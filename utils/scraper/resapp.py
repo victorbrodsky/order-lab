@@ -180,12 +180,13 @@ class ResApp:
         ck_score.send_keys(resapp["u2"])
         time.sleep(3)
 
-        # self.automation.select_option(
-        #     "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
-        #     ".select2-search .select2-input",
-        #     #resapp["medschool"]
-        #     "Weill Cornell Medical College"
-        # )
+        ####### Add Institution ########
+        self.automation.select_option(
+            "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
+            "#select2-drop .select2-search .select2-input",
+            resapp["medschool"]
+            #"Weill Cornell Medical College"
+        )
 
         # self.automation.select_option(
         #     "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "ID",
@@ -220,29 +221,30 @@ class ResApp:
         #         result.click()
         #         break
 
-        #enable input: oleg_resappbundle_residencyapplication_trainings_0_institution
-        inst = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_trainings_0_institution")
-        time.sleep(3)
-        if inst.is_displayed():
-            print("Element is visible.")
-        else:
-            print("Element is not visible.")
-            time.sleep(3)
-            #driver.execute_script("arguments[0].scrollIntoView(true);", inst)
-            driver.execute_script("arguments[0].style.display = 'block';", inst)
+        # #enable input: oleg_resappbundle_residencyapplication_trainings_0_institution
+        # inst = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_trainings_0_institution")
+        # time.sleep(3)
+        # if inst.is_displayed():
+        #     print("Element is visible.")
+        # else:
+        #     print("Element is not visible.")
+        #     time.sleep(3)
+        #     #driver.execute_script("arguments[0].scrollIntoView(true);", inst)
+        #     driver.execute_script("arguments[0].style.display = 'block';", inst)
+        #
+        # time.sleep(3)
+        # print("Enable element.")
+        # driver.execute_script("arguments[0].removeAttribute('disabled'); arguments[0].removeAttribute('readonly');",
+        #                       inst)
+        # time.sleep(3)
+        # # Click elsewhere (like the body or a parent element)
+        # driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_examinations_0_USMLEStep1Score").click()
+        # time.sleep(3)
+        # # Then interact with the input field
+        # inst = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_trainings_0_institution")
+        # inst.send_keys("Weill Cornell Medical College")
 
-        time.sleep(3)
-        print("Enable element.")
-        driver.execute_script("arguments[0].removeAttribute('disabled'); arguments[0].removeAttribute('readonly');",
-                              inst)
-        time.sleep(3)
-        # Click elsewhere (like the body or a parent element)
-        driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_examinations_0_USMLEStep1Score").click()
-        time.sleep(3)
-        # Then interact with the input field
-        inst = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_trainings_0_institution")
-        inst.send_keys("Weill Cornell Medical College")
-
+        ####### EOF Add Institution ########
 
 
         time.sleep(3)

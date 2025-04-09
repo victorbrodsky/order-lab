@@ -25,6 +25,7 @@ class CallLog:
                 'lastName': 'Castro',
                 'dob': '02/20/1985',
                 'service': 'Transfusion Medicine',
+                'issue': 'First dose plasma',
                 'history': (
                     'Splenectomized patient with beta thalassemia major on Luspatercept, '
                     'transfused every 3 weeks with 1-2 units red cells to maintain pre-transfusion '
@@ -40,6 +41,7 @@ class CallLog:
                 'lastName': 'Cruz',
                 'dob': '07/25/1965',
                 'service': 'Microbiology',
+                'issue': 'Antibiotic sensitivity approval',
                 'history': (
                     'This patient with a past medical history of myelodysplastic syndrome '
                     'with excess blasts transformed to acute myeloblastic leukemia (diagnosed in 2021) '
@@ -54,6 +56,7 @@ class CallLog:
                 'lastName': 'Ortiz',
                 'dob': '11/25/1955',
                 'service': 'Coagulation',
+                'issue': 'Critical Value',
                 'history': (
                     'Paged by BB, work up complete. No abnormal findings. Ok to release further products. SafeTrace updated.'
                 )
@@ -105,12 +108,39 @@ class CallLog:
             print(f"Alert text: {alert.text}")  # Optional: Get the text of the alert
             alert.accept()  # Click "OK" to accept the confirmation box
 
-        print("Filling out new call log")
+        # time.sleep(3)
+        # print("Filling out new call log")
         # self.automation.select_option("s2id_oleg_calllogformbundle_messagetype_messageCategory",
         #                               "CSS_SELECTOR",
-        #                               ".select2-search .select2-input",
+        #                               "#select2-drop .select2-search .select2-input",
         #                               calllog['service']
         #                               )
+
+        time.sleep(3)
+
+
+        # Locate the <label> with the specific text
+        label_element = driver.find_element(By.XPATH, "//label[text()='Message Subclass:Message Group:Service*:']")
+        # Retrieve the associated ID from the 'for' attribute of the <label>
+        #associated_id = label_element.get_attribute("for")
+        # Ensure that the ID matches the targeted <a> element
+        #print("associated_id=",associated_id)
+        #Locate the parent <div> of the child element
+        parent_div = label_element.find_element(By.XPATH, "./..")
+        print("parent_div class=",parent_div.get_attribute("class"))
+        time.sleep(3)
+        a_link = parent_div.find_element(By.CLASS_NAME,"select2-choice")
+        print("a_link id=", a_link.get_attribute("class"))
+        a_link.click()
+
+        # if associated_id == "s2id_oleg_calllogformbundle_messagetype_messageCategory":
+        #     # Locate the <a> element by its ID and click it
+        #     element = driver.find_element(By.ID, associated_id)
+        #     print("click matched!")
+        #     element.click()
+        # else:
+        #     print("Label and element ID do not match!")
+
         # # Locate the label element with text containing "Service"
         # label = driver.find_element(By.XPATH, "//label[contains(text(), 'Service')]")
         # # Extract the value of the 'for' attribute (associates the label with the element's ID)
@@ -148,21 +178,21 @@ class CallLog:
         #         """
         # driver.execute_script(script)
 
-        parent_element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'composite-tree-holder'))
-        )
-        time.sleep(3)
-        # Find child elements after ensuring the parent is present
-        #matching_elements = parent_element.find_elements(By.CLASS_NAME,'treenode')
-        matching_elements = parent_element.find_elements(By.ID, 's2id_oleg_calllogformbundle_messagetype_messageCategory')
-        count = len(matching_elements)
-        print(f"Number of matching elements: {count}")
-        if matching_elements:
-            last_element = matching_elements[-1]
-            print("last_element class:",last_element.get_attribute("class"))
-            last_element.click()
-        else:
-            print("No matching elements found!")
+        # parent_element = WebDriverWait(driver, 10).until(
+        #     EC.presence_of_element_located((By.CLASS_NAME, 'composite-tree-holder'))
+        # )
+        # time.sleep(3)
+        # # Find child elements after ensuring the parent is present
+        # #matching_elements = parent_element.find_elements(By.CLASS_NAME,'treenode')
+        # matching_elements = parent_element.find_elements(By.ID, 's2id_oleg_calllogformbundle_messagetype_messageCategory')
+        # count = len(matching_elements)
+        # print(f"Number of matching elements: {count}")
+        # if matching_elements:
+        #     last_element = matching_elements[-1]
+        #     print("last_element class:",last_element.get_attribute("class"))
+        #     last_element.click()
+        # else:
+        #     print("No matching elements found!")
 
         # time.sleep(10)
         # wait = WebDriverWait(driver, 20)  # 10 seconds timeout
