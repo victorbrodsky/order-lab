@@ -173,27 +173,45 @@ class ResApp:
         # questionnaire = driver.find_element(By.CSS_SELECTOR,
         #                                              "h4.panel-title > a[href='#residencyQuestionnaireResponses']")
         # time.sleep(3)
-
         time.sleep(3)
 
-        self.automation.select_option(
-            "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
-            ".select2-search .select2-input",
-            #resapp["medschool"]
-            "Weill Cornell Medical College"
-        )
-        search_box = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, ".select2-search .select2-input"))
-        )
-        # Enter text
-        search_box.send_keys("Weill Cornell Medical College")
+        # oleg_resappbundle_residencyapplication_examinations_0_USMLEStep2CKScore
+        ck_score = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_examinations_0_USMLEStep2CKScore")
+        ck_score.send_keys(resapp["u2"])
+        time.sleep(3)
 
-        results = driver.find_elements(By.CSS_SELECTOR, "ul#select2-results-10 li.select2-result-selectable")
-        for result in results:
-            if "Weill Cornell Medical College" in result.text:
-                print("result.text=",result.text)
-                result.click()
-                break
+        # self.automation.select_option(
+        #     "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
+        #     ".select2-search .select2-input",
+        #     #resapp["medschool"]
+        #     "Weill Cornell Medical College"
+        # )
+
+        # self.automation.select_option(
+        #     "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "ID",
+        #     "s2id_autogen11_search",
+        #     # resapp["medschool"]
+        #     "Weill Cornell Medical College"
+        # )
+
+        # dropdown_trigger = driver.find_element(By.ID, "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution")  # Replace with the ID of the dropdown trigger
+        # time.sleep(3)
+        # dropdown_trigger.click()
+        # time.sleep(3)
+        # label_element = driver.find_element(By.XPATH, "//label[text()='Educational Institution:']")
+        # # Use the 'for' attribute of the label to find the input element
+        # input_id = label_element.get_attribute("for")
+        # input_element = driver.find_element(By.ID, input_id)
+        # time.sleep(3)
+        # # Interact with the input field
+        # input_element.send_keys("Weill Cornell Medical College")
+
+        # results = driver.find_elements(By.CSS_SELECTOR, "ul#select2-results-10 li.select2-result-selectable")
+        # for result in results:
+        #     if "Weill Cornell Medical College" in result.text:
+        #         print("result.text=",result.text)
+        #         result.click()
+        #         break
         #search_box = driver.find_element(By.ID, "s2id_autogen10_search")
         #search_box.send_keys("Weill Cornell Medical College")  # Type the desired institution name
 
@@ -202,11 +220,30 @@ class ResApp:
         #         result.click()
         #         break
 
+        #enable input: oleg_resappbundle_residencyapplication_trainings_0_institution
+        inst = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_trainings_0_institution")
         time.sleep(3)
+        if inst.is_displayed():
+            print("Element is visible.")
+        else:
+            print("Element is not visible.")
+            time.sleep(3)
+            #driver.execute_script("arguments[0].scrollIntoView(true);", inst)
+            driver.execute_script("arguments[0].style.display = 'block';", inst)
 
-        #oleg_resappbundle_residencyapplication_examinations_0_USMLEStep2CKScore
-        ck_score = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_examinations_0_USMLEStep2CKScore")
-        ck_score.send_keys(resapp["u2"])
+        time.sleep(3)
+        print("Enable element.")
+        driver.execute_script("arguments[0].removeAttribute('disabled'); arguments[0].removeAttribute('readonly');",
+                              inst)
+        time.sleep(3)
+        # Click elsewhere (like the body or a parent element)
+        driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_examinations_0_USMLEStep1Score").click()
+        time.sleep(3)
+        # Then interact with the input field
+        inst = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_trainings_0_institution")
+        inst.send_keys("Weill Cornell Medical College")
+
+
 
         time.sleep(3)
 
@@ -221,7 +258,7 @@ class ResApp:
         datepicker.send_keys(one_year_plus_str)
 
         #click submit btn-warning
-        #self.automation.click_button("btn-warning")
+        self.automation.click_button("btn-warning")
 
         print("Finish new resapp")
         time.sleep(10)
