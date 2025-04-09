@@ -174,15 +174,32 @@ class ResApp:
         #                                              "h4.panel-title > a[href='#residencyQuestionnaireResponses']")
         # time.sleep(3)
 
+        time.sleep(3)
+
+        # self.automation.select_option(
+        #     "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
+        #     ".select2-search .select2-input",
+        #     #resapp["medschool"]
+        #     "All Institution"
+        # )
+
+        results = driver.find_elements(By.CSS_SELECTOR, "ul#select2-results-10 li.select2-result-selectable")
+
+        search_box = driver.find_element(By.ID, "s2id_autogen10_search")
+        search_box.send_keys("Weill Cornell Medical College")  # Type the desired institution name
+
+        # for result in results:
+        #     if "Weill Cornell Medical College" in result.text:
+        #         result.click()
+        #         break
+
+        time.sleep(3)
+
         #oleg_resappbundle_residencyapplication_examinations_0_USMLEStep2CKScore
         ck_score = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_examinations_0_USMLEStep2CKScore")
         ck_score.send_keys(resapp["u2"])
 
-        self.automation.select_option(
-            "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
-            ".select2-search .select2-input",
-            resapp["medschool"]
-        )
+        time.sleep(3)
 
         today = date.today()
         # Add one year
@@ -209,7 +226,7 @@ def main():
     automation.login_to_site(url, username_text, password_text)
 
     resapp = ResApp(automation)
-    resapp.configs()
+    #resapp.configs()
     resapp.create_resapps()
 
     print("ResApp done!")
