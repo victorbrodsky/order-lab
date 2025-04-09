@@ -176,17 +176,26 @@ class ResApp:
 
         time.sleep(3)
 
-        # self.automation.select_option(
-        #     "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
-        #     ".select2-search .select2-input",
-        #     #resapp["medschool"]
-        #     "All Institution"
-        # )
+        self.automation.select_option(
+            "s2id_oleg_resappbundle_residencyapplication_trainings_0_institution", "CSS_SELECTOR",
+            ".select2-search .select2-input",
+            #resapp["medschool"]
+            "Weill Cornell Medical College"
+        )
+        search_box = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".select2-search .select2-input"))
+        )
+        # Enter text
+        search_box.send_keys("Weill Cornell Medical College")
 
         results = driver.find_elements(By.CSS_SELECTOR, "ul#select2-results-10 li.select2-result-selectable")
-
-        search_box = driver.find_element(By.ID, "s2id_autogen10_search")
-        search_box.send_keys("Weill Cornell Medical College")  # Type the desired institution name
+        for result in results:
+            if "Weill Cornell Medical College" in result.text:
+                print("result.text=",result.text)
+                result.click()
+                break
+        #search_box = driver.find_element(By.ID, "s2id_autogen10_search")
+        #search_box.send_keys("Weill Cornell Medical College")  # Type the desired institution name
 
         # for result in results:
         #     if "Weill Cornell Medical College" in result.text:
