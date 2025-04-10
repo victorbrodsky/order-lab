@@ -118,6 +118,7 @@ class CallLog:
 
         time.sleep(3)
 
+        ############ Select 'Service' ############
         label_element_service = driver.find_element(By.XPATH, "//label[text()='Service']")
         time.sleep(1)
         parent_div = label_element_service.find_element(By.XPATH, "./..")
@@ -128,26 +129,102 @@ class CallLog:
         time.sleep(3)
         print("select_element class=", select_element.get_attribute("class"), " ID=", select_element.get_attribute("id"))
 
-        # Locate the <label> with the specific text
-        #label_element = driver.find_element(By.XPATH, "//label[text()='Message Subclass:Message Group:Service*:']")
-        label_element = driver.find_element(By.XPATH, "//label[text()='Message Subclass:Message Group:Service*:']")
-        # Retrieve the associated ID from the 'for' attribute of the <label>
-        #associated_id = label_element.get_attribute("for")
-        # Ensure that the ID matches the targeted <a> element
-        #print("associated_id=",associated_id)
-        #Locate the parent <div> of the child element
+        # select2_drop = driver.find_element(By.CLASS_NAME, "select2-drop-active")
+        # print("select2_drop class=", select2_drop.get_attribute("class"), " ID=",
+        #       select2_drop.get_attribute("id"))
+
+        # li_element = WebDriverWait(driver, 10).until(
+        #     EC.element_to_be_clickable(
+        #         (By.XPATH, "//ul[@class='select2-results']/li[div[text()='Transfusion Medicine']]"))
+        # )
+        service_name = calllog['service']
+        xpath_expression = f"//ul[@class='select2-results']/li[div[text()='{service_name}']]"
+        li_element = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, xpath_expression))
+        )
+        time.sleep(3)
+        driver.execute_script("arguments[0].scrollIntoView(true);", li_element)
+        time.sleep(3)
+        print("li_element class=", li_element.get_attribute("class"), " ID=",
+              li_element.get_attribute("id"))
+        li_element.click()
+        time.sleep(3)
+        ############ Select 'Service' ############
+
+        ############ Select 'Issue' ############
+        label_element_service = driver.find_element(By.XPATH, "//label[text()='Issue']")
         time.sleep(1)
-        parent_div = label_element.find_element(By.XPATH, "./..")
-        #parent_div = label_element.find_element(By.XPATH, "./ancestor::div[@class='select2-search']")
-        print("parent_div class=",parent_div.get_attribute("class"))
+        parent_div = label_element_service.find_element(By.XPATH, "./..")
+        grand_parent_div = parent_div.find_element(By.XPATH, "./..")
+        select_element = grand_parent_div.find_element(By.ID, 's2id_oleg_calllogformbundle_messagetype_messageCategory')
         time.sleep(3)
-        input_field = parent_div.find_element(By.CLASS_NAME,"select2-input")
-        print("a_link id=", input_field.get_attribute("class"), " ID=", input_field.get_attribute("id"))
-        input_field.send_keys(calllog['service'])
+        select_element.click()
         time.sleep(3)
-        #select2-input
-        #select_input = driver.find_element(By.CLASS_NAME, "select2-input")
-        #select_input.send_keys(calllog['service'])
+        print("select_element class=", select_element.get_attribute("class"), " ID=",
+              select_element.get_attribute("id"))
+
+        # select2_drop = driver.find_element(By.CLASS_NAME, "select2-drop-active")
+        # print("select2_drop class=", select2_drop.get_attribute("class"), " ID=",
+        #       select2_drop.get_attribute("id"))
+
+        service_name = calllog['issue']
+        xpath_expression = f"//ul[@class='select2-results']/li[div[text()='{service_name}']]"
+        li_element = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, xpath_expression))
+        )
+        time.sleep(3)
+        driver.execute_script("arguments[0].scrollIntoView(true);", li_element)
+        time.sleep(3)
+        print("li_element class=", li_element.get_attribute("class"), " ID=",
+              li_element.get_attribute("id"))
+        li_element.click()
+        time.sleep(3)
+        ############ Select 'Service' ############
+
+        # #select2-drop
+        # select2_drop = driver.find_element(By.CSS_SELECTOR, "#select2-drop .select2-input")
+        # time.sleep(3)
+        # service_text = calllog['service']
+        # print("service_text=", service_text)
+        # select2_drop.send_keys(service_text)
+        # time.sleep(3)
+        # parent_div = label_element_service.find_element(By.XPATH, "./..")
+        # time.sleep(3)
+        # grand_parent_div = parent_div.find_element(By.XPATH, "./..")
+        # time.sleep(3)
+        # print("grand_parent_div class=", grand_parent_div.get_attribute("class"), " ID=",grand_parent_div.get_attribute("id"))
+        # span = grand_parent_div.find_element(By.CLASS_NAME, "select2-match")
+        # print("span class=", span.get_attribute("class"), " ID=",
+        #       span.get_attribute("id"))
+        # time.sleep(3)
+        # span.click()
+        # time.sleep(3)
+        # #click away
+        # #"form-node-holder"
+
+        if 0:
+            # Locate the <label> with the specific text
+            #label_element = driver.find_element(By.XPATH, "//label[text()='Message Subclass:Message Group:Service*:']")
+            label_element = driver.find_element(By.XPATH, "//label[text()='Message Group:Service*:']")
+            # Retrieve the associated ID from the 'for' attribute of the <label>
+            #associated_id = label_element.get_attribute("for")
+            # Ensure that the ID matches the targeted <a> element
+            print("label_element class=",label_element.get_attribute("class")," for=",label_element.get_attribute("for"))
+            #Locate the parent <div> of the child element
+            time.sleep(1)
+            parent_div = label_element.find_element(By.XPATH, "./..")
+            #parent_div = label_element.find_element(By.XPATH, "./ancestor::div[@class='select2-search']")
+            print("parent_div class=",parent_div.get_attribute("class"))
+            time.sleep(3)
+            input_field = parent_div.find_element(By.CLASS_NAME,"select2-input")
+            print("a_link id=", input_field.get_attribute("class"), " ID=", input_field.get_attribute("id"))
+            input_field.send_keys(calllog['service'])
+            time.sleep(3)
+            #select2-input
+            #select_input = driver.find_element(By.CLASS_NAME, "select2-input")
+            #select_input.send_keys(calllog['service'])
 
         # if associated_id == "s2id_oleg_calllogformbundle_messagetype_messageCategory":
         #     # Locate the <a> element by its ID and click it
