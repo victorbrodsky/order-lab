@@ -118,20 +118,36 @@ class CallLog:
 
         time.sleep(3)
 
+        label_element_service = driver.find_element(By.XPATH, "//label[text()='Service']")
+        time.sleep(1)
+        parent_div = label_element_service.find_element(By.XPATH, "./..")
+        grand_parent_div = parent_div.find_element(By.XPATH, "./..")
+        select_element = grand_parent_div.find_element(By.ID, 's2id_oleg_calllogformbundle_messagetype_messageCategory')
+        time.sleep(3)
+        select_element.click()
+        time.sleep(3)
+        print("select_element class=", select_element.get_attribute("class"), " ID=", select_element.get_attribute("id"))
 
         # Locate the <label> with the specific text
+        #label_element = driver.find_element(By.XPATH, "//label[text()='Message Subclass:Message Group:Service*:']")
         label_element = driver.find_element(By.XPATH, "//label[text()='Message Subclass:Message Group:Service*:']")
         # Retrieve the associated ID from the 'for' attribute of the <label>
         #associated_id = label_element.get_attribute("for")
         # Ensure that the ID matches the targeted <a> element
         #print("associated_id=",associated_id)
         #Locate the parent <div> of the child element
+        time.sleep(1)
         parent_div = label_element.find_element(By.XPATH, "./..")
+        #parent_div = label_element.find_element(By.XPATH, "./ancestor::div[@class='select2-search']")
         print("parent_div class=",parent_div.get_attribute("class"))
         time.sleep(3)
-        a_link = parent_div.find_element(By.CLASS_NAME,"select2-choice")
-        print("a_link id=", a_link.get_attribute("class"))
-        a_link.click()
+        input_field = parent_div.find_element(By.CLASS_NAME,"select2-input")
+        print("a_link id=", input_field.get_attribute("class"), " ID=", input_field.get_attribute("id"))
+        input_field.send_keys(calllog['service'])
+        time.sleep(3)
+        #select2-input
+        #select_input = driver.find_element(By.CLASS_NAME, "select2-input")
+        #select_input.send_keys(calllog['service'])
 
         # if associated_id == "s2id_oleg_calllogformbundle_messagetype_messageCategory":
         #     # Locate the <a> element by its ID and click it
@@ -202,6 +218,21 @@ class CallLog:
         # all_rows = wait.until(visibility_of_all_elements_located((By.XPATH,'//div[@class="ajax-combobox-messageCategory"]/following-sibling::div')))
         #
         # print("all_rows=",len(all_rows))
+        time.sleep(3)
+
+
+        # #formnode-section-4 .note-editable
+        note = driver.find_element(By.CSS_SELECTOR, "#formnode-section-4 .note-editable")
+        note.send_keys(calllog['history'])
+        time.sleep(3)
+
+        password_text = "1234567890_demo"
+        signature = driver.find_element(By.ID, "calllog-user-password")
+        signature.send_keys(password_text)
+        time.sleep(3)
+
+        #signed-btn
+        self.automation.click_button_by_id("signed-btn")
 
         time.sleep(10)
 

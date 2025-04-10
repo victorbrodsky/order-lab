@@ -170,7 +170,7 @@ class Users:
             
             time.sleep(3)
             
-            break
+            #break
         
         #automation.quit_driver()
 
