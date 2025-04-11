@@ -46,6 +46,38 @@ class DemoDbUtil {
         $this->container = $container;
     }
 
+
+    public function processDemoDb( $backupPath ) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'live' ) {
+            exit("Live server: Under construction!!!");
+        }
+
+        $logger = $this->container->get('logger');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $logger->notice("processDemoDb: start.");
+        $res = '';
+
+        //1) backup DB (might not be need it)
+        $resBackup = $userServiceUtil->dbManagePython($backupPath, 'backup');
+        $res = $resBackup;
+
+        //2) reset DB
+        //php bin/console doctrine:database:drop --force
+        
+
+        //php bin/console doctrine:database:create
+
+    }
+
+
+
     //RuntimeException: The port 9515 is already in use
     //https://jelledev.com/how-to-run-multiple-symfony-panther-clients-in-parallel/
 

@@ -65,15 +65,16 @@ class DemoDbCommand extends Command {
             return Command::FAILURE;
         }
 
-//        $demoDbUtil = $this->container->get('demodb_utility');
-//
+        $demoDbUtil = $this->container->get('demodb_utility');
+        $resDemoDbStr = $demoDbUtil->processDemoDb();
+        
 //        $client = $demoDbUtil->loginAction();
 //        $client->takeScreenshot('test_login.png');
 //
 //        $users = $demoDbUtil->getUsers(); //testing
 //        $vacreqIds = $demoDbUtil->newVacReqs($client, $users);
 
-        $resStr = $resStr . "; " . "Demo DB completed";
+        $resStr = $resStr . "; " . $resDemoDbStr . "; " . "Demo DB completed";
 
         $output->writeln($resStr);
 

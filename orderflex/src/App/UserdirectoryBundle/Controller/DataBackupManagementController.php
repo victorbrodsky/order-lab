@@ -1041,6 +1041,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
+    //Backup DB
     //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
 
@@ -1927,10 +1928,11 @@ class DataBackupManagementController extends OrderAbstractController
                     $client->setFileName($fileMeta['name'])->concat($uploadKey, $partialKey2, $partialKey1, $partialKey3);
 
                     header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=uploaded');
-                } catch (ConnectionException | TusPhp\Exception\FileException | TusException $e) {
+                } //catch (ConnectionException | TusPhp\Exception\FileException | TusException $e) {
+                catch ( ConnectionException $e ) {
                     header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=failed');
                 }
-        }
+            }
 
             exit(0);
         }
@@ -1987,37 +1989,37 @@ class DataBackupManagementController extends OrderAbstractController
         dump($_FILES);
         exit('111');
 
-        // Alert: Sanitize all inputs properly in production code
-        if( ! empty($_FILES) ) {
-            echo "files";
-            $fileMeta  = $_FILES['tus_file'];
-            $uploadKey = hash_file('md5', $fileMeta['tmp_name']);
-
-            try {
-                $client->setKey($uploadKey)->file($fileMeta['tmp_name'], 'chunk_a');
-
-                // Upload 50MB starting from 10MB
-                $bytesUploaded = $client->seek(10000000)->upload(50000000);
-                $partialKey1   = $client->getKey();
-                $checksum      = $client->getChecksum();
-
-                // Upload first 10MB
-                $bytesUploaded = $client->setFileName('chunk_b')->seek(0)->upload(10000000);
-                $partialKey2   = $client->getKey();
-
-                // Upload remaining bytes starting from 60,000,000 bytes (60MB => 50000000 + 10000000)
-                $bytesUploaded = $client->setFileName('chunk_c')->seek(60000000)->upload();
-                $partialKey3   = $client->getKey();
-
-                $client->setFileName($fileMeta['name'])->concat($uploadKey, $partialKey2, $partialKey1, $partialKey3);
-
-                header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=uploaded');
-            } catch (ConnectionException | FileException | TusException $e) {
-                header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=failed');
-            }
-        } else {
-            echo "no files";
-        }
+//        // Alert: Sanitize all inputs properly in production code
+//        if( ! empty($_FILES) ) {
+//            echo "files";
+//            $fileMeta  = $_FILES['tus_file'];
+//            $uploadKey = hash_file('md5', $fileMeta['tmp_name']);
+//
+//            try {
+//                $client->setKey($uploadKey)->file($fileMeta['tmp_name'], 'chunk_a');
+//
+//                // Upload 50MB starting from 10MB
+//                $bytesUploaded = $client->seek(10000000)->upload(50000000);
+//                $partialKey1   = $client->getKey();
+//                $checksum      = $client->getChecksum();
+//
+//                // Upload first 10MB
+//                $bytesUploaded = $client->setFileName('chunk_b')->seek(0)->upload(10000000);
+//                $partialKey2   = $client->getKey();
+//
+//                // Upload remaining bytes starting from 60,000,000 bytes (60MB => 50000000 + 10000000)
+//                $bytesUploaded = $client->setFileName('chunk_c')->seek(60000000)->upload();
+//                $partialKey3   = $client->getKey();
+//
+//                $client->setFileName($fileMeta['name'])->concat($uploadKey, $partialKey2, $partialKey1, $partialKey3);
+//
+//                header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=uploaded');
+//            } catch (ConnectionException | FileException | TusException $e) {
+//                header('Location: ' . $_SERVER['HTTP_REFERER'] . '?state=failed');
+//            }
+//        } else {
+//            echo "no files";
+//        }
 
         $result = array("res");
         $response = new Response();

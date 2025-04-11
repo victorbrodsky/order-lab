@@ -53,7 +53,8 @@ class DbBackupCommand extends Command {
         ;
     }
 
-    //Cron job to back up DB and Uploaded files.
+    //Cron job to create backup DB only using manage_postgres_db.py via dbManagePython.
+    //Upload files backup is done by cron using filesbackup.py directly
     // /bin/php bin/console cron:db-backup-command --env=prod /mnt/pathology/view-backup/db-backup/
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
