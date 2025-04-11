@@ -136,7 +136,7 @@ class ResApp:
     def create_resapps(self):
         for resapp in self.get_res_apps():
             self.create_single_resapp(resapp)
-            break
+            #break
 
     def create_single_resapp(self, resapp):
         driver = self.automation.get_driver()

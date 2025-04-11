@@ -21,7 +21,7 @@ def main():
     # automation.click_button("button_class_name")
 
     # Create user
-    if 0:
+    if 1:
         users = Users(automation)
         users.create_user()
 
@@ -32,25 +32,29 @@ def main():
         vacreq = VacReq(automation)
         vacreq.create_group()
         vacreq.create_vacreqs()
+        time.sleep(3)
 
     if 0:
         trp = Trp(automation)
         trp.create_projects()
+        time.sleep(3)
 
-    if 0:
-        #NOT DONE
+    if 1:
         callog = CallLog(automation)
         callog.create_calllogs()
+        time.sleep(3)
 
-    if 0:
+    if 1:
         fellapp = FellApp(automation)
         fellapp.configs()
         fellapp.create_fellapps()
+        time.sleep(3)
 
     if 1:
         resapp = ResApp(automation)
         resapp.configs()
         resapp.create_resapps()
+        time.sleep(3)
 
     automation.quit_driver()
 

@@ -44,6 +44,17 @@ class DemoDataController extends OrderAbstractController
     #[Route(path: '/reset-demo-data-ajax/', name: 'employees_reset_demo_data_ajax', methods: ['POST'])]
     public function resetDemoDataAction(Request $request)
     {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'live' ) {
+            //exit("Demo DB cannot be run in live environment");
+            $this->addFlash(
+                'pnotify-error',
+                "Demo DB cannot be run in live environment"
+            );
+            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+            //return false;
+        }
 
         if (!$this->isGranted('ROLE_PLATFORM_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
@@ -135,6 +146,7 @@ class DemoDataController extends OrderAbstractController
         //return $this->redirectToRoute('employees_home');
     }
 
+    //NOT USED
     #[Route(path: '/demo-data-test/', name: 'employees_demo_data_test', methods: ['GET'])]
     public function testAction( Request $request, TokenStorageInterface $tokenStorage ) {
 
@@ -176,6 +188,7 @@ class DemoDataController extends OrderAbstractController
         exit('111');
     }
 
+    //NOT USED
     #[Route(path: '/demo-data-panther/{password}', name: 'employees_demo_data_panther', methods: ['GET'])]
     public function testPantherAction( Request $request, TokenStorageInterface $tokenStorage, $password=null ) {
         //$client = Client::createChromeClient();

@@ -54,16 +54,26 @@ class DemoDbCommand extends Command {
     // /bin/php bin/console cron:demo-db-reset --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        $logger = $this->container->get('logger');
-        $resStr = "Demo DB completed";
+        //$logger = $this->container->get('logger');
+        $resStr = "Demo DB started";
 
-        $demoDbUtil = $this->container->get('demodb_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'live' ) {
+            $resStr = "Demo DB cannot be run in live environment";
+            $output->writeln($resStr);
+            return Command::FAILURE;
+        }
 
-        $client = $demoDbUtil->loginAction();
-        $client->takeScreenshot('test_login.png');
+//        $demoDbUtil = $this->container->get('demodb_utility');
+//
+//        $client = $demoDbUtil->loginAction();
+//        $client->takeScreenshot('test_login.png');
+//
+//        $users = $demoDbUtil->getUsers(); //testing
+//        $vacreqIds = $demoDbUtil->newVacReqs($client, $users);
 
-        $users = $demoDbUtil->getUsers(); //testing
-        $vacreqIds = $demoDbUtil->newVacReqs($client, $users);
+        $resStr = $resStr . "; " . "Demo DB completed";
 
         $output->writeln($resStr);
 

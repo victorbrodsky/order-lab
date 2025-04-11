@@ -67,7 +67,7 @@ class CallLog:
     def create_calllogs(self) -> None:
         for calllog in self.get_call_logs():
             self.create_single_calllog(calllog)
-            break
+            #break
 
     def create_single_calllog(self, calllog):
         driver = self.automation.get_driver()
@@ -108,15 +108,13 @@ class CallLog:
             print(f"Alert text: {alert.text}")  # Optional: Get the text of the alert
             alert.accept()  # Click "OK" to accept the confirmation box
 
-        # time.sleep(3)
-        # print("Filling out new call log")
+        time.sleep(3)
+        print("Filling out new call log")
         # self.automation.select_option("s2id_oleg_calllogformbundle_messagetype_messageCategory",
         #                               "CSS_SELECTOR",
         #                               "#select2-drop .select2-search .select2-input",
         #                               calllog['service']
         #                               )
-
-        time.sleep(3)
 
         ############ Select 'Service' ############
         label_element_service = driver.find_element(By.XPATH, "//label[text()='Service']")
@@ -124,7 +122,7 @@ class CallLog:
         parent_div = label_element_service.find_element(By.XPATH, "./..")
         grand_parent_div = parent_div.find_element(By.XPATH, "./..")
         select_element = grand_parent_div.find_element(By.ID, 's2id_oleg_calllogformbundle_messagetype_messageCategory')
-        time.sleep(3)
+        time.sleep(1)
         select_element.click()
         time.sleep(3)
         print("select_element class=", select_element.get_attribute("class"), " ID=", select_element.get_attribute("id"))
@@ -143,9 +141,9 @@ class CallLog:
             EC.element_to_be_clickable(
                 (By.XPATH, xpath_expression))
         )
-        time.sleep(3)
+        time.sleep(1)
         driver.execute_script("arguments[0].scrollIntoView(true);", li_element)
-        time.sleep(3)
+        time.sleep(1)
         print("li_element class=", li_element.get_attribute("class"), " ID=",
               li_element.get_attribute("id"))
         li_element.click()
@@ -158,7 +156,7 @@ class CallLog:
         parent_div = label_element_service.find_element(By.XPATH, "./..")
         grand_parent_div = parent_div.find_element(By.XPATH, "./..")
         select_element = grand_parent_div.find_element(By.ID, 's2id_oleg_calllogformbundle_messagetype_messageCategory')
-        time.sleep(3)
+        time.sleep(1)
         select_element.click()
         time.sleep(3)
         print("select_element class=", select_element.get_attribute("class"), " ID=",
@@ -174,144 +172,31 @@ class CallLog:
             EC.element_to_be_clickable(
                 (By.XPATH, xpath_expression))
         )
-        time.sleep(3)
+        time.sleep(1)
         driver.execute_script("arguments[0].scrollIntoView(true);", li_element)
-        time.sleep(3)
+        time.sleep(1)
         print("li_element class=", li_element.get_attribute("class"), " ID=",
               li_element.get_attribute("id"))
         li_element.click()
         time.sleep(3)
         ############ Select 'Service' ############
 
-        # #select2-drop
-        # select2_drop = driver.find_element(By.CSS_SELECTOR, "#select2-drop .select2-input")
-        # time.sleep(3)
-        # service_text = calllog['service']
-        # print("service_text=", service_text)
-        # select2_drop.send_keys(service_text)
-        # time.sleep(3)
-        # parent_div = label_element_service.find_element(By.XPATH, "./..")
-        # time.sleep(3)
-        # grand_parent_div = parent_div.find_element(By.XPATH, "./..")
-        # time.sleep(3)
-        # print("grand_parent_div class=", grand_parent_div.get_attribute("class"), " ID=",grand_parent_div.get_attribute("id"))
-        # span = grand_parent_div.find_element(By.CLASS_NAME, "select2-match")
-        # print("span class=", span.get_attribute("class"), " ID=",
-        #       span.get_attribute("id"))
-        # time.sleep(3)
-        # span.click()
-        # time.sleep(3)
-        # #click away
-        # #"form-node-holder"
-
-        if 0:
-            # Locate the <label> with the specific text
-            #label_element = driver.find_element(By.XPATH, "//label[text()='Message Subclass:Message Group:Service*:']")
-            label_element = driver.find_element(By.XPATH, "//label[text()='Message Group:Service*:']")
-            # Retrieve the associated ID from the 'for' attribute of the <label>
-            #associated_id = label_element.get_attribute("for")
-            # Ensure that the ID matches the targeted <a> element
-            print("label_element class=",label_element.get_attribute("class")," for=",label_element.get_attribute("for"))
-            #Locate the parent <div> of the child element
-            time.sleep(1)
-            parent_div = label_element.find_element(By.XPATH, "./..")
-            #parent_div = label_element.find_element(By.XPATH, "./ancestor::div[@class='select2-search']")
-            print("parent_div class=",parent_div.get_attribute("class"))
-            time.sleep(3)
-            input_field = parent_div.find_element(By.CLASS_NAME,"select2-input")
-            print("a_link id=", input_field.get_attribute("class"), " ID=", input_field.get_attribute("id"))
-            input_field.send_keys(calllog['service'])
-            time.sleep(3)
-            #select2-input
-            #select_input = driver.find_element(By.CLASS_NAME, "select2-input")
-            #select_input.send_keys(calllog['service'])
-
-        # if associated_id == "s2id_oleg_calllogformbundle_messagetype_messageCategory":
-        #     # Locate the <a> element by its ID and click it
-        #     element = driver.find_element(By.ID, associated_id)
-        #     print("click matched!")
-        #     element.click()
-        # else:
-        #     print("Label and element ID do not match!")
-
-        # # Locate the label element with text containing "Service"
-        # label = driver.find_element(By.XPATH, "//label[contains(text(), 'Service')]")
-        # # Extract the value of the 'for' attribute (associates the label with the element's ID)
-        # target_id = label.get_attribute('for')
-        # # Use the extracted ID to locate the desired element
-        # service = driver.find_element(By.ID, target_id)
-        # actions = ActionChains(driver)
-        # actions.move_to_element(service).click().perform()
-        # time.sleep(1)
-        # search_box = driver.find_element(By.CSS_SELECTOR, ".select2-search .select2-input")
-        # search_box.send_keys(calllog['service'])
-        # time.sleep(1)
-        # search_box.send_keys(Keys.ENTER)
-        # # time.sleep(3)
-
-        # time.sleep(3)
-        # blocking_element = driver.find_element(By.ID, "user-headroom-header")
-        # driver.execute_script("arguments[0].style.display = 'none';", blocking_element)
-        #
-        # element = driver.find_element(By.ID, "s2id_oleg_calllogformbundle_messagetype_messageCategory")
-        # time.sleep(3)
-        # driver.execute_script("arguments[0].scrollIntoView();", element)
-        # element.click()
-        # time.sleep(3)
-        # search_box = driver.find_element(By.CSS_SELECTOR, ".select2-search .select2-input") #or #select2-drop .select2-input
-        # time.sleep(3)
-        # search_box.send_keys('Transfusion')
-
-        #select2-result-label-65
-        # script = f"""
-        #             $("#s2id_oleg_calllogformbundle_messagetype_messageCategory").select2('val','1');
-        #         """
-        # script = """
-        #             $(".ajax-combobox-messageCategory").click();
-        #         """
-        # driver.execute_script(script)
-
-        # parent_element = WebDriverWait(driver, 10).until(
-        #     EC.presence_of_element_located((By.CLASS_NAME, 'composite-tree-holder'))
-        # )
-        # time.sleep(3)
-        # # Find child elements after ensuring the parent is present
-        # #matching_elements = parent_element.find_elements(By.CLASS_NAME,'treenode')
-        # matching_elements = parent_element.find_elements(By.ID, 's2id_oleg_calllogformbundle_messagetype_messageCategory')
-        # count = len(matching_elements)
-        # print(f"Number of matching elements: {count}")
-        # if matching_elements:
-        #     last_element = matching_elements[-1]
-        #     print("last_element class:",last_element.get_attribute("class"))
-        #     last_element.click()
-        # else:
-        #     print("No matching elements found!")
-
-        # time.sleep(10)
-        # wait = WebDriverWait(driver, 20)  # 10 seconds timeout
-        # #last_row = wait.until(EC.presence_of_element_located((By.XPATH, '//div[@id="s2id_oleg_calllogformbundle_messagetype_messageCategory"]/following-sibling::div[last()]')))
-        # #all_rows = wait.until(EC.presence_of_all_elements_located((By.XPATH,'//div[@class="ajax-combobox-messageCategory"]/following-sibling::div')))
-        #
-        # all_rows = wait.until(visibility_of_all_elements_located((By.XPATH,'//div[@class="ajax-combobox-messageCategory"]/following-sibling::div')))
-        #
-        # print("all_rows=",len(all_rows))
-        time.sleep(3)
-
-
-        # #formnode-section-4 .note-editable
+        #Fill out History
         note = driver.find_element(By.CSS_SELECTOR, "#formnode-section-4 .note-editable")
         note.send_keys(calllog['history'])
-        time.sleep(3)
+        time.sleep(1)
 
+        #Sign
         password_text = "1234567890_demo"
         signature = driver.find_element(By.ID, "calllog-user-password")
         signature.send_keys(password_text)
-        time.sleep(3)
+        time.sleep(1)
 
-        #signed-btn
+        #Finalize and Sign
         self.automation.click_button_by_id("signed-btn")
+        print("New call log submitted")
 
-        time.sleep(10)
+        time.sleep(5)
 
 
 

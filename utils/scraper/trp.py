@@ -185,11 +185,13 @@ class Trp:
         title.send_keys(project['budget'])
 
         no_radio_button = driver.find_element(By.ID, 'oleg_translationalresearchbundle_project_requireTissueProcessing_1')
+        time.sleep(3)
         no_radio_button.click()
         # Optionally, verify if the "No" radio button is selected
         assert no_radio_button.is_selected()
 
         no_radio_button = driver.find_element(By.ID,'oleg_translationalresearchbundle_project_requireArchivalProcessing_1')
+        time.sleep(3)
         no_radio_button.click()
         # Optionally, verify if the "No" radio button is selected
         assert no_radio_button.is_selected()
