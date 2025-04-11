@@ -53,6 +53,21 @@ class DemoDbUtil {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        //php bin/console doctrine:database:create
+        //php bin/console doctrine:schema:update --complete --force
+        //php bin/console doctrine:migration:status
+        //php bin/console doctrine:migration:migrate
+        //php bin/console doctrine:migration:sync-metadata-storage
+        //php bin/console doctrine:migration:version --add --all
+
+        //Set new DB (use restoreDBWrapper)
+        //environment
+        //connectionChannel (set http for HaProxy)
+        //urlConnectionChannel (set https for HaProxy if using ssl certificate)
+        //networkDrivePath
+        //mailerDeliveryAddresses
+        //instanceId
+
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
@@ -64,18 +79,109 @@ class DemoDbUtil {
         $logger->notice("processDemoDb: start.");
         $res = '';
 
+        $phpPath = $userServiceUtil->getPhpPath();
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+
         //1) backup DB (might not be need it)
         $resBackup = $userServiceUtil->dbManagePython($backupPath, 'backup');
-        $res = $resBackup;
+        $res = $res . $resBackup;
 
         //2) reset DB
         //php bin/console doctrine:database:drop --force
-        
+        $resPhp = $userServiceUtil->runProcess('php -v');
+        echo "php=[".$resPhp."]";
+        $res = $res . "; " . $resPhp;
 
-        //php bin/console doctrine:database:create
+        $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
+        $logger->notice("drop command=[" . $drop . "]");
+        $resDrop = $this->runProcess($drop);
+        echo "drop resDrop=" . $resDrop . "<br>";
+        $res = $res . "; " . $resDrop;
 
+        //TODO: delete all Uploaded files
+
+        //3) create DB: php bin/console doctrine:database:create
+        $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
+        $logger->notice("create command=[".$create."]");
+        $resCreate = $this->runProcess($create);
+        echo "create resCreate=".$resCreate."<br>";
+        $res = $res . "; " . $resCreate;
+
+        //4) update DB: php bin/console doctrine:schema:update --complete --force
+        $update = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:schema:update --complete --force';
+        $logger->notice("update command=[".$update."]");
+        $resUpdate = $this->runProcess($update);
+        echo "resUpdate=".$resUpdate."<br>";
+        $res = $res . "; " . $resUpdate;
+
+        //5 php bin/console doctrine:migration:sync-metadata-storage
+        $syncStorageCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migration:sync-metadata-storage';
+        $logger->notice("syncStorageCommand=[".$syncStorageCommand."]");
+        $resSyncStorageCommand = $this->runProcess($syncStorageCommand);
+        echo "resSyncStorageCommand=".$resSyncStorageCommand."<br>";
+        $res = $res . "; " . $resSyncStorageCommand;
+
+        //6 php bin/console doctrine:migration:migrate
+        $migrateCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migration:migrate';
+        $logger->notice("migrateCommand=[".$migrateCommand."]");
+        $resMigrateCommand = $this->runProcess($syncStorageCommand);
+        echo "resMigrateCommand=".$resMigrateCommand."<br>";
+        $res = $res . "; " . $resMigrateCommand;
+
+        //7 initiate DB
+        $resRestore = $this->postRestoreDb();
+        $res = $res . "; " . $resRestore;
+
+        return $res;
     }
 
+    public function postRestoreDb() {
+        //Set new DB (use restoreDBWrapper)
+        //environment
+        //connectionChannel (set http for HaProxy)
+        //urlConnectionChannel (set https for HaProxy if using ssl certificate)
+        //networkDrivePath
+        //mailerDeliveryAddresses
+        //instanceId
+
+        $logger = $this->container->get('logger');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
+        $logger->notice("postRestoreDb: paramId=" . $param->getId());
+
+        $conn = $this->getConnection();
+
+        $siteEmail = 'oli2002@med.cornell.edu';
+        $env = 'demo';
+        $connectionChannel = 'http';
+        $urlConnectionChannel = 'https';
+        $networkDrivePathOrig = '';
+        $mailerDeliveryAddresses = $siteEmail;
+        $instanceId = 'VIEWDEMO';
+
+        $setparams =
+            "mailerdeliveryaddresses='$siteEmail'".
+            ", environment='$env'".
+            ", connectionChannel='$connectionChannel'" .
+            ", urlConnectionChannel='$urlConnectionChannel'" .
+            ", networkDrivePath='$networkDrivePathOrig'".
+            ", mailerDeliveryAddresses='$mailerDeliveryAddresses'".
+            ", instanceId='$instanceId'"
+        ;
+        $sql = "UPDATE user_siteparameters" .
+            " SET " . $setparams .
+            " WHERE id=" . $param->getId();
+
+        $logger->notice("postRestoreDb: sql=" . $sql);
+
+        $stmt = $conn->prepare($sql);
+        $logger->notice("postRestoreDb: after prepare");
+
+        $results = $stmt->executeQuery();
+        $logger->notice("postRestoreDb: after executeQuery");
+
+        return $results;
+    }
 
 
     //RuntimeException: The port 9515 is already in use
