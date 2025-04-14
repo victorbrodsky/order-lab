@@ -203,12 +203,12 @@ class Trp:
 
         #Approve the project
         current_url = driver.current_url
-        print(f"Current URL: {current_url}")
+        #print(f"Current URL: {current_url}")
         project_id = current_url.split('/')[-1]
-        print(f"Extracted Project ID: {project_id}")
+        #print(f"Extracted Project ID: {project_id}")
         #driver.get('https://view.online/c/demo-institution/demo-department/translational-research/projects/')
         driver.get(f'https://view.online/c/demo-institution/demo-department/translational-research/approve-project/{project_id}')
-        print(f"Approved Project ID: {project_id}")
+        #print(f"Approved Project ID: {project_id}")
         time.sleep(3)
 
         #Create 3 work requests for this project

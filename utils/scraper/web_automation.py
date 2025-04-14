@@ -46,13 +46,13 @@ class WebAutomation:
 
         if selector_option == "ID":
             search_box = self.driver.find_element(By.ID, selector_text)
-            print("search by ID=",selector_text)
+            #print("search by ID=",selector_text)
         if selector_option == "CLASS_NAME":
             search_box = self.driver.find_element(By.CLASS_NAME, selector_text)
-            print("search by CLASS_NAME=",selector_text)
+            #print("search by CLASS_NAME=",selector_text)
         if selector_option == "CSS_SELECTOR":
             search_box = self.driver.find_element(By.CSS_SELECTOR, selector_text)
-            print("search by CSS_SELECTOR=",selector_text)
+            #print("search by CSS_SELECTOR=",selector_text)
             
         time.sleep(1)
         search_box.send_keys(option_text)

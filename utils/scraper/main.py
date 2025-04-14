@@ -7,8 +7,10 @@ from calllog import CallLog
 from fellapp import FellApp
 from resapp import ResApp
 
-def runAllDemos( automation, demoIds ):
-    # Create user
+#run demo db generation only if value is True
+#if run successfully then set value flag to False so it does not run again second time
+def runDemos(automation, demoIds, attempts, max_attempts):
+    # Sections
     if demoIds['users']:
         try:
             users = Users(automation)
@@ -17,17 +19,18 @@ def runAllDemos( automation, demoIds ):
             demoIds['users'] = False
         except Exception as e:
             print("users failed:", e)
+            attempts['users'] += 1
 
-    # Create Vacation Requests
     if demoIds['vacreq']:
         try:
             vacreq = VacReq(automation)
             vacreq.create_group()
             vacreq.create_vacreqs()
-            demoIds['vacreq'] = False
             time.sleep(3)
+            demoIds['vacreq'] = False
         except Exception as e:
             print("vacreq failed:", e)
+            attempts['vacreq'] += 1
 
     if demoIds['trp']:
         try:
@@ -37,6 +40,7 @@ def runAllDemos( automation, demoIds ):
             demoIds['trp'] = False
         except Exception as e:
             print("trp failed:", e)
+            attempts['trp'] += 1
 
     if demoIds['callog']:
         try:
@@ -46,6 +50,7 @@ def runAllDemos( automation, demoIds ):
             demoIds['callog'] = False
         except Exception as e:
             print("callog failed:", e)
+            attempts['callog'] += 1
 
     if demoIds['fellapp']:
         try:
@@ -56,6 +61,7 @@ def runAllDemos( automation, demoIds ):
             demoIds['fellapp'] = False
         except Exception as e:
             print("fellapp failed:", e)
+            attempts['fellapp'] += 1
 
     if demoIds['resapp']:
         try:
@@ -66,24 +72,25 @@ def runAllDemos( automation, demoIds ):
             demoIds['resapp'] = False
         except Exception as e:
             print("resapp failed:", e)
+            attempts['resapp'] += 1
+
+    # Disable retries for sections exceeding max attempts
+    for key in demoIds.keys():
+        if attempts[key] >= max_attempts:
+            demoIds[key] = False
 
     return demoIds
+
 
 def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
     password_text = "1234567890_demo"
-    repeat_times = 2
 
     automation = WebAutomation()
-    #driver = automation.initialize_driver()
-    #driver = automation.get_driver()
-    # You can now call methods like:
     automation.login_to_site(url, username_text, password_text)
-    # automation.select_option("element_id", "select_classname", "option_text")
-    # automation.click_button("button_class_name")
 
-    #Add demo id to repeat in case of failure
+    # Add demo IDs to retry in case of failure
     demoIds = {
         'users': True,
         'vacreq': True,
@@ -93,13 +100,16 @@ def main():
         'resapp': True
     }
 
-    for key in demoIds:
-        print(key, 'corresponds to', demoIds[key])
-        if demoIds[key]:
-            demoIds = runAllDemos(automation,demoIds)
-            break
+    # Track the number of attempts
+    attempts = {key: 0 for key in demoIds.keys()}
+    max_attempts = 2  # Set maximum retries per section
+
+    # Keep running demos until all sections are successful or exceed max attempts
+    while any(demoIds.values()):
+        demoIds = runDemos(automation, demoIds, attempts, max_attempts)
 
     automation.quit_driver()
+
 
 # Execute the main function
 if __name__ == "__main__":

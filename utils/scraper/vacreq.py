@@ -211,7 +211,7 @@ class VacReq:
             # Select start date
             # Calculate the date for 1 week ago
             one_week_ago = (datetime.date.today() - datetime.timedelta(days=7)).strftime("%m-%d-%Y")  # "%Y-%m-%d"
-            print("one_week_ago=", one_week_ago)
+            #print("one_week_ago=", one_week_ago)
             # Find the datepicker input field
             datepicker = driver.find_element(By.ID, "oleg_vacreqbundle_request_requestVacation_startDate")
             # Clear the field and enter the calculated date
