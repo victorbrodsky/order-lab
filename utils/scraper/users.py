@@ -90,7 +90,7 @@ class Users:
             #id_from_link = re.search(r'/user/(\d+)', user_link.text).group(1)
             href = user_link.get_attribute('href')
             id_from_link = href.split('/')[-1]  # Assumes the ID is the last part of the URL
-            print(f"Extracted ID: {id_from_link}")
+            #print(f"Extracted ID: {id_from_link}")
             self.existing_users[user['displayName']] = id_from_link
 
         return self.existing_users
@@ -102,10 +102,10 @@ class Users:
         driver.get('https://view.online/c/demo-institution/demo-department/directory/users')
         john_doe_row = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
         # Optionally, print or interact with the row
-        print(john_doe_row.text)
+        #print(john_doe_row.text)
 
         id_from_link = re.search(r'/user/(\d+)', john_doe_row.text).group(1)
-        print(f"Extracted ID: {id_from_link}")
+        #print(f"Extracted ID: {id_from_link}")
 
         return id_from_link
 
@@ -117,7 +117,7 @@ class Users:
         driver = automation.get_driver()
         
         for user in self.get_users():
-            print(user['userid'])
+            #print(user['userid'])
             driver.get(url)
             time.sleep(1)
             
@@ -160,7 +160,8 @@ class Users:
             field = driver.find_element(By.ID, "oleg_userdirectorybundle_user_password_second")
             field.clear()
             field.send_keys(user['password'])
-            
+            field.send_keys(user['password'])
+
             #$client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val',[".$roleStr."])");
             automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "ID", "s2id_autogen4", user['rolesStr'])
             #automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "s2id_autogen4", None, "EmployeeDirectory Observer")
@@ -190,6 +191,7 @@ def main():
     #Create user
     users = Users(automation)
     users.create_user()
+    print("users done!")
 
     #Create Vacation Requests
     #vacreq = VacReq()

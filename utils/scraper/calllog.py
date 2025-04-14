@@ -105,11 +105,11 @@ class CallLog:
             time.sleep(3)
             # Switch to the alert and accept it
             alert = driver.switch_to.alert
-            print(f"Alert text: {alert.text}")  # Optional: Get the text of the alert
+            #print(f"Alert text: {alert.text}")  # Optional: Get the text of the alert
             alert.accept()  # Click "OK" to accept the confirmation box
 
         time.sleep(3)
-        print("Filling out new call log")
+        #print("Filling out new call log")
         # self.automation.select_option("s2id_oleg_calllogformbundle_messagetype_messageCategory",
         #                               "CSS_SELECTOR",
         #                               "#select2-drop .select2-search .select2-input",
@@ -125,7 +125,7 @@ class CallLog:
         time.sleep(1)
         select_element.click()
         time.sleep(3)
-        print("select_element class=", select_element.get_attribute("class"), " ID=", select_element.get_attribute("id"))
+        #print("select_element class=", select_element.get_attribute("class"), " ID=", select_element.get_attribute("id"))
 
         # select2_drop = driver.find_element(By.CLASS_NAME, "select2-drop-active")
         # print("select2_drop class=", select2_drop.get_attribute("class"), " ID=",
@@ -144,8 +144,7 @@ class CallLog:
         time.sleep(1)
         driver.execute_script("arguments[0].scrollIntoView(true);", li_element)
         time.sleep(1)
-        print("li_element class=", li_element.get_attribute("class"), " ID=",
-              li_element.get_attribute("id"))
+        #print("li_element class=", li_element.get_attribute("class"), " ID=",li_element.get_attribute("id"))
         li_element.click()
         time.sleep(3)
         ############ Select 'Service' ############
@@ -159,8 +158,7 @@ class CallLog:
         time.sleep(1)
         select_element.click()
         time.sleep(3)
-        print("select_element class=", select_element.get_attribute("class"), " ID=",
-              select_element.get_attribute("id"))
+        #print("select_element class=", select_element.get_attribute("class"), " ID=",select_element.get_attribute("id"))
 
         # select2_drop = driver.find_element(By.CLASS_NAME, "select2-drop-active")
         # print("select2_drop class=", select2_drop.get_attribute("class"), " ID=",
@@ -175,8 +173,8 @@ class CallLog:
         time.sleep(1)
         driver.execute_script("arguments[0].scrollIntoView(true);", li_element)
         time.sleep(1)
-        print("li_element class=", li_element.get_attribute("class"), " ID=",
-              li_element.get_attribute("id"))
+        #print("li_element class=", li_element.get_attribute("class"), " ID=",
+        #      li_element.get_attribute("id"))
         li_element.click()
         time.sleep(3)
         ############ Select 'Service' ############
@@ -194,7 +192,7 @@ class CallLog:
 
         #Finalize and Sign
         self.automation.click_button_by_id("signed-btn")
-        print("New call log submitted")
+        #print("New call log submitted")
 
         time.sleep(5)
 

@@ -107,7 +107,7 @@ class Trp:
 
         #user_id = self.users.get_existing_user('John Doe')
         user_id = self.existing_users[pi['displayName']]
-        print(f"pi User ID: {user_id}")
+        #print(f"pi User ID: {user_id}")
         time.sleep(1)
 
         # script = """
@@ -130,7 +130,7 @@ class Trp:
         # self.automation.click_button_by_id("user-add-btn-cancel")
 
         user_id = self.existing_users[billing_contact['displayName']]
-        print(f"billing_contact User ID: {user_id}")
+        #print(f"billing_contact User ID: {user_id}")
         time.sleep(1)
         # script = """
         #             $("#s2id_oleg_translationalresearchbundle_project_billingContact").select2('val','15');
@@ -279,19 +279,19 @@ class Trp:
 
         #submit form #oleg_translationalresearchbundle_request_saveAsComplete
         self.automation.click_button_by_id("oleg_translationalresearchbundle_request_saveAsComplete")
-        print("New work request submitted")
+        #print("New work request submitted")
 
         #get work request id
         time.sleep(3)
         #"https://view.online/c/demo-institution/demo-department/translational-research/work-request/show/20"
         current_url = driver.current_url
-        print(f"Current URL: {current_url}")
+        #print(f"Current URL: {current_url}")
         work_request_id = current_url.split('/')[-1] #Assume work request id is the last element
-        print(f"Extracted Work Request ID: {work_request_id}")
+        #print(f"Extracted Work Request ID: {work_request_id}")
         # driver.get('https://view.online/c/demo-institution/demo-department/translational-research/projects/')
         time.sleep(3)
         if work_request_id == None or work_request_id == '':
-            print("Warning: work_request_id is empty")
+            print("Warning: work_request_id is empty. Invoice will not be generated.")
             return None
 
         time.sleep(3)
@@ -310,7 +310,7 @@ class Trp:
 
         #click oleg_translationalresearchbundle_invoice_saveAndGeneratePdf
         self.automation.click_button_by_id("oleg_translationalresearchbundle_invoice_saveAndGeneratePdf")
-        print("New invoice submitted")
+        #print("New invoice submitted")
         time.sleep(3)
 
 ### End of class ###

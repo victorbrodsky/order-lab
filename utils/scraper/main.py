@@ -17,6 +17,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             users.create_user()
             time.sleep(3)
             demoIds['users'] = False
+            print("users done!")
         except Exception as e:
             print("users failed:", e)
             attempts['users'] += 1
@@ -28,6 +29,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             vacreq.create_vacreqs()
             time.sleep(3)
             demoIds['vacreq'] = False
+            print("vacreq done!")
         except Exception as e:
             print("vacreq failed:", e)
             attempts['vacreq'] += 1
@@ -38,6 +40,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             trp.create_projects()
             time.sleep(3)
             demoIds['trp'] = False
+            print("trp done!")
         except Exception as e:
             print("trp failed:", e)
             attempts['trp'] += 1
@@ -48,6 +51,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             callog.create_calllogs()
             time.sleep(3)
             demoIds['callog'] = False
+            print("callog done!")
         except Exception as e:
             print("callog failed:", e)
             attempts['callog'] += 1
@@ -59,6 +63,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             fellapp.create_fellapps()
             time.sleep(3)
             demoIds['fellapp'] = False
+            print("fellapp done!")
         except Exception as e:
             print("fellapp failed:", e)
             attempts['fellapp'] += 1
@@ -70,6 +75,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             resapp.create_resapps()
             time.sleep(3)
             demoIds['resapp'] = False
+            print("resapp done!")
         except Exception as e:
             print("resapp failed:", e)
             attempts['resapp'] += 1
@@ -108,6 +114,7 @@ def main():
     while any(demoIds.values()):
         demoIds = runDemos(automation, demoIds, attempts, max_attempts)
 
+    print("All demos done!")
     automation.quit_driver()
 
 

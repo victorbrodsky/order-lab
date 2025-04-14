@@ -62,9 +62,9 @@ class FellApp:
         try:
             target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
             if target_td:
-                print("<td> with text 'Clinical Informatics' already exists.")
+                #print("<td> with text 'Clinical Informatics' already exists.")
                 #print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
-                #pass
+                pass
             else:
                 #create
                 create_link = table.find_element(By.XPATH, './/a[text()="Create a new entry"]')
@@ -84,7 +84,7 @@ class FellApp:
                 self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
 
         except:
-            print("Unable to find or create")
+            print("fellapp configs: Unable to find or create")
 
         time.sleep(3)
 
@@ -102,7 +102,7 @@ class FellApp:
         try:
             # Try to find the element
             fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
-            print("Element found!")
+            #print("Element found!")
             # You can perform actions on the element here
             fellowship_type.click()
             time.sleep(3)
@@ -126,7 +126,7 @@ class FellApp:
             self.automation.click_button("btn-warning")
         except NoSuchElementException:
             # create new fellowship type "Clinical Informatics"
-            print("create new fellowship type Clinical Informatics")
+            #print("create new fellowship type Clinical Informatics")
             self.automation.click_button("btn-primary")
             time.sleep(3)
 
@@ -153,7 +153,7 @@ class FellApp:
         time.sleep(1)
 
         #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
-        print("create new fellowship application")
+        #print("create new fellowship application")
 
         applicant_data_element = driver.find_element(By.CSS_SELECTOR,
                                                      "h4.panel-title > a[href='#fellowshipApplicantData']")
@@ -188,7 +188,7 @@ class FellApp:
         #click submit btn-warning
         self.automation.click_button("btn-warning")
 
-        print("Finish new fellapp")
+        #print("Finish new fellapp")
         time.sleep(10)
 
 

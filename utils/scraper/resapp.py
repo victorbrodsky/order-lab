@@ -67,12 +67,12 @@ class ResApp:
         try:
             target_td = table.find_element(By.XPATH, './/td[text()="AP/CP"]')
             if target_td:
-                print("<td> with text 'AP/CP' already exists.")
+                #print("<td> with text 'AP/CP' already exists.")
                 #print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
-                #pass
+                pass
             else:
                 #create
-                print("Create a new entry AP/CP")
+                #print("Create a new entry AP/CP")
                 create_link = table.find_element(By.XPATH, './/a[text()="Create a new entry"]')
                 create_link.click()
                 time.sleep(3)
@@ -93,7 +93,7 @@ class ResApp:
 
                 self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
         except:
-            print("Unable to find or create")
+            print("resapp configs: Unable to find or create")
 
         time.sleep(3)
 
@@ -105,7 +105,7 @@ class ResApp:
         try:
             # Try to find the element
             residency_type = driver.find_element("xpath", "//h4/a[contains(text(), 'AP/CP')]")
-            print("Element found!")
+            #print("Element found!")
             # You can perform actions on the element here
             residency_type.click()
             time.sleep(3)
@@ -130,6 +130,7 @@ class ResApp:
         except NoSuchElementException:
             # create new fellowship type "AP/CP"
             print("residency track AP/CP does not exist")
+            pass
 
         time.sleep(3)
 
@@ -145,7 +146,7 @@ class ResApp:
         time.sleep(1)
 
         #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
-        print("create new residency application")
+        #print("create new residency application")
 
         applicant_data_element = driver.find_element(By.CSS_SELECTOR,
                                                      "h4.panel-title > a[href='#residencyApplicantData']")
@@ -262,7 +263,7 @@ class ResApp:
         #click submit btn-warning
         self.automation.click_button("btn-warning")
 
-        print("Finish new resapp")
+        #print("Finish new resapp")
         time.sleep(10)
 
 
