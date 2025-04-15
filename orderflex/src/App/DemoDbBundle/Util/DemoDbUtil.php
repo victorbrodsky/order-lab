@@ -112,6 +112,7 @@ class DemoDbUtil {
         $res = $res . "; " . $resPhp;
 
         $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
+        echo "drop command=[" . $drop . "]" . "<br>";
         $logger->notice("drop command=[" . $drop . "]");
         $resDrop = $userServiceUtil->runProcess($drop);
         echo "drop resDrop=" . $resDrop . "<br>";
