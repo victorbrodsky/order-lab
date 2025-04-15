@@ -185,6 +185,11 @@ class DemoDbUtil {
 
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
+
+        //1) Initialize DB with url
+        //http://$domainname/order/directory/admin/first-time-login-generation-init/
+        //https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
+
         $param = $userServiceUtil->getSingleSiteSettingParameter();
         $logger->notice("postRestoreDb: paramId=" . $param->getId());
 
