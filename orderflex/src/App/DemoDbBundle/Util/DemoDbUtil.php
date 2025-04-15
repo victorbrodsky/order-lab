@@ -113,7 +113,7 @@ class DemoDbUtil {
 
         $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
         $logger->notice("drop command=[" . $drop . "]");
-        $resDrop = $this->runProcess($drop);
+        $resDrop = $userServiceUtil->runProcess($drop);
         echo "drop resDrop=" . $resDrop . "<br>";
         $res = $res . "; " . $resDrop;
 
@@ -122,28 +122,28 @@ class DemoDbUtil {
         //3) create DB: php bin/console doctrine:database:create
         $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
         $logger->notice("create command=[".$create."]");
-        $resCreate = $this->runProcess($create);
+        $resCreate = $userServiceUtil->runProcess($create);
         echo "create resCreate=".$resCreate."<br>";
         $res = $res . "; " . $resCreate;
 
         //4) update DB: php bin/console doctrine:schema:update --complete --force
         $update = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:schema:update --complete --force';
         $logger->notice("update command=[".$update."]");
-        $resUpdate = $this->runProcess($update);
+        $resUpdate = $userServiceUtil->runProcess($update);
         echo "resUpdate=".$resUpdate."<br>";
         $res = $res . "; " . $resUpdate;
 
         //5 php bin/console doctrine:migration:sync-metadata-storage
         $syncStorageCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migration:sync-metadata-storage';
         $logger->notice("syncStorageCommand=[".$syncStorageCommand."]");
-        $resSyncStorageCommand = $this->runProcess($syncStorageCommand);
+        $resSyncStorageCommand = $userServiceUtil->runProcess($syncStorageCommand);
         echo "resSyncStorageCommand=".$resSyncStorageCommand."<br>";
         $res = $res . "; " . $resSyncStorageCommand;
 
         //6 php bin/console doctrine:migration:migrate
         $migrateCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migration:migrate';
         $logger->notice("migrateCommand=[".$migrateCommand."]");
-        $resMigrateCommand = $this->runProcess($syncStorageCommand);
+        $resMigrateCommand = $userServiceUtil->runProcess($syncStorageCommand);
         echo "resMigrateCommand=".$resMigrateCommand."<br>";
         $res = $res . "; " . $resMigrateCommand;
 
