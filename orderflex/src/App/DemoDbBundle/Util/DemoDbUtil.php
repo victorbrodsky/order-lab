@@ -87,10 +87,10 @@ class DemoDbUtil {
 
         if( !$backupPath ) {
             // /usr/local/bin/order-lab-thistenant/orderflex/var/backups/
-            $backupPath = $projectRoot."var/backups/";
+            $backupPath = $projectRoot."/var/backups/";
         }
         echo "backupPath=$backupPath <br>";
-        exit('111');
+        //exit('111 <br>');
 
         //1) backup DB (might not be need it)
         $resBackup = $userServiceUtil->dbManagePython($backupPath, 'backup');
