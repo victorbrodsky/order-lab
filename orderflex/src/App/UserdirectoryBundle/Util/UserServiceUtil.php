@@ -3327,6 +3327,7 @@ Pathology and Laboratory Medicine",
     //Used by DataBackupManagemenetController.php
     //create-backup: result file: 'backupdb-...'
     //dbManagePython is a wraper for a python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
+    //$networkDrivePath = my/path/
     public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
 
 //        if ( false == $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

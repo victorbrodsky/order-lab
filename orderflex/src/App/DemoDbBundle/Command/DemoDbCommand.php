@@ -66,7 +66,7 @@ class DemoDbCommand extends Command {
         }
 
         $demoDbUtil = $this->container->get('demodb_utility');
-        $resDemoDbStr = $demoDbUtil->processDemoDb();
+        $resDemoDbStr = $demoDbUtil->processDemoDb($backupPath);
         
 //        $client = $demoDbUtil->loginAction();
 //        $client->takeScreenshot('test_login.png');

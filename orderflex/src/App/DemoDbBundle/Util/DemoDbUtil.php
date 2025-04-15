@@ -47,7 +47,7 @@ class DemoDbUtil {
     }
 
 
-    public function processDemoDb( $backupPath ) {
+    public function processDemoDb( $backupPath=NULL ) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -81,6 +81,13 @@ class DemoDbUtil {
 
         $phpPath = $userServiceUtil->getPhpPath();
         $projectRoot = $this->container->get('kernel')->getProjectDir();
+
+        if( !$backupPath ) {
+            // /usr/local/bin/order-lab-thistenant/orderflex/var/backups/
+            $backupPath = $projectRoot."var/backups/";
+        }
+        echo "backupPath=$backupPath <br>";
+        exit('111');
 
         //1) backup DB (might not be need it)
         $resBackup = $userServiceUtil->dbManagePython($backupPath, 'backup');
