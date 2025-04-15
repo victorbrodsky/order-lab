@@ -95,11 +95,10 @@ class DemoDbUtil {
             // Handle the exception
             //echo "Error: " . $e->getMessage();
             //exit;
-            $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
-            echo "processDemoDb: drop command=[" . $drop . "]" . "<br>";
-            $logger->notice("drop command=[" . $drop . "]");
-            $resDrop = $userServiceUtil->runProcess($drop);
-            echo "processDemoDb: drop resDrop=" . $resDrop . "<br>";
+            $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
+            $logger->notice("create command=[".$create."]");
+            $resCreate = $userServiceUtil->runProcess($create);
+            echo "processDemoDb: create resCreate=".$resCreate."<br>";
         }
 
         $logger->notice("processDemoDb: start.");
