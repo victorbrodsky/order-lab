@@ -23,6 +23,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Panther\Client;
+use Symfony\Bundle\SecurityBundle\Security;
 
 
 //Called from controller DemoDataController (/demo-data-panther/) and DemoDbCommand
@@ -34,12 +35,14 @@ class DemoDbUtil {
 
     protected $em;
     protected $container;
+    protected $security;
     private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
     //private $baseUrl = 'http://127.0.0.1';
 
     public function __construct(
         EntityManagerInterface $em,
-        ContainerInterface $container
+        ContainerInterface $container,
+        Security $security=null
     )
     {
         $this->em = $em;
@@ -49,7 +52,7 @@ class DemoDbUtil {
 
     public function processDemoDb( $backupPath=NULL ) {
 
-        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->security->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
