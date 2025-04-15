@@ -86,6 +86,7 @@ class DemoDbUtil {
         $projectRoot = $this->container->get('kernel')->getProjectDir();
 
         try {
+            echo "try: getSiteSettingParameter" . "<br>";
             $environment = $userSecUtil->getSiteSettingParameter('environment');
             if( $environment == 'live' ) {
                 exit("Live server: Under construction!!!");
