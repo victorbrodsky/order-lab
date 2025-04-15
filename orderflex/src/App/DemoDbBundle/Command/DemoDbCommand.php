@@ -58,7 +58,18 @@ class DemoDbCommand extends Command {
         $resStr = "Demo DB started";
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        //$environment = $userSecUtil->getSiteSettingParameter('environment');
+        $environment = NULL;
+
+        try {
+            echo "try: getSiteSettingParameter" . "<br>";
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+        } catch (\Exception $e) {
+            // Handle the exception
+            echo "Error: " . $e->getMessage();
+            //exit;
+        }
+
         if( $environment == 'live' ) {
             $resStr = "Demo DB cannot be run in live environment";
             $output->writeln($resStr);
@@ -66,7 +77,7 @@ class DemoDbCommand extends Command {
         }
 
         $demoDbUtil = $this->container->get('demodb_utility');
-        $resDemoDbStr = $demoDbUtil->processDemoDb($backupPath);
+        $resDemoDbStr = $demoDbUtil->processDemoDb();
         
 //        $client = $demoDbUtil->loginAction();
 //        $client->takeScreenshot('test_login.png');
