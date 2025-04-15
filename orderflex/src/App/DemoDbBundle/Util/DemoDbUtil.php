@@ -71,19 +71,38 @@ class DemoDbUtil {
         //mailerDeliveryAddresses
         //instanceId
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == 'live' ) {
-            exit("Live server: Under construction!!!");
-        }
+        //check only if DB exists
 
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
-        $logger->notice("processDemoDb: start.");
-        $res = '';
+        $userSecUtil = $this->container->get('user_security_utility');
+
+//        $environment = $userSecUtil->getSiteSettingParameter('environment');
+//        if( $environment == 'live' ) {
+//            exit("Live server: Under construction!!!");
+//        }
 
         $phpPath = $userServiceUtil->getPhpPath();
         $projectRoot = $this->container->get('kernel')->getProjectDir();
+
+        try {
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            if( $environment == 'live' ) {
+                exit("Live server: Under construction!!!");
+            }
+        } catch (\Exception $e) {
+            // Handle the exception
+            //echo "Error: " . $e->getMessage();
+            //exit;
+            $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
+            echo "drop command=[" . $drop . "]" . "<br>";
+            $logger->notice("drop command=[" . $drop . "]");
+            $resDrop = $userServiceUtil->runProcess($drop);
+            echo "drop resDrop=" . $resDrop . "<br>";
+        }
+
+        $logger->notice("processDemoDb: start.");
+        $res = '';
 
         if( !$backupPath ) {
             // /usr/local/bin/order-lab-thistenant/orderflex/var/backups/
