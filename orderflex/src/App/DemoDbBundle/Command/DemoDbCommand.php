@@ -62,16 +62,16 @@ class DemoDbCommand extends Command {
         $environment = NULL;
 
         try {
-            echo "DemoDbCommand execute: try: getSiteSettingParameter" . "<br>";
+            echo "DemoDbCommand execute: try: getSiteSettingParameter" . "\n";
             $environment = $userSecUtil->getSiteSettingParameter('environment');
         } catch (\Exception $e) {
             // Handle the exception
-            echo "DemoDbCommand execute: Error: " . $e->getMessage();
+            echo "DemoDbCommand execute: Error: " . $e->getMessage() . "\n";
             //exit;
         }
 
         if( $environment == 'live' ) {
-            $resStr = "Demo DB cannot be run in live environment";
+            $resStr = "Demo DB cannot be run in live environment". "\n";
             $output->writeln($resStr);
             return Command::FAILURE;
         }
