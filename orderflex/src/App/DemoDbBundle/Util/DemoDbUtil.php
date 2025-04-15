@@ -52,9 +52,9 @@ class DemoDbUtil {
 
     public function processDemoDb( $backupPath=NULL ) {
 
-        if( false === $this->security->isGranted('ROLE_PLATFORM_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
+//        if( false === $this->security->isGranted('ROLE_PLATFORM_ADMIN') ) {
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
 
         //php bin/console doctrine:database:create
         //php bin/console doctrine:schema:update --complete --force
