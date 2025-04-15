@@ -139,12 +139,12 @@ class DemoDbUtil {
 
         //TODO: delete all Uploaded files
 
-        //3) create DB: php bin/console doctrine:database:create
-        $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
-        $logger->notice("create command=[".$create."]");
-        $resCreate = $userServiceUtil->runProcess($create);
-        echo "create resCreate=".$resCreate."<br>";
-        $res = $res . "; " . $resCreate;
+//        //3) create DB: php bin/console doctrine:database:create
+//        $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
+//        $logger->notice("create command=[".$create."]");
+//        $resCreate = $userServiceUtil->runProcess($create);
+//        echo "create resCreate=".$resCreate."<br>";
+//        $res = $res . "; " . $resCreate;
 
         //4) update DB: php bin/console doctrine:schema:update --complete --force
         $update = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:schema:update --complete --force';
