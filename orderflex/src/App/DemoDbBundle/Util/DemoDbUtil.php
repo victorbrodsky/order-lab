@@ -79,27 +79,27 @@ class DemoDbUtil {
 
 //        $environment = $userSecUtil->getSiteSettingParameter('environment');
 //        if( $environment == 'live' ) {
-//            exit("Live server: Under construction!!!");
+//            exit("Demo DB cannot be run in live environment");
 //        }
 
         $phpPath = $userServiceUtil->getPhpPath();
         $projectRoot = $this->container->get('kernel')->getProjectDir();
 
         try {
-            echo "try: getSiteSettingParameter" . "<br>";
+            echo "processDemoDb try: getSiteSettingParameter" . "<br>";
             $environment = $userSecUtil->getSiteSettingParameter('environment');
             if( $environment == 'live' ) {
-                exit("Live server: Under construction!!!");
+                exit("processDemoDb: Demo DB cannot be run in live environment");
             }
         } catch (\Exception $e) {
             // Handle the exception
             //echo "Error: " . $e->getMessage();
             //exit;
             $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
-            echo "drop command=[" . $drop . "]" . "<br>";
+            echo "processDemoDb: drop command=[" . $drop . "]" . "<br>";
             $logger->notice("drop command=[" . $drop . "]");
             $resDrop = $userServiceUtil->runProcess($drop);
-            echo "drop resDrop=" . $resDrop . "<br>";
+            echo "processDemoDb: drop resDrop=" . $resDrop . "<br>";
         }
 
         $logger->notice("processDemoDb: start.");
@@ -109,13 +109,13 @@ class DemoDbUtil {
             // /usr/local/bin/order-lab-thistenant/orderflex/var/backups/
             $backupPath = $projectRoot."/var/backups/";
         }
-        echo "backupPath=$backupPath <br>";
+        echo "processDemoDb: backupPath=$backupPath <br>";
 
         //check if $backupPath exists if not create
         if (!file_exists($backupPath)) {
             // Attempt to create the folder with appropriate permissions
             if (!mkdir($backupPath, 0755, true)) {
-                die("Failed to create directory: $backupPath");
+                die("processDemoDb: Failed to create directory: $backupPath");
             }
         }
 

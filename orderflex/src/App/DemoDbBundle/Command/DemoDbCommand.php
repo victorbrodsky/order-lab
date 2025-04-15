@@ -62,11 +62,11 @@ class DemoDbCommand extends Command {
         $environment = NULL;
 
         try {
-            echo "try: getSiteSettingParameter" . "<br>";
+            echo "DemoDbCommand execute: try: getSiteSettingParameter" . "<br>";
             $environment = $userSecUtil->getSiteSettingParameter('environment');
         } catch (\Exception $e) {
             // Handle the exception
-            echo "Error: " . $e->getMessage();
+            echo "DemoDbCommand execute: Error: " . $e->getMessage();
             //exit;
         }
 
