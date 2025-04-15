@@ -90,6 +90,15 @@ class DemoDbUtil {
             $backupPath = $projectRoot."/var/backups/";
         }
         echo "backupPath=$backupPath <br>";
+
+        //check if $backupPath exists if not create
+        if (!file_exists($backupPath)) {
+            // Attempt to create the folder with appropriate permissions
+            if (!mkdir($backupPath, 0755, true)) {
+                die("Failed to create directory: $backupPath");
+            }
+        }
+
         //exit('111 <br>');
 
         //1) backup DB (might not be need it)
