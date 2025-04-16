@@ -1,5 +1,6 @@
 import time
 from web_automation import WebAutomation
+from init import Init
 from users import Users
 from vacreq import VacReq
 from trp import Trp
@@ -13,14 +14,15 @@ def runDemos(automation, demoIds, attempts, max_attempts):
     # Sections
     if demoIds['init']:
         try:
-            #users = Users(automation)
-            #users.create_user()
-            #time.sleep(3)
+            init = Init(automation)
+            init.initialize()
+            init.run_site_settngs()
+            time.sleep(3)
             demoIds['init'] = False
-            print("users done!")
+            print("init done!")
         except Exception as e:
-            print("users failed:", e)
-            attempts['users'] += 1
+            print("init failed:", e)
+            attempts['init'] += 1
 
     if demoIds['users']:
         try:

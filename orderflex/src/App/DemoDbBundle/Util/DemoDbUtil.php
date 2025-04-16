@@ -168,8 +168,8 @@ class DemoDbUtil {
         $res = $res . "; " . $resMigrateCommand;
 
         //7 initiate DB
-        $resRestore = $this->postRestoreDb();
-        $res = $res . "; " . $resRestore;
+        //$resRestore = $this->postRestoreDb();
+        //$res = $res . "; " . $resRestore;
 
         return $res;
     }
