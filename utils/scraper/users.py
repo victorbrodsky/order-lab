@@ -182,21 +182,14 @@ def main():
     password_text = "1234567890_demo"
     
     automation = WebAutomation()
-    driver = automation.initialize_driver()
-    # You can now call methods like:
     automation.login_to_site(url, username_text, password_text)
-    # automation.select_option("element_id", "select_classname", "option_text")
-    # automation.click_button("button_class_name")    
     
     #Create user
     users = Users(automation)
     users.create_user()
     print("users done!")
 
-    #Create Vacation Requests
-    #vacreq = VacReq()
-    #vacreq.create_group()
-    #vacreq.create_vacreqs()
+    automation.quit_driver()
 
 
 # Execute the main function

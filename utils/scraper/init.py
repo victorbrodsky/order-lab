@@ -11,6 +11,9 @@ from web_automation import WebAutomation
 class Init:
     def __init__(self, automation):
         self.automation = automation
+        self.username = "administrator"
+        self.password_default = "1234567890"
+        self.password_new = "1234567890_demo"
 
     def initialize(self):
         driver = self.automation.get_driver()
@@ -21,39 +24,16 @@ class Init:
         time.sleep(3)
 
         #login using default username and password
-        #self.automation.click_button("btn-primary")
-        #time.sleep(3)
-        username_text = "administrator"
-        password_text = "1234567890"
-        self.automation.login_to_site(None, username_text, password_text)
+        self.automation.login_to_site(None, self.username, self.password_default)
         time.sleep(3)
 
         #check if logged in successesfull "display-username"
-
-        #locate the element by ID
-        # username_element = driver.find_element(By.ID, "display-username")
-        # print("Element with ID 'display-username' exists on the page.")
-        # if username_element:
-        #     print("Login page displayed, try to re-login. ")
-        #     username_text = "administrator"
-        #     password_text = "1234567890_demo"
-        #     self.automation.login_to_site(None, username_text, password_text)
-        #     time.sleep(3)
-        #     username_element = driver.find_element(By.ID, "display-username")
-        #     if username_element:
-        #         print("Element with ID 'display-username' still exist on the page.")
-        #         return
-        # else:
-        #     print("Not login page, continue")
-
         try:
             # Attempt to locate the element
             username_element = driver.find_element(By.ID, "display-username")
             if username_element:
                 print("Element display-username exists => Login page => Re-login.")
-                username_text = "administrator"
-                password_text = "1234567890_demo"
-                self.automation.login_to_site(None, username_text, password_text)
+                self.automation.login_to_site(None, self.username, self.password_new)
                 time.sleep(3)
                 try:
                     username_element = driver.find_element(By.ID, "display-username")
@@ -69,22 +49,19 @@ class Init:
         except NoSuchElementException:
             print("Element does not exist => Logged in => Continue initializing.")
 
-        #oleg_userdirectorybundle_initialconfigurationtype_environment
-        # self.automation.select_option("oleg_userdirectorybundle_initialconfigurationtype_environment", "CSS_SELECTOR",
-        #                               "#select2-drop .select2-input",
-        #                               "Pathology and Laboratory Medicine")
-
         #if page with init displayed
         print("Continue initializing.")
         time.sleep(3)
         try:
             select_element = driver.find_element(By.ID, "oleg_userdirectorybundle_initialconfigurationtype_environment")
             time.sleep(3)
-            self.run_initializing()
+            self.config_initializing()
         except NoSuchElementException:
             print("Initializing page is not showing. Continue with site settings.")
 
-    def run_initializing(self):
+        return True
+
+    def config_initializing(self):
         driver = self.automation.get_driver()
         select_element = driver.find_element(By.ID, "oleg_userdirectorybundle_initialconfigurationtype_environment")
         if select_element:
@@ -103,24 +80,24 @@ class Init:
             time.sleep(3)
 
             # oleg_userdirectorybundle_initialconfigurationtype_mailerUser
-            password_text = self.driver.find_element(By.ID,
+            password_text = driver.find_element(By.ID,
                                                      "oleg_userdirectorybundle_initialconfigurationtype_password_first")
             password_text.send_keys("1234567890_demo")
             time.sleep(3)
-            password_text = self.driver.find_element(By.ID,
+            password_text = driver.find_element(By.ID,
                                                      "oleg_userdirectorybundle_initialconfigurationtype_password_second")
             password_text.send_keys("1234567890_demo")
             time.sleep(3)
 
             siteEmail = 'oli2002@med.cornell.edu'
             # oleg_userdirectorybundle_initialconfigurationtype_siteEmail
-            password_text = self.driver.find_element(By.ID,
+            password_text = driver.find_element(By.ID,
                                                      "oleg_userdirectorybundle_initialconfigurationtype_siteEmail")
             password_text.send_keys(siteEmail)
             time.sleep(3)
 
             # oleg_userdirectorybundle_initialconfigurationtype_mailerDeliveryAddresses
-            password_text = self.driver.find_element(By.ID,
+            password_text = driver.find_element(By.ID,
                                                      "oleg_userdirectorybundle_initialconfigurationtype_mailerDeliveryAddresses")
             password_text.send_keys(siteEmail)
             time.sleep(3)
@@ -128,6 +105,12 @@ class Init:
             # click button by ID: oleg_userdirectorybundle_initialconfigurationtype_save
             self.automation.click_button_by_id("oleg_userdirectorybundle_initialconfigurationtype_save")
             time.sleep(3)
+
+            print("config_initializing complete")
+            return True
+        else:
+            print("config_initializing failed. It looks like this is not an initial config page")
+            return False
 
     def run_site_settngs(self):
         driver = self.automation.get_driver()
@@ -185,6 +168,9 @@ class Init:
         #time.sleep(10)
         self.populate_url(url)
 
+        print("All lists have been populated")
+        return True
+
     def populate_url(self, url):
         time.sleep(10)
         print("Populate url=",url)
@@ -202,6 +188,7 @@ class Init:
                 print(f"Attempt {attempt + 1} failed. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
 
+    #NOT USED
     def open_misc_panel(self):
         driver = self.automation.get_driver()
         #panel_toggle = driver.find_element(By.XPATH,
@@ -225,18 +212,13 @@ class Init:
 
 
 def main():
-    #url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
-    #username_text = "administrator"
-    #password_text = "1234567890_demo"
-
     automation = WebAutomation()
-    #driver = automation.initialize_driver()
-
     # Initialize using https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
     init = Init(automation)
     init.initialize()
     init.run_site_settngs()
     print("init done!")
+    automation.quit_driver()
 
 if __name__ == "__main__":
     main()

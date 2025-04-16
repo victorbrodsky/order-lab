@@ -167,12 +167,55 @@ class DemoDbUtil {
         echo "resMigrateCommand=".$resMigrateCommand."<br>";
         $res = $res . "; " . $resMigrateCommand;
 
-        //7 initiate DB
-        //$resRestore = $this->postRestoreDb();
-        //$res = $res . "; " . $resRestore;
+        ///////////// 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
+//        $initializePath = 'python' . ' ' . $projectRoot.'/bin/console cron:demo-db-reset';
+//        $logger->notice("initializePath=[".$initializePath."]");
+//        $resinitializeCommand = $userServiceUtil->runProcess($initializeCommand);
+//        echo "resinitializeCommand=".$resinitializeCommand."<br>";
+//        $res = $res . "; " . $resinitializeCommand;
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        //echo "projectRoot=".$projectRoot."<br>";
+        //For multitenancy is not 'order-lab' anymore, but 'order-lab-tenantapp1'
+        $parentRoot = str_replace('orderflex', '', $projectRoot);
+        $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
+        $managePackagePath = $parentRoot .
+            "utils" .
+            DIRECTORY_SEPARATOR . "scraper";
+        $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "create_demo_db.py";
+
+        if( $userServiceUtil->isWindows() ){
+            $pythonEnvPath = $managePackagePath .
+                DIRECTORY_SEPARATOR . "venv" .
+                DIRECTORY_SEPARATOR . "Scripts" . //Windows
+                DIRECTORY_SEPARATOR . "python";
+        } else {
+            $pythonEnvPath = $managePackagePath .
+                DIRECTORY_SEPARATOR . "venv" .
+                DIRECTORY_SEPARATOR . "bin" . //Linux
+                DIRECTORY_SEPARATOR . "python";
+        }
+
+        if( file_exists($pythonEnvPath) ) {
+            //echo "The file $filename exists";
+        } else {
+            $msg = "Error in processDemoDb: The file $pythonEnvPath does not exist.".
+                " Make sure pytnon's environment venv has been installed";
+            return $res . "; ". $msg;
+        }
+
+        $pythonInitCommand = "$pythonEnvPath $pythonScriptPath"
+            //.
+            //" --user $dbUsername".
+            //" --password $dbPassword"
+        ;
+        $logger->notice("processDemoDb: python command=[".$pythonInitCommand."]");
+        $res = $this->runProcess($pythonInitCommand);
+        ///////////// EOF 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 
         return $res;
     }
+
 
     public function postRestoreDb() {
         //Set new DB (use restoreDBWrapper)
