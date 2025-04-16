@@ -25,7 +25,10 @@ class WebAutomation:
 
     def login_to_site(self, url, username_text, password_text):
         """Logs in to the site."""
-        self.driver.get(url)
+        if url is not None:
+            print("use login url ",url)
+            self.driver.get(url)
+
         username = self.driver.find_element(By.ID, "display-username")
         password = self.driver.find_element(By.ID, "password")
         username.send_keys(username_text)

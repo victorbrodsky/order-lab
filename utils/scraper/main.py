@@ -11,6 +11,17 @@ from resapp import ResApp
 #if run successfully then set value flag to False so it does not run again second time
 def runDemos(automation, demoIds, attempts, max_attempts):
     # Sections
+    if demoIds['init']:
+        try:
+            #users = Users(automation)
+            #users.create_user()
+            #time.sleep(3)
+            demoIds['init'] = False
+            print("users done!")
+        except Exception as e:
+            print("users failed:", e)
+            attempts['users'] += 1
+
     if demoIds['users']:
         try:
             users = Users(automation)
@@ -98,6 +109,7 @@ def main():
 
     # Add demo IDs to retry in case of failure
     demoIds = {
+        'init': True,
         'users': True,
         'vacreq': True,
         'trp': True,
