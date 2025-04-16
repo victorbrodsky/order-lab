@@ -20,6 +20,7 @@ class WebAutomation:
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
         options.add_experimental_option("detach", True)
+        options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log")  # Replace this with a valid, unique path
         self.driver = webdriver.Chrome(options=options)
         return self.driver
 

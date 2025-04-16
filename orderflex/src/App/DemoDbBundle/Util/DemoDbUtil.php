@@ -211,6 +211,10 @@ class DemoDbUtil {
         ;
         $logger->notice("processDemoDb: python command=[".$pythonInitCommand."]");
         $res = $userServiceUtil->runProcess($pythonInitCommand);
+
+        //Error: selenium.common.exceptions.SessionNotCreatedException: Message: session not created: probably user data dir
+        //ectory is already in use, please specify a unique value for --user-data-dir argument,
+        // or don't use --user-data-dir
         ///////////// EOF 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 
         return $res;
