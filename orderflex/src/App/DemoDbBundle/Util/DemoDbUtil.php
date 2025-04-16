@@ -215,6 +215,8 @@ class DemoDbUtil {
         //Error: selenium.common.exceptions.SessionNotCreatedException: Message: session not created: probably user data dir
         //ectory is already in use, please specify a unique value for --user-data-dir argument,
         // or don't use --user-data-dir
+        //check chrome: ps aux | grep chrome
+        //kill -p PID
         ///////////// EOF 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 
         return $res;

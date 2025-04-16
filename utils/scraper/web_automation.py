@@ -19,9 +19,12 @@ class WebAutomation:
     def initialize_driver(self):
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
-        options.add_experimental_option("detach", True)
-        options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log")  # Replace this with a valid, unique path
+        #options.add_experimental_option("detach", True)
+        #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log")  # Replace this with a valid, unique path
+        #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
+        #options.add_argument("--disable-extensions")  # Disable browser extensions
         self.driver = webdriver.Chrome(options=options)
+        self.driver.set_page_load_timeout(120) # Increase timeout to handle delays
         return self.driver
 
     def login_to_site(self, url, username_text, password_text):
