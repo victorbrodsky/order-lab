@@ -210,7 +210,7 @@ class DemoDbUtil {
             //" --password $dbPassword"
         ;
         $logger->notice("processDemoDb: python command=[".$pythonInitCommand."]");
-        $res = $this->runProcess($pythonInitCommand);
+        $res = $userServiceUtil->runProcess($pythonInitCommand);
         ///////////// EOF 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 
         return $res;
