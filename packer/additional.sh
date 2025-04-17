@@ -9,7 +9,8 @@ if [ -z "$bashpath" ]
 fi
 
 if [ -z "$bashpath" ]; then
-    bashpath="/usr/local/bin"
+    #bashpath="/usr/local/bin"
+    bashpath="/srv"
 fi
 
 #bashpath="/usr/local/bin"
