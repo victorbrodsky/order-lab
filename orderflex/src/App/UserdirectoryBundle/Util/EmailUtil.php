@@ -195,10 +195,10 @@ class EmailUtil {
         //send copy email to siteEmail via bcc
         $bcc = NULL;
         //Don't send email to siteEmail for translationalresearch, because too many of them.
-        if( $sitenameAbbreviation != 'translationalresearch' ) {
+        //if( $sitenameAbbreviation != 'translationalresearch' ) {
             $bcc = $userSecUtil->getSiteSettingParameter('siteEmail');
             $bcc = $this->checkEmails($bcc); //,'bcc',$allEmails);
-        }
+        //}
 
         $resCc = array();
         $resBcc = array();
