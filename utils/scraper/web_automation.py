@@ -16,14 +16,19 @@ class WebAutomation:
     def get_driver(self):
         return self.driver
 
+    #Error: selenium.common.exceptions.SessionNotCreatedException:
+    # Message: session not created: probably user data directory is already in use, please specify a unique value for
+    # --user-data-dir argument, or don't use --user-data-dir
+    #Stops all running Chrome processes on Linux: pkill -f chrome
     def initialize_driver(self):
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
         #options.add_experimental_option("detach", True)
-        #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log")  # Replace this with a valid, unique path
+        options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log")  # Replace this with a valid, unique path
         #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
-        #options.add_argument("--disable-extensions")  # Disable browser extensions
+        options.add_argument("--disable-extensions")  # Disable browser extensions
         self.driver = webdriver.Chrome(options=options)
+        #self.driver = webdriver.Chrome()
         self.driver.set_page_load_timeout(120) # Increase timeout to handle delays
         return self.driver
 
