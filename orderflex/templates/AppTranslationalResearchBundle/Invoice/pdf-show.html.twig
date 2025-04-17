@@ -41,17 +41,17 @@
             <p><h2><b>Invoice</b></h2></p>
             {#<br>#}
             {#<br>#}
-            <p>
-                {% if invoice.oid == "MISI3829-REQ28242-V1" %}
+            {#<p>#}
+                {#{% if invoice.oid == "MISI3829-REQ28242-V1" %}#}
                     {#temporary exception#}
                     {#Date: {{ "now"|date("m/d/Y") }}#}
                     {#Date: {{ "now"|date_modify("-2 days")|date("m/d/Y") }}#}
-                    Date: 02/17/2025
-                {% else %}
-                    Date: {{ "now"|date("m/d/Y") }}
-                {% endif %}
+                    {#Date: 02/17/2025#}
+                {#{% else %}#}
+                    {#Date: {{ "now"|date("m/d/Y") }}#}
+                {#{% endif %}#}
                 {#Date: {{ "now"|date("m/d/Y") }}#}
-            </p>
+            {#</p>#}
             <p>
                 <b>Invoice No.: {{ invoice.oid }}</b>
             </p>
