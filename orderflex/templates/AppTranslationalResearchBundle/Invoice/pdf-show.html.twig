@@ -45,7 +45,8 @@
                 {% if invoice.oid == "MISI3829-REQ28242-V1" %}
                     {#temporary exception#}
                     {#Date: {{ "now"|date("m/d/Y") }}#}
-                    Date: {{ "now"|date_modify("-2 days")|date("m/d/Y") }}
+                    {#Date: {{ "now"|date_modify("-2 days")|date("m/d/Y") }}#}
+                    Date: 02/17/2025
                 {% else %}
                     Date: {{ "now"|date("m/d/Y") }}
                 {% endif %}
