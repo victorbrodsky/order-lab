@@ -213,12 +213,12 @@ f_test () {
 
 #1) Install HAProxy
 f_install_haproxy () {
-	echo -e ${COLOR} Install haproxy ${NC}
+	echo -e ${COLOR} Install haproxy using $1 ${NC}
 	sudo yum install -y haproxy
 	
 	echo -e ${COLOR} Copy haproxy from packer ${NC}
 	sudo mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg_orig
-	sudo cp "$bashpath"/order-lab/packer/haproxy.cfg /etc/haproxy/
+	sudo cp "$bashpath"/order-lab-$1/packer/haproxy.cfg /etc/haproxy/
 
 	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 		then 
@@ -287,11 +287,11 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} sudo chown -R apache:apache "$bashpath"/order-lab-"$1" ${NC}
 	sudo chown -R apache:apache "$bashpath"/order-lab-"$1"
 	
-	echo -e ${COLOR} Copy env from ["$bashpath"/order-lab/packer/.env] to ["$bashpath"/order-lab-"$1"/orderflex/] ${NC}
-	cp "$bashpath"/order-lab/packer/.env "$bashpath"/order-lab-"$1"/orderflex/
+	echo -e ${COLOR} Copy env from ["$bashpath"/order-lab-"$1"/packer/.env] to ["$bashpath"/order-lab-"$1"/orderflex/] ${NC}
+	cp "$bashpath"/order-lab-"$1"/packer/.env "$bashpath"/order-lab-"$1"/orderflex/
 	
 	echo -e ${COLOR} Copy env.test ${NC}
-	cp "$bashpath"/order-lab/packer/.env.test "$bashpath"/order-lab-"$1"/orderflex/
+	cp "$bashpath"/order-lab-"$1"/packer/.env.test "$bashpath"/order-lab-"$1"/orderflex/
 	
 	##3 NOT USED) For each order instances set APP_SUBDIR
 	#echo -e ${COLOR} Set environment APP_SUBDIR: replace "APP_SUBDIR=" to "APP_SUBDIR=$3" ${NC}
@@ -305,7 +305,7 @@ f_create_single_order_instance () {
 	#copy parameters.yml
 	echo -e ${COLOR} Copy parameters.yml for order-lab-"$1" ${NC}
 	#sudo cp "$bashpath"/order-lab/orderflex/config/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
-	sudo cp "$bashpath"/order-lab/packer/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
+	sudo cp "$bashpath"/order-lab-"$1"/packer/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 
 	echo -e ${COLOR} Set DB name for order-lab-"$1" ${NC}
 	sed -i -e "s/database_name: scanorder/database_name: $1/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
@@ -313,8 +313,8 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Set tenant_role as "$1" for order-lab-"$1" ${NC}
 	sed -i -e "s/tenant_role: null/tenant_role: $1/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 
-	echo -e ${COLOR} Copy .env for order-lab-"$1" ${NC}
-    sudo cp "$bashpath"/order-lab/packer/.env "$bashpath"/order-lab-"$1"/orderflex/.env
+	#echo -e ${COLOR} Copy .env for order-lab-"$1" ${NC}
+    #sudo cp "$bashpath"/order-lab-"$1"/packer/.env "$bashpath"/order-lab-"$1"/orderflex/.env
 
 	#run composer
 	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
@@ -349,10 +349,10 @@ f_create_single_order_instance () {
 	bash "$bashpath"/order-lab-"$1"/packer/additional.sh "$bashpath"/order-lab-"$1"
 
 	echo -e ${COLOR} Install db.config for python postgres-manage-python for order-lab-"$1" ${NC}
-    cp "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
-    sed -i -e "s/dbname/$1/g" "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
-    sed -i -e "s/dbusername/symfony/g" "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
-    sed -i -e "s/dbuserpassword/symfony/g" "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
+    cp "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbname/$1/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbusername/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbuserpassword/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
 
 	changedir "$bashpath"/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Current folder before deploy tenant for order-lab-"$1": ${NC}
@@ -431,7 +431,7 @@ f_create_single_tenant_htppd() {
 	echo "PidFile /var/run/httpd$2.pid" >> /etc/httpd/conf/"$1"-httpd.conf 
 	
 	echo -e ${COLOR} Append VirtualHost config ${NC}
-	cat "$bashpath"/order-lab/packer/000-default.conf >> /etc/httpd/conf/"$1"-httpd.conf
+	cat "$bashpath"/order-lab-"$1"/packer/000-default.conf >> /etc/httpd/conf/"$1"-httpd.conf
 	
 	echo -e ${COLOR} Replace port '80' by "$2" ${NC}
 	sed -i -e "s/:80/:$2/g" /etc/httpd/conf/"$1"-httpd.conf
@@ -453,7 +453,7 @@ f_create_single_tenant_htppd() {
 	#Since you're running multiple instances manually, you'll need to create custom systemd service files to manage them.
 	#Create httpd service
 	echo -e ${COLOR} Create httpd"$1".service for port "$2", url "$3" ${NC}
-	cp "$bashpath"/order-lab/packer/custom_httpd.service /etc/systemd/system/httpd"$1".service
+	cp "$bashpath"/order-lab-"$1"/packer/custom_httpd.service /etc/systemd/system/httpd"$1".service
 	sed -i -e "s/httpd_custom.conf/$1-httpd.conf/g" /etc/systemd/system/httpd"$1".service
 	echo -e ${COLOR} Enable httpd"$1".service for port "$2", url "$3" ${NC}
 	sudo systemctl enable httpd"$1"
@@ -462,8 +462,8 @@ f_create_single_tenant_htppd() {
 
 #5) Create combined certificate and key order-ssl.com.pem
 f_create_combined_certificate() {
-	echo -e ${COLOR} Create combined certificate and key order-ssl.com.pem ${NC}
-	cat "$bashpath"/order-lab/ssl/apache2.crt "$bashpath"/order-lab/ssl/apache2.key > /etc/haproxy/certs/order.com.pem
+	echo -e ${COLOR} Create combined certificate and key order-ssl.com.pem using $1 ${NC}
+	cat "$bashpath"/order-lab-$1/ssl/apache2.crt "$bashpath"/order-lab-$1/ssl/apache2.key > /etc/haproxy/certs/order.com.pem
 }
 
 f_stop_httpd() {
@@ -597,10 +597,10 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 		#f_test
 		if true; then
 			echo -e ${COLOR} multitenancy True ${NC}
-			f_install_haproxy
+			f_install_haproxy homepagemanager 8081
 			f_create_order_instances
 			f_create_tenant_htppd
-			f_create_combined_certificate
+			f_create_combined_certificate homepagemanager 8081
 			f_start_haproxy
 			f_stop_httpd
 			f_start_all_httpd
