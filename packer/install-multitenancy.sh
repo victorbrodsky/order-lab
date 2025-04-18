@@ -253,7 +253,7 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Check if instance exists: "$1" port "$2" url "$3" ${NC}
 	if [ -d "$bashpath/order-lab-$1" ]; then
         echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] already exist ${NC}
-        #return 0
+        return 0
     else
         echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] does not exist ${NC}
     fi
@@ -287,7 +287,7 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} sudo chown -R apache:apache "$bashpath"/order-lab-"$1" ${NC}
 	sudo chown -R apache:apache "$bashpath"/order-lab-"$1"
 	
-	echo -e ${COLOR} Copy env ${NC}
+	echo -e ${COLOR} Copy env from ["$bashpath"/order-lab/packer/.env] to ["$bashpath"/order-lab-"$1"/orderflex/] ${NC}
 	cp "$bashpath"/order-lab/packer/.env "$bashpath"/order-lab-"$1"/orderflex/
 	
 	echo -e ${COLOR} Copy env.test ${NC}
@@ -312,7 +312,10 @@ f_create_single_order_instance () {
 	
 	echo -e ${COLOR} Set tenant_role as "$1" for order-lab-"$1" ${NC}
 	sed -i -e "s/tenant_role: null/tenant_role: $1/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
-	
+
+	echo -e ${COLOR} Copy .env for order-lab-"$1" ${NC}
+    sudo cp "$bashpath"/order-lab/packer/.env "$bashpath"/order-lab-"$1"/orderflex/.env
+
 	#run composer
 	echo -e ${COLOR} Run composer for order-lab-"$1" ${NC}
 	#sudo cd "$bashpath"/order-lab-"$1"/orderflex
