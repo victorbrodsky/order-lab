@@ -10,7 +10,7 @@ fi
 
 if [ -z "$bashpath" ]; then
     #bashpath="/usr/local/bin"
-    bashpath="/srv"
+    bashpath="/srv/order-lab"
 fi
 
 #bashpath="/usr/local/bin"
@@ -19,12 +19,13 @@ fi
 echo bashpath=$bashpath
 
 #cd /srv/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/
+#folder: /srv/order-lab/packer/
 echo -e ${COLOR} Installing env python to "$bashpath" ${NC}
 cd "$bashpath"/utils/db-manage/postgres-manage-python/
 python3 -m venv venv
 source venv/bin/activate
 #sudo pip3 install -r requirements.txt
 pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install -r "$bashpath"/utils/db-manage/postgres-manage-python/requirements.txt
 cd "$bashpath"/orderflex/
 
