@@ -16,7 +16,7 @@ fi
 #bashpath="/usr/local/bin"
 #bashpath="/srv"
 
-echo bashpath=$bashpath
+echo additional.sh: bashpath=$bashpath
 
 #cd /srv/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/
 #folder: /srv/order-lab/packer/

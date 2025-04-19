@@ -47,7 +47,7 @@ Check folder size: du -sh Uploaded
 sudo service php-fpm restart
 
 HaProxy:
-bash install-multitenancy.sh -u symphony -t symphony -m haproxy -p /srv -s none -d none -e none -l none | tee multitenancy_log.log
+bash install-multitenancy.sh -u symfony -t symfony -m haproxy -p /srv -s none -d none -e none -l none | tee multitenancy_log.log
 
 Might need:
 restore using data only => valid schema
