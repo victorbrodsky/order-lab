@@ -620,7 +620,7 @@ f_install_util
 f_install_python3
 f_install_order
 f_install_prepare
-##f_install_post
+f_install_post
 fi
 
 if false; then
