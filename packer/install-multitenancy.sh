@@ -132,6 +132,10 @@ if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "none" ]
     bashprotocol=""
 fi
 
+COLOR='\033[1;36m'
+NC='\033[0m' # No Color
+
+echo -e ${COLOR} Start install-multitenancy.sh  ${NC}
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 echo bashprotocol=$bashprotocol
@@ -143,9 +147,6 @@ echo bashpath=$bashpath
 
 #Testing: Exit the script with a success status (0)
 #exit 0
-
-COLOR='\033[1;36m'
-NC='\033[0m' # No Color
 
 #TODO: convert ../../ to a string without '/' in httpd config file name 
 #TODO: test if parameters can be provided to the functions as $1 $2 $3
@@ -309,7 +310,13 @@ f_create_single_order_instance () {
 
 	echo -e ${COLOR} Set DB name for order-lab-"$1" ${NC}
 	sed -i -e "s/database_name: scanorder/database_name: $1/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
-	
+
+	echo -e ${COLOR} Set DB username for order-lab-"$1" ${NC}
+	sed -i -e "s/database_user: bash_dbuser/database_user: symfony/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
+
+  echo -e ${COLOR} Set DB database_password for order-lab-"$1" ${NC}
+	sed -i -e "s/database_password: bash_dbpass/database_password: symfony/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
+
 	echo -e ${COLOR} Set tenant_role as "$1" for order-lab-"$1" ${NC}
 	sed -i -e "s/tenant_role: null/tenant_role: $1/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 
@@ -349,10 +356,10 @@ f_create_single_order_instance () {
 	bash "$bashpath"/order-lab-"$1"/packer/additional.sh "$bashpath"/order-lab-"$1"
 
 	echo -e ${COLOR} Install db.config for python postgres-manage-python for order-lab-"$1" ${NC}
-    cp "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-    sed -i -e "s/dbname/$1/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-    sed -i -e "s/dbusername/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-    sed -i -e "s/dbuserpassword/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+  cp "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+  sed -i -e "s/dbname/$1/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+  sed -i -e "s/dbusername/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+  sed -i -e "s/dbuserpassword/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
 
 	changedir "$bashpath"/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Current folder before deploy tenant for order-lab-"$1": ${NC}
@@ -593,7 +600,7 @@ function changedir() {
 
 if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
-		echo -e ${COLOR} Use multitenancy multitenant="$multitenant" ${NC}
+		echo -e ${COLOR} Use multitenancy multitenant="$multitenant", bashdbuser="$bashdbuser", bashdbpass="$bashdbpass" ${NC}
 		#f_test
 		if true; then
 			echo -e ${COLOR} multitenancy True ${NC}

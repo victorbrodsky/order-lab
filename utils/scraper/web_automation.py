@@ -24,7 +24,7 @@ class WebAutomation:
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
         #options.add_experimental_option("detach", True)
-        #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log")  # Replace this with a valid, unique path
+        #                                   options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log")  # Replace this with a valid, unique path
         #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
         options.add_argument("--disable-extensions")  # Disable browser extensions
         self.driver = webdriver.Chrome(options=options)
