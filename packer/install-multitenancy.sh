@@ -108,11 +108,13 @@ esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters
 
+echo input bashpath=["$bashpath"] /srv.
 #bashpath="/usr/local/bin"
 #bashpath="/srv"
 if [ -z "$bashpath" ]; then
-    bashpath="/usr/local/bin"
-    #bashpath="/srv"
+    echo bashpath is not provided. Use default /srv.
+    #bashpath="/usr/local/bin"
+    bashpath="/srv"
 fi
 
 if [ ! -z "$bashemail" ] && [ "$bashemail" = "none" ]
