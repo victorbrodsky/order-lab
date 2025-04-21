@@ -68,7 +68,7 @@ f_update_os () {
 	sudo dnf update -y
 
 	echo -e ${COLOR} sudo dnf update -y ${NC}
-    sudo dnf update -y
+  sudo dnf update -y
 	
 	#echo -e ${COLOR} Once the system is updated, reboot the system ${NC}
     #sudo reboot
@@ -83,6 +83,8 @@ f_update_os () {
 
     echo ""
     sleep 1
+
+    echo -e ${COLOR} EOF f_update_os ${NC}
 }
 
 # Function install LAMP stack
@@ -109,6 +111,8 @@ f_install_apache () {
 	
 	echo ""
     sleep 1
+
+    echo -e ${COLOR} EOF f_install_apache ${NC}
 }
 
 f_install_postgresql15 () {
@@ -290,6 +294,8 @@ f_install_postgresql17 () {
 	
 	echo ""
     sleep 1
+
+    echo -e ${COLOR} EOF f_install_postgresql17 ${NC}
 }
 
 f_install_php82 () {
@@ -390,6 +396,8 @@ f_install_php83 () {
 	
 	echo ""
     sleep 1
+
+    echo -e ${COLOR} EOF f_install_php83 ${NC}
 }
 
 f_install_util () {
@@ -488,6 +496,8 @@ f_install_util () {
 	
 	echo ""
     sleep 1
+
+    echo -e ${COLOR} EOF f_install_util ${NC}
 }
 
 f_install_python3 () {
@@ -497,6 +507,8 @@ f_install_python3 () {
 	sudo yum install -y python3-pip
 	sudo pip3 install requests
 	python3 -V
+
+	echo -e ${COLOR} EOF f_install_python3 ${NC}
 }
 
 #Should not be used for a classical installation (single tenant)
