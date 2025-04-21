@@ -236,6 +236,7 @@ f_install_global () {
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
 	fi
 
+  #Moved from order-packer-alma9.json
 	#"echo @### Run script to install sshkey ###",
 	#"bash /srv/order-lab-$1/packer/install_ssh.sh $bashsshfingerprint"
 	echo -e ${COLOR} Run script to install sshkey using tenant:$1 ${NC}

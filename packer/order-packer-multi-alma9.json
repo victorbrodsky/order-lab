@@ -60,14 +60,6 @@
 		"destination": "/root/.ssh/sshkey.pub"
 	   },
 
-	  {
-		"type": "shell",
-		"inline": [
-			"echo @### Run script to install sshkey ###",
-			"bash /srv/order-lab/packer/install_ssh.sh $bashsshfingerprint"
-		 ]
-	   },
-
 	   {
 		 "type": "shell",
 	     "expect_disconnect": "true",
