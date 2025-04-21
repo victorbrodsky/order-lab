@@ -17,6 +17,7 @@
   
 	{
         "type": "shell",
+		"expect_disconnect": "true",
 		"environment_vars": [
 			"bashdbuser=bash_dbuser",
 			"bashdbpass=bash_dbpass",
@@ -69,6 +70,7 @@
 
 	   {
 		 "type": "shell",
+	     "expect_disconnect": "true",
 		 "max_retries": 1,
 		 "environment_vars": [
 			"bashdbuser=bash_dbuser",
