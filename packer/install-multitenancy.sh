@@ -218,7 +218,7 @@ f_test () {
 f_install_global () {
   echo -e ${COLOR} PHP 8.2 Copy php.ini to /etc/ using tenant:$1 ${NC}
 	cp /etc/php.ini /etc/php_ORIG.ini
-	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
+	#yes | cp /usr/local/bin/order-lab-$1/packer/php.ini /etc/opt/remi/php82/
 	yes | cp "$bashpath"/order-lab-$1/packer/php.ini /etc/
 
 	if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
@@ -235,6 +235,11 @@ f_install_global () {
 		else
 			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
 	fi
+
+	#"echo @### Run script to install sshkey ###",
+	#"bash /srv/order-lab-$1/packer/install_ssh.sh $bashsshfingerprint"
+	echo -e ${COLOR} Run script to install sshkey using tenant:$1 ${NC}
+	bash /srv/order-lab-$1/packer/install_ssh.sh $bashsshfingerprint
 
 	echo ""
 	sleep 1
@@ -333,7 +338,7 @@ f_create_single_order_instance () {
 	
 	#copy parameters.yml
 	echo -e ${COLOR} Copy parameters.yml for order-lab-"$1" ${NC}
-	#sudo cp "$bashpath"/order-lab/orderflex/config/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
+	#sudo cp "$bashpath"/order-lab-$1/orderflex/config/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 	sudo cp "$bashpath"/order-lab-"$1"/packer/parameters.yml "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 
 	echo -e ${COLOR} Set DB name for order-lab-"$1" ${NC}
