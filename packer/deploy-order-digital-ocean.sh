@@ -462,8 +462,14 @@ sleep 180
 #--ssh-key-path 	Path to SSH private key
 if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$email" ]
   then
-    echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
-    echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email'
+    if [ "$multitenant" = "haproxy" ]
+      then
+        echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
+        echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh $domainname $sslcertificate $email'
+    else
+      echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
+      echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email'
+    fi
   else
     echo -e ${COLOR} Skip certbot installation ${NC}
 fi
