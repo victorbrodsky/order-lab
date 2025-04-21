@@ -212,6 +212,7 @@ if [ "$os" = "alma9" ] || [ "$os" = "alma" ]
     if [ "$multitenant" = "haproxy" ]
       then
         ORDERPACKERJSON="order-packer-multi-alma9.json"
+    fi
 fi
 if [ "$os" = "centos7" ] || [ "$os" = "centos" ]
   then 	
