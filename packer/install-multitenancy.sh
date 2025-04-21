@@ -50,9 +50,13 @@ if [ -z "$bashemail" ]
   then
     bashemail=$6
 fi
+if [ -z "$bashsshfingerprint" ]
+  then
+    bashsshfingerprint=$7
+fi
 if [ -z "$multitenant" ]
   then
-    multitenant=$7
+    multitenant=$8
 fi
 
 POSITIONAL=()
@@ -210,9 +214,31 @@ f_test () {
 	f_replace tenantapp1 8085 c/wcm/pathology
 }
 
+#1) Install globals (php.ini)
+f_install_global () {
+  echo -e ${COLOR} PHP 8.2 Copy php.ini to /etc/ using tenant:$1 ${NC}
+	cp /etc/php.ini /etc/php_ORIG.ini
+	#yes | cp /usr/local/bin/order-lab/packer/php.ini /etc/opt/remi/php82/
+	yes | cp "$bashpath"/order-lab-$1/packer/php.ini /etc/
 
+	if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
+      then
+        #email='myemail@myemail.com'
+        echo "Error: email is not provided for installcertbot option"
+        echo "To enable CertBot installation for SSL/https functionality, please include your email address via --email email@example.com"
+        exit 0
+  fi
+	if [ ! -z "$bashdomainname" ] && [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
+		then
+			echo -e ${COLOR} Install certbot on all OS ${NC}
+			bash "$bashpath"/order-lab-$1/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$bashemail"
+		else
+			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
+	fi
 
-
+	echo ""
+	sleep 1
+}
 
 #1) Install HAProxy
 f_install_haproxy () {
@@ -608,6 +634,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			echo -e ${COLOR} multitenancy True ${NC}
 			f_install_haproxy homepagemanager 8081
 			f_create_order_instances
+			f_install_global homepagemanager 8081
 			f_create_tenant_htppd
 			f_create_combined_certificate homepagemanager 8081
 			f_start_haproxy

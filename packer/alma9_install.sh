@@ -27,17 +27,27 @@ if [ -z "$bashemail" ]
   then
     bashemail=$6
 fi
+if [ -z "$bashsshfingerprint" ]
+  then
+    bashsshfingerprint=$7
+fi
+if [ -z "$multitenant" ]
+  then
+    multitenant=$8
+fi
 
 #bashpath="/usr/local/bin"
 bashpath="/srv"
 
+echo bashpath=$bashpath
 echo bashdbuser=$bashdbuser
 echo bashdbpass=$bashdbpass
 echo bashprotocol=$bashprotocol
 echo bashdomainname=$bashdomainname
 echo bashsslcertificate=$bashsslcertificate
 echo bashemail=$bashemail
-echo bashpath=$bashpath
+echo bashsshfingerprint=$bashsshfingerprint
+echo multitenant=$multitenant
 
 #WHITE='\033[1;37m'
 COLOR='\033[1;36m'
@@ -391,7 +401,17 @@ f_install_util () {
 	sudo yum install -y vim	
 
 	echo -e ${COLOR} Install Git ${NC}		
-	sudo yum install -y git	
+	sudo yum install -y git
+
+	echo -e ${COLOR} Install composer ${NC}
+	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
+	HASH="$(wget -q -O - https://composer.github.io/installer.sig)"
+	#Output should be "Installer verified"
+	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+	#install Composer in the /usr/local/bin directory
+	#sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+	php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 	
 	echo -e ${COLOR} Install libreoffice, ghostscript, pdftk ${NC}
 	#sudo yum update
@@ -479,6 +499,7 @@ f_install_python3 () {
 	python3 -V
 }
 
+#Should not be used for a classical installation (single tenant)
 f_install_order () {
     ########## Clone ORDER ##########
     echo -e "${COLOR} Installing order ..."
@@ -517,7 +538,8 @@ f_install_order () {
 	echo ""
     sleep 1
 }
-     	
+
+#Should not be used for a classical installation (single tenant)
 f_install_prepare () {
     ########## Clone ORDER ##########
     echo -e "${COLOR} Prepare ... ${NC}"
@@ -564,16 +586,16 @@ f_install_prepare () {
 	#sudo service apache2 restart
 	sudo systemctl restart httpd.service
 	
-	echo -e ${COLOR} Install composer ${NC}
-	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" 
-	
-	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
-	HASH="$(wget -q -O - https://composer.github.io/installer.sig)"	
-	#Output should be "Installer verified"
-	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"	   
-	#install Composer in the /usr/local/bin directory
-	#sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
-	php composer-setup.php --install-dir=/usr/local/bin --filename=composer	
+#	echo -e ${COLOR} Install composer ${NC}
+#	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+#
+#	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
+#	HASH="$(wget -q -O - https://composer.github.io/installer.sig)"
+#	#Output should be "Installer verified"
+#	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+#	#install Composer in the /usr/local/bin directory
+#	#sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+#	php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 	
 	echo -e ${COLOR} OS Info ${NC}
 	sudo hostnamectl
@@ -591,6 +613,7 @@ f_install_prepare () {
     sleep 1
 }	
 
+#Should not be used for a classical installation (single tenant)
 f_install_post() {
   if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
       then
@@ -612,22 +635,28 @@ f_install_post() {
 }
 
 if true; then
-f_update_os
-f_install_apache
-f_install_postgresql17
-f_install_php83
-f_install_util
-f_install_python3
-f_install_order
-f_install_prepare
-f_install_post
+  f_update_os
+  f_install_apache
+  f_install_postgresql17
+  f_install_php83
+  f_install_util
+  f_install_python3
+  if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+    echo "multitenant is haproxy"
+  else
+    echo "multitenant is not haproxy => use classical, single tenant installation"
+    f_install_order #only for classical installation
+    f_install_prepare #only for classical installation
+    f_install_post #only for classical installation
+  fi
+  echo "Finished alma9_install.sh"
 fi
 
 if false; then
-#to install order only:
-f_install_util
-f_install_order
-f_install_prepare
+  #to install order only:
+  f_install_util
+  f_install_order
+  f_install_prepare
 fi
 	
 #Standalone:

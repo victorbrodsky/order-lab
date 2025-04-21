@@ -1,0 +1,87 @@
+{
+
+  "variables": {
+        "ssh_name": "root"
+  },
+
+  "builders": [{
+	"type": "digitalocean",
+    "api_token": "api_token_bash_value",
+    "region": "nyc3",
+    "size": "2gb",
+    "image": "almalinux-9-x64",
+    "ssh_username": "{{user `ssh_name`}}"
+  }],
+
+  "provisioners": [
+  
+	{
+        "type": "shell",
+		"environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass",
+			"bashprotocol=bash_protocol",
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email",
+			"bashsshfingerprint=bash_sshfingerprint",
+			"multitenant=bash_multitenant"
+		],
+        "script": "alma9_install.sh"
+    },
+	
+	{
+        "type": "shell",
+		"expect_disconnect": "true",
+        "inline": [ 
+           "echo @### Disable SELinux again ###",
+		   "sudo setenforce 0",
+		   "echo @### Reboot Server ###",
+		   "sudo shutdown -r now"
+         ]    
+	},
+	
+	{
+        "type": "shell",
+		"expect_disconnect": "true",
+		"pause_before": "60s",
+        "inline": [ 
+		   "echo @### Check SELinux status ###",	
+		   "sestatus",
+           "echo @### PostgreSQL Version after alma9_install ###",		
+		   "psql --version"
+         ]
+	},
+
+	  {
+		"type": "file",
+		"source": "sshkey.pub",
+		"destination": "/root/.ssh/sshkey.pub"
+	   },
+
+	  {
+		"type": "shell",
+		"inline": [
+			"echo @### Run script to install sshkey ###",
+			"bash /srv/order-lab/packer/install_ssh.sh $bashsshfingerprint"
+		 ]
+	   },
+
+	   {
+		 "type": "shell",
+		 "max_retries": 1,
+		 "environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass",
+			"bashprotocol=bash_protocol",
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email",
+		    "bashsshfingerprint=bash_sshfingerprint",
+			"multitenant=bash_multitenant"
+		 ],
+		 "script": "install-multitenancy.sh"
+	   }
+  ]
+
+}
