@@ -53,6 +53,9 @@ function prep()
 {
     echo "Preparing for Deploy..."
 
+    echo "*** Clear cache with warmup 1 ***"
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
+
     #try to set permission
     #chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
     #chown -R apache:apache $PROJECT_LOCAL_PATH/public
@@ -66,9 +69,6 @@ function prep()
     #echo "*** Update tables in Doctrine DB ***"
     #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
     #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update
-
-    echo "*** Clear cache with warmup 1 ***"
-    php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
 
     echo "*** Validate Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate
