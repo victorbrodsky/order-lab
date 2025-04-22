@@ -43,6 +43,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
 use App\UserdirectoryBundle\Entity\SiteList;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 //use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -130,6 +131,13 @@ class DefaultController extends OrderAbstractController
         //return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         //return $this->redirectToRoute('deidentifier-nopermission');
         //exit('111');
+
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $em->getRepository(User::class)->find(582);
+//        $info = $userSecUtil->getHeadInfo($user);
+//        dump($info);
+//        exit('111');
 
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));
     }

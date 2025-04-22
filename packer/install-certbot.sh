@@ -297,7 +297,7 @@ exit 0
 #2) run: sudo certbot certonly --standalone
 #3) create /etc/letsencrypt/live/view.online/cert_key.pem containing both your server’s PEM-formatted TLS certificate and its private key
 #3a) Verify Certificate is saved at: /etc/letsencrypt/live/view.online/fullchain.pem
-     Key is saved at:         /etc/letsencrypt/live/view.online/privkey.pem
+     #Key is saved at:         /etc/letsencrypt/live/view.online/privkey.pem
 #3b) cd /etc/letsencrypt/live/view.online/
 #3c) cat cert.pem privkey.pem > cert_key.pem
 #4) start haproxy: sudo systemctl start haproxy.service

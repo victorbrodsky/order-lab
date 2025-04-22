@@ -2689,6 +2689,11 @@ class UserSecurityUtil {
         return $headInfo;
     }
     public function getSearchSameObjectUrl( $elementInfo, $style=null ) {
+
+        if( is_array($elementInfo) === false ) {
+            return $elementInfo;
+        }
+
         $url = $this->container->get('router')->generate(
             'employees_search_same_object',
             array(
