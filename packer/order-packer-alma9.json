@@ -110,7 +110,7 @@
 
 		   "echo @### Run: COMPOSER_ALLOW_SUPERUSER=1 composer require symfony/runtime ###",
 		   
-		   "echo @### Run: composer require symfony/runtime ###",
+		   "echo @### Run: composer dump-autoload ###",
 		   "COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload",
 		   
 		   "echo @### Check OS Info after composer ###",

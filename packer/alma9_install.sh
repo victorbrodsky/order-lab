@@ -412,11 +412,18 @@ f_install_util () {
 	sudo yum install -y git
 
 	echo -e ${COLOR} Install composer ${NC}
+	echo -e ${COLOR} Copy composer-setup.php ${NC}
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+
+	echo -e ${COLOR} verify the data integrity https://composer.github.io/installer.sig ${NC}
 	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
-	HASH="$(wget -q -O - https://composer.github.io/installer.sig)"
+	HASH="$(/usr/bin/wget -q -O - https://composer.github.io/installer.sig)"
+
+	echo -e ${COLOR} Verify installer ${NC}
 	#Output should be "Installer verified"
 	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+
+	echo -e ${COLOR} install Composer in the /usr/local/bin directory ${NC}
 	#install Composer in the /usr/local/bin directory
 	#sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 	php composer-setup.php --install-dir=/usr/local/bin --filename=composer
@@ -428,6 +435,7 @@ f_install_util () {
 	sudo yum install -y ghostscript
 	#sudo yum install -y pdftk  
 
+  echo -e ${COLOR} Install wget unzip ${NC}
 	sudo yum install -y wget unzip
 	
 	#https://gist.github.com/apphancer/8654e82aa582d1cf02c955536df06449
