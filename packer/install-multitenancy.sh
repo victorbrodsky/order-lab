@@ -311,6 +311,7 @@ f_create_single_order_instance () {
 
 	#run global install on homepagemanager
 	if [[ "$1" == "homepagemanager" ]]; then
+	  f_install_haproxy homepagemanager 8081
     f_install_global homepagemanager 8081
   fi
 
