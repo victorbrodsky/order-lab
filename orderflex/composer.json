@@ -1,7 +1,7 @@
 {
     "type": "project",
     "license": "proprietary",
-    "name": "symfony-order",
+    "name": "oleg/symfony-order",
     "description": "Order web application for pathology",
     "require": {
         "php": "^7.4 || ^8.1",
