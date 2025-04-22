@@ -411,6 +411,9 @@ f_install_util () {
 	echo -e ${COLOR} Install Git ${NC}		
 	sudo yum install -y git
 
+	echo -e ${COLOR} Install wget unzip ${NC}
+	sudo yum install -y wget unzip
+
 	echo -e ${COLOR} Install composer ${NC}
 	echo -e ${COLOR} Copy composer-setup.php ${NC}
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -433,10 +436,7 @@ f_install_util () {
 	#disable for testing: sudo yum install -y xvfb libfontconfig	
 	sudo yum install -y libreoffice	
 	sudo yum install -y ghostscript
-	#sudo yum install -y pdftk  
-
-  echo -e ${COLOR} Install wget unzip ${NC}
-	sudo yum install -y wget unzip
+	#sudo yum install -y pdftk
 	
 	#https://gist.github.com/apphancer/8654e82aa582d1cf02c955536df06449
 	#https://jaimegris.wordpress.com/2015/03/04/how-to-install-wkhtmltopdf-in-centos-7-0/
