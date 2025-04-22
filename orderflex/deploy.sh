@@ -53,9 +53,6 @@ function prep()
 {
     echo "Preparing for Deploy..."
 
-    echo "*** Clear cache with warmup 1 ***"
-    php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
-
     #try to set permission
     #chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
     #chown -R apache:apache $PROJECT_LOCAL_PATH/public
@@ -91,7 +88,7 @@ function prep()
     #php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup
 
     #php bin/console cache:clear --no-warmup --env=prod
-    echo "*** Clear cache with warmup 2 ***"
+    echo "*** Clear cache with warmup ***"
     php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
 
     #echo "*** Dump assets ***"
