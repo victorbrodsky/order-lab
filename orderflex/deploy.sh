@@ -67,6 +67,9 @@ function prep()
     #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
     #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update
 
+    echo "*** Clear cache with warmup 1 ***"
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
+
     echo "*** Validate Doctrine DB ***"
     php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate
     #php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:validate --em systemdb
@@ -88,7 +91,7 @@ function prep()
     #php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup
 
     #php bin/console cache:clear --no-warmup --env=prod
-    echo "*** Clear cache with warmup ***"
+    echo "*** Clear cache with warmup 2 ***"
     php $PROJECT_LOCAL_PATH/bin/console cache:clear --env=prod --no-debug
 
     #echo "*** Dump assets ***"

@@ -323,6 +323,7 @@ if( $conn ) {
             //echo "connection_channel=[".$connection_channel."]\n"; //testing
             $container->setParameter('connection_channel', $connection_channel);
 
+            //echo "mailer_host=[".$smtpServerAddress."]\n"; //testing
             $container->setParameter('mailer_host', $smtpServerAddress);
             $container->setParameter('default_system_email', $defaultSiteEmail);
 
