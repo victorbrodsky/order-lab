@@ -30,7 +30,9 @@
 #sslcertificate=$7
 #sslprivatekey=$8
 
-
+#Note for sshfingerprint: add ssh fingerprint to DigitalOcean: settings->console->security->Add SSH Key
+#Follow the instrauction on a new pop-up window how to generate and add new ssh key
+#This key will be used by this installation script to run install-certbot.sh on newly created droplet
 
 #Available images: https://do-community.github.io/available-images/
 

@@ -25,7 +25,8 @@ fi
 echo "sshfingerprint=$sshfingerprint"
 
 if [ ! -z "$sshfingerprint" ]
-	then 
+	then
+	  echo -e ${COLOR} SSH fingerprint exists: $sshfingerprint ${NC}
 		echo -e ${COLOR} Copy public key to authorized_keys: cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys ${NC}
 		cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys
 		chmod 700 /root/.sshs
