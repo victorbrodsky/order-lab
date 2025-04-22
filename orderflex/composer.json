@@ -1,6 +1,8 @@
 {
     "type": "project",
     "license": "proprietary",
+    "name": "symfony-order",
+    "description": "Order web application for pathology",
     "require": {
         "php": "^7.4 || ^8.1",
         "ext-ctype": "*",
