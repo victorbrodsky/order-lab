@@ -308,7 +308,13 @@ f_create_single_order_instance () {
 	else	
 		echo -e ${COLOR} Instance "$bashpath/order-lab-$1" has been created! ${NC}
 	fi
-	
+
+	#run global install on homepagemanager
+	if [[ "$1" == "homepagemanager" ]]; then
+    f_install_global homepagemanager 8081
+  fi
+
+
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
 	ls "$bashpath"/order-lab-"$1"
 	
@@ -647,7 +653,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			echo -e ${COLOR} multitenancy True ${NC}
 			f_install_haproxy homepagemanager 8081
 			f_create_order_instances
-			f_install_global homepagemanager 8081
+			#f_install_global homepagemanager 8081
 			f_create_tenant_htppd
 			f_create_combined_certificate homepagemanager 8081
 			f_start_haproxy
