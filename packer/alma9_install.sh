@@ -97,13 +97,18 @@ f_install_apache () {
 
 	sudo dnf install httpd -y
 	
-	echo -e  ${COLOR} install mod_ssl ${NC}
+	echo -e  "${COLOR} install mod_ssl ${NC}"
 	sudo dnf -y install mod_ssl
 	
 	sudo systemctl enable httpd.service
 	sudo systemctl start httpd.service
 	sudo systemctl status httpd.service --no-pager
-	
+
+	#Install firewall
+	echo -e "${COLOR} Install firewall ${NC}"
+	sudo dnf -y install firewalld
+	sudo systemctl enable --now firewalld
+
 	echo -e "${COLOR} Allow port 80 and 443 in Firewall ${NC}"
 	sudo firewall-cmd --zone=public --permanent --add-port=80/tcp
 	sudo firewall-cmd --zone=public --permanent --add-port=443/tcp
@@ -112,7 +117,7 @@ f_install_apache () {
 	echo ""
     sleep 1
 
-    echo -e ${COLOR} EOF f_install_apache ${NC}
+    echo -e "${COLOR} EOF f_install_apache ${NC}"
 }
 
 f_install_postgresql15 () {
@@ -121,10 +126,10 @@ f_install_postgresql15 () {
     echo -e "${COLOR} Installing Postgresql 15 ... ${NC}"
     sleep 1
 
-	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	echo -e "${COLOR} Install the repository RPM, client and server packages ${NC}"
 	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 	
-	echo -e ${COLOR} disable the built-in PostgreSQL module ${NC}
+	echo -e "${COLOR} disable the built-in PostgreSQL module ${NC}"
 	sudo dnf -qy module disable postgresql
 	
 	echo @### Install postgresql 15 ###	
@@ -151,11 +156,11 @@ f_install_postgresql15 () {
 	#sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE systemdb to $bashdbuser"
 	
 	#Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5"
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/15/data to replace "ident" to "md5" ${NC}
+	echo -e "${COLOR} Modify pg_hba.conf in /var/lib/pgsql/15/data to replace ident to md5 ${NC}"
 	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
 	sed -i -e "s/peer/md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
-	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
+	echo -e "${COLOR} Modify pg_hba.conf ident to md5 ${NC}"
 	sed -i -e "s/ident/md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
@@ -164,10 +169,10 @@ f_install_postgresql15 () {
 	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
 	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/15/data/pg_hba.conf
 	
-	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
+	echo -e "${COLOR} postgresql.conf to listen all addresses ${NC}"
 	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/15/data/postgresql.conf
 	
-	echo -e ${COLOR} Set port ${NC}
+	echo -e "${COLOR} Set port ${NC}"
 	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/15/data/postgresql.conf
 		
 	sudo systemctl restart postgresql-15
@@ -241,10 +246,10 @@ f_install_postgresql17 () {
     echo -e "${COLOR} Installing Postgresql 17 ... ${NC}"
     sleep 1
 
-	echo -e ${COLOR} Install the repository RPM, client and server packages ${NC}		
+	echo -e "${COLOR} Install the repository RPM, client and server packages ${NC}"
 	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 	
-	echo -e ${COLOR} disable the built-in PostgreSQL module ${NC}
+	echo -e "${COLOR} disable the built-in PostgreSQL module ${NC}"
 	sudo dnf -qy module disable postgresql
 	
 	echo @### Install postgresql 17 ###	
@@ -271,11 +276,11 @@ f_install_postgresql17 () {
 	#sudo -Hiu postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE systemdb to $bashdbuser"
 	
 	#Modify pg_hba.conf in /var/lib/pgsql/17/data to replace "ident" to "md5"
-	echo -e ${COLOR} Modify pg_hba.conf in /var/lib/pgsql/17/data to replace "ident" to "md5" ${NC}
+	echo -e "${COLOR} Modify pg_hba.conf in /var/lib/pgsql/17/data to replace ident to md5 ${NC}"
 	#Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
 	sed -i -e "s/peer/md5/g" /var/lib/pgsql/17/data/pg_hba.conf
 	
-	echo -e ${COLOR} Modify pg_hba.conf ident to md5 ${NC}
+	echo -e "${COLOR} Modify pg_hba.conf ident to md5 ${NC}"
 	sed -i -e "s/ident/md5/g" /var/lib/pgsql/17/data/pg_hba.conf
 	
 	#echo -e ${COLOR} Add TEXTTOEND to pg_hba.conf ${NC}
@@ -284,10 +289,10 @@ f_install_postgresql17 () {
 	#echo -e ${COLOR} Replace TEXTTOEND in pg_hba.conf ${NC}
 	sed -i "s/TEXTTOEND/host all all 0.0.0.0\/0 md5/g" /var/lib/pgsql/17/data/pg_hba.conf
 	
-	echo -e ${COLOR} postgresql.conf to listen all addresses ${NC}
+	echo -e "${COLOR} postgresql.conf to listen all addresses ${NC}"
 	sed -i -e "s/#listen_addresses/listen_addresses='*' #listen_addresses/g" /var/lib/pgsql/17/data/postgresql.conf
 	
-	echo -e ${COLOR} Set port ${NC}
+	echo -e "${COLOR} Set port ${NC}"
 	sed -i -e "s/#port/port = 5432 #port/g" /var/lib/pgsql/17/data/postgresql.conf
 		
 	sudo systemctl restart postgresql-17
@@ -295,7 +300,7 @@ f_install_postgresql17 () {
 	echo ""
     sleep 1
 
-    echo -e ${COLOR} EOF f_install_postgresql17 ${NC}
+    echo -e "${COLOR} EOF f_install_postgresql17 ${NC}"
 }
 
 f_install_php82 () {
@@ -388,7 +393,7 @@ f_install_php83 () {
 	#sudo systemctl start php-fpm
 	#sudo systemctl status php-fpm
 		
-	echo -e  ${COLOR} Check PHP version: php -v ${NC}
+	echo -e  "${COLOR} Check PHP version: php -v ${NC}"
 	php -v
 	
 	# Restart Apache
@@ -397,7 +402,7 @@ f_install_php83 () {
 	echo ""
     sleep 1
 
-    echo -e ${COLOR} EOF f_install_php83 ${NC}
+    echo -e "${COLOR} EOF f_install_php83 ${NC}"
 }
 
 f_install_util () {
@@ -405,20 +410,20 @@ f_install_util () {
     echo "Installing util ..."
     sleep 1
 
-	echo -e ${COLOR} Install vim ${NC}		
+	echo -e "${COLOR} Install vim ${NC}"
 	sudo yum install -y vim	
 
-	echo -e ${COLOR} Install Git ${NC}		
+	echo -e "${COLOR} Install Git ${NC}"
 	sudo yum install -y git
 
-	echo -e ${COLOR} Install wget unzip ${NC}
+	echo -e "${COLOR} Install wget unzip ${NC}"
 	sudo yum install -y wget unzip
 
-	echo -e ${COLOR} Install composer ${NC}
-	echo -e ${COLOR} Copy composer-setup.php ${NC}
+	echo -e "${COLOR} Install composer ${NC}"
+	echo -e "${COLOR} Copy composer-setup.php ${NC}"
 	php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 
-	echo -e ${COLOR} verify the data integrity https://composer.github.io/installer.sig ${NC}
+	echo -e "${COLOR} verify the data integrity https://composer.github.io/installer.sig ${NC}"
 	#verify the data integrity of the script compare the script SHA-384 hash with the latest installer
 	HASH="$(/usr/bin/wget -q -O - https://composer.github.io/installer.sig)"
 
@@ -431,7 +436,7 @@ f_install_util () {
 	#sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 	php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 	
-	echo -e ${COLOR} Install libreoffice, ghostscript, pdftk ${NC}
+	echo -e "${COLOR} Install libreoffice, ghostscript, pdftk ${NC}"
 	#sudo yum update
 	#disable for testing: sudo yum install -y xvfb libfontconfig	
 	sudo yum install -y libreoffice	
@@ -440,15 +445,15 @@ f_install_util () {
 	
 	#https://gist.github.com/apphancer/8654e82aa582d1cf02c955536df06449
 	#https://jaimegris.wordpress.com/2015/03/04/how-to-install-wkhtmltopdf-in-centos-7-0/
-	echo -e ${COLOR} Install wkhtmltopdf dependencies xorg-x11-fonts-75dpi and xorg-x11-fonts-Type1 ${NC}
+	echo -e "${COLOR} Install wkhtmltopdf dependencies xorg-x11-fonts-75dpi and xorg-x11-fonts-Type1 ${NC}"
 	yum install -y xorg-x11-fonts-75dpi
 	yum install -y xorg-x11-fonts-Type1
 	yum install xz
 	
-	echo -e ${COLOR} synchronize the rpm & yumdb databases ${NC}
+	echo -e "${COLOR} Synchronize the rpm and yumdb databases ${NC}"
 	yum history sync
 	
-	echo -e ${COLOR} Install wkhtmltopdf ${NC}
+	echo -e "${COLOR} Install wkhtmltopdf ${NC}"
 	###https://computingforgeeks.com/install-wkhtmltopdf-wkhtmltoimage-on-rocky-almalinux/?expand_article=1
 	###wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.centos8.x86_64.rpm
 	###sudo dnf install -y ./wkhtmltox-0.12.6-1.centos8.x86_64.rpm
