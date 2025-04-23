@@ -29,7 +29,7 @@ if [ ! -z "$sshfingerprint" ]
 	  echo -e ${COLOR} SSH fingerprint exists: $sshfingerprint ${NC}
 		echo -e ${COLOR} Copy public key to authorized_keys: cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys ${NC}
 		cat ~/.ssh/sshkey.pub >> ~/.ssh/authorized_keys
-		chmod 700 /root/.sshs
+		chmod 700 /root/.ssh
 		chmod 600 /root/.ssh/authorized_keys
 		echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
 		echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
