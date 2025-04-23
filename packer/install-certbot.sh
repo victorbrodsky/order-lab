@@ -223,11 +223,42 @@ if true
   then
     echo -e ${COLOR} Sleep 120 seconds before installing certbot on Apache ${NC}
     sleep 120
-    echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
-    echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
-    sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
-    #certbot -n -v --apache --agree-tos --email "oli2002@med.cornell.edu" --domains "view.online"
-    ##sudo certbot -n -v --apache --agree-tos --dns-digitalocean --email "$email" --domains "$domainname"
+    #Certbot doesn’t officially support HAProxy, you’ll need to use the certonly command with the --standalone option. Here’s a general approach
+    if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+        echo "multitenant is haproxy => use haproxy certificate"
+        echo "1) Stop HAProxy Temporarily"
+        sudo systemctl stop haproxy
+        echo "2) Run Certbot to Obtain a Certificate"
+        sudo certbot certonly --standalone --agree-tos --non-interactive --email "$email" --domains "view.online"
+        echo "3) Combine the certificate and private key in cert_key.pem"
+        cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
+
+        echo "4) Update your HAProxy configuration"
+        echo "4a) Enable *:443"
+        #sed -i -e 's/#bind \*:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/bind *:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/g' /etc/haproxy/haproxy.cfg
+        CONFIG_FILE="/etc/haproxy/haproxy.cfg"
+        SEARCH_PATTERN="#bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
+        REPLACE_PATTERN="bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
+        # Uncomment the line
+        sed -i -e "s/$SEARCH_PATTERN/$REPLACE_PATTERN/g" "$CONFIG_FILE"
+        #sed -i -e "s/$SEARCH_PATTERN/bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
+        #sed -i -e "s|^$SEARCH_PATTERN|bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
+        echo "4a) Enable redirect scheme https"
+        sed -i -e 's/#http-request redirect scheme https unless { ssl_fc }/http-request redirect scheme https unless { ssl_fc }/g' /etc/haproxy/haproxy.cfg
+        echo "5) Restart HAProxy"
+        sudo systemctl start haproxy
+
+        #echo "6) Set Up Auto-Renewal Certbot certificates expire every 90 days, so set up a cron job to renew them"
+        #sudo crontab -e
+        #0 3 * * * certbot renew --quiet && systemctl reload haproxy
+        (crontab -l 2>/dev/null; echo "0 3 * * * certbot renew --quiet && systemctl reload haproxy") | crontab -
+    else
+        echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
+        echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
+        sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
+        #certbot -n -v --apache --agree-tos --email "oli2002@med.cornell.edu" --domains "view.online"
+        ##sudo certbot -n -v --apache --agree-tos --dns-digitalocean --email "$email" --domains "$domainname"
+    fi
 
     echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
     sudo certbot renew --dry-run
@@ -237,9 +268,16 @@ if true
         echo "==============================================="
         echo "Use Ubuntu OS $OSNAME"
         echo "==============================================="
-        echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
-        cp /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf_orig
-        cp "$bashpath"/order-lab/packer/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+        if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+            echo "multitenant is haproxy => use haproxy certificate"
+
+        else
+          echo "multitenant is not haproxy => use httpd certificate"
+          echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
+          cp /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf_orig
+          cp "$bashpath"/order-lab/packer/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+        fi
+
       else
         echo "==============================================="
         echo "Use on all others OS $OSNAME"
