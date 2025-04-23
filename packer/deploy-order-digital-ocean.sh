@@ -468,6 +468,7 @@ if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$em
       then
         echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
         #echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh $domainname $sslcertificate $email'
+        #doctl compute ssh "packer-1745428562" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu' -o StrictHostKeyChecking=no
         doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh $domainname $sslcertificate $email' -o StrictHostKeyChecking=no
     else
         echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
