@@ -197,10 +197,10 @@ echo ""
 sleep 3
 
 #sudo snap install --classic certbot => error: too early for operation, device not yet seeded or device model not acknowledged
-echo -e ${COLOR} Script install-cerbot.sh: Install Certbot second attempt ${NC}
+echo -e "${COLOR} Script install-cerbot.sh: Install Certbot second attempt ${NC}"
 sudo snap install --classic certbot
 
-echo -e ${COLOR} Script install-cerbot.sh: create symbolik link ${NC}
+echo -e "${COLOR} Script install-cerbot.sh: create symbolik link ${NC}"
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 ####### Creating a Sudo-Enabled User ######
@@ -221,21 +221,21 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ###### Run certbot and create certificate. Can be done only when DNS is pointed to this droplet IP. ######
 if true
   then
-    echo -e ${COLOR} Sleep 120 seconds before installing certbot on Apache ${NC}
+    echo -e "${COLOR} Sleep 120 seconds before installing certbot on Apache ${NC}"
     sleep 120
     #Certbot doesn’t officially support HAProxy, you’ll need to use the certonly command with the --standalone option. Here’s a general approach
     if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
-        echo -e ${COLOR} multitenant is haproxy => use haproxy certificate ${NC}
-        echo -e ${COLOR} 1 Stop HAProxy Temporarily ${NC}
+        echo -e "${COLOR} multitenant is haproxy => use haproxy certificate ${NC}"
+        echo -e "${COLOR} 1 Stop HAProxy Temporarily ${NC}"
         sudo systemctl stop haproxy
-        echo -e ${COLOR} 2 Run Certbot to Obtain a Certificate ${NC}
+        echo -e "${COLOR} 2 Run Certbot to Obtain a Certificate ${NC}"
         sudo certbot certonly --standalone --agree-tos --non-interactive --email "$email" --domains "view.online"
-        echo -e ${COLOR} 3 Combine the certificate and private key in cert_key.pem ${NC}
+        echo -e "${COLOR} 3 Combine the certificate and private key in cert_key.pem ${NC}"
         cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
 
-        echo -e ${COLOR} 4 Update your HAProxy configuration ${NC}
+        echo -e "${COLOR} 4 Update your HAProxy configuration ${NC}"
 
-        echo -e ${COLOR} 4a Enable *:443 ${NC}
+        echo -e "${COLOR} 4a Enable *:443 ${NC}"
         #sed -i -e 's/#bind \*:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/bind *:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/g' /etc/haproxy/haproxy.cfg
         CONFIG_FILE="/etc/haproxy/haproxy.cfg"
         SEARCH_PATTERN="#bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
@@ -245,13 +245,13 @@ if true
         #sed -i -e "s/$SEARCH_PATTERN/bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
         #sed -i -e "s|^$SEARCH_PATTERN|bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
 
-        echo -e ${COLOR} 4a Enable redirect scheme https ${NC}
+        echo -e "${COLOR} 4b Enable redirect scheme https ${NC}"
         sed -i -e 's/#http-request redirect scheme https unless { ssl_fc }/http-request redirect scheme https unless { ssl_fc }/g' /etc/haproxy/haproxy.cfg
 
-        echo -e ${COLOR} 5 Restart HAProxy ${NC}
+        echo -e "${COLOR} 5 Restart HAProxy ${NC}"
         sudo systemctl start haproxy
 
-        echo -e ${COLOR} 6 Set Up Auto-Renewal Certbot certificates expire every 90 days, so set up a cron job to renew them ${NC}
+        echo -e "${COLOR} 6 Set Up Auto-Renewal Certbot certificates expire every 90 days, so set up a cron job to renew them ${NC}"
         #sudo crontab -e
         #0 3 * * * certbot renew --quiet && systemctl reload haproxy
         (crontab -l 2>/dev/null; echo "0 3 * * * certbot renew --quiet && systemctl reload haproxy") | crontab -
