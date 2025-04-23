@@ -225,16 +225,17 @@ if true
     sleep 120
     #Certbot doesn’t officially support HAProxy, you’ll need to use the certonly command with the --standalone option. Here’s a general approach
     if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
-        echo "multitenant is haproxy => use haproxy certificate"
-        echo "1) Stop HAProxy Temporarily"
+        echo -e ${COLOR} multitenant is haproxy => use haproxy certificate ${NC}
+        echo -e ${COLOR} 1) Stop HAProxy Temporarily ${NC}
         sudo systemctl stop haproxy
-        echo "2) Run Certbot to Obtain a Certificate"
+        echo -e ${COLOR} 2) Run Certbot to Obtain a Certificate ${NC}
         sudo certbot certonly --standalone --agree-tos --non-interactive --email "$email" --domains "view.online"
-        echo "3) Combine the certificate and private key in cert_key.pem"
+        echo -e ${COLOR} 3) Combine the certificate and private key in cert_key.pem ${NC}
         cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
 
-        echo "4) Update your HAProxy configuration"
-        echo "4a) Enable *:443"
+        echo -e ${COLOR} 4) Update your HAProxy configuration ${NC}
+
+        echo -e ${COLOR} 4a) Enable *:443 ${NC}
         #sed -i -e 's/#bind \*:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/bind *:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/g' /etc/haproxy/haproxy.cfg
         CONFIG_FILE="/etc/haproxy/haproxy.cfg"
         SEARCH_PATTERN="#bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
@@ -243,15 +244,19 @@ if true
         sed -i -e "s/$SEARCH_PATTERN/$REPLACE_PATTERN/g" "$CONFIG_FILE"
         #sed -i -e "s/$SEARCH_PATTERN/bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
         #sed -i -e "s|^$SEARCH_PATTERN|bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
-        echo "4a) Enable redirect scheme https"
+
+        echo -e ${COLOR} 4a) Enable redirect scheme https ${NC}
         sed -i -e 's/#http-request redirect scheme https unless { ssl_fc }/http-request redirect scheme https unless { ssl_fc }/g' /etc/haproxy/haproxy.cfg
-        echo "5) Restart HAProxy"
+
+        echo -e ${COLOR} 5) Restart HAProxy ${NC}
         sudo systemctl start haproxy
 
-        #echo "6) Set Up Auto-Renewal Certbot certificates expire every 90 days, so set up a cron job to renew them"
+        echo -e ${COLOR} 6) Set Up Auto-Renewal Certbot certificates expire every 90 days, so set up a cron job to renew them ${NC}
         #sudo crontab -e
         #0 3 * * * certbot renew --quiet && systemctl reload haproxy
         (crontab -l 2>/dev/null; echo "0 3 * * * certbot renew --quiet && systemctl reload haproxy") | crontab -
+
+        echo -e ${COLOR} Done with certbot and HaProxy ${NC}
     else
         echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
         echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
@@ -269,8 +274,7 @@ if true
         echo "Use Ubuntu OS $OSNAME"
         echo "==============================================="
         if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
-            echo "multitenant is haproxy => use haproxy certificate"
-
+            echo "multitenant is haproxy => use haproxy certificate. Do nothing here"
         else
           echo "multitenant is not haproxy => use httpd certificate"
           echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
@@ -282,11 +286,8 @@ if true
         echo "==============================================="
         echo "Use on all others OS $OSNAME"
         echo "==============================================="
-
-
         if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
-            echo "multitenant is haproxy => use haproxy certificate"
-
+            echo "multitenant is haproxy => use haproxy certificate. Do nothing here"
         else
           echo "multitenant is not haproxy => use httpd certificate"
           echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
@@ -302,14 +303,24 @@ if true
         echo "==============================================="
         echo "Restart Apache on Ubuntu $OSNAME"
         echo "==============================================="
-        sudo systemctl restart apache2.service
-        sudo systemctl status apache2.service
+        if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+            echo "multitenant is haproxy => already restarted haproxy. Do nothing here"
+        else
+          echo "multitenant is not haproxy => restart httpd"
+          sudo systemctl restart apache2.service
+          sudo systemctl status apache2.service
+        fi
       else
         echo "==============================================="
         echo "Restart Apache on all others OS $OSNAME"
         echo "==============================================="
-        sudo systemctl restart httpd.service
-        sudo systemctl status httpd.service
+        if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+            echo "multitenant is haproxy => already restarted haproxy. Do nothing here"
+        else
+          echo "multitenant is not haproxy => restart httpd"
+          sudo systemctl restart httpd.service
+          sudo systemctl status httpd.service
+        fi
     fi
 fi
 ###### EOF Run certbot and create certificate ######
