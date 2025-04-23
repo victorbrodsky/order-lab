@@ -31,6 +31,11 @@ if [ -z "$email" ]
     email=$3
 fi
 
+if [ -z "$multitenant" ]
+  then
+    multitenant=$4
+fi
+
 #if [ -z "$userpass" ]
 #  then
 #    userpass=$4
@@ -43,6 +48,7 @@ echo domainname=$domainname
 echo sslcertificate=$sslcertificate
 echo email=$email
 echo bashpath=$bashpath
+echo multitenant=$multitenant
 #echo userpass=$userpass
 
 echo Script install-cerbot.sh: domainname=$domainname
@@ -130,7 +136,14 @@ if [ "$OSNAME" = "Ubuntu" ];
 fi
 
 echo -e ${COLOR} Script install-cerbot.sh: Install Snapd ${NC}
-cd "$bashpath"/order-lab/orderflex/
+if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+    echo "multitenant is haproxy => use homepagemanager folder order-lab-homepagemanager/orderflex/"
+    cd "$bashpath"/order-lab-homepagemanager/orderflex/
+else
+  echo "multitenant is not haproxy => use classical, single tenant home folder order-lab/orderflex/"
+  cd "$bashpath"/order-lab/orderflex/
+fi
+
 
 echo -e ${COLOR} Script install-cerbot.sh: Install Snapd according to OS ${NC}
 #Centos yum, Alma dnf, Ubuntu apt
@@ -213,6 +226,7 @@ if true
     echo -e ${COLOR} Script install-cerbot.sh: Get a certificate and have Certbot edit your apache configuration automatically ${NC}
     echo -e ${COLOR} Script install-cerbot.sh: sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname" ${NC}
     sudo certbot -n -v --apache --agree-tos --email "$email" --domains "$domainname"
+    #certbot -n -v --apache --agree-tos --email "oli2002@med.cornell.edu" --domains "view.online"
     ##sudo certbot -n -v --apache --agree-tos --dns-digitalocean --email "$email" --domains "$domainname"
 
     echo -e ${COLOR} Script install-cerbot.sh: Test automatic renewal ${NC}
@@ -230,9 +244,18 @@ if true
         echo "==============================================="
         echo "Use on all others OS $OSNAME"
         echo "==============================================="
-        echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
-        cp /etc/httpd/conf.d/000-default.conf /etc/httpd/conf.d/000-default.conf_orig
-        cp "$bashpath"/order-lab/packer/000-default.conf /etc/httpd/conf.d/000-default.conf
+
+
+        if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+            echo "multitenant is haproxy => use haproxy certificate"
+
+        else
+          echo "multitenant is not haproxy => use httpd certificate"
+          echo -e ${COLOR} Restore original 000-default.conf to enable to login with http ${NC}
+          cp /etc/httpd/conf.d/000-default.conf /etc/httpd/conf.d/000-default.conf_orig
+          cp "$bashpath"/order-lab/packer/000-default.conf /etc/httpd/conf.d/000-default.conf
+        fi
+
     fi
 
     echo -e ${COLOR} Script install-cerbot.sh: Restart apache server after installing Certbot ${NC}

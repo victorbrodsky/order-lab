@@ -221,27 +221,6 @@ f_install_global () {
 	#yes | cp /usr/local/bin/order-lab-$1/packer/php.ini /etc/opt/remi/php82/
 	yes | cp "$bashpath"/order-lab-$1/packer/php.ini /etc/
 
-	if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
-      then
-        #email='myemail@myemail.com'
-        echo "Error: email is not provided for installcertbot option"
-        echo "To enable CertBot installation for SSL/https functionality, please include your email address via --email email@example.com"
-        exit 0
-  fi
-	if [ ! -z "$bashdomainname" ] && [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
-		then
-			echo -e ${COLOR} Install certbot on all OS ${NC}
-			bash "$bashpath"/order-lab-$1/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$bashemail"
-		else
-			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
-	fi
-
-  #Moved from order-packer-alma9.json
-	#"echo @### Run script to install sshkey ###",
-	#"bash /srv/order-lab-$1/packer/install_ssh.sh $bashsshfingerprint"
-	echo -e ${COLOR} Run script to install sshkey using tenant:$1 ${NC}
-	bash /srv/order-lab-$1/packer/install_ssh.sh $bashsshfingerprint
-
 	echo ""
 	sleep 1
 }
@@ -641,6 +620,32 @@ f_restart_phpfpm() {
 	sudo systemctl restart php-fpm
 }
 
+f_install_certbot() {
+  echo -e ${COLOR} f_install_certbot: start ${NC}
+  if [ -z "$bashemail" ] && [ "$bashsslcertificate" = "installcertbot" ] ]
+      then
+        #email='myemail@myemail.com'
+        echo "Error: email is not provided for installcertbot option"
+        echo "To enable CertBot installation for SSL/https functionality, please include your email address via --email email@example.com"
+        exit 0
+  fi
+	if [ ! -z "$bashdomainname" ] && [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
+		then
+			echo -e ${COLOR} Install certbot on all OS ${NC}
+			bash "$bashpath"/order-lab-$1/packer/install-certbot.sh "$bashdomainname" "$bashsslcertificate" "$bashemail" "$multitenant"
+		else
+			echo -e ${COLOR} Domain name is not provided: Do not install certbot on all OS ${NC}
+	fi
+
+  #Moved from order-packer-alma9.json
+	#"echo @### Run script to install sshkey ###",
+	#"bash /srv/order-lab-$1/packer/install_ssh.sh $bashsshfingerprint"
+	echo -e ${COLOR} Run script to install sshkey using tenant:$1 ${NC}
+	bash /srv/order-lab-$1/packer/install_ssh.sh $bashsshfingerprint
+
+	echo -e ${COLOR} f_install_certbot: finish ${NC}
+}
+
 function changedir() {
   cd $1
 }
@@ -660,7 +665,8 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			f_start_haproxy
 			f_stop_httpd
 			f_start_all_httpd
-			##f_restart_phpfpm
+			f_restart_phpfpm
+			f_install_certbot homepagemanager 8081
 		else
 			echo -e ${COLOR} False ${NC}
 			f_test
