@@ -234,7 +234,6 @@ if true
         cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
 
         echo -e "${COLOR} 4 Update your HAProxy configuration ${NC}"
-
         echo -e "${COLOR} 4a Enable *:443 ${NC}"
         #sed -i -e 's/#bind \*:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/bind *:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/g' /etc/haproxy/haproxy.cfg
         CONFIG_FILE="/etc/haproxy/haproxy.cfg"
