@@ -274,9 +274,14 @@ f_create_single_order_instance () {
 	if [ -d "$bashpath/order-lab-$1" ]; then
         echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] already exist ${NC}
         return 0
-    else
+  else
         echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] does not exist ${NC}
-    fi
+  fi
+
+  if [[ "$1" == "homepagemanager" ]]; then
+	  echo -e "${COLOR} Add the host key to avoid disabling host verification entirely ${NC}"
+	  ssh-keyscan github.com >> ~/.ssh/known_hosts
+  fi
 
 	echo -e ${COLOR} Create instance: "$1" port "$2" url "$3" ${NC}
 	#cd "$bashpath"/
