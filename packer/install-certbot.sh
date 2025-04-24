@@ -282,6 +282,8 @@ if true
 
         echo -e "${COLOR} 5 Restart HAProxy ${NC}"
         sudo systemctl start haproxy
+        echo -e "${COLOR} 5 Restart php-fpm ${NC}"
+        sudo systemctl restart php-fpm
 
         echo -e "${COLOR} 6 Set Up Auto-Renewal Certbot certificates expire every 90 days, so set up a cron job to renew them ${NC}"
         #sudo crontab -e
