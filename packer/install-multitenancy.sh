@@ -234,20 +234,26 @@ f_install_haproxy () {
 	sudo mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg_orig
 	sudo cp "$bashpath"/order-lab-$1/packer/haproxy.cfg /etc/haproxy/
 
-	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
-		then 
-			echo -e ${COLOR} Enable https 'bind *:443 ssl' and disable 'bind *:80' in haproxy.cfg ${NC}
-			sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
-		else
-			echo -e ${COLOR} Use default 'http bind *:80' and disable 'bind *:443' in haproxy.cfg ${NC}
-			sed -i -e 's/^\s*bind \*:443/#&/' /etc/haproxy/haproxy.cfg
-			
-			echo -e ${COLOR} disable 'http-request redirect scheme https unless { ssl_fc }' in haproxy.cfg ${NC}
-			sed -i -e 's/^\s*http-request/#&/' /etc/haproxy/haproxy.cfg
-	fi	
-	
-	echo -e ${COLOR} Adding new line to haproxy to prevent 'Missing LF on last line' ${NC}
-	echo "" >> /etc/haproxy/haproxy.cfg
+  #By default, haproxy.cfg file is configured to use http.
+  #Always keep "bind *:80" in haproxy.cfg.
+  #If using https, then uncomment two lines:
+  # bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem
+  # http-request redirect scheme https unless { ssl_fc }
+  # Combine private key and certificate to one file: /etc/letsencrypt/live/view.online/cert_key.pem
+  #Therefore, no need to modify haproxy.cfg here. It will be configured to use https later on while executing install-certbot.sh
+#	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
+#		then
+#			echo -e ${COLOR} Enable https 'bind *:443 ssl' and disable 'bind *:80' in haproxy.cfg ${NC}
+#			sed -i -e 's/^\s*bind \*:80/#&/' /etc/haproxy/haproxy.cfg
+#		else
+#			echo -e ${COLOR} Use default 'http bind *:80' and disable 'bind *:443' in haproxy.cfg ${NC}
+#			sed -i -e 's/^\s*bind \*:443/#&/' /etc/haproxy/haproxy.cfg
+#
+#			echo -e ${COLOR} disable 'http-request redirect scheme https unless { ssl_fc }' in haproxy.cfg ${NC}
+#			sed -i -e 's/^\s*http-request/#&/' /etc/haproxy/haproxy.cfg
+#	fi
+#	echo -e ${COLOR} Adding new line to haproxy to prevent 'Missing LF on last line' ${NC}
+#	echo "" >> /etc/haproxy/haproxy.cfg
 
 	#https://ideneal.medium.com/how-to-export-symfony-4-environment-variables-into-front-end-application-with-encore-ed45463bee5a
 	#dotenv installed via: sudo yarn install --frozen-lockfile 

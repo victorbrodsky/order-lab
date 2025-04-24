@@ -260,6 +260,8 @@ if true
             echo "cert.pem file does not exist => exit script"
             echo -e "${COLOR} Start HAProxy ${NC}"
             sudo systemctl start haproxy
+            echo -e "${COLOR} Restart php-fpm ${NC}"
+            sudo systemctl restart php-fpm
             echo -e ${COLOR} End of install-certbot.sh script: certbot is installed, but certificate is not generated ${NC}
             exit 0
         fi
