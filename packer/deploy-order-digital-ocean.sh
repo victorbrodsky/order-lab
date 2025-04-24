@@ -441,8 +441,8 @@ if [ -n "$domainname" ] && [ "$domainname" != "domainname" ]
 	  echo "Do not create domain domainname=$domainname"
 fi
 
-echo -e ${COLOR} Sleep 180 seconds after creating domain "$domainname" with IP "$DROPLETIP" ${NC}
-sleep 180
+echo -e ${COLOR} Sleep 600 seconds after creating domain "$domainname" with IP "$DROPLETIP" ${NC}
+sleep 600
 ########## EOF Create domain ###########
 
 #this certificate only for Some product features, like load balancer SSL termination and custom Spaces CDN endpoints, require SSL certificates
@@ -470,7 +470,7 @@ if [ "$sslcertificate" = "installcertbot" ] && [ -n "$domainname" ] && [ -n "$em
         #echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh $domainname $sslcertificate $email'
         #doctl compute ssh "packer-1745447492" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh view.online installcertbot oli2002@med.cornell.edu haproxy' -o StrictHostKeyChecking=no
         #doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh $domainname $sslcertificate $email $multitenant' -o StrictHostKeyChecking=no
-        yes yes | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh $domainname $sslcertificate $email $multitenant' -o StrictHostKeyChecking=no
+        yes yes | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh $domainname $sslcertificate $email $multitenant'
     else
         echo -e ${COLOR} Run bash script install-certbot.sh via ssh. IMAGENAME="$IMAGENAME", domainname="$domainname", sslcertificate="$sslcertificate", email="$email" ${NC}
         #echo | doctl compute ssh "$IMAGENAME" --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email'
