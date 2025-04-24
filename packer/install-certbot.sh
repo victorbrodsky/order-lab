@@ -101,15 +101,25 @@ if [ "$OSNAME" = "Ubuntu" ];
 		echo "==============================================="
 		echo "Use Ubuntu OS $OSNAME"
 		echo "==============================================="
-		echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf on Ubuntu ${NC}
-    sudo mv /etc/apache2/sites-enabled/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.orig
-    sudo mv /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.orig
+    if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+        echo "multitenant is haproxy => use haproxy certificate. Do nothing here"
+    else
+      echo "multitenant is not haproxy => disable default-ssl.conf"
+      echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf on Ubuntu ${NC}
+      sudo mv /etc/apache2/sites-enabled/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.orig
+      sudo mv /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.orig
+    fi
 	else
 		echo "==============================================="
 		echo "Use all others OS $OSNAME"
 		echo "==============================================="
-		echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf  ${NC}
-    sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
+		if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+        echo "multitenant is haproxy => use haproxy certificate. Do nothing here"
+    else
+      echo "multitenant is not haproxy => disable default-ssl.conf"
+      echo -e ${COLOR} Script install-cerbot.sh: Disable the original ssl configuration default-ssl.conf  ${NC}
+      sudo mv /etc/httpd/conf.d/default-ssl.conf /etc/httpd/conf.d/default-ssl.orig
+    fi
 fi
 
 ######## Copy the ssl config file for lets encrypt ########
@@ -125,14 +135,24 @@ if [ "$OSNAME" = "Ubuntu" ];
 		echo "==============================================="
 		echo "Restart Apache on Ubuntu $OSNAME"
 		echo "==============================================="
-		sudo systemctl restart apache2.service
-		sudo systemctl status apache2.service
+		if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+        echo "multitenant is haproxy => use haproxy certificate. Do nothing here"
+    else
+      echo "multitenant is not haproxy => restart httpd.service"
+      sudo systemctl restart apache2.service
+		  sudo systemctl status apache2.service
+    fi
 	else	
 		echo "==============================================="
 		echo "Restart Apache on all others OS $OSNAME"
 		echo "==============================================="
-		sudo systemctl restart httpd.service
-		sudo systemctl status httpd.service
+		if [[ -n "$multitenant" && "$multitenant" == "haproxy" ]]; then
+        echo "multitenant is haproxy => use haproxy certificate. Do nothing here"
+    else
+      echo "multitenant is not haproxy => restart httpd.service"
+      sudo systemctl restart httpd.service
+		  sudo systemctl status httpd.service
+    fi
 fi
 
 echo -e ${COLOR} Script install-cerbot.sh: Install Snapd ${NC}
@@ -249,14 +269,13 @@ if true
 
         echo -e "${COLOR} 4 Update your HAProxy configuration ${NC}"
         echo -e "${COLOR} 4a Enable *:443 ${NC}"
-        #sed -i -e 's/#bind \*:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/bind *:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/g' /etc/haproxy/haproxy.cfg
-        CONFIG_FILE="/etc/haproxy/haproxy.cfg"
-        SEARCH_PATTERN="#bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
-        REPLACE_PATTERN="bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
-        # Uncomment the line
-        sed -i -e 's/$SEARCH_PATTERN/$REPLACE_PATTERN/g' "$CONFIG_FILE"
-        #sed -i -e "s/$SEARCH_PATTERN/bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
-        #sed -i -e "s|^$SEARCH_PATTERN|bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
+        sed -i -e 's/#bind \*:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/bind *:443 ssl crt \/etc\/letsencrypt\/live\/view\.online\/cert_key\.pem/g' /etc/haproxy/haproxy.cfg
+        #CONFIG_FILE="/etc/haproxy/haproxy.cfg"
+        #SEARCH_PATTERN="#bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
+        #REPLACE_PATTERN="bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
+        #sed -i -e 's/$SEARCH_PATTERN/$REPLACE_PATTERN/g' "$CONFIG_FILE"
+        ##sed -i -e "s/$SEARCH_PATTERN/bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
+        ##sed -i -e "s|^$SEARCH_PATTERN|bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
 
         echo -e "${COLOR} 4b Enable redirect scheme https ${NC}"
         sed -i -e 's/#http-request redirect scheme https unless { ssl_fc }/http-request redirect scheme https unless { ssl_fc }/g' /etc/haproxy/haproxy.cfg
