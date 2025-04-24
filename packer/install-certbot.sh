@@ -228,8 +228,22 @@ if true
         echo -e "${COLOR} multitenant is haproxy => use haproxy certificate ${NC}"
         echo -e "${COLOR} 1 Stop HAProxy Temporarily ${NC}"
         sudo systemctl stop haproxy
+
         echo -e "${COLOR} 2 Run Certbot to Obtain a Certificate ${NC}"
         sudo certbot certonly --standalone --agree-tos --non-interactive --email "$email" --domains "view.online"
+
+        #check if certificate and private key have been created
+        #[ -e /etc/letsencrypt/live/view.online/cert.pem ] && echo "File exists." || echo "File does not exist."
+        if [ -e /etc/letsencrypt/live/view.online/cert.pem ]; then
+            echo "cert.pem file exists => continue"
+        else
+            echo "cert.pem file does not exist => exit script"
+            echo -e "${COLOR} Start HAProxy ${NC}"
+            sudo systemctl start haproxy
+            echo -e ${COLOR} End of install-certbot.sh script: certbot is installed, but certificate is not generated ${NC}
+            exit 0
+        fi
+
         echo -e "${COLOR} 3 Combine the certificate and private key in cert_key.pem ${NC}"
         cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
 
@@ -240,7 +254,7 @@ if true
         SEARCH_PATTERN="#bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
         REPLACE_PATTERN="bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem"
         # Uncomment the line
-        sed -i -e "s/$SEARCH_PATTERN/$REPLACE_PATTERN/g" "$CONFIG_FILE"
+        sed -i -e 's/$SEARCH_PATTERN/$REPLACE_PATTERN/g' "$CONFIG_FILE"
         #sed -i -e "s/$SEARCH_PATTERN/bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
         #sed -i -e "s|^$SEARCH_PATTERN|bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem|g" "$CONFIG_FILE"
 
