@@ -1302,6 +1302,27 @@
         </div> <!-- panel-collapse -->
     </div> <!-- panel panel-primary -->
 
+    {#Instructions to install the server#}
+    {% set installationManualUrl = user_service_utility.getInstallationManualUrl() %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#installation-instructions">
+                    Installation Instructions
+                </a>
+            </h4>
+        </div>
+        <div id="installation-instructions" class="panel-collapse collapse">
+            <div class="panel-body">
+                <p>
+                    <embed src="{{ asset(installationManualUrl) }}" width="100%" height="900px" />
+                </p>
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-primary -->
+
+
+
     {% include 'AppUserdirectoryBundle/SiteParameters/miscellaneous.html.twig' %}
 
 

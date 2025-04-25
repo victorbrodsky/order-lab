@@ -5546,6 +5546,13 @@ Pathology and Laboratory Medicine",
         return $replacedStr;
     }
 
+    public function getInstallationManualUrl() {
+        $filename = "InstallationManual.pdf";
+        $installationManualUrl = "orderassets\\AppUserdirectoryBundle\\form\\docs\\";
+        $mailerManualUrl = $installationManualUrl.$filename;
+        return $mailerManualUrl;
+    }
+
 //    public function updateSiteSettingParametersAfterRestore( $env, $exceptionUsers, $siteEmail ) {
 //        $logger = $this->container->get('logger');
 //        $userSecUtil = $this->container->get('user_security_utility');
