@@ -5547,7 +5547,7 @@ Pathology and Laboratory Medicine",
     }
 
     public function getInstallationManualUrl() {
-        $filename = "InstallationManual.pdf";
+        $filename = "InstallationInstructions.pdf";
         $installationManualUrl = "orderassets\\AppUserdirectoryBundle\\form\\docs\\";
         $mailerManualUrl = $installationManualUrl.$filename;
         return $mailerManualUrl;

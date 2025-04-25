@@ -27,10 +27,10 @@ if [ -z "$bashemail" ]
   then
     bashemail=$6
 fi
-if [ -z "$bashsshfingerprint" ]
-  then
-    bashsshfingerprint=$7
-fi
+#if [ -z "$bashsshfingerprint" ]
+#  then
+#    bashsshfingerprint=$7
+#fi
 if [ -z "$multitenant" ]
   then
     multitenant=$8
@@ -46,7 +46,7 @@ echo bashprotocol=$bashprotocol
 echo bashdomainname=$bashdomainname
 echo bashsslcertificate=$bashsslcertificate
 echo bashemail=$bashemail
-echo bashsshfingerprint=$bashsshfingerprint
+#echo bashsshfingerprint=$bashsshfingerprint
 echo multitenant=$multitenant
 
 #WHITE='\033[1;37m'

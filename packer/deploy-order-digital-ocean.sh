@@ -490,7 +490,7 @@ echo -e ${COLOR} You can install certbot later manually by running install-certb
 
 if [ "$multitenant" = "haproxy" ]
     then
-      echo -e "${COLOR} doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email $multitenant' ${NC}"
+      echo -e "${COLOR} doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab-homepagemanager/packer/install-certbot.sh $domainname $sslcertificate $email $multitenant' ${NC}"
     else
       echo -e "${COLOR} doctl compute ssh $IMAGENAME --ssh-key-path ./sshkey --ssh-command 'bash /srv/order-lab/packer/install-certbot.sh $domainname $sslcertificate $email' ${NC}"
 fi
