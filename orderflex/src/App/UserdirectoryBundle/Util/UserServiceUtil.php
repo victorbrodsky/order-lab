@@ -3462,7 +3462,7 @@ Pathology and Laboratory Medicine",
 
             $command = $command . " --action backup --prefix ".$environment."-".$instanceId."-".gethostname();
         } elseif( $action == 'restore' ) {
-            exit('DB restore is disabled');
+            //exit('DB restore is disabled');
             //restore
             if( $backupFileName ) {
                 $command = $command . " --action restore --date $backupFileName";
