@@ -109,6 +109,14 @@ f_sync() {
         #else
         #    echo -e ${COLOR} type is empty ${NC}
     fi
+
+    if [ -n "$type" ] && [ "$type" == "addallversions" ]
+            then
+                echo -e ${COLOR} check migration status for "$1" ${NC}
+                yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
+            #else
+            #    echo -e ${COLOR} type is empty ${NC}
+        fi
     ### EOF DB migration ###
 
     if [ -n "$type" ] && [ "$type" == "composer" ]
