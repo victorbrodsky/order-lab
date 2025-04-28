@@ -733,18 +733,22 @@
                         $('#backup-msg-danger-box').hide();
                         //userStopBtn(btn,lbtn);
                         //userDirectRestoreBackup(btn,lbtn);
+                        console.log("userVerifyRestoreBackupAction: OK");
                         userRestoreBackupAjax(btn,lbtn,type);
                     } else {
+                        console.log("userVerifyRestoreBackupAction: NOT OK");
                         $('#backup-msg-danger-box').html(error);
                         $('#backup-msg-danger-box').show();
                         userStopBtn(btn,lbtn);
                     }
                 }).fail(function(jqXHR, exception) {
                     //alert(error);
+                    console.log("userVerifyRestoreBackupAction: fail");
                     userStopBtn(btn,lbtn);
                     $('#backup-msg-danger-box').html(exception);
                     $('#backup-msg-danger-box').show();
                 }).done(function() {
+                    console.log("userVerifyRestoreBackupAction: done");
                     //userStopBtn(btn,lbtn);
                     console.log("token verification done");
                 });
@@ -758,6 +762,7 @@
 
         function userRestoreBackupAjax(btn,lbtn,type) {
 
+            console.log("userRestoreBackupAjax: start");
             $('#backup-msg-danger-box').html("");
             $('#backup-msg-danger-box').hide();
 
