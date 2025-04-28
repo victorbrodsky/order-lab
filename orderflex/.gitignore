@@ -43,6 +43,8 @@
 /src/App/*/Util/*.xls
 /src/App/*/Util/*.xml
 /src/App/*/Util/*.p12
+/src/App/*/Util/*.tmp
+/src/App/*/Util/~*.docx
 
 ###/src/App/UserdirectoryBundle/temp/*
 /var/temp/*
