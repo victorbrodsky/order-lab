@@ -70,7 +70,7 @@ class HomeController extends OrderAbstractController {
         //show original primaryTenant (pathology) home page with a list of available sites
         //however, add a section with all available tenants
         if( $primaryTenant ) {
-            $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request);
+            $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request,$useShortName=true);
             $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
             $greetingText = $tenantManager->getGreeting();
         }

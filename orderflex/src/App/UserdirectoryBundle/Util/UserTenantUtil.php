@@ -1333,7 +1333,7 @@ class UserTenantUtil
         return $tenantsRows;
     }
 
-    public function getTenantBaseUrls($request)
+    public function getTenantBaseUrls($request, $useShortName=false)
     {
         $tenantManagerName = 'tenantmanager';
         $tenantBaseUrlArr = array();
@@ -1401,7 +1401,11 @@ class UserTenantUtil
 
                     //
                     //$tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $tenantBaseUrl . '</a> ';
-                    $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $instTitle . '</a> ';
+                    if( $useShortName ) {
+                        $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $instTitle . '</a> ';
+                    } else {
+                        $tenantBaseUrl = '<a href="' . $tenantBaseUrl . '" target="_blank">' . $instTitle . '</a> ';
+                    }
 
                     $enabled = $tenant->getEnabled();
                     if (!$enabled) {

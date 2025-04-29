@@ -161,7 +161,7 @@
         {% if tenantBaseUrlArr is defined and tenantBaseUrlArr|length > 0 %}
             <div class="well">
             <p>
-                222{{ greetingText|raw }}
+                {{ greetingText|raw }}
             </p>
             {% for tenant in tenantBaseUrlArr %}
                 <p>{{ tenant|raw }}</p>
