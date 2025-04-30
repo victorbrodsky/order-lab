@@ -33,19 +33,19 @@ python -m pip install -r "$bashpath"/utils/db-manage/postgres-manage-python/requ
 deactivate
 cd "$bashpath"/orderflex/
 
-#Create python environment for scrapper
-echo -e ${COLOR} Installing env python for scrapper to "$bashpath" ${NC}
+#Create python environment for scraper
+echo -e ${COLOR} Installing env python for scraper to "$bashpath" ${NC}
 #cd "$bashpath"/utils/scrapper/
 #ls -a
 #python3 -m venv venv
 #source venv/bin/activate
 #pip install --upgrade pip
-#python -m pip install -r "$bashpath"/utils/scrapper/requirements.txt
+#python -m pip install -r "$bashpath"/utils/scraper/requirements.txt
 #deactivate
 #cd "$bashpath"/orderflex/
 
 # Define the target folder
-TARGET_DIR="$bashpath/utils/scrapper"
+TARGET_DIR="$bashpath/utils/scraper"
 ENV_NAME="venv"
 
 # Navigate to the target directory
