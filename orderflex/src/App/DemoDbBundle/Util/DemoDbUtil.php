@@ -123,8 +123,8 @@ class DemoDbUtil {
 
         //1) backup DB (might not be need it)
         echo "processDemoDb: dbManagePython \n<br>";
-        $resBackup = $userServiceUtil->dbManagePython($backupPath, 'backup');
-        $res = $res . $resBackup;
+        $resBackupArr = $userServiceUtil->dbManagePython($backupPath, 'backup');
+        $res = $res . implode(',', $resBackupArr);
 
         //2) reset DB
         //php bin/console doctrine:database:drop --force
