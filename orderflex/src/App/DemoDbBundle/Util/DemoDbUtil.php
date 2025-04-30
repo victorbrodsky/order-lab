@@ -177,7 +177,10 @@ class DemoDbUtil {
         $res = $res . "; " . $resMigrateCommand;
 
         //TODO: Create python environment
-        $pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
+        $bashPath = realpath($projectRoot.'/../packer/additional.sh '. $projectRoot . '/../');
+        //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
+        echo "\nbashPath=".$bashPath."\n<br>";
+        $pythonEnvCommand = 'bash ' . $bashPath;
         $logger->notice("pythonEnvCommand=[".$pythonEnvCommand."]");
         $resPythonEnvCommand = $userServiceUtil->runProcess($pythonEnvCommand);
         echo "resPythonEnvCommand=".$resPythonEnvCommand."<br>";
