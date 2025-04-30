@@ -179,13 +179,13 @@ class DemoDbUtil {
         //TODO: Create python environment
         $bashPath = $projectRoot.'/../packer/additional.sh '. $projectRoot . '/..';
         echo "\nbashPath=".$bashPath."\n<br>";
-        $bashPath = realpath($bashPath);
+        //$bashPath = realpath($bashPath);
         //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
         echo "\nbashPath=".$bashPath."\n<br>";
         $pythonEnvCommand = 'bash ' . $bashPath;
         $logger->notice("pythonEnvCommand=[".$pythonEnvCommand."]");
         $resPythonEnvCommand = $userServiceUtil->runProcess($pythonEnvCommand);
-        echo "resPythonEnvCommand=".$resPythonEnvCommand."<br>";
+        echo "resPythonEnvCommand=".$resPythonEnvCommand."\n<br>";
         $res = $res . "; " . $resPythonEnvCommand;
 
         ///////////// 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
