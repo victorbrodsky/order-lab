@@ -178,7 +178,7 @@ class DemoDbUtil {
 
         //TODO: Create python environment
         //$bashPath = $projectRoot.'/../packer/additional.sh '. $projectRoot . '/..';
-        $bashPath = "srv/order-lab-tenantappdemo/utils/scraper/";
+        $bashPath = "srv/order-lab-tenantappdemo/utils/scraper";
         echo "\nbashPath=".$bashPath."\n<br>";
         //$bashPath = realpath($bashPath);
         //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
