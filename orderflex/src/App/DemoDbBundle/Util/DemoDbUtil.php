@@ -176,6 +176,13 @@ class DemoDbUtil {
         echo "resMigrateCommand=".$resMigrateCommand."<br>";
         $res = $res . "; " . $resMigrateCommand;
 
+        //TODO: Create python environment
+        $pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
+        $logger->notice("pythonEnvCommand=[".$pythonEnvCommand."]");
+        $resPythonEnvCommand = $userServiceUtil->runProcess($pythonEnvCommand);
+        echo "resPythonEnvCommand=".$resPythonEnvCommand."<br>";
+        $res = $res . "; " . $resPythonEnvCommand;
+
         ///////////// 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 //        $initializePath = 'python' . ' ' . $projectRoot.'/bin/console cron:demo-db-reset';
 //        $logger->notice("initializePath=[".$initializePath."]");
