@@ -59,7 +59,7 @@ source "$TARGET_DIR/$ENV_NAME/bin/activate"
 
 echo "Virtual environment '$ENV_NAME' created and activated in '$TARGET_DIR'"
 
-python -m pip install -r "$TARGET_DIR/requirements.txt
+python -m pip install -r "$TARGET_DIR/requirements.txt"
 
 deactivate
 
