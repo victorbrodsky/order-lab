@@ -178,11 +178,13 @@ class DemoDbUtil {
 
         //TODO: Create python environment
         //$bashPath = $projectRoot.'/../packer/additional.sh '. $projectRoot . '/..';
-        $bashPath = "srv/order-lab-tenantappdemo";
+        $bashPath = $projectRoot.'/..';
+        //$bashPath = "srv/order-lab-tenantappdemo";
         echo "\nbashPath=".$bashPath."\n<br>";
-        //$bashPath = realpath($bashPath);
+        $bashPath = realpath($bashPath);
+        echo "\nbashPath=".$bashPath."\n<br>";
+        exit('\nSTOP\n');
         //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
-        //echo "\nbashPath=".$bashPath."\n<br>";
         $pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh ' . $bashPath;
         echo "pythonEnvCommand=".$pythonEnvCommand."\n<br>";
         $logger->notice("pythonEnvCommand=[".$pythonEnvCommand."]");
