@@ -3382,7 +3382,7 @@ Pathology and Laboratory Medicine",
             "utils" .
             DIRECTORY_SEPARATOR . "db-manage" .
             DIRECTORY_SEPARATOR . "postgres-manage-python";
-        //echo 'scriptPath='.$scriptPath."<br>";
+        echo '\n dbManagePython: managePackagePath='.$managePackagePath."\n<br>";
 
         //config file
         $configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";

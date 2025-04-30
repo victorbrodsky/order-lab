@@ -101,6 +101,7 @@ class DemoDbUtil {
             echo "processDemoDb: create resCreate=".$resCreate."<br>";
         }
 
+        echo "\n" . "processDemoDb: start." . "\n<br>";
         $logger->notice("processDemoDb: start.");
         $res = '';
 
@@ -108,7 +109,7 @@ class DemoDbUtil {
             // /usr/local/bin/order-lab-thistenant/orderflex/var/backups/
             $backupPath = $projectRoot."/var/backups/";
         }
-        echo "processDemoDb: backupPath=$backupPath <br>";
+        echo "processDemoDb: backupPath=$backupPath \n<br>";
 
         //check if $backupPath exists if not create
         if (!file_exists($backupPath)) {
@@ -121,6 +122,7 @@ class DemoDbUtil {
         //exit('111 <br>');
 
         //1) backup DB (might not be need it)
+        echo "processDemoDb: dbManagePython \n<br>";
         $resBackup = $userServiceUtil->dbManagePython($backupPath, 'backup');
         $res = $res . $resBackup;
 
