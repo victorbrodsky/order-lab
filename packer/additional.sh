@@ -36,9 +36,9 @@ cd "$bashpath"/orderflex/
 #Create python environment for scrapper
 echo -e ${COLOR} Installing env python for scrapper to "$bashpath" ${NC}
 cd "$bashpath"/utils/scrapper/
+ls -a
 python3 -m venv venv
 source venv/bin/activate
-#sudo pip3 install -r requirements.txt
 pip install --upgrade pip
 python -m pip install -r "$bashpath"/utils/scrapper/requirements.txt
 deactivate
