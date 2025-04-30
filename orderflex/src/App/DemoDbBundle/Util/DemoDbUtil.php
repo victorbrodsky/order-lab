@@ -162,6 +162,13 @@ class DemoDbUtil {
         echo "resSyncStorageCommand=".$resSyncStorageCommand."<br>";
         $res = $res . "; " . $resSyncStorageCommand;
 
+        //5 php bin/console doctrine:migrations:version --add --all
+        $addAllCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migrations:version --add --all';
+        $logger->notice("addAllCommand=[".$addAllCommand."]");
+        $resAddAllCommand = $userServiceUtil->runProcess($addAllCommand);
+        echo "resAddAllCommand=".$resAddAllCommand."<br>";
+        $res = $res . "; " . $resAddAllCommand;
+
         //6 php bin/console doctrine:migration:migrate
         $migrateCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migration:migrate';
         $logger->notice("migrateCommand=[".$migrateCommand."]");
