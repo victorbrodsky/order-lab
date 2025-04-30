@@ -183,9 +183,9 @@ class DemoDbUtil {
         echo "\nbashPath=".$bashPath."\n<br>";
         $bashPath = realpath($bashPath);
         echo "\nbashPath=".$bashPath."\n<br>";
-        exit('\nSTOP\n');
+        //exit('\nSTOP\n');
         //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
-        $pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh ' . $bashPath;
+        $pythonEnvCommand = 'bash ' . $bashPath.'/packer/additional.sh ' . $bashPath;
         echo "pythonEnvCommand=".$pythonEnvCommand."\n<br>";
         $logger->notice("pythonEnvCommand=[".$pythonEnvCommand."]");
         $resPythonEnvCommand = $userServiceUtil->runProcess($pythonEnvCommand);
