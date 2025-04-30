@@ -35,11 +35,33 @@ cd "$bashpath"/orderflex/
 
 #Create python environment for scrapper
 echo -e ${COLOR} Installing env python for scrapper to "$bashpath" ${NC}
-cd "$bashpath"/utils/scrapper/
-ls -a
-python3 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-python -m pip install -r "$bashpath"/utils/scrapper/requirements.txt
+#cd "$bashpath"/utils/scrapper/
+#ls -a
+#python3 -m venv venv
+#source venv/bin/activate
+#pip install --upgrade pip
+#python -m pip install -r "$bashpath"/utils/scrapper/requirements.txt
+#deactivate
+#cd "$bashpath"/orderflex/
+
+# Define the target folder
+TARGET_DIR="$bashpath/utils/scrapper"
+ENV_NAME="venv"
+
+# Navigate to the target directory
+cd "$TARGET_DIR" || { echo "Directory not found"; exit 1; }
+
+# Create the virtual environment
+python -m venv "$ENV_NAME"
+
+# Activate the environment (this works for Linux/macOS)
+source "$TARGET_DIR/$ENV_NAME/bin/activate"
+
+echo "Virtual environment '$ENV_NAME' created and activated in '$TARGET_DIR'"
+
+python -m pip install -r "$TARGET_DIR/requirements.txt
+
 deactivate
-cd "$bashpath"/orderflex/
+
+echo "Deactivate virtual environment '$ENV_NAME' in '$TARGET_DIR'"
+
