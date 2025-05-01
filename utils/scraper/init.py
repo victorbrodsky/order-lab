@@ -188,6 +188,12 @@ class Init:
                 print(f"Attempt {attempt + 1} failed. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
 
+    def run_deploy(self):
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/update-system-cache-assets/"
+        driver.get(url)
+        time.sleep(3)
+
     #NOT USED
     def open_misc_panel(self):
         driver = self.automation.get_driver()
@@ -217,6 +223,7 @@ def main():
     init = Init(automation)
     init.initialize()
     init.run_site_settngs()
+    init.run_deploy()
     print("init done!")
     automation.quit_driver()
 

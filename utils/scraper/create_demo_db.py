@@ -17,6 +17,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             init = Init(automation)
             init.initialize()
             init.run_site_settngs()
+            init.run_deploy()
             time.sleep(3)
             demoIds['init'] = False
             print("init done!")

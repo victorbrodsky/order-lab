@@ -1,0 +1,11 @@
+use login url  https://view.online/c/demo-institution/demo-department/directory/login
+Create user: John Doe
+create_user: before click button
+User created: John Doe
+Create user: Albert Einstein
+create_user: before click button
+User created: Albert Einstein
+Create user: Ernest Rutherford
+create_user: before click button
+User created: Ernest Rutherford
+users done!

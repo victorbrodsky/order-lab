@@ -160,13 +160,13 @@ class Users:
             field = driver.find_element(By.ID, "oleg_userdirectorybundle_user_password_second")
             field.clear()
             field.send_keys(user['password'])
-            field.send_keys(user['password'])
 
             #$client->executeScript("$('#oleg_userdirectorybundle_user_roles').select2('val',[".$roleStr."])");
             automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "ID", "s2id_autogen4", user['rolesStr'])
             #automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "s2id_autogen4", None, "EmployeeDirectory Observer")
             automation.select_option("s2id_oleg_userdirectorybundle_user_roles", "ID", "s2id_autogen4", user['rolesStr'])
-                
+
+            print("create_user: before click button")
             automation.click_button("btn-success")
             
             time.sleep(3)

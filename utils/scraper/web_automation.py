@@ -34,19 +34,18 @@ class WebAutomation:
     def initialize_driver(self):
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
-        #options.add_experimental_option("detach", True)
-        #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")  # Replace this with a valid, unique path
 
-        #options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
-        options.add_argument("--headless")  # Optional: Run in headless mode
-
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--headless")  #working in command. Optional: Run in headless mode
+        #options.add_argument("--no-sandbox") #working in command.
+        options.add_argument("--disable-dev-shm-usage") #working in command.
 
         #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
         #options.add_argument("--disable-extensions")  # Disable browser extensions
+        # options.add_experimental_option("detach", True)
+        # options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")  # Replace this with a valid, unique path
+        # options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
+
         self.driver = webdriver.Chrome(options=options)
-        #self.driver = webdriver.Chrome()
 
         #Testing
         #self.driver.get("https://www.google.com")
