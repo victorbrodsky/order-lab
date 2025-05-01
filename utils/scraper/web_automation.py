@@ -38,10 +38,10 @@ class WebAutomation:
         #self.driver = webdriver.Chrome()
 
         #Testing
-        self.driver.get("https://www.google.com")
-        print(self.driver.title)
-        self.driver.quit()
-        exit()
+        #self.driver.get("https://www.google.com")
+        #print(self.driver.title)
+        #self.driver.quit()
+        #exit()
 
         self.driver.set_page_load_timeout(120) # Increase timeout to handle delays
         return self.driver
