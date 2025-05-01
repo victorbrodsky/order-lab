@@ -12,7 +12,7 @@ from resapp import ResApp
 #if run successfully then set value flag to False so it does not run again second time
 def runDemos(automation, demoIds, attempts, max_attempts):
     # Sections
-    if demoIds['init']:
+    if 'init' in demoIds and demoIds['init']:
         try:
             init = Init(automation)
             init.initialize()
@@ -25,7 +25,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             attempts['init'] += 1
     #return demoIds
 
-    if demoIds['users']:
+    if 'users' in demoIds and demoIds['users']:
         try:
             users = Users(automation)
             users.create_user()
@@ -36,7 +36,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             print("users failed:", e)
             attempts['users'] += 1
 
-    if demoIds['vacreq']:
+    if 'vacreq' in demoIds and demoIds['vacreq']:
         try:
             vacreq = VacReq(automation)
             vacreq.create_group()
@@ -48,7 +48,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             print("vacreq failed:", e)
             attempts['vacreq'] += 1
 
-    if demoIds['trp']:
+    if 'trp' in demoIds and demoIds['trp']:
         try:
             trp = Trp(automation)
             trp.create_projects()
@@ -59,7 +59,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             print("trp failed:", e)
             attempts['trp'] += 1
 
-    if demoIds['callog']:
+    if 'callog' in demoIds and demoIds['callog']:
         try:
             callog = CallLog(automation)
             callog.create_calllogs()
@@ -70,7 +70,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             print("callog failed:", e)
             attempts['callog'] += 1
 
-    if demoIds['fellapp']:
+    if 'fellapp' in demoIds and demoIds['fellapp']:
         try:
             fellapp = FellApp(automation)
             fellapp.configs()
@@ -82,7 +82,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
             print("fellapp failed:", e)
             attempts['fellapp'] += 1
 
-    if demoIds['resapp']:
+    if 'resapp' in demoIds and demoIds['resapp']:
         try:
             resapp = ResApp(automation)
             resapp.configs()
