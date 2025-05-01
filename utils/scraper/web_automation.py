@@ -39,7 +39,7 @@ class WebAutomation:
 
         #Testing
         self.driver.get("https://www.google.com")
-        print(driver.title)
+        print(self.driver.title)
         self.driver.quit()
         exit()
 
