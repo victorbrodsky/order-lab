@@ -176,7 +176,7 @@ class DemoDbUtil {
         echo "resMigrateCommand=".$resMigrateCommand."<br>";
         $res = $res . "; " . $resMigrateCommand;
 
-        //TODO: Create python environment
+        //TODO: Create python environment if utils/scraper/.venv does not exists
         //$bashPath = $projectRoot.'/../packer/additional.sh '. $projectRoot . '/..';
         $bashPath = $projectRoot.'/..';
         //$bashPath = "srv/order-lab-tenantappdemo";

@@ -94,7 +94,8 @@ class DemoDbCommand extends Command {
     
     
     
-    
-    
-
+    //Selenium scraper need google chrome driver to be installed:
+    // wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+    // sudo dnf install ./google-chrome-stable_current_x86_64.rpm
+    // google-chrome --version
 } 
