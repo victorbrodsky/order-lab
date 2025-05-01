@@ -112,17 +112,19 @@ def main():
     # Add demo IDs to retry in case of failure
     demoIds = {
         'init': True,
-        'users': True,
-        'vacreq': True,
-        'trp': True,
-        'callog': True,
-        'fellapp': True,
-        'resapp': True
+        # 'users': True,
+        # 'vacreq': True,
+        # 'trp': True,
+        # 'callog': True,
+        # 'fellapp': True,
+        # 'resapp': True
     }
 
     # Track the number of attempts
     attempts = {key: 0 for key in demoIds.keys()}
     max_attempts = 2  # Set maximum retries per section
+
+    print("Start demos")
 
     # Keep running demos until all sections are successful or exceed max attempts
     while any(demoIds.values()):

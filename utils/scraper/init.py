@@ -18,9 +18,9 @@ class Init:
     def initialize(self):
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
-        #print("run init link")
+        print("run init link")
         driver.get(url)
-        #print("after run init link")
+        print("after run init link")
         time.sleep(3)
 
         #login using default username and password

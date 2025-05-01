@@ -4,6 +4,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+#import logging
+import sys
+
 
 import time
 
@@ -12,9 +15,17 @@ class WebAutomation:
         """Initialize the class and set up the WebDriver."""
         self.driver = None
         self.initialize_driver()
+        self.log_file = open("app.log", "w")
+        sys.stdout = self.log_file
 
     def get_driver(self):
         return self.driver
+
+    # logging.basicConfig(
+    #     filename="app.log",
+    #     level=logging.INFO,
+    #     format="%(asctime)s - %(levelname)s - %(message)s",
+    # )
 
     #Error: selenium.common.exceptions.SessionNotCreatedException:
     # Message: session not created: probably user data directory is already in use, please specify a unique value for
