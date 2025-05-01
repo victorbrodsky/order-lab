@@ -36,7 +36,7 @@ class WebAutomation:
         options = webdriver.ChromeOptions()
 
         options.add_argument("--headless")  #working in command. Optional: Run in headless mode
-        #options.add_argument("--no-sandbox") #working in command.
+        options.add_argument("--no-sandbox") #working in command.
         options.add_argument("--disable-dev-shm-usage") #working in command.
 
         #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
