@@ -23,6 +23,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
         except Exception as e:
             print("init failed:", e)
             attempts['init'] += 1
+    return demoIds
 
     if demoIds['users']:
         try:
@@ -108,18 +109,18 @@ def main():
 
     automation = WebAutomation()
     automation.login_to_site(url, username_text, password_text)
-    print("EOF testing")
-    exit()
+    #print("EOF testing")
+    #exit()
 
     # Add demo IDs to retry in case of failure
     demoIds = {
         'init': True,
-        'users': True,
-        'vacreq': True,
-        'trp': True,
-        'callog': True,
-        'fellapp': True,
-        'resapp': True
+        # 'users': True,
+        # 'vacreq': True,
+        # 'trp': True,
+        # 'callog': True,
+        # 'fellapp': True,
+        # 'resapp': True
     }
 
     # Track the number of attempts
