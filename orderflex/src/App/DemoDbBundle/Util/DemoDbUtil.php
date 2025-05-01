@@ -176,21 +176,28 @@ class DemoDbUtil {
         echo "resMigrateCommand=".$resMigrateCommand."<br>";
         $res = $res . "; " . $resMigrateCommand;
 
-        //TODO: Create python environment if utils/scraper/.venv does not exists
+        //Create python environment if utils/scraper/.venv does not exists
+        $folderPath = "/srv/order-lab-tenantappdemo/utils/scraper/venv/bin";
         //$bashPath = $projectRoot.'/../packer/additional.sh '. $projectRoot . '/..';
         $bashPath = $projectRoot.'/..';
         //$bashPath = "srv/order-lab-tenantappdemo";
         echo "\nbashPath=".$bashPath."\n<br>";
         $bashPath = realpath($bashPath);
         echo "\nbashPath=".$bashPath."\n<br>";
-        //exit('\nSTOP\n');
-        //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
-        $pythonEnvCommand = 'bash ' . $bashPath.'/packer/additional.sh ' . $bashPath;
-        echo "pythonEnvCommand=".$pythonEnvCommand."\n<br>";
-        $logger->notice("pythonEnvCommand=[".$pythonEnvCommand."]");
-        $resPythonEnvCommand = $userServiceUtil->runProcess($pythonEnvCommand);
-        echo "resPythonEnvCommand=".$resPythonEnvCommand."\n<br>";
-        $res = $res . "; " . $resPythonEnvCommand;
+
+        $envFolderPath = $bashPath."/utils/scraper/venv";
+        if( is_dir($envFolderPath) ) {
+            echo "Environment folder exists!";
+        } else {
+            //exit('\nSTOP\n');
+            //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
+            $pythonEnvCommand = 'bash ' . $bashPath.'/packer/additional.sh ' . $bashPath;
+            echo "pythonEnvCommand=".$pythonEnvCommand."\n<br>";
+            $logger->notice("pythonEnvCommand=[".$pythonEnvCommand."]");
+            $resPythonEnvCommand = $userServiceUtil->runProcess($pythonEnvCommand);
+            echo "resPythonEnvCommand=".$resPythonEnvCommand."\n<br>";
+            $res = $res . "; " . $resPythonEnvCommand;
+        }
 
         ///////////// 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 //        $initializePath = 'python' . ' ' . $projectRoot.'/bin/console cron:demo-db-reset';
