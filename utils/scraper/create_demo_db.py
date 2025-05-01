@@ -108,16 +108,18 @@ def main():
 
     automation = WebAutomation()
     automation.login_to_site(url, username_text, password_text)
+    print("EOF testing")
+    exit()
 
     # Add demo IDs to retry in case of failure
     demoIds = {
         'init': True,
-        # 'users': True,
-        # 'vacreq': True,
-        # 'trp': True,
-        # 'callog': True,
-        # 'fellapp': True,
-        # 'resapp': True
+        'users': True,
+        'vacreq': True,
+        'trp': True,
+        'callog': True,
+        'fellapp': True,
+        'resapp': True
     }
 
     # Track the number of attempts
