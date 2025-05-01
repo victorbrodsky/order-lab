@@ -24,7 +24,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
         except Exception as e:
             print("init failed:", e)
             attempts['init'] += 1
-    #return demoIds
+            return demoIds
 
     if 'users' in demoIds and demoIds['users']:
         try:
@@ -36,6 +36,7 @@ def runDemos(automation, demoIds, attempts, max_attempts):
         except Exception as e:
             print("users failed:", e)
             attempts['users'] += 1
+            return demoIds
 
     if 'vacreq' in demoIds and demoIds['vacreq']:
         try:
