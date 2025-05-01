@@ -183,7 +183,7 @@ class DemoDbUtil {
         //$bashPath = "srv/order-lab-tenantappdemo";
         echo "\nbashPath=".$bashPath."\n<br>";
         $bashPath = realpath($bashPath);
-        echo "\nbashPath=".$bashPath."\n<br>";
+        echo "\nbashPath=".$bashPath."\n<br>"; //bashPath=/srv/order-lab-tenantappdemo
 
         $envFolderPath = $bashPath."/utils/scraper/venv";
         if( is_dir($envFolderPath) ) {
