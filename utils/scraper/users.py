@@ -117,7 +117,7 @@ class Users:
         driver = automation.get_driver()
         
         for user in self.get_users():
-            #print(user['userid'])
+            print("Create user:", user['displayName'])
             driver.get(url)
             time.sleep(1)
             
@@ -170,7 +170,9 @@ class Users:
             automation.click_button("btn-success")
             
             time.sleep(3)
-            
+
+            print("User created:", user['displayName'])
+
             #break
         
         #automation.quit_driver()
