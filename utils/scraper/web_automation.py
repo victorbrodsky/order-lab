@@ -26,13 +26,20 @@ class WebAutomation:
         #options.add_experimental_option("detach", True)
         #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")  # Replace this with a valid, unique path
 
-        options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
+        #options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
         options.add_argument("--headless")  # Optional: Run in headless mode
 
         #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
         #options.add_argument("--disable-extensions")  # Disable browser extensions
         self.driver = webdriver.Chrome(options=options)
         #self.driver = webdriver.Chrome()
+
+        #Testing
+        driver.get("https://www.google.com")
+        print(driver.title)
+        driver.quit()
+        exit()
+
         self.driver.set_page_load_timeout(120) # Increase timeout to handle delays
         return self.driver
 
