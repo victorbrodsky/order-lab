@@ -29,6 +29,9 @@ class WebAutomation:
         #options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
         options.add_argument("--headless")  # Optional: Run in headless mode
 
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
         #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
         #options.add_argument("--disable-extensions")  # Disable browser extensions
         self.driver = webdriver.Chrome(options=options)
