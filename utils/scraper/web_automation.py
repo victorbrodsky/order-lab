@@ -15,7 +15,7 @@ class WebAutomation:
         """Initialize the class and set up the WebDriver."""
         self.driver = None
         self.initialize_driver()
-        self.log_file = open("app.log", "w")
+        self.log_file = open("scraper.log", "w")
         sys.stdout = self.log_file
 
     def get_driver(self):

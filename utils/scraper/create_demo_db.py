@@ -117,11 +117,11 @@ def main():
     demoIds = {
         'init': True,
         'users': True,
-        # 'vacreq': True,
-        # 'trp': True,
-        # 'callog': True,
-        # 'fellapp': True,
-        # 'resapp': True
+        'vacreq': True,
+        'trp': True,
+        'callog': True,
+        'fellapp': True,
+        'resapp': True
     }
 
     # Track the number of attempts
