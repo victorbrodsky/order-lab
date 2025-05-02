@@ -6,6 +6,8 @@ import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from web_automation import WebAutomation
+import getpass
+
 
 
 class Init:
@@ -115,10 +117,6 @@ class Init:
     def run_site_settngs(self):
         driver = self.automation.get_driver()
 
-        #url = "https://view.online/c/demo-institution/demo-department/directory/settings/"
-        #driver.get(url)
-        #time.sleep(3)
-
         #self.open_misc_panel()
         url = "https://view.online/c/demo-institution/demo-department/directory/admin/populate-country-city-list-with-default-values"
         #driver.get(url)
@@ -188,6 +186,28 @@ class Init:
                 print(f"Attempt {attempt + 1} failed. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
 
+    def init_mailer(self, mailerPassword):
+        driver = self.automation.get_driver()
+        #/c/demo-institution/demo-department/directory/settings/1/edit?param=mailerUser
+        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=mailerUser"
+        driver.get(url)
+        time.sleep(3)
+        # set google mailer
+        # Mailer username: view.online.administrator@pathologysystems.org
+        #oleg_userdirectorybundle_siteparameters_mailerUser
+        username = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerUser")
+        username.send_keys("view.online.administrator@pathologysystems.org")
+        time.sleep(1)
+        self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
+        time.sleep(3)
+
+        # Mailer password: "dfmg hhjs rwjk ywlm"
+        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=mailerPassword"
+        driver.get(url)
+        time.sleep(3)
+        password = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerPassword")
+        password.send_keys(mailerPassword)
+
     def run_deploy(self):
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/directory/admin/update-system-cache-assets/"
@@ -217,15 +237,19 @@ class Init:
                 time.sleep(3)
 
 
-def main():
+def main(mailer_password):
     automation = WebAutomation()
     # Initialize using https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
+    if mailer_password is None:
+        mailer_password = "dfmg hhjs rwjk ywlm"
     init = Init(automation)
     init.initialize()
     init.run_site_settngs()
+    init.init_mailer(mailer_password)
     init.run_deploy()
     print("init done!")
     automation.quit_driver()
 
 if __name__ == "__main__":
-    main()
+    #password = getpass.getpass("Enter your password: ")  # Secure input
+    main(None)

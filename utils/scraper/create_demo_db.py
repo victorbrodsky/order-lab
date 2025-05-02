@@ -7,16 +7,18 @@ from trp import Trp
 from calllog import CallLog
 from fellapp import FellApp
 from resapp import ResApp
+import getpass
 
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
-def runDemos(automation, demoIds, attempts, max_attempts):
+def runDemos(automation, demoIds, attempts, max_attempts, mailer_password):
     # Sections
     if 'init' in demoIds and demoIds['init']:
         try:
             init = Init(automation)
             init.initialize()
             init.run_site_settngs()
+            init.init_mailer(mailer_password)
             init.run_deploy()
             time.sleep(3)
             demoIds['init'] = False
@@ -104,10 +106,13 @@ def runDemos(automation, demoIds, attempts, max_attempts):
     return demoIds
 
 
-def main():
+def main(mailer_password):
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
     password_text = "1234567890_demo"
+    
+    if mailer_password is None:
+        mailer_password = "dfmg hhjs rwjk ywlm"
 
     automation = WebAutomation()
     automation.login_to_site(url, username_text, password_text)
@@ -115,7 +120,7 @@ def main():
     #exit()
 
     # Add demo IDs to retry in case of failure
-    demoIds = {
+    demo_ids = {
         'init': True,
         'users': True,
         'vacreq': True,
@@ -126,14 +131,14 @@ def main():
     }
 
     # Track the number of attempts
-    attempts = {key: 0 for key in demoIds.keys()}
+    attempts = {key: 0 for key in demo_ids.keys()}
     max_attempts = 2  # Set maximum retries per section
 
     print("Start demos")
 
     # Keep running demos until all sections are successful or exceed max attempts
-    while any(demoIds.values()):
-        demoIds = runDemos(automation, demoIds, attempts, max_attempts)
+    while any(demo_ids.values()):
+        demo_ids = runDemos(automation, demo_ids, attempts, max_attempts, mailer_password)
 
     print("All demos done!")
     automation.quit_driver()
@@ -141,4 +146,6 @@ def main():
 
 # Execute the main function
 if __name__ == "__main__":
-    main()
+    #password = getpass.getpass("Enter your password: ")  # Secure input
+    password = None
+    main(password)
