@@ -40,8 +40,9 @@ class WebAutomation:
         #run_by_command = False
         run_by_command = True
 
-        if run_by_command is True:
+        if run_by_command is False:
             options.add_experimental_option("detach", True)  # keep browser open
+
         #options.add_argument("--headless")  #working in command. Run a browser without a graphical user interface
         options.add_argument("--no-sandbox") #working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
         options.add_argument("--disable-dev-shm-usage") #working in command. Prevent Chrome from using shared memory
