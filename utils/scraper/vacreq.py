@@ -260,8 +260,8 @@ def main():
     automation.login_to_site(url, username_text, password_text)
 
     vacreq = VacReq(automation)
-    #vacreq.create_group()
-    #vacreq.add_user_to_group()
+    vacreq.create_group()
+    vacreq.add_user_to_group()
     vacreq.create_vacreqs()
     print("Vacation Request done!")
 
