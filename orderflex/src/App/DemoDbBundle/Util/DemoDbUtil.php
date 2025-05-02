@@ -50,7 +50,8 @@ class DemoDbUtil {
     }
 
 
-    public function processDemoDb( $backupPath=NULL ) {
+    public function processDemoDb( $backupPath=NULL )
+    {
 
 //        if( false === $this->security->isGranted('ROLE_PLATFORM_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -82,122 +83,128 @@ class DemoDbUtil {
 //            exit("Demo DB cannot be run in live environment");
 //        }
 
-        $phpPath = $userServiceUtil->getPhpPath();
-        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $resetDb = false;
 
-        try {
-            echo "processDemoDb try: getSiteSettingParameter" . "<br>";
-            $environment = $userSecUtil->getSiteSettingParameter('environment');
-            if( $environment == 'live' ) {
-                exit("processDemoDb: Demo DB cannot be run in live environment");
+        /////////////// Drop and create new Database ////////////////
+        if ($resetDb) {
+            $phpPath = $userServiceUtil->getPhpPath();
+            $projectRoot = $this->container->get('kernel')->getProjectDir();
+
+            try {
+                echo "processDemoDb try: getSiteSettingParameter" . "<br>";
+                $environment = $userSecUtil->getSiteSettingParameter('environment');
+                if ($environment == 'live') {
+                    exit("processDemoDb: Demo DB cannot be run in live environment");
+                }
+            } catch (\Exception $e) {
+                // Handle the exception
+                //echo "Error: " . $e->getMessage();
+                //exit;
+                $create = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:create';
+                $logger->notice("create command=[" . $create . "]");
+                $resCreate = $userServiceUtil->runProcess($create);
+                echo "processDemoDb: create resCreate=" . $resCreate . "<br>";
             }
-        } catch (\Exception $e) {
-            // Handle the exception
-            //echo "Error: " . $e->getMessage();
-            //exit;
-            $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
-            $logger->notice("create command=[".$create."]");
-            $resCreate = $userServiceUtil->runProcess($create);
-            echo "processDemoDb: create resCreate=".$resCreate."<br>";
-        }
 
-        echo "\n" . "processDemoDb: start." . "\n<br>";
-        $logger->notice("processDemoDb: start.");
-        $res = '';
+            echo "\n" . "processDemoDb: start." . "\n<br>";
+            $logger->notice("processDemoDb: start.");
+            $res = '';
 
-        if( !$backupPath ) {
-            // /usr/local/bin/order-lab-thistenant/orderflex/var/backups/
-            $backupPath = $projectRoot."/var/backups/";
-        }
-        echo "processDemoDb: backupPath=$backupPath \n<br>";
+            if (!$backupPath) {
+                // /usr/local/bin/order-lab-thistenant/orderflex/var/backups/
+                $backupPath = $projectRoot . "/var/backups/";
+            }
+            echo "processDemoDb: backupPath=$backupPath \n<br>";
 
-        //check if $backupPath exists if not create
-        if (!file_exists($backupPath)) {
-            // Attempt to create the folder with appropriate permissions
-            if (!mkdir($backupPath, 0755, true)) {
-                die("processDemoDb: Failed to create directory: $backupPath");
+            //check if $backupPath exists if not create
+            if (!file_exists($backupPath)) {
+                // Attempt to create the folder with appropriate permissions
+                if (!mkdir($backupPath, 0755, true)) {
+                    die("processDemoDb: Failed to create directory: $backupPath");
+                }
+            }
+
+            //exit('111 <br>');
+
+            //1) backup DB (might not be need it)
+            echo "processDemoDb: dbManagePython \n<br>";
+            $resBackupArr = $userServiceUtil->dbManagePython($backupPath, 'backup');
+            $res = $res . implode(',', $resBackupArr);
+
+            //2) reset DB
+            //php bin/console doctrine:database:drop --force
+            $resPhp = $userServiceUtil->runProcess('php -v');
+            echo "php=[" . $resPhp . "]";
+            $res = $res . "; " . $resPhp;
+
+            $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
+            echo "drop command=[" . $drop . "]" . "<br>";
+            $logger->notice("drop command=[" . $drop . "]");
+            $resDrop = $userServiceUtil->runProcess($drop);
+            echo "drop resDrop=" . $resDrop . "<br>";
+            $res = $res . "; " . $resDrop;
+
+            //TODO: delete all Uploaded files
+
+    //        //3) create DB: php bin/console doctrine:database:create
+    //        $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
+    //        $logger->notice("create command=[".$create."]");
+    //        $resCreate = $userServiceUtil->runProcess($create);
+    //        echo "create resCreate=".$resCreate."<br>";
+    //        $res = $res . "; " . $resCreate;
+
+            //4) update DB: php bin/console doctrine:schema:update --complete --force
+            $update = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:update --complete --force';
+            $logger->notice("update command=[" . $update . "]");
+            $resUpdate = $userServiceUtil->runProcess($update);
+            echo "resUpdate=" . $resUpdate . "<br>";
+            $res = $res . "; " . $resUpdate;
+
+            //5 php bin/console doctrine:migration:sync-metadata-storage
+            $syncStorageCommand = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:migration:sync-metadata-storage';
+            $logger->notice("syncStorageCommand=[" . $syncStorageCommand . "]");
+            $resSyncStorageCommand = $userServiceUtil->runProcess($syncStorageCommand);
+            echo "resSyncStorageCommand=" . $resSyncStorageCommand . "<br>";
+            $res = $res . "; " . $resSyncStorageCommand;
+
+            //5 php bin/console doctrine:migrations:version --add --all
+            $addAllCommand = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:migrations:version --add --all';
+            $logger->notice("addAllCommand=[" . $addAllCommand . "]");
+            $resAddAllCommand = $userServiceUtil->runProcess($addAllCommand);
+            echo "resAddAllCommand=" . $resAddAllCommand . "<br>";
+            $res = $res . "; " . $resAddAllCommand;
+
+            //6 php bin/console doctrine:migration:migrate
+            $migrateCommand = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:migration:migrate';
+            $logger->notice("migrateCommand=[" . $migrateCommand . "]");
+            $resMigrateCommand = $userServiceUtil->runProcess($syncStorageCommand);
+            echo "resMigrateCommand=" . $resMigrateCommand . "<br>";
+            $res = $res . "; " . $resMigrateCommand;
+
+            //Create python environment if utils/scraper/.venv does not exists
+            $folderPath = "/srv/order-lab-tenantappdemo/utils/scraper/venv/bin";
+            //$bashPath = $projectRoot.'/../packer/additional.sh '. $projectRoot . '/..';
+            $bashPath = $projectRoot . '/..';
+            //$bashPath = "srv/order-lab-tenantappdemo";
+            echo "\nbashPath=" . $bashPath . "\n<br>";
+            $bashPath = realpath($bashPath);
+            echo "\nbashPath=" . $bashPath . "\n<br>"; //bashPath=/srv/order-lab-tenantappdemo
+
+            $envFolderPath = $bashPath . "/utils/scraper/venv";
+            if (is_dir($envFolderPath)) {
+                echo "Environment folder exists!";
+            } else {
+                //exit('\nSTOP\n');
+                //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
+                $pythonEnvCommand = 'bash ' . $bashPath . '/packer/additional.sh ' . $bashPath;
+                echo "pythonEnvCommand=" . $pythonEnvCommand . "\n<br>";
+                $logger->notice("pythonEnvCommand=[" . $pythonEnvCommand . "]");
+                $resPythonEnvCommand = $userServiceUtil->runProcess($pythonEnvCommand);
+                echo "resPythonEnvCommand=" . $resPythonEnvCommand . "\n<br>";
+                $res = $res . "; " . $resPythonEnvCommand;
             }
         }
-
-        //exit('111 <br>');
-
-        //1) backup DB (might not be need it)
-        echo "processDemoDb: dbManagePython \n<br>";
-        $resBackupArr = $userServiceUtil->dbManagePython($backupPath, 'backup');
-        $res = $res . implode(',', $resBackupArr);
-
-        //2) reset DB
-        //php bin/console doctrine:database:drop --force
-        $resPhp = $userServiceUtil->runProcess('php -v');
-        echo "php=[".$resPhp."]";
-        $res = $res . "; " . $resPhp;
-
-        $drop = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:schema:drop --full-database --force --verbose';
-        echo "drop command=[" . $drop . "]" . "<br>";
-        $logger->notice("drop command=[" . $drop . "]");
-        $resDrop = $userServiceUtil->runProcess($drop);
-        echo "drop resDrop=" . $resDrop . "<br>";
-        $res = $res . "; " . $resDrop;
-
-        //TODO: delete all Uploaded files
-
-//        //3) create DB: php bin/console doctrine:database:create
-//        $create = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:database:create';
-//        $logger->notice("create command=[".$create."]");
-//        $resCreate = $userServiceUtil->runProcess($create);
-//        echo "create resCreate=".$resCreate."<br>";
-//        $res = $res . "; " . $resCreate;
-
-        //4) update DB: php bin/console doctrine:schema:update --complete --force
-        $update = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:schema:update --complete --force';
-        $logger->notice("update command=[".$update."]");
-        $resUpdate = $userServiceUtil->runProcess($update);
-        echo "resUpdate=".$resUpdate."<br>";
-        $res = $res . "; " . $resUpdate;
-
-        //5 php bin/console doctrine:migration:sync-metadata-storage
-        $syncStorageCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migration:sync-metadata-storage';
-        $logger->notice("syncStorageCommand=[".$syncStorageCommand."]");
-        $resSyncStorageCommand = $userServiceUtil->runProcess($syncStorageCommand);
-        echo "resSyncStorageCommand=".$resSyncStorageCommand."<br>";
-        $res = $res . "; " . $resSyncStorageCommand;
-
-        //5 php bin/console doctrine:migrations:version --add --all
-        $addAllCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migrations:version --add --all';
-        $logger->notice("addAllCommand=[".$addAllCommand."]");
-        $resAddAllCommand = $userServiceUtil->runProcess($addAllCommand);
-        echo "resAddAllCommand=".$resAddAllCommand."<br>";
-        $res = $res . "; " . $resAddAllCommand;
-
-        //6 php bin/console doctrine:migration:migrate
-        $migrateCommand = $phpPath . ' ' . $projectRoot.'/bin/console doctrine:migration:migrate';
-        $logger->notice("migrateCommand=[".$migrateCommand."]");
-        $resMigrateCommand = $userServiceUtil->runProcess($syncStorageCommand);
-        echo "resMigrateCommand=".$resMigrateCommand."<br>";
-        $res = $res . "; " . $resMigrateCommand;
-
-        //Create python environment if utils/scraper/.venv does not exists
-        $folderPath = "/srv/order-lab-tenantappdemo/utils/scraper/venv/bin";
-        //$bashPath = $projectRoot.'/../packer/additional.sh '. $projectRoot . '/..';
-        $bashPath = $projectRoot.'/..';
-        //$bashPath = "srv/order-lab-tenantappdemo";
-        echo "\nbashPath=".$bashPath."\n<br>";
-        $bashPath = realpath($bashPath);
-        echo "\nbashPath=".$bashPath."\n<br>"; //bashPath=/srv/order-lab-tenantappdemo
-
-        $envFolderPath = $bashPath."/utils/scraper/venv";
-        if( is_dir($envFolderPath) ) {
-            echo "Environment folder exists!";
-        } else {
-            //exit('\nSTOP\n');
-            //$pythonEnvCommand = 'bash ' . $projectRoot.'/../packer/additional.sh '. $projectRoot . '/../';
-            $pythonEnvCommand = 'bash ' . $bashPath.'/packer/additional.sh ' . $bashPath;
-            echo "pythonEnvCommand=".$pythonEnvCommand."\n<br>";
-            $logger->notice("pythonEnvCommand=[".$pythonEnvCommand."]");
-            $resPythonEnvCommand = $userServiceUtil->runProcess($pythonEnvCommand);
-            echo "resPythonEnvCommand=".$resPythonEnvCommand."\n<br>";
-            $res = $res . "; " . $resPythonEnvCommand;
-        }
+        /////////////// EOF Drop and create new Database ////////////////
 
         ///////////// 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 //        $initializePath = 'python' . ' ' . $projectRoot.'/bin/console cron:demo-db-reset';
