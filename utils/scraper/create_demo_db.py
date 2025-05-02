@@ -11,9 +11,10 @@ import getpass
 
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
-def runDemos(automation, demoIds, attempts, max_attempts, mailer_password):
+def runDemos(automation, demo_ids, attempts, max_attempts, mailer_password):
     # Sections
-    if 'init' in demoIds and demoIds['init']:
+    if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
+        print("init attempt=",attempts['init'])
         try:
             init = Init(automation)
             init.initialize()
@@ -21,89 +22,95 @@ def runDemos(automation, demoIds, attempts, max_attempts, mailer_password):
             init.init_mailer(mailer_password)
             init.run_deploy()
             time.sleep(3)
-            demoIds['init'] = False
+            demo_ids['init'] = False
             print("init done!")
         except Exception as e:
             print("init failed:", e)
             attempts['init'] += 1
-            return demoIds
+            return demo_ids
 
-    if 'users' in demoIds and demoIds['users']:
+    if 'users' in demo_ids and demo_ids['users'] and attempts['users'] <= max_attempts:
+        print("users attempt=", attempts['users'])
         try:
             users = Users(automation)
             users.create_user()
             time.sleep(3)
-            demoIds['users'] = False
+            demo_ids['users'] = False
             print("users done!")
         except Exception as e:
             print("users failed:", e)
             attempts['users'] += 1
-            return demoIds
+            return demo_ids
 
-    if 'vacreq' in demoIds and demoIds['vacreq']:
+    if 'vacreq' in demo_ids and demo_ids['vacreq'] and attempts['vacreq'] <= max_attempts:
+        print("vacreq attempt=", attempts['vacreq'])
         try:
             vacreq = VacReq(automation)
             vacreq.create_group()
             vacreq.create_vacreqs()
             time.sleep(3)
-            demoIds['vacreq'] = False
+            demo_ids['vacreq'] = False
             print("vacreq done!")
         except Exception as e:
             print("vacreq failed:", e)
             attempts['vacreq'] += 1
 
-    if 'trp' in demoIds and demoIds['trp']:
+    if 'trp' in demo_ids and demo_ids['trp'] and attempts['trp'] <= max_attempts:
+        print("trp attempt=", attempts['trp'])
         try:
             trp = Trp(automation)
             trp.create_projects()
             time.sleep(3)
-            demoIds['trp'] = False
+            demo_ids['trp'] = False
             print("trp done!")
         except Exception as e:
             print("trp failed:", e)
             attempts['trp'] += 1
 
-    if 'callog' in demoIds and demoIds['callog']:
+    if 'callog' in demo_ids and demo_ids['callog'] and attempts['callog'] <= max_attempts:
+        print("callog attempt=", attempts['callog'])
         try:
             callog = CallLog(automation)
             callog.create_calllogs()
             time.sleep(3)
-            demoIds['callog'] = False
+            demo_ids['callog'] = False
             print("callog done!")
         except Exception as e:
             print("callog failed:", e)
             attempts['callog'] += 1
 
-    if 'fellapp' in demoIds and demoIds['fellapp']:
+    if 'fellapp' in demo_ids and demo_ids['fellapp'] and attempts['fellapp'] <= max_attempts:
+        print("fellapp attempt=", attempts['fellapp'])
         try:
             fellapp = FellApp(automation)
             fellapp.configs()
             fellapp.create_fellapps()
             time.sleep(3)
-            demoIds['fellapp'] = False
+            demo_ids['fellapp'] = False
             print("fellapp done!")
         except Exception as e:
             print("fellapp failed:", e)
             attempts['fellapp'] += 1
 
-    if 'resapp' in demoIds and demoIds['resapp']:
+    if 'resapp' in demo_ids and demo_ids['resapp'] and attempts['resapp'] <= max_attempts:
+        print("resapp attempt=", attempts['resapp'])
         try:
             resapp = ResApp(automation)
             resapp.configs()
             resapp.create_resapps()
             time.sleep(3)
-            demoIds['resapp'] = False
+            demo_ids['resapp'] = False
             print("resapp done!")
         except Exception as e:
             print("resapp failed:", e)
             attempts['resapp'] += 1
 
     # Disable retries for sections exceeding max attempts
-    for key in demoIds.keys():
+    for key in demo_ids.keys():
         if attempts[key] >= max_attempts:
-            demoIds[key] = False
+            demo_ids[key] = False
 
-    return demoIds
+    return demo_ids
 
 
 def main(mailer_password):
