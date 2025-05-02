@@ -255,7 +255,10 @@ class DemoDbUtil {
         $logger->notice("processDemoDb: run process with python command=[".$pythonInitCommand."]");
         $res = null;
         //$res = $userServiceUtil->runProcess($pythonInitCommand);
-        //$res = $userServiceUtil->runSymfonyProcessRealTime([$pythonInitCommand]);
+        
+        $pythonInitCommandArr = [$pythonEnvPath, $pythonScriptPath];
+        echo "processDemoDb: run process with python command pythonInitCommandArr=[".join('; ',$pythonInitCommandArr)."] <br>";
+        $res = $userServiceUtil->runSymfonyProcessRealTime([$pythonInitCommandArr]);
 
         //Error: selenium.common.exceptions.SessionNotCreatedException: Message: session not created: probably user data dir
         //ectory is already in use, please specify a unique value for --user-data-dir argument,
