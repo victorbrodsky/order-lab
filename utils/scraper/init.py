@@ -196,6 +196,8 @@ class Init:
         # Mailer username: view.online.administrator@pathologysystems.org
         #oleg_userdirectorybundle_siteparameters_mailerUser
         username = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerUser")
+        username.clear()
+        time.sleep(1)
         username.send_keys("view.online.administrator@pathologysystems.org")
         time.sleep(1)
         self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
@@ -206,6 +208,8 @@ class Init:
         driver.get(url)
         time.sleep(3)
         password = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerPassword")
+        time.sleep(1)
+        password.clear()
         password.send_keys(mailerPassword)
 
     def run_deploy(self):

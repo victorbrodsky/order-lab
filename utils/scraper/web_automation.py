@@ -38,8 +38,8 @@ class WebAutomation:
         options = webdriver.ChromeOptions()
 
         #run_by_command is True if calling by Symfony command in php
-        #run_by_command = False
-        run_by_command = True
+        run_by_command = False
+        #run_by_command = True
 
         if run_by_command is True:
             options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
