@@ -37,13 +37,13 @@ class WebAutomation:
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
 
-        #options.add_argument("--headless")  #working in command. Run a browser without a graphical user interface
+        options.add_argument("--headless")  #working in command. Run a browser without a graphical user interface
         options.add_argument("--no-sandbox") #working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
         options.add_argument("--disable-dev-shm-usage") #working in command. Prevent Chrome from using shared memory
 
         #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
         #options.add_argument("--disable-extensions")  # Disable browser extensions
-        options.add_experimental_option("detach", True) #keep browser open
+        #options.add_experimental_option("detach", True) #keep browser open
         # options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")  # Replace this with a valid, unique path
         # options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
 
