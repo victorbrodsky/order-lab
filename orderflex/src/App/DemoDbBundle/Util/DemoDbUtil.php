@@ -85,6 +85,7 @@ class DemoDbUtil {
 
         $resetDb = false;
 
+        echo "processDemoDb: start with resetDb=$resetDb <br>";
         $logger->notice("processDemoDb: start with resetDb=$resetDb");
 
         /////////////// Drop and create new Database ////////////////
@@ -250,9 +251,11 @@ class DemoDbUtil {
             //" --user $dbUsername".
             //" --password $dbPassword"
         ;
+        echo "processDemoDb: run process with python command=[".$pythonInitCommand."] <br>";
         $logger->notice("processDemoDb: run process with python command=[".$pythonInitCommand."]");
+        $res = null;
         //$res = $userServiceUtil->runProcess($pythonInitCommand);
-        $res = $userServiceUtil->runSymfonyProcessRealTime([$pythonInitCommand]);
+        //$res = $userServiceUtil->runSymfonyProcessRealTime([$pythonInitCommand]);
 
         //Error: selenium.common.exceptions.SessionNotCreatedException: Message: session not created: probably user data dir
         //ectory is already in use, please specify a unique value for --user-data-dir argument,
