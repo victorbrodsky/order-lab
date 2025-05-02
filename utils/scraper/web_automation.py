@@ -37,12 +37,15 @@ class WebAutomation:
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
 
+        #run_by_command is True if calling by Symfony command in php
         #run_by_command = False
         run_by_command = True
 
-        if run_by_command is False:
+        if run_by_command is True:
+            options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
+        else:
+            print("initialize_driver: run by console or pycharm")
             options.add_experimental_option("detach", True)  # keep browser open
-            options.add_argument("--headless")  #working in command. Run a browser without a graphical user interface
 
         options.add_argument("--no-sandbox") #working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
         options.add_argument("--disable-dev-shm-usage") #working in command. Prevent Chrome from using shared memory
