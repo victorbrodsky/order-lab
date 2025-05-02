@@ -1953,6 +1953,23 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
+    function runSymfonyProcessRealTime(array $command): void {
+        $process = new Process($command);
+        $process->setTimeout(0); // Optional: Disable timeout for long-running processes
+
+        // Start the process and display output in real time
+        $process->start(function ($type, $buffer) {
+            if (Process::ERR === $type) {
+                echo 'Error: ' . $buffer;
+            } else {
+                echo $buffer;
+            }
+        });
+
+        // Wait for the process to finish
+        $process->wait();
+    }
+
     public function runProcess_NEW($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
