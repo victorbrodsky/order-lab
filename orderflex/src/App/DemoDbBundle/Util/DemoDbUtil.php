@@ -255,9 +255,9 @@ class DemoDbUtil {
         $logger->notice("processDemoDb: run process with python command=[".$pythonInitCommand."]");
         $res = null;
         //$res = $userServiceUtil->runProcess($pythonInitCommand);
-        
+
         $pythonInitCommandArr = [$pythonEnvPath, $pythonScriptPath];
-        echo "processDemoDb: run process with python command pythonInitCommandArr=[".join('; ',$pythonInitCommandArr)."] <br>";
+        echo "\nprocessDemoDb: run process with python command pythonInitCommandArr=[".join(' ',$pythonInitCommandArr)."] \n<br>";
         $res = $userServiceUtil->runSymfonyProcessRealTime([$pythonInitCommandArr]);
 
         //Error: selenium.common.exceptions.SessionNotCreatedException: Message: session not created: probably user data dir
