@@ -250,7 +250,7 @@ class DemoDbUtil {
             //" --user $dbUsername".
             //" --password $dbPassword"
         ;
-        $logger->notice("processDemoDb: python command=[".$pythonInitCommand."]");
+        $logger->notice("processDemoDb: run process with python command=[".$pythonInitCommand."]");
         $res = $userServiceUtil->runProcess($pythonInitCommand);
 
         //Error: selenium.common.exceptions.SessionNotCreatedException: Message: session not created: probably user data dir
