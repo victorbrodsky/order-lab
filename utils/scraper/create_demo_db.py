@@ -119,10 +119,10 @@ def main():
         'init': True,
         'users': True,
         'vacreq': True,
-        'trp': True,
-        'callog': True,
-        'fellapp': True,
-        'resapp': True
+        #'trp': True,
+        #'callog': True,
+        #'fellapp': True,
+        #'resapp': True
     }
 
     # Track the number of attempts
