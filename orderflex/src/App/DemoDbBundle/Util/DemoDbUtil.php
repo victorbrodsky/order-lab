@@ -85,6 +85,8 @@ class DemoDbUtil {
 
         $resetDb = false;
 
+        $logger->notice("processDemoDb: start with resetDb=$resetDb");
+
         /////////////// Drop and create new Database ////////////////
         if ($resetDb) {
             $phpPath = $userServiceUtil->getPhpPath();
@@ -256,6 +258,10 @@ class DemoDbUtil {
         // or don't use --user-data-dir
         //check chrome: ps aux | grep chrome
         //kill -p PID
+        //Fix it by:
+        //options.add_argument("--headless")  #working in command. Optional: Run in headless mode
+        //options.add_argument("--no-sandbox") #working in command.
+        //options.add_argument("--disable-dev-shm-usage") #working in command.
         ///////////// EOF 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 
         return $res;
