@@ -83,7 +83,8 @@ class DemoDbUtil {
 //            exit("Demo DB cannot be run in live environment");
 //        }
 
-        $resetDb = false;
+        //$resetDb = false;
+        $resetDb = true;
 
         echo "processDemoDb: start with resetDb=$resetDb <br>";
         $logger->notice("processDemoDb: start with resetDb=$resetDb");
@@ -206,7 +207,7 @@ class DemoDbUtil {
                 echo "resPythonEnvCommand=" . $resPythonEnvCommand . "\n<br>";
                 $res = $res . "; " . $resPythonEnvCommand;
             }
-        }
+        } //EOF if ($resetDb)
         /////////////// EOF Drop and create new Database ////////////////
 
         ///////////// 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
