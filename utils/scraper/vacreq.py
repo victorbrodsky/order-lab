@@ -122,12 +122,24 @@ class VacReq:
                     #Method 2
                     if 1:
                         parent_div = driver.find_element(By.ID, "vacreq-organizational-group-submitter")
+                        time.sleep(1)
                         child_div = parent_div.find_element(By.ID, "s2id_oleg_vacreqbundle_user_participants_users")
+                        time.sleep(1)
                         child_div.click()
-                        child_input_div = parent_div.find_element(By.ID, "s2id_autogen3")
+                        time.sleep(1)
+                        #child_input_div = child_div.find_element(By.ID, "s2id_autogen3")
+                        child_input_div = child_div.find_element(By.CLASS_NAME, "select2-input")
+                        time.sleep(1)
                         child_input_div.send_keys(user['displayName'])
                         time.sleep(1)
-                        active_input.send_keys(Keys.ENTER)
+                        child_input_div.send_keys(Keys.ENTER)
+                        time.sleep(1)
+
+                    #Method 3
+                    #if 0:
+                    #    self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
+                    #                                  "#select2-drop .select2-input",
+                    #                                  "Pathology and Laboratory Medicine")
 
                     time.sleep(1)
                     button = WebDriverWait(driver, 10).until(
