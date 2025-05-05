@@ -103,18 +103,32 @@ class VacReq:
             if 1:
                 for user in self.users.get_users():
                     print(f"Adding submitter: {user['displayName']}")
-                    active_input = driver.find_element(
-                        By.XPATH,
-                        "//div[@id='vacreq-organizational-group-submitter']//input[not(@disabled)]"
-                    )
-                    time.sleep(1)
-                    actions = ActionChains(driver)
-                    time.sleep(1)
-                    actions.move_to_element(active_input).click().perform()
-                    time.sleep(1)
-                    active_input.send_keys(user['displayName'])
-                    time.sleep(1)
-                    active_input.send_keys(Keys.ENTER)
+
+                    #Method 1
+                    if 1:
+                        active_input = driver.find_element(
+                            By.XPATH,
+                            "//div[@id='vacreq-organizational-group-submitter']//input[not(@disabled)]"
+                        )
+                        time.sleep(1)
+                        actions = ActionChains(driver)
+                        time.sleep(1)
+                        actions.move_to_element(active_input).click().perform()
+                        time.sleep(1)
+                        active_input.send_keys(user['displayName'])
+                        time.sleep(1)
+                        active_input.send_keys(Keys.ENTER)
+
+                    #Method 2
+                    if 0:
+                        parent_div = driver.find_element(By.ID, "vacreq-organizational-group-submitter")
+                        child_div = parent_div.find_element(By.CLASS_NAME, "s2id_oleg_vacreqbundle_user_participants_users")
+                        child_div.click()
+                        child_input_div = parent_div.find_element(By.ID, "s2id_autogen3")
+                        child_input_div.send_keys(user['displayName'])
+                        time.sleep(1)
+                        active_input.send_keys(Keys.ENTER)
+
                     time.sleep(1)
                     button = WebDriverWait(driver, 10).until(
                         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Submitter(s)')]"))
