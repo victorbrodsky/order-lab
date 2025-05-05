@@ -122,7 +122,7 @@ class VacReq:
                     #Method 2
                     if 1:
                         parent_div = driver.find_element(By.ID, "vacreq-organizational-group-submitter")
-                        child_div = parent_div.find_element(By.CLASS_NAME, "s2id_oleg_vacreqbundle_user_participants_users")
+                        child_div = parent_div.find_element(By.ID, "s2id_oleg_vacreqbundle_user_participants_users")
                         child_div.click()
                         child_input_div = parent_div.find_element(By.ID, "s2id_autogen3")
                         child_input_div.send_keys(user['displayName'])
