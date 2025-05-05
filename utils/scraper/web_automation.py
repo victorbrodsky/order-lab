@@ -17,18 +17,20 @@ class WebAutomation:
         self.run_by_symfony_command = run_by_symfony_command
         self.initialize_driver()
 
-        #write output to a file
-        #self.log_file = open("scraper.log", "w")
-        #sys.stdout = self.log_file
+        if self.run_by_symfony_command is True:
+            #write output to a file
+            self.log_file = open("scraper.log", "w")
+            sys.stdout = self.log_file
 
     def get_driver(self):
         return self.driver
 
-    # logging.basicConfig(
-    #     filename="app.log",
-    #     level=logging.INFO,
-    #     format="%(asctime)s - %(levelname)s - %(message)s",
-    # )
+        if self.run_by_symfony_command is True:
+            logging.basicConfig(
+                filename="app.log",
+                level=logging.INFO,
+                format="%(asctime)s - %(levelname)s - %(message)s",
+            )
 
     #Error: selenium.common.exceptions.SessionNotCreatedException:
     # Message: session not created: probably user data directory is already in use, please specify a unique value for
