@@ -121,6 +121,9 @@ class VacReq:
 
                     #Method 2
                     if 1:
+                        WebDriverWait(driver, 10).until(
+                            EC.visibility_of_element_located((By.ID, "vacreq-organizational-group-submitter"))
+                        )
                         parent_div = driver.find_element(By.ID, "vacreq-organizational-group-submitter")
                         time.sleep(1)
                         child_div = parent_div.find_element(By.ID, "s2id_oleg_vacreqbundle_user_participants_users")
