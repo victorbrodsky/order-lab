@@ -39,9 +39,9 @@ class WebAutomation:
 
         #run_by_command is True if calling by Symfony command in php
         #run_by_command = False
-        run_by_command = True
+        run_by_symfony_command = True
 
-        if run_by_command is True:
+        if run_by_symfony_command is True:
             options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
         else:
             print("initialize_driver: run by console or pycharm")
