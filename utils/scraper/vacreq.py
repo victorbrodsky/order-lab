@@ -292,7 +292,8 @@ def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
     password_text = "1234567890_demo"
-    automation = WebAutomation()
+    #automation = WebAutomation() #run_by_symfony_command=True
+    automation = WebAutomation(run_by_symfony_command=True)  # run_by_symfony_command=True
     automation.login_to_site(url, username_text, password_text)
 
     vacreq = VacReq(automation)

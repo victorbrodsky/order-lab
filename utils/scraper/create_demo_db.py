@@ -48,7 +48,7 @@ def runDemos(automation, demo_ids, attempts, max_attempts, mailer_password):
             vacreq = VacReq(automation)
             vacreq.create_group()
             vacreq.add_user_to_group()
-            vacreq.create_vacreqs()
+            #vacreq.create_vacreqs()
             time.sleep(3)
             demo_ids['vacreq'] = False
             print("vacreq done!")
