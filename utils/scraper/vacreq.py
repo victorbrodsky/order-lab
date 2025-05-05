@@ -77,8 +77,10 @@ class VacReq:
                 # self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
                 #                               "#vacreq-organizational-group-approver .select2-input",
                 #                               "administrator")
-                active_input = driver.find_element(By.XPATH,
-                                                   "//div[@id='vacreq-organizational-group-approver']//input[not(@disabled)]")
+                active_input = driver.find_element(
+                    By.XPATH,
+                    "//div[@id='vacreq-organizational-group-approver']//input[not(@disabled)]"
+                )
                 actions = ActionChains(driver)
                 actions.move_to_element(active_input).click().perform()
                 time.sleep(1)
@@ -105,7 +107,9 @@ class VacReq:
                         By.XPATH,
                         "//div[@id='vacreq-organizational-group-submitter']//input[not(@disabled)]"
                     )
+                    time.sleep(1)
                     actions = ActionChains(driver)
+                    time.sleep(1)
                     actions.move_to_element(active_input).click().perform()
                     time.sleep(1)
                     active_input.send_keys(user['displayName'])
