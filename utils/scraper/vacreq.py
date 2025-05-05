@@ -118,7 +118,7 @@ class VacReq:
                     button.click()
                     time.sleep(3)
                     print("Button Add Submitter(s) clicked after waiting!")
-                    break
+                    #break
         except Exception as e:
             print(f"An error occurred in add_user_to_group: {e}")
 
@@ -265,7 +265,7 @@ def main():
     vacreq = VacReq(automation)
     vacreq.create_group()
     vacreq.add_user_to_group()
-    #vacreq.create_vacreqs()
+    vacreq.create_vacreqs()
     print("Vacation Request done!")
 
     automation.quit_driver()
