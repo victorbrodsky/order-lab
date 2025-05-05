@@ -122,7 +122,7 @@ def main(mailer_password):
     if mailer_password is None:
         mailer_password = "dfmg hhjs rwjk ywlm"
 
-    automation = WebAutomation()
+    automation = WebAutomation(run_by_symfony_command=True)
     automation.login_to_site(url, username_text, password_text)
     #print("EOF testing")
     #exit()

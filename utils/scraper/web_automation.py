@@ -11,9 +11,10 @@ import sys
 import time
 
 class WebAutomation:
-    def __init__(self):
+    def __init__(self, run_by_symfony_command=False):
         """Initialize the class and set up the WebDriver."""
         self.driver = None
+        self.run_by_symfony_command = run_by_symfony_command
         self.initialize_driver()
 
         #write output to a file
@@ -37,11 +38,11 @@ class WebAutomation:
         """Initializes the WebDriver."""
         options = webdriver.ChromeOptions()
 
-        #run_by_command is True if calling by Symfony command in php
-        #run_by_command = False
-        run_by_symfony_command = True
+        #run_by_symfony_command is True if calling by Symfony command in php
+        #run_by_symfony_command = False
+        #run_by_symfony_command = True
 
-        if run_by_symfony_command is True:
+        if self.run_by_symfony_command is True:
             options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
         else:
             print("initialize_driver: run by console or pycharm")

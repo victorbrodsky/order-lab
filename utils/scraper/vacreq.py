@@ -72,6 +72,7 @@ class VacReq:
         # Add approver
         try:
             if 1:
+                print("Adding approver administrator")
                 #Add approver
                 # self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
                 #                               "#vacreq-organizational-group-approver .select2-input",
@@ -99,6 +100,7 @@ class VacReq:
         try:
             if 1:
                 for user in self.users.get_users():
+                    print(f"Adding submitter: {user['displayName']}")
                     active_input = driver.find_element(
                         By.XPATH,
                         "//div[@id='vacreq-organizational-group-submitter']//input[not(@disabled)]"
@@ -116,6 +118,7 @@ class VacReq:
                     button.click()
                     time.sleep(3)
                     print("Button Add Submitter(s) clicked after waiting!")
+                    break
         except Exception as e:
             print(f"An error occurred in add_user_to_group: {e}")
 
@@ -262,7 +265,7 @@ def main():
     vacreq = VacReq(automation)
     vacreq.create_group()
     vacreq.add_user_to_group()
-    vacreq.create_vacreqs()
+    #vacreq.create_vacreqs()
     print("Vacation Request done!")
 
     automation.quit_driver()
