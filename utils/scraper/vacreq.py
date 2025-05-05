@@ -96,7 +96,7 @@ class VacReq:
                 time.sleep(1)
 
         except Exception as e:
-            print(f"An error occurred in add_user_to_group: {e}")
+            print(f"An error occurred in add_user_to_group approver: {e}")
 
         # Add submitter
         try:
@@ -105,7 +105,7 @@ class VacReq:
                     print(f"Adding submitter: {user['displayName']}")
 
                     #Method 1
-                    if 1:
+                    if 0:
                         active_input = driver.find_element(
                             By.XPATH,
                             "//div[@id='vacreq-organizational-group-submitter']//input[not(@disabled)]"
@@ -120,7 +120,7 @@ class VacReq:
                         active_input.send_keys(Keys.ENTER)
 
                     #Method 2
-                    if 0:
+                    if 1:
                         parent_div = driver.find_element(By.ID, "vacreq-organizational-group-submitter")
                         child_div = parent_div.find_element(By.CLASS_NAME, "s2id_oleg_vacreqbundle_user_participants_users")
                         child_div.click()
@@ -138,7 +138,7 @@ class VacReq:
                     print("Button Add Submitter(s) clicked after waiting!")
                     #break
         except Exception as e:
-            print(f"An error occurred in add_user_to_group: {e}")
+            print(f"An error occurred in add_user_to_group submitter: {e}")
 
         print("EOF add_user_to_group")
 
