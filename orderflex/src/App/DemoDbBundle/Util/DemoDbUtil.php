@@ -86,7 +86,10 @@ class DemoDbUtil {
         //Testing
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
-        dump($tenantappSettings);
+        $maileruser = $tenantappSettings[0]['maileruser'];
+        $mailerpassword = $tenantappSettings[0]['mailerpassword'];
+        echo "maileruser=$maileruser, mailerpassword=$mailerpassword <br>";
+        //dump($tenantappSettings);
         exit('111');
 
         //$resetDb = false;
@@ -224,11 +227,15 @@ class DemoDbUtil {
 //        $res = $res . "; " . $resinitializeCommand;
 
         //Get $mailerpassword from tenantapp1
+        $maileruser = "";
         $mailerpassword = "";
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
-        dump($tenantappSettings);
-        exit('111');
+        $maileruser = $tenantappSettings[0]['maileruser'];
+        $mailerpassword = $tenantappSettings[0]['mailerpassword'];
+        //echo "maileruser=$maileruser, mailerpassword=$mailerpassword <br>";
+        //dump($tenantappSettings);
+        //exit('111');
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
