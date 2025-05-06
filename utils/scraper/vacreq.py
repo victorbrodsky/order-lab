@@ -101,11 +101,12 @@ class VacReq:
         # Add submitter
         try:
             if 1:
+                use_method = 2
                 for user in self.users.get_users():
                     print(f"Adding submitter: {user['displayName']}")
 
                     #Method 1
-                    if 0:
+                    if use_method == 1:
                         active_input = driver.find_element(
                             By.XPATH,
                             "//div[@id='vacreq-organizational-group-submitter']//input[not(@disabled)]"
@@ -120,7 +121,7 @@ class VacReq:
                         active_input.send_keys(Keys.ENTER)
 
                     #Method 2
-                    if 1:
+                    if use_method == 2:
                         WebDriverWait(driver, 10).until(
                             EC.visibility_of_element_located((By.ID, "vacreq-organizational-group-submitter"))
                         )
@@ -139,10 +140,10 @@ class VacReq:
                         time.sleep(1)
 
                     #Method 3
-                    #if 0:
-                    #    self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
-                    #                                  "#select2-drop .select2-input",
-                    #                                  "Pathology and Laboratory Medicine")
+                    if use_method == 3:
+                        self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
+                                                      "#select2-drop .select2-input",
+                                                      "Pathology and Laboratory Medicine")
 
                     time.sleep(1)
                     button = WebDriverWait(driver, 10).until(
@@ -299,7 +300,7 @@ def main():
     vacreq = VacReq(automation)
     vacreq.create_group()
     vacreq.add_user_to_group()
-    vacreq.create_vacreqs()
+    #vacreq.create_vacreqs()
     print("Vacation Request done!")
 
     automation.quit_driver()
