@@ -1333,16 +1333,46 @@ class UserTenantUtil
         return $tenantsRows;
     }
 
-    public function getTenantSiteSettingsTable($tenant)
+    public function getTenantData($tenantName)
+    {
+        $tenantDataArr['existedTenantIds'][] = $tenantName;
+        $tenantDataArr = $this->getTenantDataFromParameters($tenantDataArr);
+
+        //dump($tenantDataArr);
+        //exit('111');
+
+        if (!isset($tenantDataArr[$tenantName])) {
+            return array();
+        }
+
+        $host = $tenantDataArr[$tenantName]['databaseHost'];
+        $dbname = $tenantDataArr[$tenantName]['databaseName'];
+        $user = $tenantDataArr[$tenantName]['databaseUser'];
+        $password = $tenantDataArr[$tenantName]['databasePassword'];
+        //echo "dbname=$dbname<br>";
+
+        //create temporary tenant object
+        $tenant = new TenantList();
+        $tenant->setDatabaseHost($host);
+        $tenant->setDatabaseName($dbname);
+        $tenant->setDatabaseUser($user);
+        $tenant->setDatabasePassword($password);
+
+        return $tenant;
+    }
+
+    public function getTenantSiteSettingsTable($tenantname)
     {
         //return true; //testing
         $logger = $this->container->get('logger');
         $initialized = false;
 
-        if (!$tenant) {
+        if (!$tenantname) {
             $logger->notice("getTenantSiteSettingsTable: tenant is null");
             return $initialized;
         }
+
+        $tenant = $this->getTenantData($tenantname);
 
         //check if tenant's DB has users
         $conn = $this->getConnectionTenantDB($tenant);
