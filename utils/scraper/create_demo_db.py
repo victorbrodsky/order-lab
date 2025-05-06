@@ -181,6 +181,7 @@ def main(mailer_user, mailer_password):
 
 if __name__ == "__main__":
     args = sys.argv
+    print("args=",args)
 
     if "--maileruser" in args and "--mailerpassword" in args:
         mailer_index = args.index("--maileruser") + 1
