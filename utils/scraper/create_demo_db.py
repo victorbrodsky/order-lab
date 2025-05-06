@@ -158,26 +158,24 @@ def main(mailer_user, mailer_password):
 
 
 # Execute the main function
-if __name__ == "__main1__":
-    #password = getpass.getpass("Enter your password: ")  # Secure input
-    user = None
-    password = None
-    main(user,password)
+# if __name__ == "__main1__":
+#     #password = getpass.getpass("Enter your password: ")  # Secure input
+#     user = None
+#     password = None
+#     main(user,password)
 
-if __name__ == "__main__":
-    if "--mailerpassword" in sys.argv:
-        index = sys.argv.index("--mailerpassword") + 1
-        if index < len(sys.argv):
-            mailer_password = sys.argv[index]
-            main(mailer_password)
-        else:
-            print("Error: No password provided after --mailerpassword")
-    else:
-        print("Error: --mailerpassword not found in arguments")
-
-    main()
-
-import sys
+# if __name__ == "__main__":
+#     if "--mailerpassword" in sys.argv:
+#         index = sys.argv.index("--mailerpassword") + 1
+#         if index < len(sys.argv):
+#             mailer_password = sys.argv[index]
+#             main(mailer_password)
+#         else:
+#             print("Error: No password provided after --mailerpassword")
+#     else:
+#         print("Error: --mailerpassword not found in arguments")
+#
+#     main()
 
 
 
@@ -190,8 +188,8 @@ if __name__ == "__main__":
 
         if mailer_index < len(args) and password_index < len(args):
             mailer_user = args[mailer_index]
-            email_password = args[password_index]
-            main(mailer_user, email_password)
+            mailer_password = args[password_index]
+            main(mailer_user, mailer_password)
         else:
             print("Error: Missing values for --maileruser or --mailerpassword")
     else:
