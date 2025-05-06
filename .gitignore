@@ -11,5 +11,5 @@ Certificate
 Vendorutil
 /*/.idea/
 orderflex_orig
-/utils/scraper/scraper.log
+/utils/scraper/*.log
 
