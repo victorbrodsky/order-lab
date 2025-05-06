@@ -286,7 +286,7 @@ class DemoDbUtil {
         $res = null;
         //$res = $userServiceUtil->runProcess($pythonInitCommand);
 
-        $pythonInitCommandArr = [$pythonEnvPath, $pythonScriptPath, $maileruser, $mailerpassword];
+        $pythonInitCommandArr = [$pythonEnvPath, $pythonScriptPath . " " . $maileruser . " " . $mailerpassword];
         echo "\nprocessDemoDb: run process with python command pythonInitCommandArr=[".join(' ',$pythonInitCommandArr)."] \n<br>";
         $res = $userServiceUtil->runSymfonyProcessRealTime($pythonInitCommandArr);
 
