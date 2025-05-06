@@ -233,7 +233,7 @@ class DemoDbUtil {
         $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
         $maileruser = $tenantappSettings[0]['maileruser'];
         $mailerpassword = $tenantappSettings[0]['mailerpassword'];
-        //echo "maileruser=$maileruser, mailerpassword=$mailerpassword <br>";
+        echo "maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
         //dump($tenantappSettings);
         //exit('111');
 
@@ -247,7 +247,7 @@ class DemoDbUtil {
             DIRECTORY_SEPARATOR . "scraper";
         $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "create_demo_db.py";
         $pythonScriptPath = $pythonScriptPath .
-            " --maileruser " . $maileruser . " --mailerpassword " . "'" . $mailerpassword . "'";
+            " --maileruser " . "'" . $maileruser . "'" . " --mailerpassword " . "'" . $mailerpassword . "'";
 
         if( $userServiceUtil->isWindows() ){
             $pythonEnvPath = $managePackagePath .
