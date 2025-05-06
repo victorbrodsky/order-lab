@@ -13,7 +13,7 @@ import sys
 
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
-def runDemos(automation, demo_ids, attempts, max_attempts, mailer_password):
+def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password):
     # Sections
     if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
         print("init attempt=",attempts['init'])
@@ -21,7 +21,7 @@ def runDemos(automation, demo_ids, attempts, max_attempts, mailer_password):
             init = Init(automation)
             init.initialize()
             init.run_site_settngs()
-            init.init_mailer(mailer_password)
+            init.init_mailer(mailer_user,mailer_password)
             init.run_deploy()
             time.sleep(3)
             demo_ids['init'] = False
@@ -116,13 +116,16 @@ def runDemos(automation, demo_ids, attempts, max_attempts, mailer_password):
     return demo_ids
 
 
-def main(mailer_password):
+def main(mailer_user, mailer_password):
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
     password_text = "1234567890_demo"
 
+    if mailer_user is None:
+        mailer_user = ""
+
     if mailer_password is None:
-        mailer_password = "dfmg hhjs rwjk ywlm"
+        mailer_password = ""
 
     automation = WebAutomation(run_by_symfony_command=True)
     automation.login_to_site(url, username_text, password_text)
@@ -148,7 +151,7 @@ def main(mailer_password):
 
     # Keep running demos until all sections are successful or exceed max attempts
     while any(demo_ids.values()):
-        demo_ids = runDemos(automation, demo_ids, attempts, max_attempts, mailer_password)
+        demo_ids = run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password)
 
     print("All demos done!")
     automation.quit_driver()
@@ -157,8 +160,9 @@ def main(mailer_password):
 # Execute the main function
 if __name__ == "__main1__":
     #password = getpass.getpass("Enter your password: ")  # Secure input
+    user = None
     password = None
-    main(password)
+    main(user,password)
 
 if __name__ == "__main__":
     if "--mailerpassword" in sys.argv:
@@ -170,5 +174,27 @@ if __name__ == "__main__":
             print("Error: No password provided after --mailerpassword")
     else:
         print("Error: --mailerpassword not found in arguments")
+
+    main()
+
+import sys
+
+
+
+if __name__ == "__main__":
+    args = sys.argv
+
+    if "--maileruser" in args and "--emailpassword" in args:
+        mailer_index = args.index("--maileruser") + 1
+        password_index = args.index("--emailpassword") + 1
+
+        if mailer_index < len(args) and password_index < len(args):
+            mailer_user = args[mailer_index]
+            email_password = args[password_index]
+            main(mailer_user, email_password)
+        else:
+            print("Error: Missing values for --maileruser or --emailpassword")
+    else:
+        print("Error: --maileruser or --emailpassword not found in arguments")
 
     main()

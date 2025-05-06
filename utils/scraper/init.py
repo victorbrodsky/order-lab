@@ -186,7 +186,7 @@ class Init:
                 print(f"Attempt {attempt + 1} failed. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
 
-    def init_mailer(self, mailerPassword):
+    def init_mailer(self, mailer_user, mailer_password):
         driver = self.automation.get_driver()
         #/c/demo-institution/demo-department/directory/settings/1/edit?param=mailerUser
         url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=mailerUser"
@@ -198,7 +198,7 @@ class Init:
         username = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerUser")
         username.clear()
         time.sleep(1)
-        username.send_keys("view.online.administrator@pathologysystems.org")
+        username.send_keys(mailer_user)
         time.sleep(1)
         self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
         time.sleep(3)
@@ -210,7 +210,7 @@ class Init:
         password = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerPassword")
         time.sleep(1)
         password.clear()
-        password.send_keys(mailerPassword)
+        password.send_keys(mailer_password)
 
     def run_deploy(self):
         driver = self.automation.get_driver()
@@ -241,19 +241,21 @@ class Init:
                 time.sleep(3)
 
 
-def main(mailer_password):
+def main(mailer_user,mailer_password):
     automation = WebAutomation()
     # Initialize using https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
+    if mailer_user is None:
+        mailer_password = ""
     if mailer_password is None:
-        mailer_password = "dfmg hhjs rwjk ywlm"
+        mailer_password = ""
     init = Init(automation)
     init.initialize()
     init.run_site_settngs()
-    init.init_mailer(mailer_password)
+    init.init_mailer(mailer_user,mailer_password)
     init.run_deploy()
     print("init done!")
     automation.quit_driver()
 
 if __name__ == "__main__":
     #password = getpass.getpass("Enter your password: ")  # Secure input
-    main(None)
+    main(None,None)
