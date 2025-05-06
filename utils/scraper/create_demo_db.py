@@ -164,8 +164,8 @@ if __name__ == "__main__":
     if "--mailerpassword" in sys.argv:
         index = sys.argv.index("--mailerpassword") + 1
         if index < len(sys.argv):
-            mailerpassword = sys.argv[index]
-            main(mailerpassword)
+            mailer_password = sys.argv[index]
+            main(mailer_password)
         else:
             print("Error: No password provided after --mailerpassword")
     else:

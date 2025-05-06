@@ -83,6 +83,12 @@ class DemoDbUtil {
 //            exit("Demo DB cannot be run in live environment");
 //        }
 
+        //Testing
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
+        dump($tenantappSettings);
+        exit('111');
+
         //$resetDb = false;
         $resetDb = true;
 
@@ -217,6 +223,13 @@ class DemoDbUtil {
 //        echo "resinitializeCommand=".$resinitializeCommand."<br>";
 //        $res = $res . "; " . $resinitializeCommand;
 
+        //Get $mailerpassword from tenantapp1
+        $mailerpassword = "";
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
+        dump($tenantappSettings);
+        exit('111');
+
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
         //For multitenancy is not 'order-lab' anymore, but 'order-lab-tenantapp1'
@@ -226,6 +239,7 @@ class DemoDbUtil {
             "utils" .
             DIRECTORY_SEPARATOR . "scraper";
         $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "create_demo_db.py";
+        $pythonScriptPath = $pythonScriptPath . " --mailerpassword " . $mailerpassword;
 
         if( $userServiceUtil->isWindows() ){
             $pythonEnvPath = $managePackagePath .

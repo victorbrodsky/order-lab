@@ -1333,6 +1333,39 @@ class UserTenantUtil
         return $tenantsRows;
     }
 
+    public function getTenantSiteSettingsTable($tenant)
+    {
+        //return true; //testing
+        $logger = $this->container->get('logger');
+        $initialized = false;
+
+        if (!$tenant) {
+            $logger->notice("getTenantSiteSettingsTable: tenant is null");
+            return $initialized;
+        }
+
+        //check if tenant's DB has users
+        $conn = $this->getConnectionTenantDB($tenant);
+
+        if (!$conn) {
+            $logger->notice("getTenantSiteSettingsTable: connection is null for tenant DB=" . $tenant->getDatabaseName());
+            return $initialized;
+        }
+
+        $settingsSql = "SELECT * FROM " . 'user_siteparameters';
+        $userQuery = $conn->executeQuery($settingsSql);
+        $settingsRows = $userQuery->fetchAllAssociative();
+        //dump($settingsRows);
+        //exit();
+        //$id = $hostedGroupRows[0]['id'];
+        $logger->notice("getTenantSiteSettingsTable: $tenant, found rows count=" . count($settingsRows));
+        if (count($settingsRows) > 0) {
+            return $settingsRows;
+        }
+
+        return NULL;
+    }
+
     public function getTenantBaseUrls($request, $useShortName=false)
     {
         $tenantManagerName = 'tenantmanager';
@@ -1382,7 +1415,7 @@ class UserTenantUtil
                     continue;
                 }
 
-                $databasename = $tenant->getDatabaseName();
+                //$databasename = $tenant->getDatabaseName();
                 $url = $tenant->getUrlslug();
                 $instTitle = $tenant->getInstitutionTitle();
                 //echo $databasename.": url=".$url."<br>";
