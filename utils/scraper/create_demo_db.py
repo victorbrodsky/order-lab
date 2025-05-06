@@ -184,17 +184,17 @@ import sys
 if __name__ == "__main__":
     args = sys.argv
 
-    if "--maileruser" in args and "--emailpassword" in args:
+    if "--maileruser" in args and "--mailerpassword" in args:
         mailer_index = args.index("--maileruser") + 1
-        password_index = args.index("--emailpassword") + 1
+        password_index = args.index("--mailerpassword") + 1
 
         if mailer_index < len(args) and password_index < len(args):
             mailer_user = args[mailer_index]
             email_password = args[password_index]
             main(mailer_user, email_password)
         else:
-            print("Error: Missing values for --maileruser or --emailpassword")
+            print("Error: Missing values for --maileruser or --mailerpassword")
     else:
-        print("Error: --maileruser or --emailpassword not found in arguments")
+        print("Error: --maileruser or --mailerpassword not found in arguments")
 
     main()
