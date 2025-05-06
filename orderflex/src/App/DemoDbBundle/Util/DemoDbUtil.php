@@ -247,7 +247,7 @@ class DemoDbUtil {
             DIRECTORY_SEPARATOR . "scraper";
         $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "create_demo_db.py";
         $pythonScriptPath = $pythonScriptPath .
-            " --maileruser " . $maileruser . " --mailerpassword " . $mailerpassword;
+            " --maileruser " . $maileruser . " --mailerpassword " . "'" . $mailerpassword . "'";
 
         if( $userServiceUtil->isWindows() ){
             $pythonEnvPath = $managePackagePath .
