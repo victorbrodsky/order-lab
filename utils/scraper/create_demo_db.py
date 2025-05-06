@@ -8,6 +8,8 @@ from calllog import CallLog
 from fellapp import FellApp
 from resapp import ResApp
 import getpass
+import sys
+
 
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
@@ -153,7 +155,20 @@ def main(mailer_password):
 
 
 # Execute the main function
-if __name__ == "__main__":
+if __name__ == "__main1__":
     #password = getpass.getpass("Enter your password: ")  # Secure input
     password = None
     main(password)
+
+if __name__ == "__main__":
+    if "--mailerpassword" in sys.argv:
+        index = sys.argv.index("--mailerpassword") + 1
+        if index < len(sys.argv):
+            mailerpassword = sys.argv[index]
+            main(mailerpassword)
+        else:
+            print("Error: No password provided after --mailerpassword")
+    else:
+        print("Error: --mailerpassword not found in arguments")
+
+    main()
