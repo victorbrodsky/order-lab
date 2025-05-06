@@ -235,10 +235,10 @@ class DemoDbUtil {
         $mailerpassword = $tenantappSettings[0]['mailerpassword'];
         echo "maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
         if( $maileruser ) {
-            $maileruser =  "--maileruser " . "'" . $maileruser . "'";
+            $maileruser =  "--maileruser " . '"' . $maileruser . '"';
         }
         if( $mailerpassword ) {
-            $mailerpassword =  "--mailerpassword " . "'" . $mailerpassword . "'";
+            $mailerpassword =  "--mailerpassword " . '"' . $mailerpassword . '"';
         }
         echo "maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
         //dump($tenantappSettings);
