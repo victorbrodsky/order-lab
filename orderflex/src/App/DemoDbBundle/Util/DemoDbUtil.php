@@ -240,6 +240,7 @@ class DemoDbUtil {
         if( $mailerpassword ) {
             $mailerpassword =  "--mailerpassword " . "'" . $mailerpassword . "'";
         }
+        echo "maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
         //dump($tenantappSettings);
         //exit('111');
 
