@@ -233,14 +233,14 @@ class DemoDbUtil {
         $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
         $maileruser = $tenantappSettings[0]['maileruser'];
         $mailerpassword = $tenantappSettings[0]['mailerpassword'];
-        echo "maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
-//        if( $maileruser ) {
-//            $maileruser =  "--maileruser " . '"' . $maileruser . '"';
-//        }
-//        if( $mailerpassword ) {
-//            $mailerpassword =  "--mailerpassword " . '"' . $mailerpassword . '"';
-//        }
-//        echo "maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
+        echo "1 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
+        if( $maileruser ) {
+            $maileruser =  '"' . $maileruser . '"';
+        }
+        if( $mailerpassword ) {
+            $mailerpassword =  '"' . $mailerpassword . '"';
+        }
+        echo "2 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
         //dump($tenantappSettings);
         //exit('111');
 

@@ -100,6 +100,79 @@ class VacReq:
 
         # Add submitter
         try:
+            if 0:
+                use_method = 2
+                for user in self.users.get_users():
+                    print(f"Adding submitter: {user['displayName']}")
+
+                    #Method 1
+                    if use_method == 1:
+                        active_input = driver.find_element(
+                            By.XPATH,
+                            "//div[@id='vacreq-organizational-group-submitter']//input[not(@disabled)]"
+                        )
+                        time.sleep(1)
+                        actions = ActionChains(driver)
+                        time.sleep(1)
+                        actions.move_to_element(active_input).click().perform()
+                        time.sleep(1)
+                        active_input.send_keys(user['displayName'])
+                        time.sleep(1)
+                        active_input.send_keys(Keys.ENTER)
+
+                    #Method 2
+                    if use_method == 2:
+                        WebDriverWait(driver, 10).until(
+                            EC.visibility_of_element_located((By.ID, "vacreq-organizational-group-submitter"))
+                        )
+                        parent_div = driver.find_element(By.ID, "vacreq-organizational-group-submitter")
+                        time.sleep(1)
+                        child_div = parent_div.find_element(By.ID, "s2id_oleg_vacreqbundle_user_participants_users")
+                        time.sleep(1)
+                        child_div.click()
+                        time.sleep(1)
+                        #child_input_div = child_div.find_element(By.ID, "s2id_autogen3")
+                        child_input_div = child_div.find_element(By.CLASS_NAME, "select2-input")
+                        time.sleep(1)
+                        child_input_div.send_keys(user['displayName'])
+                        time.sleep(1)
+                        child_input_div.send_keys(Keys.ENTER)
+                        time.sleep(1)
+
+                    #Method 3
+                    if use_method == 3:
+                        self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
+                                                      "#select2-drop .select2-input",
+                                                      "Pathology and Laboratory Medicine")
+
+                    time.sleep(1)
+                    button = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Submitter(s)')]"))
+                    )
+                    button.click()
+                    time.sleep(3)
+                    print("Button Add Submitter(s) clicked after waiting!")
+                    #break
+        except Exception as e:
+            print(f"An error occurred in add_user_to_group submitter: {e}")
+
+        print("EOF add_user_to_group")
+
+    def add_submitter_to_group(self):
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/time-away-request/groups/"
+        driver.get(url)
+        time.sleep(1)
+
+        link = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//a[contains(text(), 'Manage') and contains(@class, 'btn-sm btn-info')]"))
+        )
+        link.click()
+        time.sleep(3)
+
+        # Add submitter
+        try:
             if 1:
                 use_method = 2
                 for user in self.users.get_users():
@@ -157,6 +230,7 @@ class VacReq:
             print(f"An error occurred in add_user_to_group submitter: {e}")
 
         print("EOF add_user_to_group")
+
 
     def create_vacreqs(self):
         """Main function to execute all actions."""
@@ -293,13 +367,14 @@ def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
     password_text = "1234567890_demo"
-    #automation = WebAutomation() #run_by_symfony_command=True
-    automation = WebAutomation(run_by_symfony_command=True)  # run_by_symfony_command=True
+    automation = WebAutomation() #run_by_symfony_command=True
+    #automation = WebAutomation(run_by_symfony_command=True)  # run_by_symfony_command=True
     automation.login_to_site(url, username_text, password_text)
 
     vacreq = VacReq(automation)
     vacreq.create_group()
     vacreq.add_user_to_group()
+    vacreq.add_submitter_to_group()
     #vacreq.create_vacreqs()
     print("Vacation Request done!")
 
