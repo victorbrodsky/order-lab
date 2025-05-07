@@ -7,6 +7,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
+import sys
+
 
 
 #from scraper_base import login_to_site, initialize_driver
@@ -177,6 +179,14 @@ class Users:
         
         #automation.quit_driver()
 
+    def check_users(self):
+        self.existing_users = self.users.get_existing_users()
+        if len(self.existing_users) > 1:
+            pass
+        else:
+            raise ValueError(f"Exit: users have not been created. Number of users {len(self.existing_users)}")
+            #sys.exit("Exit: users have not been created.")
+
 def main():
     
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
@@ -189,6 +199,7 @@ def main():
     #Create user
     users = Users(automation)
     users.create_user()
+    users.check_users()
     print("users done!")
 
     automation.quit_driver()

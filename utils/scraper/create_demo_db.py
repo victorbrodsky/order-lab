@@ -36,6 +36,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
         try:
             users = Users(automation)
             users.create_user()
+            users.check_users()
             time.sleep(3)
             demo_ids['users'] = False
             print("users done!")

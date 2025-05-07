@@ -165,7 +165,7 @@ class VacReq:
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/time-away-request/groups/"
         driver.get(url)
-        time.sleep(1)
+        time.sleep(3)
 
         link = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(
