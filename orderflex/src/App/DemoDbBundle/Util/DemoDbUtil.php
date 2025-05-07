@@ -92,6 +92,10 @@ class DemoDbUtil {
 //        //dump($tenantappSettings);
 //        exit('111');
 
+        //$projectRoot = $this->container->get('kernel')->getProjectDir(); // /usr/local/bin/order-lab-thistenant/orderflex
+        //TODO: try to run from tenantmanager
+        $projectRoot = "/usr/local/bin/order-lab-tenantappdemo/orderflex";
+
         //$resetDb = false;
         $resetDb = true;
 
@@ -101,7 +105,6 @@ class DemoDbUtil {
         /////////////// Drop and create new Database ////////////////
         if ($resetDb) {
             $phpPath = $userServiceUtil->getPhpPath();
-            $projectRoot = $this->container->get('kernel')->getProjectDir();
 
             try {
                 echo "processDemoDb try: getSiteSettingParameter" . "<br>";
@@ -226,7 +229,7 @@ class DemoDbUtil {
 //        echo "resinitializeCommand=".$resinitializeCommand."<br>";
 //        $res = $res . "; " . $resinitializeCommand;
 
-        //Get $mailerpassword from tenantapp1
+        ////// Get $mailerpassword from tenantapp1 //////
         $maileruser = "";
         $mailerpassword = "";
         $userTenantUtil = $this->container->get('user_tenant_utility');
@@ -243,8 +246,9 @@ class DemoDbUtil {
         echo "2 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
         //dump($tenantappSettings);
         //exit('111');
+        ////// EOF Get $mailerpassword from tenantapp1 //////
 
-        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        //$projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
         //For multitenancy is not 'order-lab' anymore, but 'order-lab-tenantapp1'
         $parentRoot = str_replace('orderflex', '', $projectRoot);
