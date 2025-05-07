@@ -92,8 +92,8 @@ class DemoDbUtil {
 //        //dump($tenantappSettings);
 //        exit('111');
 
-        //$resetDb = false;
-        $resetDb = true;
+        $resetDb = false;
+        //$resetDb = true;
 
         echo "processDemoDb: start with resetDb=$resetDb <br>";
         $logger->notice("processDemoDb: start with resetDb=$resetDb");
