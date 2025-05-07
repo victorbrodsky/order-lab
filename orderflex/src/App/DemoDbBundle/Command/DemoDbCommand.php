@@ -80,7 +80,7 @@ class DemoDbCommand extends Command {
         }
 
         $demoDbUtil = $this->container->get('demodb_utility');
-        $resDemoDbStr = $demoDbUtil->processDemoDb($projectRoot);
+        $resDemoDbStr = $demoDbUtil->processDemoDb($projectRoot,$backupPath=NULL);
         
 //        $client = $demoDbUtil->loginAction();
 //        $client->takeScreenshot('test_login.png');
