@@ -120,7 +120,7 @@ class DemoDbUtil {
         //$resetDb = false;
         $resetDb = true;
 
-        echo "processDemoDb: start with resetDb=$resetDb <br>";
+        echo "processDemoDb: start with resetDb=$resetDb \n<br>";
         $logger->notice("processDemoDb: start with resetDb=$resetDb");
 
         /////////////// Drop and create new Database ////////////////
@@ -130,7 +130,7 @@ class DemoDbUtil {
             try {
                 echo "processDemoDb try: getSiteSettingParameter" . "<br>";
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if ($environment == 'live') {
+                if ($environment == 'live' && str_contains($projectRoot,'demo') === false ) {
                     exit("processDemoDb: Demo DB cannot be run in live environment");
                 }
             } catch (\Exception $e) {
@@ -251,8 +251,8 @@ class DemoDbUtil {
 //        $res = $res . "; " . $resinitializeCommand;
 
         ////// Get $mailerpassword from tenantapp1 //////
-        $maileruser = "";
-        $mailerpassword = "";
+        //$maileruser = "";
+        //$mailerpassword = "";
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
         $maileruser = $tenantappSettings[0]['maileruser'];
