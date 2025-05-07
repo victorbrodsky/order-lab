@@ -25,10 +25,13 @@ class VacReq:
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/time-away-request/add-group"
         driver.get(url)
-        time.sleep(1)
+        time.sleep(3)
 
         try:
             #s2id_oleg_vacreqbundle_group_approvaltype
+            WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located((By.ID, "s2id_oleg_vacreqbundle_group_approvaltype"))
+            )
             self.automation.select_option("s2id_oleg_vacreqbundle_group_approvaltype", "ID", "s2id_autogen1_search", "Faculty")
 
             #Pathology and Laboratory Medicine
