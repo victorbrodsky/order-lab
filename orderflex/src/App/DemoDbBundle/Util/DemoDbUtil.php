@@ -50,7 +50,7 @@ class DemoDbUtil {
     }
 
 
-    public function processDemoDb( $backupPath=NULL )
+    public function processDemoDb( $projectRoot, $backupPath=NULL )
     {
 
 //        if( false === $this->security->isGranted('ROLE_PLATFORM_ADMIN') ) {
@@ -72,6 +72,24 @@ class DemoDbUtil {
         //mailerDeliveryAddresses
         //instanceId
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $environment = NULL;
+
+        try {
+            echo "processDemoDb execute: try: getSiteSettingParameter" . "\n";
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+        } catch (\Exception $e) {
+            // Handle the exception
+            echo "processDemoDb execute: Error: " . $e->getMessage() . "\n";
+            //exit;
+        }
+
+        if( $environment == 'live' && $projectRoot === NULL ) {
+            $resStr = "Demo DB cannot be run in live environment". "\n";
+            return $resStr;
+        }
+
         //check only if DB exists
 
         $logger = $this->container->get('logger');
@@ -92,9 +110,11 @@ class DemoDbUtil {
 //        //dump($tenantappSettings);
 //        exit('111');
 
-        //$projectRoot = $this->container->get('kernel')->getProjectDir(); // /usr/local/bin/order-lab-thistenant/orderflex
+        if( !$projectRoot ) {
+            $projectRoot = $this->container->get('kernel')->getProjectDir(); // /usr/local/bin/order-lab-thistenant/orderflex
+        }
         //TODO: try to run from tenantmanager
-        $projectRoot = "/usr/local/bin/order-lab-tenantappdemo/orderflex";
+        //$projectRoot = "/usr/local/bin/order-lab-tenantappdemo/orderflex";
 
         //$resetDb = false;
         $resetDb = true;

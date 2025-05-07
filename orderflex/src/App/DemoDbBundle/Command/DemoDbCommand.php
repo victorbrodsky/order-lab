@@ -70,14 +70,17 @@ class DemoDbCommand extends Command {
             //exit;
         }
 
-        if( $environment == 'live' ) {
+        $projectRoot = NULL; //use current project dir of the tenant where command is running
+        $projectRoot = "/usr/local/bin/order-lab-tenantappdemo/orderflex"; //use project dir of the demo tenant
+        
+        if( $environment == 'live' && $projectRoot === NULL ) {
             $resStr = "Demo DB cannot be run in live environment". "\n";
             $output->writeln($resStr);
             return Command::FAILURE;
         }
 
         $demoDbUtil = $this->container->get('demodb_utility');
-        $resDemoDbStr = $demoDbUtil->processDemoDb();
+        $resDemoDbStr = $demoDbUtil->processDemoDb($projectRoot);
         
 //        $client = $demoDbUtil->loginAction();
 //        $client->takeScreenshot('test_login.png');
