@@ -85,9 +85,9 @@ class DemoDbUtil {
             //exit;
         }
 
-        echo "processDemoDb: environment=$environment" . "\n";
+        echo "processDemoDb: environment=$environment, projectRoot=$projectRoot" . "\n";
         if( $environment == 'live' && $projectRoot === NULL ) {
-            $resStr = "Demo DB cannot be run in live environment". "\n";
+            $resStr = "processDemoDb: Demo DB cannot be run in live environment". "\n";
             return $resStr;
         }
 
