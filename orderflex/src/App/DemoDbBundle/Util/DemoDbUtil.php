@@ -257,6 +257,12 @@ class DemoDbUtil {
         $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
         $maileruser = $tenantappSettings[0]['maileruser'];
         $mailerpassword = $tenantappSettings[0]['mailerpassword'];
+        if( !$maileruser ) {
+            $maileruser =  "maileruser";
+        }
+        if( !$mailerpassword ) {
+            $mailerpassword =  "mailerpassword";
+        }
         echo "1 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
         if( $maileruser ) {
             $maileruser =  '"' . $maileruser . '"';
