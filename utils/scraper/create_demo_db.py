@@ -132,7 +132,7 @@ def main(mailer_user, mailer_password):
     print("mailer_user=", mailer_user, "mailer_password=", mailer_password)
 
     automation = WebAutomation(run_by_symfony_command=True)
-    automation.login_to_site(url, username_text, password_text)
+    #automation.login_to_site(url, username_text, password_text)
     #print("EOF testing")
     #exit()
 
