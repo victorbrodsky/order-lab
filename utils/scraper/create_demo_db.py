@@ -200,4 +200,4 @@ if __name__ == "__main__":
     else:
         print("Error: --maileruser or --mailerpassword not found in arguments")
 
-    main()
+    main('maileruser','mailerpassword')
