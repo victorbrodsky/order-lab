@@ -139,9 +139,9 @@ def main(mailer_user, mailer_password):
         'init': True,
         'users': True,
         #'vacreq': True,
-        'trp': True,
+        #'trp': True,
         #'callog': True,
-        #'fellapp': True,
+        'fellapp': True,
         #'resapp': True
     }
 
