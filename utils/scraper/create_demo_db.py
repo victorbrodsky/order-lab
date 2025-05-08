@@ -124,10 +124,10 @@ def main(mailer_user, mailer_password):
     password_text = "1234567890_demo"
 
     if mailer_user is None:
-        mailer_user = ""
+        mailer_user = "maileruser"
 
     if mailer_password is None:
-        mailer_password = ""
+        mailer_password = "mailerpassword"
 
     automation = WebAutomation(run_by_symfony_command=True)
     automation.login_to_site(url, username_text, password_text)
@@ -138,10 +138,10 @@ def main(mailer_user, mailer_password):
     demo_ids = {
         'init': True,
         'users': True,
-        #'vacreq': True,
+        'vacreq': True,
         #'trp': True,
         #'callog': True,
-        'fellapp': True,
+        #'fellapp': True,
         #'resapp': True
     }
 
