@@ -180,7 +180,7 @@ class Users:
         #automation.quit_driver()
 
     def check_users(self):
-        self.existing_users = self.users.get_existing_users()
+        self.existing_users = self.get_existing_users()
         if len(self.existing_users) > 1:
             pass
         else:

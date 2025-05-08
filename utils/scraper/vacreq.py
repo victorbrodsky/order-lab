@@ -177,6 +177,8 @@ class VacReq:
         # Add submitter
         try:
             if 1:
+                driver.save_screenshot("add-submitter-group.png")
+
                 use_method = 2
                 for user in self.users.get_users():
                     print(f"Adding submitter: {user['displayName']}")
@@ -214,6 +216,8 @@ class VacReq:
                         time.sleep(1)
                         child_input_div.send_keys(Keys.ENTER)
                         time.sleep(1)
+
+                        driver.save_screenshot("after-add-submitter-group.png")
 
                     #Method 3
                     if use_method == 3:
@@ -370,8 +374,8 @@ def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
     password_text = "1234567890_demo"
-    automation = WebAutomation() #run_by_symfony_command=True
-    #automation = WebAutomation(run_by_symfony_command=True)  # run_by_symfony_command=True
+    #automation = WebAutomation() #run_by_symfony_command=True
+    automation = WebAutomation(run_by_symfony_command=True)  # run_by_symfony_command=True
     automation.login_to_site(url, username_text, password_text)
 
     vacreq = VacReq(automation)
