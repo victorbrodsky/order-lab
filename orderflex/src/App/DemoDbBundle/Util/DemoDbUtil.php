@@ -117,8 +117,8 @@ class DemoDbUtil {
         //TODO: try to run from tenantmanager
         //$projectRoot = "/usr/local/bin/order-lab-tenantappdemo/orderflex";
 
-        //$resetDb = false;
-        $resetDb = true;
+        $resetDb = false;
+        //$resetDb = true;
 
         echo "processDemoDb: start with resetDb=$resetDb \n<br>";
         $logger->notice("processDemoDb: start with resetDb=$resetDb");
