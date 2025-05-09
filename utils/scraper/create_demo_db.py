@@ -19,6 +19,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
         print("init attempt=",attempts['init'])
         try:
             automation = WebAutomation(run_by_symfony_command=True)
+            automation.login_to_site()
             init = Init(automation)
             init.initialize()
             init.run_site_settngs()
@@ -37,6 +38,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
         print("users attempt=", attempts['users'])
         try:
             automation = WebAutomation(run_by_symfony_command=True)
+            automation.login_to_site()
             users = Users(automation)
             users.create_user()
             users.check_users()
@@ -53,6 +55,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
         print("vacreq attempt=", attempts['vacreq'])
         try:
             automation = WebAutomation(run_by_symfony_command=True)
+            automation.login_to_site()
             vacreq = VacReq(automation)
             vacreq.create_group()
             vacreq.add_user_to_group()
@@ -147,7 +150,7 @@ def main(mailer_user, mailer_password):
     demo_ids = {
         'init': True,
         'users': True,
-        'vacreq': True,
+        #'vacreq': True,
         #'trp': True,
         #'callog': True,
         #'fellapp': True,
@@ -165,7 +168,7 @@ def main(mailer_user, mailer_password):
         demo_ids = run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password)
 
     print("All demos done!")
-    automation.quit_driver()
+    #automation.quit_driver()
 
 
 # Execute the main function
@@ -207,4 +210,5 @@ if __name__ == "__main__":
     else:
         print("Error: --maileruser or --mailerpassword not found in arguments")
 
+    print("Proceed without mailer")
     main('maileruser','mailerpassword')

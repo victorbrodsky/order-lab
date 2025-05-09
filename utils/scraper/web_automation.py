@@ -47,6 +47,7 @@ class WebAutomation:
         #run_by_symfony_command = True
 
         if self.run_by_symfony_command is True:
+            print("Initialize driver with --headless")
             options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
         else:
             print("initialize_driver: run by console or pycharm")
@@ -71,11 +72,22 @@ class WebAutomation:
         self.driver.set_page_load_timeout(120) # Increase timeout to handle delays
         return self.driver
 
-    def login_to_site(self, url, username_text, password_text):
+    def login_to_site(self, url=None, username_text=None, password_text=None):
         """Logs in to the site."""
+        if url is None:
+            url = "https://view.online/c/demo-institution/demo-department/directory/login"
+
+        if username_text is None:
+            username_text = "administrator"
+
+        if password_text is None:
+            password_text = "1234567890_demo"
+
         if url is not None:
             print("use login url ",url)
             self.driver.get(url)
+
+        self.driver.save_screenshot("login_to_site.png")
 
         username = self.driver.find_element(By.ID, "display-username")
         password = self.driver.find_element(By.ID, "password")
@@ -127,6 +139,7 @@ class WebAutomation:
     def quit_driver(self):
         """Quits the WebDriver."""
         if self.driver:
+            self.driver.close()
             self.driver.quit()
 
 # Usage Example:
