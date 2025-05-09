@@ -456,10 +456,13 @@ class Examination
      */
     public function getCOMLEXLevel1Score( $onlyValid=false )
     {
-        if( $onlyValid ) {
-            return $this->getComlexIfValid($this->COMLEXLevel1Score);
-        }
+        //COMLEX Level 1 result is pass/fail since May 10, 2022.
         return $this->COMLEXLevel1Score;
+        
+//        if( $onlyValid ) {
+//            return $this->getComlexIfValid($this->COMLEXLevel1Score);
+//        }
+//        return $this->COMLEXLevel1Score;
     }
 
     /**
