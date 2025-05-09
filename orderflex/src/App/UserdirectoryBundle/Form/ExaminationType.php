@@ -55,7 +55,9 @@ class ExaminationType extends AbstractType
         ));
         $builder->add('USMLEStep1Score', null, array(
             'label' => 'Score:',
-            'attr' => array('class'=>'form-control digit-mask')
+            //'attr' => array('class'=>'form-control digit-mask')
+            //USMLE Step 1 results are now reported a pass/fail only, as the exam transitioned to this format in January 2022.
+            'attr' => array('class'=>'form-control')
         ));
         $builder->add('USMLEStep1Percentile', null, array(
             'label' => 'Percentile:',
@@ -142,9 +144,11 @@ class ExaminationType extends AbstractType
             'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
+        //COMLEX Level 1 result is pass/fail since May 10, 2022.
         $builder->add('COMLEXLevel1Score', null, array(
             'label' => 'Score:',
-            'attr' => array('class'=>'form-control digit-mask')
+            //'attr' => array('class'=>'form-control digit-mask')
+            'attr' => array('class'=>'form-control')
         ));
         $builder->add('COMLEXLevel1Percentile', null, array(
             'label' => 'Percentile:',

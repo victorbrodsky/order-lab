@@ -54,6 +54,7 @@ class Examination
     private $scores;
 
     //USMLE Step 1 Score,	USMLE Step 2 CK Score,	USMLE Step 2 CS Score (Pass/Fail),	USMLE Step 3 Score
+    //USMLE Step 1 results are now reported a pass or fail only, as the exam transitioned to this format in January 2022.
     #[ORM\Column(type: 'string', nullable: true)]
     private $USMLEStep1Score;
 
@@ -103,6 +104,7 @@ class Examination
     private $ECFMGCertificateDate;
 
     //COMLEX-USA Level 1 Score,	COMLEX-USA Level 2 CE Score, COMLEX-USA Level 2 PE Score (Pass/Fail), COMLEX-USA Level 3 Score
+    //COMLEX Level 1 result is pass/fail since May 10, 2022.
     #[ORM\Column(type: 'string', nullable: true)]
     private $COMLEXLevel1Score;
 
@@ -261,10 +263,18 @@ class Examination
      */
     public function getUSMLEStep1Score( $onlyValid=false )
     {
-        if( $onlyValid ) {
-            return $this->getUsmleIfValid($this->USMLEStep1Score);
-        }
+        //USMLE Step 1 results are now reported a pass/fail only, as the exam transitioned to this format in January 2022.
         return $this->USMLEStep1Score;
+
+//        if( $onlyValid ) {
+//            //return $this->getUsmleIfValid($this->USMLEStep1Score);
+//            if( $this->getUsmleIfValid($this->USMLEStep1Score) || $this->isPassFailfValidation($this->USMLEStep1Score) ) {
+//                return $this->USMLEStep1Score;
+//            } else {
+//                return NULL;
+//            }
+//        }
+//        return $this->USMLEStep1Score;
     }
 
     /**
@@ -743,6 +753,12 @@ class Examination
 
     public function getUsmleIfValid( $score ) {
         if( $this->isUsmleValid($score) ) {
+            return $score;
+        }
+        return NULL;
+    }
+    public function isPassFailfValidation( $score ) {
+        if( $score == 'pass' || $score == 'fail' ) {
             return $score;
         }
         return NULL;
