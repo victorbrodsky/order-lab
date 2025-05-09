@@ -18,12 +18,14 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
         print("init attempt=",attempts['init'])
         try:
+            automation = WebAutomation(run_by_symfony_command=True)
             init = Init(automation)
             init.initialize()
             init.run_site_settngs()
             init.init_mailer(mailer_user,mailer_password)
             init.run_deploy()
             time.sleep(3)
+            automation.quit_driver()
             demo_ids['init'] = False
             print("init done!")
         except Exception as e:
@@ -34,10 +36,12 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'users' in demo_ids and demo_ids['users'] and attempts['users'] <= max_attempts:
         print("users attempt=", attempts['users'])
         try:
+            automation = WebAutomation(run_by_symfony_command=True)
             users = Users(automation)
             users.create_user()
             users.check_users()
             time.sleep(3)
+            automation.quit_driver()
             demo_ids['users'] = False
             print("users done!")
         except Exception as e:
@@ -48,12 +52,14 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'vacreq' in demo_ids and demo_ids['vacreq'] and attempts['vacreq'] <= max_attempts:
         print("vacreq attempt=", attempts['vacreq'])
         try:
+            automation = WebAutomation(run_by_symfony_command=True)
             vacreq = VacReq(automation)
             vacreq.create_group()
             vacreq.add_user_to_group()
             vacreq.add_submitter_to_group()
             #vacreq.create_vacreqs()
             time.sleep(3)
+            automation.quit_driver()
             demo_ids['vacreq'] = False
             print("vacreq done!")
         except Exception as e:
@@ -131,7 +137,8 @@ def main(mailer_user, mailer_password):
 
     print("mailer_user=", mailer_user, "mailer_password=", mailer_password)
 
-    automation = WebAutomation(run_by_symfony_command=True)
+    automation = None #create driver each time for a new demo to reset the memory
+    #automation = WebAutomation(run_by_symfony_command=True)
     #automation.login_to_site(url, username_text, password_text)
     #print("EOF testing")
     #exit()
