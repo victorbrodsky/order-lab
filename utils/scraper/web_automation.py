@@ -48,13 +48,13 @@ class WebAutomation:
 
         if self.run_by_symfony_command is True:
             print("Initialize driver with --headless")
-            options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
+            #options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
         else:
             print("initialize_driver: run by console or pycharm")
-            options.add_experimental_option("detach", True)  # keep browser open
+            #options.add_experimental_option("detach", True)  # keep browser open
 
-        options.add_argument("--no-sandbox") #working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
-        options.add_argument("--disable-dev-shm-usage") #working in command. Prevent Chrome from using shared memory
+        #options.add_argument("--no-sandbox") #working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
+        #options.add_argument("--disable-dev-shm-usage") #working in command. Prevent Chrome from using shared memory
 
         #options.add_argument("--incognito")  # Example: Run the browser in incognito mode
         #options.add_argument("--disable-extensions")  # Disable browser extensions
