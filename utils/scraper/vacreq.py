@@ -222,6 +222,10 @@ class VacReq:
                         child_input_div.send_keys(Keys.ENTER)
                         time.sleep(1)
 
+                        #actions = ActionChains(driver)
+                        #element = driver.find_element(By.ID, "your_element_id")
+                        #actions.move_to_element(element).perform()
+
                         driver.save_screenshot("after-add-submitter-group.png")
 
                     #Method 3

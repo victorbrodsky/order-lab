@@ -9,6 +9,7 @@ from fellapp import FellApp
 from resapp import ResApp
 import getpass
 import sys
+import multiprocessing
 
 
 #run demo db generation only if value is True
@@ -197,7 +198,7 @@ def main(mailer_user, mailer_password):
 
 
 
-if __name__ == "__main__":
+if 0 and __name__ == "__main__":
     args = sys.argv
     print("args=",args)
 
@@ -216,3 +217,35 @@ if __name__ == "__main__":
 
     print("Proceed without mailer")
     main('maileruser','mailerpassword')
+
+if __name__ == "__main__":
+    args = sys.argv
+    print("args=", args)
+
+    processes = []
+
+    if "--maileruser" in args and "--mailerpassword" in args:
+        mailer_index = args.index("--maileruser") + 1
+        password_index = args.index("--mailerpassword") + 1
+
+        if mailer_index < len(args) and password_index < len(args):
+            mailer_user = args[mailer_index]
+            mailer_password = args[password_index]
+
+            # Creating a process to run main function
+            p = multiprocessing.Process(target=main, args=(mailer_user, mailer_password))
+            processes.append(p)
+            p.start()
+        else:
+            print("Error: Missing values for --maileruser or --mailerpassword")
+    else:
+        print("Error: --maileruser or --mailerpassword not found in arguments")
+
+    print("Proceed without mailer")
+    p2 = multiprocessing.Process(target=main, args=('maileruser', 'mailerpassword'))
+    processes.append(p2)
+    p2.start()
+
+    # Waiting for all processes to complete
+    for p in processes:
+        p.join()
