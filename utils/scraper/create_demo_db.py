@@ -58,11 +58,15 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             automation.login_to_site()
             vacreq = VacReq(automation)
             vacreq.create_group()
+            automation.quit_driver()
+
+            automation.login_to_site()
             vacreq.add_user_to_group()
             vacreq.add_submitter_to_group()
             #vacreq.create_vacreqs()
             time.sleep(3)
             automation.quit_driver()
+
             demo_ids['vacreq'] = False
             print("vacreq done!")
         except Exception as e:

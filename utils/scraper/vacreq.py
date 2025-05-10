@@ -26,6 +26,7 @@ class VacReq:
         url = "https://view.online/c/demo-institution/demo-department/time-away-request/add-group"
         driver.get(url)
         time.sleep(3)
+        driver.save_screenshot("vacreq_create_group.png")
 
         try:
             #s2id_oleg_vacreqbundle_group_approvaltype
@@ -48,9 +49,11 @@ class VacReq:
             alert.accept()  # Clicks 'OK'
 
             time.sleep(3)
+            driver.save_screenshot("vacreq_create_group_before_click.png")
 
             self.automation.click_button("btn-info")
             time.sleep(3)
+            driver.save_screenshot("vacreq_create_group_after_click.png")
 
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -60,6 +63,7 @@ class VacReq:
         url = "https://view.online/c/demo-institution/demo-department/time-away-request/groups/"
         driver.get(url)
         time.sleep(1)
+        driver.save_screenshot("vacreq_add_user_to_group.png")
 
         #self.automation.click_button("btn-info")
         # button = WebDriverWait(driver, 10).until(
@@ -75,6 +79,7 @@ class VacReq:
         # Add approver
         try:
             if 1:
+                driver.save_screenshot("add_user_to_group_administrator.png")
                 print("Adding approver administrator")
                 #Add approver
                 # self.automation.select_option("s2id_oleg_vacreqbundle_user_participants_users", "CSS_SELECTOR",
