@@ -408,7 +408,7 @@ class ApproverController extends OrderAbstractController
             $roleApproverId = $roleApprover->getId();
         }
 
-        $roleSubmitterId = null;
+        $roleSubmitterId = "nonerole"; //null;
         if( $roleSubmitter ) {
             $roleSubmitterId = $roleSubmitter->getId();
         }
@@ -485,11 +485,14 @@ class ApproverController extends OrderAbstractController
         //$rolesArr = $securityUtil->getSiteRolesKeyValue('vacreq');
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
-        $roles = $em->getRepository(Roles::class)->findById($roleId);
         $rolesArr = array();
-        foreach( $roles as $role ) {
-            //$rolesArr[$role->getName()] = $role->getAlias();
-            $rolesArr[$role->getAlias()] = $role->getName(); //flipped
+
+        if( $roleId && $roleId != 'nonerole' && $roleId != 0 && $roleId != '0' ) {
+            $roles = $em->getRepository(Roles::class)->findById($roleId);
+            foreach ($roles as $role) {
+                //$rolesArr[$role->getName()] = $role->getAlias();
+                $rolesArr[$role->getAlias()] = $role->getName(); //flipped
+            }
         }
 
         $params = array('roles'=>$rolesArr);
