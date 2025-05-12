@@ -125,6 +125,10 @@
         <div id="vacreq-organizational-group-submitter" class="panel-collapse collapse in">
             <div class="panel-body">
 
+                {% if not submitterRoleId %}
+                    {% set submitterRoleId = "nonerole" %}
+                {% endif %}
+
                 {% for submitter in submitters %}
                     <div class="well">
                         {#{{ submitter }}#}
