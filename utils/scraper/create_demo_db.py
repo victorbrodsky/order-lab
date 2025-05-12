@@ -127,6 +127,12 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             automation.login_to_site()
             fellapp = FellApp(automation)
             fellapp.configs()
+            del automation
+            del fellapp
+
+            automation = WebAutomation(run_by_symfony_command)
+            automation.login_to_site()
+            fellapp = FellApp(automation)
             fellapp.create_fellapps()
             time.sleep(3)
             automation.quit_driver()
@@ -145,6 +151,12 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             automation.login_to_site()
             resapp = ResApp(automation)
             resapp.configs()
+            del automation
+            del resapp
+
+            automation = WebAutomation(run_by_symfony_command)
+            automation.login_to_site()
+            resapp = ResApp(automation)
             resapp.create_resapps()
             time.sleep(3)
             automation.quit_driver()
