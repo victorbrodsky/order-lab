@@ -412,7 +412,7 @@ def main():
         time.sleep(1)
         vacreq.add_user_to_group()
         vacreq.add_submitter_to_group()
-        # vacreq.create_vacreqs()
+        vacreq.create_vacreqs()
         time.sleep(3)
         automation.quit_driver()
         del automation
