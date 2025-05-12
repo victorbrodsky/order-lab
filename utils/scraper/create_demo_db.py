@@ -15,11 +15,13 @@ import multiprocessing
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
 def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password):
+    #run_by_symfony_command = True
+    run_by_symfony_command = False
     # Sections
     if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
         print("init attempt=",attempts['init'])
         try:
-            automation = WebAutomation(run_by_symfony_command=True)
+            automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
             init = Init(automation)
             init.initialize()
@@ -38,7 +40,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'users' in demo_ids and demo_ids['users'] and attempts['users'] <= max_attempts:
         print("users attempt=", attempts['users'])
         try:
-            automation = WebAutomation(run_by_symfony_command=True)
+            automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
             users = Users(automation)
             users.create_user()
@@ -55,7 +57,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'vacreq' in demo_ids and demo_ids['vacreq'] and attempts['vacreq'] <= max_attempts:
         print("vacreq attempt=", attempts['vacreq'])
         try:
-            automation = WebAutomation(run_by_symfony_command=True)
+            automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
             vacreq = VacReq(automation)
             vacreq.create_group()
@@ -198,7 +200,7 @@ def main(mailer_user, mailer_password):
 
 
 
-if 0 and __name__ == "__main__":
+if __name__ == "__main__":
     args = sys.argv
     print("args=",args)
 
@@ -218,7 +220,7 @@ if 0 and __name__ == "__main__":
     print("Proceed without mailer")
     main('maileruser','mailerpassword')
 
-if __name__ == "__main__":
+if 0 and __name__ == "__main__":
     args = sys.argv
     print("args=", args)
 
