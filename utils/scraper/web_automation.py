@@ -97,6 +97,7 @@ class WebAutomation:
         self.select_option("s2id_usernametypeid_show", "CLASS_NAME", "select2-input", "Local User")
         time.sleep(1)
         self.click_button("btn-primary")
+        time.sleep(1)
 
     def select_option(self, element_id, selector_option, selector_text, option_text):
         #print("ID=",select_id,", CLASS=", select_classname)

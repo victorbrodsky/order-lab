@@ -380,21 +380,45 @@ class VacReq:
             pass
 
 def main():
-    url = "https://view.online/c/demo-institution/demo-department/directory/login"
-    username_text = "administrator"
-    password_text = "1234567890_demo"
-    automation = WebAutomation() #run_by_symfony_command=True
-    #automation = WebAutomation(run_by_symfony_command=True)  # run_by_symfony_command=True
-    automation.login_to_site(url, username_text, password_text)
 
-    vacreq = VacReq(automation)
-    vacreq.create_group()
-    vacreq.add_user_to_group()
-    vacreq.add_submitter_to_group()
-    #vacreq.create_vacreqs()
+    if 0:
+        url = "https://view.online/c/demo-institution/demo-department/directory/login"
+        username_text = "administrator"
+        password_text = "1234567890_demo"
+        automation = WebAutomation() #run_by_symfony_command=True
+        #automation = WebAutomation(run_by_symfony_command=True)  # run_by_symfony_command=True
+        automation.login_to_site(url, username_text, password_text)
+
+        vacreq = VacReq(automation)
+        vacreq.create_group()
+        vacreq.add_user_to_group()
+        vacreq.add_submitter_to_group()
+        #vacreq.create_vacreqs()
+        automation.quit_driver()
+
+    if 1:
+        run_by_symfony_command = False
+        automation = WebAutomation(run_by_symfony_command)
+        automation.login_to_site()
+        vacreq = VacReq(automation)
+        vacreq.create_group()
+        automation.quit_driver()
+        del automation
+        time.sleep(3)
+
+        automation = WebAutomation(run_by_symfony_command)
+        automation.login_to_site()
+        vacreq = VacReq(automation)
+        time.sleep(1)
+        vacreq.add_user_to_group()
+        vacreq.add_submitter_to_group()
+        # vacreq.create_vacreqs()
+        time.sleep(3)
+        automation.quit_driver()
+        del automation
+
     print("Vacation Request done!")
 
-    automation.quit_driver()
 
 # Execute the main function
 if __name__ == "__main__":

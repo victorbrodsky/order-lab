@@ -63,15 +63,18 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             vacreq.create_group()
             automation.quit_driver()
             del automation
+            del vacreq
 
             automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
+            vacreq = VacReq(automation)
             vacreq.add_user_to_group()
             vacreq.add_submitter_to_group()
             #vacreq.create_vacreqs()
             time.sleep(3)
             automation.quit_driver()
             del automation
+            del vacreq
 
             demo_ids['vacreq'] = False
             print("vacreq done!")
@@ -158,8 +161,8 @@ def main(mailer_user, mailer_password):
 
     # Add demo IDs to retry in case of failure
     demo_ids = {
-        #'init': True,
-        #'users': True,
+        'init': True,
+        'users': True,
         'vacreq': True,
         #'trp': True,
         #'callog': True,
