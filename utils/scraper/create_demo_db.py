@@ -62,13 +62,16 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             vacreq = VacReq(automation)
             vacreq.create_group()
             automation.quit_driver()
+            del automation
 
+            automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
             vacreq.add_user_to_group()
             vacreq.add_submitter_to_group()
             #vacreq.create_vacreqs()
             time.sleep(3)
             automation.quit_driver()
+            del automation
 
             demo_ids['vacreq'] = False
             print("vacreq done!")
