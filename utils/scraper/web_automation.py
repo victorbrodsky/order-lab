@@ -139,7 +139,9 @@ class WebAutomation:
     def quit_driver(self):
         """Quits the WebDriver."""
         if self.driver:
-            self.driver.close()
+            #print("quit_driver: before cloes")
+            #self.driver.close()
+            print("quit_driver: before quit")
             self.driver.quit()
 
 # Usage Example:
