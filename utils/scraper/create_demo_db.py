@@ -30,6 +30,8 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             init.run_deploy()
             time.sleep(3)
             automation.quit_driver()
+            del automation
+            del init
             demo_ids['init'] = False
             print("init done!")
         except Exception as e:
@@ -47,6 +49,8 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             users.check_users()
             time.sleep(3)
             automation.quit_driver()
+            del automation
+            del users
             demo_ids['users'] = False
             print("users done!")
         except Exception as e:
