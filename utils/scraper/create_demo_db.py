@@ -15,8 +15,8 @@ import multiprocessing
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
 def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password):
-    #run_by_symfony_command = True
-    run_by_symfony_command = False
+    run_by_symfony_command = True
+    #run_by_symfony_command = False
     # Sections
     if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
         print("init attempt=",attempts['init'])
