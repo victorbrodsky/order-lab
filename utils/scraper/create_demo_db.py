@@ -89,9 +89,14 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'trp' in demo_ids and demo_ids['trp'] and attempts['trp'] <= max_attempts:
         print("trp attempt=", attempts['trp'])
         try:
+            automation = WebAutomation(run_by_symfony_command)
+            automation.login_to_site()
             trp = Trp(automation)
             trp.create_projects()
             time.sleep(3)
+            automation.quit_driver()
+            del automation
+            del trp
             demo_ids['trp'] = False
             print("trp done!")
         except Exception as e:
@@ -101,9 +106,14 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'callog' in demo_ids and demo_ids['callog'] and attempts['callog'] <= max_attempts:
         print("callog attempt=", attempts['callog'])
         try:
+            automation = WebAutomation(run_by_symfony_command)
+            automation.login_to_site()
             callog = CallLog(automation)
             callog.create_calllogs()
             time.sleep(3)
+            automation.quit_driver()
+            del automation
+            del callog
             demo_ids['callog'] = False
             print("callog done!")
         except Exception as e:
@@ -113,10 +123,15 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'fellapp' in demo_ids and demo_ids['fellapp'] and attempts['fellapp'] <= max_attempts:
         print("fellapp attempt=", attempts['fellapp'])
         try:
+            automation = WebAutomation(run_by_symfony_command)
+            automation.login_to_site()
             fellapp = FellApp(automation)
             fellapp.configs()
             fellapp.create_fellapps()
             time.sleep(3)
+            automation.quit_driver()
+            del automation
+            del fellapp
             demo_ids['fellapp'] = False
             print("fellapp done!")
         except Exception as e:
@@ -126,10 +141,15 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
     if 'resapp' in demo_ids and demo_ids['resapp'] and attempts['resapp'] <= max_attempts:
         print("resapp attempt=", attempts['resapp'])
         try:
+            automation = WebAutomation(run_by_symfony_command)
+            automation.login_to_site()
             resapp = ResApp(automation)
             resapp.configs()
             resapp.create_resapps()
             time.sleep(3)
+            automation.quit_driver()
+            del automation
+            del resapp
             demo_ids['resapp'] = False
             print("resapp done!")
         except Exception as e:
@@ -168,10 +188,10 @@ def main(mailer_user, mailer_password):
         'init': True,
         'users': True,
         'vacreq': True,
-        #'trp': True,
-        #'callog': True,
-        #'fellapp': True,
-        #'resapp': True
+        'trp': True,
+        'callog': True,
+        'fellapp': True,
+        'resapp': True
     }
 
     # Track the number of attempts
