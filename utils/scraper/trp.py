@@ -81,7 +81,7 @@ class Trp:
     def create_projects(self):
         for project in self.get_trp_projects():
             self.create_single_project(project)
-            break
+            #break
 
     def create_single_project(self, project):
         driver = self.automation.get_driver()
@@ -220,11 +220,22 @@ class Trp:
         #self.create_work_requests(project_id)
 
     def create_work_requests(self):
-        i = 0
+        print("Project IDs:", self.project_ids)  # Debugging step
+        print("Number of work requests:", len(self.get_trp_work_requests()))
+        print("Number of project IDs:", len(self.project_ids))
+        for project_id in self.project_ids:
+            self.create_work_requests_by_project(project_id)
+
+        # i = 0
+        # for work_requests in self.get_trp_work_requests():
+        #     project_id = self.project_ids[i]
+        #     self.create_single_work_requests(project_id,work_requests)
+        #     i = i + 1
+        #     #break
+
+    def create_work_requests_by_project(self,project_id):
         for work_requests in self.get_trp_work_requests():
-            project_id = self.project_ids[i]
             self.create_single_work_requests(project_id,work_requests)
-            i = i + 1
             #break
 
     def create_single_work_requests(self, project_id, work_requests):
@@ -340,6 +351,7 @@ def main():
     run_by_symfony_command = True
     run_by_symfony_command = False
 
+    print("Create projects")
     automation = WebAutomation(run_by_symfony_command)
     automation.login_to_site()
     trp = Trp(automation)
@@ -348,6 +360,7 @@ def main():
     automation.quit_driver()
     del automation
 
+    print("Create work requests")
     automation = WebAutomation(run_by_symfony_command)
     automation.login_to_site()
     trp.set_automation(automation)
