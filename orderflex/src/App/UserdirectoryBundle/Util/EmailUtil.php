@@ -371,6 +371,7 @@ class EmailUtil {
                 "; attachmentPath=".$attachmentPath).
                 "; redirected=".$mailerDeliveryAddressesStr
             ;
+            return NULL;
         }
         //echo "after transport newInstance <br>";
         //$logger->notice("sendEmail: Trying to sent email: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
@@ -478,6 +479,10 @@ class EmailUtil {
         //$password = rawurlencode($password);
         //echo '$password='.$password."<br>";
         //exit();
+
+        if( !$password ) {
+            return NULL;
+        }
 
         if( $host == 'smtp.gmail.com' ) {
             //Use gmail# SMTP

@@ -13,6 +13,10 @@ class Trp:
         self.automation = automation
         self.users = Users(automation)
         self.existing_users = self.users.get_existing_users()
+        self.project_ids = []
+
+    def set_automation(self, automation):
+        self.automation = automation
 
     def get_trp_projects(self):
         projects = [
@@ -77,7 +81,7 @@ class Trp:
     def create_projects(self):
         for project in self.get_trp_projects():
             self.create_single_project(project)
-            #break
+            break
 
     def create_single_project(self, project):
         driver = self.automation.get_driver()
@@ -203,23 +207,28 @@ class Trp:
 
         #Approve the project
         current_url = driver.current_url
-        #print(f"Current URL: {current_url}")
+        print(f"Current URL: {current_url}")
         project_id = current_url.split('/')[-1]
         #print(f"Extracted Project ID: {project_id}")
         #driver.get('https://view.online/c/demo-institution/demo-department/translational-research/projects/')
         driver.get(f'https://view.online/c/demo-institution/demo-department/translational-research/approve-project/{project_id}')
-        #print(f"Approved Project ID: {project_id}")
+        print(f"Approved Project ID: {project_id}")
+        self.project_ids.append(project_id)
         time.sleep(3)
 
         #Create 3 work requests for this project
-        self.create_work_requests(project_id)
+        #self.create_work_requests(project_id)
 
-    def create_work_requests(self, project_id):
+    def create_work_requests(self):
+        i = 0
         for work_requests in self.get_trp_work_requests():
+            project_id = self.project_ids[i]
             self.create_single_work_requests(project_id,work_requests)
+            i = i + 1
             #break
 
     def create_single_work_requests(self, project_id, work_requests):
+        print(f"create_single_work_requests: project_id={project_id}")
         driver = self.automation.get_driver()
         url = f"https://view.online/c/demo-institution/demo-department/translational-research/project/{project_id}/work-request/new/"
         driver.get(url)
@@ -317,19 +326,38 @@ class Trp:
 
 
 def main():
-    url = "https://view.online/c/demo-institution/demo-department/directory/login"
-    username_text = "administrator"
-    password_text = "1234567890_demo"
-    automation = WebAutomation()
-    automation.login_to_site(url, username_text, password_text)
+    #url = "https://view.online/c/demo-institution/demo-department/directory/login"
+    #username_text = "administrator"
+    #password_text = "1234567890_demo"
+    #automation = WebAutomation()
+    #automation.login_to_site(url, username_text, password_text)
 
+    #trp = Trp(automation)
+    #trp.create_projects()
+    #trp.create_work_requests()
+    #automation.quit_driver()
+
+    run_by_symfony_command = True
+    run_by_symfony_command = False
+
+    automation = WebAutomation(run_by_symfony_command)
+    automation.login_to_site()
     trp = Trp(automation)
     trp.create_projects()
-    #trp.create_work_requests(15) #project ID 15 - testing
+    time.sleep(3)
+    automation.quit_driver()
+    del automation
+
+    automation = WebAutomation(run_by_symfony_command)
+    automation.login_to_site()
+    trp.set_automation(automation)
+    trp.create_work_requests()
+    automation.quit_driver()
+    del automation
+
+    del trp
 
     print("TRP done!")
-
-    automation.quit_driver()
 
 if __name__ == "__main__":
     main()

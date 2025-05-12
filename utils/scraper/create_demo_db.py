@@ -96,6 +96,14 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             time.sleep(3)
             automation.quit_driver()
             del automation
+
+            automation = WebAutomation(run_by_symfony_command)
+            automation.login_to_site()
+            trp.set_automation(automation)
+            trp.create_work_requests()
+            automation.quit_driver()
+            del automation
+
             del trp
             demo_ids['trp'] = False
             print("trp done!")
@@ -197,13 +205,13 @@ def main(mailer_user, mailer_password):
 
     # Add demo IDs to retry in case of failure
     demo_ids = {
-        'init': True,
-        'users': True,
-        'vacreq': True,
+        #'init': True,
+        #'users': True,
+        #'vacreq': True,
         'trp': True,
-        'callog': True,
-        'fellapp': True,
-        'resapp': True
+        #'callog': True,
+        #'fellapp': True,
+        #'resapp': True
     }
 
     # Track the number of attempts

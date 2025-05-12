@@ -87,7 +87,7 @@ class WebAutomation:
             print("use login url ",url)
             self.driver.get(url)
 
-        self.driver.save_screenshot("login_to_site.png")
+        #self.driver.save_screenshot("login_to_site.png")
 
         username = self.driver.find_element(By.ID, "display-username")
         password = self.driver.find_element(By.ID, "password")
