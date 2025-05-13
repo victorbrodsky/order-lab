@@ -205,13 +205,13 @@ def main(mailer_user, mailer_password):
 
     # Add demo IDs to retry in case of failure
     demo_ids = {
-        #'init': True,
-        #'users': True,
-        #'vacreq': True,
+        'init': True,
+        'users': True,
+        'vacreq': True,
         'trp': True,
-        #'callog': True,
-        #'fellapp': True,
-        #'resapp': True
+        'callog': True,
+        'fellapp': True,
+        'resapp': True
     }
 
     # Track the number of attempts
