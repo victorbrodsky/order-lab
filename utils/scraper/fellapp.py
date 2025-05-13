@@ -111,6 +111,7 @@ class FellApp:
 
             # add coordinator
             coordinator = users[2]
+            print(f"configs: coordinator: {coordinator['displayName']}")
 
             # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
             self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
