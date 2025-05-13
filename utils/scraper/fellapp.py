@@ -122,6 +122,7 @@ class FellApp:
             time.sleep(3)
 
             driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+            time.sleep(3)
 
             # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
