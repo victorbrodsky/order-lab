@@ -118,7 +118,7 @@ class DemoDbUtil {
         //$projectRoot = "/usr/local/bin/order-lab-tenantappdemo/orderflex";
 
         $resetDb = false;
-        $resetDb = true;
+        //$resetDb = true;
 
         echo "processDemoDb: start with resetDb=$resetDb \n<br>";
         $logger->notice("processDemoDb: start with resetDb=$resetDb");
