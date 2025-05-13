@@ -79,18 +79,20 @@ class Trp:
         return requests
 
     def create_projects(self):
+        counter = 0
         for project in self.get_trp_projects():
-            self.create_single_project(project)
+            self.create_single_project(project,counter)
+            counter = counter + 1
             #break
 
-    def create_single_project(self, project):
+    def create_single_project(self, project, counter):
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/translational-research/project/new/ap-cp?requester-group=Internal"
         driver.get(url)
         time.sleep(1)
 
         users = self.users.get_users()
-        pi = users[0]
+        pi = users[counter]
 
         # self.automation.select_option("s2id_oleg_translationalresearchbundle_project_principalInvestigators", "CSS_SELECTOR",
         #                               ".select2-search-field .select2-input",

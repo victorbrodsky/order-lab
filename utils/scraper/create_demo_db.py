@@ -203,15 +203,15 @@ def main(mailer_user, mailer_password):
     #print("EOF testing")
     #exit()
 
-    # Add demo IDs to retry in case of failure
+    # Add demo IDs to retry in case of failure. True flag means that this demo has to be run
     demo_ids = {
-        'init': True,
-        'users': True,
-        'vacreq': True,
-        'trp': True,
-        'callog': True,
+        #'init': True,
+        #'users': True,
+        #'vacreq': True,
+        #'trp': True,
+        #'callog': True,
         'fellapp': True,
-        'resapp': True
+        #'resapp': True
     }
 
     # Track the number of attempts
