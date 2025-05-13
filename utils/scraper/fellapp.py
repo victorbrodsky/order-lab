@@ -126,6 +126,8 @@ class FellApp:
 
             # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
+            button = driver.find_element(By.CLASS_NAME, "btn-warning")
+            driver.execute_script("arguments[0].scrollIntoView();", button)
             driver.save_screenshot("configs: after_click_btn-warning.png")
         except NoSuchElementException:
             # create new fellowship type "Clinical Informatics"
@@ -187,9 +189,14 @@ class FellApp:
         signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         signature_date.clear()
         signature_date.send_keys(today)
+        signature_date_after = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
+        driver.execute_script("arguments[0].scrollIntoView();", signature_date_after)
+        driver.save_screenshot("create_single_fellapp: signature_date_after.png")
 
         #click submit btn-warning
         self.automation.click_button("btn-warning")
+        button = driver.find_element(By.CLASS_NAME, "btn-warning")
+        driver.execute_script("arguments[0].scrollIntoView();", button)
         driver.save_screenshot("create_single_fellapp: after_click_btn-warning.png")
 
         #print("Finish new fellapp")
