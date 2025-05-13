@@ -126,7 +126,7 @@ class FellApp:
 
             # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
-            self.driver.save_screenshot("configs: after_click_btn-warning.png")
+            driver.save_screenshot("configs: after_click_btn-warning.png")
         except NoSuchElementException:
             # create new fellowship type "Clinical Informatics"
             #print("create new fellowship type Clinical Informatics")
@@ -190,7 +190,7 @@ class FellApp:
 
         #click submit btn-warning
         self.automation.click_button("btn-warning")
-        self.driver.save_screenshot("create_single_fellapp: after_click_btn-warning.png")
+        driver.save_screenshot("create_single_fellapp: after_click_btn-warning.png")
 
         #print("Finish new fellapp")
         time.sleep(10)
