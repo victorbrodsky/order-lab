@@ -189,7 +189,7 @@ class FellApp:
         signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         signature_date.clear()
         signature_date.send_keys(today)
-        time.sleep(2)
+        time.sleep(5)
         body = driver.find_element(By.TAG_NAME, "body")
         body.send_keys(Keys.ESCAPE)  # Close the datepicker
         time.sleep(1)
