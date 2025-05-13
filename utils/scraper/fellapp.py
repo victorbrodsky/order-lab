@@ -195,13 +195,18 @@ class FellApp:
         time.sleep(1)
         signature_date_after = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         driver.execute_script("arguments[0].scrollIntoView();", signature_date_after)
-        driver.save_screenshot("create_single_fellapp: signature_date_after.png")
+        driver.save_screenshot("fellapp_signature_date_after.png")
+
+        button = driver.find_element(By.CLASS_NAME, "btn-warning")
+        driver.execute_script("arguments[0].scrollIntoView();", button)
+        driver.save_screenshot("create_single_fellapp_after_click_btn-warning.png")
+        time.sleep(1)
 
         #click submit btn-warning
         self.automation.click_button("btn-warning")
-        button = driver.find_element(By.CLASS_NAME, "btn-warning")
-        driver.execute_script("arguments[0].scrollIntoView();", button)
-        driver.save_screenshot("create_single_fellapp: after_click_btn-warning.png")
+
+        #driver.execute_script("arguments[0].scrollIntoView();", button)
+        #driver.save_screenshot("create_single_fellapp_after_click_btn-warning.png")
 
         #print("Finish new fellapp")
         time.sleep(10)
