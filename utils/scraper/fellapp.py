@@ -2,7 +2,7 @@ from web_automation import WebAutomation
 from users import Users
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
-#from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 #from selenium.webdriver.common.action_chains import ActionChains
 import time
@@ -189,6 +189,10 @@ class FellApp:
         signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         signature_date.clear()
         signature_date.send_keys(today)
+        time.sleep(2)
+        body = driver.find_element(By.TAG_NAME, "body")
+        body.send_keys(Keys.ESCAPE)  # Close the datepicker
+        time.sleep(1)
         signature_date_after = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         driver.execute_script("arguments[0].scrollIntoView();", signature_date_after)
         driver.save_screenshot("create_single_fellapp: signature_date_after.png")
