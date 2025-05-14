@@ -195,11 +195,15 @@ class FellApp:
         body = driver.find_element(By.TAG_NAME, "body")
         body.send_keys(Keys.ESCAPE)  # Close the datepicker
         time.sleep(3)
+        driver.find_element(By.TAG_NAME, "body").click()
+        time.sleep(3)
         signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         signature_date.click()  # Close the datepicker
         time.sleep(3)
         signature_date_after = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         driver.execute_script("arguments[0].scrollIntoView();", signature_date_after)
+        time.sleep(3)
+        driver.execute_script("document.querySelector('.datepicker-dropdown').style.display='none';")
         driver.save_screenshot("fellapp_signature_date_after.png")
 
         button = driver.find_element(By.CLASS_NAME, "btn-warning")
