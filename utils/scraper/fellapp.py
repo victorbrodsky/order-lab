@@ -128,7 +128,7 @@ class FellApp:
             self.automation.click_button("btn-warning")
             button = driver.find_element(By.CLASS_NAME, "btn-warning")
             driver.execute_script("arguments[0].scrollIntoView();", button)
-            driver.save_screenshot("configs: after_click_btn-warning.png")
+            driver.save_screenshot("configs_after_click_btn-warning.png")
         except NoSuchElementException:
             # create new fellowship type "Clinical Informatics"
             #print("create new fellowship type Clinical Informatics")
@@ -190,9 +190,14 @@ class FellApp:
         signature_date.clear()
         signature_date.send_keys(today)
         time.sleep(5)
+
+        #click somewhere to close datepicker dialog box
         body = driver.find_element(By.TAG_NAME, "body")
         body.send_keys(Keys.ESCAPE)  # Close the datepicker
-        time.sleep(1)
+        time.sleep(3)
+        signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
+        signature_date.click()  # Close the datepicker
+        time.sleep(3)
         signature_date_after = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         driver.execute_script("arguments[0].scrollIntoView();", signature_date_after)
         driver.save_screenshot("fellapp_signature_date_after.png")
