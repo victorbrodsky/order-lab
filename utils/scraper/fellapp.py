@@ -212,7 +212,8 @@ class FellApp:
         time.sleep(1)
 
         #click submit btn-warning
-        self.automation.click_button("btn-warning")
+        driver.execute_script("arguments[0].click();", button)
+        #self.automation.click_button("btn-warning")
 
         #driver.execute_script("arguments[0].scrollIntoView();", button)
         #driver.save_screenshot("create_single_fellapp_after_click_btn-warning.png")
