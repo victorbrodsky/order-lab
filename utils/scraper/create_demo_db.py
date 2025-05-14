@@ -210,8 +210,8 @@ def main(mailer_user, mailer_password):
         #'vacreq': True,
         #'trp': True,
         #'callog': True,
-        'fellapp': True,
-        #'resapp': True
+        #'fellapp': True,
+        'resapp': True
     }
 
     # Track the number of attempts
