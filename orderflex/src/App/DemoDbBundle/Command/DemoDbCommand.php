@@ -73,7 +73,7 @@ class DemoDbCommand extends Command {
         $projectRoot = NULL; //use current project dir of the tenant where command is running
         $projectRoot = "/srv/order-lab-tenantappdemo/orderflex"; //use project dir of the demo tenant
         
-        if( $environment == 'live' && $projectRoot === NULL ) {
+        if( $environment != 'demo' && $projectRoot === NULL ) {
             $resStr = "Demo DB cannot be run in live environment". "\n";
             $output->writeln($resStr);
             return Command::FAILURE;

@@ -192,26 +192,30 @@ class FellApp:
         time.sleep(5)
 
         #click somewhere to close datepicker dialog box
-        body = driver.find_element(By.TAG_NAME, "body")
-        body.send_keys(Keys.ESCAPE)  # Close the datepicker
-        time.sleep(3)
-        driver.find_element(By.TAG_NAME, "body").click()
-        time.sleep(3)
-        signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
-        signature_date.click()  # Close the datepicker
-        time.sleep(3)
+        # body = driver.find_element(By.TAG_NAME, "body")
+        # body.send_keys(Keys.ESCAPE)  # Close the datepicker
+        # time.sleep(3)
+        # driver.find_element(By.TAG_NAME, "body").click()
+        # time.sleep(3)
+        # signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
+        # signature_date.click()  # Close the datepicker
+        # time.sleep(3)
         signature_date_after = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_signatureDate")
         driver.execute_script("arguments[0].scrollIntoView();", signature_date_after)
-        time.sleep(3)
-        driver.execute_script("document.querySelector('.datepicker-dropdown').style.display='none';")
-        driver.save_screenshot("fellapp_signature_date_after.png")
+        # time.sleep(3)
+        # driver.execute_script("document.querySelector('.datepicker-dropdown').style.display='none';")
+        # driver.save_screenshot("fellapp_signature_date_after.png")
+        #
+        # button = driver.find_element(By.CLASS_NAME, "btn-warning")
+        # driver.execute_script("arguments[0].scrollIntoView();", button)
+        # driver.save_screenshot("create_single_fellapp_after_click_btn-warning.png")
+        # time.sleep(1)
 
-        button = driver.find_element(By.CLASS_NAME, "btn-warning")
-        driver.execute_script("arguments[0].scrollIntoView();", button)
-        driver.save_screenshot("create_single_fellapp_after_click_btn-warning.png")
-        time.sleep(1)
+        driver.save_screenshot("create_single_fellapp_before_click_btn-warning.png")
 
         #click submit btn-warning
+        button = driver.find_element(By.CLASS_NAME, "btn-warning")
+        driver.execute_script("arguments[0].scrollIntoView();", button)
         driver.execute_script("arguments[0].click();", button)
         #self.automation.click_button("btn-warning")
 

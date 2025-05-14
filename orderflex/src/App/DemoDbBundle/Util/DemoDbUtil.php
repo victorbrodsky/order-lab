@@ -86,8 +86,16 @@ class DemoDbUtil {
         }
 
         echo "processDemoDb: environment=$environment, projectRoot=$projectRoot" . "\n";
-        if( $environment == 'live' && $projectRoot === NULL ) {
+        if( $environment == 'live' ) {
             $resStr = "processDemoDb: Demo DB cannot be run in live environment". "\n";
+            return $resStr;
+        }
+        if( $environment == 'live' && $projectRoot === NULL ) {
+            $resStr = "processDemoDb: Demo DB cannot be run in live environment ot project root is not specified". "\n";
+            return $resStr;
+        }
+        if( $environment != 'demo' && $projectRoot === NULL ) {
+            $resStr = "processDemoDb: Demo DB can be run only in demo environment or only if projectRoot specified. Current environment=$environment, projectRoot=$projectRoot". "\n";
             return $resStr;
         }
 
@@ -130,7 +138,7 @@ class DemoDbUtil {
             try {
                 echo "processDemoDb try: getSiteSettingParameter" . "<br>";
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if ($environment == 'live' && str_contains($projectRoot,'demo') === false ) {
+                if ($environment != 'demo' && str_contains($projectRoot,'demo') === false ) {
                     exit("processDemoDb: Demo DB cannot be run in live environment");
                 }
             } catch (\Exception $e) {
