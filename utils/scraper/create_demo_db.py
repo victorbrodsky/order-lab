@@ -207,10 +207,10 @@ def main(mailer_user, mailer_password):
     demo_ids = {
         'init': True,
         'users': True,
-        #'vacreq': True,
-        #'trp': True,
-        #'callog': True,
-        #'fellapp': True,
+        'vacreq': True,
+        'trp': True,
+        'callog': True,
+        'fellapp': True,
         'resapp': True
     }
 
