@@ -920,15 +920,15 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
-
-        if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"create") === false ) {
+        if( $transresRequestUtil->isUserHasInvoicePermission($invoice=NULL,"create") === false ) {
             $this->addFlash(
                 'warning',
                 "You don't have a permission to create this invoice."
             );
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
+
+        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
 
         $originalInvoiceStatus = $invoice->getStatus();
 

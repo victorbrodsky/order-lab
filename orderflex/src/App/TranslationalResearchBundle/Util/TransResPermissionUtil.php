@@ -141,7 +141,17 @@ class TransResPermissionUtil
 
         if( !$invoice ) {
             if( $action == "create" ) {
-                return true;
+                //return true;
+                //Exception: executive role can not create invoice
+                //if( $this->security->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr) ) {
+                //    return false;
+                //}
+                //Who can create a new invoice?: all above (technician, billing admin, sales person)
+                //If invoice is NULL, only ROLE_TRANSRES_BILLING_ADMIN_ can create a new invoice, so isInvoiceSalesPerson here is pointless
+                //if( $this->isInvoiceSalesPerson($invoice,$user) ) {
+                //    return true;
+                //}
+                return false;
             } else {
                 //exit("Logical Error: Invoice is NULL and action is $action");
                 return false;
@@ -280,16 +290,18 @@ class TransResPermissionUtil
         return false;
     }
     public function isInvoiceSalesPerson( $invoice, $user ) {
-        $transresRequest = $invoice->getTransresRequest();
-        if( $transresRequest ) {
-            //ok
-        } else {
-            return false;
+        if( $invoice ) {
+            $transresRequest = $invoice->getTransresRequest();
+            if ($transresRequest) {
+                //ok, go next check
+            } else {
+                return false;
+            }
         }
 
         $project = $transresRequest->getProject();
         if( $project ) {
-            //ok
+            //ok, go next check
         } else {
             return false;
         }
@@ -303,9 +315,11 @@ class TransResPermissionUtil
         }
 
         //Invoice's billing contact (salesperson)
-        $salesperson = $invoice->getSalesperson();
-        if( $salesperson && $salesperson->getId() == $user->getId() ) {
-            return true;
+        if( $invoice ) {
+            $salesperson = $invoice->getSalesperson();
+            if ($salesperson && $salesperson->getId() == $user->getId()) {
+                return true;
+            }
         }
 
         return false;
