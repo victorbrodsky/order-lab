@@ -145,7 +145,8 @@ class ProjectController extends OrderAbstractController
 
         if( $routeName == "translationalresearch_project_index" ) {
             if( 
-                $transresUtil->isAdminOrPrimaryReviewer() === false && 
+                //$transresUtil->isAdminOrPrimaryReviewer() === false &&
+                $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false &&
                 $this->isGranted('ROLE_TRANSRES_TECHNICIAN') === false 
             ) {
                 if ($this->isGranted('ROLE_TRANSRES_REQUESTER')) {
