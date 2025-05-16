@@ -84,6 +84,7 @@ class TransResPermissionUtil
         return false;
     }
     //similar to isGranted("read",$entity)
+    //TODO: executive only has view permission
     public function isUserHasInvoicePermission( $invoice, $action ) {
         $user = $this->security->getUser();
         $transresUtil = $this->container->get('transres_util');
@@ -99,7 +100,11 @@ class TransResPermissionUtil
         }
         //exit('1');
 
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+        //Executive can only view invoice
+        //if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+        //    return true;
+        //}
+        if( $transresUtil->isAdminOrPrimaryReviewer() ) {
             return true;
         }
 
@@ -176,6 +181,10 @@ class TransResPermissionUtil
             if( $transresUtil->isProjectRequester($project) ) {
                 return true;
             }
+
+            if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+                return true;
+            }
         }
 
         //view-pdf: show pdf if user can not edit, but can view
@@ -206,6 +215,10 @@ class TransResPermissionUtil
 
             //associated with the project
             if( $transresUtil->isProjectRequester($project) ) {
+                return true;
+            }
+
+            if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
                 return true;
             }
         }
