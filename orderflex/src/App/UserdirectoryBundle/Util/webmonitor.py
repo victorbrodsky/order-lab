@@ -6,10 +6,14 @@
 #Ref: https://medium.com/swlh/tutorial-creating-a-webpage-monitor-using-python-and-running-it-on-a-raspberry-pi-df763c142dac
 
 #https://www.shell-tips.com/linux/sudo-sorry-you-must-have-a-tty-to-run-sudo/#gsc.tab=0
-#1) add permission to run systemctl by apache user by running visudo and add the following:
+#1) add permission to run systemctl by apache user by running 'sudo visudo' and add the following:
 #2) Defaults:apache !requiretty
 #3) apache ALL= NOPASSWD: /usr/bin/systemctl restart httpd.service
 #   apache ALL= NOPASSWD: /usr/bin/systemctl restart postgresql-14
+#RHEL9:
+#apache ALL=(ALL) NOPASSWD: /bin/systemctl restart haproxy
+#apache ALL=(ALL) NOPASSWD: /bin/systemctl restart php-fpm
+#apache ALL=(ALL) NOPASSWD: /bin/systemctl restart postgresql-17
 
 # sample usage: python webmonitor.py --urls "http://view.med.cornell.edu, http://view-test.med.cornell.edu" -h "smtp.med.cornell.edu" -u "" -p "" -s "oli2002@med.cornell.edu" -r "oli2002@med.cornell.edu"
 # -l --urls: "http://view.med.cornell.edu,http://view-test.med.cornell.edu"
