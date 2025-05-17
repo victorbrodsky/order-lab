@@ -1215,7 +1215,7 @@ class SiteParametersType extends AbstractType
                     (python3 path/to/webmonitor.py 
                     -l 'url1,url2...' -h mailerhost -o mailerport -u mailerusername -p mailerpassword
                     -s 'sender email' -r 'receiver email1, email2 ...' 
-                    -c 'sudo systemctl restart postgresql-14, sudo systemctl restart httpd.service' 
+                    -c 'sudo systemctl restart postgresql-17, sudo systemctl restart haproxy, sudo systemctl restart php-fpm' 
                     -U 'http://view-test.med.cornell.edu' 
                     -e 'server environment or description)'
                     :",
