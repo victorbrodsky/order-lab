@@ -464,7 +464,7 @@ class FellAppController extends OrderAbstractController {
                 foreach ($startDatesArr as $startDate) {
                     //$startDatesArr = explode("-", $startDate); //2009-01-01 00:00:00.000000
                     //$startYearStr = $startDatesArr[0];
-                    //echo "startDate=$startDate <br>";
+                    echo "startDate=$startDate <br>";
 
 //                    if(0) {
 //                        $bottomDate = $startDate . "-01-01";
