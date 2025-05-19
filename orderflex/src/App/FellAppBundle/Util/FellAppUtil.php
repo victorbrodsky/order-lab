@@ -162,7 +162,7 @@ class FellAppUtil {
                     $startEndDates = $this->getAcademicYearStartEndDates($singleYear);
                     $bottomDate = $startEndDates['startDate'];
                     $topDate = $startEndDates['endDate'];
-                    //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+                    echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
                     $criterions[] = "("."fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
                 $criterionStr = implode(" OR ",$criterions);
@@ -175,7 +175,7 @@ class FellAppUtil {
                 $startEndDates = $this->getAcademicYearStartEndDates($year);
                 $bottomDate = $startEndDates['startDate'];
                 $topDate = $startEndDates['endDate'];
-                //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+                echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
                 $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'");
             }
         }

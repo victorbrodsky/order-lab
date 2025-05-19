@@ -146,7 +146,7 @@ class FellAppApplicantController extends OrderAbstractController {
         $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startDateStr);
         $bottomDate = $startEndDates['startDate'];
         $topDate = $startEndDates['endDate'];
-        //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+        echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
 
         $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
