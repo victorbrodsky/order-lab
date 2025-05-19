@@ -162,7 +162,7 @@ class FellAppUtil {
                     $startEndDates = $this->getAcademicYearStartEndDates($singleYear);
                     $bottomDate = $startEndDates['startDate'];
                     $topDate = $startEndDates['endDate'];
-                    echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+                    //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
                     $criterions[] = "("."fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'".")";
                 }
                 $criterionStr = implode(" OR ",$criterions);
@@ -175,7 +175,7 @@ class FellAppUtil {
                 $startEndDates = $this->getAcademicYearStartEndDates($year);
                 $bottomDate = $startEndDates['startDate'];
                 $topDate = $startEndDates['endDate'];
-                echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
+                //echo "new: bottomDate=$bottomDate, topDate=$topDate <br>";
                 $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'");
             }
         }
@@ -236,14 +236,14 @@ class FellAppUtil {
                 $endDate = $startEndDates['endDate'];
             }
 
-            echo "2 startDate=[".$startDate."]<br>";
-            echo "2 endDate=[".$endDate."]<br>";
+            //echo "2 startDate=[".$startDate."]<br>";
+            //echo "2 endDate=[".$endDate."]<br>";
             if( $startDate == NULL || $startDate == '' || $endDate == NULL || $endDate == '' ) {
                 $currentYear = intval(date("Y"));
                 $currentYear = $currentYear + 2;
 
                 //3) If still missing, set to the default value to April 1st
-                echo "If still missing, set to the default value to April 1st<br>";
+                //echo "If still missing, set to the default value to April 1st<br>";
                 if( $startDate == NULL || $startDate == '' ) {
                     if( $asDateTimeObject ) {
                         $startDate = new \DateTime($currentYear."-07-01");
@@ -264,8 +264,8 @@ class FellAppUtil {
             }
         }
 
-        echo "3 startDate=[".$startDate."]<br>";
-        echo "3 endDate=[".$endDate."]<br>";
+        //echo "3 startDate=[".$startDate."]<br>";
+        //echo "3 endDate=[".$endDate."]<br>";
 
         return array(
             'startDate'=> $startDate,

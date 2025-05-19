@@ -476,7 +476,7 @@ class FellAppController extends OrderAbstractController {
                         $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startDate);
                         $startDate = $startEndDates['startDate'];
                         $endDate = $startEndDates['endDate'];
-                        echo "new: startDate=$startDate, endDate=$endDate <br>";
+                        //echo "new: startDate=$startDate, endDate=$endDate <br>";
                         $startDateCriterions[] = "(" . "fellapp.startDate BETWEEN '" . $startDate . "'" . " AND " . "'" . $endDate . "'" . ")";
                         //$startDateCriterions[] = "("."fellapp.startDate >= '" . $startDate . "'" . " AND " . "fellapp.startDate < " . "'" . $endDate . "'".")";
                     }
@@ -498,7 +498,7 @@ class FellAppController extends OrderAbstractController {
                 $startEndDates = $fellappUtil->getAcademicYearStartEndDates($startYearStr);
                 $topDate = $startEndDates['startDate'];
                 $bottomDate = $startEndDates['endDate'];
-                echo "new: topDate=$topDate, bottomDate=$bottomDate <br>";
+                //echo "new: topDate=$topDate, bottomDate=$bottomDate <br>";
                 $dql->andWhere("fellapp.startDate BETWEEN '" . $bottomDate . "'" . " AND " . "'" . $topDate . "'" );
 
                 if( $startYearStr != $currentYear ) {
