@@ -303,15 +303,14 @@ class FellAppUtil {
         $currentYear = $this->getDefaultAcademicStartYear();
         $startDates = array();
         foreach($fellowshipTypes as $fellowshipId=>$fellowshipName) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
             $fellowshipType = $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipId);
             $startDate = $fellowshipType->getSeasonYearStart();
             if( $startDate ) {
-                //echo $fellowshipName.": startDate=".$startDate->format('d-m-Y')."<br>";
+                echo $fellowshipName.": startDate=".$startDate->format('d-m-Y')."<br>";
                 $startYear = $userServiceUtil->getAcademicStartYear($startDate);
                 $startDates[] = $startYear;
             } else {
-                //echo $fellowshipName.": startDate=NULL"."<br>";
+                echo $fellowshipName.": startDate=NULL"."<br>";
                 $startDates[] = $currentYear;
             }
         }
