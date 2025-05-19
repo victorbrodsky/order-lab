@@ -8110,8 +8110,11 @@ class DashboardUtil
                     $usmleArr = $fellapp->getAllUsmleArr();
                     if( count($usmleArr) > 0 ) {
                         //USMLE Step 1 can be numerical, pass or fail
-                        $usmleStep1 = $usmleArr[1];
-                        if( $usmleStep1 !== NULL && is_numeric($usmleStep1) ) {
+                        $usmleStep1 = $usmleArr[1]; //Range: from 1 to 300
+                        if( $usmleStep1 !== NULL && is_numeric($usmleStep1) && $usmleStep1 < 500 ) {
+//                            if( $usmleStep1 > 1000 ) {
+//                                exit('big $usmleStep1='.$usmleStep1.', fellapp ID='.$fellapp->getId());
+//                            }
                             $usmle1ScoreSumTotal = $usmle1ScoreSumTotal + $usmleStep1;
                             $usmle1ScoreCounter++;
                         }
@@ -8144,8 +8147,8 @@ class DashboardUtil
                     $comlexArr = $fellapp->getAllComlexArr();
                     if( count($comlexArr) > 0 ) {
                         //Comlex Level 1 can be numerical, pass or fail
-                        $comlexStep1 = $comlexArr[1];
-                        if( $comlexStep1 !== NULL && is_numeric($comlexStep1) ) {
+                        $comlexStep1 = $comlexArr[1]; //Range: from 9 to 999
+                        if( $comlexStep1 !== NULL && is_numeric($comlexStep1) && $comlexStep1 < 1000 ) {
                             $comlex1ScoreSumTotal = $comlex1ScoreSumTotal + $comlexStep1;
                             $comlex1ScoreCounter++;
                         }
