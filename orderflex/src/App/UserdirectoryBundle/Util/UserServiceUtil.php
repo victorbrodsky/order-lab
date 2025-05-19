@@ -3252,6 +3252,13 @@ Pathology and Laboratory Medicine",
                 $cronJob = "0 0 */$cronDay * * * " . " " . $cronJobCommand;
             }
 
+            if( $cronJob == NULL && $cronInterval && str_contains($cronInterval, 'ed') ) {
+                //exit("Every Day (ed) at X hours"); //'0 3 * * *' - every day at 3 AM, '0 15 * * *' - every day at 3 PM
+
+                $cronTime = str_replace('ed','',$cronInterval);
+                $cronJob = "0 $cronTime * * * " . " " . $cronJobCommand;
+            }
+
             //Create cron job
             if( $cronJob ) {
                 //echo "Create cronJobName=".$cronJobName."<br>";
