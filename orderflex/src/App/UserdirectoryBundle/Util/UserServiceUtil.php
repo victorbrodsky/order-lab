@@ -3252,10 +3252,10 @@ Pathology and Laboratory Medicine",
                 $cronJob = "0 0 */$cronDay * * * " . " " . $cronJobCommand;
             }
 
-            if( $cronJob == NULL && $cronInterval && str_contains($cronInterval, 'ed') ) {
-                //exit("Every Day (ed) at X hours"); //'0 3 * * *' - every day at 3 AM, '0 15 * * *' - every day at 3 PM
+            if( $cronJob == NULL && $cronInterval && str_contains($cronInterval, 'e') ) {
+                //exit("Every Day (e) at X hours"); //'0 3 * * *' - every day at 3 AM, '0 15 * * *' - every day at 3 PM
 
-                $cronTime = str_replace('ed','',$cronInterval);
+                $cronTime = str_replace('e','',$cronInterval);
                 $cronJob = "0 $cronTime * * * " . " " . $cronJobCommand;
             }
 
