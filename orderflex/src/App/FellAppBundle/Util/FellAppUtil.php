@@ -214,6 +214,8 @@ class FellAppUtil {
         
         $userServiceUtil = $this->container->get('user_service_utility');
 
+        echo "currentYear=[".$currentYear."]<br>";
+
         //1) get start/end dates from fellapp site settings
         $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,$asDateTimeObject,$yearOffset,'fellapp','fellappAcademicYearStart','fellappAcademicYearEnd');
         
