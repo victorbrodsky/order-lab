@@ -207,7 +207,8 @@ class FellAppUtil {
         return $applicants;
     }
     
-    //Get Application season start dates
+    //Get Application season start dates based
+    // on the current year and fellapp application season start/end dates: if current year 2025, return start date 2027-04-01
     //$yearOffset: 0=>current year, -1=>previous year, +1=>next year
     //return format: Y-m-d
     public function getAcademicYearStartEndDates( $currentYear, $asDateTimeObject=false, $yearOffset=null ) {

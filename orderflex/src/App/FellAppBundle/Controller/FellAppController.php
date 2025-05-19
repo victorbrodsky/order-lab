@@ -141,6 +141,7 @@ class FellAppController extends OrderAbstractController {
         $searchFlag = false;
 
         $defaultStartDates = NULL;
+        echo "defaultStartDates=$defaultStartDates <br>"; //testing
         $currentYears = $fellappUtil->getAcademicStartYearByFellowships($fellowshipTypes);
         if( $currentYears ) {
             $currentYearArr = array();
@@ -149,7 +150,7 @@ class FellAppController extends OrderAbstractController {
             }
             $currentYear = implode(",",$currentYearArr);
             $defaultStartDates = $currentYear;
-            //echo "defaultStartDates1=$defaultStartDates <br>";
+            echo "defaultStartDates1=$defaultStartDates <br>";
         }
         if( !$defaultStartDates ) {
             //$startEndDates = $fellappUtil->getAcademicYearStartEndDates(null,false,+2);
@@ -159,9 +160,9 @@ class FellAppController extends OrderAbstractController {
             $currentYear = $currentYear + 2;
             //$currentYear = $currentYear + 3;
             $defaultStartDates = $currentYear; //"2012,2013,2014,2015";
-            //echo "defaultStartDates2=$defaultStartDates <br>";
+            echo "defaultStartDates2=$defaultStartDates <br>";
         }
-
+        echo "defaultStartDates=$defaultStartDates <br>"; //testing
 
         if( count($fellowshipTypes) == 0 ) {
 //            $linkUrl = $this->generateUrl(
@@ -508,6 +509,7 @@ class FellAppController extends OrderAbstractController {
         } else {
             $startYearStr = $currentYear;
         }
+        //echo "startYearStr=$startYearStr <br>"; //testing
 
         if( $route == "fellapp_myinterviewees" ) {
             $dql->leftJoin("fellapp.interviews", "interviews");

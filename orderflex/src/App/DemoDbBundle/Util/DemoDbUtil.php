@@ -52,6 +52,8 @@ class DemoDbUtil {
 
     public function processDemoDb( $projectRoot, $backupPath=NULL )
     {
+        $logger = $this->container->get('logger');
+        $logger->notice("processDemoDb started");
 
 //        if( false === $this->security->isGranted('ROLE_PLATFORM_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -101,7 +103,6 @@ class DemoDbUtil {
 
         //check only if DB exists
 
-        $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
 

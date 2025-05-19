@@ -57,6 +57,9 @@ class DemoDbCommand extends Command {
         //$logger = $this->container->get('logger');
         $resStr = "Demo DB started";
 
+        $logger = $this->container->get('logger');
+        $logger->notice("cron demo-db-reset started");
+
         $userSecUtil = $this->container->get('user_security_utility');
         //$environment = $userSecUtil->getSiteSettingParameter('environment');
         $environment = NULL;
@@ -74,7 +77,8 @@ class DemoDbCommand extends Command {
         $projectRoot = "/srv/order-lab-tenantappdemo/orderflex"; //use project dir of the demo tenant
         
         if( $environment != 'demo' && $projectRoot === NULL ) {
-            $resStr = "Demo DB cannot be run in live environment". "\n";
+            $resStr = "Demo DB can be run only in demo environment. environment=$environment, projectRoot=$projectRoot". "\n";
+            $logger->notice("cron: ".$resStr);
             $output->writeln($resStr);
             return Command::FAILURE;
         }
@@ -89,6 +93,7 @@ class DemoDbCommand extends Command {
 //        $vacreqIds = $demoDbUtil->newVacReqs($client, $users);
 
         $resStr = $resStr . "; " . $resDemoDbStr . "; " . "Demo DB completed";
+        $logger->notice("cron finished: ".$resStr);
 
         $output->writeln($resStr);
 
