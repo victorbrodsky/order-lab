@@ -301,16 +301,17 @@ class FellAppUtil {
     public function getAcademicStartYearByFellowships( $fellowshipTypes=NULL ) {
         $userServiceUtil = $this->container->get('user_service_utility');
         $currentYear = $this->getDefaultAcademicStartYear();
+        echo "currentYear=$currentYear"."<br>"; //testing
         $startDates = array();
         foreach($fellowshipTypes as $fellowshipId=>$fellowshipName) {
             $fellowshipType = $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipId);
             $startDate = $fellowshipType->getSeasonYearStart();
             if( $startDate ) {
-                echo $fellowshipName.": startDate=".$startDate->format('d-m-Y')."<br>";
+                //echo $fellowshipName.": startDate=".$startDate->format('d-m-Y')."<br>";
                 $startYear = $userServiceUtil->getAcademicStartYear($startDate);
                 $startDates[] = $startYear;
             } else {
-                echo $fellowshipName.": startDate=NULL"."<br>";
+                //echo $fellowshipName.": startDate=NULL"."<br>";
                 $startDates[] = $currentYear;
             }
         }
