@@ -112,7 +112,11 @@
             {{ form_label(edit_form.academicYearStart) }}
             {{ form_widget(edit_form.academicYearStart['month']) }}
             {{ form_widget(edit_form.academicYearStart['day']) }}
-            {{ form_widget(edit_form.academicYearStart['year'],{'attr':{'style':'display:none'}}) }}
+
+            {{ form_widget(edit_form.academicYearStart['year']) }}
+
+            {#Hiding the year gives error: provide valid date#}
+            {#{{ form_widget(edit_form.academicYearStart['year'],{'attr':{'style':'display:none'}}) }}#}
 
             {#{{ form_widget(edit_form.academicYearStart.month) }}#}
             {#{{ form_widget(edit_form.academicYearStart.day) }}#}
@@ -129,7 +133,11 @@
             {{ form_label(edit_form.academicYearEnd) }}
             {{ form_widget(edit_form.academicYearEnd['month']) }}
             {{ form_widget(edit_form.academicYearEnd['day']) }}
-            {{ form_widget(edit_form.academicYearEnd['year'],{'attr':{'style':'display:none'}}) }}
+
+            {{ form_widget(edit_form.academicYearEnd['year']) }}
+
+            {#Hiding the year gives error: provide valid date#}
+            {#{{ form_widget(edit_form.academicYearEnd['year'],{'attr':{'style':'display:none'}}) }}#}
 
             {#{{ form_label(edit_form.academicYearEnd) }}#}
             {#{{ form_widget(edit_form.academicYearEnd.month) }}#}

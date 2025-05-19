@@ -4854,7 +4854,9 @@ Pathology and Laboratory Medicine",
 
         $userSecUtil = $this->container->get('user_security_utility');
         $academicYearStart = $userSecUtil->getSiteSettingParameter($startfieldname,$sitename);
+        //echo "getDefaultAcademicStartYear: academicYearStart=$academicYearStart <br>";
         $currentYear = $this->getAcademicStartYear( $academicYearStart );
+        //echo "getDefaultAcademicStartYear: currentYear=$currentYear <br>";
         return $currentYear;
 
         //Moved to getAcademicStartYear
@@ -4907,7 +4909,7 @@ Pathology and Laboratory Medicine",
             //$startDate = $currentYear;
         }
 
-        //echo "currentYear=$currentYear <br>";
+        //echo "getDefaultAcademicStartYear: currentYear=$currentYear <br>";
 
         return $currentYear;
     }
@@ -4917,6 +4919,7 @@ Pathology and Laboratory Medicine",
         //$userSecUtil = $this->container->get('user_security_utility');
 
         $currentYear = intval(date("Y"));
+        //echo "getAcademicStartYear: currentYear=$currentYear <br>"; //testing
         $currentDate = new \DateTime();
 
         //2011-03-26 (year-month-day)

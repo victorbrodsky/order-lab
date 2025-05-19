@@ -271,6 +271,7 @@ class SiteParametersController extends OrderAbstractController
 
         $param = trim((string)$request->get('param') );
         //echo "param=".$param."<br>";
+        //exit('111');
 
         $routeName = $request->get('_route');
         $routeArr = explode("_", $routeName);
@@ -303,12 +304,19 @@ class SiteParametersController extends OrderAbstractController
 
         $editForm->handleRequest($request);
 
-        if( $editForm->isValid() ) {
+//        foreach ($editForm->all() as $field) {
+//            if (!$field->isValid()) {
+//                foreach ($field->getErrors() as $error) {
+//                    echo $field->getName() . ": " . $error->getMessage() . "<br>";
+//                }
+//            }
+//        }
 
+        if( $editForm->isValid() ) {
+            //exit("updateParameters: valid");
             $updatedParam = $entity->$getMethod();
 
             if( $param == 'platformLogos' ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
                 $em->getRepository(Document::class)->processDocuments($entity,"platformLogo");
                 if( $originalParam && count($originalParam)>0 ) {
                     $platformLogo = $originalParam->first();
@@ -385,6 +393,8 @@ class SiteParametersController extends OrderAbstractController
             ///// EOF redirect to the individual site setting parameters pages /////
 
             return $this->redirect($this->generateUrl($sitename.$redirectPathPostfix)); //'_siteparameters'
+        } else {
+            exit("updateParameters: invalid");
         }
 
         return array(
