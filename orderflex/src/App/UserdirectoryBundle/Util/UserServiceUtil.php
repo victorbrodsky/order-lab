@@ -4845,8 +4845,8 @@ Pathology and Laboratory Medicine",
 
         return array(
             //'currentYear' => $currentYear,
-            'startDate'=> $startDate,
-            'endDate'=> $endDate,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         );
     }
     //Get default academic year (if 2021 it means 2021-2022 academic year) according to the academicYearStart in the site settings

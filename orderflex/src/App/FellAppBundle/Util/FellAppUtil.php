@@ -263,8 +263,8 @@ class FellAppUtil {
             }
         }
 
-        //echo "3 startDate=[".$startDate."]<br>";
-        //echo "3 endDate=[".$endDate."]<br>";
+        echo "3 startDate=[".$startDate."]<br>";
+        echo "3 endDate=[".$endDate."]<br>";
 
         return array(
             'startDate'=> $startDate,
