@@ -220,26 +220,30 @@ class FellAppUtil {
         $startDate = $startEndDates['startDate'];
         $endDate = $startEndDates['endDate'];
 
-        //echo "startDate=".$startDate."<br>";
-        //echo "endDate=".$endDate."<br>";
+        //echo "1 startDate=[".$startDate."]<br>";
+        //echo "1 endDate=[".$endDate."]<br>";
 
-        if( $startDate == NULL || $endDate == NULL ) {
+        if( $startDate == NULL || $startDate == '' || $endDate == NULL || $endDate == '' ) {
             //2) get start/end dates from default site settings
+            //echo "get start/end dates from default site settings<br>";
             $startEndDates = $userServiceUtil->getAcademicYearStartEndDates($currentYear,$asDateTimeObject,$yearOffset);
 
-            if( $startDate == NULL ) {
+            if( $startDate == NULL || $startDate == '' ) {
                 $startDate = $startEndDates['startDate'];
             }
 
-            if( $endDate == NULL ) {
+            if( $endDate == NULL || $endDate == '' ) {
                 $endDate = $startEndDates['endDate'];
             }
 
-            if( $startDate == NULL || $endDate == NULL ) {
+            //echo "2 startDate=[".$startDate."]<br>";
+            //echo "2 endDate=[".$endDate."]<br>";
+            if( $startDate == NULL || $startDate == '' || $endDate == NULL || $endDate == '' ) {
                 $currentYear = intval(date("Y"));
 
                 //3) If still missing, set to the default value to April 1st
-                if( $startDate == NULL ) {
+                //echo "If still missing, set to the default value to April 1st<br>";
+                if( $startDate == NULL || $startDate == '' ) {
                     if( $asDateTimeObject ) {
                         $startDate = new \DateTime($currentYear."-07-01");
                     } else {
@@ -249,7 +253,7 @@ class FellAppUtil {
                 }
 
                 //3) If still missing, set to the default value to March 31
-                if( $endDate == NULL ) {
+                if( $endDate == NULL || $endDate == '' ) {
                     if( $asDateTimeObject ) {
                         $endDate = new \DateTime($currentYear . "-03-31");
                     } else {
@@ -258,6 +262,9 @@ class FellAppUtil {
                 }
             }
         }
+
+        //echo "3 startDate=[".$startDate."]<br>";
+        //echo "3 endDate=[".$endDate."]<br>";
 
         return array(
             'startDate'=> $startDate,
