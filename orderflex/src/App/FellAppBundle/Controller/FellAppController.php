@@ -146,6 +146,7 @@ class FellAppController extends OrderAbstractController {
         if( $currentYears ) {
             $currentYearArr = array();
             foreach($currentYears as $thisCurrentYear) {
+                echo "thisCurrentYear=$thisCurrentYear <br>"; //testing
                 $currentYearArr[] = $thisCurrentYear + 2;
             }
             $currentYear = implode(",",$currentYearArr);
