@@ -212,6 +212,62 @@ class Init:
         password.clear()
         password.send_keys(mailer_password)
 
+    def init_other_settings(self):
+        driver = self.automation.get_driver()
+
+        # Global academic start date
+        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=academicYearStart"
+        driver.get(url)
+        time.sleep(3)
+
+        start_date_month = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_month")
+        time.sleep(1)
+        select = Select(start_date_month)
+        select.select_by_value("7")  # Since July has a value of "7"
+
+        start_date_day = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_day")
+        time.sleep(1)
+        select = Select(start_date_day)
+        select.select_by_value("1")
+        time.sleep(3)
+
+        start_date_year = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_year")
+        time.sleep(1)
+        select = Select(start_date_year)
+        select.select_by_value("2025")
+        time.sleep(3)
+
+        #oleg_userdirectorybundle_siteparameters_submit
+        self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
+        print("academicYearStart populated")
+
+        # Global academic end date
+        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=academicYearEnd"
+        driver.get(url)
+        time.sleep(3)
+
+        end_date_month = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_month")
+        time.sleep(1)
+        select = Select(end_date_month)
+        select.select_by_value("6")  # Since June has a value of "6"
+
+        end_date_day = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_day")
+        time.sleep(1)
+        select = Select(end_date_day)
+        select.select_by_value("1")
+        time.sleep(3)
+
+        end_date_year = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_year")
+        time.sleep(1)
+        select = Select(end_date_year)
+        select.select_by_value("2025")
+        time.sleep(3)
+
+        # oleg_userdirectorybundle_siteparameters_submit
+        self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
+
+        print("academicYearEnd populated")
+
     def run_deploy(self):
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/directory/admin/update-system-cache-assets/"
@@ -250,9 +306,10 @@ def main(mailer_user,mailer_password):
         mailer_password = ""
     init = Init(automation)
     init.initialize()
-    init.run_site_settngs()
-    init.init_mailer(mailer_user,mailer_password)
-    init.run_deploy()
+    #init.run_site_settngs()
+    init.init_other_settings()
+    #init.init_mailer(mailer_user,mailer_password)
+    #init.run_deploy()
     print("init done!")
     automation.quit_driver()
 

@@ -6,9 +6,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 #import logging
 import sys
-
-
 import time
+
+#Note: enable Swap memory:
+#Check current swap: sudo swapon --show
+#Allocate 2GB for swap: sudo fallocate -l 2G /swapfile
+#Set Permissions: sudo chmod 600 /swapfile
+#Format as Swap: sudo mkswap /swapfile
+#Enable Swap: sudo swapon /swapfile
+#Make Swap Permanent. Add this line to /etc/fstab: /swapfile none swap sw 0 0
+
 
 class WebAutomation:
     def __init__(self, run_by_symfony_command=False):
