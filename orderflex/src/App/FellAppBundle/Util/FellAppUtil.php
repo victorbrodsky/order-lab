@@ -220,8 +220,8 @@ class FellAppUtil {
         $startDate = $startEndDates['startDate'];
         $endDate = $startEndDates['endDate'];
 
-        //echo "1 startDate=[".$startDate."]<br>";
-        //echo "1 endDate=[".$endDate."]<br>";
+        echo "1 startDate=[".$startDate."]<br>";
+        echo "1 endDate=[".$endDate."]<br>";
 
         if( $startDate == NULL || $startDate == '' || $endDate == NULL || $endDate == '' ) {
             //2) get start/end dates from default site settings
@@ -236,8 +236,8 @@ class FellAppUtil {
                 $endDate = $startEndDates['endDate'];
             }
 
-            //echo "2 startDate=[".$startDate."]<br>";
-            //echo "2 endDate=[".$endDate."]<br>";
+            echo "2 startDate=[".$startDate."]<br>";
+            echo "2 endDate=[".$endDate."]<br>";
             if( $startDate == NULL || $startDate == '' || $endDate == NULL || $endDate == '' ) {
                 $currentYear = intval(date("Y"));
 
@@ -263,8 +263,8 @@ class FellAppUtil {
             }
         }
 
-        //echo "3 startDate=[".$startDate."]<br>";
-        //echo "3 endDate=[".$endDate."]<br>";
+        echo "3 startDate=[".$startDate."]<br>";
+        echo "3 endDate=[".$endDate."]<br>";
 
         return array(
             'startDate'=> $startDate,
