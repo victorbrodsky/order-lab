@@ -236,13 +236,13 @@ class FellAppUtil {
                 $endDate = $startEndDates['endDate'];
             }
 
-            //echo "2 startDate=[".$startDate."]<br>";
-            //echo "2 endDate=[".$endDate."]<br>";
+            echo "2 startDate=[".$startDate."]<br>";
+            echo "2 endDate=[".$endDate."]<br>";
             if( $startDate == NULL || $startDate == '' || $endDate == NULL || $endDate == '' ) {
                 $currentYear = intval(date("Y"));
 
                 //3) If still missing, set to the default value to April 1st
-                //echo "If still missing, set to the default value to April 1st<br>";
+                echo "If still missing, set to the default value to April 1st<br>";
                 if( $startDate == NULL || $startDate == '' ) {
                     if( $asDateTimeObject ) {
                         $startDate = new \DateTime($currentYear."-07-01");
