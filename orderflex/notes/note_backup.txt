@@ -21,3 +21,57 @@ https://view.online/c/wcm/pathology/directory/settings/1/edit?param=filesBackupC
 ]
 }
 
+
+Current live server:
+
+{
+"sets" :
+[
+{
+"idname" : "uploads-live-MIN",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/public -d /mnt/pathology/view-backup/upload-backup/uploads-live-MIN -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 3 >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-MIN.log",
+"croninterval" : "40m"
+},
+{
+"idname" : "uploads-live-xits-po-order-prd2-tenantapp1-HOURLY",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/public -d /mnt/pathology/view-backup/upload-backup/uploads-live-xits-po-order-prd2-tenantapp1-HOURLY -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 6 -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-xits-po-order-prd2-tenantapp1-HOURLY.log",
+"croninterval" : "4h"
+},
+{
+"idname" : "uploads-live-test-MIN",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/public -d /mnt/pathology/view-backup/upload-backup/uploads-live-test-MIN -b 'docs' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 6 -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-test-MIN.log",
+"croninterval" : "1m"
+},
+{
+"idname" : "db-mount-HOURLY",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/db-mount-HOURLY.log",
+"croninterval" : "3h"
+},
+{
+"idname" : "upload-mount-HOURLY",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/upload-mount-HOURLY.log",
+"croninterval" : "3h"
+},
+{
+"idname" : "upload-mount-MIN",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/upload-mount-MIN.log",
+"croninterval" : "1m"
+},
+{
+"idname" : "db-mount-MIN",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/mountdrive.py -a 'postgres' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup' -l '/mnt/pathology/view-backup/db-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/db-mount-MIN.log",
+"croninterval" : "1m"
+},
+{
+"idname" : "sync-backup",
+"command" : "/bin/php /srv/order-lab-tenantapp1/orderflex/bin/console cron:sync-backup --env=prod >> /srv/order-lab-tenantapp1/orderflex/var/log/syncbackup.log",
+"croninterval" : "12h"
+},
+{
+"idname" : "db-backup-command",
+"command" : "/bin/php /srv/order-lab-tenantapp1/orderflex/bin/console cron:db-backup-command --env=prod /mnt/pathology/view-backup/db-backup/>> /srv/order-lab-tenantapp1/orderflex/var/log/db-backup-command.log",
+"croninterval" : "3h"
+}
+]
+}
+

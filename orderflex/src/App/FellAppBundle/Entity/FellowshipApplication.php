@@ -1290,7 +1290,7 @@ class FellowshipApplication extends BaseUserAttributes {
         $scoreSum = 0;
         $counter = 0;
         foreach($this->getUsmleArr() as $score) {
-            if( $score && $score != '-' ) {
+            if( $score && $score != '-' && is_numeric($score) ) {
                 $score = intval($score);
                 //if( $score > 0 && $score <= 300 ) {
                 //if( $this->isUsmleValid($score) ) {
