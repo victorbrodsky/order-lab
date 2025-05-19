@@ -240,6 +240,7 @@ class FellAppUtil {
             echo "2 endDate=[".$endDate."]<br>";
             if( $startDate == NULL || $startDate == '' || $endDate == NULL || $endDate == '' ) {
                 $currentYear = intval(date("Y"));
+                $currentYear = $currentYear + 2;
 
                 //3) If still missing, set to the default value to April 1st
                 echo "If still missing, set to the default value to April 1st<br>";
@@ -257,7 +258,7 @@ class FellAppUtil {
                     if( $asDateTimeObject ) {
                         $endDate = new \DateTime($currentYear . "-03-31");
                     } else {
-                        $endDate = $currentYear . "-06-30";
+                        $endDate = ($currentYear + 1) . "-06-30";
                     }
                 }
             }
