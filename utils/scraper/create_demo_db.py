@@ -14,8 +14,8 @@ import multiprocessing
 
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
-def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password):
-    run_by_symfony_command = True
+def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command):
+    #run_by_symfony_command = True
     #run_by_symfony_command = False
     # Sections
     if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
@@ -186,6 +186,15 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
 
 
 def main(mailer_user, mailer_password):
+
+    run_by_symfony_command = True
+    # run_by_symfony_command = False
+
+    if run_by_symfony_command is True:
+        # write output to a file
+        log_file = open("scraper.log", "w")
+        sys.stdout = log_file
+
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
     password_text = "1234567890_demo"
@@ -223,7 +232,7 @@ def main(mailer_user, mailer_password):
 
     # Keep running demos until all sections are successful or exceed max attempts
     while any(demo_ids.values()):
-        demo_ids = run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password)
+        demo_ids = run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command)
 
     print("All demos done!")
     #automation.quit_driver()

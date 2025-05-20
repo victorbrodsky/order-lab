@@ -24,10 +24,10 @@ class WebAutomation:
         self.run_by_symfony_command = run_by_symfony_command
         self.initialize_driver()
 
-        if self.run_by_symfony_command is True:
-            #write output to a file
-            self.log_file = open("scraper.log", "w")
-            sys.stdout = self.log_file
+        # if self.run_by_symfony_command is True:
+        #     #write output to a file
+        #     self.log_file = open("scraper.log", "w")
+        #     sys.stdout = self.log_file
 
         print("__init__: self.run_by_symfony_command=",self.run_by_symfony_command)
 
