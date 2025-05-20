@@ -160,6 +160,18 @@ class ResApp:
         )
         time.sleep(3)
 
+        #oleg_resappbundle_residencyapplication_applicationSeasonStartDate => 07/01/2024
+        start_date = '07/01/2024'
+        datepicker = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_applicationSeasonStartDate")
+        datepicker.clear()
+        datepicker.send_keys(start_date)
+
+        #oleg_resappbundle_residencyapplication_applicationSeasonEndDate => 06/30/2025
+        start_date = '06/30/2025'
+        datepicker = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_applicationSeasonEndDate")
+        datepicker.clear()
+        datepicker.send_keys(start_date)
+
         #oleg_fellappbundle_fellowshipapplication_user_infos_0_firstName
         first_name = driver.find_element(By.ID, "oleg_resappbundle_residencyapplication_user_infos_0_firstName")
         first_name.send_keys(resapp["firstName"])
