@@ -261,26 +261,47 @@ def main(mailer_user, mailer_password):
 
 
 
+def get_arg_value(args, key):
+    try:
+        return args[args.index(key) + 1]
+    except (ValueError, IndexError):
+        return None
+
 if __name__ == "__main__":
     args = sys.argv
-    print("args=",args)
+    print("args=", args)
 
-    if "--maileruser" in args and "--mailerpassword" in args:
-        mailer_index = args.index("--maileruser") + 1
-        password_index = args.index("--mailerpassword") + 1
+    mailer_user = get_arg_value(args, "--maileruser")
+    mailer_password = get_arg_value(args, "--mailerpassword")
 
-        if mailer_index < len(args) and password_index < len(args):
-            mailer_user = args[mailer_index]
-            mailer_password = args[password_index]
-            main(mailer_user, mailer_password)
-        else:
-            print("Error: Missing values for --maileruser or --mailerpassword")
-            print("Proceed without mailer")
-            main('maileruser', 'mailerpassword')
+    if mailer_user and mailer_password:
+        main(mailer_user, mailer_password)
     else:
-        print("Error: --maileruser or --mailerpassword not found in arguments")
+        print("Error: Missing values for --maileruser or --mailerpassword")
         print("Proceed without mailer")
-        main('maileruser','mailerpassword')
+        main('maileruser', 'mailerpassword')
+
+
+# if 0 and __name__ == "__main__":
+#     args = sys.argv
+#     print("args=",args)
+#
+#     if "--maileruser" in args and "--mailerpassword" in args:
+#         mailer_index = args.index("--maileruser") + 1
+#         password_index = args.index("--mailerpassword") + 1
+#
+#         if mailer_index < len(args) and password_index < len(args):
+#             mailer_user = args[mailer_index]
+#             mailer_password = args[password_index]
+#             main(mailer_user, mailer_password)
+#         else:
+#             print("Error: Missing values for --maileruser or --mailerpassword")
+#             print("Proceed without mailer")
+#             main('maileruser', 'mailerpassword')
+#     else:
+#         print("Error: --maileruser or --mailerpassword not found in arguments")
+#         print("Proceed without mailer")
+#         main('maileruser','mailerpassword')
 
 if 0 and __name__ == "__main__":
     args = sys.argv
