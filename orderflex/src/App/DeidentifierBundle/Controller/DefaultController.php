@@ -139,18 +139,18 @@ class DefaultController extends OrderAbstractController
 //        dump($info);
 //        exit('111');
 
-        $logger = $this->container->get('logger');
-        $demoDbUtil = $this->container->get('demodb_utility');
-        //Verify DB
-        $verifyRes = $demoDbUtil->verifyDemoDb();
-        if( $verifyRes ) {
-            $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
-            echo $verifyMsg."<br>";
-            $logger->error($verifyMsg);
-            $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg);
-        }
-        exit('111');
+//        $logger = $this->container->get('logger');
+//        $demoDbUtil = $this->container->get('demodb_utility');
+//        //Verify DB
+//        $verifyRes = $demoDbUtil->verifyDemoDb();
+//        if( $verifyRes ) {
+//            $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
+//            echo $verifyMsg."<br>";
+//            $logger->error($verifyMsg);
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg);
+//        }
+//        exit('111');
 
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));
     }
