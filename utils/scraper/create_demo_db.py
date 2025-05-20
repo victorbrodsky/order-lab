@@ -193,7 +193,7 @@ def main(mailer_user, mailer_password):
 
     if run_by_symfony_command is True:
         # write output to a file
-        log_file = open("scraper.log", "w")
+        log_file = open("/srv/order-lab-tenantappdemo/orderflex/scraper.log", "w")
         sys.stdout = log_file
 
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
