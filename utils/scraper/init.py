@@ -268,6 +268,7 @@ class Init:
 
         print("academicYearEnd populated")
 
+
     def run_deploy(self):
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/directory/admin/update-system-cache-assets/"

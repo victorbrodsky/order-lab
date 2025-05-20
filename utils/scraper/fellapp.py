@@ -3,6 +3,7 @@ from users import Users
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 #from selenium.webdriver.common.action_chains import ActionChains
 import time
@@ -146,6 +147,48 @@ class FellApp:
 
         time.sleep(3)
 
+    def set_site_settings(self):
+        # Set fellowship start/end dates
+        # https://view.online/c/demo-institution/demo-department/fellowship-applications/settings/specific-site-parameters/edit-page/
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/settings/specific-site-parameters/edit-page/"
+        driver.get(url)
+        time.sleep(3)
+
+        start_date_month = driver.find_element(By.ID, "oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearStart_month")
+        time.sleep(1)
+        select = Select(start_date_month)
+        select.select_by_value("4")  # Since April has a value of "4"
+
+        start_date_day = driver.find_element(By.ID, "oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearStart_day")
+        time.sleep(1)
+        select = Select(start_date_day)
+        select.select_by_value("1")
+        time.sleep(3)
+
+        # start_date_year = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_year")
+        # time.sleep(1)
+        # select = Select(start_date_year)
+        # select.select_by_value("2025")
+        # time.sleep(3)
+
+        end_date_month = driver.find_element(By.ID,
+                                             "oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearEnd_month")
+        time.sleep(1)
+        select = Select(end_date_month)
+        select.select_by_value("3")  # Since March has a value of "3"
+
+        end_date_day = driver.find_element(By.ID,
+                                             "oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearEnd_day")
+        time.sleep(1)
+        select = Select(end_date_day)
+        select.select_by_value("31")
+        time.sleep(3)
+
+        self.automation.click_button_by_id("oleg_fellappbundle_fellappsiteparameter_save")
+        time.sleep(3)
+        print("fellappAcademicYear Start/End dates populated")
+
     def create_fellapps(self):
         for fellapp in self.get_fell_apps():
             self.create_single_fellapp(fellapp)
@@ -235,6 +278,7 @@ def main():
 
     fellapp = FellApp(automation)
     fellapp.configs()
+    fellapp.set_site_settings()
     fellapp.create_fellapps()
 
     print("FellApp done!")
