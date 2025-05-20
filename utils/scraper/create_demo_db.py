@@ -136,6 +136,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             automation.login_to_site()
             fellapp = FellApp(automation)
             fellapp.configs()
+            fellapp.set_site_settings()
             del automation
             del fellapp
 
