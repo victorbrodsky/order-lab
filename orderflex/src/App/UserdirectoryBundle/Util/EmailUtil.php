@@ -449,6 +449,7 @@ class EmailUtil {
     // 3) On the bottom of the page click "App passwords"
     // 4) Create new App passwords and save it
     public function getSmtpTransport() {
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
         $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
@@ -481,14 +482,17 @@ class EmailUtil {
         //exit();
 
         if( !$password ) {
+            $logger->notice("getSmtpTransport: mailerPassword is not provided => return NULL");
             return NULL;
         }
 
         if( $host == 'smtp.gmail.com' ) {
+            $logger->notice("getSmtpTransport: use smtp.gmail.com host=$host");
             //Use gmail# SMTP
             //MAILER_DSN=gmail+smtp://USERNAME:APP-PASSWORD@default
             $transport = Transport::fromDsn('gmail+smtp://' . rawurlencode((string)$username) . ':' . rawurlencode((string)$password) . '@' . 'default');
         } else {
+            $logger->notice("getSmtpTransport: use other host=$host");
             //urlencode
             //https://serveanswer.com/questions/convert-swiftmailer-to-symfony-mailer-with-username-password-antiflood-plugin-and-failed-recipients
             $transport = Transport::fromDsn('smtp://'.rawurlencode((string)$username).':'.rawurlencode((string)$password).'@'.$host.':'.$port.$timeoutStr);
