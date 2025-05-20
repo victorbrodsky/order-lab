@@ -101,7 +101,8 @@ class DemoDbCommand extends Command {
             $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
             $logger->error($verifyMsg);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg);
+            $toEmailsArr = array('oli2002@med.cornell.edu');
+            $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg, $toEmailsArr);
         }
 
         $resVerifyStr = $output->writeln($resStr);

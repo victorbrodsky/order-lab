@@ -275,11 +275,12 @@ if __name__ == "__main__":
             main(mailer_user, mailer_password)
         else:
             print("Error: Missing values for --maileruser or --mailerpassword")
+            print("Proceed without mailer")
+            main('maileruser', 'mailerpassword')
     else:
         print("Error: --maileruser or --mailerpassword not found in arguments")
-
-    print("Proceed without mailer")
-    main('maileruser','mailerpassword')
+        print("Proceed without mailer")
+        main('maileruser','mailerpassword')
 
 if 0 and __name__ == "__main__":
     args = sys.argv
