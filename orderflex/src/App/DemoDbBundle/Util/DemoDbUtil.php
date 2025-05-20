@@ -19,6 +19,11 @@ namespace App\DemoDbBundle\Util;
 
 
 
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\ResAppBundle\Entity\ResidencyApplication;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\UserdirectoryBundle\Entity\User;
+use App\VacReqBundle\Entity\VacReqRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mailer\MailerInterface;
@@ -342,6 +347,61 @@ class DemoDbUtil {
         ///////////// EOF 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 
         return $res;
+    }
+
+    //Add a verification function to the demo data generation script
+    // that queries the database and checks the specific table
+    // for the presence of the data entered by the demo data
+    // script (3 applications, with expected names? 3 vacation requests,
+    // with expected values? Etc) and generate an email to the admin address
+    // if this verification fails.
+    public function verifyDemoDb() {
+        $message = array();
+        //1) get users
+        $users = $this->em->getRepository(User::class)->findAll();
+        if( count($users) < 4 ) {
+            $message[] = "Only ".count($users). " users were generated.";
+        }
+
+        //2) check vacreq
+        $vacreqs = $this->em->getRepository(VacReqRequest::class)->findAll();
+        if( count($vacreqs) < 3 ) {
+            $message[] = "Only ".count($vacreqs). " vacation requests were generated.";
+        }
+
+        //3) check trp
+        $projects = $this->em->getRepository(Project::class)->findAll();
+        if( count($projects) < 3 ) {
+            $message[] = "Only ".count($projects). " TRP project requests were generated.";
+        }
+
+        //4) check callog
+        $calllogUtil = $this->container->get('calllog_util');
+        $time = new \DateTime('now');
+        $startDate = $time->modify('-2 year'); //->format('Y-m-d');
+        $endDate = $time->modify('+2 year'); //->format('Y-m-d');
+        $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount($startDate, $endDate);
+        if( $callogs < 3 ) {
+            $message[] = "Only ".$callogs. " Call logs were generated.";
+        }
+
+        //5) check fellapp
+        $fellapps = $this->em->getRepository(FellowshipApplication::class)->findAll();
+        if( count($fellapps) < 3 ) {
+            $message[] = "Only ".count($fellapps). " Fellowship Applications were generated.";
+        }
+
+        //6) check fellapp
+        $resapps = $this->em->getRepository(ResidencyApplication::class)->findAll();
+        if( count($resapps) < 3 ) {
+            $message[] = "Only ".count($resapps). " Residency Applications were generated.";
+        }
+
+        if( count($message) > 0 ) {
+            return implode(";", $message);
+        }
+
+        return NULL;
     }
 
 

@@ -78,7 +78,7 @@ class DemoDbCommand extends Command {
         
         if( $environment != 'demo' && $projectRoot === NULL ) {
             $resStr = "Demo DB can be run only in demo environment. environment=$environment, projectRoot=$projectRoot". "\n";
-            $logger->notice("cron: ".$resStr);
+            $logger->notice("cron demo-db-reset: ".$resStr);
             $output->writeln($resStr);
             return Command::FAILURE;
         }
@@ -93,9 +93,19 @@ class DemoDbCommand extends Command {
 //        $vacreqIds = $demoDbUtil->newVacReqs($client, $users);
 
         $resStr = $resStr . "; " . $resDemoDbStr . "; " . "Demo DB completed";
-        $logger->notice("cron finished: ".$resStr);
+        $logger->notice("cron demo-db-reset finished: ".$resStr);
 
-        $output->writeln($resStr);
+        //Verify DB
+        $verifyRes = $demoDbUtil->verifyDemoDb();
+        if( $verifyRes ) {
+            $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
+            $logger->error($verifyMsg);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg);
+        }
+
+        $resVerifyStr = $output->writeln($resStr);
+        $logger->notice("cron demo-db-reset Verify DB: ".$resVerifyStr);
 
         return Command::SUCCESS;
     }
