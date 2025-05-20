@@ -75,3 +75,15 @@ Current live server:
 ]
 }
 
+Demo DB config (here, set at everyday at 11 am):
+{
+"sets" :
+[
+{
+"idname" : "demo-db-reset",
+"command" : "/usr/bin/php /srv/order-lab-tenantappdemo/orderflex/bin/console cron:demo-db-reset --env=prod",
+"croninterval" : "11e"
+}
+]
+}
+

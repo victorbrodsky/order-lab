@@ -254,7 +254,7 @@ class Init:
         end_date_day = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_day")
         time.sleep(1)
         select = Select(end_date_day)
-        select.select_by_value("1")
+        select.select_by_value("30")
         time.sleep(3)
 
         end_date_year = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_year")
@@ -306,10 +306,10 @@ def main(mailer_user,mailer_password):
         mailer_password = ""
     init = Init(automation)
     init.initialize()
-    #init.run_site_settngs()
+    init.run_site_settngs()
     init.init_other_settings()
-    #init.init_mailer(mailer_user,mailer_password)
-    #init.run_deploy()
+    init.init_mailer(mailer_user,mailer_password)
+    init.run_deploy()
     print("init done!")
     automation.quit_driver()
 
