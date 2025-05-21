@@ -476,18 +476,21 @@ class EmailUtil {
         $timeoutStr = "?timeout=60"; //timeout in seconds
 
         //url encode password
-        //$password = 'otmu vzjw mwzm puzl';
+        //$password = 'sddsd sdsd trt rgbfg fggdg';
         //$password = rawurlencode($password);
         //echo '$password='.$password."<br>";
         //exit();
-
-        if( !$password ) {
-            $logger->notice("getSmtpTransport: mailerPassword is not provided => return NULL");
-            return NULL;
-        }
+//        if( !$password ) {
+//            $logger->notice("getSmtpTransport: mailerPassword is not provided => return NULL");
+//            return NULL;
+//        }
 
         if( $host == 'smtp.gmail.com' ) {
             $logger->notice("getSmtpTransport: use smtp.gmail.com host=$host");
+            if( !$password ) {
+                $logger->notice("getSmtpTransport: mailerPassword is not provided => return NULL");
+                return NULL;
+            }
             //Use gmail# SMTP
             //MAILER_DSN=gmail+smtp://USERNAME:APP-PASSWORD@default
             $transport = Transport::fromDsn('gmail+smtp://' . rawurlencode((string)$username) . ':' . rawurlencode((string)$password) . '@' . 'default');
