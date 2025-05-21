@@ -10,7 +10,8 @@ from resapp import ResApp
 import getpass
 import sys
 import os
-import multiprocessing
+#import multiprocessing
+import subprocess
 
 
 #run demo db generation only if value is True
@@ -194,8 +195,20 @@ def main(mailer_user, mailer_password):
 
     if run_by_symfony_command is True:
         # write output to a file
-        log_file = open("/srv/order-lab-tenantappdemo/orderflex/scraper.log", "w")
-        sys.stdout = log_file
+
+        #Option 1
+        if 0:
+            log_file = open("/srv/order-lab-tenantappdemo/orderflex/scraper.log", "w")
+            sys.stdout = log_file
+
+        #Option 2 - to be able to read in real time
+        if 1:
+            log_file_path = "/srv/order-lab-tenantappdemo/orderflex/scraper.log"
+            process = subprocess.Popen(["tail", "-f", log_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            while True:
+                line = process.stdout.readline().decode("utf-8").strip()
+                if line:
+                    print(line)
 
     print("script directory:",os.getcwd())  # This will show the directory where your script is running
 
