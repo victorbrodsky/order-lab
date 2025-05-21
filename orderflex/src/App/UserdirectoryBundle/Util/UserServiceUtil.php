@@ -806,12 +806,12 @@ class UserServiceUtil {
     public function getSingleSiteSettingParameter( $createIfEmpty=false ) {
         //return null; //testing
 
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $entities = $this->em->getRepository(SiteParameters::class)->findAll();
 
         //make sure sitesettings is initialized
         if( count($entities) != 1 ) {
-            $logger->notice("getSingleSiteSettingParameter: SiteParameters count=".count($entities)."; createIfEmpty=".$createIfEmpty);
+            //$logger->notice("getSingleSiteSettingParameter: SiteParameters count=".count($entities)."; createIfEmpty=".$createIfEmpty);
             if( $createIfEmpty ) {
                 $this->generateSiteParameters();
             }
