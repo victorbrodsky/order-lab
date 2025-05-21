@@ -9,6 +9,7 @@ from fellapp import FellApp
 from resapp import ResApp
 import getpass
 import sys
+import os
 import multiprocessing
 
 
@@ -195,6 +196,8 @@ def main(mailer_user, mailer_password):
         # write output to a file
         log_file = open("/srv/order-lab-tenantappdemo/orderflex/scraper.log", "w")
         sys.stdout = log_file
+
+    print("script directory:",os.getcwd())  # This will show the directory where your script is running
 
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"

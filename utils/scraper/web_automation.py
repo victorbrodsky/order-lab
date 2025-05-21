@@ -105,6 +105,7 @@ class WebAutomation:
         time.sleep(1)
         self.click_button("btn-primary")
         time.sleep(1)
+        self.driver.save_screenshot("after_login_to_site.png")
 
     def select_option(self, element_id, selector_option, selector_text, option_text):
         #print("ID=",select_id,", CLASS=", select_classname)

@@ -219,9 +219,15 @@ class Init:
         url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=academicYearStart"
         driver.get(url)
         time.sleep(3)
+        self.driver.save_screenshot("academicYearStart1.png")
 
         start_date_month = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_month")
         time.sleep(1)
+
+        driver.execute_script("arguments[0].scrollIntoView(true);", start_date_month)
+        self.driver.save_screenshot("academicYearStart2.png")
+        time.sleep(1)
+
         select = Select(start_date_month)
         select.select_by_value("7")  # Since July has a value of "7"
 
