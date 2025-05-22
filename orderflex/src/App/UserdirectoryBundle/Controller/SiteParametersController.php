@@ -367,8 +367,10 @@ class SiteParametersController extends OrderAbstractController
             }
 
             if( $param == 'academicYearStart' || $param == 'academicYearEnd' ) {
-                $originalParam = $originalParam->format('m/d');
-                $updatedParam = $updatedParam->format('m/d');
+                if( $originalParam )
+                    $originalParam = $originalParam->format('m/d');
+                if( $updatedParam )
+                    $updatedParam = $updatedParam->format('m/d');
             }
 
             //add a new eventlog record for an updated parameter

@@ -149,7 +149,7 @@ class Init:
         self.populate_url(url)
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/generate-dermatopathology-form-node-tree/"
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/generate-dermatopathology-form-node-tree/"
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)

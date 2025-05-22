@@ -599,7 +599,7 @@ class FellAppImportPopulateUtil {
         //$backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
         $backupFileIdFellApp = $googlesheetmanagement->getGoogleConfigParameter('felBackupTemplateFileId');
         if( !$backupFileIdFellApp ) {
-            $logger->error("Import is not proceed because the felBackupTemplateFileId parameter is not set.");
+            $logger->warning("Import is not proceed because the felBackupTemplateFileId parameter is not set.");
             return 0;
         }
 
