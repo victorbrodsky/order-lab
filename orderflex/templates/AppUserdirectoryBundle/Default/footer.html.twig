@@ -35,14 +35,15 @@
             {% endif %}
 
             <br><br>
-        {% endif %}
 
-        {% if department_url and department_name and subinstitution_url and subinstitution_name %}
-            <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
-            <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>.
-        {% else %}
-            <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Department's Name]</a> at
-            <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Organization's Name]</a>.
+
+            {% if department_url and department_name and subinstitution_url and subinstitution_name %}
+                <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
+                <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>.
+            {% else %}
+                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Department's Name]</a> at
+                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Organization's Name]</a>.
+            {% endif %}
         {% endif %}
 
     </div>
