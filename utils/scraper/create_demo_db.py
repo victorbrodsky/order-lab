@@ -189,6 +189,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
 
 
 def main(mailer_user, mailer_password):
+    print("script directory:", os.getcwd())  # This will show the directory where your script is running
 
     run_by_symfony_command = True
     # run_by_symfony_command = False
@@ -197,8 +198,11 @@ def main(mailer_user, mailer_password):
         # write output to a file
 
         #Option 1
-        if 0:
-            log_file = open("/srv/order-lab-tenantappdemo/orderflex/scraper.log", "w")
+        if 1:
+            log_file_path = "/srv/order-lab-tenantappdemo/orderflex/scraper.log"
+            if not os.path.exists(log_file_path):
+                log_file_path = os.getcwd() + "/scraper.log"
+            log_file = open(log_file_path, "w")
             sys.stdout = log_file
 
         #Option 2 - to be able to read in real time
@@ -211,11 +215,19 @@ def main(mailer_user, mailer_password):
                     print(line)
 
         #Option 3 - to be able to read in real time
-        if 1:
-            log_file_path = "/srv/order-lab-tenantappdemo/orderflex/scraper.log"
+        if 0:
+            log_file_path = os.getcwd()+"/scraper.log"
+            #log_file_path = "/srv/order-lab-tenantappdemo/orderflex/scraper.log"
+
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+            # Create the log file if it doesn't exist
+            if not os.path.exists(log_file_path):
+                open(log_file_path, "w").close()  # Creates an empty file
+
             with open(log_file_path, "r") as log_file:
                 log_file.seek(0, 2)  # Move to the end of the file
-                while True:
+                while not stop_monitoring:
                     line = log_file.readline()
                     if line:
                         print(line.strip())  # Process the new log entry
@@ -260,12 +272,11 @@ def main(mailer_user, mailer_password):
     print("Start demos")
 
     # Keep running demos until all sections are successful or exceed max attempts
-    #while any(demo_ids.values()):
-    #    demo_ids = run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command)
+    while any(demo_ids.values()):
+        demo_ids = run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command)
 
     print("All demos done!")
     #automation.quit_driver()
-
 
 # Execute the main function
 # if __name__ == "__main1__":
