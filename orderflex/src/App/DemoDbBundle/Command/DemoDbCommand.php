@@ -97,13 +97,16 @@ class DemoDbCommand extends Command {
 
         //Verify DB
         if(1) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $toEmailsArr = array('oli2002@med.cornell.edu');
             $verifyRes = $demoDbUtil->verifyDemoDb();
             if ($verifyRes) {
                 $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
                 $logger->error($verifyMsg);
-                $userSecUtil = $this->container->get('user_security_utility');
-                $toEmailsArr = array('oli2002@med.cornell.edu');
                 $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg, $toEmailsArr);
+            } else {
+                $msg = "cron demo-db-reset Verify DB: ".$resStr;
+                $userSecUtil->sendEmailToSystemEmail("DB Demos Completed", $msg, $toEmailsArr);
             }
         }
 
