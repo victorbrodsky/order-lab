@@ -96,7 +96,7 @@ class DemoDbCommand extends Command {
         $logger->notice("cron demo-db-reset finished: ".$resStr);
 
         //Verify DB
-        if(0) {
+        if(1) {
             $verifyRes = $demoDbUtil->verifyDemoDb();
             if ($verifyRes) {
                 $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
