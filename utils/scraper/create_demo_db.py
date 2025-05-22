@@ -10,7 +10,7 @@ from resapp import ResApp
 import getpass
 import sys
 import os
-#import multiprocessing
+import multiprocessing
 import subprocess
 
 
@@ -202,7 +202,7 @@ def main(mailer_user, mailer_password):
             sys.stdout = log_file
 
         #Option 2 - to be able to read in real time
-        if 1:
+        if 0:
             log_file_path = "/srv/order-lab-tenantappdemo/orderflex/scraper.log"
             process = subprocess.Popen(["tail", "-f", log_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             while True:
@@ -210,11 +210,23 @@ def main(mailer_user, mailer_password):
                 if line:
                     print(line)
 
+        #Option 3 - to be able to read in real time
+        if 1:
+            log_file_path = "/srv/order-lab-tenantappdemo/orderflex/scraper.log"
+            with open(log_file_path, "r") as log_file:
+                log_file.seek(0, 2)  # Move to the end of the file
+                while True:
+                    line = log_file.readline()
+                    if line:
+                        print(line.strip())  # Process the new log entry
+                    else:
+                        time.sleep(1)  # Wait before checking again
+
     print("script directory:",os.getcwd())  # This will show the directory where your script is running
 
-    url = "https://view.online/c/demo-institution/demo-department/directory/login"
-    username_text = "administrator"
-    password_text = "1234567890_demo"
+    #url = "https://view.online/c/demo-institution/demo-department/directory/login"
+    #username_text = "administrator"
+    #password_text = "1234567890_demo"
 
     if mailer_user is None:
         mailer_user = "maileruser"
@@ -248,8 +260,8 @@ def main(mailer_user, mailer_password):
     print("Start demos")
 
     # Keep running demos until all sections are successful or exceed max attempts
-    while any(demo_ids.values()):
-        demo_ids = run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command)
+    #while any(demo_ids.values()):
+    #    demo_ids = run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command)
 
     print("All demos done!")
     #automation.quit_driver()
