@@ -64,8 +64,8 @@ class SamlController extends OrderAbstractController //AbstractController
     #[Route(path: '/login/{client}/{sitename}', name: 'saml_login', requirements: ['client' => '.+'], options: ['expose' => true])]
     public function login(Request $request, $client, $sitename): Response
     {
-        var_dump(getenv('JWT_SECRET_KEY'));
-        exit('saml login');
+        //var_dump(getenv('JWT_SECRET_KEY'));
+        //exit('saml login');
         //$this->logger->notice("Starting SAML login for client: $client");
 
         $config = $this->samlConfigProvider->getConfig($client);

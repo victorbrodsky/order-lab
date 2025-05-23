@@ -283,6 +283,9 @@ class UserController extends OrderAbstractController
         //dump($context);
         //exit("111");
 
+        var_dump(getenv('JWT_SECRET_KEY'));
+        exit('saml login');
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 
