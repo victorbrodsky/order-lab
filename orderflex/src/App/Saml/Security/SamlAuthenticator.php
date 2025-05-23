@@ -50,7 +50,7 @@ class SamlAuthenticator extends AbstractAuthenticator
     {
         $testing = true;
         $testing = false;
-        exit('SamlAuthenticator: authenticate');
+        //exit('SamlAuthenticator: authenticate');
         $this->logger->notice("SamlAuthenticator: authenticate");
 
         //dump($request);
