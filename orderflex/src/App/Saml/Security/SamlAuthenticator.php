@@ -188,6 +188,7 @@ class SamlAuthenticator extends AbstractAuthenticator
 
     private function generateJwtToken($user)
     {
+        exit('generateJwtToken'); //testing
         return $this->jWTManager->create($user);
     }
 }

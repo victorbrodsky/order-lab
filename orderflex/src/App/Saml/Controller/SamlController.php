@@ -53,6 +53,7 @@ class SamlController extends OrderAbstractController //AbstractController
     // 127.0.0.1/saml/login/oli2002
     // https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu
     // https://view.online/c/wcm/pathology/saml/login/vib9020@med.cornell.edu
+    // https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu/employees
     // 127.0.0.1/saml/login/oli2002@med.cornell.edu
     //#[Route(path: '/about', name: 'employees_about_page')]
     //#[Template('AppUserdirectoryBundle/Default/about.html.twig')]
