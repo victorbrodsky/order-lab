@@ -480,6 +480,18 @@ class InvoiceItem {
         return $itemCode;
     }
 
+    //pull in “Completed” orderable prices into the Subtotal
+    public function isOrderableStatus( $status='Completed' ) {
+        $product = $this->getProduct();
+        if( $product ) {
+            $orderableStatus = $product->getOrderableStatus();
+            if( $orderableStatus && $orderableStatus == $status ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function __toString() {
         return "InvoiceItem ".$this->getId().": description=".$this->getDescription().
         "; itemCode=".$this->getItemCode()."; quantity=".$this->getQuantity().

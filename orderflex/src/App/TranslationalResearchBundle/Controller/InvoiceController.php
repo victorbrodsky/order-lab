@@ -989,6 +989,97 @@ class InvoiceController extends OrderAbstractController
     }
 
     /**
+     * Creates a new invoice entity.
+     */
+    #[Route(path: '/partial/new/{id}', name: 'translationalresearch_partial_invoice_new', methods: ['GET', 'POST'])]
+    #[Template('AppTranslationalResearchBundle/Invoice/new-partial-invoice.html.twig')]
+    public function newPartialInvoiceAction(Request $request, TransResRequest $transresRequest)
+    {
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $user = $this->getUser();
+        //$user = null; //testing
+        $cycle = "new";
+
+        $project = $transresRequest->getProject();
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->addFlash(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        if( $transresRequestUtil->isUserHasInvoicePermission($invoice=NULL,"create") === false ) {
+            $this->addFlash(
+                'warning',
+                "You don't have a permission to create this invoice."
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
+
+        $originalInvoiceStatus = $invoice->getStatus();
+
+        $form = $this->createInvoiceForm($invoice,$cycle,$transresRequest); //new
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //exit('new');
+
+//            //update subsidy for new invoice : done in create Submit New Invoice
+//            $transresRequestUtil->updateInvoiceSubsidy($invoice);
+
+            if ($invoice->getStatus() == "Unpaid/Issued") {
+                $invoice->setIssuedDate(new \DateTime());
+            }
+
+            //remove product with not existing fee schedule
+            //$transresRequestUtil->processProductFromInvoiceItem($invoice);
+
+            $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
+
+            //generate new PDF
+            $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user,$request); //new
+
+            $invoiceStatus = $invoice->getStatus();
+            if( $invoiceStatus != $originalInvoiceStatus ) {
+                $transresRequestUtil->syncInvoiceRequestStatus($invoice, $invoiceStatus);
+            }
+
+            //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
+
+            $msg = $msg . $msg2;
+
+            $this->addFlash(
+                'notice',
+                $msg
+            );
+
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
+        }//$form->isSubmitted()
+
+        //$invoiceDefaultTotal = $transresRequestUtil->calculateDefaultTotalByInvoice($invoice);
+        $invoiceDefaultTotal = $transresRequest->calculateDefaultTotalByRequest();
+
+        //list of RequestCategoryTypeList
+        $productArr = $transresRequestUtil->getFeeSchedule($transresRequest);
+
+        return array(
+            'transresRequest' => $transresRequest,
+            'invoice' => $invoice,
+            'form' => $form->createView(),
+            'title' => "New Partial Invoice for the Request ID ".$transresRequest->getOid(),
+            'cycle' => $cycle,
+            'invoiceDefaultTotal' => $invoiceDefaultTotal,
+            'productArr' => $productArr
+        );
+    }
+
+    /**
      * Finds and displays a invoice entity.
      */
     #[Route(path: '/show/{oid}', name: 'translationalresearch_invoice_show', methods: ['GET'])]

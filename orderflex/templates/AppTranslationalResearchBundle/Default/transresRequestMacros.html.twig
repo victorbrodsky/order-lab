@@ -449,6 +449,80 @@
 
 {% endmacro %}
 
+{% macro partialInvoiceItemSections(form, cycle, sitename) %}
+
+    {% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}
+    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+    {% import "AppTranslationalResearchBundle/Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+    {#{% if form.invoiceItems is defined and form.invoiceItems|length > 0 %}#}
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#invoiceItems" name="invoiceItems">
+                    Completed Invoice Items
+                </a>
+            </h4>
+            <p>{{ transres_request_util.getSubsidyInfo(form.vars.value)|raw }}</p>
+        </div>
+
+        <div id="invoiceItems" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {% if form.invoiceItems|length > 0 %}
+                    <div class="row">
+                        <div class="col-xs-6">
+                            {{ form_label(form.invoiceItems|first.description) }}
+                        </div>
+                        <div class="col-xs-1">
+                            {{ form_label(form.invoiceItems|first.quantity) }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.itemCode) }}
+                        </div>
+                        <div class="col-xs-1">
+                            {{ form_label(form.invoiceItems|first.unitPrice) }}
+                        </div>
+                        {#<div class="col-xs-1">#}
+                        {#{{ form_label(form.invoiceItems|first.additionalUnitPrice) }}#}
+                        {#</div>#}
+                        <div class="col-xs-1">
+                            <b>Total ($)</b>
+                        </div>
+                        {#<div class="col-xs-1">#}
+                        {#{{ form_label(form.invoiceItems|first.total) }}#}
+                        {#</div>#}
+                        <div class="col-xs-1">
+                            {#action delete#}
+                        </div>
+                    </div>
+                {% else %}
+                    <p>There are no Invoice Items</p>
+                {% endif %}
+
+                <div class="transres-invoiceItems-holder">
+                    {% for invoiceItem in form.invoiceItems %}
+                        {% if invoiceItem.vars.value.isOrderableStatus('Completed') %}
+                            {{ transresRequestMacros.invoiceItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if cycle != "show" and cycle != "download" %}
+                        {{ usermacros.addNewObjectBtn(cycle,'transres-invoiceItems','Add New Item',null,'transresInvoiceItemListeneres') }}
+                    {% endif %}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+    {#{% else %}#}
+    {#<p>There are no invoice items</p>#}
+    {#{% endif %}#}
+
+{% endmacro %}
+
 {#Original#}
 {#{% macro invoiceItemSectionsOriginal(form, cycle, sitename) %}#}
 

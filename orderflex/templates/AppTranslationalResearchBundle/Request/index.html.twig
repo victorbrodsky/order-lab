@@ -452,6 +452,10 @@
                                     <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} "
                                     >Create new invoice</a>
                                 </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_partial_invoice_new', { 'id': transresRequest.id }) }} "
+                                    >Generate partial invoice</a>
+                                </li>
                             {% endif %}
 
                             {% if latestInvoice and latestInvoice.oid %}
