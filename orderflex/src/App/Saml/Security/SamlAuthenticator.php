@@ -50,7 +50,7 @@ class SamlAuthenticator extends AbstractAuthenticator
     {
         $testing = true;
         $testing = false;
-        //exit('SamlAuthenticator: authenticate');
+        exit('SamlAuthenticator: authenticate');
         $this->logger->notice("SamlAuthenticator: authenticate");
 
         //dump($request);
@@ -188,7 +188,7 @@ class SamlAuthenticator extends AbstractAuthenticator
 
     private function generateJwtToken($user)
     {
-        exit('generateJwtToken'); //testing
+        //exit('generateJwtToken'); //testing
         return $this->jWTManager->create($user);
     }
 }
