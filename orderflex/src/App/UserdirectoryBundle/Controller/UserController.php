@@ -283,8 +283,10 @@ class UserController extends OrderAbstractController
         //dump($context);
         //exit("111");
 
-        var_dump(getenv('JWT_SECRET_KEY'));
-        exit('saml login');
+//        var_dump(getenv('JWT_SECRET_KEY'));
+//        echo "JWT_SECRET_KEY=".getenv('JWT_SECRET_KEY')."<br>";
+//        echo "JWT_PUBLIC_KEY=".getenv('JWT_PUBLIC_KEY')."<br>";
+//        exit('saml login');
 
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }

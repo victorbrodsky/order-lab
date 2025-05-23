@@ -502,15 +502,31 @@
                 {% endif %}
 
                 <div class="transres-invoiceItems-holder">
+                    {#Render completed#}
                     {% for invoiceItem in form.invoiceItems %}
                         {% if invoiceItem.vars.value.isOrderableStatus('Completed') %}
                             {{ transresRequestMacros.invoiceItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}
+                        {% else %}
+                            {% do invoiceItem.setRendered %}
                         {% endif %}
                     {% endfor %}
 
                     {% if cycle != "show" and cycle != "download" %}
                         {{ usermacros.addNewObjectBtn(cycle,'transres-invoiceItems','Add New Item',null,'transresInvoiceItemListeneres') }}
                     {% endif %}
+                </div>
+
+                <br>
+                <div class="well">
+                    {#Render not completed#}
+                    Not completed items<br>
+                    {% for invoiceItem in form.invoiceItems %}
+                        {% if not invoiceItem.vars.value.isOrderableStatus('Completed') %}
+                            {{ transresRequestMacros.invoiceDisabledItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}
+                        {% else %}
+                            {% do invoiceItem.setRendered %}
+                        {% endif %}
+                    {% endfor %}
                 </div>
 
             </div> <!-- panel-body -->
@@ -522,6 +538,141 @@
     {#{% endif %}#}
 
 {% endmacro %}
+{% macro invoiceDisabledItemForm( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set forminvoiceItem = invoiceItem.vars.prototype %}
+    {% else %}
+        {% set forminvoiceItem = invoiceItem %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    {#{% set secondRaw = false %}#}
+    {#{% set secondRaw = invoiceItem.hasSecondRaw() %}#}
+    {% set secondRaw = true %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        {% set invoiceItemTotalQuantity = NULL %}
+        {% set invoiceItemProductId = NULL %}
+        {% set invoiceItemEntity = forminvoiceItem.vars.value %}
+        {% if invoiceItemEntity %}
+            {% set invoiceItemTotalQuantity = invoiceItemEntity.getTotalQuantity() %}
+            {% set invoiceItemProductId = invoiceItemEntity.getProductId() %}
+        {% endif %}
+
+        {#<input type="hidden" id="original-total-quantity" value="{{ transres_request_util.getTotalQuantity() }}" />#}
+        <input type="hidden" class="original-total-quantity" value="{{ invoiceItemTotalQuantity }}" />
+        <input type="hidden" class="invoiceitem-product-id" value="{{ invoiceItemProductId }}" />
+
+        {% if secondRaw %}
+
+            <div class="invoiceitem-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
+            <div class="invoiceitem-quantity-warning-message alert alert-warning center-block" align="middle" style="width: 70%; display:none;"></div>
+
+
+            {#hidden#}
+            {{ form_widget(forminvoiceItem.id) }}
+
+            {#  Removed forminvoiceItem.product:
+                Why do we need constantly growing the list of all products here?
+                classname='invoiceitem-product' is not used anywehere.
+            #}
+            {% if forminvoiceItem.product is defined %}
+                {{ form_widget(forminvoiceItem.product) }}
+            {% endif %}
+
+            <div class="row">
+                <div class="col-xs-6">
+                    {#{{ form_widget(forminvoiceItem.description) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.description|raw, "", "disabled" ) }}
+                </div>
+                <div class="col-xs-1">
+                    {#{{ form_widget(forminvoiceItem.quantity) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.quantity|raw, "", "disabled" ) }}
+                    <br>
+                    {#{{ form_widget(forminvoiceItem.additionalQuantity) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.additionalQuantity|raw, "", "disabled" ) }}
+                </div>
+                <div class="col-xs-2" style="margin-top: 2%;">
+                    {#{{ form_widget(forminvoiceItem.itemCode) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.itemCode, "", "disabled" ) }}
+                </div>
+                <div class="col-xs-1 text-left">
+                    {#{{ form_widget(forminvoiceItem.unitPrice) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.unitPrice, "", "disabled" ) }}
+                    <br>
+                    {#{{ form_widget(forminvoiceItem.additionalUnitPrice) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.additionalUnitPrice, "", "disabled" ) }}
+                </div>
+                <div class="col-xs-1">
+                    {#sub total#}
+                    {#{{ form_widget(forminvoiceItem.total1) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.total1, "", "disabled" ) }}
+                    <br>
+                    {#{{ form_widget(forminvoiceItem.total2) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.total2, "", "disabled" ) }}
+
+                    {#{{ form_widget(forminvoiceItem.total) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.total, "", "disabled" ) }}
+                </div>
+
+                <div class="col-xs-1">
+                    {% if cycle != "show" and showAddDeleteBtn %}
+                        <button type="button" class="btn btn-default btn-sm"
+                                onClick="removeInvoiceItemExistingObject(this,'{{ classname }}')"
+                        ><span class="glyphicon glyphicon-remove"></span></button>
+                    {% endif %}
+                </div>
+            </div>
+
+        {% else %}
+
+            <div class="row">
+                <div class="col-xs-5">
+                    {{ form_widget(forminvoiceItem.description) }}
+                </div>
+                <div class="col-xs-1">
+                    {{ form_widget(forminvoiceItem.quantity) }}
+                </div>
+                <div class="col-xs-2">
+                    {{ form_widget(forminvoiceItem.itemCode) }}
+                </div>
+                <div class="col-xs-1">
+                    {{ form_widget(forminvoiceItem.unitPrice) }}
+                </div>
+                {#<div class="col-xs-1">#}
+                {#{{ form_widget(forminvoiceItem.additionalUnitPrice) }}#}
+                {#</div>#}
+                <div class="col-xs-2">
+                    {{ form_widget(forminvoiceItem.total) }}
+                </div>
+                <div class="col-xs-1">
+                    {% if cycle != "show" and showAddDeleteBtn %}
+                        {#<button type="button" class="btn btn-default btn-sm"#}
+                        {#onClick="removeExistingObject(this,'{{ classname }}')"#}
+                        {#><span class="glyphicon glyphicon-remove"></span></button>#}
+                        <button type="button" class="btn btn-default btn-sm"
+                                onClick="removeInvoiceItemExistingObject(this,'{{ classname }}')"
+                        ><span class="glyphicon glyphicon-remove"></span></button>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endmacro %}
+
 
 {#Original#}
 {#{% macro invoiceItemSectionsOriginal(form, cycle, sitename) %}#}
