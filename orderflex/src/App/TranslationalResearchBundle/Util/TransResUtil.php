@@ -3905,6 +3905,24 @@ class TransResUtil
 
         return $allowedSpecialties;
     }
+    public function getTransResProjectSpecialtiesQuery($userAllowed = true) {
+        $user = $this->security->getUser();
+
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('s')
+            ->from(SpecialtyList::class, 's')
+            ->where($qb->expr()->in('s.type', [':default', ':user_added']))
+            ->orderBy('s.orderinlist', 'ASC')
+            ->setParameter(':default', 'default')
+            ->setParameter(':user_added', 'user-added');
+
+        if ($userAllowed && $user) {
+            $qb->andWhere(':user MEMBER OF s.allowedUsers')
+                ->setParameter(':user', $user);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 
     //Specialties filtered by enableProjectOnConfig
     public function getTransResEnableProjectOnConfigSpecialties( $userAllowed=true ) {
@@ -3934,6 +3952,32 @@ class TransResUtil
         }
 
         return $allowedSpecialties;
+    }
+
+    //Get list of the projects visible to admin, technicians, executives ...
+    public function getProjectsAllowedByUser() {
+        $specialties = $this->getTransResProjectSpecialtiesQuery($userAllowed=true);
+        
+        //get project with these specialties
+        $repository = $this->em->getRepository(Project::class);
+        $dql = $repository->createQueryBuilder("project");
+        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+
+        $specialtyIds = array();
+        foreach( $specialties as $specialtyObject ) {
+            $specialtyIds[] = $specialtyObject->getId();
+        }
+
+        if( count($specialtyIds) > 0 ) {
+            $dql->leftJoin("project.projectSpecialty", "projectSpecialty");
+            $specialtyStr = "projectSpecialty.id IN (".implode(",",$specialtyIds).")";
+            //echo "specialtyStr=$specialtyStr<br>";
+            $dql->andWhere($specialtyStr);
+        } 
+
+        $query = $dql->getQuery();
+        $projects = $query->getResult();
+        return $projects;
     }
 
     public function getTransResRequesterGroups() {

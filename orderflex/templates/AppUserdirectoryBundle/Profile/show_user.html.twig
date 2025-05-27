@@ -114,6 +114,28 @@
         </div>
     {#{% endif %}#}
 
+    {#
+    add an accordion to each Employee Directory’s user profile page
+    titled “Translational Research Projects” listing all the IDs and titles
+    (“AP123 - Experimenting with lactose enzymes (1/31/2024)”) of TRP Project
+    requests that the user is associated with, each as a clickable
+    link to the project request page.
+    Please only show this new accordion to users with
+    platform admin/deputy platform admin/TRP admin/TRP Technician/Employee Directory Admin roles
+    #}
+    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        <br>
+        <div class="well well-sm">
+            <strong>Translational Research Projects:</strong><br>
+            {% for role in entity.roles %}
+                {% if role != "ROLE_USER" %}
+                    {#{{ role }}<br>#}
+                    {{ user_security_utility.getRoleAliasByName(role) }}<br>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <br>
 
     {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}
