@@ -121,20 +121,25 @@
     requests that the user is associated with, each as a clickable
     link to the project request page.
     Please only show this new accordion to users with
-    platform admin/deputy platform admin/TRP admin/TRP Technician/Employee Directory Admin roles
+    platform admin/deputy platform admin/TRP admin/TRP Technician/Employee Directory Admin roles.
+    AP123 - Experimenting with lactose enzymes (1/31/2024)
     #}
-    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+    {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+    {% set projects = transres_util.getProjectsAllowedByUser() %}
+    {% if projects|length > 0 %}
         <br>
-        <div class="well well-sm">
+        <div class="well well-sm" style="text-align: left;">
             <strong>Translational Research Projects:</strong><br>
-            {% for role in entity.roles %}
-                {% if role != "ROLE_USER" %}
-                    {#{{ role }}<br>#}
-                    {{ user_security_utility.getRoleAliasByName(role) }}<br>
-                {% endif %}
+            {% for project in projects %}
+                {#{{ project.oid }} {{ project.getTitle() }} ({{ project.approvalDate|date('m/d/Y H:i:s',false) }})#}
+                <a href="{{ path(translationalresearch_sitename~'_project_show', {'id': project.id}) }}" target="_blank">
+                    {{ project.oid }} {{ project.getTitle()|slice(0, 70) ~ (project.getTitle()|length > 50 ? '...') }} ({{ project.approvalDate|date('m/d/Y H:i:s', false) }})
+                </a>
+                <br>
             {% endfor %}
         </div>
     {% endif %}
+    {#{% endif %}#}
 
     <br>
 

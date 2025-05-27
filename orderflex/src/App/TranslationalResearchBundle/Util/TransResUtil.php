@@ -3956,12 +3956,13 @@ class TransResUtil
 
     //Get list of the projects visible to admin, technicians, executives ...
     public function getProjectsAllowedByUser() {
-        $specialties = $this->getTransResProjectSpecialtiesQuery($userAllowed=true);
+        $specialties = $this->getTransResProjectSpecialties($userAllowed=true);
+        //$specialties = $this->getTransResProjectSpecialtiesQuery($userAllowed=true);
         
         //get project with these specialties
         $repository = $this->em->getRepository(Project::class);
         $dql = $repository->createQueryBuilder("project");
-        $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+        //$dql->leftJoin('project.projectSpecialty','projectSpecialty');
 
         $specialtyIds = array();
         foreach( $specialties as $specialtyObject ) {
