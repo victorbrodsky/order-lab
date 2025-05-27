@@ -125,11 +125,11 @@
     AP123 - Experimenting with lactose enzymes (1/31/2024)
     #}
     {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
-    {% set projects = transres_util.getProjectsAllowedByUser() %}
+    {% set projects = transres_util.getProjectsAllowedByUser(entity) %}
     {% if projects|length > 0 %}
         <br>
         <div class="well well-sm" style="text-align: left;">
-            <strong>Translational Research Projects:</strong><br>
+            <strong>Associated Translational Research Projects ({{ projects|length }}):</strong><br>
             {% for project in projects %}
                 {#{{ project.oid }} {{ project.getTitle() }} ({{ project.approvalDate|date('m/d/Y H:i:s',false) }})#}
                 <a href="{{ path(translationalresearch_sitename~'_project_show', {'id': project.id}) }}" target="_blank">

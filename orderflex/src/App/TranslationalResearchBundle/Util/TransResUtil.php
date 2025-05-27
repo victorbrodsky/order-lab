@@ -3905,24 +3905,25 @@ class TransResUtil
 
         return $allowedSpecialties;
     }
-    public function getTransResProjectSpecialtiesQuery($userAllowed = true) {
-        $user = $this->security->getUser();
-
-        $qb = $this->em->createQueryBuilder();
-        $qb->select('s')
-            ->from(SpecialtyList::class, 's')
-            ->where($qb->expr()->in('s.type', [':default', ':user_added']))
-            ->orderBy('s.orderinlist', 'ASC')
-            ->setParameter(':default', 'default')
-            ->setParameter(':user_added', 'user-added');
-
-        if ($userAllowed && $user) {
-            $qb->andWhere(':user MEMBER OF s.allowedUsers')
-                ->setParameter(':user', $user);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
+//    //experimental
+//    public function getTransResProjectSpecialtiesQuery($userAllowed = true) {
+//        $user = $this->security->getUser();
+//
+//        $qb = $this->em->createQueryBuilder();
+//        $qb->select('s')
+//            ->from(SpecialtyList::class, 's')
+//            ->where($qb->expr()->in('s.type', [':default', ':user_added']))
+//            ->orderBy('s.orderinlist', 'ASC')
+//            ->setParameter(':default', 'default')
+//            ->setParameter(':user_added', 'user-added');
+//
+//        if ($userAllowed && $user) {
+//            $qb->andWhere(':user MEMBER OF s.allowedUsers')
+//                ->setParameter(':user', $user);
+//        }
+//
+//        return $qb->getQuery()->getResult();
+//    }
 
     //Specialties filtered by enableProjectOnConfig
     public function getTransResEnableProjectOnConfigSpecialties( $userAllowed=true ) {
@@ -3955,10 +3956,9 @@ class TransResUtil
     }
 
     //Get list of the projects visible to admin, technicians, executives ...
-    public function getProjectsAllowedByUser() {
+    public function getProjectsAllowedByUser( $user ) {
         $specialties = $this->getTransResProjectSpecialties($userAllowed=true);
-        //$specialties = $this->getTransResProjectSpecialtiesQuery($userAllowed=true);
-        
+
         //get project with these specialties
         $repository = $this->em->getRepository(Project::class);
         $dql = $repository->createQueryBuilder("project");
@@ -3974,9 +3974,36 @@ class TransResUtil
             $specialtyStr = "projectSpecialty.id IN (".implode(",",$specialtyIds).")";
             //echo "specialtyStr=$specialtyStr<br>";
             $dql->andWhere($specialtyStr);
-        } 
+        }
+
+        //And user is associated
+        $dql->leftJoin('project.principalInvestigators','principalInvestigators');
+        $dql->leftJoin('project.principalIrbInvestigator','principalIrbInvestigator');
+        $dql->leftJoin('project.submitInvestigators','submitInvestigators');
+        $dql->leftJoin('project.coInvestigators','coInvestigators');
+        $dql->leftJoin('project.pathologists','pathologists');
+        $dql->leftJoin('project.contacts','contacts');
+        $dql->leftJoin('project.billingContact','billingContact');
+        $dql->leftJoin('project.submitter','submitter');
+        $showAssCriterion =
+            "principalInvestigators.id = (:assUserId) OR ".
+            "principalIrbInvestigator.id = (:assUserId) OR ".
+            "submitInvestigators.id = (:assUserId) OR ".
+            "coInvestigators.id = (:assUserId) OR ".
+            "pathologists.id = (:assUserId) OR ".
+            "contacts.id = (:assUserId) OR ".
+            "billingContact.id = (:assUserId) OR ".
+            "submitter.id = (:assUserId)";
+
+        $dql->andWhere($showAssCriterion);
+        $dqlParameters["assUserId"] = $user->getId();
 
         $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
         $projects = $query->getResult();
         return $projects;
     }
