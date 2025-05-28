@@ -477,6 +477,10 @@ class TransResUtil
 //            }
 //        }
 
+        if( !$project ) {
+            return false;
+        }
+
         $user = $this->security->getUser();
 
         if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
@@ -3957,10 +3961,13 @@ class TransResUtil
     //Get list of the projects visible to admin, technicians, executives ...
     public function getProjectsAllowedByUser( $user ) {
 
+        //echo "getProjectsAllowedByUser:". $user->getId() ."<br>";
+        if( !$user ) {
+            return null;
+        }
+
         $transresPermissionUtil  = $this->container->get('transres_permission_util');
-
-        //$user = $this->security->getUser(); //logged in user
-
+        
 //        //Check if logged in user has general role: admin, technicians, executives
 //        if( $transresPermissionUtil->hasProjectPermission('view') == false ) {
 //            return null;
@@ -3977,16 +3984,20 @@ class TransResUtil
         $specialtyIds = array();
         foreach( $specialties as $specialtyObject ) {
             //Check if logged in user has general role: admin, technicians, executives
-            if( $transresPermissionUtil->hasProjectPermission('view',$specialtyObject) ) {
+            if( $transresPermissionUtil->hasProjectPermission('view',null,$specialtyObject) ) {
                 $specialtyIds[] = $specialtyObject->getId();
             }
         }
 
+        //echo "specialtyIds count=".count($specialtyIds)."<br>";
         if( count($specialtyIds) > 0 ) {
             $dql->leftJoin("project.projectSpecialty", "projectSpecialty");
             $specialtyStr = "projectSpecialty.id IN (".implode(",",$specialtyIds).")";
             //echo "specialtyStr=$specialtyStr<br>";
             $dql->andWhere($specialtyStr);
+        } else {
+            //Logged in user does not have any specific specialty roles such as admin, technicians, executives
+            return null;
         }
 
         //And user is associated

@@ -17,6 +17,7 @@ use App\TranslationalResearchBundle\Entity\Product;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 //use App\UserdirectoryBundle\Entity\Grant;
 //use App\UserdirectoryBundle\Entity\SiteList;
+use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
@@ -271,6 +272,14 @@ class DefaultController extends OrderAbstractController
 //        exit();
         //$orderinlist = $transresUtil->findNextProjectGoalOrderinlist(3566);
         //exit('$orderinlist='.$orderinlist);
+
+//        $em = $this->getDoctrine()->getManager();
+//        $transresUtil = $this->container->get('transres_util');
+//        $user = $this->getUser();
+//        $user = $em->getRepository(User::class)->find(7305);
+//        echo "getProjectsAllowedByUser:". $user->getId() ."<br>";
+//        //exit('111');
+//        $projects = $transresUtil->getProjectsAllowedByUser($user);
         
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

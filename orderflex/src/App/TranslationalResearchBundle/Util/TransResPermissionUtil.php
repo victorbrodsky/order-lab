@@ -495,11 +495,11 @@ class TransResPermissionUtil
                 return true;
             }
 
-            if( $transresUtil->isProjectRequester($project,false) ) {
+            if( $project && $transresUtil->isProjectRequester($project,false) ) {
                 return true;
             }
 
-            if( $transresUtil->isProjectReviewer($project,false) ) {
+            if( $project && $transresUtil->isProjectReviewer($project,false) ) {
                 return true;
             }
 
