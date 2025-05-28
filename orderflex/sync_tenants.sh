@@ -15,16 +15,17 @@ homedir=$2
 #type: 'basic'; sync source code, run deploy.sh, show doctrine migration status 'dbstatus'.
 
 
+if [ -z "$type" ]
+  then
+    type="basic"
+fi
+
 if [ -z "$homedir" ]
   then
     homedir="/srv"
     #homedir="/usr/local/bin"
 fi
 
-if [ -z "$type" ]
-  then
-    type="basic"
-fi
 
 bashpath="/usr/bin"
 
