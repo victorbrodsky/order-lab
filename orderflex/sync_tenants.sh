@@ -4,14 +4,16 @@
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
-#Usage: bash sync_tenants.sh /srv
+#Usage: bash sync_tenants.sh basic /srv
 
 #/usr/local/bin/order-lab-tenantapp1/orderflex
 #/srv/order-lab-homepagemanager/orderflex
 
-homedir=$1
+type=$1
+
+homedir=$2
 #type: 'basic'; sync source code, run deploy.sh, show doctrine migration status 'dbstatus'.
-type=$2
+
 
 if [ -z "$homedir" ]
   then
