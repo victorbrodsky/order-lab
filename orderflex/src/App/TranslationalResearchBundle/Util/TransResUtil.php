@@ -3882,7 +3882,6 @@ class TransResUtil
 
         $user = $this->security->getUser();
 
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
         $specialties = $this->em->getRepository(SpecialtyList::class)->findBy(
             array(
                 'type' => array("default","user-added")
@@ -3957,6 +3956,17 @@ class TransResUtil
 
     //Get list of the projects visible to admin, technicians, executives ...
     public function getProjectsAllowedByUser( $user ) {
+
+        $transresPermissionUtil  = $this->container->get('transres_permission_util');
+
+        //$user = $this->security->getUser(); //logged in user
+
+//        //Check if logged in user has general role: admin, technicians, executives
+//        if( $transresPermissionUtil->hasProjectPermission('view') == false ) {
+//            return null;
+//        }
+
+        //getTransResProjectSpecialties will return all users that associated with the partial role, even project requester
         $specialties = $this->getTransResProjectSpecialties($userAllowed=true);
 
         //get project with these specialties
@@ -3966,7 +3976,10 @@ class TransResUtil
 
         $specialtyIds = array();
         foreach( $specialties as $specialtyObject ) {
-            $specialtyIds[] = $specialtyObject->getId();
+            //Check if logged in user has general role: admin, technicians, executives
+            if( $transresPermissionUtil->hasProjectPermission('view',$specialtyObject) ) {
+                $specialtyIds[] = $specialtyObject->getId();
+            }
         }
 
         if( count($specialtyIds) > 0 ) {

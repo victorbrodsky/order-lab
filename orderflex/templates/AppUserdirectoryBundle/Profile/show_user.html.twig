@@ -126,7 +126,7 @@
     #}
     {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
     {% set projects = transres_util.getProjectsAllowedByUser(entity) %}
-    {% if projects|length > 0 %}
+    {% if projects and projects|length > 0 %}
         <br>
         <div class="well well-sm" style="text-align: left;">
             <strong>Associated Translational Research Projects ({{ projects|length }}):</strong><br>
