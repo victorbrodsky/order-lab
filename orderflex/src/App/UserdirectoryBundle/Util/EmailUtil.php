@@ -363,7 +363,7 @@ class EmailUtil {
         $mailer = $this->getMailer();
 
         if( !$mailer ) {
-            $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail.
+            $logger->notice("sendEmail: Email has not been sent (mailer is empty): From:".$fromEmail.
                 "; To:".$emailsStr.
                 "; CC:".$ccStr.
                 ", BCC:".$bccStr.
@@ -454,6 +454,7 @@ class EmailUtil {
 
         $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
         if( !$host ) {
+            $logger->notice("getSmtpTransport: host is empty");
             return null;
         }
 
