@@ -277,14 +277,14 @@ class DemoDbUtil {
         if( !$mailerpassword ) {
             $mailerpassword =  "mailerpassword";
         }
-        echo "1 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
-        if( $maileruser ) {
-            $maileruser =  '"' . $maileruser . '"';
-        }
-        if( $mailerpassword ) {
-            $mailerpassword =  '"' . $mailerpassword . '"';
-        }
-        echo "2 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
+//        echo "1 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
+//        if( $maileruser ) {
+//            $maileruser =  '"' . $maileruser . '"';
+//        }
+//        if( $mailerpassword ) {
+//            $mailerpassword =  '"' . $mailerpassword . '"';
+//        }
+//        echo "2 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
         //dump($tenantappSettings);
         //exit('111');
         ////// EOF Get $mailerpassword from tenantapp1 //////
