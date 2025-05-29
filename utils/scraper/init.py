@@ -198,6 +198,7 @@ class Init:
         username = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerUser")
         username.clear()
         time.sleep(1)
+        print(f"Set mailer_user={mailer_user}")
         username.send_keys(mailer_user)
         time.sleep(1)
         self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
@@ -210,7 +211,11 @@ class Init:
         password = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerPassword")
         time.sleep(1)
         password.clear()
+        print(f"Set mailer_password={mailer_password}")
         password.send_keys(mailer_password)
+        time.sleep(3)
+        self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
+        time.sleep(3)
 
     def init_other_settings(self):
         driver = self.automation.get_driver()
@@ -308,9 +313,10 @@ def main(mailer_user,mailer_password):
     automation = WebAutomation()
     # Initialize using https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
     if mailer_user is None:
-        mailer_password = ""
+        mailer_user = "maileruser"
     if mailer_password is None:
-        mailer_password = ""
+        mailer_password = "mailerpassword"
+    print("mailer_user:",mailer_user,", mailer_password:",mailer_password)
     init = Init(automation)
     init.initialize()
     init.run_site_settngs()
