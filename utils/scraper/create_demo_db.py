@@ -196,7 +196,6 @@ def main(mailer_user, mailer_password):
 
     if run_by_symfony_command is True:
         # write output to a file
-
         #It's better to use: /usr/bin/php /srv/order-lab-tenantappdemo/orderflex/bin/console cron:demo-db-reset --env=prod >> /srv/order-lab-tenantappdemo/orderflex/scraper.log 2>&1
         #Option 1
         if 0:

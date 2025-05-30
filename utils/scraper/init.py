@@ -310,7 +310,9 @@ class Init:
 
 
 def main(mailer_user,mailer_password):
-    automation = WebAutomation()
+    #run_by_symfony_command = True
+    run_by_symfony_command = False
+    automation = WebAutomation(run_by_symfony_command)
     # Initialize using https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
     if mailer_user is None:
         mailer_user = "maileruser"

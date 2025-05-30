@@ -603,7 +603,7 @@
                 </div>
                 <div class="col-xs-2" style="margin-top: 2%;">
                     {#{{ form_widget(forminvoiceItem.itemCode) }}#}
-                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.itemCode, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.itemCode, "input", "disabled" ) }}
                 </div>
                 <div class="col-xs-1 text-left">
                     {#{{ form_widget(forminvoiceItem.unitPrice) }}#}
@@ -621,7 +621,7 @@
                     {{ formmacros.simplefield( "", forminvoiceItem.vars.value.total2, "", "disabled" ) }}
 
                     {#{{ form_widget(forminvoiceItem.total) }}#}
-                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.total, "", "disabled" ) }}
+                    {{ formmacros.simplefield( "Total:", forminvoiceItem.vars.value.total, "", "disabled" ) }}
                 </div>
 
                 <div class="col-xs-1">
@@ -637,22 +637,27 @@
 
             <div class="row">
                 <div class="col-xs-5">
-                    {{ form_widget(forminvoiceItem.description) }}
+                    {#{{ form_widget(forminvoiceItem.description) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.description|raw, "", "disabled" ) }}
                 </div>
                 <div class="col-xs-1">
-                    {{ form_widget(forminvoiceItem.quantity) }}
+                    {#{{ form_widget(forminvoiceItem.quantity) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.quantity|raw, "", "disabled" ) }}
                 </div>
                 <div class="col-xs-2">
-                    {{ form_widget(forminvoiceItem.itemCode) }}
+                    {#{{ form_widget(forminvoiceItem.itemCode) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.itemCode|raw, "input", "disabled" ) }}
                 </div>
                 <div class="col-xs-1">
-                    {{ form_widget(forminvoiceItem.unitPrice) }}
+                    {#{{ form_widget(forminvoiceItem.unitPrice) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.unitPrice|raw, "", "disabled" ) }}
                 </div>
                 {#<div class="col-xs-1">#}
                 {#{{ form_widget(forminvoiceItem.additionalUnitPrice) }}#}
                 {#</div>#}
                 <div class="col-xs-2">
-                    {{ form_widget(forminvoiceItem.total) }}
+                    {#{{ form_widget(forminvoiceItem.total) }}#}
+                    {{ formmacros.simplefield( "", forminvoiceItem.vars.value.total|raw, "", "disabled" ) }}
                 </div>
                 <div class="col-xs-1">
                     {% if cycle != "show" and showAddDeleteBtn %}

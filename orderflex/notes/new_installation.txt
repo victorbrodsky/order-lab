@@ -177,7 +177,7 @@ start as postgres user: sudo -u postgres /srv/order-lab-tenantapp1/backup/pg_bac
 Check all crons for all users:
 tail -n 1000 /var/spool/cron/*
 or
-for user in $(cut -f1 -d: /etc/passwd); do crontab -u $user -l; done
+for user in $(cut -f1 -d: /etc/passwd); do echo $user; crontab -u $user -l; done
 
 Check space usage: df -h
 Get total folder size: du -sh upload-backup/
