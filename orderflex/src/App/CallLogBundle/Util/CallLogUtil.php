@@ -5440,14 +5440,18 @@ class CallLogUtil
             $dql->distinct();
         }
 
-        //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
-        $dql->andWhere('message.orderdate >= :startDate');
-        //$startDate->modify('-1 day');
-        $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+        if( $startDate ) {
+            //$dql->andWhere("logger.creationdate > :startDate AND logger.creationdate < :endDate");
+            $dql->andWhere('message.orderdate >= :startDate');
+            //$startDate->modify('-1 day');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+        }
 
-        $dql->andWhere('message.orderdate <= :endDate');
-        $endDate->modify('+1 day');
-        $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+        if( $endDate ) {
+            $dql->andWhere('message.orderdate <= :endDate');
+            $endDate->modify('+1 day');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+        }
 
         //$dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery();

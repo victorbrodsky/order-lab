@@ -384,6 +384,8 @@ class DemoDbUtil {
         echo "startDate=".$startDate->format('Y-m-d')."; endDate=".$endDate->format('Y-m-d')."<br>";
         $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount($startDate, $endDate);
         echo "calllogs count=".$callogs."<br>";
+        $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount(null, null);
+        echo "calllogs2 count=".$callogs."<br>";
         if( $callogs < 3 ) {
             $message[] = $callogs. " Call logs were generated.";
         }
