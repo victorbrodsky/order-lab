@@ -995,6 +995,11 @@ class InvoiceController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Invoice/new-partial-invoice.html.twig')]
     public function newPartialInvoiceAction(Request $request, TransResRequest $transresRequest)
     {
+        //if( false === $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+        //    return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+        //}
+
+        //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $user = $this->getUser();
@@ -1072,7 +1077,7 @@ class InvoiceController extends OrderAbstractController
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $form->createView(),
-            'title' => "New Partial Invoice for the Request ID ".$transresRequest->getOid(),
+            'title' => "New Invoice for the Request ID ".$transresRequest->getOid(),
             'cycle' => $cycle,
             'invoiceDefaultTotal' => $invoiceDefaultTotal,
             'productArr' => $productArr
