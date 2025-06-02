@@ -387,7 +387,7 @@ class DemoDbUtil {
 //        $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount(null, null);
 //        echo "calllogs2 count=".$callogs."<br>";
         if( $callogs < 3 ) {
-            $message[] = $callogs. " Call logs were generated.";
+            $message[] = "Only ".$callogs. " Call logs were generated.";
         }
 
         //5) check fellapp
