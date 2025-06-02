@@ -279,6 +279,41 @@ class Init:
 
         print("academicYearEnd populated")
 
+    def remove_crons(self):
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:importfellapp"
+        driver.get(url)
+        time.sleep(3)
+
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:verifyimport"
+        driver.get(url)
+        time.sleep(3)
+
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:invoice-reminder-emails"
+        driver.get(url)
+        time.sleep(3)
+
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:expiration-reminder-emails"
+        driver.get(url)
+        time.sleep(3)
+
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:project-sync"
+        driver.get(url)
+        time.sleep(3)
+
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:status"
+        driver.get(url)
+        time.sleep(3)
+
+        driver = self.automation.get_driver()
+        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/webmonitor.py"
+        driver.get(url)
+        time.sleep(3)
 
     def run_deploy(self):
         driver = self.automation.get_driver()
@@ -323,6 +358,7 @@ def main(mailer_user,mailer_password):
     init.initialize()
     init.run_site_settngs()
     init.init_other_settings()
+    init.remove_crons()
     init.init_mailer(mailer_user,mailer_password)
     init.run_deploy()
     print("init done!")

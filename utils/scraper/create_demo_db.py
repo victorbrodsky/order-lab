@@ -29,6 +29,7 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             init.initialize()
             init.run_site_settngs()
             init.init_other_settings()
+            init.remove_crons()
             init.init_mailer(mailer_user,mailer_password)
             init.run_deploy()
             time.sleep(3)
