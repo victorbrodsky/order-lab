@@ -5434,7 +5434,7 @@ class CallLogUtil
         $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
         $dql->andWhere("calllogEntryMessage IS NOT NULL");
 
-        $dql->andWhere("message.version > 1");
+        //$dql->andWhere("message.version > 1");
 
         if( $unique ) {
             $dql->distinct();
