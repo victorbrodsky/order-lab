@@ -381,9 +381,10 @@ class DemoDbUtil {
         $startDate = $startDate->modify('-2 year'); //->format('Y-m-d');
         $endDate = new \DateTime('now');
         $endDate = $endDate->modify('+2 year'); //->format('Y-m-d');
+        echo "startDate=".$startDate->format('Y-m-d')."; endDate=".$endDate->format('Y-m-d')."<br>";
         $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount($startDate, $endDate);
         if( $callogs < 3 ) {
-            $message[] = "Only ".$callogs. " Call logs were generated.";
+            $message[] = $callogs. " Call logs were generated.";
         }
 
         //5) check fellapp
