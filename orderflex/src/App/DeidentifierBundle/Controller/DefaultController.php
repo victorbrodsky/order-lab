@@ -139,14 +139,16 @@ class DefaultController extends OrderAbstractController
 //        dump($info);
 //        exit('111');
 
-        $demoDbUtil = $this->container->get('demodb_utility');
-        //Verify DB
-        $verifyRes = $demoDbUtil->verifyDemoDb();
-        if( $verifyRes ) {
-            $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
-            echo $verifyMsg."<br>";
-        }
-        exit('111');
+//        $demoDbUtil = $this->container->get('demodb_utility');
+//        //Verify DB
+//        $verifyRes = $demoDbUtil->verifyDemoDb();
+//        if( $verifyRes ) {
+//            $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
+//            echo $verifyMsg."<br>";
+//        } else {
+//            echo "Verify ok"."<br>";
+//        }
+//        exit('111');
 
 
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));

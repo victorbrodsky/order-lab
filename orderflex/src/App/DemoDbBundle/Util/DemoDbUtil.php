@@ -388,7 +388,7 @@ class DemoDbUtil {
 //        echo "calllogs2 count=".$callogs."<br>";
         if( $callogs < 3 ) {
             $message[] = "Only ".$callogs. " Call logs were generated.";
-        }
+        } 
 
         //5) check fellapp
         $fellapps = $this->em->getRepository(FellowshipApplication::class)->findAll();

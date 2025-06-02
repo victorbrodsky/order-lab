@@ -106,7 +106,7 @@ class DemoDbCommand extends Command {
                 $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg, $toEmailsArr);
             } else {
                 $msg = "cron demo-db-reset Verify DB: ".$resStr;
-                $userSecUtil->sendEmailToSystemEmail("DB Demos Completed", $msg, $toEmailsArr);
+                $userSecUtil->sendEmailToSystemEmail("DB Demos Completed Successfully", $msg, $toEmailsArr);
             }
         }
 
