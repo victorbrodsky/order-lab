@@ -101,7 +101,7 @@ class DemoDbCommand extends Command {
             $toEmailsArr = array('oli2002@med.cornell.edu');
             $verifyRes = $demoDbUtil->verifyDemoDb();
             if ($verifyRes) {
-                $verifyMsg = 'Some of the demos were not generated: ' . $verifyRes;
+                $verifyMsg = 'Not all demos were generated: ' . $verifyRes;
                 $logger->error($verifyMsg);
                 $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg, $toEmailsArr);
             } else {

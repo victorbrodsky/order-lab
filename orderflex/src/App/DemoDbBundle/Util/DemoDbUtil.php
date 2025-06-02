@@ -377,9 +377,10 @@ class DemoDbUtil {
 
         //4) check callog
         $calllogUtil = $this->container->get('calllog_util');
-        $time = new \DateTime('now');
-        $startDate = $time->modify('-2 year'); //->format('Y-m-d');
-        $endDate = $time->modify('+2 year'); //->format('Y-m-d');
+        $startDate = new \DateTime('now');
+        $startDate = $startDate->modify('-2 year'); //->format('Y-m-d');
+        $endDate = new \DateTime('now');
+        $endDate = $endDate->modify('+2 year'); //->format('Y-m-d');
         $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount($startDate, $endDate);
         if( $callogs < 3 ) {
             $message[] = "Only ".$callogs. " Call logs were generated.";
