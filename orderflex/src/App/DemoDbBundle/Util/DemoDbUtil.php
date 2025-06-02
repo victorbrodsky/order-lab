@@ -381,11 +381,11 @@ class DemoDbUtil {
         $startDate = $startDate->modify('-2 year'); //->format('Y-m-d');
         $endDate = new \DateTime('now');
         $endDate = $endDate->modify('+2 year'); //->format('Y-m-d');
-        echo "startDate=".$startDate->format('Y-m-d')."; endDate=".$endDate->format('Y-m-d')."<br>";
+        //echo "startDate=".$startDate->format('Y-m-d')."; endDate=".$endDate->format('Y-m-d')."<br>";
         $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount($startDate, $endDate);
-        echo "calllogs count=".$callogs."<br>";
-        $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount(null, null);
-        echo "calllogs2 count=".$callogs."<br>";
+        //echo "calllogs count=".$callogs."<br>";
+//        $callogs = $calllogUtil->getTotalUniqueCalllogEntriesCount(null, null);
+//        echo "calllogs2 count=".$callogs."<br>";
         if( $callogs < 3 ) {
             $message[] = $callogs. " Call logs were generated.";
         }
