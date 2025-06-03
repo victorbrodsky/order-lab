@@ -43,6 +43,11 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             attempts['init'] += 1
             return demo_ids
 
+    #Stop all following demos if init failed
+    if demo_ids['init'] and attempts['init'] >= max_attempts:
+        print("Init failed. Exit all demos.")
+        sys.exit()
+
     if 'users' in demo_ids and demo_ids['users'] and attempts['users'] <= max_attempts:
         print("users attempt=", attempts['users'])
         try:
@@ -61,6 +66,11 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
             print("users failed:", e)
             attempts['users'] += 1
             return demo_ids
+
+    # Stop all following demos if users failed
+    if demo_ids['users'] and attempts['users'] >= max_attempts:
+        print("Users failed. Exit all demos.")
+        sys.exit()
 
     if 'vacreq' in demo_ids and demo_ids['vacreq'] and attempts['vacreq'] <= max_attempts:
         print("vacreq attempt=", attempts['vacreq'])
