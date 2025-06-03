@@ -561,6 +561,7 @@ class AntibodyController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $cycle = "edit";
 
@@ -571,6 +572,15 @@ class AntibodyController extends OrderAbstractController
             $originalVisualInfos[] = $visualInfo;
         }
 
+        $originalName = NULL;
+        if( method_exists($antibody,'getName') ) {
+            $originalName = $antibody->getName();
+        }
+        $originalType = NULL;
+        if( method_exists($antibody,'getType') ) {
+            $originalType = $antibody->getType();
+        }
+
         $form = $this->createAntibodyForm($antibody,$cycle); //new
 
         $form->handleRequest($request);
@@ -578,6 +588,7 @@ class AntibodyController extends OrderAbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('antibody edit /antibody/edit/');
 
+            $user = $this->getUser();
             $em->getRepository(Document::class)->processDocuments($antibody, "document");
 
             $removedInfo1 = $this->removeEmptyVisualInfo($antibody);
@@ -585,12 +596,38 @@ class AntibodyController extends OrderAbstractController
 
             $em->flush();
 
+            $newName = "Unknown";
+            if( method_exists($antibody,"getName") ) {
+                $newName = $antibody->getName();
+            }
+            $newType = "Unknown";
+            if( method_exists($antibody,"getType") ) {
+                $newType = $antibody->getType();
+            }
+            $updatedInfo = "";
+            if( $newName != $originalName ) {
+                $updatedInfo = " original name=$originalName, new name=$newName";
+            }
+            if( $newType != $originalType ) {
+                if( $updatedInfo ) {
+                    $updatedInfo = $updatedInfo . ";";
+                }
+                $updatedInfo = $updatedInfo . " original type=$originalType, new type=$newType";
+            }
+            if( $updatedInfo ) {
+                $updatedInfo = ": ".$updatedInfo;
+            }
+
             $msg = "Updated antibody ".$antibody; //."; ".$removedInfo1."; ".$removedInfo2;
 
             $this->addFlash(
                 'notice',
-                $msg
+                $msg."; ".$updatedInfo
             );
+
+            //EventLog
+            $event = "Antibody '".$antibody."' updated by $user" . $updatedInfo;
+            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$antibody,$request,'List Updated');
 
             return $this->redirectToRoute('translationalresearch_antibody_show', array('id' => $antibody->getId()));
         }//$form->isSubmitted()
