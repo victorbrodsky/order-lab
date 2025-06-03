@@ -122,12 +122,12 @@ class WebAutomation:
         time.sleep(3)
 
         try:
-            element = driver.find_element(By.ID, "display-username")
+            element = self.driver.find_element(By.ID, "display-username")
             print("check_login_page: Element display-username found!")
             return True
         except NoSuchElementException:
             print("check_login_page: Element display-username not found.")
-            driver.save_screenshot("login_page_error.png")
+            self.driver.save_screenshot("login_page_error.png")
             #sys.exit()
             return False
 
