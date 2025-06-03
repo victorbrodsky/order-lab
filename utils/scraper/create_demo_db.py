@@ -14,6 +14,7 @@ import multiprocessing
 import subprocess
 
 
+
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
 def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command):
@@ -348,8 +349,9 @@ def main(mailer_user, mailer_password):
     #init = Init(automation)
     #init.run_deploy()
     #/srv/order-lab-tenantappdemo/orderflex
-    os.system("cd /srv/order-lab-tenantappdemo/orderflex/")
-    os.system("/usr/bin/bash /srv/order-lab-tenantappdemo/orderflex/deploy.sh")
+    #os.system("cd /srv/order-lab-tenantappdemo/orderflex/")
+    #os.system("/usr/bin/bash /srv/order-lab-tenantappdemo/orderflex/deploy.sh")
+    subprocess.run(["/usr/bin/bash", "/srv/order-lab-tenantappdemo/orderflex/deploy.sh"], check=True)
     print("main: after deploy.sh")
 
     print("All demos done!")
