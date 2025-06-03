@@ -1071,6 +1071,29 @@ class AntibodyList extends ListAbstract
             $res = $res . "/" . $dilution;
         }
 
+
+
+        return $res;
+    }
+
+    public function getEssentialAttributes() {
+
+        $res = $this->__toString();
+
+        $res = $res . "; " . $this->getPublicText();
+
+        $openToPublic = $this->getOpenToPublic();
+        if( $openToPublic === true ) {
+            $res = $res . "; " . "OpenToPublic=Yes";
+        } else {
+            $res = $res . "; " . "OpenToPublic=No";
+        }
+
+        $comment = $this->getAllComments();
+        if( $comment ) {
+            $res = $res . "; comments=" . $comment;
+        }
+
         return $res;
     }
 

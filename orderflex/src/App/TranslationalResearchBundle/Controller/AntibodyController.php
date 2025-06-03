@@ -585,6 +585,16 @@ class AntibodyController extends OrderAbstractController
         if( method_exists($antibody,'getType') ) {
             $originalType = $antibody->getType();
         }
+//        $originalDescription = NULL;
+//        if( method_exists($antibody,'getDescription') ) {
+//            $originalDescription = $antibody->getDescription();
+//        }
+
+        //Antibody specific attributes
+        $originalEssentialAttributes = NULL;
+        if( method_exists($antibody,'getEssentialAttributes') ) {
+            $originalEssentialAttributes = $antibody->getEssentialAttributes();
+        }
 
         $form = $this->createAntibodyForm($antibody,$cycle); //new
 
@@ -619,6 +629,12 @@ class AntibodyController extends OrderAbstractController
                 }
                 $updatedInfo = $updatedInfo . " original type=$originalType, new type=$newType";
             }
+
+            $newEssentialAttributes = $antibody->getEssentialAttributes();
+            if( $newEssentialAttributes != $originalEssentialAttributes ) {
+                $updatedInfo = $updatedInfo . " original EssentialAttributes=$originalEssentialAttributes, new EssentialAttributes=$newEssentialAttributes";
+            }
+
             if( $updatedInfo ) {
                 $updatedInfo = ": ".$updatedInfo;
             }

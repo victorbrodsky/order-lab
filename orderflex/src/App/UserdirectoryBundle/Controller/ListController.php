@@ -2437,6 +2437,10 @@ class ListController extends OrderAbstractController
         if( method_exists($entity,'getType') ) {
             $originalType = $entity->getType();
         }
+        $originalDescription = NULL;
+        if( method_exists($entity,'getDescription') ) {
+            $originalDescription = $entity->getDescription();
+        }
 
         //remove permissions: original permissions. Used for roles
         if( method_exists($entity,'getPermissions') ) {
@@ -2689,6 +2693,11 @@ class ListController extends OrderAbstractController
             if( method_exists($entity,"getType") ) {
                 $newType = $entity->getType();
             }
+            $newDescription = "Unknown";
+            if( method_exists($entity,'getDescription') ) {
+                $newDescription = $entity->getDescription();
+            }
+
             $updatedInfo = "";
             if( $newName != $originalName ) {
                 $updatedInfo = " original name=$originalName, new name=$newName";
@@ -2698,6 +2707,12 @@ class ListController extends OrderAbstractController
                     $updatedInfo = $updatedInfo . ";";
                 }
                 $updatedInfo = $updatedInfo . " original type=$originalType, new type=$newType";
+            }
+            if( $newDescription != $originalDescription ) {
+                if( $updatedInfo ) {
+                    $updatedInfo = $updatedInfo . ";";
+                }
+                $updatedInfo = $updatedInfo . " original description=$originalDescription, new description=$newDescription";
             }
             if( $updatedInfo ) {
                 $updatedInfo = ": ".$updatedInfo;
