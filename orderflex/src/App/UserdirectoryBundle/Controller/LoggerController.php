@@ -452,7 +452,7 @@ class LoggerController extends OrderAbstractController
         //exit("process loger filter");
 
         if( $search ) {
-            $dql->andWhere("logger.event LIKE :searchEvent");
+            $dql->andWhere("LOWER(logger.event) LIKE LOWER(:searchEvent)");
             $dqlParameters['searchEvent'] = '%'.$search.'%';
 
             $filtered = true;
