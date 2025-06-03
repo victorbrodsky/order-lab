@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 #import logging
@@ -95,17 +96,40 @@ class WebAutomation:
             self.driver.get(url)
 
         #self.driver.save_screenshot("login_to_site.png")
-
         username = self.driver.find_element(By.ID, "display-username")
         password = self.driver.find_element(By.ID, "password")
+        time.sleep(1)
+
         username.send_keys(username_text)
         password.send_keys(password_text)
-        
+        time.sleep(1)
+
         self.select_option("s2id_usernametypeid_show", "CLASS_NAME", "select2-input", "Local User")
         time.sleep(1)
+
         self.click_button("btn-primary")
         time.sleep(1)
         self.driver.save_screenshot("after_login_to_site.png")
+
+    def check_login_page(self):
+        #Check if system is login able
+        url = "https://view.online/c/demo-institution/demo-department/directory/logout"
+        self.driver.get(url)
+        time.sleep(3)
+
+        url = "https://view.online/c/demo-institution/demo-department/directory/login"
+        self.driver.get(url)
+        time.sleep(3)
+
+        try:
+            element = driver.find_element(By.ID, "display-username")
+            print("check_login_page: Element display-username found!")
+            return True
+        except NoSuchElementException:
+            print("check_login_page: Element display-username not found.")
+            driver.save_screenshot("login_page_error.png")
+            #sys.exit()
+            return False
 
     def select_option(self, element_id, selector_option, selector_text, option_text):
         #print("ID=",select_id,", CLASS=", select_classname)
