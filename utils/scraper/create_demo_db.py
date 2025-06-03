@@ -254,9 +254,9 @@ def run_demos(automation, demo_ids, attempts, max_attempts, mailer_user, mailer_
 def main(mailer_user, mailer_password):
     print("script directory:", os.getcwd())  # This will show the directory where your script is running
 
-    os.system("/usr/bin/bash /srv/order-lab-tenantappdemo/orderflex/deploy.sh")
-    print("main: after deploy.sh")
-    sys.exit()
+    #os.system("/usr/bin/bash /srv/order-lab-tenantappdemo/orderflex/deploy.sh")
+    #print("main: after deploy.sh")
+    #sys.exit()
 
     run_by_symfony_command = True
     # run_by_symfony_command = False
@@ -348,6 +348,7 @@ def main(mailer_user, mailer_password):
     #init = Init(automation)
     #init.run_deploy()
     #/srv/order-lab-tenantappdemo/orderflex
+    os.system("cd /srv/order-lab-tenantappdemo/orderflex/")
     os.system("/usr/bin/bash /srv/order-lab-tenantappdemo/orderflex/deploy.sh")
     print("main: after deploy.sh")
 
