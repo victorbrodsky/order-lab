@@ -509,8 +509,10 @@ class AntibodyController extends OrderAbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->getUser();
+        //$transresUtil = $this->container->get('transres_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         //$user = $this->getUser();
         $cycle = "new";
 
@@ -530,8 +532,11 @@ class AntibodyController extends OrderAbstractController
             $em->persist($antibody);
             $em->flush();
 
-            $msg = "Created new antibody ".$antibody; //."; ".$removedInfo;
+            //EventLog
+            $event = "New antibody '".$antibody."' created by $user";
+            $userSecUtil->createUserEditEvent($this->getParameter('translationalresearch.sitename'),$event,$user,$antibody,$request,'List Created');
 
+            $msg = "Created new antibody ".$antibody; //."; ".$removedInfo;
             $this->addFlash(
                 'notice',
                 $msg
@@ -627,7 +632,7 @@ class AntibodyController extends OrderAbstractController
 
             //EventLog
             $event = "Antibody '".$antibody."' updated by $user" . $updatedInfo;
-            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$antibody,$request,'List Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('translationalresearch.sitename'),$event,$user,$antibody,$request,'List Updated');
 
             return $this->redirectToRoute('translationalresearch_antibody_show', array('id' => $antibody->getId()));
         }//$form->isSubmitted()
@@ -853,7 +858,7 @@ class AntibodyController extends OrderAbstractController
                 $event
             );
 
-            $userSecUtil->createUserEditEvent($this->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
+            $userSecUtil->createUserEditEvent($this->getParameter('translationalresearch.sitename'),$event,$user,$entity,$request,'List Updated');
         }
 
         //exit();
