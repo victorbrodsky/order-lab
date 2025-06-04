@@ -566,4 +566,43 @@ class RequestCategoryTypeList extends ListAbstract
         //echo "count=".count($workQueues)."<br>";
         return $workQueues;
     }
+
+    public function getEssentialAttributes() {
+
+        $res = $this->getId();
+
+        $name = $this->getName();
+        if( $name ) {
+            //$name = trim((string)$name);
+            $res = $res . "; name=" . $name;
+        }
+
+        $description = $this->getDescription();
+        if( $description ) {
+            $res = $res . "; description=" . $description;
+        }
+
+        $type = $this->getType();
+        if( $type ) {
+            $res = $res . "; type=" . $type;
+        }
+
+
+        $optimalName = $this->getOptimalAbbreviationName();
+        if( $optimalName ) {
+            $res = $res . "; optimalName=" . $optimalName;
+        }
+
+//        $workQueues = $this->getWorkQueues();
+//        if( $workQueues ) {
+//            $res = $res . "; workQueues=" . $workQueues;
+//        }
+
+        $specificPricesInfo = $this->getSpecificPricesInfo();
+        if( $specificPricesInfo ) {
+            $res = $res . "; specificPricesInfo=" . $specificPricesInfo;
+        }
+
+        return $res;
+    }
 }

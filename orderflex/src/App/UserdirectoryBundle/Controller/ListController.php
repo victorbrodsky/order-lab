@@ -2721,11 +2721,13 @@ class ListController extends OrderAbstractController
                 $updatedInfo = $updatedInfo . " original description=$originalDescription, new description=$newDescription";
             }
 
-            $newEssentialAttributes = $entity->getEssentialAttributes();
-            if( $newEssentialAttributes != $originalEssentialAttributes ) {
-                $updatedInfo = $updatedInfo . "<br> original EssentialAttributes=$originalEssentialAttributes; <br> new EssentialAttributes=$newEssentialAttributes";
+            if( method_exists($entity,'getEssentialAttributes') ) {
+                $newEssentialAttributes = $entity->getEssentialAttributes();
+                if( $newEssentialAttributes != $originalEssentialAttributes ) {
+                    $updatedInfo = $updatedInfo . "<br> original EssentialAttributes=$originalEssentialAttributes; <br> new EssentialAttributes=$newEssentialAttributes";
+                }
             }
-
+            
             if( $updatedInfo ) {
                 $updatedInfo = ": ".$updatedInfo;
             }
