@@ -632,7 +632,7 @@ class AntibodyController extends OrderAbstractController
 
             $newEssentialAttributes = $antibody->getEssentialAttributes();
             if( $newEssentialAttributes != $originalEssentialAttributes ) {
-                $updatedInfo = $updatedInfo . " original EssentialAttributes=$originalEssentialAttributes, new EssentialAttributes=$newEssentialAttributes";
+                $updatedInfo = $updatedInfo . "<br> original EssentialAttributes=$originalEssentialAttributes; <br> new EssentialAttributes=$newEssentialAttributes";
             }
 
             if( $updatedInfo ) {
