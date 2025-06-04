@@ -2471,6 +2471,12 @@ class ListController extends OrderAbstractController
             }
         }
 
+        //Antibody specific attributes
+        $originalEssentialAttributes = NULL;
+        if( method_exists($entity,'getEssentialAttributes') ) {
+            $originalEssentialAttributes = $entity->getEssentialAttributes();
+        }
+
         $deleteForm = $this->createDeleteForm($id,$pathbase);
         $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit_put_list');
         $editForm->handleRequest($request);
@@ -2714,6 +2720,12 @@ class ListController extends OrderAbstractController
                 }
                 $updatedInfo = $updatedInfo . " original description=$originalDescription, new description=$newDescription";
             }
+
+            $newEssentialAttributes = $entity->getEssentialAttributes();
+            if( $newEssentialAttributes != $originalEssentialAttributes ) {
+                $updatedInfo = $updatedInfo . "<br> original EssentialAttributes=$originalEssentialAttributes; <br> new EssentialAttributes=$newEssentialAttributes";
+            }
+
             if( $updatedInfo ) {
                 $updatedInfo = ": ".$updatedInfo;
             }
