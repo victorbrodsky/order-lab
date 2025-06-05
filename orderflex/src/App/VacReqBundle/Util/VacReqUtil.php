@@ -1117,6 +1117,7 @@ class VacReqUtil
         return $res;
     }
 
+    //TODO: test case 06/29/2024 - 07/06/2024 - 5 days total, 4 days for 2024, but showing 5 days
     //"During the current academic year, you have received X approved vacation days in total."
     // (if X = 1, show "During the current academic year, you have received X approved vacation day."
     // if X = 0, show "During the current academic year, you have received no approved vacation days."
