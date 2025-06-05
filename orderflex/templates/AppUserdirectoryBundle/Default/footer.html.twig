@@ -25,24 +25,29 @@
         {#at#}
         {#<a href="{{ institution_url }}" target="_blank">{{ institution_name }}</a>.#}
 
-        {% if showcopyrightonfooter %}
-            <a href="{{ path('main_common_home') }}" target="_blank">O R D E R</a>
-            &copy; {{ "now"|date('Y') }}
-            {% if institution_url and institution_name %}
-                <a href="{{ institution_url }}" target="_blank">{{ institution_name }}</a>.
-            {% else %}
-                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Institution's Name]</a>.
-            {% endif %}
+        {% set environmentServer = user_security_utility.getSiteSettingParameter('environment') %}
+        {% if environmentServer == 'demo' %}
+            Demo Department at Demo Institution
+        {% else %}
+            {% if showcopyrightonfooter %}
+                <a href="{{ path('main_common_home') }}" target="_blank">O R D E R</a>
+                &copy; {{ "now"|date('Y') }}
+                {% if institution_url and institution_name %}
+                    <a href="{{ institution_url }}" target="_blank">{{ institution_name }}</a>.
+                {% else %}
+                    <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Institution's Name]</a>.
+                {% endif %}
 
-            <br><br>
+                <br><br>
 
 
-            {% if department_url and department_name and subinstitution_url and subinstitution_name %}
-                <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
-                <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>.
-            {% else %}
-                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Department's Name]</a> at
-                <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Organization's Name]</a>.
+                {% if department_url and department_name and subinstitution_url and subinstitution_name %}
+                    <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
+                    <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>.
+                {% else %}
+                    <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Department's Name]</a> at
+                    <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Organization's Name]</a>.
+                {% endif %}
             {% endif %}
         {% endif %}
 
