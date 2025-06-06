@@ -1815,7 +1815,7 @@ class VacReqUtil
             $status
             //$bruteForce
         );
-        // echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
+        echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
 
 //        //testing
 //        $numberOfDaysInsideRequests = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",true,$status,$bruteForce);
@@ -1829,13 +1829,13 @@ class VacReqUtil
         $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
         $accurateBefore = $numberOfDaysBeforeRes['accurate'];
         //$accurateBefore = false;
-        // echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
+        echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
         $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status); //,$bruteForce
         $numberOfDaysAfter = $numberOfDaysAfterRes['numberOfDays'];
         $accurateAfter = $numberOfDaysAfterRes['accurate'];
-        // echo $status.":numberOfDaysAfter=".$numberOfDaysAfter."<br>";
+        echo $status.":numberOfDaysAfter=".$numberOfDaysAfter."<br>";
 
         $res = array();
 
