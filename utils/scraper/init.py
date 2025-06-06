@@ -87,7 +87,7 @@ class Init:
         if "500 Internal Server Error" in driver.page_source:
             print("500 Error detected!")
             self.run_deploy_command()
-            time.sleep(3)
+            time.sleep(60)
 
             #Second attempt to run init
             url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
