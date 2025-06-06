@@ -2977,5 +2977,33 @@ class User extends UserBase {
 
     //TODO: create dynamic roles as in http://php-and-symfony.matthiasnoback.nl/2012/07/symfony2-security-creating-dynamic-roles-using-roleinterface/
     //ROLE_DEIDENTIFICATOR_USE: if one of the user role has DEIDENTIFICATOR site then create this role. It will solve security.yml problem
-    
+
+    //Original exception message=Symfony\Component\Security\Core\Authentication\Token\AbstractToken::setUser():
+    // Argument #1 ($user) must be of type Symfony\Component\Security\Core\User\UserInterface, null given
+    // called in /usr/local/bin/order-lab-tenantappdemo/orderflex/vendor/symfony/security-http/Firewall/ContextListener.php
+    // on line 209" at AbstractToken.php line 59
+    //Trigger: user's addRole or removeRole calls refreshUser()
+    //https://stackoverflow.com/questions/59301420/authentication-problem-user-must-be-an-instanceof-userinterface
+    //As soon as a user group (ROLES) was changed, the error occurred because the session user could not be refreshed.
+    //In order to allow a role change without the user being logged out or receiving an error message,
+    // a separate isEqualTo() method must be integrated in your User entity.
+    // See: https://symfony.com/doc/current/security/user_provider.html#comparing-users-manually-with-equatableinterface
+    //https://stackoverflow.com/questions/59879834/security-downsides-of-using-equatableuserinterface
+    /**
+     * The equality comparison should neither be done by referential equality
+     * nor by comparing identities (i.e. getId() === getId()).
+     *
+     * However, you do not need to compare every attribute, but only those that
+     * are relevant for assessing whether re-authentication is required.
+     */
+    public function isEqualTo(UserInterface $user): bool
+    {
+        //return true;
+        //dump($this); // Check what values are being passed
+        //exit('111');
+
+        //Only id, usernameCanonical and password are not empty
+        return $this->usernameCanonical === $user->getUsernameCanonical() && $this->password === $user->getPassword(); // && $this->email === $user->getEmail();
+    }
+
 }

@@ -1796,12 +1796,12 @@ class VacReqUtil
         $currentYear = $yearRangeArr[1];
 
         $academicYearStartStr = $previousYear."-".$academicYearStartStr;
-        echo "current academicYearStartStr=".$academicYearStartStr."<br>";
+        //echo "current academicYearStartStr=".$academicYearStartStr."<br>";
         //academicYearEnd
         $academicYearEndStr = $academicYearEnd->format('m-d');
 
         $academicYearEndStr = $currentYear."-".$academicYearEndStr;
-        echo "current academicYearEndStr=".$academicYearEndStr."<br>";
+        //echo "current academicYearEndStr=".$academicYearEndStr."<br>";
 
         //step1: get requests within current academic Year (2015-07-01 - 2016-06-30)
         //getApprovedYearDays($user, $requestTypeStr, $startStr=null, $endStr=null, $type=null, $asObject=false, $status='approved', $bruteForce=false)
@@ -1815,7 +1815,7 @@ class VacReqUtil
             $status
             //$bruteForce
         );
-        //echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
+        // echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
 
 //        //testing
 //        $numberOfDaysInsideRequests = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",true,$status,$bruteForce);
@@ -1829,18 +1829,18 @@ class VacReqUtil
         $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
         $accurateBefore = $numberOfDaysBeforeRes['accurate'];
         //$accurateBefore = false;
-        //echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
+        // echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
         $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status); //,$bruteForce
         $numberOfDaysAfter = $numberOfDaysAfterRes['numberOfDays'];
         $accurateAfter = $numberOfDaysAfterRes['accurate'];
-        //echo $status.":numberOfDaysAfter=".$numberOfDaysAfter."<br>";
+        // echo $status.":numberOfDaysAfter=".$numberOfDaysAfter."<br>";
 
         $res = array();
 
         $numberOfDays = $numberOfDaysBefore+$numberOfDaysInside+$numberOfDaysAfter;
-        echo "$numberOfDays = $numberOfDaysBefore + $numberOfDaysInside + $numberOfDaysAfter<br>";
+        // echo "$numberOfDays = $numberOfDaysBefore + $numberOfDaysInside + $numberOfDaysAfter<br>";
         //echo $status.": sum numberOfDays=".$numberOfDays."<br>";
 
         $res['numberOfDays'] = $numberOfDays;
@@ -2396,21 +2396,21 @@ class VacReqUtil
         // |----|year|-----start-----end-----|year+1|----|
         // |----|2015-07-01|-----start-----end-----|2016-06-30|----|
         if( $type == "inside" && $startStr && $endStr ) {
-            echo "inside: range=".$startStr." > ".$endStr."<br>";
+            //echo "inside: range=".$startStr." > ".$endStr."<br>";
             $dql->andWhere("requestType.startDate >= '" . $startStr . "'" . " AND requestType.endDate <= " . "'" . $endStr . "'");
         }
 
         // |-----start-----|year|-----end-----|year+1|----|
         // |-----rstart-----|2015-07-01|-----rend-----|2016-06-30|----|
         if( $type == "before" && $startStr ) {
-            echo "before: startStr=".$startStr."<br>";
+            //echo "before: startStr=".$startStr."<br>";
             $dql->andWhere("requestType.startDate < '" . $startStr . "'" . " AND requestType.endDate > '".$startStr."'"); // . " AND requestType.endDate > " . "'" . $startStr . "'");
         }
 
         // |----|year|-----start-----|year+1|-----end-----|
         // |----|2015-07-01|-----start-----|2016-06-30|-----end-----|
         if( $type == "after" && $startStr && $endStr ) {
-            echo "after: sql endStr=".$endStr."<br>";
+            //echo "after: sql endStr=".$endStr."<br>";
             //$dql->andWhere("requestType.endDate > '" . $endStr . "'" . " AND requestType.startDate < '".$endStr."'");  // . " AND requestType.endDate < " . "'" . $endStr . "'");
             //$dql->andWhere("requestType.startDate > '" . $startStr . "'" . " AND requestType.endDate > " . "'" . $endStr . "'");
             $dql->andWhere("requestType.startDate < '" . $endStr . "'" . " AND requestType.endDate > '".$endStr."'");
@@ -2469,7 +2469,7 @@ class VacReqUtil
                     }
                     foreach( $numberOfDaysItems as $numberOfDaysItem ) {
                         //echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
-                        echo $status.": +numberOfDays = ".$numberOfDaysItem['numberOfDays']."<br>";
+                        //echo $status.": +numberOfDays = ".$numberOfDaysItem['numberOfDays']."<br>";
                         $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
 
                         //TODO: adjust to holidays here or give a warning?
@@ -4622,7 +4622,7 @@ class VacReqUtil
         $totalMonths = $months + $years * 12;
         $totalDays = $diffInSeconds/(60*60*24);
 
-        echo "diffBetweenTwoDates: $years years, $months months, $days days, totalMonths=$totalMonths, totalDays=$totalDays <br>";
+        //echo "diffBetweenTwoDates: $years years, $months months, $days days, totalMonths=$totalMonths, totalDays=$totalDays <br>";
 
         return array(
             'years' => $years,
@@ -5974,6 +5974,7 @@ class VacReqUtil
             }
             $remainingDaysString .= ".";
         } else {
+            $remainingDaysRes = array('numberOfDays'=>0);
             $remainingDaysString = $totalAccruedDaysStr .
                 ", you have " . $totalAccruedDays .
                 " accrued days per year.";
@@ -5987,7 +5988,11 @@ class VacReqUtil
         $messages['carriedOverDaysString'] = $carriedOverDaysString;
         //$messages['carriedOverDaysNextYearString'] = $carriedOverDaysNextYearString;
         $messages['remainingDaysString'] = $remainingDaysString;
-        $messages['remainingDays'] = $remainingDaysRes['numberOfDays'];
+
+        if( $remainingDaysRes ) {
+            $messages['remainingDays'] = $remainingDaysRes['numberOfDays'];
+        }
+
         $messages['overlapped'] = $overlapped;
 
         return $messages;

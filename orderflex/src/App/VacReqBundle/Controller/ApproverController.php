@@ -360,7 +360,6 @@ class ApproverController extends OrderAbstractController
         $roleApprover = $roleApprovers[0];
         //echo "roleApprover=".$roleApprover."<br>";
         if( $roleApprover ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
             $approvers = $em->getRepository(User::class)->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
         }
         //echo "approvers=".count($approvers)."<br>";
@@ -735,6 +734,9 @@ class ApproverController extends OrderAbstractController
     public function addRoleToUserAction(Request $request, $instid, $roleId )
     {
 
+        $logger = $this->container->get('logger');
+        $logger->notice('addRoleToUserAction: start');
+
         if(
             false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
             false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
@@ -748,6 +750,7 @@ class ApproverController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
+
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
         $role = $em->getRepository(Roles::class)->find($roleId);
@@ -810,6 +813,8 @@ class ApproverController extends OrderAbstractController
             'notice',
             implode(" ",$globalEventArr)
         );
+
+        $logger->notice('addRoleToUserAction: end');
 
         return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
     }

@@ -107,6 +107,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function supports(Request $request) : bool
     {
         //$logger = $this->container->get('logger');
+        //$logger->notice("supports: start");
 
         //GOOD behavior: only authenticate (i.e. return true) on a specific route
         //return 'employees_login' === $request->attributes->get('_route') && $request->isMethod('POST');
@@ -179,6 +180,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
         //exit('authenticate');
         $logger = $this->container->get('logger');
+        $logger->notice('authenticate: start');
 
         ///////// Switch DB according to the locale ////////
         //Switch DB must be done on every request: MultiDbConnectionWrapper->__construct

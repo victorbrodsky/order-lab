@@ -93,6 +93,13 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
     // Argument #1 ($user) must be of type Symfony\Component\Security\Core\User\UserInterface, null given
     // called in /usr/local/bin/order-lab-tenantappdemo/orderflex/vendor/symfony/security-http/Firewall/ContextListener.php
     // on line 209" at AbstractToken.php line 59
+    //Trigger: user's addRole or removeRole calls refreshUser()
+    //https://stackoverflow.com/questions/59301420/authentication-problem-user-must-be-an-instanceof-userinterface
+    //As soon as a user group (ROLES) was changed, the error occurred because the session user could not be refreshed.
+    //In order to allow a role change without the user being logged out or receiving an error message,
+    // a separate isEqualTo() method must be integrated in your User entity.
+    // See: https://symfony.com/doc/current/security/user_provider.html#comparing-users-manually-with-equatableinterface
+    //https://stackoverflow.com/questions/59879834/security-downsides-of-using-equatableuserinterface
     public function setUser(UserInterface $user=null): void
     {
         if( $user ) {

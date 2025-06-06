@@ -14,7 +14,9 @@ namespace App\UserdirectoryBundle\User\Model;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 //https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/config/doctrine-mapping/User.orm.xml
 //<field name="username" column="username" type="string" length="180" />
@@ -36,11 +38,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  * @author Thibault Duplessis <thibault.duplessis@gmail.com>
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInterface #, GroupableInterface
+abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface #, GroupableInterface
 {
 
-//    const ROLE_DEFAULT = 'ROLE_USER';
+    const ROLE_DEFAULT = 'ROLE_USER';
     //    const ROLE_SUPER_ADMIN = 'ROLE_PLATFORM_ADMIN'; //'ROLE_SUPER_ADMIN';
+
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
@@ -134,6 +137,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
      */
     public function addRole($role): self
     {
+        //echo "addRole start <br>";
         $role = strtoupper($role);
         if ($role === static::ROLE_DEFAULT) {
             return $this;
@@ -142,6 +146,8 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
         if (!in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }
+
+        //exit("addRole end");
 
         return $this;
     }
@@ -411,12 +417,13 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
      */
     public function removeRole($role): bool
     {
+        //echo 'removeRole start <br>';
         if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
             unset($this->roles[$key]);
             $this->roles = array_values($this->roles);
             return true;
         }
-
+        //exit('removeRole finish');
         //return $this;
         return false;
     }
@@ -594,7 +601,6 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
 
         return $result;
     }
-
 
 
 //    /**
