@@ -1815,7 +1815,7 @@ class VacReqUtil
             $status
             //$bruteForce
         );
-        echo $status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
+        echo "### ".$status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
 
 //        //testing
 //        $numberOfDaysInsideRequests = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",true,$status,$bruteForce);
@@ -1880,9 +1880,10 @@ class VacReqUtil
                 //echo $request->getId()." continue <br>";
                 continue;
             }
-            //echo "requestStartDate=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
-            //echo "requestEndAcademicYearStr=".$requestEndAcademicYearStr."<br>";
-            //echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
+            echo "requestStartDate=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
+            echo "requestEndAcademicYearStr=".$requestEndAcademicYearStr."<br>";
+            echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
+            echo "requestEndDate=".$subRequest->getEndDate()->format('Y-m-d')."<br>";
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
             $workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestEndAcademicYearStr), $subRequest->getEndDate() );
             //echo "workingDays=".$workingDays."<br>";
@@ -1934,7 +1935,7 @@ class VacReqUtil
 //                //$accurate = false;
 //            }
 
-            //echo $request->getId().": before: request days=".$workingDays."<br>";
+            echo $request->getId().": before: request days=".$workingDays."<br>";
             $days = $days + $workingDays;
         }
 
@@ -1988,7 +1989,7 @@ class VacReqUtil
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestStartAcademicYearStr), $subRequest->getEndDate() );
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
             $workingDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
-            //echo "calculated workingDays=".$workingDays."<br>";
+            echo "calculated workingDays=".$workingDays."<br>";
 
             $requestNumberOfDays = $subRequest->getNumberOfDays();
 
@@ -2900,12 +2901,17 @@ class VacReqUtil
     public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
         $starDateStr = $starDate->format('Y-m-d');
         $endDateStr = $endDate->format('Y-m-d');
-        //echo $starDateStr . " --- " . $endDateStr ."<br>"; //2023-06-29 --- 2023-06-30
+        echo $starDateStr . " --- " . $endDateStr ."<br>"; //2023-06-29 --- 2023-06-30
         //exit('111');
+
         $holidays = array();
         //$holidays = ['*-12-25', '*-01-01', '*-07-04']; # variable and fixed holidays
         //return $this->getWorkingDays($starDateStr,$endDateStr,$holidays);
-        return $this->number_of_working_days($starDateStr,$endDateStr,$holidays);
+        //$workingDays = $this->getWorkingDays($starDateStr,$endDateStr,$holidays);
+
+        $workingDays = $this->number_of_working_days($starDateStr,$endDateStr,$holidays);
+        echo "getNumberOfWorkingDaysBetweenDates: workingDays=$workingDays <br>";
+        return $workingDays;
     }
     //http://stackoverflow.com/questions/336127/calculate-business-days
     //The function returns the no. of business days between two dates and it skips the holidays

@@ -427,3 +427,8 @@ def main(mailer_user,mailer_password):
 if __name__ == "__main__":
     #password = getpass.getpass("Enter your password: ")  # Secure input
     main(None,None)
+
+#Test one function:
+#python -c "import init.py; init.py.run_deploy_command()"
+#python -c "import init; obj = init.Init(); obj.run_deploy_command()"
+

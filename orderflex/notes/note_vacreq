@@ -1,4 +1,5 @@
 getApprovedDaysString -> getApprovedTotalDays -> getApprovedTotalDaysAcademicYear
+-> getApprovedBeforeAcademicYearDays -> getNumberOfWorkingDaysBetweenDates
 
 getApprovedTotalDaysAcademicYear:
 check inside, before, after
@@ -6,5 +7,8 @@ check inside, before, after
 getApprovedYearDays
 check inside, before, after
 
+getNumberOfWorkingDaysBetweenDates
+
 testcase: esc9016
 test case 06/29/2024 - 07/06/2024 - 5 days total, 4 days for 2024, but showing 5 days
+06/28/2024 - 07/06/2024
