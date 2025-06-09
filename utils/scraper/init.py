@@ -377,9 +377,12 @@ class Init:
         time.sleep(3)
 
     @staticmethod
-    def run_deploy_command():
+    def run_deploy_command(self):
         subprocess.run(["/usr/bin/bash", "/srv/order-lab-tenantappdemo/orderflex/deploy.sh"], check=True)
         print("run_deploy_command: after deploy.sh")
+
+    def run_deploy_command_new(self):
+        subprocess.run(["/usr/bin/bash", "deploy.sh"], check=True, cwd="/srv/order-lab-tenantappdemo/orderflex")
 
     #NOT USED
     def open_misc_panel(self):
