@@ -84,17 +84,17 @@ class Init:
         print("after run init link")
         time.sleep(3)
 
-        # if "500 Internal Server Error" in driver.page_source:
-        #     print("500 Error detected!")
-        #     self.run_deploy_command()
-        #     time.sleep(60)
-        #
-        #     #Second attempt to run init
-        #     url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
-        #     print("run init link 2")
-        #     driver.get(url)
-        #     print("after run init link 2")
-        #     time.sleep(3)
+        if "500 Internal Server Error" in driver.page_source:
+            print("500 Error detected!")
+            self.run_deploy_command()
+            time.sleep(60)
+
+            #Second attempt to run init
+            url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
+            print("run init link 2")
+            driver.get(url)
+            print("after run init link 2")
+            time.sleep(3)
 
         #login using default username and password
         self.automation.login_to_site(None, self.username, self.password_default)
@@ -376,12 +376,12 @@ class Init:
         driver.get(url)
         time.sleep(3)
 
-    @staticmethod
-    def run_deploy_command(self):
-        subprocess.run(["/usr/bin/bash", "/srv/order-lab-tenantappdemo/orderflex/deploy.sh"], check=True)
-        print("run_deploy_command: after deploy.sh")
+    # @staticmethod
+    # def run_deploy_command_old(self):
+    #     subprocess.run(["/usr/bin/bash", "/srv/order-lab-tenantappdemo/orderflex/deploy.sh"], check=True)
+    #     print("run_deploy_command: after deploy.sh")
 
-    def run_deploy_command_new(self):
+    def run_deploy_command(self):
         subprocess.run(["/usr/bin/bash", "deploy.sh"], check=True, cwd="/srv/order-lab-tenantappdemo/orderflex")
 
     #NOT USED
