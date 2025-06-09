@@ -55,6 +55,7 @@ class Examination
 
     //USMLE Step 1 Score,	USMLE Step 2 CK Score,	USMLE Step 2 CS Score (Pass/Fail),	USMLE Step 3 Score
     //USMLE Step 1 results are now reported a pass or fail only, as the exam transitioned to this format in January 2022.
+    //Plus, 'No Score' can be provided without pass date (required by Clinical Chemistry Fellowship).
     #[ORM\Column(type: 'string', nullable: true)]
     private $USMLEStep1Score;
 
