@@ -265,6 +265,7 @@ class Examination
     public function getUSMLEStep1Score( $onlyValid=false )
     {
         //USMLE Step 1 results are now reported a pass/fail only, as the exam transitioned to this format in January 2022.
+        //Plus, it accept 'No Score' as requested for the Clinical Chemistry fellowship
         return $this->USMLEStep1Score;
 
 //        if( $onlyValid ) {
