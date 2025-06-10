@@ -1781,7 +1781,7 @@ class VacReqUtil
 
     //Main function to calculate total approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
     //TODO: include holidays: compare $requestNumberOfDays with submitted days ($subRequest->getNumberOfDays()) for request submitted with modified away days
-    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved" ) { //, $bruteForce=false
+    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved", $institutionId=NULL ) { //, $bruteForce=false
         //exit('get ApprovedTotalDaysAcademicYear');
         $academicYearStart = $this->getAcademicYearStart();
         $academicYearEnd = $this->getAcademicYearEnd();
@@ -1846,13 +1846,13 @@ class VacReqUtil
         //TODO: include holiday adjustment here
         if(0) {
             $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
-            $institutionId = NULL;
+            //$institutionId = NULL; //get institution from user? but user might have multiple institution
             $custom = false; //use holiday days as number
             $holidays = $vacreqCalendarUtil->getHolidaysInRange($academicYearStartStr, $academicYearEndStr, $institutionId, $custom);
             echo 'holidays count=' . count($holidays) . '<br>';
-            if ($holidays > 0) {
-                $numberOfDays = intval($numberOfDays) - count($holidays);
-            }
+//            if ($holidays > 0) {
+//                $numberOfDays = intval($numberOfDays) - count($holidays);
+//            }
         }
 
         $res['numberOfDays'] = $numberOfDays;

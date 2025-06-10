@@ -16,5 +16,8 @@ test case 06/29/2024 - 07/06/2024 - 5 days total, 4 days for 2024, but showing 5
 
 JS calculate it correctly using: vacreq_get_observed_holidays_daterange_ajax in calculateWorkingDays()
 
-
+getApprovedTotalDaysAcademicYear calculate vacationDays shown in summary:
+{% set vacationDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange) %}
+{% set vacationDays = vacationDaysRes['numberOfDays'] %}
+{% set vacationAccurate = vacationDaysRes['accurate'] %}
 

@@ -206,7 +206,7 @@
                 {% set pendingDaysResB = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'business',yearRange,"pending") %}
                 {% set pendingDaysB = pendingDaysResB['numberOfDays'] %}
 
-                {% set vacationDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange) %}
+                {% set vacationDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange,"approved",groupId) %}
                 {% set vacationDays = vacationDaysRes['numberOfDays'] %}
                 {% set vacationAccurate = vacationDaysRes['accurate'] %}
                 {% set pendingDaysResV = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange,"pending") %}
@@ -237,7 +237,7 @@
 
                 {##### Vacation #####}
                 <td style="background-color: {{ backgroundColor }}">
-                    {#{{ vacationDays }}#}
+                    vacationDays={{ vacationDays }}
                     {{ vacreqmacros.incomingRequestHref( vacationDays, submitter, yearRange, groupId, 1, 'vacationRequest', vacreq_sitename ) }}
                     {% if not vacationAccurate %}
                         <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
