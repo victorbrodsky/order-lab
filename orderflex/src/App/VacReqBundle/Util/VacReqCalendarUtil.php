@@ -908,9 +908,9 @@ class VacReqCalendarUtil
         //echo "startDate=".$startDate->format('d-m-Y H:i:s') . ", endDate=".$endDate->format('d-m-Y H:i:s');
 
         //count number of vacation days from $startDate and $endDate
-        $countedNumberOfDays = $vacreqUtil->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
+        $countedNumberOfDays = $vacreqUtil->getNumberOfWorkingDaysBetweenDates($startDate,$endDate); //getSingleDaysDifferenceNote
 
-        $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom);
+        $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom); //getSingleDaysDifferenceNote
 
         //10 June 2025: Holiday agjustment is already done in getNumberOfWorkingDaysBetweenDates
         //$countedNumberOfDays = intval($countedNumberOfDays) - count($holidays);

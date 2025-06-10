@@ -33,3 +33,25 @@ getApprovedYearDays is used in getApprovedTotalDaysAcademicYear, getApprovedBefo
 getNumberOfWorkingDaysBetweenDates now has holidays adjustment (getApprovedTotalDaysAcademicYear, getApprovedBeforeAcademicYearDays)
 test inside case
 
+Usage: getNumberOfWorkingDaysBetweenDates:
+getApprovedBeforeAcademicYearDays
+getApprovedAfterAcademicYearDays
+getSingleDaysDifferenceNote
+
+Usage: getApprovedBeforeAcademicYearDays
+getApprovedTotalDaysAcademicYear
+
+Usage: getApprovedAfterAcademicYearDays
+getApprovedTotalDaysAcademicYear
+
+Usage: getSingleDaysDifferenceNote
+getDaysDifferenceNote
+
+Usage: getApprovedTotalDaysAcademicYear
+totalVacationRemainingDays
+getPendingTotalDaysAcademicYear
+getApprovedTotalDays
+getPreviousYearApprovedTotalDays
+createtSummaryReportByNameSpout
+
+

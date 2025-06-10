@@ -1821,7 +1821,7 @@ class VacReqUtil
 
 //        //testing
 //        $numberOfDaysInsideRequests = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",true,$status,$bruteForce);
-//        echo $status.": numberOfDaysInsideRequests count=".count($numberOfDaysInsideRequests)."<br>";
+//        echo $status.": numberOfDaysInsideRequests count=".count($numberOfDaysInsideRequests)."<br>";Z
 //        if( $status=='pending' && $academicYearStartStr=='2019-07-01' && count($numberOfDaysInsideRequests)>0 ) {
 //            exit('111');
 //        }
@@ -1899,7 +1899,7 @@ class VacReqUtil
             //echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
             echo "requestEndDate=".$subRequest->getEndDate()->format('Y-m-d')."<br>";
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
-            $workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestEndAcademicYearStr), $subRequest->getEndDate() );
+            $workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestEndAcademicYearStr), $subRequest->getEndDate() ); //getApprovedBeforeAcademicYearDays
             //echo "workingDays=".$workingDays."<br>";
 
             $requestNumberOfDays = $subRequest->getNumberOfDays();
@@ -2003,7 +2003,7 @@ class VacReqUtil
 
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestStartAcademicYearStr), $subRequest->getEndDate() );
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
-            $workingDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate);
+            $workingDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate); //getApprovedAfterAcademicYearDays
             echo "calculated workingDays=".$workingDays."<br>";
 
             $requestNumberOfDays = $subRequest->getNumberOfDays();
@@ -2019,8 +2019,9 @@ class VacReqUtil
                 $accurate = false;
             }
 
-            //echo $request->getId().": after: request days=".$workingDays."<br>";
+            echo $request->getId().": after: request days=".$workingDays."<br>";
             $days = $days + $workingDays;
+            echo "days=$days <br>";
         }
 
         $res = array(
