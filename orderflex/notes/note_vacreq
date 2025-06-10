@@ -1,7 +1,7 @@
 getApprovedDaysString -> getApprovedTotalDays -> getApprovedTotalDaysAcademicYear
 -> getApprovedBeforeAcademicYearDays -> getNumberOfWorkingDaysBetweenDates
 
-getApprovedTotalDaysAcademicYear:
+1784: getApprovedTotalDaysAcademicYear:
 check inside, before, after
 
 getApprovedYearDays
@@ -12,3 +12,9 @@ getNumberOfWorkingDaysBetweenDates
 testcase: esc9016
 test case 06/29/2024 - 07/06/2024 - 5 days total, 4 days for 2024, but showing 5 days
 06/28/2024 - 07/06/2024
+
+
+JS calculate it correctly using: vacreq_get_observed_holidays_daterange_ajax in calculateWorkingDays()
+
+
+

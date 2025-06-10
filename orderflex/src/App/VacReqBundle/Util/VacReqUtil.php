@@ -1843,6 +1843,18 @@ class VacReqUtil
         // echo "$numberOfDays = $numberOfDaysBefore + $numberOfDaysInside + $numberOfDaysAfter<br>";
         //echo $status.": sum numberOfDays=".$numberOfDays."<br>";
 
+        //TODO: include holiday adjustment here
+        if(0) {
+            $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+            $institutionId = NULL;
+            $custom = false; //use holiday days as number
+            $holidays = $vacreqCalendarUtil->getHolidaysInRange($academicYearStartStr, $academicYearEndStr, $institutionId, $custom);
+            echo 'holidays count=' . count($holidays) . '<br>';
+            if ($holidays > 0) {
+                $numberOfDays = intval($numberOfDays) - count($holidays);
+            }
+        }
+
         $res['numberOfDays'] = $numberOfDays;
         $res['accurate'] = true;
 
