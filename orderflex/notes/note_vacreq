@@ -21,3 +21,15 @@ getApprovedTotalDaysAcademicYear calculate vacationDays shown in summary:
 {% set vacationDays = vacationDaysRes['numberOfDays'] %}
 {% set vacationAccurate = vacationDaysRes['accurate'] %}
 
+
+getApprovedTotalDaysAcademicYear:
+inside: get requests within current academic Year (2015-07-01 - 2016-06-30) -   getApprovedYearDays
+before: get requests with start date earlier than academic Year Start -         getApprovedBeforeAcademicYearDays
+after: get requests with start date later than academic Year End -              getApprovedAfterAcademicYearDays
+
+getApprovedYearDays is used in getApprovedTotalDaysAcademicYear, getApprovedBeforeAcademicYearDays, getApprovedAfterAcademicYearDays (plus getPriorApprovedDays)
+
+
+getNumberOfWorkingDaysBetweenDates now has holidays adjustment (getApprovedTotalDaysAcademicYear, getApprovedBeforeAcademicYearDays)
+test inside case
+

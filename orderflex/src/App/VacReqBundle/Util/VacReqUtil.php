@@ -1227,7 +1227,9 @@ class VacReqUtil
             }
             $holidayLink = '<a href="' . $holidaysUrl . '" target="_blank">holidays</a>';
 
-            $result .= "<br>If your requests included " . $holidayLink . ", they are not automatically removed from these counts.";
+            //$result .= "<br>If your requests included " . $holidayLink . ", they are not automatically removed from these counts.";
+            //10 JUne 2025 - auto adjustment for holidays in getNumberOfWorkingDaysBetweenDates
+            $result .= "<br>If your requests included " . $holidayLink . ", they are automatically removed from these counts.";
         }
 
         return $result;
@@ -1781,7 +1783,7 @@ class VacReqUtil
 
     //Main function to calculate total approved total days for the academical year specified by $yearRange (2015-2016 - current academic year)
     //TODO: include holidays: compare $requestNumberOfDays with submitted days ($subRequest->getNumberOfDays()) for request submitted with modified away days
-    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved", $institutionId=NULL ) { //, $bruteForce=false
+    public function getApprovedTotalDaysAcademicYear( $user, $requestTypeStr, $yearRange, $status="approved" ) { //, $bruteForce=false
         //exit('get ApprovedTotalDaysAcademicYear');
         $academicYearStart = $this->getAcademicYearStart();
         $academicYearEnd = $this->getAcademicYearEnd();
@@ -1844,16 +1846,16 @@ class VacReqUtil
         //echo $status.": sum numberOfDays=".$numberOfDays."<br>";
 
         //TODO: include holiday adjustment here
-        if(0) {
-            $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
-            //$institutionId = NULL; //get institution from user? but user might have multiple institution
-            $custom = false; //use holiday days as number
-            $holidays = $vacreqCalendarUtil->getHolidaysInRange($academicYearStartStr, $academicYearEndStr, $institutionId, $custom);
-            echo 'holidays count=' . count($holidays) . '<br>';
-//            if ($holidays > 0) {
-//                $numberOfDays = intval($numberOfDays) - count($holidays);
-//            }
-        }
+//        if(0) {
+//            $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+//            //$institutionId = NULL; //get institution from user? but user might have multiple institution
+//            $custom = false; //use holiday days as number
+//            $holidays = $vacreqCalendarUtil->getHolidaysInRange($academicYearStartStr, $academicYearEndStr, $institutionId, $custom);
+//            echo 'holidays count=' . count($holidays) . '<br>';
+////            if ($holidays > 0) {
+////                $numberOfDays = intval($numberOfDays) - count($holidays);
+////            }
+//        }
 
         $res['numberOfDays'] = $numberOfDays;
         $res['accurate'] = true;
@@ -1894,13 +1896,14 @@ class VacReqUtil
             }
             echo "requestStartDate=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
             echo "requestEndAcademicYearStr=".$requestEndAcademicYearStr."<br>";
-            echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
+            //echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
             echo "requestEndDate=".$subRequest->getEndDate()->format('Y-m-d')."<br>";
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
             $workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestEndAcademicYearStr), $subRequest->getEndDate() );
             //echo "workingDays=".$workingDays."<br>";
 
             $requestNumberOfDays = $subRequest->getNumberOfDays();
+            echo "workingDays=".$workingDays.", requestNumberOfDays=".$requestNumberOfDays."<br>";
 
             if( $workingDays > $requestNumberOfDays ) {
                 //$logger->warning("Logical error getApprovedBeforeAcademicYearDays: number of calculated working days (".$workingDays.") are more than number of days in request (".$subRequest->getNumberOfDays().")");
@@ -2074,7 +2077,7 @@ class VacReqUtil
 //        $requestFirstDateAwayStr = $finalStartEndDates['endDate']->format('Y-m-d');
 //        $requestFirstDateAwayStr = date("Y-m-d", strtotime('+1 days', strtotime($requestFirstDateAwayStr)) );
 
-        $days = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$requestFirstDateAwayStr,"inside",false);
+        $days = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$requestFirstDateAwayStr,"inside",$asObject=false);
 
         return $days;
     }
@@ -2484,8 +2487,6 @@ class VacReqUtil
                         //echo "+numberOfDays = ".$numberOfDaysItem['numberOfDays']."; count=".$numberOfDaysItem['totalCount']."<br>";
                         //echo $status.": +numberOfDays = ".$numberOfDaysItem['numberOfDays']."<br>";
                         $numberOfDays = $numberOfDays + $numberOfDaysItem['numberOfDays'];
-
-                        //TODO: adjust to holidays here or give a warning?
                     }
                     //echo "### get numberOfDays = ".$numberOfDays."<br><br>";
                 }
@@ -2923,10 +2924,25 @@ class VacReqUtil
 
         $workingDays = $this->number_of_working_days($starDateStr,$endDateStr,$holidays);
         echo "getNumberOfWorkingDaysBetweenDates: workingDays=$workingDays <br>";
+
+        //get holidays in date range
+        //TODO: include holiday adjustment here
+        if(1) {
+            $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
+            $institutionId = NULL; //get institution from user? but user might have multiple institution
+            $custom = false; //use holiday days as number
+            $holidays = $vacreqCalendarUtil->getHolidaysInRange($starDateStr, $endDateStr, $institutionId, $custom);
+            echo 'holidays count=' . count($holidays) . '<br>';
+            if ($holidays > 0) {
+                $workingDays = intval($workingDays) - count($holidays);
+            }
+        }
+
         return $workingDays;
     }
     //http://stackoverflow.com/questions/336127/calculate-business-days
     //The function returns the no. of business days between two dates and it skips the holidays
+    //NOT USED
     function getWorkingDays($startDate,$endDate,$holidays){
         // do strtotime calculations just once
         $endDate = strtotime($endDate);

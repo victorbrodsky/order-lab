@@ -206,7 +206,7 @@
                 {% set pendingDaysResB = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'business',yearRange,"pending") %}
                 {% set pendingDaysB = pendingDaysResB['numberOfDays'] %}
 
-                {% set vacationDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange,"approved",groupId) %}
+                {% set vacationDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange,"approved") %}
                 {% set vacationDays = vacationDaysRes['numberOfDays'] %}
                 {% set vacationAccurate = vacationDaysRes['accurate'] %}
                 {% set pendingDaysResV = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange,"pending") %}

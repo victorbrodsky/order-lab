@@ -912,7 +912,8 @@ class VacReqCalendarUtil
 
         $holidays = $this->getHolidaysInRange($startDate,$endDate,$institutionId,$custom);
 
-        $countedNumberOfDays = intval($countedNumberOfDays) - count($holidays);
+        //10 June 2025: Holiday agjustment is already done in getNumberOfWorkingDaysBetweenDates
+        //$countedNumberOfDays = intval($countedNumberOfDays) - count($holidays);
 
         //echo $break . $countedNumberOfDays . "?=" . $requestNumberOfDays . $break;
 
