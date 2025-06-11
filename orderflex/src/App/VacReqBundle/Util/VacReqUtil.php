@@ -55,6 +55,7 @@ use App\VacReqBundle\Entity\VacReqUserCarryOver;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 #use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -1813,11 +1814,11 @@ class VacReqUtil
             $academicYearStartStr,
             $academicYearEndStr,
             "inside",
-            $asObject=false,
+            $asObject=false, //$asObject=false - get number of days directly from the vacation request => count is accurate
             $status
             //$bruteForce
         );
-        echo "### ".$status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
+        //echo "### ".$status.": numberOfDaysInside=".$numberOfDaysInside.", startYear=".$academicYearStartStr.", endYear=".$academicYearEndStr."<br>";
 
 //        //testing
 //        $numberOfDaysInsideRequests = $this->getApprovedYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,"inside",true,$status,$bruteForce);
@@ -1827,22 +1828,26 @@ class VacReqUtil
 //        }
 
         //step2: get requests with start date earlier than academic Year Start
+        //Use getApprovedYearDays() with $asObject=true - get start and end date from the vacation request, and calculate number of days in date range.
+        // Then, adjusted for holidays using getNumberOfWorkingDaysBetweenDates.
         $numberOfDaysBeforeRes = $this->getApprovedBeforeAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status); //,$bruteForce
         $numberOfDaysBefore = $numberOfDaysBeforeRes['numberOfDays'];
         $accurateBefore = $numberOfDaysBeforeRes['accurate'];
         //$accurateBefore = false;
-        echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
+        //echo $status.":numberOfDaysBefore=".$numberOfDaysBefore."<br>";
 
         //step3: get requests with start date later than academic Year End
+        //Use getApprovedYearDays() with $asObject=true - get start and end date from the vacation request, and calculate number of days in date range.
+        // Then, adjusted for holidays using getNumberOfWorkingDaysBetweenDates.
         $numberOfDaysAfterRes = $this->getApprovedAfterAcademicYearDays($user,$requestTypeStr,$academicYearStartStr,$academicYearEndStr,$status); //,$bruteForce
         $numberOfDaysAfter = $numberOfDaysAfterRes['numberOfDays'];
         $accurateAfter = $numberOfDaysAfterRes['accurate'];
-        echo $status.":numberOfDaysAfter=".$numberOfDaysAfter."<br>";
+        //echo $status.":numberOfDaysAfter=".$numberOfDaysAfter."<br>";
 
         $res = array();
 
         $numberOfDays = $numberOfDaysBefore+$numberOfDaysInside+$numberOfDaysAfter;
-        // echo "$numberOfDays = $numberOfDaysBefore + $numberOfDaysInside + $numberOfDaysAfter<br>";
+        //echo "### $numberOfDays = before($numberOfDaysBefore) + inside($numberOfDaysInside) + after($numberOfDaysAfter)<br>";
         //echo $status.": sum numberOfDays=".$numberOfDays."<br>";
 
         //TODO: include holiday adjustment here
@@ -1894,16 +1899,16 @@ class VacReqUtil
                 //echo $request->getId()." continue <br>";
                 continue;
             }
-            echo "requestStartDate=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
-            echo "requestEndAcademicYearStr=".$requestEndAcademicYearStr."<br>";
+            //echo "requestStartDate=".$subRequest->getStartDate()->format('Y-m-d')."<br>";
+            //echo "requestEndAcademicYearStr=".$requestEndAcademicYearStr."<br>";
             //echo $request->getId().": before: request days=".$subRequest->getNumberOfDays()."<br>";
-            echo "requestEndDate=".$subRequest->getEndDate()->format('Y-m-d')."<br>";
+            //echo "requestEndDate=".$subRequest->getEndDate()->format('Y-m-d')."<br>";
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
             $workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestEndAcademicYearStr), $subRequest->getEndDate() ); //getApprovedBeforeAcademicYearDays
             //echo "workingDays=".$workingDays."<br>";
 
             $requestNumberOfDays = $subRequest->getNumberOfDays();
-            echo "workingDays=".$workingDays.", requestNumberOfDays=".$requestNumberOfDays."<br>";
+            //echo "workingDays=".$workingDays.", requestNumberOfDays=".$requestNumberOfDays."<br>";
 
             if( $workingDays > $requestNumberOfDays ) {
                 //$logger->warning("Logical error getApprovedBeforeAcademicYearDays: number of calculated working days (".$workingDays.") are more than number of days in request (".$subRequest->getNumberOfDays().")");
@@ -1950,8 +1955,9 @@ class VacReqUtil
 //                //$accurate = false;
 //            }
 
-            echo $request->getId().": before: request days=".$workingDays."<br>";
+            //echo $request->getId().": before: request workingDays=".$workingDays."<br>";
             $days = $days + $workingDays;
+            //echo $request->getId().": before: request days=".$days."<br>";
         }
 
         $res = array(
@@ -2004,7 +2010,7 @@ class VacReqUtil
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( new \DateTime($requestStartAcademicYearStr), $subRequest->getEndDate() );
             //$workingDays = $this->getNumberOfWorkingDaysBetweenDates( $subRequest->getStartDate(), new \DateTime($requestEndAcademicYearStr) );
             $workingDays = $this->getNumberOfWorkingDaysBetweenDates($startDate,$endDate); //getApprovedAfterAcademicYearDays
-            echo "calculated workingDays=".$workingDays."<br>";
+            //echo "calculated workingDays=".$workingDays."<br>";
 
             $requestNumberOfDays = $subRequest->getNumberOfDays();
 
@@ -2019,9 +2025,9 @@ class VacReqUtil
                 $accurate = false;
             }
 
-            echo $request->getId().": after: request days=".$workingDays."<br>";
+            //echo $request->getId().": after: request days=".$workingDays."<br>";
             $days = $days + $workingDays;
-            echo "days=$days <br>";
+            //echo "days=$days <br>";
         }
 
         $res = array(
@@ -2912,10 +2918,10 @@ class VacReqUtil
         return $errorMsg;
     }
 
-    public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate ) {
+    public function getNumberOfWorkingDaysBetweenDates( $starDate, $endDate, $adjustHolidays=true ) {
         $starDateStr = $starDate->format('Y-m-d');
         $endDateStr = $endDate->format('Y-m-d');
-        echo $starDateStr . " --- " . $endDateStr ."<br>"; //2023-06-29 --- 2023-06-30
+        //echo $starDateStr . " --- " . $endDateStr ."<br>"; //2023-06-29 --- 2023-06-30
         //exit('111');
 
         $holidays = array();
@@ -2924,20 +2930,23 @@ class VacReqUtil
         //$workingDays = $this->getWorkingDays($starDateStr,$endDateStr,$holidays);
 
         $workingDays = $this->number_of_working_days($starDateStr,$endDateStr,$holidays);
-        echo "getNumberOfWorkingDaysBetweenDates: workingDays=$workingDays <br>";
+        //echo "getNumberOfWorkingDaysBetweenDates: $starDateStr - $endDateStr => workingDays=$workingDays <br>";
 
         //get holidays in date range
         //TODO: include holiday adjustment here
-        if(1) {
+        //$adjustHolidays=false; //testing
+        if( $adjustHolidays ) {
             $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
             $institutionId = NULL; //get institution from user? but user might have multiple institution
             $custom = false; //use holiday days as number
             $holidays = $vacreqCalendarUtil->getHolidaysInRange($starDateStr, $endDateStr, $institutionId, $custom);
-            echo 'holidays count=' . count($holidays) . '<br>';
+            //echo 'holidays count=' . count($holidays) . '<br>';
             if ($holidays > 0) {
                 $workingDays = intval($workingDays) - count($holidays);
             }
         }
+
+        //echo "getNumberOfWorkingDaysBetweenDates: $starDateStr - $endDateStr => adjusted workingDays=$workingDays <br>";
 
         return $workingDays;
     }
@@ -5712,6 +5721,46 @@ class VacReqUtil
 
         dump($testDataStr);
         exit('EOF testDefaultVsNewDaysCalculation');
+    }
+
+    public function testDaysVsNewDaysHolidaysCalculation( $request ) {
+        //get vacreq users
+        $user = $this->security->getUser();
+
+        //find groups for logged in user
+        //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
+        //$groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
+        $groupParams = array('asObject'=>true);
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        $groupParams['exceptPermissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $groupParams['statusArr'] = array('default','user-added');
+        $groups = $this->getGroupsByPermission($user,$groupParams);
+
+        //$testData = array();
+        $testDataStr = "";
+
+        foreach($groups as $group) {
+
+            $submitters = $this->getUsersByGroupId($group->getId(), "ROLE_VACREQ_SUBMITTER");
+            echo "submitters=" . count($submitters) . "<br>";
+
+            //use getHeaderInfoMessages or $totalAccruedDays = $this->getTotalAccruedDays($user,NULL,$approvalGroupType); //current year
+            foreach ($submitters as $submitter) {
+                //echo "submitter=$submitter <br>";
+                $res = $this->getApprovedDaysString($user);
+                $resArr[] = $res;
+            }
+        }
+
+        $resStr = implode("\n\n", $resArr);
+
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $fs = new Filesystem();
+        $fs->dumpFile("$projectDir/vacreq.log", $resStr);
+
+        //dump($resArr);
+        exit('EOF testDaysVsNewDaysHolidaysCalculation');
     }
 
     public function getTotalAccruedDaysByGroup( $approvalGroupType ) {

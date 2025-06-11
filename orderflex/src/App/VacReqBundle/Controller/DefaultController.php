@@ -951,4 +951,30 @@ class DefaultController extends OrderAbstractController
         exit('EOF removeAllObservedHolidaysAction');
     }
 
+    #[Route(path: '/comparison-test', name: 'vacreq_comparison_test')]
+    public function comparisonTestAction( Request $request )
+    {
+        if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+        
+        $vacreqUtil = $this->container->get('vacreq_util');
+        $res = $vacreqUtil->testDaysVsNewDaysHolidaysCalculation($request);
+        dump($res);
+
+//        //get vacreq users
+//        //getUsersByGroupId($groupId, $rolePartialName="ROLE_VACREQ_SUBMITTER", $onlyWorking=false);
+//        $users = $vacreqUtil->getUsersByGroupId($groupId=null, $rolePartialName="ROLE_VACREQ_SUBMITTER", $onlyWorking=false);
+//
+//        $resArr = array();
+//        foreach($users as $user) {
+//            $resStr = $vacreqUtil->getApprovedDaysString($user);
+//            $resArr[] = $resStr;
+//        }
+//
+//        dump($resArr);
+
+        exit('EOF comparisonTestAction');
+    }
+
 }

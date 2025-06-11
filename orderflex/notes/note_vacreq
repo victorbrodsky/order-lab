@@ -29,22 +29,18 @@ after: get requests with start date later than academic Year End -              
 
 getApprovedYearDays is used in getApprovedTotalDaysAcademicYear, getApprovedBeforeAcademicYearDays, getApprovedAfterAcademicYearDays (plus getPriorApprovedDays)
 
-
-getNumberOfWorkingDaysBetweenDates now has holidays adjustment (getApprovedTotalDaysAcademicYear, getApprovedBeforeAcademicYearDays)
-test inside case
-
 Usage: getNumberOfWorkingDaysBetweenDates:
-getApprovedBeforeAcademicYearDays
-getApprovedAfterAcademicYearDays
-getSingleDaysDifferenceNote
+1) getApprovedBeforeAcademicYearDays
+2) getApprovedAfterAcademicYearDays
+3) getSingleDaysDifferenceNote
 
-Usage: getApprovedBeforeAcademicYearDays
+1) Usage: getApprovedBeforeAcademicYearDays
 getApprovedTotalDaysAcademicYear
 
-Usage: getApprovedAfterAcademicYearDays
+2) Usage: getApprovedAfterAcademicYearDays
 getApprovedTotalDaysAcademicYear
 
-Usage: getSingleDaysDifferenceNote
+3) Usage: getSingleDaysDifferenceNote
 getDaysDifferenceNote
 
 Usage: getApprovedTotalDaysAcademicYear
@@ -53,5 +49,13 @@ getPendingTotalDaysAcademicYear
 getApprovedTotalDays
 getPreviousYearApprovedTotalDays
 createtSummaryReportByNameSpout
+
+Important changes:
+getNumberOfWorkingDaysBetweenDates now has holidays adjustment (getApprovedTotalDaysAcademicYear, getApprovedBeforeAcademicYearDays)
+remove holidays adjustment from getSingleDaysDifferenceNote because it is using getNumberOfWorkingDaysBetweenDates
+
+
+Test compare old vs new version: use getApprovedDaysString($user) for each user and save to .log files.
+Compare two log files and find differences.
 
 

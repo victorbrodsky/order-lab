@@ -237,7 +237,7 @@
 
                 {##### Vacation #####}
                 <td style="background-color: {{ backgroundColor }}">
-                    vacationDays={{ vacationDays }}
+                    {#vacationDays={{ vacationDays }}#}
                     {{ vacreqmacros.incomingRequestHref( vacationDays, submitter, yearRange, groupId, 1, 'vacationRequest', vacreq_sitename ) }}
                     {% if not vacationAccurate %}
                         <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
