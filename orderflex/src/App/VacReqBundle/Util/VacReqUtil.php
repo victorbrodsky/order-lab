@@ -92,6 +92,9 @@ class VacReqUtil
     private $academicYearStartDateStr = '';
     private $academicYearEndDateStr = '';
 
+    //private $_adjustHolidays = null;
+    private $_adjustHolidays = false; //testing
+
 
     public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
 
@@ -2935,6 +2938,14 @@ class VacReqUtil
         //get holidays in date range
         //TODO: include holiday adjustment here
         //$adjustHolidays=false; //testing
+
+        if( !$this->_adjustHolidays && $this->_adjustHolidays == true ) {
+            $adjustHolidays = true;
+        }
+        if( !$this->_adjustHolidays && $this->_adjustHolidays == false ) {
+            $adjustHolidays = false;
+        }
+
         if( $adjustHolidays ) {
             $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
             $institutionId = NULL; //get institution from user? but user might have multiple institution
@@ -5723,6 +5734,7 @@ class VacReqUtil
         exit('EOF testDefaultVsNewDaysCalculation');
     }
 
+    //test with $adjustHolidays=true and $adjustHolidays=false in getNumberOfWorkingDaysBetweenDates
     public function testDaysVsNewDaysHolidaysCalculation( $request ) {
         //get vacreq users
         $user = $this->security->getUser();
