@@ -5727,6 +5727,8 @@ class VacReqUtil
         //get vacreq users
         $user = $this->security->getUser();
 
+        $yearRangeStr = '2024-2025';
+
         //find groups for logged in user
         //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
         //$groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
@@ -5749,6 +5751,26 @@ class VacReqUtil
             foreach ($submitters as $submitter) {
                 //echo "submitter=$submitter <br>";
                 $res = $this->getApprovedDaysString($user);
+
+                $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr);
+                $approvedVacDays = $vacationDaysRes['numberOfDays'];
+
+                $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'business', $yearRangeStr);
+                $approvedBusDays = $businessDaysRes['numberOfDays'];
+
+                $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr, "pending");
+                $pendingVacDays = $vacationPendingDaysRes['numberOfDays'];
+
+                $remainingDaysRes = $this->totalVacationRemainingDays(
+                    $user
+//                    $totalAllocatedDays=null,
+//                    $vacationDays=null,
+//                    $carryOverDaysToNextYear=null,
+//                    $carryOverDaysFromPreviousYear=null,
+//                    $yearRange
+                );
+                $remainingDays = $remainingDaysRes['numberOfDays'];
+
                 $resArr[] = $res;
             }
         }

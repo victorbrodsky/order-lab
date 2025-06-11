@@ -58,4 +58,17 @@ remove holidays adjustment from getSingleDaysDifferenceNote because it is using 
 Test compare old vs new version: use getApprovedDaysString($user) for each user and save to .log files.
 Compare two log files and find differences.
 
+###
+$approvalGroupType = $this->getSingleApprovalGroupType($user);
+$totalAccruedDays = $this->getTotalAccruedDays($user,NULL,$approvalGroupType); //current year
 
+$maxCarryOverVacationDays = $this->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
+        if( !$maxCarryOverVacationDays ) {
+            $maxCarryOverVacationDays = 10;
+        }
+
+$currentYearRange = $this->getCurrentAcademicYearRange();
+            $carriedOverDays = $this->getUserCarryOverDays($user, $currentYearRange);
+
+$remainingDaysRes = $this->totalVacationRemainingDays($user);
+$remainingDaysRes['numberOfDays']

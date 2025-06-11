@@ -27,11 +27,7 @@
 
         {% set environmentServer = user_security_utility.getSiteSettingParameter('environment') %}
         {% if environmentServer == 'demo' %}
-            <a href="https://example.com/" class="arrow">
-                Demo Department
-            </a> at <a href="https://example.com/" class="arrow">
-                Demo Institution
-            </a>
+            <a href="https://example.com/" class="arrow">Demo Department</a> at <a href="https://example.com/" class="arrow">Demo Institution</a>
         {% else %}
             {% if showcopyrightonfooter %}
                 <a href="{{ path('main_common_home') }}" target="_blank">O R D E R</a>
