@@ -5740,6 +5740,8 @@ class VacReqUtil
         //get vacreq users
         $user = $this->security->getUser();
 
+        $yearRangeStr = '2022-2023';
+        //$yearRangeStr = '2023-2024';
         $yearRangeStr = '2024-2025';
 
         //find groups for logged in user
@@ -5758,7 +5760,7 @@ class VacReqUtil
         foreach($groups as $group) {
 
             $submitters = $this->getUsersByGroupId($group->getId(), "ROLE_VACREQ_SUBMITTER");
-            echo "submitters=" . count($submitters) . "<br>";
+            //echo "submitters=" . count($submitters) . "<br>";
 
             //use getHeaderInfoMessages or $totalAccruedDays = $this->getTotalAccruedDays($user,NULL,$approvalGroupType); //current year
             foreach ($submitters as $submitter) {
@@ -5815,26 +5817,31 @@ class VacReqUtil
 
         $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr);
         $approvedVacDays = $vacationDaysRes['numberOfDays'];
+        $vacationDaysAccurate = $vacationDaysRes['accurate'];
 
         $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'business', $yearRangeStr);
         $approvedBusDays = $businessDaysRes['numberOfDays'];
+        $businessDaysAccurate = $businessDaysRes['accurate'];
 
         $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr, "pending");
         $pendingVacDays = $vacationPendingDaysRes['numberOfDays'];
+        $accurate = $vacationPendingDaysRes['accurate'];
 
+        //$yearRange = $this->getYearsFromYearRangeStr($yearRangeStr);
         $remainingDaysRes = $this->totalVacationRemainingDays(
-            $submitter
-//                    $totalAllocatedDays=null,
-//                    $vacationDays=null,
-//                    $carryOverDaysToNextYear=null,
-//                    $carryOverDaysFromPreviousYear=null,
-//                    $yearRange
+            $submitter,
+            $totalAllocatedDays=null,
+            $vacationDays=null,
+            $carryOverDaysToNextYear=null,
+            $carryOverDaysFromPreviousYear=null,
+            $yearRangeStr
         );
         $remainingDays = $remainingDaysRes['numberOfDays'];
+        $remainingDaysAccurate = $remainingDaysRes['accurate'];
 
         return $yearRangeStr.": group=$group; submitter=$submitter; ".
-            "approvedVacDays=$approvedVacDays; approvedBusDays=$approvedBusDays, ".
-            "pendingVacDays=$pendingVacDays, remainingDays=$remainingDays";
+            "approvedVacDays=$approvedVacDays ($vacationDaysAccurate); approvedBusDays=$approvedBusDays ($businessDaysAccurate), ".
+            "pendingVacDays=$pendingVacDays ($accurate), remainingDays=$remainingDays ($remainingDaysAccurate)";
     }
 
     public function getTotalAccruedDaysByGroup( $approvalGroupType ) {
