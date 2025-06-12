@@ -92,8 +92,9 @@ class VacReqUtil
     private $academicYearStartDateStr = '';
     private $academicYearEndDateStr = '';
 
-    //private $_adjustHolidays = null;
-    private $_adjustHolidays = false; //testing
+    private $_adjustHolidays = null;
+    //private $_adjustHolidays = false; //testing
+    //private $_adjustHolidays = true; //testing
 
 
     public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
@@ -5783,7 +5784,7 @@ class VacReqUtil
                 );
                 $remainingDays = $remainingDaysRes['numberOfDays'];
 
-                $resArr[] = $res;
+                $resArr[] = $yearRangeStr.": group=$group; submitter=$submitter; approvedVacDays=$approvedVacDays; approvedBusDays=$approvedBusDays, pendingVacDays=$pendingVacDays, remainingDays=$remainingDays";
             }
         }
 
@@ -5791,7 +5792,7 @@ class VacReqUtil
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $fs = new Filesystem();
-        $fs->dumpFile("$projectDir/vacreq.log", $resStr);
+        $fs->dumpFile("$projectDir/vacreq_".$this->_adjustHolidays.".log", $resStr);
 
         //dump($resArr);
         exit('EOF testDaysVsNewDaysHolidaysCalculation');
