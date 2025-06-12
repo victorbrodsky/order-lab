@@ -5741,8 +5741,8 @@ class VacReqUtil
         $user = $this->security->getUser();
 
         $yearRangeStr = '2022-2023';
-        //$yearRangeStr = '2023-2024';
-        $yearRangeStr = '2024-2025';
+        $yearRangeStr = '2023-2024';
+        //$yearRangeStr = '2024-2025';
 
         //find groups for logged in user
         //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
