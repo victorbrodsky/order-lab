@@ -92,9 +92,9 @@ class VacReqUtil
     private $academicYearStartDateStr = '';
     private $academicYearEndDateStr = '';
 
-    private $_adjustHolidays = null;
+    //private $_adjustHolidays = null;
     //private $_adjustHolidays = false; //testing
-    //private $_adjustHolidays = true; //testing
+    private $_adjustHolidays = true; //testing
 
 
     public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
@@ -5762,40 +5762,79 @@ class VacReqUtil
 
             //use getHeaderInfoMessages or $totalAccruedDays = $this->getTotalAccruedDays($user,NULL,$approvalGroupType); //current year
             foreach ($submitters as $submitter) {
-                //echo "submitter=$submitter <br>";
-                $res = $this->getApprovedDaysString($user);
+//                //echo "submitter=$submitter <br>";
+//                $res = $this->getApprovedDaysString($user);
+//
+//                $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr);
+//                $approvedVacDays = $vacationDaysRes['numberOfDays'];
+//
+//                $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'business', $yearRangeStr);
+//                $approvedBusDays = $businessDaysRes['numberOfDays'];
+//
+//                $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr, "pending");
+//                $pendingVacDays = $vacationPendingDaysRes['numberOfDays'];
+//
+//                $remainingDaysRes = $this->totalVacationRemainingDays(
+//                    $user
+////                    $totalAllocatedDays=null,
+////                    $vacationDays=null,
+////                    $carryOverDaysToNextYear=null,
+////                    $carryOverDaysFromPreviousYear=null,
+////                    $yearRange
+//                );
+//                $remainingDays = $remainingDaysRes['numberOfDays'];
+//
+//                $resArr[] = $yearRangeStr.": group=$group; submitter=$submitter; approvedVacDays=$approvedVacDays; approvedBusDays=$approvedBusDays, pendingVacDays=$pendingVacDays, remainingDays=$remainingDays";
 
-                $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr);
-                $approvedVacDays = $vacationDaysRes['numberOfDays'];
+                $this->_adjustHolidays = true;
+                $resAdjustHolidayStr = $this->singleTestDaysVsNewDaysHolidaysCalculation($submitter,$group,$yearRangeStr);
 
-                $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'business', $yearRangeStr);
-                $approvedBusDays = $businessDaysRes['numberOfDays'];
+                $this->_adjustHolidays = false;
+                $resAdjustNoHolidayStr = $this->singleTestDaysVsNewDaysHolidaysCalculation($submitter,$group,$yearRangeStr);
 
-                $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr, "pending");
-                $pendingVacDays = $vacationPendingDaysRes['numberOfDays'];
+                if( $resAdjustHolidayStr != $resAdjustNoHolidayStr ) {
+                    echo "<br>Difference for $submitter [original, withAdjustedHolidays]:<br>".
+                        "$resAdjustNoHolidayStr".
+                        "<br>" . $resAdjustHolidayStr.
+                        "<br>";
+                }
+            }
+        }
 
-                $remainingDaysRes = $this->totalVacationRemainingDays(
-                    $user
+        //$resStr = implode("\n\n", $resArr);
+        //$projectDir = $this->container->get('kernel')->getProjectDir();
+        //$fs = new Filesystem();
+        //$fs->dumpFile("$projectDir/vacreq_".$this->_adjustHolidays.".log", $resStr);
+
+        //dump($resArr);
+        exit('EOF testDaysVsNewDaysHolidaysCalculation');
+    }
+    public function singleTestDaysVsNewDaysHolidaysCalculation($submitter,$group,$yearRangeStr) {
+        //echo "submitter=$submitter <br>";
+        //$res = $this->getApprovedDaysString($user);
+
+        $vacationDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr);
+        $approvedVacDays = $vacationDaysRes['numberOfDays'];
+
+        $businessDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'business', $yearRangeStr);
+        $approvedBusDays = $businessDaysRes['numberOfDays'];
+
+        $vacationPendingDaysRes = $this->getApprovedTotalDaysAcademicYear($submitter, 'vacation', $yearRangeStr, "pending");
+        $pendingVacDays = $vacationPendingDaysRes['numberOfDays'];
+
+        $remainingDaysRes = $this->totalVacationRemainingDays(
+            $submitter
 //                    $totalAllocatedDays=null,
 //                    $vacationDays=null,
 //                    $carryOverDaysToNextYear=null,
 //                    $carryOverDaysFromPreviousYear=null,
 //                    $yearRange
-                );
-                $remainingDays = $remainingDaysRes['numberOfDays'];
+        );
+        $remainingDays = $remainingDaysRes['numberOfDays'];
 
-                $resArr[] = $yearRangeStr.": group=$group; submitter=$submitter; approvedVacDays=$approvedVacDays; approvedBusDays=$approvedBusDays, pendingVacDays=$pendingVacDays, remainingDays=$remainingDays";
-            }
-        }
-
-        $resStr = implode("\n\n", $resArr);
-
-        $projectDir = $this->container->get('kernel')->getProjectDir();
-        $fs = new Filesystem();
-        $fs->dumpFile("$projectDir/vacreq_".$this->_adjustHolidays.".log", $resStr);
-
-        //dump($resArr);
-        exit('EOF testDaysVsNewDaysHolidaysCalculation');
+        return $yearRangeStr.": group=$group; submitter=$submitter; ".
+            "approvedVacDays=$approvedVacDays; approvedBusDays=$approvedBusDays, ".
+            "pendingVacDays=$pendingVacDays, remainingDays=$remainingDays";
     }
 
     public function getTotalAccruedDaysByGroup( $approvalGroupType ) {
