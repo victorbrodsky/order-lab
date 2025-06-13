@@ -957,6 +957,8 @@ class DefaultController extends OrderAbstractController
         if( !$this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
+
+        exit('comparisonTestAction Not allowed.');
         
         $vacreqUtil = $this->container->get('vacreq_util');
         $res = $vacreqUtil->testDaysVsNewDaysHolidaysCalculation($request);

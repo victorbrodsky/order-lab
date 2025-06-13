@@ -92,9 +92,9 @@ class VacReqUtil
     private $academicYearStartDateStr = '';
     private $academicYearEndDateStr = '';
 
-    //private $_adjustHolidays = null;
+    private $_adjustHolidays = null;
     //private $_adjustHolidays = false; //testing
-    private $_adjustHolidays = true; //testing
+    //private $_adjustHolidays = true; //testing
 
 
     public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
@@ -2937,15 +2937,18 @@ class VacReqUtil
         //echo "getNumberOfWorkingDaysBetweenDates: $starDateStr - $endDateStr => workingDays=$workingDays <br>";
 
         //get holidays in date range
-        //TODO: include holiday adjustment here
+        //Include holiday adjustment here
         //$adjustHolidays=false; //testing
 
-        if( !$this->_adjustHolidays && $this->_adjustHolidays == true ) {
-            $adjustHolidays = true;
-        }
-        if( !$this->_adjustHolidays && $this->_adjustHolidays == false ) {
-            $adjustHolidays = false;
-        }
+        //Needed for testing only
+//        if( $this->_adjustHolidays != null ) {
+//            if( $this->_adjustHolidays == true ) {
+//                $adjustHolidays = true;
+//            }
+//            if( $this->_adjustHolidays == false ) {
+//                $adjustHolidays = false;
+//            }
+//        }
 
         if( $adjustHolidays ) {
             $vacreqCalendarUtil = $this->container->get('vacreq_calendar_util');
