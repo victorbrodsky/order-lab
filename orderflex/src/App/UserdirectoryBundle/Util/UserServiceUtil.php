@@ -5580,6 +5580,37 @@ Pathology and Laboratory Medicine",
         return $mailerManualUrl;
     }
 
+    //Exact same Last name AND Exact same First name as the profile being shown OR (B) exact same email address as the profile being shown
+    public function getSimilarUsers( $user ) {
+        //$users = array();
+
+        $firstName = $user->getFirstName();
+        $lastName = $user->getLastName();
+        $email = $user->getSingleEmail();
+
+        $repository = $this->em->getRepository(User::class);
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin('user.infos','infos');
+
+        $dql->where("LOWER(infos.firstName) = LOWER(:firstName) AND LOWER(infos.lastName) = LOWER(:lastName)");
+
+        $dql->orWhere("LOWER(infos.email) = LOWER(:email)");
+        
+        $queryParameters = array(
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email,
+        );
+
+        $query = $dql->getQuery();
+        $query->setParameters( $queryParameters );
+
+        $users = $query->getResult();
+
+        return $users;
+    }
+
 //    public function updateSiteSettingParametersAfterRestore( $env, $exceptionUsers, $siteEmail ) {
 //        $logger = $this->container->get('logger');
 //        $userSecUtil = $this->container->get('user_security_utility');

@@ -141,6 +141,20 @@
     {% endif %}
     {#{% endif %}#}
 
+    {#Show similar users: Exact same Last name AND Exact same First name as the profile being shown OR (B) exact same email address as the profile being shown#}
+    {% set similarUsers = user_service_utility.getSimilarUsers(entity) %}
+    {% if similarUsers|length > 0  %}
+        <div class="well well-sm" style="text-align: left;">
+            <strong>Similar user accounts:</strong><br>
+            {% for similarUser in similarUsers %}
+                {#FirstName MiddleNameIfAny LastName, JobTitleIfAny -
+                primaryEmail ("Locked account" If Locked, "Inactive in AD"
+                if inactive in AD); Last successful log in MM/DD/YYYY, HH:MM:SS#}
+                {{ similarUser }}<br>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <br>
 
     {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}
