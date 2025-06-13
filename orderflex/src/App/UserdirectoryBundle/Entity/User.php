@@ -2545,7 +2545,7 @@ class User extends UserBase {
     //return null if user is still employed
     //return str if user not longer working:
     //"No longer works at the [Institution] as of MM/DD/YYYY. (show the most recent "End of Employment Date")
-    public function getEmploymentTerminatedStr( $withLockStatus=true ) {
+    public function getEmploymentTerminatedStr() {
         $res = "";
         $emplCount = 0;
         $resArr = array();
@@ -2595,14 +2595,14 @@ class User extends UserBase {
             $res = implode("; ",$resArr);
         }
 
-        if( $withLockStatus ) {
-            if ($this->isLocked()) {
-                if ($res) {
-                    $res = $res . ".";
-                }
-                $res = $res . " Account is locked";
-            }
-        }
+//        if( $withLockStatus ) {
+//            if ($this->isLocked()) {
+//                if ($res) {
+//                    $res = $res . ".";
+//                }
+//                $res = $res . " Account is locked";
+//            }
+//        }
 
 //        //get AD status
 //        if( $res ) {
@@ -2628,6 +2628,15 @@ class User extends UserBase {
 //        if( $res ) {
 //            $res = $res . ";";
 //        }
+
+        //if the user is a “Local User”, then it would never say “Inactive in User AD”
+        $keyTypeStr = $this->getUsernamePrefix();
+        //echo "keyTypeStr=$keyTypeStr <br>";
+        if( $keyTypeStr == 'local-user' ) {
+            $res = "";
+            return $res;
+        }
+
         if( $this->getActiveAD() === true ) {
             $res = "Active in AD";
         }
@@ -2644,13 +2653,23 @@ class User extends UserBase {
     public function getFullStatusStr( $short=true, $withBrackets=true, $withLockStatus=true ) {
         $addInfo = "";
 
-        $terminatedStr = $this->getEmploymentTerminatedStr($withLockStatus);
+        $terminatedStr = $this->getEmploymentTerminatedStr();
         //echo "terminatedStr=$terminatedStr <br>";
         if( $terminatedStr ) {
             if( $short ) {
                 $addInfo = "No longer works";
             } else {
                 $addInfo = $terminatedStr;
+            }
+        }
+
+        if( $withLockStatus ) {
+            $lockedStr = $this->getLockedStr();
+            if( $lockedStr ) {
+                if ($addInfo) {
+                    $addInfo = $addInfo . ".";
+                }
+                $addInfo = $addInfo . " " . $lockedStr;
             }
         }
 
@@ -2667,6 +2686,13 @@ class User extends UserBase {
         }
 
         return $addInfo;
+    }
+
+    public function getLockedStr() {
+        if ($this->isLocked()) {
+            return "Account is locked";
+        }
+        return "";
     }
 
     public function getEmploymentStartEndDates( $asString=true, $format='m/d/Y' )

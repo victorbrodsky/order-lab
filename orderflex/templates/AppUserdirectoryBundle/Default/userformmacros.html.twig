@@ -882,8 +882,12 @@
                     </h4>
 
                     {% if termStr %}
+                        {% set locked = user.getLockedStr() %}
                         <h4>
                             {{ termStr }}
+                            {% if locked %}
+                                <br>{{ locked }}
+                            {% endif %}
                         </h4>
                     {% endif %}
 
