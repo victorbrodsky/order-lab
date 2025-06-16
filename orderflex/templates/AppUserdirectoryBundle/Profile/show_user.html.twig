@@ -151,8 +151,12 @@
                 primaryEmail ("Locked account" If Locked, "Inactive in AD"
                 if inactive in AD); Last successful log in MM/DD/YYYY, HH:MM:SS#}
                 {#{{ similarUser.getUsernameOptimal() }} {{ similarUser.getSingleEmail() }} {{ similarUser.getFullStatusStr() }}#}
-                {{ similarUser.getFirstMiddleLastNameLastLogin() }}
-                <br>
+                {#{{ similarUser.getFirstMiddleLastNameLastLogin() }}#}
+
+                {% if similarUser.id != entity.id %}
+                    <a href="{{ path(sitename~'_showuser', { 'id': similarUser.id }) }}" target="_blank">{{ similarUser.getFirstMiddleLastNameLastLogin() }}</a>
+                    <br>
+                {% endif %}
             {% endfor %}
         </div>
     {% endif %}
