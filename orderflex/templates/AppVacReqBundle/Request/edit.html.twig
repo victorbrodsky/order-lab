@@ -1104,7 +1104,7 @@
             //var totalAccruedDays = $('#totalAccruedDays').val();
             var remainingDays = $('#remainingDays').val();
             if( carryOverDays && remainingDays ) {
-                if( carryOverDays > remainingDays ) {
+                if( Number(carryOverDays) > Number(remainingDays) ) {
                     var siteEmail = $('#siteEmail').val();
                     var lessDays = Number(carryOverDays) - Number(remainingDays);
                     var warningMsg = "You are about to request "+carryOverDays+
