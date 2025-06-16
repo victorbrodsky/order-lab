@@ -150,7 +150,9 @@
                 {#FirstName MiddleNameIfAny LastName, JobTitleIfAny -
                 primaryEmail ("Locked account" If Locked, "Inactive in AD"
                 if inactive in AD); Last successful log in MM/DD/YYYY, HH:MM:SS#}
-                {{ similarUser }}<br>
+                {#{{ similarUser.getUsernameOptimal() }} {{ similarUser.getSingleEmail() }} {{ similarUser.getFullStatusStr() }}#}
+                {{ similarUser.getFirstMiddleLastNameLastLogin() }}
+                <br>
             {% endfor %}
         </div>
     {% endif %}

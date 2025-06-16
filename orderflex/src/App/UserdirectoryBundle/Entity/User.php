@@ -90,7 +90,8 @@ use App\UserdirectoryBundle\Repository\UserRepository;
         column: new Column(name: "email_canonical", type: "string", unique: false, nullable: true)
     )]
 )]
-class User extends UserBase {
+class User extends UserBase
+{
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
@@ -285,7 +286,7 @@ class User extends UserBase {
     private $lastAdCheck;
 
 
-    function __construct( $addobjects=true )
+    function __construct($addobjects = true)
     {
         parent::__construct();
 
@@ -324,7 +325,7 @@ class User extends UserBase {
         $this->setPreferences($userPref);
 
         //create credentials
-        $this->setCredentials(new Credentials($this,$addobjects));
+        $this->setCredentials(new Credentials($this, $addobjects));
 
         //create PerSiteSettings
         $perSiteSettings = new PerSiteSettings();
@@ -340,7 +341,6 @@ class User extends UserBase {
 
         //parent::__construct();
     }
-
 
 
     /**
@@ -361,25 +361,25 @@ class User extends UserBase {
     }
 
     public function setIdNull(): void
-    {
-        $this->id = null;
-    }
+{
+    $this->id = null;
+}
 
     /**
      * @return mixed
      */
     public function getAuthor(): mixed
-    {
-        return $this->author;
-    }
+{
+    return $this->author;
+}
 
     /**
      * @param mixed $author
      */
     public function setAuthor($author): void
-    {
-        $this->author = $author;
-    }
+{
+    $this->author = $author;
+}
 
     /**
      * @return \DateTime
@@ -393,63 +393,63 @@ class User extends UserBase {
      * @param \DateTime $createDate
      */
     public function setCreateDate($createDate): void
-    {
-        $this->createDate = $createDate;
-    }
+{
+    $this->createDate = $createDate;
+}
 
     /**
      * @param mixed $avatar
      */
     public function setAvatar($avatar): void
-    {
-        //1) clear old avatar image if exists
-        if( $this->getAvatar() ) {
-            $this->getAvatar()->clearUseObject();
-        }
-
-        //2) set avatar
-        $this->avatar = $avatar;
-        if( $avatar ) {
-            $avatar->createUseObject($this);
-        }
+{
+    //1) clear old avatar image if exists
+    if ($this->getAvatar()) {
+        $this->getAvatar()->clearUseObject();
     }
+
+    //2) set avatar
+    $this->avatar = $avatar;
+    if ($avatar) {
+        $avatar->createUseObject($this);
+    }
+}
 
     /**
      * @return mixed
      */
     public function getAvatar(): mixed
-    {
-        return $this->avatar;
-    }
+{
+    return $this->avatar;
+}
 
     /**
      * @param mixed $keytype
      */
     public function setKeytype($keytype): void
-    {
-        $this->keytype = $keytype;
-    }
+{
+    $this->keytype = $keytype;
+}
 
     /**
      * @return mixed
      */
     public function getKeytype(): mixed
-    {
-        return $this->keytype;
-    }
+{
+    return $this->keytype;
+}
 
     /**
      * @param mixed $primaryPublicUserId
      */
     public function setPrimaryPublicUserId($primaryPublicUserId): void
-    {
-        if( $primaryPublicUserId ) {
-            //$primaryPublicUserId = trim((string)$primaryPublicUserId);
-            //$primaryPublicUserId = strtolower($primaryPublicUserId);
-            $primaryPublicUserId = $this->canonicalize($primaryPublicUserId);
-        }
-        $this->primaryPublicUserId = $primaryPublicUserId;
+{
+    if ($primaryPublicUserId) {
+        //$primaryPublicUserId = trim((string)$primaryPublicUserId);
+        //$primaryPublicUserId = strtolower($primaryPublicUserId);
+        $primaryPublicUserId = $this->canonicalize($primaryPublicUserId);
     }
+    $this->primaryPublicUserId = $primaryPublicUserId;
+}
 
     /**
      * @return mixed
@@ -472,40 +472,40 @@ class User extends UserBase {
      * @param mixed $title
      */
     public function setTitle($title): void
-    {
-        if( count($this->getAdministrativeTitles()) == 0 ) {
-            $administrativeTitle = new AdministrativeTitle($this);
-            $administrativeTitle->setName($title);
-            $this->addAdministrativeTitle($administrativeTitle);
-        } else {
-            $this->getAdministrativeTitles()->first()->setName($title);
-        }
-
+{
+    if (count($this->getAdministrativeTitles()) == 0) {
+        $administrativeTitle = new AdministrativeTitle($this);
+        $administrativeTitle->setName($title);
+        $this->addAdministrativeTitle($administrativeTitle);
+    } else {
+        $this->getAdministrativeTitles()->first()->setName($title);
     }
+
+}
 
     /**
      * @return mixed
      */
     public function getTestingAccount(): bool
-    {
-        return $this->testingAccount;
-    }
+{
+    return $this->testingAccount;
+}
 
     /**
      * @param mixed $testingAccount
      */
     public function setTestingAccount($testingAccount): void
-    {
-        $this->testingAccount = $testingAccount;
-    }
+{
+    $this->testingAccount = $testingAccount;
+}
 
     /**
      * @param mixed $createdby
      */
     public function setCreatedby($createdby = 'ldap'): void
-    {
-        $this->createdby = $createdby;
-    }
+{
+    $this->createdby = $createdby;
+}
 
     /**
      * @return mixed
@@ -527,89 +527,89 @@ class User extends UserBase {
      * @param mixed $otherUserParam
      */
     public function setOtherUserParam($otherUserParam): void
-    {
-        $this->otherUserParam = $otherUserParam;
-    }
+{
+    $this->otherUserParam = $otherUserParam;
+}
 
     //
     public function getMainLocation(): mixed
-    {
+{
 
-        $loc = $this->getLocations()->get(0);
+    $loc = $this->getLocations()->get(0);
 
-        if( $loc && $loc->hasLocationTypeName("Employee Office") ) {
+    if ($loc && $loc->hasLocationTypeName("Employee Office")) {
+        return $loc;
+    }
+
+    foreach ($this->getLocations() as $loc) {
+        if ($loc && $loc->hasLocationTypeName("Employee Office")) {
             return $loc;
         }
-
-        foreach( $this->getLocations() as $loc ) {
-            if( $loc && $loc->hasLocationTypeName("Employee Office") ) {
-                return $loc;
-            }
-            if( $loc && $loc->getName() == "Main Office" ) {
-                return $loc;
-            }
+        if ($loc && $loc->getName() == "Main Office") {
+            return $loc;
         }
-
-        return null;
     }
+
+    return null;
+}
 
     public function getHomeLocation(): mixed
-    {
+{
 
-        $loc = $this->getLocations()->get(1);
+    $loc = $this->getLocations()->get(1);
 
-        if( $loc && $loc->hasLocationTypeName("Employee Home") ) {
+    if ($loc && $loc->hasLocationTypeName("Employee Home")) {
+        return $loc;
+    }
+
+    foreach ($this->getLocations() as $loc) {
+        if ($loc && $loc->hasLocationTypeName("Employee Home")) {
             return $loc;
         }
-
-        foreach( $this->getLocations() as $loc ) {
-            if( $loc && $loc->hasLocationTypeName("Employee Home") ) {
-                return $loc;
-            }
-            if( $loc && $loc->getName() == "Home" ) {
-                return $loc;
-            }
+        if ($loc && $loc->getName() == "Home") {
+            return $loc;
         }
-
-        return null;
     }
+
+    return null;
+}
 
 
     public function hasRole($role): bool
-    {
-        return in_array(strtoupper($role), $this->roles, true);
-    }
+{
+    return in_array(strtoupper($role), $this->roles, true);
+}
 
     public function hasPartialRole($partialRoleStr)
-    {
-        foreach( $this->getRoles() as $role ) {
-            if( strpos((string)$role, $partialRoleStr) !== false ) {
-                return true;
-            }
+{
+    foreach ($this->getRoles() as $role) {
+        if (strpos((string)$role, $partialRoleStr) !== false) {
+            return true;
         }
-        return false;
     }
+    return false;
+}
 
     /**
      * @param mixed $preferences
      */
     public function setPreferences($preferences): void
-    {
-        $this->preferences = $preferences;
-    }
+{
+    $this->preferences = $preferences;
+}
 
     /**
      * @return mixed
      */
     public function getPreferences(): mixed
-    {
-        return $this->preferences;
-    }
+{
+    return $this->preferences;
+}
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId(): ?int
     {
@@ -618,176 +618,176 @@ class User extends UserBase {
 
 
     public function addTraining($training): self
-    {
-        if( $training && !$this->trainings->contains($training) ) {
-            $this->trainings->add($training);
-            $training->setUser($this);
-        }
+{
+    if ($training && !$this->trainings->contains($training)) {
+        $this->trainings->add($training);
+        $training->setUser($this);
+    }
 
-        return $this;
-    }
+    return $this;
+}
     public function removeTraining($training): void
-    {
-        $this->trainings->removeElement($training);
-    }
+{
+    $this->trainings->removeElement($training);
+}
     public function getTrainings(): mixed
-    {
-        return $this->trainings;
-    }
+{
+    return $this->trainings;
+}
 
     public function addFellowshipApplication($application): self
-    {
-        if( $application && !$this->fellowshipApplications->contains($application) ) {
-            $this->fellowshipApplications->add($application);
-            $application->setUser($this);
-        }
+{
+    if ($application && !$this->fellowshipApplications->contains($application)) {
+        $this->fellowshipApplications->add($application);
+        $application->setUser($this);
+    }
 
-        return $this;
-    }
+    return $this;
+}
     public function removeFellowshipApplication($application): void
-    {
-        $this->fellowshipApplications->removeElement($application);
-    }
+{
+    $this->fellowshipApplications->removeElement($application);
+}
     public function getFellowshipApplications(): mixed
-    {
-        return $this->fellowshipApplications;
-    }
+{
+    return $this->fellowshipApplications;
+}
 
     public function addResidencyApplication($application): self
-    {
-        if( $application && !$this->residencyApplications->contains($application) ) {
-            $this->residencyApplications->add($application);
-            $application->setUser($this);
-        }
+{
+    if ($application && !$this->residencyApplications->contains($application)) {
+        $this->residencyApplications->add($application);
+        $application->setUser($this);
+    }
 
-        return $this;
-    }
+    return $this;
+}
     public function removeResidencyApplication($application): void
-    {
-        $this->residencyApplications->removeElement($application);
-    }
+{
+    $this->residencyApplications->removeElement($application);
+}
     public function getResidencyApplications(): mixed
-    {
-        return $this->residencyApplications;
-    }
+{
+    return $this->residencyApplications;
+}
 
 
     public function addLocation($location): self
-    {
-        if( $location && !$this->locations->contains($location) ) {
-            $this->locations->add($location);
-            $location->setUser($this);
-        }
-    
-        return $this;
+{
+    if ($location && !$this->locations->contains($location)) {
+        $this->locations->add($location);
+        $location->setUser($this);
     }
+
+    return $this;
+}
     public function removeLocation($locations): void
-    {
-        $this->locations->removeElement($locations);
-    }
+{
+    $this->locations->removeElement($locations);
+}
     public function getLocations(): mixed
-    {
-        return $this->locations;
-    }
+{
+    return $this->locations;
+}
 
     public function addAdministrativeTitle($administrativeTitle): self
-    {
-        if( $administrativeTitle && !$this->administrativeTitles->contains($administrativeTitle) ) {
-            $this->administrativeTitles->add($administrativeTitle);
-            $administrativeTitle->setUser($this);
+{
+    if ($administrativeTitle && !$this->administrativeTitles->contains($administrativeTitle)) {
+        $this->administrativeTitles->add($administrativeTitle);
+        $administrativeTitle->setUser($this);
 
-            //$administrativeTitle->setHeads();
-        }
-    
-        return $this;
+        //$administrativeTitle->setHeads();
     }
+
+    return $this;
+}
     public function removeAdministrativeTitle($administrativeTitle): void
-    {
-        //$administrativeTitle->unsetHeads();
-        $this->administrativeTitles->removeElement($administrativeTitle);
-    }
+{
+    //$administrativeTitle->unsetHeads();
+    $this->administrativeTitles->removeElement($administrativeTitle);
+}
     public function getAdministrativeTitles()
-    {
-        return $this->administrativeTitles;
-    }
+{
+    return $this->administrativeTitles;
+}
 
     public function addAppointmentTitle($appointmentTitle): self
-    {
-        if( $appointmentTitle && !$this->appointmentTitles->contains($appointmentTitle) ) {
-            $this->appointmentTitles->add($appointmentTitle);
-            $appointmentTitle->setUser($this);
-        }
-    
-        return $this;
-    }
-    public function removeAppointmentTitle($appointmentTitle): void
-    {
-        $this->appointmentTitles->removeElement($appointmentTitle);
-    }
-    public function getAppointmentTitles(): mixed
-    {
-        return $this->appointmentTitles;
+{
+    if ($appointmentTitle && !$this->appointmentTitles->contains($appointmentTitle)) {
+        $this->appointmentTitles->add($appointmentTitle);
+        $appointmentTitle->setUser($this);
     }
 
+    return $this;
+}
+    public function removeAppointmentTitle($appointmentTitle): void
+{
+    $this->appointmentTitles->removeElement($appointmentTitle);
+}
+    public function getAppointmentTitles(): mixed
+{
+    return $this->appointmentTitles;
+}
+
     public function addMedicalTitle($medicalTitle): self
-    {
-        if( $medicalTitle && !$this->medicalTitles->contains($medicalTitle) ) {
-            $this->medicalTitles->add($medicalTitle);
-            $medicalTitle->setUser($this);
-        }
-        return $this;
+{
+    if ($medicalTitle && !$this->medicalTitles->contains($medicalTitle)) {
+        $this->medicalTitles->add($medicalTitle);
+        $medicalTitle->setUser($this);
     }
+    return $this;
+}
     public function removeMedicalTitle($medicalTitle): void
-    {
-        $this->medicalTitles->removeElement($medicalTitle);
-    }
+{
+    $this->medicalTitles->removeElement($medicalTitle);
+}
     public function getMedicalTitles(): mixed
-    {
-        return $this->medicalTitles;
-    }
+{
+    return $this->medicalTitles;
+}
 
 
     /**
      * @param mixed $credentials
      */
     public function setCredentials($credentials): void
-    {
-        $this->credentials = $credentials;
-    }
+{
+    $this->credentials = $credentials;
+}
 
     /**
      * @return mixed
      */
     public function getCredentials(): mixed
-    {
-        return $this->credentials;
-    }
+{
+    return $this->credentials;
+}
 
     public function addEmploymentStatus($employmentStatus): self
-    {
-        if( $employmentStatus ) {
-            if( !$this->employmentStatus->contains($employmentStatus) ) {
-                $this->employmentStatus->add($employmentStatus);
-                $employmentStatus->setUser($this);
-            }
+{
+    if ($employmentStatus) {
+        if (!$this->employmentStatus->contains($employmentStatus)) {
+            $this->employmentStatus->add($employmentStatus);
+            $employmentStatus->setUser($this);
         }
+    }
 
-        return $this;
-    }
+    return $this;
+}
     public function addEmploymentStatu($employmentStatus): self
-    {
-        $this->addEmploymentStatus($employmentStatus);
-        return $this;
-    }
+{
+    $this->addEmploymentStatus($employmentStatus);
+    return $this;
+}
 
     public function removeEmploymentStatus($employmentStatus): void
-    {
-        $this->employmentStatus->removeElement($employmentStatus);
-    }
+{
+    $this->employmentStatus->removeElement($employmentStatus);
+}
     public function removeEmploymentStatu($employmentStatus): void
-    {
-        $this->removeEmploymentStatus($employmentStatus);
-    }
+{
+    $this->removeEmploymentStatus($employmentStatus);
+}
 
     /**
      * Get employmentStatus
@@ -795,9 +795,9 @@ class User extends UserBase {
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getEmploymentStatus(): mixed
-    {
-        return $this->employmentStatus;
-    }
+{
+    return $this->employmentStatus;
+}
 
 
 
@@ -805,64 +805,64 @@ class User extends UserBase {
      * @return mixed
      */
     public function getPrivateComments(): mixed
+{
+    return $this->privateComments;
+}
+    public function addPrivateComment($comment): ?self
     {
-        return $this->privateComments;
-    }
-    public function addPrivateComment( $comment ): ?self
-    {
-        if( !$comment )
+        if (!$comment)
             return null;
 
-        if( !$this->privateComments->contains($comment) ) {
+        if (!$this->privateComments->contains($comment)) {
             $comment->setUser($this);
             $this->privateComments->add($comment);
         }
         return $this;
     }
     public function removePrivateComment($comment): void
-    {
-        $this->privateComments->removeElement($comment);
-    }
+{
+    $this->privateComments->removeElement($comment);
+}
 
 
     /**
      * @return mixed
      */
     public function getPublicComments(): mixed
+{
+    return $this->publicComments;
+}
+    public function addPublicComment($comment): ?self
     {
-        return $this->publicComments;
-    }
-    public function addPublicComment( $comment ): ?self
-    {
-        if( !$comment )
+        if (!$comment)
             return null;
 
-        if( !$this->publicComments->contains($comment) ) {
+        if (!$this->publicComments->contains($comment)) {
             $comment->setUser($this);
             $this->publicComments->add($comment);
         }
         return $this;
     }
     public function removePublicComment($comment): void
-    {
-        $this->publicComments->removeElement($comment);
-    }
+{
+    $this->publicComments->removeElement($comment);
+}
 
 
     /**
      * @return mixed
      */
     public function getAdminComments(): mixed
+{
+    return $this->adminComments;
+}
+    public function addAdminComment($comment): ?self
     {
-        return $this->adminComments;
-    }
-    public function addAdminComment( $comment ): ?self
-    {
-        if( !$comment ) {
+        if (!$comment) {
             return null;
         }
 
-        if( !$this->adminComments->contains($comment) ) {
+        if (!$this->adminComments->contains($comment)) {
             $comment->setUser($this);
             $this->adminComments->add($comment);
         }
@@ -870,24 +870,24 @@ class User extends UserBase {
         return $this;
     }
     public function removeAdminComment($comment): void
-    {
-        $this->adminComments->removeElement($comment);
-    }
+{
+    $this->adminComments->removeElement($comment);
+}
 
 
     /**
      * @return mixed
      */
     public function getConfidentialComments(): mixed
+{
+    return $this->confidentialComments;
+}
+    public function addConfidentialComment($comment): ?self
     {
-        return $this->confidentialComments;
-    }
-    public function addConfidentialComment( $comment ): ?self
-    {
-        if( !$comment )
+        if (!$comment)
             return null;
 
-        if( !$this->confidentialComments->contains($comment) ) {
+        if (!$this->confidentialComments->contains($comment)) {
             $comment->setUser($this);
             $this->confidentialComments->add($comment);
         }
@@ -895,118 +895,118 @@ class User extends UserBase {
         return $this;
     }
     public function removeConfidentialComment($comment): void
-    {
-        $this->confidentialComments->removeElement($comment);
-    }
+{
+    $this->confidentialComments->removeElement($comment);
+}
 
 
 
     public function addResearchLab($researchLab): self
-    {
-        if( $researchLab && !$this->researchLabs->contains($researchLab) ) {
-            $this->researchLabs->add($researchLab);
-            //$researchLab->addUser($this);
-        }
+{
+    if ($researchLab && !$this->researchLabs->contains($researchLab)) {
+        $this->researchLabs->add($researchLab);
+        //$researchLab->addUser($this);
+    }
 
-        return $this;
-    }
+    return $this;
+}
     public function removeResearchLab($researchLab): void
-    {
-        $this->researchLabs->removeElement($researchLab);
-        //$researchLab->removeUser($this);
-    }
+{
+    $this->researchLabs->removeElement($researchLab);
+    //$researchLab->removeUser($this);
+}
     public function getResearchLabs()
-    {
-        return $this->researchLabs;
-    }
+{
+    return $this->researchLabs;
+}
 
 
     public function addGrant($item): self
-    {
-        if( $item && !$this->grants->contains($item) ) {
-            $this->grants->add($item);
-            $item->addUser($this);
-        }
-        return $this;
+{
+    if ($item && !$this->grants->contains($item)) {
+        $this->grants->add($item);
+        $item->addUser($this);
     }
+    return $this;
+}
     public function removeGrant($item): void
-    {
-        $this->grants->removeElement($item);
-        $item->removeUser($this);
-    }
+{
+    $this->grants->removeElement($item);
+    $item->removeUser($this);
+}
     public function getGrants(): mixed
-    {
-        return $this->grants;
-    }
+{
+    return $this->grants;
+}
 
 
     public function addPublication($item): self
-    {
-        if( $item && !$this->publications->contains($item) ) {
-            $this->publications->add($item);
-            //$item->addUser($this);
-        }
-        return $this;
+{
+    if ($item && !$this->publications->contains($item)) {
+        $this->publications->add($item);
+        //$item->addUser($this);
     }
+    return $this;
+}
     public function removePublication($item): void
-    {
-        $this->publications->removeElement($item);
-        //$item->removeUser($this);
-    }
+{
+    $this->publications->removeElement($item);
+    //$item->removeUser($this);
+}
     public function getPublications(): mixed
-    {
-        return $this->publications;
-    }
+{
+    return $this->publications;
+}
 
     public function addBook($item): self
-    {
-        if( $item && !$this->books->contains($item) ) {
-            $this->books->add($item);
-        }
-        return $this;
+{
+    if ($item && !$this->books->contains($item)) {
+        $this->books->add($item);
     }
+    return $this;
+}
     public function removeBook($item): void
-    {
-        $this->books->removeElement($item);
-    }
+{
+    $this->books->removeElement($item);
+}
     public function getBooks(): mixed
-    {
-        return $this->books;
-    }
+{
+    return $this->books;
+}
 
 
     public function addLecture($item): self
-    {
-        if( $item && !$this->lectures->contains($item) ) {
-            $this->lectures->add($item);
-            $item->setUser($this);
-        }
-        return $this;
+{
+    if ($item && !$this->lectures->contains($item)) {
+        $this->lectures->add($item);
+        $item->setUser($this);
     }
+    return $this;
+}
     public function removeLecture($item): void
-    {
-        $this->lectures->removeElement($item);
-    }
+{
+    $this->lectures->removeElement($item);
+}
     public function getLectures(): mixed
-    {
-        return $this->lectures;
-    }
+{
+    return $this->lectures;
+}
 
     public function getPermissions(): mixed
-    {
-        return $this->permissions;
-    }
+{
+    return $this->permissions;
+}
     public function addPermission($item): void
-    {
-        if( $item && !$this->permissions->contains($item) ) {
-            $this->permissions->add($item);
-            $item->setUser($this);
-        }
+{
+    if ($item && !$this->permissions->contains($item)) {
+        $this->permissions->add($item);
+        $item->setUser($this);
     }
+}
     public function removePermission($item): void
-    {
-        $this->permissions->removeElement($item);
-    }
+{
+    $this->permissions->removeElement($item);
+}
 
     /**
      * @return mixed
@@ -1019,26 +1019,26 @@ class User extends UserBase {
      * @param mixed $failedAttemptCounter
      */
     public function setFailedAttemptCounter($failedAttemptCounter): void
-    {
-        $this->failedAttemptCounter = $failedAttemptCounter;
-    }
+{
+    $this->failedAttemptCounter = $failedAttemptCounter;
+}
     public function incrementFailedAttemptCounter(): void
-    {
-        $counter = $this->getFailedAttemptCounter();
-        if( $counter === null ) {
-            $counter = 0;
-        }
-        $counter = $counter + 1;
-        $this->setFailedAttemptCounter($counter);
-        //$this->setLastFailedAttemptDate(new \DateTime());
+{
+    $counter = $this->getFailedAttemptCounter();
+    if ($counter === null) {
+        $counter = 0;
     }
+    $counter = $counter + 1;
+    $this->setFailedAttemptCounter($counter);
+    //$this->setLastFailedAttemptDate(new \DateTime());
+}
     public function resetFailedAttemptCounter(): void
-    {
-        if( $this->getFailedAttemptCounter() ) {
-            $this->setFailedAttemptCounter(0);
-            //$this->setLastFailedAttemptDate(null);
-        }
+{
+    if ($this->getFailedAttemptCounter()) {
+        $this->setFailedAttemptCounter(0);
+        //$this->setLastFailedAttemptDate(null);
     }
+}
 
 //    /**
 //     * @return mixed
@@ -1057,25 +1057,25 @@ class User extends UserBase {
 //    }
 
     public function getNotifyUsers(): mixed
+{
+    return $this->notifyUsers;
+}
+    public function addNotifyUser($item): ?self
     {
-        return $this->notifyUsers;
-    }
-    public function addNotifyUser( $item ): ?self
-    {
-        if( !$item ) {
+        if (!$item) {
             return null;
         }
 
-        if( !$this->notifyUsers->contains($item) ) {
+        if (!$this->notifyUsers->contains($item)) {
             $this->notifyUsers->add($item);
         }
 
         return $this;
     }
     public function removeNotifyUser($item): void
-    {
-        $this->notifyUsers->removeElement($item);
-    }
+{
+    $this->notifyUsers->removeElement($item);
+}
 
     /**
      * @return \DateTime|null
@@ -1089,57 +1089,59 @@ class User extends UserBase {
      * {@inheritdoc}
      */
     public function setLastActivity(\DateTime $time = null): self
-    {
-        $this->lastActivity = $time;
+{
+    $this->lastActivity = $time;
 
-        return $this;
-    }
+    return $this;
+}
 
 
     public function getLastLoggedUrl()
-    {
-        return $this->lastLoggedUrl;
-    }
+{
+    return $this->lastLoggedUrl;
+}
 
     public function setLastLoggedUrl($string)
-    {
-        $this->lastLoggedUrl = $string;
+{
+    $this->lastLoggedUrl = $string;
 
-        return $this;
-    }
+    return $this;
+}
 
     /**
      * @return mixed
      */
-    public function getActiveAD() {
-        return $this->activeAD;
-    }
+    public function getActiveAD()
+{
+    return $this->activeAD;
+}
 
     /**
      * @param mixed $activeAD
      */
-    public function setActiveAD($activeAD) {
-        $this->activeAD = $activeAD;
-    }
+    public function setActiveAD($activeAD)
+{
+    $this->activeAD = $activeAD;
+}
 
     /**
      * @return mixed
      */
     public function getLastAdCheck()
-    {
-        return $this->lastAdCheck;
-    }
+{
+    return $this->lastAdCheck;
+}
 
     /**
      * @param mixed $lastAdCheck
      */
     public function setLastAdCheck($lastAdCheck)
-    {
-        if( $lastAdCheck ) {
-            $lastAdCheck = new \DateTime();
-        }
-        $this->lastAdCheck = $lastAdCheck;
+{
+    if ($lastAdCheck) {
+        $lastAdCheck = new \DateTime();
     }
+    $this->lastAdCheck = $lastAdCheck;
+}
 
 
 //    /**
@@ -1158,18 +1160,18 @@ class User extends UserBase {
 //    }
 
     public function getUserIdentifier(): string
-    {
-        return $this->getUsername();
-    }
+{
+    return $this->getUsername();
+}
 
 
 
     public function __toString(): string
-    {
-        //return $this->getUsername();
-        //return $this->getDisplayOrFirstLastname();
-        //return $this->getDisplayName();
-        //return $this->getFirstName();
+{
+    //return $this->getUsername();
+    //return $this->getDisplayOrFirstLastname();
+    //return $this->getDisplayName();
+    //return $this->getFirstName();
 
 //        $displayName = null;
 //        $infos = $this->getInfos();
@@ -1178,39 +1180,39 @@ class User extends UserBase {
 //        }
 //        return $displayName;
 
-        //testing
-        //return $this->getPrimaryPublicUserId();                 //it takes ~20 sec, 3933 DB queries total, 3780 DB queries 'scan_perSiteSettings'
-        //return (string) $this->getPrimaryUseridKeytypeStr();    //it takes ~20 sec, 3937 DB queries total, 3780 DB queries 'scan_perSiteSettings'
+    //testing
+    //return $this->getPrimaryPublicUserId();                 //it takes ~20 sec, 3933 DB queries total, 3780 DB queries 'scan_perSiteSettings'
+    //return (string) $this->getPrimaryUseridKeytypeStr();    //it takes ~20 sec, 3937 DB queries total, 3780 DB queries 'scan_perSiteSettings'
 
-        return (string) $this->getUserNameStr();                //it takes ~30 sec, 7732 DB queries total, 3795 DB queries 'user_userInfo', 3780 DB queries 'scan_perSiteSettings'
-    }
+    return (string)$this->getUserNameStr();                //it takes ~30 sec, 7732 DB queries total, 3795 DB queries 'user_userInfo', 3780 DB queries 'scan_perSiteSettings'
+}
 
 
 
 
 
     public function setUsernameForce($username): self
-    {
-        if( $username ) {
-            //$username = trim((string)$username);
-            //$username = strtolower($username);
-            $username = $this->canonicalize($username);
-        }
-        $this->username = $username;
-        $this->setUsernameCanonicalForce($username);
-        return $this;
+{
+    if ($username) {
+        //$username = trim((string)$username);
+        //$username = strtolower($username);
+        $username = $this->canonicalize($username);
     }
+    $this->username = $username;
+    $this->setUsernameCanonicalForce($username);
+    return $this;
+}
     //do not overwrite username when user id is set (user already exists in DB)
     public function setUsername($username): ?self
     {
-        if( $this->getId() && $username != $this->getUsername() ) {
+        if ($this->getId() && $username != $this->getUsername()) {
             //continue without error
             return null;
             //exit('Can not change username when user is in DB: username='.$username.', existing username='.$this->getUsername().', id='.$this->getId());
             //throw new \Exception( 'Can not change username when user is in DB: username='.$username.', existing username='.$this->getUsername().', id='.$this->getId() );
         }
 
-        if( $username ) {
+        if ($username) {
             //$username = trim((string)$username);
             //$username = strtolower($username);
             $username = $this->canonicalize($username);
@@ -1222,17 +1224,17 @@ class User extends UserBase {
         return $this;
     }
     public function setUsernameCanonicalForce($usernameCanonical): void
-    {
-        if( $usernameCanonical ) {
-            //$usernameCanonical = trim((string)$usernameCanonical);
-            //$usernameCanonical = strtolower($usernameCanonical);
-            $usernameCanonical = $this->canonicalize($usernameCanonical);
-        }
-        $this->usernameCanonical = $usernameCanonical;
+{
+    if ($usernameCanonical) {
+        //$usernameCanonical = trim((string)$usernameCanonical);
+        //$usernameCanonical = strtolower($usernameCanonical);
+        $usernameCanonical = $this->canonicalize($usernameCanonical);
     }
+    $this->usernameCanonical = $usernameCanonical;
+}
     public function setUsernameCanonical($usernameCanonical): ?self
     {
-        if( $this->getId() && $usernameCanonical != $this->getUsernameCanonical() ) {
+        if ($this->getId() && $usernameCanonical != $this->getUsernameCanonical()) {
             //continue without error
             return null;
             //exit('Can not change canonical username when user is in DB: username='.$usernameCanonical.', existing canonical username='.$this->getUsername().', id='.$this->getId());
@@ -1247,14 +1249,14 @@ class User extends UserBase {
 
     //Username utilities methods
     public function setUniqueUsername(): void
-    {
-        $this->setUsername($this->createUniqueUsername());
-    }
+{
+    $this->setUsername($this->createUniqueUsername());
+}
 
     public function createUniqueUsername(): ?string
     {
-        $uniqueUsername = $this->createUniqueUsernameByKeyKeytype($this->getKeytype(),$this->getPrimaryPublicUserId());
-        if( $uniqueUsername ) {
+        $uniqueUsername = $this->createUniqueUsernameByKeyKeytype($this->getKeytype(), $this->getPrimaryPublicUserId());
+        if ($uniqueUsername) {
             //$uniqueUsername = trim((string)$uniqueUsername);
             //$uniqueUsername = strtolower($uniqueUsername);
             $uniqueUsername = $this->canonicalize($uniqueUsername);
@@ -1262,66 +1264,66 @@ class User extends UserBase {
         return $uniqueUsername;
     }
 
-    public function createUniqueUsernameByKeyKeytype($keytype,$key): string
-    {
-        if( $key ) {
-            //$key = trim((string)$key);
-            //$key = strtolower($key);
-            $key = $this->canonicalize($key);
-        }
-
-        $keytypeAbbreviation = 'local-user';
-        if( $keytype ) {
-            $keytypeAbbreviation = $keytype->getAbbreviation();
-        }
-
-        $username = $key."_@_".$keytypeAbbreviation;
-        $usernamestr = preg_replace('/\s+/', '-', $username);   //replace all whitespaces by '-'
-        return $usernamestr;
+    public function createUniqueUsernameByKeyKeytype($keytype, $key): string
+{
+    if ($key) {
+        //$key = trim((string)$key);
+        //$key = strtolower($key);
+        $key = $this->canonicalize($key);
     }
+
+    $keytypeAbbreviation = 'local-user';
+    if ($keytype) {
+        $keytypeAbbreviation = $keytype->getAbbreviation();
+    }
+
+    $username = $key . "_@_" . $keytypeAbbreviation;
+    $usernamestr = preg_replace('/\s+/', '-', $username);   //replace all whitespaces by '-'
+    return $usernamestr;
+}
 
     //Get CWID
     public function createCleanUsername($username): ?string
     {
-        if( $username ) {
+        if ($username) {
             $username = $this->canonicalize($username);
         }
-        $usernameArr = explode("_@_",$username);
+        $usernameArr = explode("_@_", $username);
         return $usernameArr[0];
     }
 
-    public function getUsernamePrefix($username=null): ?string
+    public function getUsernamePrefix($username = null): ?string
     {
-        if( !$username ) {
+        if (!$username) {
             $username = $this->getUsername();
         }
 
-        if( $username ) {
+        if ($username) {
             //$username = trim((string)$username);
             //$username = strtolower($username);
             $username = $this->canonicalize($username);
         }
 
-        $usernameArr = explode("_@_",$username);
-        if( array_key_exists(1, $usernameArr) ) {
+        $usernameArr = explode("_@_", $username);
+        if (array_key_exists(1, $usernameArr)) {
             $prefix = $usernameArr[1];
         } else {
             $prefix = "";
         }
-        
+
         return $prefix;
     }
 
-    public function usernameIsValid($username=null): bool
-    {
-        if( !$username ) {
-            $username = $this->getUsername();
-        }
-        if( strpos((string)$username,"_@_") !== false ) {
-            return true;
-        }
-        return false;
+    public function usernameIsValid($username = null): bool
+{
+    if (!$username) {
+        $username = $this->getUsername();
     }
+    if (strpos((string)$username, "_@_") !== false) {
+        return true;
+    }
+    return false;
+}
 
 
     //[ORM\PreUpdate] - update
@@ -1329,63 +1331,63 @@ class User extends UserBase {
     //Use PreFlush - always check and set display name if empty on create or update user
     #[ORM\PreFlush]
     public function setDisplaynameIfEmpty(): void
-    {
-        $originalDisplayName = $this->getOriginalDisplayName();
-        //echo "originalDisplayName=".$originalDisplayName."<br>";
-        if( !$originalDisplayName || $originalDisplayName == "" ) {
-            //$this->setDisplayname( $this->getUsernameOptimal() );
-            $this->setDisplayname( $this->getDisplayName() );
-        }
+{
+    $originalDisplayName = $this->getOriginalDisplayName();
+    //echo "originalDisplayName=".$originalDisplayName."<br>";
+    if (!$originalDisplayName || $originalDisplayName == "") {
+        //$this->setDisplayname( $this->getUsernameOptimal() );
+        $this->setDisplayname($this->getDisplayName());
     }
+}
 
 
 
     public function addInfo($info): self
-    {
-        if( $info && !$this->infos->contains($info) ) {
-            $this->infos->add($info);
-            $info->setUser($this);
-        }
+{
+    if ($info && !$this->infos->contains($info)) {
+        $this->infos->add($info);
+        $info->setUser($this);
+    }
 
-        return $this;
-    }
+    return $this;
+}
     public function removeInfo($info): void
-    {
-        $this->infos->removeElement($info);
-    }
+{
+    $this->infos->removeElement($info);
+}
     public function getInfos(): mixed
-    {
-        return $this->infos;
-    }
+{
+    return $this->infos;
+}
 
     //for "friendsofsymfony/user-bundle" > "v2.0.0-alpha3" => locked field is removed
-    public function setLocked( $value ): void
-    {
-        $this->setEnabled(!$value);
-    }
+    public function setLocked($value): void
+{
+    $this->setEnabled(!$value);
+}
     public function getLocked(): bool
-    {
-        return !$this->isEnabled();
-    }
+{
+    return !$this->isEnabled();
+}
     public function isLocked(): bool
-    {
-        return !$this->isEnabled();
+{
+    return !$this->isEnabled();
 //        if( $this->isEnabled() ) {
 //            return false;
 //        } else {
 //            return true;
 //        }
-    }
+}
     public function setEnabled($boolean): self
-    {
-        $this->enabled = (bool) $boolean;
+{
+    $this->enabled = (bool)$boolean;
 
-        if( $boolean ) {
-            $this->resetFailedAttemptCounter();
-        }
-
-        return $this;
+    if ($boolean) {
+        $this->resetFailedAttemptCounter();
     }
+
+    return $this;
+}
 
     /////////////////////////// user's info mapper 7+2: //////////////////////////////////////
     /// suffix, firstName, middleName, lastName, displayName, initials, preferredPhone, preferredEmail/emailCanonical (used instead of extended user's email) ///
@@ -1393,12 +1395,12 @@ class User extends UserBase {
      * @param mixed $suffix
      */
     public function setSuffix($suffix): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setSuffix($suffix);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setSuffix($suffix);
     }
+}
 
     /**
      * @return mixed
@@ -1407,7 +1409,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getSuffix();
         }
         return $value;
@@ -1417,12 +1419,12 @@ class User extends UserBase {
      * @param mixed $firstName
      */
     public function setFirstName($firstName): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setFirstName($firstName);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setFirstName($firstName);
     }
+}
 
     /**
      * @return mixed
@@ -1431,7 +1433,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getFirstName();
         }
         return $value;
@@ -1441,12 +1443,12 @@ class User extends UserBase {
      * @param mixed $middleName
      */
     public function setMiddleName($middleName): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setMiddleName($middleName);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setMiddleName($middleName);
     }
+}
 
     /**
      * @return mixed
@@ -1455,7 +1457,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getMiddleName();
         }
         return $value;
@@ -1465,12 +1467,12 @@ class User extends UserBase {
      * @param mixed $lastName
      */
     public function setLastName($lastName): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setLastName($lastName);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setLastName($lastName);
     }
+}
 
     /**
      * @return mixed
@@ -1479,7 +1481,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getLastName();
         }
 //        if( $infos ) {
@@ -1496,18 +1498,18 @@ class User extends UserBase {
      * @param mixed $firstName
      */
     public function setSalutation($salutation): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setSalutation($salutation);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setSalutation($salutation);
     }
+}
 
     public function getSalutation(): ?string
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getSalutation();
         }
         return $value;
@@ -1531,24 +1533,24 @@ class User extends UserBase {
 //        return ucwords($s);
 //    }
     public function capitalizeIfNotAllCapital($s): mixed
-    {
-        if( !$s ) {
-            return $s;
-        }
-        $convert = false;
-        //check if all UPPER
-        if( strtoupper($s) == $s ) {
-            $convert = true;
-        }
-        //check if all lower
-        if( strtolower($s) == $s ) {
-            $convert = true;
-        }
-        if( $convert ) {
-            return ucwords( strtolower($s) );
-        }
+{
+    if (!$s) {
         return $s;
     }
+    $convert = false;
+    //check if all UPPER
+    if (strtoupper($s) == $s) {
+        $convert = true;
+    }
+    //check if all lower
+    if (strtolower($s) == $s) {
+        $convert = true;
+    }
+    if ($convert) {
+        return ucwords(strtolower($s));
+    }
+    return $s;
+}
 //    function isAllCapital($s) {
 //        if( $this->count_capitals($s) == strlen((string)$s) ) {
 //            return true;
@@ -1563,12 +1565,12 @@ class User extends UserBase {
      * @param mixed $displayName
      */
     public function setDisplayName($displayName): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setDisplayName($displayName);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setDisplayName($displayName);
     }
+}
 
     /**
      * @return mixed
@@ -1577,26 +1579,26 @@ class User extends UserBase {
     {
         $displayName = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $displayName = $infos->first()->getDisplayName();
         }
 
-        if( !$displayName ) {
+        if (!$displayName) {
             $displayName = $this->getFirstName() . " " . $this->getLastName();
         }
 
-        if( !$displayName ){
+        if (!$displayName) {
             $displayName = $this->getPrimaryUseridKeytypeStr();
         }
-        
-        return $displayName."";
+
+        return $displayName . "";
     }
 
     public function getOriginalDisplayName(): ?string
     {
         $displayName = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $displayName = $infos->first()->getDisplayName();
         }
         return $displayName;
@@ -1606,12 +1608,12 @@ class User extends UserBase {
      * @param mixed $preferredPhone
      */
     public function setPreferredPhone($preferredPhone): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setPreferredPhone($preferredPhone);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setPreferredPhone($preferredPhone);
     }
+}
     /**
      * @return mixed
      */
@@ -1619,7 +1621,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getPreferredPhone();
         }
         return $value;
@@ -1629,12 +1631,12 @@ class User extends UserBase {
      * @param mixed $preferredMobilePhone
      */
     public function setPreferredMobilePhone($preferredMobilePhone): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setPreferredMobilePhone($preferredMobilePhone);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setPreferredMobilePhone($preferredMobilePhone);
     }
+}
     /**
      * @return mixed
      */
@@ -1642,7 +1644,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getPreferredMobilePhone();
         }
         return $value;
@@ -1653,14 +1655,14 @@ class User extends UserBase {
      */
     public function getUserInfoByPreferredMobilePhone($preferredMobilePhone): ?string
     {
-        $preferredMobilePhone = str_replace("+","",$preferredMobilePhone);
+        $preferredMobilePhone = str_replace("+", "", $preferredMobilePhone);
         $infos = $this->getInfos();
-        foreach($infos as $info) {
+        foreach ($infos as $info) {
             $thisPreferredMobilePhone = $info->getPreferredMobilePhone();
-            $thisPreferredMobilePhone = str_replace("+","",$thisPreferredMobilePhone);
+            $thisPreferredMobilePhone = str_replace("+", "", $thisPreferredMobilePhone);
             //echo "[$preferredMobilePhone] =? [$thisPreferredMobilePhone]<br>";
             //exit();
-            if( $thisPreferredMobilePhone && $preferredMobilePhone && $thisPreferredMobilePhone == $preferredMobilePhone ) {
+            if ($thisPreferredMobilePhone && $preferredMobilePhone && $thisPreferredMobilePhone == $preferredMobilePhone) {
                 //echo 'found userInfo='.$info->getId()."<br>";
                 return $info;
             }
@@ -1669,24 +1671,24 @@ class User extends UserBase {
         return null;
     }
     public function getUserInfo(): mixed
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            return $infos->first();
-        }
-        return false;
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        return $infos->first();
     }
+    return false;
+}
 
     /**
      * @param mixed $initials
      */
     public function setInitials($initials): void
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            $infos->first()->setInitials($initials);
-        }
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        $infos->first()->setInitials($initials);
     }
+}
 
     /**
      * @return mixed
@@ -1695,7 +1697,7 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getInitials();
         }
         return $value;
@@ -1705,7 +1707,7 @@ class User extends UserBase {
     public function setEmail($email): ?self
     {
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $infos->first()->setEmail($email);
         }
 
@@ -1715,30 +1717,30 @@ class User extends UserBase {
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getEmail();
         }
         return $value;
     }
     //overwrite canonical email
     public function setEmailCanonical($emailCanonical): self
-    {
-        $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
-            if( $emailCanonical ) {
-                //$emailCanonical = strtolower($emailCanonical);
-                $emailCanonical = $this->canonicalize($emailCanonical);
-            }
-            $infos->first()->setEmailCanonical($emailCanonical);
+{
+    $infos = $this->getInfos();
+    if ($infos && count($infos) > 0) {
+        if ($emailCanonical) {
+            //$emailCanonical = strtolower($emailCanonical);
+            $emailCanonical = $this->canonicalize($emailCanonical);
         }
-
-        return $this;
+        $infos->first()->setEmailCanonical($emailCanonical);
     }
+
+    return $this;
+}
     public function getEmailCanonical(): ?string
     {
         $value = null;
         $infos = $this->getInfos();
-        if( $infos && count($infos) > 0 ) {
+        if ($infos && count($infos) > 0) {
             $value = $infos->first()->getEmailCanonical();
         }
         return $value;
@@ -1748,18 +1750,18 @@ class User extends UserBase {
      * @param mixed $perSiteSettings
      */
     public function setPerSiteSettings($perSiteSettings): void
-    {
-        $this->perSiteSettings = $perSiteSettings;
-        $perSiteSettings->setUser($this);
-    }
+{
+    $this->perSiteSettings = $perSiteSettings;
+    $perSiteSettings->setUser($this);
+}
 
     /**
      * @return mixed
      */
     public function getPerSiteSettings(): mixed
-    {
-        return $this->perSiteSettings;
-    }
+{
+    return $this->perSiteSettings;
+}
 
     /////////////////////////////////////////////////////////////////
 
@@ -1772,16 +1774,16 @@ class User extends UserBase {
     
     public function getCleanUsername(): ?string
     {
-        return $this->createCleanUsername( $this->getUsername() );
+        return $this->createCleanUsername($this->getUsername());
     }
 
     //show user's FirstName LastName - userName (userNameType)
-    public function getUserNameStr( $showStatus=false ): ?string
+    public function getUserNameStr($showStatus = false): ?string
     {
         //Add (No longer works)
         //echo "showStatus=$showStatus <br>";
         $statusStr = "";
-        if( $showStatus ) {
+        if ($showStatus) {
             $statusStr = $this->getFullStatusStr();
         }
 
@@ -1789,41 +1791,41 @@ class User extends UserBase {
         //$primaryUseridKeytypeStr = " 222 ";
         $displayName = $this->getDisplayName();
 
-        if( !$displayName ) {
+        if (!$displayName) {
             $displayName = $this->getFirstName() . " " . $this->getLastName();
         }
 
-        if( $displayName && $primaryUseridKeytypeStr ) {
-            return $displayName . " - " . $primaryUseridKeytypeStr.$statusStr;
+        if ($displayName && $primaryUseridKeytypeStr) {
+            return $displayName . " - " . $primaryUseridKeytypeStr . $statusStr;
         }
 
-        if( $primaryUseridKeytypeStr && !$displayName ){
-            return $primaryUseridKeytypeStr."".$statusStr;
+        if ($primaryUseridKeytypeStr && !$displayName) {
+            return $primaryUseridKeytypeStr . "" . $statusStr;
         }
 
-        if( $displayName && !$primaryUseridKeytypeStr ){
-            return $displayName."".$statusStr;
+        if ($displayName && !$primaryUseridKeytypeStr) {
+            return $displayName . "" . $statusStr;
         }
     }
 
     //Get displayname or first + last name
     //Used in vacreq personAwayInfo
-    public function getDisplayOrFirstLastname( $showStatus=false ): ?string
+    public function getDisplayOrFirstLastname($showStatus = false): ?string
     {
 
         $displayName = $this->getDisplayName();
 
-        if( !$displayName ) {
+        if (!$displayName) {
             $displayName = $this->getFirstName() . " " . $this->getLastName();
 
             //Add status (No longer works, Active in AD)
-            if( $showStatus ) {
+            if ($showStatus) {
                 $addInfo = $this->getFullStatusStr();
                 $displayName = $displayName . $addInfo;
             }
         }
 
-        if( !$displayName ){
+        if (!$displayName) {
             $displayName = $this->getUserNameStr($showStatus);
         }
 
@@ -1836,20 +1838,20 @@ class User extends UserBase {
         return $this->getPrimaryPublicUserId();
     }
 
-    public function getPrimaryUseridKeytypeStr( string $delimeter = " " ) : ?string
+    public function getPrimaryUseridKeytypeStr(string $delimeter = " ") : ?string
     {
         //Exception in twig: UsernameType was already present for the same ID (example dev user id=12: $this->getKeytype() -> this error)
-        if( $this->getKeytype() && $this->getKeytype()->getName() ) {
-            return $this->getPrimaryPublicUserId().$delimeter."(".$this->getKeytype()->getName().")";
+        if ($this->getKeytype() && $this->getKeytype()->getName()) {
+            return $this->getPrimaryPublicUserId() . $delimeter . "(" . $this->getKeytype()->getName() . ")";
         } else {
-            return $this->getPrimaryPublicUserId()."";
+            return $this->getPrimaryPublicUserId() . "";
         }
     }
 
 
     public function getUsernameShortest(): ?string
     {
-        if( $this->getDisplayName() ) {
+        if ($this->getDisplayName()) {
             return $this->getDisplayName();
         } else {
             return $this->getPrimaryPublicUserId();
@@ -1862,7 +1864,7 @@ class User extends UserBase {
     //if the user has no last name, use the first name; if the user has none of the three names, start with the User ID:
     //FirstName LastName, MD
     //if $inverted is true => LastName FirstName
-    public function getUsernameOptimal( $inverted=false ): ?string
+    public function getUsernameOptimal($inverted = false): ?string
     {
         $degrees = array();
         $titles = array();
@@ -1870,7 +1872,7 @@ class User extends UserBase {
         //get appended degrees
         $trainings = $this->getTrainings();
         //echo "trainings=".count($trainings)."<br>";
-        foreach($trainings as $training) {
+        foreach ($trainings as $training) {
             //echo "training=".$training."<br>";
             if ($training->getAppendDegreeToName() && $training->getDegree()) {
                 $degrees[] = $training->getDegree();
@@ -1886,36 +1888,36 @@ class User extends UserBase {
         $titlesStr = implode(", ", $titles);
 
         $degreesAndTitlesStr = $degreesStr;
-        if( $titlesStr ) {
+        if ($titlesStr) {
             $degreesAndTitlesStr = $degreesAndTitlesStr . ", " . $titlesStr;
         }
 
-        if( $degreesAndTitlesStr ) {
+        if ($degreesAndTitlesStr) {
             $degreesAndTitlesStr = ", " . $degreesAndTitlesStr;
         }
 
 
-        if( $this->getDisplayName() ) {
+        if ($this->getDisplayName()) {
             return $this->getDisplayName() . $degreesAndTitlesStr;
         }
 
-        if( $this->getLastName() && $this->getFirstName() ) {
-            if( $inverted ) {
+        if ($this->getLastName() && $this->getFirstName()) {
+            if ($inverted) {
                 return $this->getLastName() . " " . $this->getFirstName() . $degreesAndTitlesStr;
             } else {
                 return $this->getFirstName() . " " . $this->getLastName() . $degreesAndTitlesStr;
             }
         }
 
-        if( $this->getLastName() ) {
+        if ($this->getLastName()) {
             return $this->getLastName() . $degreesAndTitlesStr;
         }
 
-        if( $this->getFirstName() ) {
+        if ($this->getFirstName()) {
             return $this->getFirstName() . $degreesAndTitlesStr;
         }
 
-        if( $this->getPrimaryPublicUserId() ) {
+        if ($this->getPrimaryPublicUserId()) {
             return $this->getPrimaryPublicUserId() . $degreesAndTitlesStr;
         }
 
@@ -1924,6 +1926,36 @@ class User extends UserBase {
     public function getOptimalAbbreviationName(): ?string
     {
         return $this->getUserNameStr();
+    }
+
+    public function getFirstMiddleLastNameLastLogin($inverted = false): ?string
+    {
+        $res = $this->getUsernameOptimal();
+
+        $email = $this->getSingleEmail();
+        if( $email ) {
+            $res = $res . ", ".$email;
+        }
+
+        $status = $this->getFullStatusStr();
+        if( $status ) {
+            if( $res ) {
+                $res = $res . " " . $status;
+            }
+        }
+
+        //Last successful log in MM/DD/YYYY, HH:MM:SS
+        $lastLogin = $this->getLastLogin();
+        if( $lastLogin ) {
+            if( $res ) {
+                $user_tz_str = $this->getPreferences()->getTimezone();
+                $user_tz = new \DateTimeZone($user_tz_str);
+                $lastLogin->setTimezone($user_tz);
+                $res = $res . "; Last successful log in " . $lastLogin->format('m/d/Y, H:i:s');
+            }
+        }
+
+        return $res;
     }
 
     public function getSingleLastName(): ?string
@@ -2667,9 +2699,9 @@ class User extends UserBase {
             $lockedStr = $this->getLockedStr();
             if( $lockedStr ) {
                 if ($addInfo) {
-                    $addInfo = $addInfo . ".";
+                    $addInfo = $addInfo . ". ";
                 }
-                $addInfo = $addInfo . " " . $lockedStr;
+                $addInfo = $addInfo . "" . $lockedStr;
             }
         }
 
