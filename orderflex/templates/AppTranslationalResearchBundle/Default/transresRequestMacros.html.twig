@@ -472,6 +472,15 @@
 
                 {% if form.invoiceItems|length > 0 %}
                     <div class="row">
+                        <div class="col-xs-3"></div>
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-3">For reference (not listed on generated invoice)</div>
+                        <div class="col-xs-2"></div>
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-1"></div>
+                    </div>
+                    <div class="row">
                         <div class="col-xs-3">
                             {{ form_label(form.invoiceItems|first.description) }}
                         </div>
@@ -480,8 +489,21 @@
                         </div>
 
                         {#For reference (not listed on generated invoice)#}
-                        <div class="col-xs-3">
-                            <label for="oleg_translationalresearchbundle_invoice_invoiceItems_ref">For reference (not listed on generated invoice)</label>
+                        {#<div class="col-xs-3">#}
+                            {#<label for="oleg_translationalresearchbundle_invoice_invoiceItems_ref">#}
+                                {#For reference (not listed on generated invoice)#}
+                                {#1111 2222 3333#}
+                            {#</label>#}
+                        {#</div>#}
+                        {#“Requested Quantity”, “Completed Quantity”, “Previously Invoiced Quantity”, and “Orderable Status”#}
+                        <div class="col-xs-1">
+                            {{ form_label(form.invoiceItems|first.quantity) }}
+                        </div>
+                        <div class="col-xs-1">
+
+                        </div>
+                        <div class="col-xs-1">
+
                         </div>
 
 
@@ -589,7 +611,9 @@
                 </div>
                 {#For reference (not listed on generated invoice)#}
                 <div class="col-xs-3">
-                    111 222 333
+                    {#“Requested Quantity”, “Completed Quantity”, “Previously Invoiced Quantity”, and “Orderable Status”#}
+                    {#111 222 333#}
+                    Requested Quantity
                 </div>
                 <div class="col-xs-2" style="margin-top: 2%;">
                     {{ form_widget(forminvoiceItem.itemCode) }}

@@ -1,0 +1,20 @@
+InvoiceItem Entity:
+$quantity
+$additionalQuantity
+$itemCode
+
+Partial Invoice:
+“Requested Quantity”, “Completed Quantity”, “Previously Invoiced Quantity” (not editable), and “Orderable Status”
+
+The values for the “Requested Quantity” and “Completed Quantity”
+should come from the corresponding parent Work Request fields for each invoice row.
+
+The value in the “Previously Invoiced Quantity” should come from the total of
+all quantities for this item code in all existing invoices with non-”Canceled” status
+of the same parent work request.
+
+The value of the “Orderable Status” drop down menu should come from the parent work request for this orderable line item.
+
+Get and show these fields from Request.
+
+
