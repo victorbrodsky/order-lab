@@ -17,4 +17,7 @@ The value of the “Orderable Status” drop down menu should come from the pare
 
 Get and show these fields from Request.
 
+Take only completed quantity for now.
+
+
 

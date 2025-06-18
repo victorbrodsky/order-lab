@@ -472,16 +472,16 @@
 
                 {% if form.invoiceItems|length > 0 %}
                     <div class="row">
-                        <div class="col-xs-3"></div>
+                        <div class="col-xs-2"></div>
                         <div class="col-xs-1"></div>
-                        <div class="col-xs-3">For reference (not listed on generated invoice)</div>
+                        <div class="col-xs-4">For reference (not listed on generated invoice)</div>
                         <div class="col-xs-2"></div>
                         <div class="col-xs-1"></div>
                         <div class="col-xs-1"></div>
                         <div class="col-xs-1"></div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-3">
+                        <div class="col-xs-2">
                             {{ form_label(form.invoiceItems|first.description) }}
                         </div>
                         <div class="col-xs-1">
@@ -497,15 +497,17 @@
                         {#</div>#}
                         {#“Requested Quantity”, “Completed Quantity”, “Previously Invoiced Quantity”, and “Orderable Status”#}
                         <div class="col-xs-1">
-                            {{ form_label(form.invoiceItems|first.quantity) }}
+                            <label class="col-xs-12 control-label">Requested Quantity</label>
                         </div>
                         <div class="col-xs-1">
-
+                            <label class="col-xs-12 control-label">Completed Quantity</label>
                         </div>
                         <div class="col-xs-1">
-
+                            <label class="col-xs-12 control-label">Previously Invoiced Quantity</label>
                         </div>
-
+                        <div class="col-xs-1">
+                            <label class="col-xs-12 control-label">Orderable Status</label>
+                        </div>
 
                         <div class="col-xs-2">
                             {{ form_label(form.invoiceItems|first.itemCode) }}
@@ -601,7 +603,7 @@
             {% endif %}
 
             <div class="row">
-                <div class="col-xs-3">
+                <div class="col-xs-2">
                     {{ form_widget(forminvoiceItem.description) }}
                 </div>
                 <div class="col-xs-1">
@@ -609,12 +611,27 @@
                     <br>
                     {{ form_widget(forminvoiceItem.additionalQuantity) }}
                 </div>
+
                 {#For reference (not listed on generated invoice)#}
-                <div class="col-xs-3">
+                {#<div class="col-xs-4">#}
                     {#“Requested Quantity”, “Completed Quantity”, “Previously Invoiced Quantity”, and “Orderable Status”#}
-                    {#111 222 333#}
-                    Requested Quantity
+                    {#111 222 333 444#}
+                    {#Requested Quantity#}
+                    {#{{ formmacros.simplefield( "", forminvoiceItem.vars.value.itemCode, "input", "disabled" ) }}#}
+                {#</div>#}
+                <div class="col-xs-1">
+                    111
                 </div>
+                <div class="col-xs-1">
+                    222
+                </div>
+                <div class="col-xs-1">
+                    333
+                </div>
+                <div class="col-xs-1">
+                    444
+                </div>
+
                 <div class="col-xs-2" style="margin-top: 2%;">
                     {{ form_widget(forminvoiceItem.itemCode) }}
                 </div>
