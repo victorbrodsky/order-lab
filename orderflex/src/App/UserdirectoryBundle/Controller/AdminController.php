@@ -2862,7 +2862,6 @@ class AdminController extends OrderAbstractController
         $pathDefaultGroup->setInstitution($autoAssignInstitution);
 
         //primaryPublicUserIdType (WCM CWID)
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
         $primaryPublicUserIdType = $em->getRepository(UsernameType::class)->findOneByName("Active Directory (LDAP)");
         if( !$primaryPublicUserIdType ) {
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]

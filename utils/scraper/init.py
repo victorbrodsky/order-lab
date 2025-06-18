@@ -332,6 +332,9 @@ class Init:
         # oleg_userdirectorybundle_siteparameters_submit
         self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
 
+        #Set UsernameType: Local User as default (set display order to -1)
+        #Move 'Local User' to add as the first one in generateUsernameTypes()
+
         print("academicYearEnd populated")
 
     def remove_crons(self):
