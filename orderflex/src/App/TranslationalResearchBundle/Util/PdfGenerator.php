@@ -82,7 +82,19 @@ class PdfGenerator
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
         $this->generatePdf($invoice,$applicationFilePath,$request); //this does not work with https
-        //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+        $logger->notice("generateInvoicePdf: applicationFilePath=".$applicationFilePath);
+
+        if( is_file($applicationFilePath) ) {
+            $logger->notice("generateInvoicePdf: file exists applicationFilePath=".$applicationFilePath);
+        } else {
+            $logger->notice("generateInvoicePdf: file does not exist!!! applicationFilePath=".$applicationFilePath);
+            $res = array(
+                'filename' => NULL,
+                'pdf' => NULL,
+                'size' => NULL
+            );
+            return $res;
+        }
 
         //$pdfPath = "translationalresearch_invoice_download";
         //$pdfPathParametersArr = array('id' => $invoice->getId());
@@ -187,13 +199,29 @@ class PdfGenerator
     //http://wkhtmltopdf.org must be installed on server
     public function generatePdf($invoice,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
-        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        $logger->notice("generatePdf: Trying to generate PDF in ".$applicationOutputFilePath);
         $userSecUtil = $this->container->get('user_security_utility');
 
         if( file_exists($applicationOutputFilePath) ) {
             //return;
             $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
             unlink($applicationOutputFilePath);
+        }
+
+        $wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
+        $logger->notice("generateProjectPdf: wkhtmltopdfpath=".$wkhtmltopdfpath);
+        //echo "wkhtmltopdfpath=[$wkhtmltopdfpath] <br>";
+        $wkhtmltopdfpathClean = str_replace('"','',$wkhtmltopdfpath);
+        $wkhtmltopdfpathClean = str_replace("'",'',$wkhtmltopdfpathClean);
+        //echo "wkhtmltopdfpathClean=[$wkhtmltopdfpathClean] <br>";
+        $logger->notice("generateProjectPdf: wkhtmltopdfpathClean=".$wkhtmltopdfpathClean.", wkhtmltopdfpath=".$wkhtmltopdfpath);
+        if (file_exists($wkhtmltopdfpathClean)) {
+            //echo "The file $wkhtmltopdfpath exists <br>";
+        } else {
+            //echo "The file [$wkhtmltopdfpath] does not exist <br>";
+            //exit("The file [$wkhtmltopdfpath] does not exist");
+            $logger->notice("generatePdf: Error - ignore PDF generation, wkhtmltopdfpath path does not exists");
+            return null;
         }
 
         ini_set('max_execution_time', 300); //300 sec
@@ -504,7 +532,7 @@ class PdfGenerator
     //http://wkhtmltopdf.org must be installed on server
     public function generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
-        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        $logger->notice("generatePdfPackingSlip: Trying to generate PDF in ".$applicationOutputFilePath);
         $userSecUtil = $this->container->get('user_security_utility');
         
         if( file_exists($applicationOutputFilePath) ) {
@@ -910,12 +938,13 @@ class PdfGenerator
     //http://wkhtmltopdf.org must be installed on server
     public function generateProjectPdf($project,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
-        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        $logger->notice("generateProjectPdf: Trying to generate PDF in ".$applicationOutputFilePath);
         $userSecUtil = $this->container->get('user_security_utility');
 
         //wkhtmltopdf doesn't like localhost:8000, caused by the PHP built-in server
         //https://github.com/barryvdh/laravel-snappy/issues/9
         $port = $request->getPort();
+        $logger->notice("generateProjectPdf: port=".$port);
         //exit('$port='.$port);
         if( $port == 8000 ) {
             $logger->notice("generateProjectPdf: Skip PDF generation: wkhtmltopdf does not run correctly on localhost:8000");
@@ -925,10 +954,12 @@ class PdfGenerator
         //Make sure $wkhtmltopdfpath correctly set in the site setting
         $wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
         //$logger->notice("generateProjectPdf: wkhtmltopdfpath=".$wkhtmltopdfpath);
+
         //echo "wkhtmltopdfpath=[$wkhtmltopdfpath] <br>";
         $wkhtmltopdfpathClean = str_replace('"','',$wkhtmltopdfpath);
         //echo "wkhtmltopdfpathClean=[$wkhtmltopdfpathClean] <br>";
-        $logger->notice("generateProjectPdf: wkhtmltopdfpathClean=".$wkhtmltopdfpathClean.", wkhtmltopdfpath=".$wkhtmltopdfpath);
+        //$logger->notice("generateProjectPdf: wkhtmltopdfpathClean=".$wkhtmltopdfpathClean.", wkhtmltopdfpath=".$wkhtmltopdfpath);
+
         if (file_exists($wkhtmltopdfpathClean)) {
             //echo "The file $wkhtmltopdfpath exists <br>";
         } else {
