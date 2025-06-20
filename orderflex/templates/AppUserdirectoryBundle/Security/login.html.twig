@@ -324,16 +324,13 @@
                         $('#password').hide();
                     }
 
-//                    if( loginType == 'local-user' ) {
-//                        $('#login-instruction').hide();
-//                    } else {
-//                        $('#login-instruction').show();
-//                    }
                     changeLoginInstruction(loginType);
                 });
 
             }
 
+            //This is a questionable feature to hide the login instruction since it
+            // can be changed in the site settings and might be different than 'Please use your CWID to log in.'
             function changeLoginInstruction( loginType ) {
                 if( loginType == null ) {
                     loginType = $('#usernametypeid_show').val();

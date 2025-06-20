@@ -171,20 +171,20 @@
 
         <br><br>
         <div id="login-instruction">
-        <p>
-            {% set loginInstruction = user_security_utility.getSiteSettingParameter('loginInstruction') %}
-            {% if loginInstruction and loginInstruction != -1 %}
-                {{ loginInstruction|raw }}
-            {% else %}
-                Please use your
-                <a href="https://its.weill.cornell.edu/services/accounts-and-access/center-wide-id">CWID</a>
-                {% if title == "Scan Orders" %}
-                    or your
-                    <a href="http://c.med.cornell.edu/">External Authentication</a> account
+            <p>
+                {% set loginInstruction = user_security_utility.getSiteSettingParameter('loginInstruction') %}
+                {% if loginInstruction and loginInstruction != -1 %}
+                    {{ loginInstruction|raw }}
+                {% else %}
+                    Please use your
+                    <a href="https://its.weill.cornell.edu/services/accounts-and-access/center-wide-id">CWID</a>
+                    {% if title == "Scan Orders" %}
+                        or your
+                        <a href="http://c.med.cornell.edu/">External Authentication</a> account
+                    {% endif %}
+                    to log in.
                 {% endif %}
-                to log in.
-            {% endif %}
-        </p>
+            </p>
         </div>
 
         {% if user_security_utility.isSelfSignUp(sitename) %}

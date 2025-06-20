@@ -332,10 +332,27 @@ class Init:
         # oleg_userdirectorybundle_siteparameters_submit
         self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
 
+        print("academicYearEnd populated")
+
         #Set UsernameType: Local User as default (set display order to -1)
         #Move 'Local User' to add as the first one in generateUsernameTypes()
 
-        print("academicYearEnd populated")
+        #For the demo site only, in Site Settings, change “Please use your CWID to log in.”
+        # to “Institutional account integration is disabled on the Demo site.”
+        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=loginInstruction"
+        driver.get(url)
+        time.sleep(3)
+
+        login_instruction = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_loginInstruction")
+        login_instruction.clear()
+        time.sleep(1)
+        login_instruction_text = "Institutional account integration is disabled on the Demo site."
+        login_instruction.send_keys(login_instruction_text)
+        time.sleep(3)
+        self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
+        time.sleep(1)
+
+        print("loginInstruction changed")
 
     def remove_crons(self):
         driver = self.automation.get_driver()
@@ -414,6 +431,7 @@ def main(mailer_user,mailer_password):
     #run_by_symfony_command = True
     run_by_symfony_command = False
     automation = WebAutomation(run_by_symfony_command)
+    automation.login_to_site()
     # Initialize using https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
     if mailer_user is None:
         mailer_user = "maileruser"
