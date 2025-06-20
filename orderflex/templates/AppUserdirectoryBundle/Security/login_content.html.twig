@@ -170,6 +170,7 @@
     <div class="text-center">
 
         <br><br>
+        <div id="login-instruction">
         <p>
             {% set loginInstruction = user_security_utility.getSiteSettingParameter('loginInstruction') %}
             {% if loginInstruction and loginInstruction != -1 %}
@@ -184,6 +185,7 @@
                 to log in.
             {% endif %}
         </p>
+        </div>
 
         {% if user_security_utility.isSelfSignUp(sitename) %}
             <p>

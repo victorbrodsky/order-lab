@@ -322,8 +322,23 @@
                     if( loginType == 'saml-sso' ) {
                         $('#password').hide();
                     }
+
+                    if( loginType == 'local-user' ) {
+                        $('#login-instruction').hide();
+                    } else {
+                        $('#login-instruction').show();
+                    }
+                    changeLoginInstruction(loginType);
                 });
 
+            }
+
+            function changeLoginInstruction( loginType ) {
+                if( loginType == 'local-user' ) {
+                    $('#login-instruction').hide();
+                } else {
+                    $('#login-instruction').show();
+                }
             }
 
             function validateUsername() {
