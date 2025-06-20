@@ -153,6 +153,7 @@
                 userPnotifyDisplay();
                 regularCombobox();
                 loginTypeOnchange();
+                changeLoginInstruction();
 
                 $("#login-form").on("submit", function () {
                     setFullUsername();
@@ -323,17 +324,22 @@
                         $('#password').hide();
                     }
 
-                    if( loginType == 'local-user' ) {
-                        $('#login-instruction').hide();
-                    } else {
-                        $('#login-instruction').show();
-                    }
+//                    if( loginType == 'local-user' ) {
+//                        $('#login-instruction').hide();
+//                    } else {
+//                        $('#login-instruction').show();
+//                    }
                     changeLoginInstruction(loginType);
                 });
 
             }
 
             function changeLoginInstruction( loginType ) {
+                if( loginType == null ) {
+                    loginType = $('#usernametypeid_show').val();
+                }
+                console.log('changeLoginInstruction: loginType='+loginType);
+
                 if( loginType == 'local-user' ) {
                     $('#login-instruction').hide();
                 } else {
