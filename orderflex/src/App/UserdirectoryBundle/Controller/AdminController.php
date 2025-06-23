@@ -292,8 +292,29 @@ class AdminController extends OrderAbstractController
                     $entity->setConnectionChannel("https");
                     $entity->setUrlConnectionChannel("https");
                     //$em->flush($entity);
+
+
+
                 }
                 $em->flush();
+            }
+
+            //TODO: change site settings according to the tenant
+            #For the demo site only, in Site Settings, change “Please use your CWID to log in.” to
+            # “Institutional account integration is disabled on the Demo site.”
+            #For the Test site only (https://view.online/c/test-institution/test-department/translational-research/login ),
+            # in Site Settings, change “Please use your CWID to log in.” to “Please use your institution’s account to log in.”
+            //$domain = $request->getHost(); // e.g., example.com
+            //$scheme = $request->getScheme(); // http or https
+            //$fullDomain = $scheme . '://' . $domain;
+            $fullDomain = trim($request->getPathInfo());
+            if (str_contains($fullDomain, 'demo-institution')) {
+                // 'demo' is present in the domain => setLoginInstruction('Institutional account integration is disabled on the Demo site.');
+                echo "'demo' found in domain.";
+            }
+            if (str_contains($fullDomain, 'test-institution')) {
+                // 'test' is present in the domain => setLoginInstruction('Please use your institution’s account to log in.');
+                echo "'test' found in domain.";
             }
 
             $logger->notice('Start updateApplication (run deploy script)');
@@ -310,12 +331,6 @@ class AdminController extends OrderAbstractController
             //exit('users already exists');
             $logger->notice('Finished initialization. '.$adminRes);
         }
-
-        //testing
-        $domain = $request->getHost(); // e.g., example.com
-        $scheme = $request->getScheme(); // http or https
-        $fullDomain = $scheme . '://' . $domain;
-        $adminRes = $adminRes . "; " .$fullDomain;
 
         $this->addFlash(
             'notice',
