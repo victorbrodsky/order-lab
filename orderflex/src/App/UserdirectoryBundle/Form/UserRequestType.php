@@ -142,7 +142,6 @@ class UserRequestType extends AbstractType
             'multiple' => false,
             //'empty_value' => false,
             'choice_label' => 'getNodeNameWithRoot',
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             'class' => Institution::class,
             'choices' => $requestedScanOrderInstitutionScope,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
@@ -157,12 +156,10 @@ class UserRequestType extends AbstractType
             if( $title ) {
                 $institution = $title->getRequestedScanOrderInstitutionScope();
                 if( $institution ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                     $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
                 }
             }
             if( !$label ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                 $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
             }
 
@@ -221,17 +218,23 @@ class UserRequestType extends AbstractType
                 'required' => true,
                 //'multiple' => true,
                 //'empty_value' => false,
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
                 'class' => SourceSystemList::class,
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         } else {
+            //TODO: set the value of the “System for which the account is being requested:” field to the value that corresponds to the URL
+            //$fullDomain = trim($request->getPathInfo());
+            $systemAccountRequestName = 'ORDER Employee Directory';
+            $systemAccountRequest = $this->params['em']->getRepository(SourceSystemList::class)->findOneByName($systemAccountRequestName);
+            //dump($systemAccountRequest);
+            //exit('111');
+
             $builder->add('systemAccountRequest', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SourceSystemList'] by [SourceSystemList::class]
                 'class' => SourceSystemList::class,
                 //'choice_label' => 'name',
                 'label' => 'System for which the account is being requested:',
                 'required' => false,
+                'data' => $systemAccountRequest,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
