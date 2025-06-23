@@ -345,7 +345,7 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Set DB username for order-lab-"$1" ${NC}
 	sed -i -e "s/database_user: bash_dbuser/database_user: symfony/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 
-  echo -e ${COLOR} Set DB database_password for order-lab-"$1" ${NC}
+    echo -e ${COLOR} Set DB database_password for order-lab-"$1" ${NC}
 	sed -i -e "s/database_password: bash_dbpass/database_password: symfony/g" "$bashpath"/order-lab-"$1"/orderflex/config/parameters.yml
 
 	echo -e ${COLOR} Set tenant_role as "$1" for order-lab-"$1" ${NC}
@@ -387,10 +387,10 @@ f_create_single_order_instance () {
 	bash "$bashpath"/order-lab-"$1"/packer/additional.sh "$bashpath"/order-lab-"$1"
 
 	echo -e ${COLOR} Install db.config for python postgres-manage-python for order-lab-"$1" ${NC}
-  cp "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-  sed -i -e "s/dbname/$1/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-  sed -i -e "s/dbusername/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-  sed -i -e "s/dbuserpassword/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+    cp "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbname/$1/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbusername/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+    sed -i -e "s/dbuserpassword/symfony/g" "$bashpath"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
 
 	changedir "$bashpath"/order-lab-"$1"/orderflex
 	echo -e ${COLOR} Current folder before deploy tenant for order-lab-"$1": ${NC}
@@ -661,6 +661,16 @@ function changedir() {
   cd $1
 }
 
+#For the demo site only, in Site Settings, change “Please use your CWID to log in.” to
+# “Institutional account integration is disabled on the Demo site.”
+#For the Test site only (https://view.online/c/test-institution/test-department/translational-research/login ),
+# in Site Settings, change “Please use your CWID to log in.” to “Please use your institution’s account to log in.”
+#Run command to make changes to loginInstruction
+#NOT USED: make site settings adjustments in the /first-time-login-generation-init/ controller
+#f_sitesettings_changes() {
+    #tenantapptest
+    #tenantappdemo
+#}
 
 if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 	then
@@ -678,6 +688,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			f_start_all_httpd
 			f_restart_phpfpm
 			f_install_certbot homepagemanager 8081
+			#f_sitesettings_changes
 		else
 			echo -e ${COLOR} False ${NC}
 			f_test

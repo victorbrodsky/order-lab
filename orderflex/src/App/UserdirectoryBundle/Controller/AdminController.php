@@ -206,6 +206,7 @@ class AdminController extends OrderAbstractController
     /**
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/
      * run: http://localhost/order/directory/admin/first-time-login-generation-init/https
+     * https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init
      */
     #[Route(path: '/first-time-login-generation-init/', name: 'first-time-login-generation-init')]
     #[Route(path: '/first-time-login-generation-init/https', name: 'first-time-login-generation-init-https')]
@@ -310,6 +311,11 @@ class AdminController extends OrderAbstractController
             $logger->notice('Finished initialization. '.$adminRes);
         }
 
+        //testing
+        $domain = $request->getHost(); // e.g., example.com
+        $scheme = $request->getScheme(); // http or https
+        $fullDomain = $scheme . '://' . $domain;
+        $adminRes = $adminRes . "; " .$fullDomain;
 
         $this->addFlash(
             'notice',
