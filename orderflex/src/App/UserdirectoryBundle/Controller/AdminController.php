@@ -308,6 +308,7 @@ class AdminController extends OrderAbstractController
                     // 'demo' is present in the domain => setLoginInstruction('Institutional account integration is disabled on the Demo site.');
                     //echo "'demo' found in domain.";
                     $entity->setLoginInstruction("Institutional account integration is disabled on the Demo site.");
+                    $entity->setNoticeHasLdapAccount("Do you (the person for whom the account is being requested) have a an existing institutional username?");
                 }
                 if (str_contains($fullDomain, 'test-institution')) {
                     // 'test' is present in the domain => setLoginInstruction('Please use your institution’s account to log in.');

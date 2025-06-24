@@ -222,14 +222,6 @@ class UserRequestType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         } else {
-            //TODO: set the value of the “System for which the account is being requested:” field to the value that corresponds to the URL
-            //$fullDomain = trim($this->params['request']->getPathInfo());
-            //echo '$fullDomain='.$fullDomain.'<br>';
-            //$systemAccountRequestName = 'ORDER Employee Directory';
-            //$systemAccountRequest = $this->params['em']->getRepository(SourceSystemList::class)->findOneByName($systemAccountRequestName);
-            //dump($systemAccountRequest);
-            //exit('111');
-
             $builder->add('systemAccountRequest', EntityType::class, array(
                 'class' => SourceSystemList::class,
                 //'choice_label' => 'name',

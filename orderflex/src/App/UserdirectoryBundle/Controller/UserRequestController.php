@@ -136,6 +136,7 @@ class UserRequestController extends OrderAbstractController
     {
         //exit("createAction");
         $securityUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
 
         $entity  = new UserRequest();
         $entity->setSiteName($this->siteName);
@@ -202,6 +203,17 @@ class UserRequestController extends OrderAbstractController
                 ));
             }
 
+            //Send email to admin
+            $systemEmail = $securityUtil->getSiteSettingParameter('siteEmail');
+            $subject = "New account request has been submitted for ".$this->siteName;
+            $reason = $entity->getRequest();
+            $emailBody = "New account request has been submitted for ".$this->siteName .
+                " by " . $entity->getFirstName(). " " . $entity->getName() .
+                ", email: " . $entity->getEmail() . ", reason: " . $reason
+            ;
+            $emailUtil->sendEmail( $systemEmail, $subject, $emailBody );
+
+
             return $this->redirect( $this->generateUrl($this->siteName.'_login') );
         }
 
@@ -216,6 +228,7 @@ class UserRequestController extends OrderAbstractController
 
     /**
      * Displays a form to create a new UserRequest entity.
+     * http://127.0.0.1/translational-research/account-requests/new
      */
     #[Route(path: '/account-requests/new', name: 'employees_accountrequest_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
