@@ -149,9 +149,9 @@ class UserRequestController extends OrderAbstractController
             array('orderinlist' => 'ASC')
         );
 
-        $params = $this->getParams($this->siteName);
+        $params = $this->getParams($this->siteName, $request);
 
-        $form = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
+        $form = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params)); //create POST
 
         $form->handleRequest($request);
 
@@ -218,7 +218,7 @@ class UserRequestController extends OrderAbstractController
      */
     #[Route(path: '/account-requests/new', name: 'employees_accountrequest_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
-    public function newAction()
+    public function newAction( Request $request )
     {
         $entity = new UserRequest();
         $entity->setSiteName($this->siteName);
@@ -233,9 +233,9 @@ class UserRequestController extends OrderAbstractController
             array('orderinlist' => 'ASC')
         );
         
-        $params = $this->getParams($this->siteName);
+        $params = $this->getParams($this->siteName, $request);
 
-        $form = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
+        $form = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params)); //create GET
 
         return array(
             'entity' => $entity,
@@ -318,7 +318,7 @@ class UserRequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $entity = new UserRequest();
 
-        $params = $this->getParams($this->siteName);
+        $params = $this->getParams($this->siteName, $request);
 
         $form = $this->createForm(UserRequestApproveType::class,$entity,array('form_custom_value'=>$params));
         $form->handleRequest($request);
@@ -439,7 +439,7 @@ class UserRequestController extends OrderAbstractController
         return $this->redirect($this->generateUrl($this->siteName.'_accountrequest'));
     }
 
-    public function getParams( $sitename ) {
+    public function getParams( $sitename, $request=NULL ) {
 
         $securityUtil = $this->container->get('user_security_utility');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -459,6 +459,7 @@ class UserRequestController extends OrderAbstractController
 
         $params['institution'] = $department;
         $params['sitename'] = $sitename;
+        $params['request'] = $request;
 
         //Institution
         //$requestedScanOrderInstitutionScope = $em->getRepository('AppUserdirectoryBundle:Institution')->findBy(array('level'=>0));
@@ -546,7 +547,7 @@ class UserRequestController extends OrderAbstractController
 
         $params = $this->getParams();
 
-        $editForm = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
+        $editForm = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params)); //edit GET
 
         $deleteForm = $this->createDeleteForm($id);
 
@@ -583,7 +584,7 @@ class UserRequestController extends OrderAbstractController
 
         $params = $this->getParams();
 
-        $editForm = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
+        $editForm = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params)); //edit PUT
 
         $editForm->handleRequest($request);
 

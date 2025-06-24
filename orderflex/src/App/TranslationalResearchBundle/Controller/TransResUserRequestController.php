@@ -49,7 +49,7 @@ class TransResUserRequestController extends UserRequestController
      */
     #[Route(path: '/account-requests/new', name: 'translationalresearch_accountrequest_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
-    public function newAction()
+    public function newAction( Request $request )
     {
         return parent::newAction();
     }
