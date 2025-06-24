@@ -49,7 +49,7 @@ class DashboardUserRequestController extends UserRequestController
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function newAction( Request $request )
     {
-        return parent::newAction();
+        return parent::newAction($request);
     }
 
     /**
