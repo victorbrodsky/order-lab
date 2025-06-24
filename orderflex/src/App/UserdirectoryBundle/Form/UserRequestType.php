@@ -223,10 +223,10 @@ class UserRequestType extends AbstractType
             ));
         } else {
             //TODO: set the value of the “System for which the account is being requested:” field to the value that corresponds to the URL
-            $fullDomain = trim($this->params['request']->getPathInfo());
-            echo '$fullDomain='.$fullDomain.'<br>';
-            $systemAccountRequestName = 'ORDER Employee Directory';
-            $systemAccountRequest = $this->params['em']->getRepository(SourceSystemList::class)->findOneByName($systemAccountRequestName);
+            //$fullDomain = trim($this->params['request']->getPathInfo());
+            //echo '$fullDomain='.$fullDomain.'<br>';
+            //$systemAccountRequestName = 'ORDER Employee Directory';
+            //$systemAccountRequest = $this->params['em']->getRepository(SourceSystemList::class)->findOneByName($systemAccountRequestName);
             //dump($systemAccountRequest);
             //exit('111');
 
@@ -235,7 +235,7 @@ class UserRequestType extends AbstractType
                 //'choice_label' => 'name',
                 'label' => 'System for which the account is being requested:',
                 'required' => false,
-                'data' => $systemAccountRequest,
+                'data' => $this->params['systemRequested'],
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')

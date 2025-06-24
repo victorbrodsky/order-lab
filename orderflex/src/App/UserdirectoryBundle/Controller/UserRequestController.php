@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\UserdirectoryBundle\Entity\SourceSystemList;
 use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 
 
@@ -459,7 +460,10 @@ class UserRequestController extends OrderAbstractController
 
         $params['institution'] = $department;
         $params['sitename'] = $sitename;
-        $params['request'] = $request;
+        //$params['request'] = $request;
+
+        $systemRequested = $this->getSystemRequestedBySitename($sitename);
+        $params['systemRequested'] = $systemRequested;
 
         //Institution
         //$requestedScanOrderInstitutionScope = $em->getRepository('AppUserdirectoryBundle:Institution')->findBy(array('level'=>0));
@@ -649,5 +653,51 @@ class UserRequestController extends OrderAbstractController
             ->getForm()
             ;
     }
+
+    private function getSystemRequestedBySitename( $sitename ) {
+        $systemAccountRequest = NULL;
+        $name = NULL;
+
+        switch( $sitename ) {
+            case "employees":
+                $name = "ORDER Employee Directory";
+                break;
+            case "calllog":
+                $name = "ORDER Call Log Book";
+                break;
+            case "dashboard":
+                $name = "ORDER Employee Directory";
+                break;
+            case "deidentifier":
+                $name = "ORDER Deidentifier";
+                break;
+            case "fellapp":
+                $name = "ORDER Fellowship Applications";
+                break;
+            case "scan":
+                $name = "ORDER Scan Order";
+                break;
+            case "resapp":
+                $name = "ORDER Employee Directory";
+                break;
+            case "translationalresearch":
+                $name = "ORDER Translational Research";
+                break;
+            case "vacreq":
+                $name = "ORDER Vacation Request";
+                break;
+            default:
+                $name = "ORDER Employee Directory";
+        }
+
+        if( $name ) {
+            $systemAccountRequest = $this->getDoctrine()->getManager()->getRepository(SourceSystemList::class)->findOneByName($name);
+        }
+
+        //echo '$systemRequested='.$systemAccountRequest.'<br>';
+
+        return $systemAccountRequest;
+    }
+
     
 }
