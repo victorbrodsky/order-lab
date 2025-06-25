@@ -163,6 +163,13 @@
             {#{{ form_errors(form) }}#}
         {#</div>#}
 
+        <div id="form-prototype-data"
+             {#data-prototype-fellapp-interviews = "{{ fellappmacros.interviewForm(form.interviews,cycle,'vacreq-interviews','prototype', sitename,1)|e }}"#}
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('vacreq_gallery') }}"
+             data-userid = "{{ entity.user.id }}"
+        ></div>
+
         {% if not form.vars.valid %}
             {#form has error!!!!!!!!!#}
             <div class="alert alert-danger" style="background-color: #f2dede; border-color: #ebccd1; color: #a94442;">
@@ -360,6 +367,7 @@
                         {#{% if form.travelIntakeForms is defined %}#}
                             <div class="well form-element-holder user-travelIntakeForms">
                                 <label class="col-xs-12 control-label">Travel Intake Form</label>
+                                <p class="text-danger">Complete the Travel Intake form for Spend Control Committee Approval</p>
                                 <div class="row withpaddingtop">
                                     <div class="col-xs-12">
                                         {{ usermacros.documentsContainer(null,form.requestBusiness.travelIntakeForms,cycle,'noprototype',8,'default','Travel Intake Form',"asForm") }}
@@ -1219,6 +1227,13 @@
                 if( !error && !numberOfDays ) {
                     error = "Please enter the number of work days off-site";
                     businessRequest.find('.vacreq-numberOfDays').addClass('alert-danger');
+                }
+
+                //Travel intake form
+                var travelIntakeForm = businessRequest.find('#oleg_vacreqbundle_request_requestBusiness_travelIntakeForms_0_id').val();
+                if( !error && !travelIntakeForm ) {
+                    error = "Please upload the travel intake form";
+                    //businessRequest.find('.vacreq-expenses').addClass('alert-danger');
                 }
 
                 var expenses = businessRequest.find('.vacreq-expenses').val();
