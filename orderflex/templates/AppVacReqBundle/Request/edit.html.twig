@@ -355,6 +355,20 @@
                         {{ vacreqmacros.request_inputWithCalculateBtn(form.requestBusiness.numberOfDays) }}
                         {#{{ vacreqmacros.request_dateWithCalculateBtn(form.requestBusiness.firstDayBackInOffice) }}#}
 
+                        {#travelIntakeForms#}
+                        {#{{ formmacros.simplefield( "Test:", "test", "input", "disabled" ) }}#}
+                        {#{% if form.travelIntakeForms is defined %}#}
+                            <div class="well form-element-holder user-travelIntakeForms">
+                                <label class="col-xs-12 control-label">Travel Intake Form</label>
+                                <div class="row withpaddingtop">
+                                    <div class="col-xs-12">
+                                        {{ usermacros.documentsContainer(null,form.requestBusiness.travelIntakeForms,cycle,'noprototype',8,'default','Travel Intake Form',"asForm") }}
+                                        {#{{ usermacros.documentsContainer(null,form.coverLetters,cycle,'noprototype',8,'default','Fellowship Cover Letter') }}#}
+                                    </div>
+                                </div>
+                            </div>
+                        {#{% endif %}#}
+
                         {{ formmacros.checkbox(form.requestBusiness.paidByOutsideOrganization) }}
                         {{ formmacros.field(form.requestBusiness.expenses) }}
 

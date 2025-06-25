@@ -126,6 +126,16 @@ class PostgresMigration extends AbstractMigration
 
         $newline = "\n";
 
+        //New style nowdoc:
+        // $this->addSql(<<<'SQL'ALTER TABLE fellapp_fellapp_coverletter DROP CONSTRAINT fellapp_fellapp_coverletter_pkeySQL);
+        //So, the sql has prepended empty spaces
+        $sql = trim($sql);
+
+//        echo $this->counter.": sql=".$sql.$newline;
+//        if (str_contains($sql, 'fellapp_fellapp_coverletter_pkey')) {
+//            exit('111');
+//        }
+
         //Always skip: An exception occurred while executing 'DROP INDEX "primary"':
         if( $sql == 'DROP INDEX "primary"' ) {
             echo $this->counter.":###Ignore1 ".$sql.$newline;
@@ -182,23 +192,30 @@ class PostgresMigration extends AbstractMigration
         }
 
         //Case: ALTER TABLE fellapp_fellapp_coverletter DROP CONSTRAINT fellapp_fellapp_coverletter_pkey
+        //if( str_contains((string)$sql, 'DROP CONSTRAINT ') ) {
         if( strpos((string)$sql, 'DROP CONSTRAINT ') !== false ) {
             $sqlArr = explode(" ",$sql);
+            //dump($sqlArr);
             if( count($sqlArr) == 6 ) {
                 //We need the last index 5
                 $sqlIndex = $sqlArr[5];
+                echo '$sqlIndex='.$sqlIndex.$newline;
                 if( str_contains($sqlIndex,'_pkey') ) {
                     echo $this->counter.":###Ignore6 ".$sql.$newline;
                     return; // FALSE;
                 }
             }
         }
+//        else {
+//            echo $this->counter.": NOTFOUND DROP CONSTRAINT ".$sql.$newline;
+//        }
 
         //ALTER INDEX idx_7ecb11f7378898f400000 RENAME TO IDX_7ECB11F7378898F4
 
         //if( strpos((string)$sql, 'idx_7ecb11f7378898f400000') !== false ) {
         //    exit("exit: ".$sql);
         //}
+
 
         $this->processedCounter ++;
         $msg = $this->counter."; processedCounter=".$this->processedCounter.": Process sql=".$sql;

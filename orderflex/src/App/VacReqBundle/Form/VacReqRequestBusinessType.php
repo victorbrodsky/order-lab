@@ -18,7 +18,9 @@
 namespace App\VacReqBundle\Form;
 
 
+use App\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -63,7 +65,17 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
             //'attr' => array('class' => 'form-control'),
             'disabled' => ($this->params['review'] ? true : false)
         ));
-
+        
+        $builder->add('travelIntakeForms', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Complete the Travel Intake form for Spend Control Committee Approval:',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
 
     }
 

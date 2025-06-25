@@ -24,6 +24,8 @@
 
 namespace App\VacReqBundle\Entity;
 
+use App\UserdirectoryBundle\Entity\Document;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
@@ -41,8 +43,24 @@ class VacReqRequestBusiness extends VacReqRequestBase
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $paidByOutsideOrganization;
 
+    /**
+     * Travel Intake form (similarly to irbApprovalLetters)
+     **/
+    #[ORM\JoinTable(name: 'vacreq_business_document')]
+    #[ORM\JoinColumn(name: 'business_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
+    private $travelIntakeForms;
+    
 
+    public function __construct($status='pending') {
+        parent::__construct($status);
 
+        $this->travelIntakeForms = new ArrayCollection();
+
+        //$this->addTravelIntakeForm( new Document());
+    }
 
     /**
      * @return mixed
@@ -90,6 +108,33 @@ class VacReqRequestBusiness extends VacReqRequestBase
     public function setPaidByOutsideOrganization($paidByOutsideOrganization)
     {
         $this->paidByOutsideOrganization = $paidByOutsideOrganization;
+    }
+
+
+    public function addTravelIntakeForm($item)
+    {
+        if( $item && !$this->travelIntakeForms->contains($item) ) {
+            $this->travelIntakeForms->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeTravelIntakeForm($item)
+    {
+        $this->travelIntakeForms->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getTravelIntakeForms()
+    {
+        return $this->travelIntakeForms;
+    }
+    public function getSingleTravelIntakeForm()
+    {
+        $docs = $this->getTravelIntakeForms();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
     }
 
 
