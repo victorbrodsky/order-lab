@@ -19,6 +19,7 @@ namespace App\VacReqBundle\Controller;
 
 
 
+use App\UserdirectoryBundle\Entity\Document;
 use App\VacReqBundle\Entity\VacReqRequestTypeList; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequestTypeList
 
 
@@ -283,6 +284,11 @@ class RequestController extends OrderAbstractController
             // IF (and only if) the automatically calculated quantity of total days away was changed by the submitter to a different value.
             //$message = $vacreqCalendarUtil->getHolidaysNote($entity);
             //exit("getHolidaysNote: ".$message);
+
+            if( $entity->hasBusinessRequest() ) {
+                $em->getRepository(Document::class)->processDocuments($entity->getRequestBusiness(), 'travelIntakeForm');
+                //exit('111');
+            }
 
             $testing = false;
             //$testing = true;

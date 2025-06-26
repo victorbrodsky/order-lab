@@ -30,7 +30,7 @@ class DocumentRepository extends EntityRepository {
     public function processDocuments($documentHolder, $docfieldname=null, $docType=null, $attachmentHolder=null) {
 
         if( $documentHolder == null ) {
-            //echo "not exists: document=".$documentHolder."<br>";
+            echo "not exists: document=".$documentHolder."<br>";
             return $documentHolder;
         }
 
@@ -48,11 +48,11 @@ class DocumentRepository extends EntityRepository {
         $addMethodName = "add".$docfieldname;
         $removeMethodName = "remove".$docfieldname;
         $getMethod = "get".$docfieldname."s";
-        //echo "getMethod=".$getMethod."<br>";
-        //echo "removeMethodName=".$removeMethodName."<br>";
+        echo "getMethod=".$getMethod."<br>";
+        echo "removeMethodName=".$removeMethodName."<br>";
 
         if( count($documentHolder->$getMethod()) == 0 ) {
-            //echo "return: no documents<br>";
+            echo "return: no documents<br>";
 
             //prvenet create an empty DocumentContainer and AttachmentContainer: remove DocumentContainer from AttachmentContainer
             //$attachmentContainer = null;
@@ -341,6 +341,9 @@ class DocumentRepository extends EntityRepository {
                 break;
             case 'ResidencyApplication':
                 $doctypeStr = 'Residency Application Document';
+                break;
+            case 'VacReqRequest':
+                $doctypeStr = 'Vacation Request Document';
                 break;
 //            case 'Credentials':
 //                $doctypeStr = 'Medical License Document';
