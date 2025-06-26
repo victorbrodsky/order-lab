@@ -347,6 +347,47 @@ class DefaultController extends OrderAbstractController
     }
 
 
+//    #[Route(path: '/download/new-travel-intake-form', name: 'vacreq_download_new_travel_intake_form')]
+//    public function downloadTravelIntakeIntakeFormAction_old( Request $request ) {
+//        $abspath = 'C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\orderassets\AppVacReqBundle\downloads';
+//        $originalname = null;
+//        $size = null;//$document->getSize();
+//
+//        $downloader = new LargeFileDownloader();
+//        $downloader->downloadLargeFile($abspath, $originalname, $size);
+//
+//        exit;
+//    }
+    #[Route(path: '/download/new-travel-intake-form', name: 'vacreq_download_new_travel_intake_form', methods: ['GET'])]
+    public function downloadTravelIntakeIntakeFormAction(Request $request)
+    {
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        //orderflex\src\App\VacReqBundle\Util\TRAVEL_REQUEST_FORM.pdf
+        $originalname = 'TRAVEL_REQUEST_FORM.pdf';
+        $folderPath = $projectDir.
+            DIRECTORY_SEPARATOR."src".
+            DIRECTORY_SEPARATOR."App".
+            DIRECTORY_SEPARATOR."VacReqBundle".
+            DIRECTORY_SEPARATOR."Util"
+        ;
+        $abspath = $folderPath . DIRECTORY_SEPARATOR . $originalname;
+
+        $size = filesize($abspath);
+
+        if( $abspath || $originalname || $size ) {
+            //echo "abspath=".$abspath."<br>";
+            //echo "originalname=".$originalname."<br>";
+            //echo "$abspath: size=".$size."<br>";
+            $viewType = NULL;
+            $downloader = new LargeFileDownloader();
+            $downloader->downloadLargeFile($abspath, $originalname, $size, true, "view", $viewType);
+        } else {
+            exit ("File $originalname is not available");
+        }
+        exit;
+    }
+
     /**
      * //@Route("/download-spreadsheet-with-ids/{ids}", name="vacreq_download_spreadsheet_get_ids")
      */

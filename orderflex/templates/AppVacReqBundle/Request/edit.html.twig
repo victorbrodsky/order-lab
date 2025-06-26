@@ -368,6 +368,11 @@
                             <div class="well form-element-holder user-travelIntakeForms">
                                 <label class="col-xs-12 control-label">Travel Intake Form</label>
                                 <p class="text-danger">Complete the Travel Intake form for Spend Control Committee Approval</p>
+                                <p>
+                                    You can
+                                    <a href="{{ path(vacreq_sitename~'_download_new_travel_intake_form') }}"
+                                       target="_blank">download the blank form here.</a>
+                                </p>
                                 <div class="row withpaddingtop">
                                     <div class="col-xs-12">
                                         {{ usermacros.documentsContainer(null,form.requestBusiness.travelIntakeForms,cycle,'noprototype',8,'default','Travel Intake Form',"asForm") }}
@@ -1230,11 +1235,10 @@
                 }
 
                 //Travel intake form
-                var travelIntakeForm = businessRequest.find('#oleg_vacreqbundle_request_requestBusiness_travelIntakeForms_0_id').val();
-                if( !error && !travelIntakeForm ) {
-                    error = "Please upload the travel intake form";
-                    //businessRequest.find('.vacreq-expenses').addClass('alert-danger');
-                }
+//                var travelIntakeForm = businessRequest.find('#oleg_vacreqbundle_request_requestBusiness_travelIntakeForms_0_id').val();
+//                if( !error && !travelIntakeForm ) {
+//                    error = "Please upload the travel intake form";
+//                }
 
                 var expenses = businessRequest.find('.vacreq-expenses').val();
                 if( !error && !expenses ) {

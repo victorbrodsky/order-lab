@@ -287,7 +287,6 @@ class RequestController extends OrderAbstractController
 
             if( $entity->hasBusinessRequest() ) {
                 $em->getRepository(Document::class)->processDocuments($entity->getRequestBusiness(), 'travelIntakeForm');
-                //exit('111');
             }
 
             $testing = false;
@@ -905,6 +904,11 @@ class RequestController extends OrderAbstractController
 
                 //re-set final (global) first day away
                 $entity->setFinalFirstDayAway(); //update
+
+                //TODO: processDocument
+                if( $entity->hasBusinessRequest() ) {
+                    $em->getRepository(Document::class)->processDocuments($entity->getRequestBusiness(), 'travelIntakeForm');
+                }
 
                 //echo "0 business req=".$entity->getRequestBusiness()."<br>";
                 //exit('1');
