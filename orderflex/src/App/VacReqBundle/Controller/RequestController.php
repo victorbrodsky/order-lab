@@ -320,6 +320,17 @@ class RequestController extends OrderAbstractController
                 );
             }
 
+            //Attachment
+            $attachmentPath = NULL;
+            $attachmentFilename = NULL;
+            if( $entity->hasBusinessRequest() ) {
+                $travelIntakeForm = $entity->getRequestBusiness()->getSingleTravelIntakeForm();
+                if( $travelIntakeForm ) {
+                    $attachmentPath = $travelIntakeForm->getAttachmentEmailPath();
+                    $attachmentFilename = $travelIntakeForm->getDescriptiveFilename();
+                }
+            }
+
             $subject = $requestName." ID #".$entity->getId()." Confirmation";
             $message = "Dear ".$entity->getUser()->getUsernameOptimal().",".$break.$break;
 
@@ -341,7 +352,15 @@ class RequestController extends OrderAbstractController
             
             $message .= $break."You will be notified once your request is reviewed and its status changes.";
             $message .= $break.$break."**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
-            $emailUtil->sendEmail( $personAwayEmail, $subject, $message, $css, null );
+            $emailUtil->sendEmail(
+                $personAwayEmail,
+                $subject,
+                $message,
+                $css,
+                null,                   //$fromEmail
+                $attachmentPath,        //$attachmentData
+                $attachmentFilename     //$attachmentFilename
+            );
             
             //set confirmation email to approver and email users
             $approversNameStr = $vacreqUtil->sendConfirmationEmailToApprovers( $entity );
