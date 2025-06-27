@@ -4279,6 +4279,16 @@ class VacReqUtil
 
         //$requestName = $entity->getRequestName();
 
+        //Attachment
+        $attachmentPath = NULL;
+        if( $entity->hasBusinessRequest() ) {
+            $travelIntakeForm = $entity->getRequestBusiness()->getSingleTravelIntakeForm();
+            if( $travelIntakeForm ) {
+                $attachmentPath = $travelIntakeForm->getAttachmentEmailPath();
+            }
+        }
+        $logger->notice("travelIntakeForm attachmentPath=$attachmentPath");
+
         $approvers = $this->getRequestApprovers($entity);
         //echo "#### approvers=".count($approvers)."<br>";
 
@@ -4308,7 +4318,15 @@ class VacReqUtil
 
         if( count($approverEmailArr) > 0 ) {
             $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send confirmation emails to approvers=".implode("; ",$approverEmailArr)."; subject=".$subject."; message=".$message);
-            $emailUtil->sendEmail($approverEmailArr, $subject, $message, null, null);
+            $emailUtil->sendEmail(
+                $approverEmailArr,
+                $subject,
+                $message,               //body
+                null,                   //$ccs
+                null,                   //$fromEmail
+                null,                   //$attachmentData
+                $attachmentPath         //$attachmentFilename
+            );
         }
 
         //send email to email users
@@ -4366,7 +4384,15 @@ class VacReqUtil
             //$logger->notice("sendGeneralEmailToApproversAndEmailUsers: emailUserEmailArr count=".count($emailUserEmailArr));
             if (count($emailUserEmailArr) > 0) {
                 $logger->notice("sendGeneralEmailToApproversAndEmailUsers: send a copy of the confirmation emails to email users and supervisors=" . implode("; ", $emailUserEmailArr) . "; subject=" . $subject . "; message=" . $message);
-                $emailUtil->sendEmail($emailUserEmailArr, $subject, $message, null, null);
+                $emailUtil->sendEmail(
+                    $emailUserEmailArr,     //$emails
+                    $subject,               //subject
+                    $message,               //body
+                    null,                   //$ccs
+                    null,                   //$fromEmail
+                    null,                   //$attachmentData
+                    $attachmentPath        //$attachmentFilename
+                );
             }
         }
 

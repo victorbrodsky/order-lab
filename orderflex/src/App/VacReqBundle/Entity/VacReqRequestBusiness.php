@@ -160,6 +160,12 @@ class VacReqRequestBusiness extends VacReqRequestBase
         $res .= "Number of Work Days Off-site: ".$this->getNumberOfDays().$break;
         //$res .= "First Day Back in Office: ".$transformer->transform($this->getFirstDayBackInOffice()).$break;
 
+        if( $this->getSingleTravelIntakeForm() ) {
+            $res .= "Travel Intake Form is provided".$break;
+        } else {
+            $res .= "Travel Intake Form is not provided".$break;
+        }
+
         if( $this->getPaidByOutsideOrganization() ) {
             $paidOutside = "yes";
         } else {

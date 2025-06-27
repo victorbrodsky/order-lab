@@ -282,6 +282,10 @@
             {% endif %}
         {% endif %}
 
+        {% set dropzoneFilesTxt = 'files' %}
+        {% if dz_maxFiles == 1 %}
+            {% set dropzoneFilesTxt = 'file' %}
+        {% endif %}
 
         <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">
 
@@ -291,7 +295,7 @@
                 <input type="hidden" id="documentcontainer-documentmaxfilesize" value="{{ dz_maxFilesize }}">
                 <input type="hidden" id="documentcontainer-document-type" value="{{ dz_documentType }}">
                 <div class="dz-message" style="padding-bottom:5px;">
-                    <span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, {{ dz_maxFilesize }} MB each)</span>
+                    <span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} {{ dropzoneFilesTxt }}, {{ dz_maxFilesize }} MB each)</span>
                 </div>
 
             {% else %}
