@@ -996,6 +996,18 @@ class VacReqUtil
 
         $submitter = $entity->getUser();
 
+        //Attachment
+        $attachmentPath = NULL;
+        $attachmentFilename = NULL;
+        if( $entity->hasBusinessRequest() ) {
+            $travelIntakeForm = $entity->getRequestBusiness()->getSingleTravelIntakeForm();
+            if( $travelIntakeForm ) {
+                $attachmentPath = $travelIntakeForm->getAttachmentEmailPath();
+                $attachmentFilename = $travelIntakeForm->getDescriptiveFilename();
+            }
+        }
+        $logger->notice("travelIntakeForm attachmentPath=$attachmentPath");
+
         if( !$message ) {
             $message = "Dear " . $submitter->getUsernameOptimal() . "," . $break . $break;
 
@@ -1020,7 +1032,15 @@ class VacReqUtil
             $message .= "**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
         }
 
-        $emailUtil->sendEmail( $submitter->getSingleEmail(), $subject, $message, null, null );
+        $emailUtil->sendEmail(
+            $submitter->getSingleEmail(),
+            $subject,
+            $message,
+            null,
+            null,
+            $attachmentPath,
+            $attachmentFilename
+        );
         $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to submitter ".$submitter->getSingleEmail());
 
         //css to email users
@@ -1055,7 +1075,15 @@ class VacReqUtil
             $subject = "Copy of the email: " . $subject;
             $addText = "### This is a copy of the email sent to the submitter " . $submitter . "###";
             $message = $addText . $break . $break . $message;
-            $emailUtil->sendEmail($cssArr, $subject, $message, null, null);
+            $emailUtil->sendEmail(
+                $cssArr,
+                $subject,
+                $message,
+                null,
+                null,
+                $attachmentPath,
+                $attachmentFilename
+            );
 
             $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to all related users " . implode("; ", $cssArr));
         }
@@ -4281,10 +4309,12 @@ class VacReqUtil
 
         //Attachment
         $attachmentPath = NULL;
+        $attachmentFilename = NULL;
         if( $entity->hasBusinessRequest() ) {
             $travelIntakeForm = $entity->getRequestBusiness()->getSingleTravelIntakeForm();
             if( $travelIntakeForm ) {
                 $attachmentPath = $travelIntakeForm->getAttachmentEmailPath();
+                $attachmentFilename = $travelIntakeForm->getDescriptiveFilename();
             }
         }
         $logger->notice("travelIntakeForm attachmentPath=$attachmentPath");
@@ -4324,8 +4354,8 @@ class VacReqUtil
                 $message,               //body
                 null,                   //$ccs
                 null,                   //$fromEmail
-                null,                   //$attachmentData
-                $attachmentPath         //$attachmentFilename
+                $attachmentPath,        //$attachmentData
+                $attachmentFilename     //$attachmentFilename
             );
         }
 
@@ -4390,8 +4420,8 @@ class VacReqUtil
                     $message,               //body
                     null,                   //$ccs
                     null,                   //$fromEmail
-                    null,                   //$attachmentData
-                    $attachmentPath        //$attachmentFilename
+                    $attachmentPath,        //$attachmentData
+                    $attachmentFilename     //$attachmentFilename
                 );
             }
         }
