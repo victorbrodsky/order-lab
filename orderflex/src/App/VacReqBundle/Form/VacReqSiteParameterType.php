@@ -138,6 +138,11 @@ class VacReqSiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('enableTravelIntakeForm', CheckboxType::class, array(
+            'label' => 'Enable Travel intake form:',
+            'required' => false,
+            //'attr' => array('class' => 'form-control')
+        ));
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(

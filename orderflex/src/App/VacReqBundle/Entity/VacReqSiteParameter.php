@@ -130,7 +130,13 @@ class VacReqSiteParameter
     //International Travel Registry
     #[ORM\Column(type: 'text', nullable: true)]
     private $intTravelNote;
-    
+
+    /**
+     * Show "Travel intake form for Spend Control Committee approval" section
+     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $enableTravelIntakeForm;
+
 
     
     public function __construct() {
@@ -401,6 +407,22 @@ class VacReqSiteParameter
     public function setIntTravelNote($intTravelNote)
     {
         $this->intTravelNote = $intTravelNote;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableTravelIntakeForm()
+    {
+        return $this->enableTravelIntakeForm;
+    }
+
+    /**
+     * @param mixed $enableTravelIntakeForm
+     */
+    public function setEnableTravelIntakeForm($enableTravelIntakeForm)
+    {
+        $this->enableTravelIntakeForm = $enableTravelIntakeForm;
     }
 
 
