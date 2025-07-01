@@ -328,31 +328,60 @@
 
             getComboboxCompositetree();
 
+            initHasCwidField();
+
             $('.cwid').val('');
 
             $(".hascwid").find('input:radio').on('change', function () {
                 var checkedValue = $(this).val();
                 //console.log("checkedValue="+checkedValue);
 
-                if (checkedValue == "Yes") {
-                    $("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', false);
-                    //disable all fields, except some
-                    var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password, #usernametypeid_show, #usernametype, #sitename, #csrf_token');
-                    allInputs.prop('disabled', true);
-                    $('#password_field').show();
-                    $('#usernametypeid_show_holder').show();
-                } else {
-                    $('.cwid').val('');
-                    $(":input").prop('disabled', false);
-                    $("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', true);
-                    $('#password_field').hide();
-                    $('#usernametypeid_show_holder').hide();
-                }
+//                if (checkedValue == "Yes") {
+//                    //$("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', false);
+//                    $("#oleg_userdirectorybundle_userrequesttype_cwid").parent().parent().show();
+//                    //disable all fields, except some
+//                    var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password, #usernametypeid_show, #usernametype, #sitename, #csrf_token');
+//                    allInputs.prop('disabled', true);
+//                    $('#password_field').show();
+//                    $('#usernametypeid_show_holder').show();
+//                } else {
+//                    $('.cwid').val('');
+//                    $(":input").prop('disabled', false);
+//                    //$("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', true);
+//                    $("#oleg_userdirectorybundle_userrequesttype_cwid").parent().parent().hide();
+//                    $('#password_field').hide();
+//                    $('#usernametypeid_show_holder').hide();
+//                }
+                changeHasCwidField(checkedValue);
 
             });
 
 
         });
+
+        function initHasCwidField() {
+            var checkedValue = $("#accountrequestform input[type='radio']:checked").val();
+            //console.log('checkedValue='+checkedValue);
+            changeHasCwidField(checkedValue);
+        }
+        function changeHasCwidField( checkedValue ) {
+            if (checkedValue == "Yes") {
+                //$("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', false);
+                $("#oleg_userdirectorybundle_userrequesttype_cwid").parent().parent().show();
+                //disable all fields, except some
+                var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password, #usernametypeid_show, #usernametype, #sitename, #csrf_token');
+                allInputs.prop('disabled', true);
+                $('#password_field').show();
+                $('#usernametypeid_show_holder').show();
+            } else {
+                $('.cwid').val('');
+                $(":input").prop('disabled', false);
+                //$("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', true);
+                $("#oleg_userdirectorybundle_userrequesttype_cwid").parent().parent().hide();
+                $('#password_field').hide();
+                $('#usernametypeid_show_holder').hide();
+            }
+        }
 
         function submitRequestForm() {
 
