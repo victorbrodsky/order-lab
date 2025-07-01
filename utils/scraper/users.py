@@ -126,6 +126,14 @@ class Users:
             #$client->executeScript("$('#s2id_oleg_userdirectorybundle_user_keytype').select2('val','4')");
             #$("#select").select2("val", $("#select option:contains('Text')").val() );
             automation.select_option("s2id_oleg_userdirectorybundle_user_keytype", "ID", "s2id_autogen2_search", "Local User")
+            time.sleep(3)
+            #Triger switch so fields passwords are shown
+            automation.select_option("s2id_oleg_userdirectorybundle_user_keytype", "ID", "s2id_autogen2_search",
+                                     "Active Directory (LDAP)")
+            time.sleep(3)
+            automation.select_option("s2id_oleg_userdirectorybundle_user_keytype", "ID", "s2id_autogen2_search",
+                                     "Local User")
+            time.sleep(3)
             #primaryPublicUserId = driver.find_element(By.ID, "oleg_userdirectorybundle_user_primaryPublicUserId")
             #primaryPublicUserId.send_keys(user['userid'])
             
@@ -189,19 +197,27 @@ class Users:
 
 def main():
     
-    url = "https://view.online/c/demo-institution/demo-department/directory/login"
-    username_text = "administrator"
-    password_text = "1234567890_demo"
-    
-    automation = WebAutomation()
-    automation.login_to_site(url, username_text, password_text)
-    
-    #Create user
+    # url = "https://view.online/c/demo-institution/demo-department/directory/login"
+    # username_text = "administrator"
+    # password_text = "1234567890_demo"
+    #
+    # automation = WebAutomation()
+    # automation.login_to_site(url, username_text, password_text)
+    #
+    # #Create user
+    # users = Users(automation)
+    # users.create_user()
+    # users.check_users()
+    # print("users done!")
+    #
+    # automation.quit_driver()
+    run_by_symfony_command = False
+    automation = WebAutomation(run_by_symfony_command)
+    automation.login_to_site()
     users = Users(automation)
     users.create_user()
     users.check_users()
-    print("users done!")
-
+    time.sleep(3)
     automation.quit_driver()
 
 
