@@ -184,6 +184,20 @@
                 {{ formmacros.field(form.requestedScanOrderInstitutionScope) }}
             {% endif %}
 
+        {#<select id="mySelect">#}
+            {#<option value="apple">Apple</option>#}
+            {#<option value="banana">Banana</option>#}
+        {#</select>#}
+        {#<input type="text" id="newOption" placeholder="Add new option" />#}
+        {#<button onclick="addOption()">Add</button>#}
+
+        <input type="hidden" id="mySelect2" />
+
+
+        {% if form.requestedInstitutionScope is defined %}
+                {{ formmacros.field(form.requestedInstitutionScope) }}
+            {% endif %}
+
             {#{{ formmacros.field(form.institution) }}#}
             {#{{ formmacros.field(form.department) }}#}
             {#{{ formmacros.field(form.services) }}#}
@@ -355,6 +369,25 @@
                 changeHasCwidField(checkedValue);
 
             });
+
+
+            //Testing
+            $('#mySelect2').select2({
+                placeholder: 'Select or add a value',
+                createSearchChoice: function (term, data) {
+                    if ($(data).filter(function () {
+                                return this.text.localeCompare(term) === 0;
+                            }).length === 0) {
+                        return { id: term, text: term };
+                    }
+                },
+                //multiple: true, // optional, if you want to allow multiple selections
+                data: [
+                    { id: 'apple', text: 'Apple' },
+                    { id: 'banana', text: 'Banana' }
+                ]
+            });
+
 
 
         });

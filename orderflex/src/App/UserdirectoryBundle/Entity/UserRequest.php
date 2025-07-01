@@ -98,6 +98,15 @@ class UserRequest
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id')]
     private $requestedScanOrderInstitutionScope;
+
+    //Free text field accepts new values.
+    //The new value does not have to be recorded back into
+    // the Organizational Group hierarchy,
+    // but do save it with the rest of
+    // the “Request account” variables submitted
+    // on this page as a free text typed value
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $requestedInstitutionScope;
     
     #[ORM\Column(type: 'text', nullable: true)]
     private $request;

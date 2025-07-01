@@ -129,54 +129,62 @@ class UserRequestType extends AbstractType
 
 
         //requestedScanOrderInstitutionScope
-    if(1) {
-        if (array_key_exists('requestedScanOrderInstitutionScope', $this->params)) {
-            $requestedScanOrderInstitutionScope = $this->params['requestedScanOrderInstitutionScope'];
-        } else {
-            $requestedScanOrderInstitutionScope = null;
-        }
-        //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
-        $builder->add('requestedScanOrderInstitutionScope', EntityType::class, array(
-            'label' => 'Organizational Group:',
-            'required' => true, //false,
-            'multiple' => false,
-            //'empty_value' => false,
-            'choice_label' => 'getNodeNameWithRoot',
-            'class' => Institution::class,
-            'choices' => $requestedScanOrderInstitutionScope,
-            'attr' => array('class' => 'combobox combobox-width combobox-institution')
-        ));
-    } else {
-        ///////////////////////// tree node /////////////////////////
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $title = $event->getData();
-            $form = $event->getForm();
-
-            $label = null;
-            if( $title ) {
-                $institution = $title->getRequestedScanOrderInstitutionScope();
-                if( $institution ) {
-                    $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
+        if(0) {
+            if (1) {
+                if (array_key_exists('requestedScanOrderInstitutionScope', $this->params)) {
+                    $requestedScanOrderInstitutionScope = $this->params['requestedScanOrderInstitutionScope'];
+                } else {
+                    $requestedScanOrderInstitutionScope = null;
                 }
-            }
-            if( !$label ) {
-                $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
-            }
+                //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
+                $builder->add('requestedScanOrderInstitutionScope', EntityType::class, array(
+                    'label' => 'Organizational Group:',
+                    'required' => true, //false,
+                    'multiple' => false,
+                    //'empty_value' => false,
+                    'choice_label' => 'getNodeNameWithRoot',
+                    'class' => Institution::class,
+                    'choices' => $requestedScanOrderInstitutionScope,
+                    'attr' => array('class' => 'combobox combobox-width combobox-institution')
+                ));
+            } else {
+                ///////////////////////// tree node /////////////////////////
+                $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                    $title = $event->getData();
+                    $form = $event->getForm();
 
-            $form->add('requestedScanOrderInstitutionScope', CustomSelectorType::class, array(
-                'label' => "Organizational Group (".$label."):",
-                'required' => true,
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree',
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
-                    'data-compositetree-classname' => 'Institution'
-                ),
-                'classtype' => 'institution'
-            ));
-        });
-        ///////////////////////// EOF tree node /////////////////////////
-    }
+                    $label = null;
+                    if ($title) {
+                        $institution = $title->getRequestedScanOrderInstitutionScope();
+                        if ($institution) {
+                            $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels($institution) . ":";
+                        }
+                    }
+                    if (!$label) {
+                        $label = $this->params['em']->getRepository(Institution::class)->getLevelLabels(null) . ":";
+                    }
+
+                    $form->add('requestedScanOrderInstitutionScope', CustomSelectorType::class, array(
+                        'label' => "Organizational Group (" . $label . "):",
+                        'required' => true,
+                        'attr' => array(
+                            'class' => 'ajax-combobox-compositetree',
+                            'type' => 'hidden',
+                            'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                            'data-compositetree-classname' => 'Institution'
+                        ),
+                        'classtype' => 'institution'
+                    ));
+                });
+                ///////////////////////// EOF tree node /////////////////////////
+            }
+        }
+        $builder->add( 'requestedInstitutionScope', TextType::class, array(
+            'label' => "Organizational Group:",
+            'required'=> false,
+            "mapped" => false,
+            'attr' => array('class'=>'form-control form-control-modif'),
+        ));
 
 
         
