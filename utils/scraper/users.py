@@ -125,8 +125,8 @@ class Users:
             
             #$client->executeScript("$('#s2id_oleg_userdirectorybundle_user_keytype').select2('val','4')");
             #$("#select").select2("val", $("#select option:contains('Text')").val() );
-            automation.select_option("s2id_oleg_userdirectorybundle_user_keytype", "ID", "s2id_autogen2_search", "Local User")
-            time.sleep(3)
+            #automation.select_option("s2id_oleg_userdirectorybundle_user_keytype", "ID", "s2id_autogen2_search", "Local User")
+            #time.sleep(3)
             #Triger switch so fields passwords are shown
             automation.select_option("s2id_oleg_userdirectorybundle_user_keytype", "ID", "s2id_autogen2_search",
                                      "Active Directory (LDAP)")
