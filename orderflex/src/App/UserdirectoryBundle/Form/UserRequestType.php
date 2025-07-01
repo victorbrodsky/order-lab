@@ -183,10 +183,9 @@ class UserRequestType extends AbstractType
             'label' => "Organizational Group:",
             'required'=> false,
             "mapped" => false,
-            'attr' => array('class'=>'form-control form-control-modif'),
+            //'attr' => array('class'=>'form-control form-control-modif requestedInstitutionScope-select2'),
+            'attr' => array('class'=>'requestedInstitutionScope-select2'),
         ));
-
-
         
         $builder->add('request', TextareaType::class, array(
             'label'=>'Reason for account request:',

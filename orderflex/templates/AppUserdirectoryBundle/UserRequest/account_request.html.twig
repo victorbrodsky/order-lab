@@ -184,17 +184,14 @@
                 {{ formmacros.field(form.requestedScanOrderInstitutionScope) }}
             {% endif %}
 
-        {#<select id="mySelect">#}
-            {#<option value="apple">Apple</option>#}
-            {#<option value="banana">Banana</option>#}
-        {#</select>#}
-        {#<input type="text" id="newOption" placeholder="Add new option" />#}
-        {#<button onclick="addOption()">Add</button>#}
-
-        <input type="hidden" id="mySelect2" />
-
-
-        {% if form.requestedInstitutionScope is defined %}
+            {#<select id="mySelect">#}
+                {#<option value="apple">Apple</option>#}
+                {#<option value="banana">Banana</option>#}
+            {#</select>#}
+            {#<input type="text" id="newOption" placeholder="Add new option" />#}
+            {#<button onclick="addOption()">Add</button>#}
+            {#<input type="hidden" id="mySelect2" />#}
+            {% if form.requestedInstitutionScope is defined %}
                 {{ formmacros.field(form.requestedInstitutionScope) }}
             {% endif %}
 
@@ -372,7 +369,9 @@
 
 
             //Testing
-            $('#mySelect2').select2({
+            const select2Data = {{ orggroups|json_encode|raw }};
+            console.log(select2Data);
+            $('.requestedInstitutionScope-select2').select2({
                 placeholder: 'Select or add a value',
                 createSearchChoice: function (term, data) {
                     if ($(data).filter(function () {
@@ -382,10 +381,11 @@
                     }
                 },
                 //multiple: true, // optional, if you want to allow multiple selections
-                data: [
-                    { id: 'apple', text: 'Apple' },
-                    { id: 'banana', text: 'Banana' }
-                ]
+//                data: [
+//                    { id: 'apple', text: 'Apple' },
+//                    { id: 'banana', text: 'Banana' }
+//                ]
+                data: select2Data
             });
 
 

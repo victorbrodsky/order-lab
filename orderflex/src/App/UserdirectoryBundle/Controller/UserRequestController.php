@@ -251,12 +251,29 @@ class UserRequestController extends OrderAbstractController
 
         $form = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params)); //create GET
 
+        //convert to $orgGroupsSelect2
+//        $choices = [
+//            ['id' => 'apple', 'text' => 'Apple'],
+//            ['id' => 'banana', 'text' => 'Banana'],
+//        ];
+        //dump($params['requestedScanOrderInstitutionScope']);
+        //exit('111');
+//        $orgGroupsSelect2 = [
+//            ['id' => 'apple', 'text' => 'Apple'],
+//            ['id' => 'banana', 'text' => 'Banana'],
+//        ];
+        $orgGroupsSelect2 = array();
+        foreach( $params['requestedScanOrderInstitutionScope'] as $orgGroup) {
+            $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
+        }
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
             'usernametypes' => $usernametypes,
             'sitename' => $this->siteName,
-            'title' => "Account Request for ".$this->siteNameStr
+            'title' => "Account Request for ".$this->siteNameStr,
+            'orggroups' => $orgGroupsSelect2
             //'security' => 'false'
         );
     }
