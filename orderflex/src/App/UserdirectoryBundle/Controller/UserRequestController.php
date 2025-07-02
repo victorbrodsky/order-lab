@@ -157,10 +157,14 @@ class UserRequestController extends OrderAbstractController
 
         $form->handleRequest($request);
 
-        if( !$entity->getRequestedScanOrderInstitutionScope() ) {
-            $error = new FormError("Organizational Group is empty");
-            $form->get('requestedScanOrderInstitutionScope')->addError($error);
-        }
+//        if( !$entity->getRequestedScanOrderInstitutionScope() ) {
+//            $error = new FormError("Organizational Group is empty");
+//            $form->get('requestedScanOrderInstitutionScope')->addError($error);
+//        }
+//        if( !$entity->getRequestedInstitutionScope() ) {
+//            $error = new FormError("Organizational Group is empty");
+//            $form->get('requestedInstitutionScope')->addError($error);
+//        }
 
         if( !$entity->getName() ) {
             $error = new FormError("Last Name is empty");
@@ -217,12 +221,19 @@ class UserRequestController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->siteName.'_login') );
         }
 
+        //Use new free text field requestedInstitutionScope. Populate it with the original requestedScanOrderInstitutionScope
+        $orgGroupsSelect2 = array();
+        foreach( $params['requestedScanOrderInstitutionScope'] as $orgGroup) {
+            $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
+        }
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
             'usernametypes' => $usernametypes,
             'sitename' => $this->siteName,
-            'title' => "Account Request for ".$this->siteNameStr
+            'title' => "Account Request for ".$this->siteNameStr,
+            'orggroups' => $orgGroupsSelect2
         );
     }
 
@@ -262,6 +273,7 @@ class UserRequestController extends OrderAbstractController
 //            ['id' => 'apple', 'text' => 'Apple'],
 //            ['id' => 'banana', 'text' => 'Banana'],
 //        ];
+        //Use new free text field requestedInstitutionScope. Populate it with the original requestedScanOrderInstitutionScope
         $orgGroupsSelect2 = array();
         foreach( $params['requestedScanOrderInstitutionScope'] as $orgGroup) {
             $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
@@ -361,7 +373,8 @@ class UserRequestController extends OrderAbstractController
                 $entity->getUsername() &&
                 $entity->getUsername() != "" &&
                 //count($entity->getRequestedInstitutionalPHIScope()) != 0 &&
-                $entity->getRequestedScanOrderInstitutionScope() &&
+                //$entity->getRequestedScanOrderInstitutionScope() &&
+                $entity->getRequestedInstitutionScope() &&
                 $entity->getUsername()
             ) {
 
@@ -369,7 +382,6 @@ class UserRequestController extends OrderAbstractController
 //            echo "getRequestedScanOrderInstitutionScope=".$entity->getRequestedScanOrderInstitutionScope();
 //            exit();
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
                 $entityDb = $em->getRepository(UserRequest::class)->findOneById($entity->getId());
                 if (!$entityDb) {
                     throw $this->createNotFoundException('Unable to find UserRequest entity with ID:' . $entity->getId());
@@ -378,7 +390,8 @@ class UserRequestController extends OrderAbstractController
                 $entityDb->setStatus('approved');
                 $entityDb->setUsername($entity->getUsername());
                 //$entityDb->setRequestedInstitutionalPHIScope($entity->getRequestedInstitutionalPHIScope());
-                $entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
+                //$entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
+                $entityDb->setRequestedInstitutionScope($entity->getRequestedInstitutionScope());
 
                 $em->persist($entityDb);
                 $em->flush();
@@ -402,7 +415,10 @@ class UserRequestController extends OrderAbstractController
 //                $failedArr[] = "Institution list is empty";
 //            }
 
-                if (!$entity->getRequestedScanOrderInstitutionScope()) {
+//                if (!$entity->getRequestedScanOrderInstitutionScope()) {
+//                    $failedArr[] = "organizational group is empty";
+//                }
+                if (!$entity->getRequestedInstitutionScope()) {
                     $failedArr[] = "organizational group is empty";
                 }
 
@@ -416,7 +432,8 @@ class UserRequestController extends OrderAbstractController
             //Case 2: all other sites, except scan
             if ($entity->getId() &&
                 $entity->getId() != "" &&
-                $entity->getRequestedScanOrderInstitutionScope() &&
+                //$entity->getRequestedScanOrderInstitutionScope() &&
+                $entity->getRequestedInstitutionScope() &&
                 count($entity->getRoles()) > 0
             ) {
                 //exit('Approve ');
@@ -432,7 +449,8 @@ class UserRequestController extends OrderAbstractController
                     $entityDb->setUsername($entity->getUsername());
                 }
 
-                $entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
+                //$entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
+                $entityDb->setRequestedInstitutionScope($entity->getRequestedInstitutionScope());
 
                 if( count($entity->getRoles()) > 0 ) {
                     $entityDb->setRoles( $entity->getRoles() );
@@ -455,7 +473,10 @@ class UserRequestController extends OrderAbstractController
                     $failedArr[] = "Roles are not assigned";
                 }
 
-                if (!$entity->getRequestedScanOrderInstitutionScope()) {
+//                if (!$entity->getRequestedScanOrderInstitutionScope()) {
+//                    $failedArr[] = "organizational group is empty";
+//                }
+                if (!$entity->setRequestedInstitutionScope()) {
                     $failedArr[] = "organizational group is empty";
                 }
 
@@ -585,11 +606,18 @@ class UserRequestController extends OrderAbstractController
 
         $deleteForm = $this->createDeleteForm($id);
 
+        //Use new free text field requestedInstitutionScope. Populate it with the original requestedScanOrderInstitutionScope
+        $orgGroupsSelect2 = array();
+        foreach( $params['requestedScanOrderInstitutionScope'] as $orgGroup) {
+            $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
+        }
+
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'sitename' => $this->siteName
+            'sitename' => $this->siteName,
+            'orggroups' => $orgGroupsSelect2
         );
     }
 
@@ -632,11 +660,18 @@ class UserRequestController extends OrderAbstractController
             //return $this->redirect($this->generateUrl($this->siteName.'_accountrequest_edit', array('id' => $id)));
         }
 
+        //Use new free text field requestedInstitutionScope. Populate it with the original requestedScanOrderInstitutionScope
+        $orgGroupsSelect2 = array();
+        foreach( $params['requestedScanOrderInstitutionScope'] as $orgGroup) {
+            $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
+        }
+
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-            'sitename' => $this->siteName
+            'sitename' => $this->siteName,
+            'orggroups' => $orgGroupsSelect2
         );
     }
     /**

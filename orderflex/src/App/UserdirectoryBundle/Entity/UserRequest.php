@@ -477,6 +477,22 @@ class UserRequest
         return $this->requestedScanOrderInstitutionScope;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRequestedInstitutionScope()
+    {
+        return $this->requestedInstitutionScope;
+    }
+
+    /**
+     * @param mixed $requestedInstitutionScope
+     */
+    public function setRequestedInstitutionScope($requestedInstitutionScope)
+    {
+        $this->requestedInstitutionScope = $requestedInstitutionScope;
+    }
+
 
 
     /**
