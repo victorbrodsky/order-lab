@@ -62,6 +62,21 @@
                 updateConfirm( $(this) );
             });
 
+            //requestedInstitutionScope
+            const select2Data = {{ orggroups|json_encode|raw }};
+            console.log(select2Data);
+            $('.requestedInstitutionScope-select2').select2({
+                placeholder: 'Select or add a value',
+                createSearchChoice: function (term, data) {
+                    if ($(data).filter(function () {
+                                return this.text.localeCompare(term) === 0;
+                            }).length === 0) {
+                        return { id: term, text: term };
+                    }
+                },
+                data: select2Data
+            });
+
         });
 
         //formInputEl: any element inside the form
@@ -152,7 +167,8 @@
                 <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'accreq.phone') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Mobile Phone Number', 'accreq.mobilePhone') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Title', 'accreq.job') }}</th>
-                <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Organizational Group', 'accreq.requestedScanOrderInstitutionScope') }}</th>
+                {#<th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Organizational Group', 'accreq.requestedScanOrderInstitutionScope') }}</th>#}
+                <th class="col-xs-2" style="width:auto;">{{ knp_pagination_sortable(entities, 'Organizational Group', 'accreq.requestedInstitutionScope') }}</th>
                 {#<th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'Service(s)', 'services.name') }}</th>#}
                 <th>{{ knp_pagination_sortable(entities, 'Reason for Account Request', 'accreq.request') }}</th>
@@ -215,7 +231,9 @@
                     {#{{ entity.institution }}#}
                     {#{{ treemacros.compositeTreeNode(form.requestedScanOrderInstitutionScope,'','') }}#}
                     {#<div id="requestedScanOrderInstitutionScope">{{ entity.requestedScanOrderInstitutionScope.getNodeNameWithRoot }}</div>#}
-                    {{ form_widget(forms[loop.index0].requestedScanOrderInstitutionScope) }}
+                    {#{{ form_widget(forms[loop.index0].requestedScanOrderInstitutionScope) }}#}
+                    {#{{ form_widget(forms[loop.index0].requestedInstitutionScope) }}#}
+                    {{ entity.requestedInstitutionScope }}
                 </td>
 
                 {#<td>{{ entity.department }}</td>#}

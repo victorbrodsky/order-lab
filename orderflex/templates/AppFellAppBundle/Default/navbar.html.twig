@@ -174,7 +174,7 @@
 
                             {% if is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
                                 <li><a href="{{ path(fellapp_sitename~'_accessrequest_list') }}">Access Requests</a></li>
-                                {#<li><a href="{{ path(fellapp_sitename~'_accountrequest') }}">Account Requests</a></li>#}
+                                <li><a href="{{ path(fellapp_sitename~'_accountrequest') }}">Account Requests</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_authorized_users') }}">Authorized Users</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_import_populate') }}">Check for new applications now</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_import_populate_letters') }}">Check for new recommendation letters now</a></li>

@@ -182,9 +182,9 @@ class UserRequestType extends AbstractType
         $builder->add( 'requestedInstitutionScope', TextType::class, array(
             'label' => "Organizational Group:",
             'required'=> false,
-            "mapped" => false,
+            //"mapped" => false,
             //'attr' => array('class'=>'form-control form-control-modif requestedInstitutionScope-select2'),
-            'attr' => array('class'=>'requestedInstitutionScope-select2'),
+            'attr' => array('class'=>'combobox combobox-width requestedInstitutionScope-select2'),
         ));
         
         $builder->add('request', TextareaType::class, array(

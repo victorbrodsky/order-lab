@@ -59,23 +59,31 @@ class UserRequestApproveType extends AbstractType
         }
 
 
-        if( array_key_exists('requestedScanOrderInstitutionScope', $this->params) ) {
-            $requestedScanOrderInstitutionScope = $this->params['requestedScanOrderInstitutionScope'];
-        } else {
-            $requestedScanOrderInstitutionScope = null;
+        if(0) {
+            if (array_key_exists('requestedScanOrderInstitutionScope', $this->params)) {
+                $requestedScanOrderInstitutionScope = $this->params['requestedScanOrderInstitutionScope'];
+            } else {
+                $requestedScanOrderInstitutionScope = null;
+            }
+            //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
+            $builder->add('requestedScanOrderInstitutionScope', EntityType::class, array(
+                'label' => 'Organizational Group:',
+                'required' => false,
+                'multiple' => false,
+                //'empty_value' => false,
+                'choice_label' => 'getNodeNameWithRoot',
+                //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+                'class' => Institution::class,
+                //'choices' => $requestedScanOrderInstitutionScope,
+                'attr' => array('class' => 'combobox combobox-width combobox-institution')
+            ));
         }
-        //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
-        $builder->add('requestedScanOrderInstitutionScope', EntityType::class, array(
-            'label' => 'Organizational Group:',
-            'required'=> false,
-            'multiple' => false,
-            //'empty_value' => false,
-            'choice_label' => 'getNodeNameWithRoot',
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-            'class' => Institution::class,
-            //'choices' => $requestedScanOrderInstitutionScope,
-            'attr' => array('class' => 'combobox combobox-width combobox-institution')
-        ));
+
+//        $builder->add( 'requestedInstitutionScope', TextType::class, array(
+//            'label' => "Organizational Group:",
+//            'required'=> false,
+//            'attr' => array('class'=>'combobox combobox-width requestedInstitutionScope-select2'),
+//        ));
 
         //dump($this->params['roles']);
         //exit('111');

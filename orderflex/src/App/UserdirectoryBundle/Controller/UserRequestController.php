@@ -120,10 +120,18 @@ class UserRequestController extends OrderAbstractController
             $forms[] = $this->createForm(UserRequestApproveType::class,$req,array('disabled'=>$disable,'form_custom_value'=>$params))->createView();
         }
 
+        //Use new free text field requestedInstitutionScope. Populate it with the original requestedScanOrderInstitutionScope
+        $orgGroupsSelect2 = array();
+        foreach( $params['requestedScanOrderInstitutionScope'] as $orgGroup) {
+            $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
+        }
+        //$orgGroupsSelect2[] = array('id' => 'test2', 'text' => 'test2');
+
         return array(
             'entities' => $pagination,
             'forms' => $forms,
-            'sitename' => $this->siteName
+            'sitename' => $this->siteName,
+            'orggroups' => $orgGroupsSelect2
         );
     }
 
@@ -161,10 +169,10 @@ class UserRequestController extends OrderAbstractController
 //            $error = new FormError("Organizational Group is empty");
 //            $form->get('requestedScanOrderInstitutionScope')->addError($error);
 //        }
-//        if( !$entity->getRequestedInstitutionScope() ) {
-//            $error = new FormError("Organizational Group is empty");
-//            $form->get('requestedInstitutionScope')->addError($error);
-//        }
+        if( !$entity->getRequestedInstitutionScope() ) {
+            $error = new FormError("Organizational Group is empty");
+            $form->get('requestedInstitutionScope')->addError($error);
+        }
 
         if( !$entity->getName() ) {
             $error = new FormError("Last Name is empty");

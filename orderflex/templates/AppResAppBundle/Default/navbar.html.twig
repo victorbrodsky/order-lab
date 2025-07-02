@@ -192,7 +192,7 @@
 
                             {% if is_granted('ROLE_RESAPP_DIRECTOR') or is_granted('ROLE_RESAPP_COORDINATOR') %}
                                 <li><a href="{{ path(resapp_sitename~'_accessrequest_list') }}">Access Requests</a></li>
-                                {#<li><a href="{{ path(resapp_sitename~'_accountrequest') }}">Account Requests</a></li>#}
+                                <li><a href="{{ path(resapp_sitename~'_accountrequest') }}">Account Requests</a></li>
                                 <li><a href="{{ path(resapp_sitename~'_authorized_users') }}">Authorized Users</a></li>
                                 {#<li><a href="{{ path(resapp_sitename~'_import_populate') }}">Check for new applications now</a></li>#}
                                 {#<li><a href="{{ path(resapp_sitename~'_import_populate_letters') }}">Check for new recommendation letters now</a></li>#}

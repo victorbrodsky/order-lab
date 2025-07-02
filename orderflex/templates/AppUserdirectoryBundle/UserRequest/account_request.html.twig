@@ -368,9 +368,9 @@
             });
 
 
-            //Testing
+            //requestedInstitutionScope
             const select2Data = {{ orggroups|json_encode|raw }};
-            console.log(select2Data);
+//            console.log(select2Data);
             $('.requestedInstitutionScope-select2').select2({
                 placeholder: 'Select or add a value',
                 createSearchChoice: function (term, data) {
@@ -380,11 +380,6 @@
                         return { id: term, text: term };
                     }
                 },
-                //multiple: true, // optional, if you want to allow multiple selections
-//                data: [
-//                    { id: 'apple', text: 'Apple' },
-//                    { id: 'banana', text: 'Banana' }
-//                ]
                 data: select2Data
             });
 
