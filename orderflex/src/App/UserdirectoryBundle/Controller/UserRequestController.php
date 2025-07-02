@@ -484,7 +484,7 @@ class UserRequestController extends OrderAbstractController
 //                if (!$entity->getRequestedScanOrderInstitutionScope()) {
 //                    $failedArr[] = "organizational group is empty";
 //                }
-                if (!$entity->setRequestedInstitutionScope()) {
+                if (!$entity->getRequestedInstitutionScope()) {
                     $failedArr[] = "organizational group is empty";
                 }
 
