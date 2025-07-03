@@ -130,11 +130,17 @@
                         </div>
                         <div class="col-xs-6" align="left">
                             <select id="usernametypeid_show" class="combobox limit-font-size" name="_usernametype">
+                                {#usernametypes={{ usernametypes|length }}#}
                                 {% for  usernametype in usernametypes %}
+                                    usernametype.name={{ usernametype.name }}
+                                    usernametype.abbreviation={{ usernametype.abbreviation }}
                                     {% if user_type is defined and usernametype.name == user_type %}
                                         {% set selected = 'selected="selected"' %}
                                     {% else %}
                                         {% set selected = '' %}
+                                        {% if usernametype.abbreviation == 'ldap-user' %}
+                                            {% set selected = 'selected="selected"' %}
+                                        {% endif %}
                                     {% endif %}
                                     <option value="{{ usernametype.abbreviation }}" {{ selected }}>{{ usernametype.name }}</option>
                                 {% endfor %}

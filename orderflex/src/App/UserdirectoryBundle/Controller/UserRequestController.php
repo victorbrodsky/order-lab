@@ -265,6 +265,8 @@ class UserRequestController extends OrderAbstractController
             ),
             array('orderinlist' => 'ASC')
         );
+        //dump($usernametypes);
+        //exit('111');
         
         $params = $this->getParams($this->siteName, $request);
 
