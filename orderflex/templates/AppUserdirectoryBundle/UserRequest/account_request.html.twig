@@ -121,6 +121,11 @@
                 </div>
             </p>
 
+            {% for  usernametype in usernametypes %}
+                usernametype.name={{ usernametype.name }},
+                usernametype.abbreviation={{ usernametype.abbreviation }};
+            {% endfor %}
+
             {#usernametype#}
             <div id="usernametypeid_show_holder" class="collapse">
                 <div class="well" align='center'>
@@ -132,8 +137,8 @@
                             <select id="usernametypeid_show" class="combobox limit-font-size" name="_usernametype">
                                 {#usernametypes={{ usernametypes|length }}#}
                                 {% for  usernametype in usernametypes %}
-                                    usernametype.name={{ usernametype.name }}
-                                    usernametype.abbreviation={{ usernametype.abbreviation }}
+                                    {#usernametype.name={{ usernametype.name }}#}
+                                    {#usernametype.abbreviation={{ usernametype.abbreviation }}#}
                                     {% if user_type is defined and usernametype.name == user_type %}
                                         {% set selected = 'selected="selected"' %}
                                     {% else %}
