@@ -4110,14 +4110,14 @@ class AdminController extends OrderAbstractController
         //}
 
         $elements = array(
-            'ORDER Employee Directory',
-            'ORDER Deidentifier',
-            'ORDER Call Log Book',
-            'ORDER Critical Result Notifications',
-            'ORDER Fellowship Applications',
-            'ORDER Vacation Request',
-            'ORDER Translational Research',
-            'ORDER Scan Order', //used as default in getDefaultSourceSystem //'Scan Order',
+            'Employee Directory',
+            'Deidentifier',
+            'Call Log Book',
+            'Critical Result Notifications',
+            'Fellowship Applications',
+            'Vacation Request',
+            'Translational Research',
+            'Scan Order', //used as default in getDefaultSourceSystem //'Scan Order',
             'WCM Epic Practice Management',
             'WCM Epic Ambulatory EMR',
             'NYH Paper Requisition',
