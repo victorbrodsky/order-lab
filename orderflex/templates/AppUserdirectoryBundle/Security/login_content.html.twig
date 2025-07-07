@@ -199,18 +199,31 @@
         {#{% endif %}#}
 
         {#Show login footer controlled by checkboxes on the SITE settings#}
-        {% if user_security_utility.getSiteParameter(sitename,"showSignUp") %}
-            {% set noticeSignUpNoCwid = user_security_utility.getSiteSettingParameter("noticeSignUpNoCwid") %}
-            <a href="{{ path(sitename~'_signup_new') }}">{{ noticeSignUpNoCwid|raw }}</a>
-        {% endif %}
+        {#{% set loginFooter = [] %}#}
+        {#{% set loginFooter = 0 %}#}
+        {#{% if user_security_utility.isShowSignUp(sitename) %}#}
+            {#{% set noticeSignUpNoCwid = user_security_utility.getSiteSettingParameter("noticeSignUpNoCwid") %}#}
+            {#<a href="{{ path(sitename~'_signup_new') }}">{{ noticeSignUpNoCwid|raw }}</a>#}
+            {#{% set loginFooter = 1 %}#}
+        {#{% endif %}#}
 
-        {% if user_security_utility.getSiteParameter(sitename,"showRequestAccount") %}
-            <a href="{{ path(sitename~'_accountrequest_new') }}">Request a new account</a> if you can't log in.
-        {% endif %}
+        {#{% if user_security_utility.isShowRequestAccount(sitename) %}#}
+            {#{% if loginFooter %}#}
+                {#|#}
+            {#{% endif %}#}
+            {#<a href="{{ path(sitename~'_accountrequest_new') }}">Request an account to access specific data</a>#}
+            {#{% set loginFooter = 1 %}#}
+        {#{% endif %}#}
 
-        {% if user_security_utility.getSiteParameter(sitename,"showForgotPassword") %}
-            <a href="{{ path(sitename~'_forgot_password') }}">Forgot Password</a>
-        {% endif %}
+        {#{% if user_security_utility.isShowForgotPassword(sitename) %}#}
+            {#{% if loginFooter %}#}
+                {#|#}
+            {#{% endif %}#}
+            {#<a href="{{ path(sitename~'_forgot_password') }}">Forgot Password</a>#}
+            {#{% set loginFooter = 1 %}#}
+        {#{% endif %}#}
+
+        {{ user_security_utility.getLoginFooter(sitename)|raw }}
 
     </div>
 {% else %}

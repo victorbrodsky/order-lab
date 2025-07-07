@@ -3004,6 +3004,7 @@ class UserSecurityUtil {
     }
     public function isShowSignUp( $sitename ) {
         $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        //echo "getShowSignUp=".$siteObject->getShowSignUp()."<br>";
         if( $siteObject && $siteObject->getShowSignUp() === true ) {
             return true;
         }
@@ -3022,6 +3023,47 @@ class UserSecurityUtil {
             return true;
         }
         return false;
+    }
+    public function getLoginFooter( $sitename ) {
+        $loginFooterArr = array();
+        if( $this->isShowSignUp($sitename) ) {
+            $url = $this->container->get('router')->generate(
+                $sitename.'_signup_new',
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $noticeSignUpNoCwid = $this->getSiteSettingParameter("noticeSignUpNoCwid");
+            //$link = "<a href=" . "'" . $url . "'>".$noticeSignUpNoCwid."</a>";
+            $link = "<a href=\"$url\">$noticeSignUpNoCwid</a>";
+            $loginFooterArr[] = $link;
+        }
+
+        if( $this->isShowRequestAccount($sitename) ) {
+            $url = $this->container->get('router')->generate(
+                $sitename.'_accountrequest_new',
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            //$link = "<a href=" . "'" . $url . "'>"."Request an account to access specific data"."</a>";
+            $link = "<a href=\"$url\">Request an account to access specific data</a>";
+            $loginFooterArr[] = $link;
+        }
+
+        if( $this->isShowForgotPassword($sitename) ) {
+            $url = $this->container->get('router')->generate(
+                $sitename.'_forgot_password',
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $link = "<a href=\"$url\">Forgot Password</a>";
+            $loginFooterArr[] = $link;
+        }
+
+        if( count($loginFooterArr) > 0 ) {
+            return implode(' | ',$loginFooterArr);
+        }
+
+        return '';
     }
 //    public function getSiteParameter( $sitename, $parameter ) {
 //        if( !$parameter || !$sitename ) {
