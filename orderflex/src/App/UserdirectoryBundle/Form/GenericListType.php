@@ -855,7 +855,7 @@ class GenericListType extends AbstractType
 
         if( strtolower($this->mapper['className']) == strtolower("SiteList") ) {
             $builder->add('selfSignUp',null,array(
-                'label' => "Self Sign Up (auto-Grant access by assigning the lowest roles):",
+                'label' => "Allow Self Sign Up (auto-grant access by assigning the lowest roles):",
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
@@ -865,12 +865,12 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'form-control'),
             ));
             $builder->add('showRequestAccount',null,array(
-                'label' => "Show “Request an account to access specific data” link on the log in page:",
+                'label' => "Show 'Request an account to access specific data' link on the log in page:",
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
-            $builder->add('selfSignUp',null,array(
-                'label' => "Self Sign Up:",
+            $builder->add('showForgotPassword',null,array(
+                'label' => "Show 'Forgot Password' link on the log in page:",
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
