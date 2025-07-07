@@ -32,8 +32,21 @@ class SiteList extends ListAbstract
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id')]
     protected $original;
 
+    //Auto-Grant Access by assigning the lowest roles
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $selfSignUp;
+
+    //Show “Sign Up” link on the log in page:
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $showSignUp;
+
+    //Show “Request an account to access specific data” link on the log in page:
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $showRequestAccount;
+
+    //Show “Forgot Password” link on the log in page:
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $showForgotPassword;
 
     #[ORM\JoinTable(name: 'user_sites_lowestRoles')]
     #[ORM\JoinColumn(name: 'site_id', referencedColumnName: 'id')]
@@ -119,6 +132,55 @@ class SiteList extends ListAbstract
     {
         $this->selfSignUp = $selfSignUp;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getShowSignUp()
+    {
+        return $this->showSignUp;
+    }
+
+    /**
+     * @param mixed $showSignUp
+     */
+    public function setShowSignUp($showSignUp)
+    {
+        $this->showSignUp = $showSignUp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowRequestAccount()
+    {
+        return $this->showRequestAccount;
+    }
+
+    /**
+     * @param mixed $showRequestAccount
+     */
+    public function setShowRequestAccount($showRequestAccount)
+    {
+        $this->showRequestAccount = $showRequestAccount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowForgotPassword()
+    {
+        return $this->showForgotPassword;
+    }
+
+    /**
+     * @param mixed $showForgotPassword
+     */
+    public function setShowForgotPassword($showForgotPassword)
+    {
+        $this->showForgotPassword = $showForgotPassword;
+    }
+
 
     public function addLowestRole(Roles $role)
     {
