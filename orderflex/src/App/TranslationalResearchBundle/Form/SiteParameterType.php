@@ -262,12 +262,12 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('fromEmail', null, array(
-            'label' => "Emails sent by this site will appear to come from the following address (trp-admin):",
+            'label' => "Emails sent by this site will appear to come from the following address (ctp-admin):",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
         $builder->add('notifyEmail', null, array(
-            'label' => 'Cc for email notification when Work Request\' status change to "Completed" and "Completed and Notified" (trp@med.cornell.edu):',
+            'label' => 'Cc for email notification when Work Request\' status change to "Completed" and "Completed and Notified" (ctp@med.cornell.edu):',
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
@@ -513,7 +513,7 @@ class SiteParameterType extends AbstractType
 
         ////////////// Budget Related Parameters /////////////////////
         $builder->add('overBudgetFromEmail', null, array(
-            'label' => "Over budget notification from (default trp-admin):",
+            'label' => "Over budget notification from (default ctp-admin):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
@@ -545,7 +545,7 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('approvedBudgetFromEmail', null, array(
-            'label' => "Approved budget amount update notification from (default trp-admin):",
+            'label' => "Approved budget amount update notification from (default ctp-admin):",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
@@ -623,7 +623,7 @@ class SiteParameterType extends AbstractType
         ));
         //2
         $builder->add('expiringProjectEmailFrom', null, array(
-            'label' => "Non-Funded Project Request Upcoming Expiration Notification E-Mail sent from (default trp-admin):",
+            'label' => "Non-Funded Project Request Upcoming Expiration Notification E-Mail sent from (default ctp-admin):",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
@@ -645,7 +645,7 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('expiredProjectEmailFrom', null, array(
-            'label' => "Non-Funded Project Request Expiration Notification E-Mail sent from (default trp-admin):",
+            'label' => "Non-Funded Project Request Expiration Notification E-Mail sent from (default ctp-admin):",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));

@@ -187,15 +187,29 @@
             </p>
         </div>
 
-        {% if user_security_utility.isSelfSignUp(sitename) %}
-            <p>
-                {% set noticeSignUpNoCwid = user_security_utility.getSiteSettingParameter("noticeSignUpNoCwid") %}
-                <a href="{{ path(sitename~'_signup_new') }}">{{ noticeSignUpNoCwid|raw }}</a> | <a href="{{ path(sitename~'_forgot_password') }}">Forgot Password</a>
-            </p>
-        {% else %}
-            <p>
-                <a href="{{ path(sitename~'_accountrequest_new') }}">Request a new account</a> if you can't log in.
-            </p>
+        {#{% if user_security_utility.isSelfSignUp(sitename) %}#}
+            {#<p>#}
+                {#{% set noticeSignUpNoCwid = user_security_utility.getSiteSettingParameter("noticeSignUpNoCwid") %}#}
+                {#<a href="{{ path(sitename~'_signup_new') }}">{{ noticeSignUpNoCwid|raw }}</a> | <a href="{{ path(sitename~'_forgot_password') }}">Forgot Password</a>#}
+            {#</p>#}
+        {#{% else %}#}
+            {#<p>#}
+                {#<a href="{{ path(sitename~'_accountrequest_new') }}">Request a new account</a> if you can't log in.#}
+            {#</p>#}
+        {#{% endif %}#}
+
+        {#Show login footer controlled by checkboxes on the SITE settings#}
+        {% if user_security_utility.getSiteParameter(sitename,"showSignUp") %}
+            {% set noticeSignUpNoCwid = user_security_utility.getSiteSettingParameter("noticeSignUpNoCwid") %}
+            <a href="{{ path(sitename~'_signup_new') }}">{{ noticeSignUpNoCwid|raw }}</a>
+        {% endif %}
+
+        {% if user_security_utility.getSiteParameter(sitename,"showRequestAccount") %}
+            <a href="{{ path(sitename~'_accountrequest_new') }}">Request a new account</a> if you can't log in.
+        {% endif %}
+
+        {% if user_security_utility.getSiteParameter(sitename,"showForgotPassword") %}
+            <a href="{{ path(sitename~'_forgot_password') }}">Forgot Password</a>
         {% endif %}
 
     </div>

@@ -114,6 +114,10 @@ class SiteList extends ListAbstract
         $this->setShowLinkHomePage(true);
         $this->setShowLinkNavbar(true);
         $this->setAccessibility(true);
+
+        $this->setShowSignUp(true);
+        $this->setShowRequestAccount(true);
+        $this->setShowForgotPassword(true);
     }
     
 
@@ -138,7 +142,11 @@ class SiteList extends ListAbstract
      */
     public function getShowSignUp()
     {
-        return $this->showSignUp;
+        if( $this->showSignUp === TRUE ) {
+            return TRUE;
+        }
+        return FALSE;
+        //return $this->showSignUp;
     }
 
     /**
@@ -154,7 +162,11 @@ class SiteList extends ListAbstract
      */
     public function getShowRequestAccount()
     {
-        return $this->showRequestAccount;
+        //return $this->showRequestAccount;
+        if( $this->showRequestAccount === TRUE ) {
+            return TRUE;
+        }
+        return FALSE;
     }
 
     /**
@@ -170,7 +182,11 @@ class SiteList extends ListAbstract
      */
     public function getShowForgotPassword()
     {
-        return $this->showForgotPassword;
+        //return $this->showForgotPassword;
+        if( $this->showForgotPassword === TRUE ) {
+            return TRUE;
+        }
+        return FALSE;
     }
 
     /**

@@ -3002,6 +3002,36 @@ class UserSecurityUtil {
         }
         return false;
     }
+    public function isShowSignUp( $sitename ) {
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        if( $siteObject && $siteObject->getShowSignUp() === true ) {
+            return true;
+        }
+        return false;
+    }
+    public function isShowRequestAccount( $sitename ) {
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        if( $siteObject && $siteObject->getShowRequestAccount() === true ) {
+            return true;
+        }
+        return false;
+    }
+    public function isShowForgotPassword( $sitename ) {
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        if( $siteObject && $siteObject->getShowForgotPassword() === true ) {
+            return true;
+        }
+        return false;
+    }
+//    public function getSiteParameter( $sitename, $parameter ) {
+//        if( !$parameter || !$sitename ) {
+//            return NULL;
+//        }
+//        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+//        $getterMethod = "get".$parameter;
+//
+//        return $siteObject->$getterMethod();
+//    }
 
     public function isSiteAccessible( $sitename ) {
         if( $sitename == "employees" ) {

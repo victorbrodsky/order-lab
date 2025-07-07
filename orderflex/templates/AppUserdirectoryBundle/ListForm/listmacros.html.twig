@@ -1150,6 +1150,17 @@
     {% if form.selfSignUp is defined %}
         {{ formmacros.checkbox(form.selfSignUp) }}
     {% endif %}
+
+    {% if form.showSignUp is defined %}
+        {{ formmacros.checkbox(form.showSignUp) }}
+    {% endif %}
+    {% if form.showRequestAccount is defined %}
+        {{ formmacros.checkbox(form.showRequestAccount) }}
+    {% endif %}
+    {% if form.showForgotPassword is defined %}
+        {{ formmacros.checkbox(form.showForgotPassword) }}
+    {% endif %}
+
     {% if form.lowestRoles is defined %}
         {{ formmacros.field(form.lowestRoles) }}
     {% endif %}
