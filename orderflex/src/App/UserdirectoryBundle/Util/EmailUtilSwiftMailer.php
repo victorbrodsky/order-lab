@@ -166,7 +166,7 @@ class EmailUtilSwiftMailer {
             if (strpos((string)$url, "/translational-research/") !== false) {
                 $sitenameAbbreviation = "translationalresearch";
                 //adding “[TRP] “ in front of every notifications’ subject line
-                $subject = "[TRP] " . $subject;
+                $subject = "[CTP] " . $subject;
             }
             if (strpos((string)$url, "/directory/") !== false) {
                 $sitenameAbbreviation = "employees";
