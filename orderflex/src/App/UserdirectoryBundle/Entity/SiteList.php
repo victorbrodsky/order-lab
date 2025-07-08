@@ -142,11 +142,11 @@ class SiteList extends ListAbstract
      */
     public function getShowSignUp()
     {
-        if( $this->showSignUp === TRUE ) {
-            return TRUE;
-        }
-        return FALSE;
-        //return $this->showSignUp;
+        return $this->showSignUp;
+//        if( $this->showSignUp === TRUE ) {
+//            return TRUE;
+//        }
+//        return FALSE;
     }
 
     /**
@@ -162,11 +162,11 @@ class SiteList extends ListAbstract
      */
     public function getShowRequestAccount()
     {
-        //return $this->showRequestAccount;
-        if( $this->showRequestAccount === TRUE ) {
-            return TRUE;
-        }
-        return FALSE;
+        return $this->showRequestAccount;
+//        if( $this->showRequestAccount === TRUE && $this->showRequestAccount === NULL ) {
+//            return TRUE;
+//        }
+//        return FALSE;
     }
 
     /**
@@ -182,11 +182,11 @@ class SiteList extends ListAbstract
      */
     public function getShowForgotPassword()
     {
-        //return $this->showForgotPassword;
-        if( $this->showForgotPassword === TRUE ) {
-            return TRUE;
-        }
-        return FALSE;
+        return $this->showForgotPassword;
+//        if( $this->showForgotPassword === TRUE ) {
+//            return TRUE;
+//        }
+//        return FALSE;
     }
 
     /**

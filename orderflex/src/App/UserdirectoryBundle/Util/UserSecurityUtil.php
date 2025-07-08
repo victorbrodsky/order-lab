@@ -3005,21 +3005,21 @@ class UserSecurityUtil {
     public function isShowSignUp( $sitename ) {
         $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         //echo "getShowSignUp=".$siteObject->getShowSignUp()."<br>";
-        if( $siteObject && $siteObject->getShowSignUp() === true ) {
+        if( $siteObject && ($siteObject->getShowSignUp() === true || $siteObject->getShowSignUp() === NULL) ) {
             return true;
         }
         return false;
     }
     public function isShowRequestAccount( $sitename ) {
         $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
-        if( $siteObject && $siteObject->getShowRequestAccount() === true ) {
+        if( $siteObject && ($siteObject->getShowRequestAccount() === true || $siteObject->getShowRequestAccount() === NULL) ) {
             return true;
         }
         return false;
     }
     public function isShowForgotPassword( $sitename ) {
         $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
-        if( $siteObject && $siteObject->getShowForgotPassword() === true ) {
+        if( $siteObject && ($siteObject->getShowForgotPassword() === true || $siteObject->getShowForgotPassword() ===NULL) ) {
             return true;
         }
         return false;
