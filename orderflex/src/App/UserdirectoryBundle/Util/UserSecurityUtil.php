@@ -3020,7 +3020,7 @@ class UserSecurityUtil {
     }
     public function isShowForgotPassword( $sitename ) {
         $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
-        if( $siteObject && ($siteObject->getShowForgotPassword() === true || $siteObject->getShowForgotPassword() ===NULL) ) {
+        if( $siteObject && ($siteObject->getShowForgotPassword() === true || $siteObject->getShowForgotPassword() === NULL) ) {
             return true;
         }
         return false;
@@ -3041,7 +3041,7 @@ class UserSecurityUtil {
             } catch (RouteNotFoundException $e) {
                 //show disable url
                 $noticeSignUpNoCwid = $this->getSiteSettingParameter("noticeSignUpNoCwid");
-                $link = "<a style=\"color: gray; cursor: default;\" title=\"Not unavailable\">$noticeSignUpNoCwid</a>";
+                $link = "<a style=\"color: gray; cursor: default;\" title=\"Not unavailable for this site\">$noticeSignUpNoCwid</a>";
                 $loginFooterArr[] = $link;
             }
         }
@@ -3058,7 +3058,7 @@ class UserSecurityUtil {
                 $loginFooterArr[] = $link;
             } catch (RouteNotFoundException $e) {
                 //show disable url
-                $link = "<a style=\"color: gray; cursor: default;\" title=\"Not unavailable\">Request an account to access specific data</a>";
+                $link = "<a style=\"color: gray; cursor: default;\" title=\"Not unavailable for this site\">Request an account to access specific data</a>";
                 $loginFooterArr[] = $link;
             }
         }
@@ -3076,7 +3076,7 @@ class UserSecurityUtil {
                 //show disable url
                 //$url = "Not Available";
                 //$link = "<a href=\"$url\">Forgot Password</a>";
-                $link = "<a style=\"color: gray; cursor: default;\" title=\"Not unavailable\">Forgot Password</a>";
+                $link = "<a style=\"color: gray; cursor: default;\" title=\"Not unavailable for this site\">Forgot Password</a>";
                 $loginFooterArr[] = $link;
             }
         }
