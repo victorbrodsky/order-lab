@@ -170,7 +170,7 @@
     <div class="text-center">
 
         <br><br>
-        <div id="login-instruction">
+        <div id="login-instruction" style="display: none;">
             <p>
                 {% set loginInstruction = user_security_utility.getSiteSettingParameter('loginInstruction') %}
                 {% if loginInstruction and loginInstruction != -1 %}

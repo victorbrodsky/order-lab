@@ -364,7 +364,7 @@
 
                         {#travelIntakeForms#}
                         {#{{ formmacros.simplefield( "Test:", "test", "input", "disabled" ) }}#}
-                        {#{% if form.travelIntakeForms is defined %}#}
+                        {% if form.requestBusiness.travelIntakeForms is defined %}
                             <div class="well form-element-holder user-travelIntakeForms">
                                 <label class="col-xs-12 control-label">Travel Intake Form</label>
                                 <p class="text-danger">Complete the Travel Intake form for Spend Control Committee Approval</p>
@@ -380,7 +380,7 @@
                                     </div>
                                 </div>
                             </div>
-                        {#{% endif %}#}
+                        {% endif %}
 
                         {{ formmacros.checkbox(form.requestBusiness.paidByOutsideOrganization) }}
                         {{ formmacros.field(form.requestBusiness.expenses) }}

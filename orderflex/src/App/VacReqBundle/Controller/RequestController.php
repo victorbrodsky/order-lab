@@ -1855,7 +1855,16 @@ class RequestController extends OrderAbstractController
             );
             $params['destinationYearRanges'] = $destinationYearRanges;
         }
-
+        
+        //Show is enableTravelIntakeForm is not False
+        $enableTravelIntakeForm = $userSecUtil->getSiteSettingParameter('enableTravelIntakeForm','vacreq');
+        if( $enableTravelIntakeForm === false ) {
+            $enableTravelIntakeForm = false;
+        } else {
+            $enableTravelIntakeForm = true;
+        }
+        //$enableTravelIntakeForm = true; //Testing
+        $params['enableTravelIntakeForm'] = $enableTravelIntakeForm;
 
         $form = $this->createForm(
             VacReqRequestType::class,

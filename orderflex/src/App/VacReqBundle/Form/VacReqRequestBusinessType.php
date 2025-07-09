@@ -66,17 +66,21 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
             'disabled' => ($this->params['review'] ? true : false)
         ));
 
-        //Complete the Travel Intake form 
-        $builder->add('travelIntakeForms', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Complete the Travel Intake form for Spend Control Committee Approval:',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+        //Complete the Travel Intake form
+        //Show if enableTravelIntakeForm is not False
+        //echo "enableTravelIntakeForm=".$this->params['enableTravelIntakeForm']."<br>";
+        if( $this->params['enableTravelIntakeForm'] === true ) {
+            $builder->add('travelIntakeForms', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'Complete the Travel Intake form for Spend Control Committee Approval:',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
+        }
 
     }
 

@@ -137,6 +137,10 @@ class VacReqSiteParameter
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $enableTravelIntakeForm;
 
+    //Title of travel intake form accordion: [Travel intake form for Spend Control Committee approval]
+
+    //Travel intake form PDF: [DropZone field where the new empty form can be uploaded so that its URL can be shown in the href field name link  above]
+
 
     
     public function __construct() {
