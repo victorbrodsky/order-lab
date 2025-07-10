@@ -365,9 +365,14 @@
                         {#travelIntakeForms#}
                         {#{{ formmacros.simplefield( "Test:", "test", "input", "disabled" ) }}#}
                         {% if form.requestBusiness.travelIntakeForms is defined %}
+                            {% set formText = user_security_utility.getSiteSettingParameter('titleTravelIntakeForm','vacreq') %}
+                            {% if not formText %}
+                                {% set formText = '<p class="text-danger">Complete the Travel Intake form for Spend Control Committee Approval</p>' %}
+                            {% endif %}
                             <div class="well form-element-holder user-travelIntakeForms">
                                 <label class="col-xs-12 control-label">Travel Intake Form</label>
-                                <p class="text-danger">Complete the Travel Intake form for Spend Control Committee Approval</p>
+                                {#<p class="text-danger">Complete the Travel Intake form for Spend Control Committee Approval</p>#}
+                                {{ formText|raw }}
                                 <p>
                                     You can
                                     <a href="{{ path(vacreq_sitename~'_download_new_travel_intake_form') }}"

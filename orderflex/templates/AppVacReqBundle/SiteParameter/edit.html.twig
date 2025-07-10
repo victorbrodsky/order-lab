@@ -41,6 +41,12 @@
 
         {{ form_errors(form) }}
 
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('vacreq_gallery') }}"
+             data-userid = "{{ user.id }}"
+        ></div>
+
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">

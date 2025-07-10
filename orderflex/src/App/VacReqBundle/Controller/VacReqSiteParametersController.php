@@ -18,6 +18,7 @@
 namespace App\VacReqBundle\Controller;
 
 
+use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\VacReqBundle\Entity\VacReqSiteParameter;
 use App\VacReqBundle\Form\VacReqSiteParameterType;
@@ -89,6 +90,7 @@ class VacReqSiteParametersController extends SiteParametersController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $user = $this->getUser();
         $cycle = "edit";
 
         $vacreqSiteParameter = $this->getOrCreateNewVacReqParameters();
@@ -99,6 +101,8 @@ class VacReqSiteParametersController extends SiteParametersController
 
         if( $form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
+
+            $em->getRepository(Document::class)->processDocuments($vacreqSiteParameter, 'travelIntakePdf');
 
             //exit('submit');
             $em->persist($vacreqSiteParameter);
@@ -111,6 +115,7 @@ class VacReqSiteParametersController extends SiteParametersController
             'entity' => $vacreqSiteParameter,
             'form'   => $form->createView(),
             'cycle' => $cycle,
+            'user' => $user,
             'title' => "Update Vacation Request Specific Site Parameters"
         );
     }
@@ -126,6 +131,7 @@ class VacReqSiteParametersController extends SiteParametersController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $user = $this->getUser();
         $cycle = "show";
 
         $vacreqSiteParameter = $this->getOrCreateNewVacReqParameters();
@@ -137,6 +143,7 @@ class VacReqSiteParametersController extends SiteParametersController
             'entity' => $vacreqSiteParameter,
             'form'   => $form->createView(),
             'cycle' => $cycle,
+            'user' => $user,
             'title' => "Vacation Request Specific Site Parameters"
         );
     }

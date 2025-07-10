@@ -17,6 +17,7 @@
 {#Used in site settings view page#}
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
 
 <input type="hidden" id="formcycle" value="{{ cycle }}" />
@@ -24,6 +25,13 @@
 {{ form_start(form) }}
 
     {{ form_errors(form) }}
+
+    {#<div id="form-prototype-data"#}
+            {#data-prototype-fellapp-interviews = "{{ fellappmacros.interviewForm(form.interviews,cycle,'vacreq-interviews','prototype', sitename,1)|e }}"#}
+         {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+         {#data-uploadurl = "{{ oneup_uploader_endpoint('vacreq_gallery') }}"#}
+         {#data-userid = "{{ entity.user.id }}"#}
+    {#></div>#}
 
     {# Defaults #}
     <div class="panel panel-primary">
