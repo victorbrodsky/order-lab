@@ -138,13 +138,23 @@ class VacReqSiteParameter
     private $enableTravelIntakeForm;
 
     //Title of travel intake form accordion: [Travel intake form for Spend Control Committee approval]
+    //Complete the Travel Intake form for Spend Control Committee Approval
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $titleTravelIntakeForm;
 
     //Travel intake form PDF: [DropZone field where the new empty form can be uploaded so that its URL can be shown in the href field name link  above]
+    #[ORM\JoinTable(name: 'vacreq_siteparameter_intakeform')]
+    #[ORM\JoinColumn(name: 'siteparameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
+    private $travelIntakeForms;
 
 
-    
+
     public function __construct() {
         $this->institutions = new ArrayCollection();
+        $this->travelIntakeForms = new ArrayCollection();
     }
 
 
@@ -429,7 +439,47 @@ class VacReqSiteParameter
         $this->enableTravelIntakeForm = $enableTravelIntakeForm;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTitleTravelIntakeForm()
+    {
+        return $this->titleTravelIntakeForm;
+    }
 
+    /**
+     * @param mixed $titleTravelIntakeForm
+     */
+    public function setTitleTravelIntakeForm($titleTravelIntakeForm)
+    {
+        $this->titleTravelIntakeForm = $titleTravelIntakeForm;
+    }
+
+    public function addTravelIntakeForm($item)
+    {
+        if( $item && !$this->travelIntakeForms->contains($item) ) {
+            $this->travelIntakeForms->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeTravelIntakeForm($item)
+    {
+        $this->travelIntakeForms->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getTravelIntakeForms()
+    {
+        return $this->travelIntakeForms;
+    }
+    public function getSingleTravelIntakeForm()
+    {
+        $docs = $this->getTravelIntakeForms();
+        if( count($docs) > 0 ) {
+            return $docs->last(); //ASC: the oldest ones come first and the most recent ones last
+        }
+        return null;
+    }
     
 
 }
