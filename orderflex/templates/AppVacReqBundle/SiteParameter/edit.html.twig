@@ -84,6 +84,20 @@
                     <hr>
 
                     {{ formmacros.checkbox(form.enableTravelIntakeForm) }}
+                    {{ formmacros.field(form.titleTravelIntakeForm) }}
+                    {#{{ formmacros.field(form.travelIntakePdfs) }}#}
+                    {% if form.travelIntakePdfs is defined %}
+                        <div class="well form-element-holder user-travelIntakeForms">
+                            <label class="col-xs-12 control-label">Travel Intake Form PDF</label>
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {{ usermacros.documentsContainer(null,form.travelIntakePdfs,cycle,'noprototype',1,'default','Travel Intake Form Pdf',"asForm") }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <hr>
 
                     {#{{ formmacros.field(form.holidayDatesUrl) }}#}
                     {% if form.holidayDatesUrl is defined %}

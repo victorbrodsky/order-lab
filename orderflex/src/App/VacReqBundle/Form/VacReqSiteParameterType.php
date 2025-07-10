@@ -20,6 +20,7 @@ namespace App\VacReqBundle\Form;
 
 
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\UserdirectoryBundle\Form\DocumentType;
 use Doctrine\ORM\EntityRepository;
 //use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 //use App\UserdirectoryBundle\Util\TimeZoneUtil;
@@ -29,6 +30,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 //use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 //use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 //use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -143,6 +145,26 @@ class VacReqSiteParameterType extends AbstractType
             'required' => false,
             //'attr' => array('class' => 'form-control')
         ));
+        
+        //titleTravelIntakeForm
+        //Title of travel intake form accordion: [Travel intake form for Spend Control Committee approval]
+        $builder->add('titleTravelIntakeForm', null, array(
+            'label' => 'Title of travel intake form accordion (i.e. Travel intake form for Spend Control Committee approval): ',
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        //travelIntakePdfs
+        $builder->add('travelIntakePdfs', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Travel intake form PDF:',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
+
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(

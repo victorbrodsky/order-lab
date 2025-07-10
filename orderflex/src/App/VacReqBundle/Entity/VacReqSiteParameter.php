@@ -143,18 +143,19 @@ class VacReqSiteParameter
     private $titleTravelIntakeForm;
 
     //Travel intake form PDF: [DropZone field where the new empty form can be uploaded so that its URL can be shown in the href field name link  above]
-    #[ORM\JoinTable(name: 'vacreq_siteparameter_intakeform')]
+    //Similarly to travelIntakeForms
+    #[ORM\JoinTable(name: 'vacreq_siteparameter_intakepdf')]
     #[ORM\JoinColumn(name: 'siteparameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'document_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdate' => 'ASC'])]
-    private $travelIntakeForms;
+    private $travelIntakePdfs;
 
 
 
     public function __construct() {
         $this->institutions = new ArrayCollection();
-        $this->travelIntakeForms = new ArrayCollection();
+        $this->travelIntakePdfs = new ArrayCollection();
     }
 
 
@@ -455,24 +456,24 @@ class VacReqSiteParameter
         $this->titleTravelIntakeForm = $titleTravelIntakeForm;
     }
 
-    public function addTravelIntakeForm($item)
+    public function addTravelIntakePdf($item)
     {
-        if( $item && !$this->travelIntakeForms->contains($item) ) {
-            $this->travelIntakeForms->add($item);
+        if( $item && !$this->travelIntakePdfs->contains($item) ) {
+            $this->travelIntakePdfs->add($item);
             $item->createUseObject($this);
         }
         return $this;
     }
-    public function removeTravelIntakeForm($item)
+    public function removeTravelIntakePdf($item)
     {
-        $this->travelIntakeForms->removeElement($item);
+        $this->travelIntakePdfs->removeElement($item);
         $item->clearUseObject();
     }
-    public function getTravelIntakeForms()
+    public function getTravelIntakePdfs()
     {
-        return $this->travelIntakeForms;
+        return $this->travelIntakePdfs;
     }
-    public function getSingleTravelIntakeForm()
+    public function getSingleTravelIntakePdf()
     {
         $docs = $this->getTravelIntakeForms();
         if( count($docs) > 0 ) {
