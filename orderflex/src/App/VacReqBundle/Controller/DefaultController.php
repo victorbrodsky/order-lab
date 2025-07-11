@@ -361,22 +361,22 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/download/new-travel-intake-form', name: 'vacreq_download_new_travel_intake_form', methods: ['GET'])]
     public function downloadTravelIntakeIntakeFormAction(Request $request)
     {
-        if(0) {
-            $projectDir = $this->container->get('kernel')->getProjectDir();
+//        if(0) {
+//            $projectDir = $this->container->get('kernel')->getProjectDir();
+//
+//            //orderflex\src\App\VacReqBundle\Util\TRAVEL_REQUEST_FORM.pdf
+//            $originalname = 'TRAVEL_REQUEST_FORM.pdf';
+//            $folderPath = $projectDir .
+//                DIRECTORY_SEPARATOR . "src" .
+//                DIRECTORY_SEPARATOR . "App" .
+//                DIRECTORY_SEPARATOR . "VacReqBundle" .
+//                DIRECTORY_SEPARATOR . "Util";
+//            $abspath = $folderPath . DIRECTORY_SEPARATOR . $originalname;
+//
+//            $size = filesize($abspath);
+//        }
 
-            //orderflex\src\App\VacReqBundle\Util\TRAVEL_REQUEST_FORM.pdf
-            $originalname = 'TRAVEL_REQUEST_FORM.pdf';
-            $folderPath = $projectDir .
-                DIRECTORY_SEPARATOR . "src" .
-                DIRECTORY_SEPARATOR . "App" .
-                DIRECTORY_SEPARATOR . "VacReqBundle" .
-                DIRECTORY_SEPARATOR . "Util";
-            $abspath = $folderPath . DIRECTORY_SEPARATOR . $originalname;
-
-            $size = filesize($abspath);
-        }
-
-        //TODO: get ir from travelIntakePdfs
+        //Get the intake form PDF from travelIntakePdfs
         $userSecUtil = $this->container->get('user_security_utility');
         $travelIntakePdf = NULL;
         $size = NULL;
