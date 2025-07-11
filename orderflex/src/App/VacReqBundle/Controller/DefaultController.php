@@ -361,19 +361,36 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/download/new-travel-intake-form', name: 'vacreq_download_new_travel_intake_form', methods: ['GET'])]
     public function downloadTravelIntakeIntakeFormAction(Request $request)
     {
-        $projectDir = $this->container->get('kernel')->getProjectDir();
+        if(0) {
+            $projectDir = $this->container->get('kernel')->getProjectDir();
 
-        //orderflex\src\App\VacReqBundle\Util\TRAVEL_REQUEST_FORM.pdf
-        $originalname = 'TRAVEL_REQUEST_FORM.pdf';
-        $folderPath = $projectDir.
-            DIRECTORY_SEPARATOR."src".
-            DIRECTORY_SEPARATOR."App".
-            DIRECTORY_SEPARATOR."VacReqBundle".
-            DIRECTORY_SEPARATOR."Util"
-        ;
-        $abspath = $folderPath . DIRECTORY_SEPARATOR . $originalname;
+            //orderflex\src\App\VacReqBundle\Util\TRAVEL_REQUEST_FORM.pdf
+            $originalname = 'TRAVEL_REQUEST_FORM.pdf';
+            $folderPath = $projectDir .
+                DIRECTORY_SEPARATOR . "src" .
+                DIRECTORY_SEPARATOR . "App" .
+                DIRECTORY_SEPARATOR . "VacReqBundle" .
+                DIRECTORY_SEPARATOR . "Util";
+            $abspath = $folderPath . DIRECTORY_SEPARATOR . $originalname;
 
-        $size = filesize($abspath);
+            $size = filesize($abspath);
+        }
+
+        //TODO: get ir from travelIntakePdfs
+        $userSecUtil = $this->container->get('user_security_utility');
+        $travelIntakePdf = NULL;
+        $size = NULL;
+        $originalname = NULL;
+        $travelIntakePdfs = $userSecUtil->getSiteSettingParameter('travelIntakePdfs','vacreq'); //the last one appears at the bottom
+        if( count($travelIntakePdfs) > 0 ) {
+            $travelIntakePdf = $travelIntakePdfs->last();
+        }
+
+        if( $travelIntakePdf ) {
+            $abspath = $travelIntakePdf->getFullServerPath();
+            $size = filesize($abspath);
+            $originalname = $travelIntakePdf->getOriginalnameClean();
+        }
 
         if( $abspath || $originalname || $size ) {
             //echo "abspath=".$abspath."<br>";
