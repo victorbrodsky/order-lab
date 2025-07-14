@@ -115,6 +115,7 @@ class EmailUtil {
                 if( !$transresBusinessEntityAbbreviation ) {
                     $transresBusinessEntityAbbreviation = "CTP";
                 }
+                $transresBusinessEntityAbbreviation = trim($transresBusinessEntityAbbreviation);
                 //replace only the leading [TRP] or [CTP] substring at the beginning of $subject
                 $subject = "[" . $transresBusinessEntityAbbreviation . "] " . $subject;
                 //Legacy: replace the possible duplication in subject
