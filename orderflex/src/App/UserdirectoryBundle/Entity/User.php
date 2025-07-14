@@ -2676,7 +2676,7 @@ class User extends UserBase
             $res = "Inactive in AD";
         }
         if( $this->getActiveAD() === null ) {
-            $res = "Inactive in AD";
+            $res = "Unknown status in AD";
         }
         return $res;
     }

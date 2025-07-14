@@ -110,6 +110,12 @@ class EmailUtil {
                 $sitenameAbbreviation = "translationalresearch";
                 //adding “[TRP] “ in front of every notifications’ subject line
                 $subject = "[CTP] " . $subject;
+                //Use transresBusinessEntityAbbreviation
+                $transresBusinessEntityAbbreviation = $userSecUtil->getSiteSettingParameter('transresBusinessEntityAbbreviation');
+                //replace only the leading [TRP] or [CTP] substring at the beginning of $subject
+                $subject = preg_replace('/^\[CTP\]/', '', $subject);
+                $subject = preg_replace('/^\[TRP\]/', '', $subject);
+                $subject = $transresBusinessEntityAbbreviation . " " . $subject;
             }
             if (strpos((string)$url, "/directory/") !== false) {
                 $sitenameAbbreviation = "employees";
