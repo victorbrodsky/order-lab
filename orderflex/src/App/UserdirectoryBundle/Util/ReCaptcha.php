@@ -33,6 +33,17 @@
  * A ReCaptchaResponse is returned from checkAnswer().
  */
 
+
+//How to use
+//Create site key and secret key:
+//1) https://www.google.com/recaptcha/admin/site/730004528/setup
+//2) Enter label: for example view.online
+//3) Choose V2
+//4) Add domain: for example view.online
+//5) Click Submit
+//6) In the site settings: enter generated site key and secret key from
+//Example use in web: C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\templates\AppUserdirectoryBundle\SignUp\new.html.twig
+
 namespace App\UserdirectoryBundle\Util;
 
 

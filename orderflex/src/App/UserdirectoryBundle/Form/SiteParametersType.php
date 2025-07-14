@@ -1001,13 +1001,13 @@ class SiteParametersType extends AbstractType
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'captchaSiteKey' ) {
             $builder->add('captchaSiteKey',null,array(
-                'label'=>'Captcha Site Key (required for Captcha):',
+                'label'=>'Captcha Site Key (required when Captcha is enabled):',
                 'attr' => array('class'=>'form-control textarea')
             ));
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'captchaSecretKey' ) {
             $builder->add('captchaSecretKey',null,array(
-                'label'=>'Captcha Secret Key (required for Captcha):',
+                'label'=>'Captcha Secret Key (required when Captcha is enabled):',
                 'attr' => array('class'=>'form-control textarea')
             ));
         }
