@@ -109,13 +109,19 @@ class EmailUtil {
             if (strpos((string)$url, "/translational-research/") !== false) {
                 $sitenameAbbreviation = "translationalresearch";
                 //adding “[TRP] “ in front of every notifications’ subject line
-                $subject = "[CTP] " . $subject;
+                //$subject = "[CTP] " . $subject;
                 //Use transresBusinessEntityAbbreviation
                 $transresBusinessEntityAbbreviation = $userSecUtil->getSiteSettingParameter('transresBusinessEntityAbbreviation');
+                if( !$transresBusinessEntityAbbreviation ) {
+                    $transresBusinessEntityAbbreviation = "CTP";
+                }
                 //replace only the leading [TRP] or [CTP] substring at the beginning of $subject
-                $subject = preg_replace('/^\[CTP\]/', '', $subject);
-                $subject = preg_replace('/^\[TRP\]/', '', $subject);
-                $subject = $transresBusinessEntityAbbreviation . " " . $subject;
+                $subject = "[" . $transresBusinessEntityAbbreviation . "] " . $subject;
+                //Legacy: replace the possible duplication in subject
+                //$subject = preg_replace('/^\[CTP\]/', '', $subject);
+                //$subject = preg_replace('/^\[TRP\]/', '', $subject);
+                $subject = str_replace('[CTP] [CTP]','[CTP]',$subject);
+                $subject = str_replace('[TRP] [TRP]','[TRP]',$subject);
             }
             if (strpos((string)$url, "/directory/") !== false) {
                 $sitenameAbbreviation = "employees";
