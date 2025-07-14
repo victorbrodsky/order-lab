@@ -110,6 +110,7 @@
     {{ formmacros.field(form.email) }}
 
     {% if captchaSiteKey %}
+        captchaSiteKey={{ captchaSiteKey }}
         {#{{ form_errors(form.recaptcha) }}#}
         <div class="col-xs-12 text-center">
         <p>

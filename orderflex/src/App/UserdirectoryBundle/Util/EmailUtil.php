@@ -118,7 +118,7 @@ class EmailUtil {
                 $transresBusinessEntityAbbreviation = trim($transresBusinessEntityAbbreviation);
                 //replace only the leading [TRP] or [CTP] substring at the beginning of $subject
                 $subject = "[" . $transresBusinessEntityAbbreviation . "] " . $subject;
-                //Legacy: replace the possible duplication in subject
+                //Legacy: replace the possible duplication in subject if [TRP] was added to the subject in the site settings
                 //$subject = preg_replace('/^\[CTP\]/', '', $subject);
                 //$subject = preg_replace('/^\[TRP\]/', '', $subject);
                 $subject = str_replace('[CTP] [CTP]','[CTP]',$subject);
