@@ -332,8 +332,8 @@ if __name__ == "__main__":
     mailer_password = get_arg_value(args, "--mailerpassword")
 
     #TODO: provide recaptcha site key and secret key
-    captcha_sitekey = get_arg_value(args, "--captchasitekey")
-    captcha_secretkey = get_arg_value(args, "--captchasecretkey")
+    #captcha_sitekey = get_arg_value(args, "--captchasitekey")
+    #captcha_secretkey = get_arg_value(args, "--captchasecretkey")
 
     if mailer_user and mailer_password:
         main(mailer_user, mailer_password)
