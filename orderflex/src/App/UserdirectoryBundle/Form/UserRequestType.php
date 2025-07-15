@@ -249,6 +249,14 @@ class UserRequestType extends AbstractType
             ));
         }
 
+        //used to display recaptcha error
+        $builder->add( 'recaptcha', HiddenType::class, array(
+            'mapped' => false,
+            'error_bubbling' => false,
+            'label' => false,
+            'attr' => array('class'=>'form-control g-recaptcha1'),
+        ));
+
     }
 
     /**

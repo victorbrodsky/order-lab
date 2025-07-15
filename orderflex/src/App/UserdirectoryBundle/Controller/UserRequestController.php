@@ -235,13 +235,21 @@ class UserRequestController extends OrderAbstractController
             $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+            $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+        } else {
+            $captchaSiteKey = null;
+        }
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
             'usernametypes' => $usernametypes,
             'sitename' => $this->siteName,
             'title' => "Account Request for ".$this->siteNameStr,
-            'orggroups' => $orgGroupsSelect2
+            'orggroups' => $orgGroupsSelect2,
+            'captchaSiteKey' => $captchaSiteKey
         );
     }
 
@@ -289,13 +297,21 @@ class UserRequestController extends OrderAbstractController
             $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+            $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+        } else {
+            $captchaSiteKey = null;
+        }
+
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
             'usernametypes' => $usernametypes,
             'sitename' => $this->siteName,
             'title' => "Account Request for ".$this->siteNameStr,
-            'orggroups' => $orgGroupsSelect2
+            'orggroups' => $orgGroupsSelect2,
+            'captchaSiteKey' => $captchaSiteKey
             //'security' => 'false'
         );
     }

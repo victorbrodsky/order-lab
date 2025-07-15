@@ -245,6 +245,17 @@
             {{ form_widget(form._token) }}
 
 
+            {% if captchaSiteKey %}
+                {#captchaSiteKey={{ captchaSiteKey }}#}
+                {#{{ form_errors(form.recaptcha) }}#}
+                <div class="col-xs-12 text-center">
+                    <p>
+                        {{ formmacros.field(form.recaptcha) }}
+                    <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+                    </p>
+                </div>
+            {% endif %}
+
             <br>
             <p>
                 <button class="btn btn-info" type="button" onclick="submitRequestForm()">Submit</button>
