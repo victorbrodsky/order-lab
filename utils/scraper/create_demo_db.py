@@ -251,7 +251,7 @@ def run_demos(demo_ids, attempts, max_attempts, mailer_user, mailer_password, ru
 
     return demo_ids
 
-
+#TODO: add recaptcha site key and secret key
 def main(mailer_user, mailer_password):
     print("script directory:", os.getcwd())  # This will show the directory where your script is running
 
@@ -331,8 +331,16 @@ if __name__ == "__main__":
     mailer_user = get_arg_value(args, "--maileruser")
     mailer_password = get_arg_value(args, "--mailerpassword")
 
+    #TODO: provide recaptcha site key and secret key
+    captcha_sitekey = get_arg_value(args, "--captchasitekey")
+    captcha_secretkey = get_arg_value(args, "--captchasecretkey")
+
     if mailer_user and mailer_password:
         main(mailer_user, mailer_password)
+
+    #if mailer_user and mailer_password and captcha_sitekey and captcha_secretkey:
+    #    main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey)
+
     else:
         print("Error: Missing values for --maileruser or --mailerpassword")
         print("Proceed without mailer")
