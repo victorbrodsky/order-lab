@@ -246,7 +246,7 @@
 
 
             {% if captchaSiteKey %}
-                {#captchaSiteKey={{ captchaSiteKey }}#}
+                captchaSiteKey={{ captchaSiteKey }}
                 {#{{ form_errors(form.recaptcha) }}#}
                 <div class="col-xs-12 text-center">
                     <p>
@@ -344,6 +344,7 @@
     {#<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>#}
     {#<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>#}
 
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 
     <script language="Javascript">
 
