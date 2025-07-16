@@ -269,6 +269,7 @@ class DemoDbUtil {
         //$mailerpassword = "";
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
+
         $maileruser = $tenantappSettings[0]['maileruser'];
         $mailerpassword = $tenantappSettings[0]['mailerpassword'];
         if( !$maileruser ) {
@@ -277,6 +278,16 @@ class DemoDbUtil {
         if( !$mailerpassword ) {
             $mailerpassword =  "mailerpassword";
         }
+
+        $captchaSiteKey = $tenantappSettings[0]['captchaSiteKey'];
+        $captchaSecretKey = $tenantappSettings[0]['captchaSecretKey'];
+        if( !$captchaSiteKey ) {
+            $captchaSiteKey =  "captchaSiteKey";
+        }
+        if( !$captchaSecretKey ) {
+            $captchaSecretKey =  "captchaSecretKey";
+        }
+
 //        echo "1 maileruser=[$maileruser], mailerpassword=[$mailerpassword] <br>";
 //        if( $maileruser ) {
 //            $maileruser =  '"' . $maileruser . '"';
@@ -331,7 +342,16 @@ class DemoDbUtil {
         $res = null;
         //$res = $userServiceUtil->runProcess($pythonInitCommand);
 
-        $pythonInitCommandArr = [$pythonEnvPath, $pythonScriptPath, "--maileruser", $maileruser, "--mailerpassword", $mailerpassword];
+        //$pythonInitCommandArr = [$pythonEnvPath, $pythonScriptPath, "--maileruser", $maileruser, "--mailerpassword", $mailerpassword];
+        $pythonInitCommandArr = [
+            $pythonEnvPath,
+            $pythonScriptPath,
+            "--maileruser", $maileruser,
+            "--mailerpassword", $mailerpassword,
+            "--captchasitekey", $captchaSiteKey,
+            "--captchasecretkey", $captchaSecretKey
+        ];
+
         echo "\nprocessDemoDb: run process with python command pythonInitCommandArr=[".join(' ',$pythonInitCommandArr)."] \n<br>";
         $res = $userServiceUtil->runSymfonyProcessRealTime($pythonInitCommandArr);
 
