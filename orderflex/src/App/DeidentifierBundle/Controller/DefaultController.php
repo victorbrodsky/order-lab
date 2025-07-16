@@ -150,11 +150,11 @@ class DefaultController extends OrderAbstractController
 //        }
 //        exit('111');
 
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-        $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
-        $captchaSiteKey = $tenantappSettings[0]['captchasitekey'];
-        $captchaSecretKey = $tenantappSettings[0]['captchasecretkey'];
-        echo "captchaSiteKey=[$captchaSiteKey], captchaSecretKey=[$captchaSecretKey] <br>";
+//        $userTenantUtil = $this->container->get('user_tenant_utility');
+//        $tenantappSettings = $userTenantUtil->getTenantSiteSettingsTable('tenantapp1');
+//        $captchaSiteKey = $tenantappSettings[0]['captchasitekey'];
+//        $captchaSecretKey = $tenantappSettings[0]['captchasecretkey'];
+//        echo "captchaSiteKey=[$captchaSiteKey], captchaSecretKey=[$captchaSecretKey] <br>";
 
         return array('sitename'=>$this->getParameter('deidentifier.sitename'));
     }
