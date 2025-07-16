@@ -245,7 +245,7 @@
             {{ form_widget(form._token) }}
 
 
-            {% if captchaSiteKey %}
+            {% if captchaSiteKey is defined and captchaSiteKey %}
                 {#captchaSiteKey={{ captchaSiteKey }}#}
                 {#{{ form_errors(form.recaptcha) }}#}
                 <div class="col-xs-12 text-center">

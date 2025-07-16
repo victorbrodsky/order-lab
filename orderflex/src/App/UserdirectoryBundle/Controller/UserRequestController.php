@@ -311,7 +311,7 @@ class UserRequestController extends OrderAbstractController
             'sitename' => $this->siteName,
             'title' => "Account Request for ".$this->siteNameStr,
             'orggroups' => $orgGroupsSelect2,
-            'captchaSiteKey' => $captchaSiteKey
+            //'captchaSiteKey' => $captchaSiteKey
             //'security' => 'false'
         );
     }
