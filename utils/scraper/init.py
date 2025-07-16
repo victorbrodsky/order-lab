@@ -272,6 +272,35 @@ class Init:
         self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
         time.sleep(3)
 
+    def init_captcha(self,captcha_sitekey, captcha_secretkey):
+        driver = self.automation.get_driver()
+        # /c/demo-institution/demo-department/directory/settings/1/edit?param=mailerUser
+        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=captchaSiteKey"
+        driver.get(url)
+        time.sleep(3)
+        # set google mailer
+        captcha_sitekey_field = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_captchaSiteKey")
+        captcha_sitekey_field.clear()
+        time.sleep(1)
+        print(f"Set captcha_sitekey={captcha_sitekey}")
+        captcha_sitekey_field.send_keys(captcha_sitekey)
+        time.sleep(1)
+        self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
+        time.sleep(3)
+
+        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=captchaSecretKey"
+        driver.get(url)
+        time.sleep(3)
+        # set google mailer
+        captcha_secretkey_field = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_captchaSecretKey")
+        captcha_secretkey_field.clear()
+        time.sleep(1)
+        print(f"Set captcha_sitekey={captcha_secretkey}")
+        captcha_secretkey_field.send_keys(captcha_secretkey)
+        time.sleep(1)
+        self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
+        time.sleep(3)
+
     def init_other_settings(self):
         driver = self.automation.get_driver()
 
@@ -427,7 +456,7 @@ class Init:
                 time.sleep(3)
 
 
-def main(mailer_user,mailer_password):
+def main(mailer_user,mailer_password,captcha_sitekey,captcha_secretkey):
     #run_by_symfony_command = True
     run_by_symfony_command = False
     automation = WebAutomation(run_by_symfony_command)
@@ -444,13 +473,14 @@ def main(mailer_user,mailer_password):
     init.init_other_settings()
     init.remove_crons()
     init.init_mailer(mailer_user,mailer_password)
+    init.init_captcha(captcha_sitekey, captcha_secretkey)
     init.run_deploy()
     print("init done!")
     automation.quit_driver()
 
 if __name__ == "__main__":
     #password = getpass.getpass("Enter your password: ")  # Secure input
-    main(None,None)
+    main(None,None, None, None)
 
 #Test one function:
 #python -c "import init.py; init.py.run_deploy_command()"

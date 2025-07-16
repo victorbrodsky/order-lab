@@ -17,7 +17,7 @@ import subprocess
 
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
-def run_demos(demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command):
+def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     #run_by_symfony_command = True
     #run_by_symfony_command = False
     # Sections
@@ -32,6 +32,7 @@ def run_demos(demo_ids, attempts, max_attempts, mailer_user, mailer_password, ru
             init.init_other_settings()
             init.remove_crons()
             init.init_mailer(mailer_user,mailer_password)
+            init.init_captcha(captcha_sitekey, captcha_secretkey)
             init.run_deploy()
             time.sleep(3)
             automation.quit_driver()
@@ -252,7 +253,7 @@ def run_demos(demo_ids, attempts, max_attempts, mailer_user, mailer_password, ru
     return demo_ids
 
 #TODO: add recaptcha site key and secret key
-def main(mailer_user, mailer_password):
+def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     print("script directory:", os.getcwd())  # This will show the directory where your script is running
 
     #subprocess.run(["/usr/bin/bash", "/srv/order-lab-tenantappdemo/orderflex/deploy.sh"], check=True)
@@ -302,7 +303,7 @@ def main(mailer_user, mailer_password):
 
     # Keep running demos until all sections are successful or exceed max attempts
     while any(demo_ids.values()):
-        demo_ids = run_demos(demo_ids, attempts, max_attempts, mailer_user, mailer_password, run_by_symfony_command)
+        demo_ids = run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_user, mailer_password, captcha_sitekey, captcha_secretkey)
 
     #clean cach: 'bash deploy.sh'
     #automation = WebAutomation(run_by_symfony_command)
@@ -331,20 +332,20 @@ if __name__ == "__main__":
     mailer_user = get_arg_value(args, "--maileruser")
     mailer_password = get_arg_value(args, "--mailerpassword")
 
-    #TODO: provide recaptcha site key and secret key
-    #captcha_sitekey = get_arg_value(args, "--captchasitekey")
-    #captcha_secretkey = get_arg_value(args, "--captchasecretkey")
+    #provide recaptcha site key and secret key
+    captcha_sitekey = get_arg_value(args, "--captchasitekey")
+    captcha_secretkey = get_arg_value(args, "--captchasecretkey")
 
-    if mailer_user and mailer_password:
-        main(mailer_user, mailer_password)
+    #if mailer_user and mailer_password:
+    #    main(mailer_user, mailer_password)
 
-    #if mailer_user and mailer_password and captcha_sitekey and captcha_secretkey:
-    #    main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey)
+    if mailer_user and mailer_password and captcha_sitekey and captcha_secretkey:
+       main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey)
 
     else:
         print("Error: Missing values for --maileruser or --mailerpassword")
         print("Proceed without mailer")
-        main('maileruser', 'mailerpassword')
+        main('maileruser', 'mailerpassword', 'captchasitekey', 'captchasecretkey')
 
 
 # if 0 and __name__ == "__main__":
