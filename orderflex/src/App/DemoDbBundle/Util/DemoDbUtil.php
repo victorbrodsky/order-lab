@@ -279,8 +279,8 @@ class DemoDbUtil {
             $mailerpassword =  "mailerpassword";
         }
 
-        $captchaSiteKey = $tenantappSettings[0]['captchaSiteKey'];
-        $captchaSecretKey = $tenantappSettings[0]['captchaSecretKey'];
+        $captchaSiteKey = $tenantappSettings[0]['captchasitekey'];
+        $captchaSecretKey = $tenantappSettings[0]['captchasecretkey'];
         if( !$captchaSiteKey ) {
             $captchaSiteKey =  "captchaSiteKey";
         }
