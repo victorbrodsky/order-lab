@@ -301,6 +301,16 @@ class Init:
         self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
         time.sleep(3)
 
+        #check box
+        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=captchaEnabled"
+        driver.get(url)
+        time.sleep(3)
+        checkbox = driver.find_element(By.ID, 'oleg_userdirectorybundle_siteparameters_captchaEnabled')
+        checkbox.click()
+        time.sleep(1)
+        self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
+        time.sleep(3)
+
     def init_other_settings(self):
         driver = self.automation.get_driver()
 
