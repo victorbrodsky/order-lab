@@ -3061,12 +3061,20 @@ Pathology and Laboratory Medicine",
             array(
                 "ssl" => array(
                     "capture_peer_cert" => TRUE,
-                    'verify_peer' => true,
-                    'verify_peer_name' => true
+                    //'verify_peer' => true,
+                    //'verify_peer_name' => true
                 )
             )
         );
-        $read = stream_socket_client("ssl://".$orignal_parse.":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
+        $read = stream_socket_client(
+            "ssl://".$orignal_parse.":443",
+            //"ssl://{$domain}:{$port}",
+            $errno,
+            $errstr,
+            30,
+            STREAM_CLIENT_CONNECT,
+            $get
+        );
 
         if( $read ) {
             $cert = stream_context_get_params($read);
@@ -3078,6 +3086,50 @@ Pathology and Laboratory Medicine",
         } else {
             echo "checkSslCertificate2: Failed to connect to $url: $errstr ($errno)\n";
         }
+    }
+
+    public function checkSslCertificate3( $domain ) {
+        //$url = "https://www.google.com";
+        //$url = "https://view.online";
+
+        echo "checkSslCertificate3: domain=$domain <br>";
+        if( !$domain ) {
+            $domain = 'view.online';
+            echo "checkSslCertificate3: use the default domain=$domain <br>";
+        }
+
+        $port = 443;
+
+        $context = stream_context_create([
+            'ssl' => ['capture_peer_cert' => true]
+        ]);
+
+        $client = stream_socket_client(
+            "ssl://{$domain}:{$port}",
+            $errno,
+            $errstr,
+            30,
+            STREAM_CLIENT_CONNECT,
+            $context
+        );
+
+        if (!$client) {
+            echo "Connection failed: $errstr ($errno)";
+            exit('Error');
+        }
+
+        $params = stream_context_get_params($client);
+        $cert = $params['options']['ssl']['peer_certificate'];
+        $certinfo = openssl_x509_parse($cert);
+
+        $validFrom = date('Y-m-d H:i:s', $certinfo['validFrom_time_t']);
+        $validTo = date('Y-m-d H:i:s', $certinfo['validTo_time_t']);
+
+        echo "Certificate for {$domain}\n";
+        echo "Valid From: {$validFrom}\n";
+        echo "Valid To:   {$validTo}\n";
+
+        exit("Ok");
     }
 
     public function createUserADStatusCron( $frequency = '6h' ) {
