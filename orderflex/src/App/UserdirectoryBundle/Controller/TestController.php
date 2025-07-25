@@ -68,40 +68,16 @@ class TestController extends TestBaseController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        //$msg = "Certificate Test";
-        //$em = $this->getDoctrine()->getManager();
-        //$calllogUtil = $this->container->get('calllog_util');
-        //$user = $this->getUser();
-
-        //$user = $em->getRepository(User::class)->find($user->getId());
-        //$msg = $msg . "; user=$user";
-
-        //$id = $calllogUtil->getNextEncounterGeneratedId();
-        //$msg = $msg . "; id=$id";
-
-        //$this->container ContainerInterface $container
-        //https://github.com/symfony/symfony/blob/5.0/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php
-        //$calllogUtilDirect = $this->container->get('calllog_util');
         $userServiceUtil = $this->container->get('user_service_utility');
 
         //$res = $userServiceUtil->checkSslCertificate3($domain);
         //echo "<br><br>";
 
-        $res = $userServiceUtil->checkSslCertificate2($domain);
-        echo "<br><br>";
+        //$res = $userServiceUtil->checkSslCertificate2($domain);
+        //echo "<br><br>";
 
         $res = $userServiceUtil->checkSslCertificate($domain);
         exit("Test Certificate: ".$res);
-
-        $this->addFlash(
-            'notice',
-            $msg
-        );
-
-        return array(
-            'user' => $user,
-            'title' => "TestController"
-        );
     }
 
 }

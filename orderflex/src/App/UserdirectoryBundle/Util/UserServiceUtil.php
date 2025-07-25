@@ -3008,11 +3008,17 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
-    public function checkSslCertificate() {
+    //Since HAProxy serves the cert directly, you can use openssl from the command line
+    public function checkSslCertificate( $domain=NULL ) {
         //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
 
-        $domain = 'view.online';
+        //$domain = 'view.online';
         $port = 443;
+
+        if( !$domain ) {
+            $domain = 'view.online';
+            echo "use the default domain=$domain <br>";
+        }
 
         // Build the shell command
         $cmd = "echo | openssl s_client -connect {$domain}:{$port} 2>/dev/null | openssl x509 -noout -dates";
@@ -3038,135 +3044,81 @@ Pathology and Laboratory Medicine",
         echo "Valid From: {$validFrom}\n<br>";
         echo "Valid To:   {$validTo}\n<br>";
         echo "Days Remaining: {$daysRemaining}\n<br>";
+
+        //Use two weeks in advance notification
+        if( (int)$daysRemaining < 14 ) {
+            //send email
+            $userSecUtil = $this->container->get('user_security_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
+            //$environment = $userSecUtil->getSiteSettingParameter('environment');
+            $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
+            //$emails = array("oli2002@med.cornell.edu"); //testing
+
+            //siteEmail
+            $sender = $userSecUtil->getSiteSettingParameter('siteEmail');
+            if( $sender ) {
+                if( $emails ) {
+                    $emails[] = $sender;
+                } else {
+                    $emails = array($sender);
+                }
+            }
+
+            //$subject = "Warning! ".$res . " (sent by the external ORDER system on $environment server)";
+            $subject = "Certificate expiration for $domain";
+
+            //body: “Site [URL/link] does not appear to be accessible. Please verify the site is operational.”
+            $msg = "The SSL certificate for server $domain will expire in $daysRemaining.";
+
+            $emailUtil->sendEmail($emails,$subject,$msg);
+
+            //Event Log
+            $eventType = "SSL Certificate Warning";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
+        }
+
+        return $daysRemaining;
     }
+//    //when HAProxy is terminating SSL with bind :443 ssl crt ...,
+//    // the PHP script I shared earlier won't retrieve the certificate from HAProxy itself.
+//    // That script connects to the domain and inspects the certificate
+//    // presented during the SSL handshake, which in this case is HAProxy’s certificate, not the backend’s.
+//    public function checkSslCertificate0( $domain ) {
+//        echo "domain=$domain <br>";
+//        if( !$domain ) {
+//            $domain = 'view.online';
+//            echo "use the default domain=$domain <br>";
+//        }
+//
+//        $url = "https://".$domain; // Replace with your target URL
+//        echo "url=$url <br>";
+//
+//
+//        $host = parse_url($url, PHP_URL_HOST);
+//        echo "host=$host <br>";
+//
+//        // Create SSL context to capture the peer certificate
+//        $context = stream_context_create(["ssl" => ["capture_peer_cert" => true]]);
+//        $sslUrl = "ssl://$host:443";
+//        echo "sslUrl=$sslUrl <br>";
+//        $client = stream_socket_client($sslUrl, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+//
+//        if ($client) {
+//            $params = stream_context_get_params($client);
+//            $cert = $params["options"]["ssl"]["peer_certificate"];
+//            $certInfo = openssl_x509_parse($cert);
+//
+//            $validFrom = date(DATE_RFC2822, $certInfo['validFrom_time_t']);
+//            $validTo = date(DATE_RFC2822, $certInfo['validTo_time_t']);
+//
+//            echo "Certificate for $host\n<br>";
+//            echo "Valid From: $validFrom\n<br>";
+//            echo "Valid To: $validTo\n<br>";
+//        } else {
+//            echo "Failed to connect to $host: $errstr ($errno)\n";
+//        }
+//    }
 
-    public function checkSslCertificate0( $domain ) {
-        echo "domain=$domain <br>";
-        if( !$domain ) {
-            $domain = 'view.online';
-            echo "use the default domain=$domain <br>";
-        }
-
-        $url = "https://".$domain; // Replace with your target URL
-        echo "url=$url <br>";
-
-
-        $host = parse_url($url, PHP_URL_HOST);
-        echo "host=$host <br>";
-        
-        // Create SSL context to capture the peer certificate
-        $context = stream_context_create(["ssl" => ["capture_peer_cert" => true]]);
-        $sslUrl = "ssl://$host:443";
-        echo "sslUrl=$sslUrl <br>";
-        $client = stream_socket_client($sslUrl, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
-        
-        if ($client) {
-            $params = stream_context_get_params($client);
-            $cert = $params["options"]["ssl"]["peer_certificate"];
-            $certInfo = openssl_x509_parse($cert);
-        
-            $validFrom = date(DATE_RFC2822, $certInfo['validFrom_time_t']);
-            $validTo = date(DATE_RFC2822, $certInfo['validTo_time_t']);
-        
-            echo "Certificate for $host\n<br>";
-            echo "Valid From: $validFrom\n<br>";
-            echo "Valid To: $validTo\n<br>";
-        } else {
-            echo "Failed to connect to $host: $errstr ($errno)\n";
-        }
-    }
-    public function checkSslCertificate2( $domain ) {
-        //$url = "https://www.google.com";
-        //$url = "https://view.online";
-
-        echo "checkSslCertificate2: domain=$domain <br>";
-        if( !$domain ) {
-            $domain = 'view.online';
-            echo "checkSslCertificate2: use the default domain=$domain <br>";
-        }
-
-        $url = "https://".$domain; // Replace with your target URL
-        echo "checkSslCertificate2: url=$url <br>";
-
-        $orignal_parse = parse_url($url, PHP_URL_HOST);
-        $get = stream_context_create(
-            array(
-                "ssl" => array(
-                    "capture_peer_cert" => TRUE,
-                    //'verify_peer' => true,
-                    //'verify_peer_name' => true
-                )
-            )
-        );
-        $read = stream_socket_client(
-            "ssl://".$orignal_parse.":443",
-            //"ssl://{$domain}:{$port}",
-            $errno,
-            $errstr,
-            30,
-            STREAM_CLIENT_CONNECT,
-            $get
-        );
-
-        if( $read ) {
-            $cert = stream_context_get_params($read);
-            $certinfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
-
-            echo '<pre>';
-            print_r($certinfo);
-            echo '</pre>';
-        } else {
-            echo "checkSslCertificate2: Failed to connect to $url: $errstr ($errno)\n";
-        }
-    }
-
-    public function checkSslCertificate3( $domain ) {
-        //$url = "https://www.google.com";
-        //$url = "https://view.online";
-
-        echo "checkSslCertificate3: domain=$domain <br>";
-        if( !$domain ) {
-            $domain = 'view.online';
-            echo "checkSslCertificate3: use the default domain=$domain <br>";
-        }
-
-        $port = 443;
-
-        $context = stream_context_create(
-            array(
-                "ssl" => array(
-                    "capture_peer_cert" => TRUE
-                )
-            )
-        );
-
-        $sslUrl = "ssl://$domain:$port";
-        echo "checkSslCertificate3: sslUrl=$sslUrl <br>";
-
-        $client = stream_socket_client(
-            $sslUrl,
-            $errno,
-            $errstr,
-            30,
-            STREAM_CLIENT_CONNECT,
-            $context
-        );
-
-        if( $client ) {
-            $params = stream_context_get_params($client);
-            $cert = $params['options']['ssl']['peer_certificate'];
-            $certinfo = openssl_x509_parse($cert);
-
-            $validFrom = date('Y-m-d H:i:s', $certinfo['validFrom_time_t']);
-            $validTo = date('Y-m-d H:i:s', $certinfo['validTo_time_t']);
-
-            echo "Certificate for {$domain}<br>";
-            echo "Valid From: {$validFrom}<br>";
-            echo "Valid To:   {$validTo}<br>";
-        } else {
-            echo "checkSslCertificate3: Connection failed: $errstr ($errno)";
-        }
-    }
 
     public function createUserADStatusCron( $frequency = '6h' ) {
 
