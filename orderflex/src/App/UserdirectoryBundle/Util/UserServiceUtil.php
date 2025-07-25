@@ -3043,9 +3043,19 @@ Pathology and Laboratory Medicine",
             echo "Failed to connect to $host: $errstr ($errno)\n";
         }
     }
-    public function checkSslCertificate2() {
-        $url = "https://www.google.com";
+    public function checkSslCertificate2( $domain ) {
+        //$url = "https://www.google.com";
         //$url = "https://view.online";
+
+        echo "checkSslCertificate2: domain=$domain <br>";
+        if( !$domain ) {
+            $domain = 'view.online';
+            echo "checkSslCertificate2: use the default domain=$domain <br>";
+        }
+
+        $url = "https://".$domain; // Replace with your target URL
+        echo "checkSslCertificate2: url=$url <br>";
+
         $orignal_parse = parse_url($url, PHP_URL_HOST);
         $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
         $read = stream_socket_client("ssl://".$orignal_parse.":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
