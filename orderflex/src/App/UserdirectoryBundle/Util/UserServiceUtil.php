@@ -3057,7 +3057,15 @@ Pathology and Laboratory Medicine",
         echo "checkSslCertificate2: url=$url <br>";
 
         $orignal_parse = parse_url($url, PHP_URL_HOST);
-        $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
+        $get = stream_context_create(
+            array(
+                "ssl" => array(
+                    "capture_peer_cert" => TRUE,
+                    'verify_peer' => true,
+                    'verify_peer_name' => true
+                )
+            )
+        );
         $read = stream_socket_client("ssl://".$orignal_parse.":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
 
         if( $read ) {
