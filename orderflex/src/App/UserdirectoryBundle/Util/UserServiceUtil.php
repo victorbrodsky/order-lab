@@ -3009,7 +3009,7 @@ Pathology and Laboratory Medicine",
     }
 
     //Since HAProxy serves the cert directly, you can use openssl from the command line
-    public function checkSslCertificate( $domain=NULL ) {
+    public function getSslCertificateRemainingDays( $domain=NULL ) {
         //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
 
         //$domain = 'view.online';
@@ -3045,8 +3045,19 @@ Pathology and Laboratory Medicine",
         echo "Valid To:   {$validTo}\n<br>";
         echo "Days Remaining: {$daysRemaining}\n<br>";
 
-        //Use two weeks in advance notification
-        if( (int)$daysRemaining < 114 ) {
+        if( $daysRemaining ) {
+            return (int)$daysRemaining;
+        }
+
+        return NULL;
+    }
+    public function checkSslCertificate( $domain=NULL ) {
+        //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
+
+        $daysRemaining = $this->getSslCertificateRemainingDays($domain);
+
+        //Use two weeks (14 days) in advance notification
+        if( $daysRemaining === NULL || $daysRemaining < 114 ) {
             //send email
             $userSecUtil = $this->container->get('user_security_utility');
             $emailUtil = $this->container->get('user_mailer_utility');
