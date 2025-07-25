@@ -59,4 +59,41 @@ class TestController extends TestBaseController
             'title' => "TestController"
         );
     }
+
+    //http://127.0.0.1/directory/test/test-certificate/
+    #[Route(path: '/test-certificate/', name: 'user_test_certificate')]
+    public function testSslCertificateAction() {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        //$msg = "Certificate Test";
+        //$em = $this->getDoctrine()->getManager();
+        //$calllogUtil = $this->container->get('calllog_util');
+        //$user = $this->getUser();
+
+        //$user = $em->getRepository(User::class)->find($user->getId());
+        //$msg = $msg . "; user=$user";
+
+        //$id = $calllogUtil->getNextEncounterGeneratedId();
+        //$msg = $msg . "; id=$id";
+
+        //$this->container ContainerInterface $container
+        //https://github.com/symfony/symfony/blob/5.0/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php
+        //$calllogUtilDirect = $this->container->get('calllog_util');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $res = $userServiceUtil->checkSslCertificate();
+        exit("Test Certificate: ".$res);
+
+        $this->addFlash(
+            'notice',
+            $msg
+        );
+
+        return array(
+            'user' => $user,
+            'title' => "TestController"
+        );
+    }
+
 }

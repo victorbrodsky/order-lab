@@ -3008,6 +3008,30 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
+    public function checkSslCertificate() {
+        $url = "https://view.online"; // Replace with your target URL
+        $host = parse_url($url, PHP_URL_HOST);
+        
+        // Create SSL context to capture the peer certificate
+        $context = stream_context_create(["ssl" => ["capture_peer_cert" => true]]);
+        $client = stream_socket_client("ssl://$host:443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+        
+        if ($client) {
+            $params = stream_context_get_params($client);
+            $cert = $params["options"]["ssl"]["peer_certificate"];
+            $certInfo = openssl_x509_parse($cert);
+        
+            $validFrom = date(DATE_RFC2822, $certInfo['validFrom_time_t']);
+            $validTo = date(DATE_RFC2822, $certInfo['validTo_time_t']);
+        
+            echo "Certificate for $host\n<br>";
+            echo "Valid From: $validFrom\n<br>";
+            echo "Valid To: $validTo\n<br>";
+        } else {
+            echo "Failed to connect to $host: $errstr ($errno)\n";
+        }
+    }
+
     public function createUserADStatusCron( $frequency = '6h' ) {
 
         if( $this->isWindows() ) {
