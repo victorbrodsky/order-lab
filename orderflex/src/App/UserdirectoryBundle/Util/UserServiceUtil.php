@@ -3008,9 +3008,19 @@ Pathology and Laboratory Medicine",
         return $res;
     }
 
-    public function checkSslCertificate() {
-        $url = "https://view.online"; // Replace with your target URL
+    public function checkSslCertificate( $domain ) {
+        echo "domain=$domain <br>";
+        if( !$domain ) {
+            $domain = 'view.online';
+            echo "use the default domain=$domain <br>";
+        }
+
+        $url = "https://".$domain; // Replace with your target URL
+        echo "url=$url <br>";
+
+
         $host = parse_url($url, PHP_URL_HOST);
+        echo "host=$host <br>";
         
         // Create SSL context to capture the peer certificate
         $context = stream_context_create(["ssl" => ["capture_peer_cert" => true]]);

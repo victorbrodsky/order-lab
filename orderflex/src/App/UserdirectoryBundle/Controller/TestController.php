@@ -11,6 +11,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\CallLogBundle\Util\CallLogUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 //use Symfony\Component\Routing\Annotation\Template;
 
@@ -61,8 +62,8 @@ class TestController extends TestBaseController
     }
 
     //http://127.0.0.1/directory/test/test-certificate/
-    #[Route(path: '/test-certificate/', name: 'user_test_certificate')]
-    public function testSslCertificateAction() {
+    #[Route(path: '/test-certificate/{domain}', name: 'user_test_certificate')]
+    public function testSslCertificateAction(Request $request, $domain) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -82,7 +83,7 @@ class TestController extends TestBaseController
         //https://github.com/symfony/symfony/blob/5.0/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php
         //$calllogUtilDirect = $this->container->get('calllog_util');
         $userServiceUtil = $this->container->get('user_service_utility');
-        $res = $userServiceUtil->checkSslCertificate();
+        $res = $userServiceUtil->checkSslCertificate($domain);
         exit("Test Certificate: ".$res);
 
         $this->addFlash(
