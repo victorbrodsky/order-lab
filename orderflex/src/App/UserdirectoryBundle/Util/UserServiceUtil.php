@@ -3025,7 +3025,7 @@ Pathology and Laboratory Medicine",
         // Create SSL context to capture the peer certificate
         $context = stream_context_create(["ssl" => ["capture_peer_cert" => true]]);
         $sslUrl = "ssl://$host:443";
-        echo "host=$host <br>";
+        echo "sslUrl=$sslUrl <br>";
         $client = stream_socket_client($sslUrl, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
         
         if ($client) {
