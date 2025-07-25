@@ -3010,38 +3010,28 @@ Pathology and Laboratory Medicine",
 
     public function checkSslCertificate() {
         //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
-        $domain = 'view.online'; // Replace with your domain
+
+        $domain = 'view.online';
         $port = 443;
 
-        // Create SSL context to capture the certificate
-        $context = stream_context_create([
-            'ssl' => ['capture_peer_cert' => true]
-        ]);
+        // Build the shell command
+        $cmd = "echo | openssl s_client -connect {$domain}:{$port} 2>/dev/null | openssl x509 -noout -dates";
 
-        // Open SSL connection
-        $client = @stream_socket_client(
-            "ssl://{$domain}:{$port}",
-            $errno,
-            $errstr,
-            30,
-            STREAM_CLIENT_CONNECT,
-            $context
-        );
+        // Execute and capture output
+        $output = shell_exec($cmd);
 
-        if (!$client) {
-            echo "Connection failed: $errstr ($errno) <br>";
-            return;
+        // Parse the output
+        $validFrom = $validTo = null;
+        if (preg_match('/notBefore=(.+)/', $output, $matches)) {
+            $validFrom = trim($matches[1]);
+        }
+        if (preg_match('/notAfter=(.+)/', $output, $matches)) {
+            $validTo = trim($matches[1]);
         }
 
-        // Extract certificate info
-        $params = stream_context_get_params($client);
-        $cert = $params['options']['ssl']['peer_certificate'];
-        $certinfo = openssl_x509_parse($cert);
-
-        // Convert to readable variables
-        $validFrom = date('Y-m-d H:i:s', $certinfo['validFrom_time_t']);
-        $validTo = date('Y-m-d H:i:s', $certinfo['validTo_time_t']);
-        $daysRemaining = floor(($certinfo['validTo_time_t'] - time()) / 86400);
+        // Optional: Convert to timestamp or calculate days remaining
+        $validToTimestamp = strtotime($validTo);
+        $daysRemaining = floor(($validToTimestamp - time()) / 86400);
 
         // Output or use variables
         echo "Certificate for {$domain}\n<br>";
