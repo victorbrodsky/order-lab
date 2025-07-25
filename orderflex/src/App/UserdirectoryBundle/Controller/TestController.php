@@ -85,6 +85,7 @@ class TestController extends TestBaseController
         $userServiceUtil = $this->container->get('user_service_utility');
 
         $res = $userServiceUtil->checkSslCertificate2($domain);
+        echo "<br><br>";
 
         $res = $userServiceUtil->checkSslCertificate($domain);
         exit("Test Certificate: ".$res);
