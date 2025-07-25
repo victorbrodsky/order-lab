@@ -50,8 +50,8 @@ class CertificateCronCommand extends Command {
     protected function configure() : void 
     {
         $this
-            ->setName('console.command')
-            ->setCommand('cron:certificate')
+            //->setName('console.command')
+            //->setCommand('cron:certificate')
             ->setDescription('Cron job to check SSL certificate expiration date')
             ->addArgument('domain', InputArgument::REQUIRED, 'Server domain, for example, view.online');
     }
@@ -75,7 +75,7 @@ class CertificateCronCommand extends Command {
 
 //cron: sudo crontab -e
 //Every 2 minutes: */2 * * * *
-// */2 * * * * /usr/bin/php /srv/order-lab-tenantappdemo/orderflex/bin/console cron:certificate --env=prod
+// */2 * * * * /usr/bin/php /srv/order-lab-tenantapptest/orderflex/bin/console cron:certificate --env=prod
 
 
 
