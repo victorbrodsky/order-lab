@@ -3045,7 +3045,7 @@ Pathology and Laboratory Medicine",
     }
     public function checkSslCertificate2() {
         $url = "https://www.google.com";
-        $url = "https://view.online";
+        //$url = "https://view.online";
         $orignal_parse = parse_url($url, PHP_URL_HOST);
         $get = stream_context_create(array("ssl" => array("capture_peer_cert" => TRUE)));
         $read = stream_socket_client("ssl://".$orignal_parse.":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
