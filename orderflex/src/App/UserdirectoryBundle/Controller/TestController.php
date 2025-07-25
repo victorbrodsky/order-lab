@@ -83,6 +83,9 @@ class TestController extends TestBaseController
         //https://github.com/symfony/symfony/blob/5.0/src/Symfony/Bundle/FrameworkBundle/Controller/AbstractController.php
         //$calllogUtilDirect = $this->container->get('calllog_util');
         $userServiceUtil = $this->container->get('user_service_utility');
+
+        $res = $userServiceUtil->checkSslCertificate2($domain);
+
         $res = $userServiceUtil->checkSslCertificate($domain);
         exit("Test Certificate: ".$res);
 
