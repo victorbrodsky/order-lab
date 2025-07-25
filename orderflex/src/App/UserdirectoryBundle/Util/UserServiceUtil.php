@@ -3101,9 +3101,6 @@ Pathology and Laboratory Medicine",
         $port = 443;
 
         $context = stream_context_create(
-//            [
-//                'ssl' => ['capture_peer_cert' => true]
-//            ]
             array(
                 "ssl" => array(
                     "capture_peer_cert" => TRUE
@@ -3123,21 +3120,20 @@ Pathology and Laboratory Medicine",
             $context
         );
 
-        if (!$client) {
+        if( $client ) {
+            $params = stream_context_get_params($client);
+            $cert = $params['options']['ssl']['peer_certificate'];
+            $certinfo = openssl_x509_parse($cert);
+
+            $validFrom = date('Y-m-d H:i:s', $certinfo['validFrom_time_t']);
+            $validTo = date('Y-m-d H:i:s', $certinfo['validTo_time_t']);
+
+            echo "Certificate for {$domain}<br>";
+            echo "Valid From: {$validFrom}<br>";
+            echo "Valid To:   {$validTo}<br>";
+        } else {
             echo "checkSslCertificate3: Connection failed: $errstr ($errno)";
-            //exit('Error');
         }
-
-        $params = stream_context_get_params($client);
-        $cert = $params['options']['ssl']['peer_certificate'];
-        $certinfo = openssl_x509_parse($cert);
-
-        $validFrom = date('Y-m-d H:i:s', $certinfo['validFrom_time_t']);
-        $validTo = date('Y-m-d H:i:s', $certinfo['validTo_time_t']);
-
-        echo "Certificate for {$domain}\n";
-        echo "Valid From: {$validFrom}\n";
-        echo "Valid To:   {$validTo}\n";
 
         exit("Ok");
     }
