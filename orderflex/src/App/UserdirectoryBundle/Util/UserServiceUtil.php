@@ -3134,8 +3134,6 @@ Pathology and Laboratory Medicine",
         } else {
             echo "checkSslCertificate3: Connection failed: $errstr ($errno)";
         }
-
-        exit("Ok");
     }
 
     public function createUserADStatusCron( $frequency = '6h' ) {
