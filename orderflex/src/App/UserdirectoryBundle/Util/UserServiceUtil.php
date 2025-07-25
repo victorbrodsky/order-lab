@@ -3063,6 +3063,9 @@ Pathology and Laboratory Medicine",
                     $emails = array($sender);
                 }
             }
+            echo "emails: <br>";
+            dump($emails);
+            exit('111');
 
             //$subject = "Warning! ".$res . " (sent by the external ORDER system on $environment server)";
             $subject = "Certificate expiration for $domain";
