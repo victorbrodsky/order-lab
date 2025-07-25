@@ -3114,8 +3114,8 @@ Pathology and Laboratory Medicine",
         );
 
         if (!$client) {
-            echo "Connection failed: $errstr ($errno)";
-            exit('Error');
+            echo "checkSslCertificate3: Connection failed: $errstr ($errno)";
+            //exit('Error');
         }
 
         $params = stream_context_get_params($client);
