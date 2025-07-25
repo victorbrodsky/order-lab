@@ -84,8 +84,8 @@ class TestController extends TestBaseController
         //$calllogUtilDirect = $this->container->get('calllog_util');
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $res = $userServiceUtil->checkSslCertificate3($domain);
-        echo "<br><br>";
+        //$res = $userServiceUtil->checkSslCertificate3($domain);
+        //echo "<br><br>";
 
         $res = $userServiceUtil->checkSslCertificate2($domain);
         echo "<br><br>";
