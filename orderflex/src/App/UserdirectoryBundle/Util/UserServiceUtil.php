@@ -3111,8 +3111,11 @@ Pathology and Laboratory Medicine",
             )
         );
 
+        $sslUrl = "ssl://$domain:$port";
+        echo "checkSslCertificate3: sslUrl=$sslUrl <br>";
+
         $client = stream_socket_client(
-            "ssl://{$domain}:{$port}",
+            $sslUrl,
             $errno,
             $errstr,
             30,
