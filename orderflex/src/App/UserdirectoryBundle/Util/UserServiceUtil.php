@@ -3100,9 +3100,16 @@ Pathology and Laboratory Medicine",
 
         $port = 443;
 
-        $context = stream_context_create([
-            'ssl' => ['capture_peer_cert' => true]
-        ]);
+        $context = stream_context_create(
+//            [
+//                'ssl' => ['capture_peer_cert' => true]
+//            ]
+            array(
+                "ssl" => array(
+                    "capture_peer_cert" => TRUE
+                )
+            )
+        );
 
         $client = stream_socket_client(
             "ssl://{$domain}:{$port}",
