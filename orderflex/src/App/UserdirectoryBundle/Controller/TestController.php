@@ -61,9 +61,9 @@ class TestController extends TestBaseController
         );
     }
 
-    //http://127.0.0.1/directory/test/test-certificate/
+    //https://view.online/c/test-institution/test-department/directory/test/test-certificate/
     #[Route(path: '/test-certificate/{domain}', name: 'user_test_certificate')]
-    public function testSslCertificateAction(Request $request, $domain) {
+    public function testSslCertificateAction(Request $request, $domain=NULL) {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
