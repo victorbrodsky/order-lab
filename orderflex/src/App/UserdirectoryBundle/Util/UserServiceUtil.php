@@ -2774,6 +2774,8 @@ Pathology and Laboratory Medicine",
 //        $logger->notice($res);
         $res = $this->createStatusCronLinux();
         //$logger->notice($res);
+
+        $res = $this->createCertificateCronLinux();
         //////////////////// EOF 4) Status ////////////////////
 
         return $res;
@@ -2808,6 +2810,39 @@ Pathology and Laboratory Medicine",
 
         $logger->notice($res);
         
+        return $res;
+    }
+    public function createCertificateCronLinux() {
+
+        if( $this->isWindows() ) {
+            //Windows
+            return "Windows is not supported";
+        }
+
+        $logger = $this->container->get('logger');
+        $logger->notice("Creating status cron job for Linux");
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+
+        //$domain = 'view.online';
+        $commandName = "cron:certificate";
+        $cronJobName = $commandName." --env=prod"; //." ".$domain;
+
+        $phpPath = $this->getPhpPath();
+        $statusCronJobCommand = $phpPath." ".$projectDir.DIRECTORY_SEPARATOR."bin/console $cronJobName";
+
+        //Every 2 minutes: */2 * * * *
+        //Every day at 3 AM: 0 3 * * *
+        $statusCronJob = "0 3 * * *" . " " . $statusCronJobCommand;
+
+        if( $this->getCronJobFullNameLinux($commandName) === false ) {
+            $this->addCronJobLinux($statusCronJob);
+            $res = "Created $cronJobName cron job";
+        } else {
+            $res = "$cronJobName already exists";
+        }
+
+        $logger->notice($res);
+
         return $res;
     }
     //Dummy test cron job to check new line for multiple jobs
@@ -3051,7 +3086,7 @@ Pathology and Laboratory Medicine",
 
         return NULL;
     }
-    public function checkSslCertificate( $domain=NULL ) {
+    public function checkSslCertificate( $domain=NULL, $renew=true ) {
         //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
 
         $daysRemaining = $this->getSslCertificateRemainingDays($domain);
@@ -3081,12 +3116,18 @@ Pathology and Laboratory Medicine",
 
             $subject = "Warning: SSL certificate expiration for $domain";
             $msg = "The SSL certificate for server $domain will expire in $daysRemaining days.";
+            //insert steps
 
             $emailUtil->sendEmail($emails,$subject,$msg);
 
             //Event Log
             $eventType = "SSL Certificate Warning";
             $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
+
+            //Renew SSL certificate
+            if( $renew ) {
+
+            }
         }
 
         return $daysRemaining;
