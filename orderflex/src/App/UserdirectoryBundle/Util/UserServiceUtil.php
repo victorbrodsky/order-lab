@@ -3055,17 +3055,17 @@ Pathology and Laboratory Medicine",
             //$emails = array("oli2002@med.cornell.edu"); //testing
 
             //siteEmail
-            $sender = $userSecUtil->getSiteSettingParameter('siteEmail');
-            if( $sender ) {
+            $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
+            if( $sender && !str_contains($sender, 'example.com') ) {
                 if( $emails ) {
                     $emails[] = $sender;
                 } else {
                     $emails = array($sender);
                 }
             }
-            echo "emails: <br>";
-            dump($emails);
-            exit('111');
+            //echo "emails: <br>";
+            //dump($emails);
+            //exit('111');
 
             //$subject = "Warning! ".$res . " (sent by the external ORDER system on $environment server)";
             $subject = "Certificate expiration for $domain";
