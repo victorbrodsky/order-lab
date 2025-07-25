@@ -3046,7 +3046,7 @@ Pathology and Laboratory Medicine",
         echo "Days Remaining: {$daysRemaining}\n<br>";
 
         //Use two weeks in advance notification
-        if( (int)$daysRemaining < 14 ) {
+        if( (int)$daysRemaining < 114 ) {
             //send email
             $userSecUtil = $this->container->get('user_security_utility');
             $emailUtil = $this->container->get('user_mailer_utility');
