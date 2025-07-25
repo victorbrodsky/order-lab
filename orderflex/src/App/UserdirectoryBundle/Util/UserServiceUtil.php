@@ -3056,22 +3056,20 @@ Pathology and Laboratory Medicine",
 
             //siteEmail
             $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
-            if( $sender && !str_contains($sender, 'example.com') ) {
+            if( $sender ) {
                 if( $emails ) {
                     $emails[] = $sender;
                 } else {
                     $emails = array($sender);
                 }
             }
+            $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
             //echo "emails: <br>";
             //dump($emails);
             //exit('111');
 
-            //$subject = "Warning! ".$res . " (sent by the external ORDER system on $environment server)";
-            $subject = "Certificate expiration for $domain";
-
-            //body: “Site [URL/link] does not appear to be accessible. Please verify the site is operational.”
-            $msg = "The SSL certificate for server $domain will expire in $daysRemaining.";
+            $subject = "Warning: SSL certificate expiration for $domain";
+            $msg = "The SSL certificate for server $domain will expire in $daysRemaining days.";
 
             $emailUtil->sendEmail($emails,$subject,$msg);
 
