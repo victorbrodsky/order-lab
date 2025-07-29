@@ -246,7 +246,7 @@ class SignUpController extends OrderAbstractController
 
             if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
                 $captchaRes = $request->request->get('g-recaptcha-response');
-                if( !$this->captchaValidate($captchaRes) ) {
+                if( !$this->captchaValidate($request,$captchaRes) ) {
                     $form->get('recaptcha')->addError(new FormError('Captcha is required'));
                 }
             }
@@ -402,10 +402,10 @@ class SignUpController extends OrderAbstractController
 
     //get success response from recaptcha and return it to controller
     //https://www.google.com/recaptcha/admin#site/341068506
-    function captchaValidate($recaptcha) {
+    function captchaValidate($request,$recaptcha) {
 
         //return false; //Fatal error: Cannot declare class App\UserdirectoryBundle\Util\ReCaptchaResponse, because the name is already in use
-        
+
         dump($recaptcha);
 
         //$dir = $this->getParameter('kernel.root_dir'); //app
@@ -423,6 +423,7 @@ class SignUpController extends OrderAbstractController
         $reCaptcha = new ReCaptcha($captchaSecretKey);
 
         $response = $reCaptcha->verifyResponse(
+            $request,
             $_SERVER["REMOTE_ADDR"],
             $recaptcha
         );

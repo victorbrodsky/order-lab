@@ -107,7 +107,7 @@ class ReCaptcha
      *
      * @return ReCaptchaResponse
      */
-    public function verifyResponse($remoteIp, $response)
+    public function verifyResponse_old($remoteIp, $response)
     {
         $recaptchaResponse = new ReCaptchaResponse();
         // Discard empty solution submissions
@@ -138,6 +138,31 @@ class ReCaptcha
             $recaptchaResponse->errorCodes = $answers['error-codes'];
         }
         return $recaptchaResponse;
+    }
+
+    public function verifyResponse($request, $remoteIp, $recaptchaResponse) {
+
+        echo '$remoteIp='.$remoteIp."<br>";
+        echo '$recaptchaResponse='.$recaptchaResponse."<br>";
+
+        $userIp = $request->getClientIp();
+
+        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+        $response = file_get_contents($verifyUrl . '?secret=' . urlencode($this->_secret) . '&response=' . urlencode($recaptchaResponse) . '&remoteip=' . urlencode($userIp));
+        $responseData = json_decode($response);
+        dump($responseData);
+        exit('captcha');
+
+        $recaptchaResponse = new ReCaptchaResponse();
+        if ($responseData->success) {
+            // ✅ CAPTCHA passed — proceed with form logic
+            $recaptchaResponse->success = true;
+        } else {
+            // ❌ CAPTCHA failed — handle error
+            $recaptchaResponse->success = false;
+            $recaptchaResponse->errorCodes = $responseData->errorCodes; //['error-codes'];
+        }
+
     }
 }
 ?>
