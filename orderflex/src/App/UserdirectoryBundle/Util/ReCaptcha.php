@@ -48,6 +48,8 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
+use Symfony\Component\HttpClient\HttpClient;
+
 class ReCaptcha
 {
     private static $_signupUrl = "https://www.google.com/recaptcha/admin";
@@ -146,6 +148,21 @@ class ReCaptcha
         //echo '$recaptchaResponse='.$recaptchaResponse."<br>";
 
         $userIp = $request->getClientIp();
+        echo '$userIp='.$userIp."<br>";
+        echo '$this->_secret='.$this->_secret."<br>";
+
+
+        $client = HttpClient::create();
+        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+            'body' => [
+                'secret' => $this->_secret,
+                'response' => $recaptchaResponse,
+                'remoteip' => $userIp
+            ]
+        ]);
+        $responseData = $response->toArray();
+        dump($responseData);
+
 
         $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
         $response = file_get_contents($verifyUrl . '?secret=' . urlencode($this->_secret) . '&response=' . urlencode($recaptchaResponse) . '&remoteip=' . urlencode($userIp));

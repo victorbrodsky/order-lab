@@ -115,6 +115,7 @@
         <div class="col-xs-12 text-center">
         <p>
             {{ formmacros.field(form.recaptcha) }}
+            captchaSiteKey={{ captchaSiteKey }}<br>
             {#<div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>#}
             <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}"></div>
         </p>
