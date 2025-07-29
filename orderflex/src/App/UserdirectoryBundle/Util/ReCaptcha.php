@@ -68,6 +68,8 @@ class ReCaptcha
                 . self::$_signupUrl . "'>" . self::$_signupUrl . "</a>");
         }
         $this->_secret=$secret;
+
+        echo 'init: $this->_secret='.$this->_secret."<br>";
     }
     /**
      * Encodes the given data into a query string format.
@@ -149,6 +151,9 @@ class ReCaptcha
 
         $userIp = $request->getClientIp();
         echo '$userIp='.$userIp."<br>";
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
         echo '$this->_secret='.$this->_secret."<br>";
 
 
