@@ -56,6 +56,18 @@ class ReCaptcha
     private static $_siteVerifyUrl = "https://www.google.com/recaptcha/api/siteverify?";
     private $_secret;
     private static $_version = "php_1.0";
+
+    public function __construct($secret)
+    {
+        if ($secret == null || $secret == "") {
+            die("To use reCAPTCHA you must get an API key from <a href='"
+                . self::$_signupUrl . "'>" . self::$_signupUrl . "</a>");
+        }
+        $this->_secret=$secret;
+        echo '__construct: $this->_secret='.$this->_secret."<br>";
+    }
+
+
     /**
      * Constructor.
      *
@@ -71,6 +83,7 @@ class ReCaptcha
 
         echo 'init: $this->_secret='.$this->_secret."<br>";
     }
+
     /**
      * Encodes the given data into a query string format.
      *
@@ -111,8 +124,10 @@ class ReCaptcha
      *
      * @return ReCaptchaResponse
      */
-    public function verifyResponse_old($remoteIp, $response)
+    public function verifyResponse($remoteIp, $response)
     {
+        echo '$remoteIp='.$remoteIp."<br>";
+
         $recaptchaResponse = new ReCaptchaResponse();
         // Discard empty solution submissions
         if ($response == null || strlen((string)$response) == 0) {
@@ -144,7 +159,7 @@ class ReCaptcha
         return $recaptchaResponse;
     }
 
-    public function verifyResponse($request, $remoteIp, $recaptchaResponse, $captchaSecretKey) {
+    public function verifyResponse_new($request, $remoteIp, $recaptchaResponse, $captchaSecretKey) {
 
         echo '$remoteIp='.$remoteIp."<br>";
         //echo '$recaptchaResponse='.$recaptchaResponse."<br>";
