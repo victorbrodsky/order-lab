@@ -75,6 +75,7 @@ class CertificateCronCommand extends Command {
 
 //cron: sudo crontab -e
 //Every 2 minutes: */2 * * * *
+//Every day at 3 AM: 0 3 * * *
 // */2 * * * * /usr/bin/php /srv/order-lab-tenantapptest/orderflex/bin/console cron:certificate --env=prod
 
 

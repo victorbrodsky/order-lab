@@ -1,0 +1,20 @@
+Generate DB diagrams using phuml
+
+1) Using DBeaver
+Install DBeaver
+Open Schem
+Select objects
+Right Click -> Create New Diagram
+On the diagram, right click and "Save Diagram as ..."
+
+2) Using PHUML
+Install phuml:
+composer global require phuml/phuml
+
+Generate TRP diagrams:
+phuml phuml:diagram -r -a -i -o -p dot src/App/TranslationalResearchBundle/Entity
+
+Generate User diagrams:
+phuml phuml:diagram -r -a -i -o -p dot src/App/UserdirectoryBundle/Entity/ user_diagram.png
+
+
