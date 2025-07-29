@@ -143,7 +143,7 @@ class ReCaptcha
     public function verifyResponse($request, $remoteIp, $recaptchaResponse) {
 
         echo '$remoteIp='.$remoteIp."<br>";
-        echo '$recaptchaResponse='.$recaptchaResponse."<br>";
+        //echo '$recaptchaResponse='.$recaptchaResponse."<br>";
 
         $userIp = $request->getClientIp();
 

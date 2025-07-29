@@ -115,7 +115,8 @@
         <div class="col-xs-12 text-center">
         <p>
             {{ formmacros.field(form.recaptcha) }}
-            <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+            {#<div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>#}
+            <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}"></div>
         </p>
         </div>
     {% endif %}
@@ -148,7 +149,7 @@
 <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
 
-<script src='https://www.google.com/recaptcha/api.js'></script>
+<script src='https://www.google.com/recaptcha/api.js' async defer></script>
 
 <script language="Javascript">
 
