@@ -170,7 +170,10 @@ class ReCaptcha
 
 
         $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
-        $response = file_get_contents($verifyUrl . '?secret=' . urlencode($this->_secret) . '&response=' . urlencode($recaptchaResponse) . '&remoteip=' . urlencode($userIp));
+        //$response = file_get_contents($verifyUrl . '?secret=' . urlencode($this->_secret) . '&response=' . urlencode($recaptchaResponse) . '&remoteip=' . urlencode($userIp));
+        $fullVerifyUrl = $verifyUrl . '?secret=' . urlencode($this->_secret) . '&response=' . urlencode($recaptchaResponse) . '&remoteip=' . urlencode($userIp);
+        echo '$fullVerifyUrl='.$fullVerifyUrl."<br>";
+        $response = file_get_contents($fullVerifyUrl);
         $responseData = json_decode($response);
         dump($responseData);
         exit('captcha');
