@@ -404,7 +404,7 @@ class SignUpController extends OrderAbstractController
     //https://www.google.com/recaptcha/admin#site/341068506
     function captchaValidate($recaptcha) {
 
-        return false; //Fatal error: Cannot declare class App\UserdirectoryBundle\Util\ReCaptchaResponse, because the name is already in use
+        //return false; //Fatal error: Cannot declare class App\UserdirectoryBundle\Util\ReCaptchaResponse, because the name is already in use
 
         //$dir = $this->getParameter('kernel.root_dir'); //app
         //echo "dir=".$dir."<br>";
