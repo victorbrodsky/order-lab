@@ -52,19 +52,25 @@ use Symfony\Component\HttpClient\HttpClient;
 
 class ReCaptcha
 {
-    private static $_signupUrl = "https://www.google.com/recaptcha/admin";
-    private static $_siteVerifyUrl = "https://www.google.com/recaptcha/api/siteverify?";
-    private $_secret;
-    private static $_version = "php_1.0";
+    private static string $_signupUrl = "https://www.google.com/recaptcha/admin";
+    private static string $_siteVerifyUrl = "https://www.google.com/recaptcha/api/siteverify?";
+    private string $_secret;
+    private static string $_version = "php_1.0";
 
-    public function __construct($secret)
+    public function __construct( string $secret )
     {
-        if ($secret == null || $secret == "") {
-            die("To use reCAPTCHA you must get an API key from <a href='"
-                . self::$_signupUrl . "'>" . self::$_signupUrl . "</a>");
+//        if ($secret == null || $secret == "") {
+//            die("To use reCAPTCHA you must get an API key from <a href='"
+//                . self::$_signupUrl . "'>" . self::$_signupUrl . "</a>");
+//        }
+        if (empty($secret)) {
+            throw new \InvalidArgumentException(
+                "Missing reCAPTCHA API key. You can get one at: " . self::$_signupUrl
+            );
         }
+        $this->_secret = $secret;
+
         $this->_secret=$secret;
-        echo '__construct: $this->_secret='.$this->_secret."<br>";
     }
 
 
@@ -81,7 +87,7 @@ class ReCaptcha
         }
         $this->_secret=$secret;
 
-        echo 'init: $this->_secret='.$this->_secret."<br>";
+        //echo 'init: $this->_secret='.$this->_secret."<br>";
     }
 
     /**
@@ -197,10 +203,10 @@ class ReCaptcha
 
         $recaptchaResponse = new ReCaptchaResponse();
         if ($responseData->success) {
-            // ✅ CAPTCHA passed — proceed with form logic
+            //CAPTCHA passed - proceed with form logic
             $recaptchaResponse->success = true;
         } else {
-            // ❌ CAPTCHA failed — handle error
+            //CAPTCHA failed - handle error
             $recaptchaResponse->success = false;
             $recaptchaResponse->errorCodes = $responseData->errorCodes; //['error-codes'];
         }
