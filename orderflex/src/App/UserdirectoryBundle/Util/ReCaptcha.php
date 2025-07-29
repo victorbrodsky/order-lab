@@ -152,8 +152,8 @@ class ReCaptcha
         $userIp = $request->getClientIp();
         echo '$userIp='.$userIp."<br>";
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
         echo '$this->_secret='.$this->_secret."<br>";
 
 
