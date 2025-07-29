@@ -395,8 +395,13 @@ class EmailUtil {
         // If you set two To: recipients and three Bcc: recipients in the message and all of the recipients
         // are delivered to successfully then the value 5 will be returned.
         //$emailRes = $mailer->send($message);
+        //$sendEmailFlag = false;
+        $emailRes = '';
         try{
-            $emailRes = $mailer->send($message);
+            //$emailRes = $mailer->send($message);
+            $mailer->send($message); //return void
+            //$sendEmailFlag = true;
+            $emailRes = 'Email successfully sent.';
         }
         catch( TransportExceptionInterface $e ){
             $emailRes = $e->getMessage() ;
@@ -419,6 +424,7 @@ class EmailUtil {
         $logger->notice($msg);
 
         return $emailRes;
+        //return $sendEmailFlag;
     }
 
     public function getMailer() {
