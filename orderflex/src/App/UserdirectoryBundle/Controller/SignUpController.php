@@ -406,7 +406,7 @@ class SignUpController extends OrderAbstractController
 
         //return false; //Fatal error: Cannot declare class App\UserdirectoryBundle\Util\ReCaptchaResponse, because the name is already in use
 
-        dump($recaptcha);
+        //dump($recaptcha);
 
         //$dir = $this->getParameter('kernel.root_dir'); //app
         //echo "dir=".$dir."<br>";
@@ -417,16 +417,17 @@ class SignUpController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
 
+        $userIp = $request->getClientIp();
+
         $response = null;
 
         // check secret key
         $reCaptcha = new ReCaptcha($captchaSecretKey);
 
         $response = $reCaptcha->verifyResponse(
-            //$request,
-            $_SERVER["REMOTE_ADDR"],
+            //$_SERVER["REMOTE_ADDR"],
+            $userIp,
             $recaptcha
-            //$captchaSecretKey
         );
 
 //        $response = $reCaptcha->verifyResponse(

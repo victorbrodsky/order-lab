@@ -126,7 +126,7 @@ class ReCaptcha
      */
     public function verifyResponse($remoteIp, $response)
     {
-        echo '$remoteIp='.$remoteIp."<br>";
+        //echo '$remoteIp='.$remoteIp."<br>";
 
         $recaptchaResponse = new ReCaptchaResponse();
         // Discard empty solution submissions
@@ -146,8 +146,8 @@ class ReCaptcha
             )
         );
         $answers = json_decode($getResponse, true);
-        dump($answers);
-        exit('captcha');
+        //dump($answers);
+        //exit('captcha');
 
         //$recaptchaResponse = new ReCaptchaResponse();
         if (trim((string)$answers['success']) == true) {
