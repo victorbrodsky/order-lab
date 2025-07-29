@@ -425,7 +425,8 @@ class SignUpController extends OrderAbstractController
         $response = $reCaptcha->verifyResponse(
             $request,
             $_SERVER["REMOTE_ADDR"],
-            $recaptcha
+            $recaptcha,
+            $captchaSecretKey
         );
 
         if( $response != null && $response->success ) {

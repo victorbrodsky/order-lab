@@ -144,7 +144,7 @@ class ReCaptcha
         return $recaptchaResponse;
     }
 
-    public function verifyResponse($request, $remoteIp, $recaptchaResponse) {
+    public function verifyResponse($request, $remoteIp, $recaptchaResponse, $captchaSecretKey) {
 
         echo '$remoteIp='.$remoteIp."<br>";
         //echo '$recaptchaResponse='.$recaptchaResponse."<br>";
@@ -154,13 +154,15 @@ class ReCaptcha
 
         //$userSecUtil = $this->container->get('user_security_utility');
         //$captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
-        echo '$this->_secret='.$this->_secret."<br>";
+
+        $secret = $captchaSecretKey;
+        echo '$secret='.$secret."<br>";
 
 
         $client = HttpClient::create();
         $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
             'body' => [
-                'secret' => $this->_secret,
+                'secret' => $secret,
                 'response' => $recaptchaResponse,
                 'remoteip' => $userIp
             ]
@@ -171,7 +173,7 @@ class ReCaptcha
 
         $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
         //$response = file_get_contents($verifyUrl . '?secret=' . urlencode($this->_secret) . '&response=' . urlencode($recaptchaResponse) . '&remoteip=' . urlencode($userIp));
-        $fullVerifyUrl = $verifyUrl . '?secret=' . urlencode($this->_secret) . '&response=' . urlencode($recaptchaResponse) . '&remoteip=' . urlencode($userIp);
+        $fullVerifyUrl = $verifyUrl . '?secret=' . urlencode($secret) . '&response=' . urlencode($recaptchaResponse) . '&remoteip=' . urlencode($userIp);
         echo '$fullVerifyUrl='.$fullVerifyUrl."<br>";
         $response = file_get_contents($fullVerifyUrl);
         $responseData = json_decode($response);
