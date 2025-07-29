@@ -127,12 +127,15 @@ class ReCaptcha
             )
         );
         $answers = json_decode($getResponse, true);
+        dump($answers);
+        exit('captcha');
+
         //$recaptchaResponse = new ReCaptchaResponse();
-        if (trim((string)$answers ['success']) == true) {
+        if (trim((string)$answers['success']) == true) {
             $recaptchaResponse->success = true;
         } else {
             $recaptchaResponse->success = false;
-            $recaptchaResponse->errorCodes = $answers [error-codes];
+            $recaptchaResponse->errorCodes = $answers['error-codes'];
         }
         return $recaptchaResponse;
     }
