@@ -28,7 +28,7 @@ use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Entity\UserInfo;
 use App\UserdirectoryBundle\Form\ResetPasswordType;
 use App\UserdirectoryBundle\Form\UserSimpleType;
-use App\UserdirectoryBundle\Util\ReCaptcha;
+use App\UserdirectoryBundle\Captcha\ReCaptcha;
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 

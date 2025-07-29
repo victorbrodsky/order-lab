@@ -33,7 +33,7 @@
  * A ReCaptchaResponse is returned from checkAnswer().
  */
 
-namespace App\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Captcha;
 
 class ReCaptchaResponse
 {

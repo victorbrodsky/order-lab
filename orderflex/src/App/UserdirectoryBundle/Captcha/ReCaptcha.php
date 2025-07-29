@@ -44,7 +44,7 @@
 //6) In the site settings: enter generated site key and secret key from
 //Example use in web: C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\templates\AppUserdirectoryBundle\SignUp\new.html.twig
 
-namespace App\UserdirectoryBundle\Util;
+namespace App\UserdirectoryBundle\Captcha;
 
 
 
