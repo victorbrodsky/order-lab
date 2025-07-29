@@ -2832,6 +2832,7 @@ Pathology and Laboratory Medicine",
 
         //Every 2 minutes: */2 * * * *
         //Every day at 3 AM: 0 3 * * *
+        //EDT to UTC 3am -> +4 -> 7am -> 0 7 * * *
         $statusCronJob = "0 3 * * *" . " " . $statusCronJobCommand;
 
         if( $this->getCronJobFullNameLinux($commandName) === false ) {
@@ -3092,7 +3093,7 @@ Pathology and Laboratory Medicine",
         $daysRemaining = $this->getSslCertificateRemainingDays($domain);
 
         //Use two weeks (14 days) in advance notification
-        if( $daysRemaining === NULL || $daysRemaining < 114 ) {
+        if( $daysRemaining === NULL || $daysRemaining < 14 ) {
             //send email
             $userSecUtil = $this->container->get('user_security_utility');
             $emailUtil = $this->container->get('user_mailer_utility');
