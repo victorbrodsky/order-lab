@@ -149,11 +149,12 @@ class Init:
             password_text.send_keys(siteEmail)
             time.sleep(3)
 
-            # oleg_userdirectorybundle_initialconfigurationtype_mailerDeliveryAddresses
-            password_text = driver.find_element(By.ID,
-                                                     "oleg_userdirectorybundle_initialconfigurationtype_mailerDeliveryAddresses")
-            password_text.send_keys(siteEmail)
-            time.sleep(3)
+            #Don't use "Reroute all outgoing emails only to " for Demo
+            # # oleg_userdirectorybundle_initialconfigurationtype_mailerDeliveryAddresses
+            # password_text = driver.find_element(By.ID,
+            #                                          "oleg_userdirectorybundle_initialconfigurationtype_mailerDeliveryAddresses")
+            # password_text.send_keys(siteEmail)
+            # time.sleep(3)
 
             # click button by ID: oleg_userdirectorybundle_initialconfigurationtype_save
             self.automation.click_button_by_id("oleg_userdirectorybundle_initialconfigurationtype_save")
