@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TranslationalResearchBundle\Controller;
+namespace App\ResAppBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\SignUpController;
