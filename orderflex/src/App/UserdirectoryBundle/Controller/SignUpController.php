@@ -1165,12 +1165,19 @@ class SignUpController extends OrderAbstractController
         }
         //exit('new');
 
+        if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+            $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+        } else {
+            $captchaSiteKey = null;
+        }
+
         return $this->render('AppUserdirectoryBundle/SignUp/forgot-password.html.twig', array(
             'resetPassword' => $resetPassword,
             'form' => $form->createView(),
             'title' => "ORDER Password Reset",
             'sitenamefull' => $this->siteNameStr,
-            'sitename' => $this->siteName
+            'sitename' => $this->siteName,
+            'captchaSiteKey' => $captchaSiteKey
         ));
     }
     public function sendEmailWithResetLink($resetPassword,$request) {

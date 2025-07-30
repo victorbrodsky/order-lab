@@ -24,6 +24,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -53,6 +54,14 @@ class ForgotPasswordType extends AbstractType
             'label'=>'Email:',
             //'required'=> true, //does not work here
             'attr' => array('class'=>'form-control'), //form-control-modif email-mask
+        ));
+
+        //used to display recaptcha error
+        $builder->add( 'recaptcha', HiddenType::class, array(
+            'mapped' => false,
+            'error_bubbling' => false,
+            'label' => false,
+            'attr' => array('class'=>'form-control g-recaptcha1'),
         ));
 
         $builder->add('submit', SubmitType::class, array(
