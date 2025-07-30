@@ -101,6 +101,13 @@ class SignUpController extends OrderAbstractController
 
         if( $form->isSubmitted() ) {
 
+            if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+                $captchaRes = $request->request->get('g-recaptcha-response');
+                if( !$this->captchaValidate($request,$captchaRes) ) {
+                    $form->get('recaptcha')->addError(new FormError('Captcha is required'));
+                }
+            }
+
             $passwordErrorCount = 0;
             if( !$password ) {
                 $passwordErrorCount++;
@@ -241,13 +248,6 @@ class SignUpController extends OrderAbstractController
                 $userDb = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($signUp->getUserName());
                 if( $userDb ) {
                     $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
-                }
-            }
-
-            if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
-                $captchaRes = $request->request->get('g-recaptcha-response');
-                if( !$this->captchaValidate($request,$captchaRes) ) {
-                    $form->get('recaptcha')->addError(new FormError('Captcha is required'));
                 }
             }
 
@@ -1034,6 +1034,13 @@ class SignUpController extends OrderAbstractController
         $form->handleRequest($request);
 
         if( $form->isSubmitted() ) {
+
+            if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+                $captchaRes = $request->request->get('g-recaptcha-response');
+                if( !$this->captchaValidate($request,$captchaRes) ) {
+                    $form->get('recaptcha')->addError(new FormError('Captcha is required'));
+                }
+            }
 
             if( !$resetPassword->getEmail() ) {
                 //$form->get('email')->addError(new FormError('The email value should not be blank.'));
