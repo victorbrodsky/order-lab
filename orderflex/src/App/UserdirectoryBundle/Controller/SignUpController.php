@@ -346,6 +346,7 @@ class SignUpController extends OrderAbstractController
         $emailUtil = $this->container->get('user_mailer_utility');
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         $newline = "<br>";
@@ -358,13 +359,20 @@ class SignUpController extends OrderAbstractController
         );
 
         //$activationUrl = ""; //http://URL/order/activate-account/REGISTRATION-LINK-ID
-        $activationUrl = $this->container->get('router')->generate(
+//        $activationUrl = $this->container->get('router')->generate(
+//            $this->siteName.'_activate_account',
+//            array(
+//                'registrationLinkID'=>$signUp->getRegistrationLinkID()
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+        $activationUrl = $userTenantUtil->routerGenerateExternalChanelWrapper(
             $this->siteName.'_activate_account',
             array(
                 'registrationLinkID'=>$signUp->getRegistrationLinkID()
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+            )
+        ); //$routName, $paramArr=array(), $replaceContext = true
+
         $activationUrl = '<a href="'.$activationUrl.'">'.$activationUrl.'</a>';
 
         $body =
@@ -1184,6 +1192,7 @@ class SignUpController extends OrderAbstractController
         $emailUtil = $this->container->get('user_mailer_utility');
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
@@ -1192,13 +1201,21 @@ class SignUpController extends OrderAbstractController
         $subject = "ORDER Password reset link";
 
         //$activationUrl = ""; //http://URL/order/activate-account/REGISTRATION-LINK-ID
-        $resetPasswordUrl = $this->container->get('router')->generate(
+//        $resetPasswordUrl = $this->container->get('router')->generate(
+//            $this->siteName.'_reset_password',
+//            array(
+//                'resetPasswordLinkID'=>$resetPassword->getRegistrationLinkID()
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+        $resetPasswordUrl = $userTenantUtil->routerGenerateExternalChanelWrapper(
             $this->siteName.'_reset_password',
             array(
                 'resetPasswordLinkID'=>$resetPassword->getRegistrationLinkID()
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+            )
+        ); //$routName, $paramArr=array(), $replaceContext = true
+
+        $resetPasswordUrl = '<a href="'.$resetPasswordUrl.'">'.$resetPasswordUrl.'</a>';
 
         $body =
             "Please visit the following link to reset your password or copy/paste it into your browser’s address bar:".

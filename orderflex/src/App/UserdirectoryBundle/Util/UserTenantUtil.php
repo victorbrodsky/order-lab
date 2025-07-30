@@ -1696,7 +1696,7 @@ class UserTenantUtil
         return $pageUrl;
     }
 
-    public function routerGenerateExternalChanelWrapper($routName, $paramArr=array(), $replaceContext = true) {
+    public function routerGenerateExternalChanelWrapper($routName, $paramArr=array(), $replaceContext=true) {
 
         if( $replaceContext ) {
             $userSecUtil = $this->container->get('user_security_utility');
