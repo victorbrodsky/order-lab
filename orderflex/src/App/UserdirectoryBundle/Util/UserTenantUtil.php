@@ -1696,8 +1696,8 @@ class UserTenantUtil
         return $pageUrl;
     }
 
+    //Set scheme is not working - the url behind HaProxy is still http instead of https
     public function routerGenerateExternalChanelWrapper_orig($routName, $paramArr=array(), $replaceContext=true) {
-
         $context = $this->container->get('router')->getContext();
         if( $replaceContext ) {
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1705,7 +1705,7 @@ class UserTenantUtil
             if (!$urlConnectionChannel) {
                 $urlConnectionChannel = 'http';
             }
-            echo "setSheme=".$urlConnectionChannel."<br>";
+            //echo "setSheme=".$urlConnectionChannel."<br>";
             $context->setScheme($urlConnectionChannel);
         }
 
@@ -1715,17 +1715,10 @@ class UserTenantUtil
             $paramArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
-
-        if( $replaceContext ) {
-            $url = preg_replace('/^http:/', 'https:', $pageUrl);
-        }
-
-
-            exit('$pageUrl='.$pageUrl);
+        //exit('$pageUrl='.$pageUrl);
 
         return $pageUrl;
     }
-
     public function routerGenerateExternalChanelWrapper($routName, $paramArr=array(), $replaceSchema=true) {
         $router = $this->container->get('router');
 
@@ -1746,7 +1739,7 @@ class UserTenantUtil
                 );
             }
         }
-        exit('$pageUrl='.$pageUrl);
+        //exit('$pageUrl='.$pageUrl);
         return $pageUrl;
     }
 }
