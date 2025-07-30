@@ -3076,8 +3076,8 @@ class UserSecurityUtil {
                 //show disable url
                 //$url = "Not Available";
                 //$link = "<a href=\"$url\">Forgot Password</a>";
-                $link = "<a style=\"color: gray; cursor: default;\" title=\"Not unavailable for this site\">Forgot Password</a>";
-                $loginFooterArr[] = $link;
+                //$link = "<a style=\"color: gray; cursor: default;\" title=\"Not unavailable for this site\">Forgot Password</a>";
+                //$loginFooterArr[] = $link;
             }
         }
 
