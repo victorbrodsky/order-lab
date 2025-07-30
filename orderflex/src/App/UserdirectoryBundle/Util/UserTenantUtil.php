@@ -1698,9 +1698,9 @@ class UserTenantUtil
 
     public function routerGenerateExternalChanelWrapper($routName, $paramArr=array(), $replaceContext=true) {
 
+        $context = $this->container->get('router')->getContext();
         if( $replaceContext ) {
             $userSecUtil = $this->container->get('user_security_utility');
-            $context = $this->container->get('router')->getContext();
             $urlConnectionChannel = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
             if (!$urlConnectionChannel) {
                 $urlConnectionChannel = 'http';
