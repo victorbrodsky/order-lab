@@ -1705,6 +1705,7 @@ class UserTenantUtil
             if (!$urlConnectionChannel) {
                 $urlConnectionChannel = 'http';
             }
+            echo "setSheme=".$urlConnectionChannel."<br>";
             $context->setScheme($urlConnectionChannel);
         }
 
@@ -1717,6 +1718,7 @@ class UserTenantUtil
             $paramArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
+        exit('$pageUrl='.$pageUrl);
 
         return $pageUrl;
     }
