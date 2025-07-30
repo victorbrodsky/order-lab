@@ -1696,7 +1696,7 @@ class UserTenantUtil
         return $pageUrl;
     }
 
-    public function routerGenerateExternalChanelWrapper($routName, $paramArr=array(), $replaceContext=true) {
+    public function routerGenerateExternalChanelWrapper_orig($routName, $paramArr=array(), $replaceContext=true) {
 
         $context = $this->container->get('router')->getContext();
         if( $replaceContext ) {
@@ -1712,14 +1712,41 @@ class UserTenantUtil
         $router = $this->container->get('router');
         $pageUrl = $router->generate(
             $routName,
-            //array(
-            //    'id' => $applicationId
-            //),
             $paramArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
-        exit('$pageUrl='.$pageUrl);
 
+        if( $replaceContext ) {
+            $url = preg_replace('/^http:/', 'https:', $pageUrl);
+        }
+
+
+            exit('$pageUrl='.$pageUrl);
+
+        return $pageUrl;
+    }
+
+    public function routerGenerateExternalChanelWrapper($routName, $paramArr=array(), $replaceSchema=true) {
+        $router = $this->container->get('router');
+
+        $pageUrl = $router->generate(
+            $routName,
+            $paramArr,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        if( $replaceSchema ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $urlConnectionChannel = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
+            if ($urlConnectionChannel) {
+                $pageUrl = $urlConnectionChannel . ':' . $router->generate(
+                    $routName,
+                    $paramArr,
+                    UrlGeneratorInterface::NETWORK_PATH
+                );
+            }
+        }
+        exit('$pageUrl='.$pageUrl);
         return $pageUrl;
     }
 }
