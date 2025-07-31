@@ -318,7 +318,7 @@ class ResAppController extends OrderAbstractController {
             ));
         }
 
-        //default, initial state, when resapp homepage is showing without any parameters
+        //default, initial page, when resapp homepage is showing without any parameters
         //on default page, use only Residency Start Year filter
         if( count($filterParams) == 0 ) {
             //exit('initial');
