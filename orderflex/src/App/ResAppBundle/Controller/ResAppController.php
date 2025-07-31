@@ -264,18 +264,20 @@ class ResAppController extends OrderAbstractController {
         $rejectedandnotified = $filterform['rejectedandnotified']->getData();
 
         //$page = $request->get('page');
-        //echo "0startDates=".$startDates->format('Y-m-d')."<br>";
+        echo "startDates=".$startDates."<br>"; //->format('Y-m-d H:i:s')
+        echo "applicationSeasonStartDates=".$applicationSeasonStartDates."<br>"; //->format('Y-m-d H:i:s')
         //echo "active=".$active."<br>";
         //echo "filter=".$filter."<br>";
         //echo "<br>search=".$search."<br>";
         //exit('1');
 
         $filterParams = $request->query->all();
+        //echo "filterParams=".count($filterParams)."<br>";
 
         if( $route == "resapp_accepted_residents" && count($filterParams) == 0 ) {
             $residencyTypeId = null;
             if( count($residencyTypes) == 1 ) {
-                $firstResType = reset($residencyTypes);
+                $firstResType = reset($residencyTypes); //set the internal pointer of an array to its first element and return the value of that element
                 //echo "firstResType id=".key($residencyTypes)."";
                 //exit();
                 $residencyTypeId = key($residencyTypes);
@@ -305,7 +307,7 @@ class ResAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl($route,
                 array(
                     'filter[startDates]' => $defaultStartDates, 
-                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
+                    //'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
@@ -316,18 +318,21 @@ class ResAppController extends OrderAbstractController {
             ));
         }
 
+        //default, initial state, when resapp homepage is showing without any parameters
+        //on default page, use only Residency Start Year filter
         if( count($filterParams) == 0 ) {
+            //exit('initial');
             $residencyTypeId = null;
             if( count($residencyTypes) == 1 ) {
                 $firstResType = reset($residencyTypes);
                 //echo "firstResType id=".key($residencyTypes)."";
-                //exit();
+                //exit('initial');
                 $residencyTypeId = key($residencyTypes);
             }
             return $this->redirect( $this->generateUrl($route, //'resapp_home',
                 array(
                     'filter[startDates]' => $defaultStartDates, 
-                    'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
+                    //'filter[applicationSeasonStartDates]' => $defaultApplicationSeasonStartDates,
                     'filter[active]' => 1,
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
