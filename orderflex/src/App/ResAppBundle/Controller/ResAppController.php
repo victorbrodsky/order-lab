@@ -264,8 +264,8 @@ class ResAppController extends OrderAbstractController {
         $rejectedandnotified = $filterform['rejectedandnotified']->getData();
 
         //$page = $request->get('page');
-        echo "startDates=".$startDates."<br>"; //->format('Y-m-d H:i:s')
-        echo "applicationSeasonStartDates=".$applicationSeasonStartDates."<br>"; //->format('Y-m-d H:i:s')
+        //echo "startDates=".$startDates."<br>"; //->format('Y-m-d H:i:s')
+        //echo "applicationSeasonStartDates=".$applicationSeasonStartDates."<br>"; //->format('Y-m-d H:i:s')
         //echo "active=".$active."<br>";
         //echo "filter=".$filter."<br>";
         //echo "<br>search=".$search."<br>";
