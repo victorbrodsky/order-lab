@@ -245,6 +245,9 @@ class ResAppController extends OrderAbstractController {
         //$filterform->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
         $filterform->handleRequest($request);
 
+        //Note for filter dates: do not use "Residency Start Year" and "Application Season Start Year" together,
+        //it might conflict each other and does not give any residency applications on the list page.
+
         $filter = $filterform['filter']->getData(); //Residency Track
         $search = $filterform['search']->getData();
         $startDates = $filterform['startDates']->getData(); //Residency Start Year
@@ -319,7 +322,7 @@ class ResAppController extends OrderAbstractController {
         }
 
         //default, initial page, when resapp homepage is showing without any parameters
-        //on default page, use only Residency Start Year filter
+        //on default page, use only Residency Start Year as default filter
         if( count($filterParams) == 0 ) {
             //exit('initial');
             $residencyTypeId = null;

@@ -1,0 +1,21 @@
+add checkbox on the Site Settings page - title it “[ ] Show the section with the list of tenants on the homepage”
+
+add a second checkbox titled “[ ] Show “test” and “demo” tenants in the section with the list of tenants on the homepage,
+if available”. If this checkbox in Site Settings is not checked, hide the links to “test” and “demo”
+tenants in this section even if the section is set to be shown.
+
+Control home page behavior:
+home page - HomeController->mainCommonHomeAction '/'
+
+Show list of tenants with greeting:
+if( $primaryTenant ) {
+    $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request,$useShortName=true);
+    $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+    $greetingText = $tenantManager->getGreeting();
+}
+
+Add checkbox to the tenant-manager for each tenant and use only if tenant is primer.
+Or add to homepage manager page.
+Need one place to manage tenants and homepage
+
+
