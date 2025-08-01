@@ -41,6 +41,8 @@ class HomeController extends OrderAbstractController {
     public function mainCommonHomeAction(Request $request) {
 
         $userTenantUtil = $this->container->get('user_tenant_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         //homepagemanager show a different multi-tenant home page
         //TODO: define and get $tenantManagerName from the tenants list tenant-manager/tenant-manager/configure/
@@ -70,13 +72,13 @@ class HomeController extends OrderAbstractController {
         //show original primaryTenant (pathology) home page with a list of available sites
         //however, add a section with all available tenants
         if( $primaryTenant ) {
-            $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request,$useShortName=true);
-            $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
-            $greetingText = $tenantManager->getGreeting();
+            $showTenantsHomepage = $userSecUtil->getSiteSettingParameter('showTenantsHomepage');
+            if( $showTenantsHomepage ) {
+                $tenantBaseUrlArr = $userTenantUtil->getTenantBaseUrls($request, $useShortName = true);
+                $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
+                $greetingText = $tenantManager->getGreeting();
+            }
         }
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userServiceUtil = $this->container->get('user_service_utility');
 
         $width = "300";
         $height = "80";

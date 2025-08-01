@@ -1348,7 +1348,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'showTenantsHomepage' ) {
             $builder->add('showTenantsHomepage', null, array(
-                'label' => 'Show the section with the list of tenants on the homepage (for a primary tenant) [Yes/No]:',
+                'label' => 'Show the section with the list of tenants on the homepage (for a primary tenant):',
                 'attr' => array('class' => 'form-control')
             ));
         }
