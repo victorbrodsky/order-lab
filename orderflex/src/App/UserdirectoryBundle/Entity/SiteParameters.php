@@ -1053,6 +1053,10 @@ class SiteParameters {
     #[ORM\Column(type: 'text', nullable: true)]
     private $instanceId;
 
+    //Show the section with the list of tenants on the homepage
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $showTenantsHomepage;
+
 //    #[ORM\Column(type: 'text', nullable: true)]
 //    private $tenantPrefixUrlSlug;
 
@@ -1078,6 +1082,7 @@ class SiteParameters {
         $this->setShowCopyrightOnFooter(true);
         $this->setLdapAll(true);
         $this->setInitialConfigurationCompleted(false);
+        $this->setShowTenantsHomepage(true);
     }
 
 
@@ -4388,6 +4393,22 @@ class SiteParameters {
     public function setInstanceId($instanceId)
     {
         $this->instanceId = $instanceId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowTenantsHomepage()
+    {
+        return $this->showTenantsHomepage;
+    }
+
+    /**
+     * @param mixed $showTenantsHomepage
+     */
+    public function setShowTenantsHomepage($showTenantsHomepage)
+    {
+        $this->showTenantsHomepage = $showTenantsHomepage;
     }
 
     

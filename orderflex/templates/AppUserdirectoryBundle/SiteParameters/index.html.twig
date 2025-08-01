@@ -261,6 +261,17 @@
                 <td>{{ entity.authPartnerServer }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'authPartnerServer'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Send email notifications to platform administrators when new user records are created:</td>
+                <td>
+                    {% set showTenantsHomepageStr = 'No' %}
+                    {% if entity.showTenantsHomepage == true %}
+                        {% set showTenantsHomepageStr = 'Yes' %}
+                    {% endif %}
+                    {{ showTenantsHomepageStr }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'showTenantsHomepage'}) }}">Edit</a></td>
+            </tr>
 
 
             {#Maintenance#}

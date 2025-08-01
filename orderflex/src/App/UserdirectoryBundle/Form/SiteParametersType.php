@@ -1346,6 +1346,13 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'showTenantsHomepage' ) {
+            $builder->add('showTenantsHomepage', null, array(
+                'label' => 'Show the section with the list of tenants on the homepage (for a primary tenant) [Yes/No]:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'hostedUserGroups' ) {
 //            $builder->add('hostedUserGroups', EntityType::class, array(
 //                'class' => 'App\UserdirectoryBundle\Entity\HostedUserGroupList',

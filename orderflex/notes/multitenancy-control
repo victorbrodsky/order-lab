@@ -16,6 +16,8 @@ if( $primaryTenant ) {
 
 Add checkbox to the tenant-manager for each tenant and use only if tenant is primer.
 Or add to homepage manager page.
+Or add to the site settings, and the tenant can decide to show or hide the list of tenants.
+
 Need one place to manage tenants and homepage
 
 
