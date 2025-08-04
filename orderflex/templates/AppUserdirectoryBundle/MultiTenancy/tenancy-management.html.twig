@@ -86,6 +86,23 @@
                     server tenant1_server *:8087 check<br>
                     d) Restart haproxy: sudo systemctl restart haproxy<br>
 
+                    <br>
+                    <b>How to set a primary tenant</b>
+                    For a primary tenant, the homepage will look different -
+                    the homepage will show the list of the systems (fellowship, trp, vacation, etc) and the section
+                    with the list of other tenants. This section can be hidden by setting showTenantsHomepage to false (un-check)
+                    in the primary tenant's site settings.
+                    The file haproxy.cfg should be modified to use '/' with backend of the primary tenant:
+                    For example to set tenantapp1 as a primary tenant, comment out line:<br>
+                    replace line:<br>
+                    use_backend homepagemanager_backend if homepagemanager_url<br>
+                    with:<br>
+                    use_backend tenantapp1_backend if homepagemanager_url<br>
+                    So, the lines before ###END-FRONTEND  will look like this:<br>
+                    #8081 - homepagemanager_backend. Default home page with empty '/' declare at the end<br>
+                    acl homepagemanager_url path_beg -i /<br>
+                    #use_backend homepagemanager_backend if homepagemanager_url<br>
+                    use_backend tenantapp1_backend if homepagemanager_url<br>
 
                     {#How to enable multi-tenancy:<br>#}
                     {#1) Select "Server Role and Network Access" as "Internet (Hub)"<br>#}

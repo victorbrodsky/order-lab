@@ -3133,6 +3133,44 @@ Pathology and Laboratory Medicine",
 
         return $daysRemaining;
     }
+
+    //Run as root
+    public function updateSslCertificate( $domain, $daysRemaining ) {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
+
+        //Run bash packer/update-certbot.sh
+
+
+        //siteEmail
+        $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
+        if( $sender ) {
+            if( $emails ) {
+                $emails[] = $sender;
+            } else {
+                $emails = array($sender);
+            }
+        }
+        $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
+        //echo "emails: <br>";
+        //dump($emails);
+        //exit('111');
+
+        $subject = "Warning: SSL certificate expiration for $domain";
+        $msg = "The SSL certificate for server $domain will expire in $daysRemaining days.";
+        //insert steps
+
+        $emailUtil->sendEmail($emails,$subject,$msg);
+
+        //Event Log
+        $eventType = "SSL Certificate Warning";
+        $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
+
+        return true;
+    }
+
 //    //when HAProxy is terminating SSL with bind :443 ssl crt ...,
 //    // the PHP script I shared earlier won't retrieve the certificate from HAProxy itself.
 //    // That script connects to the domain and inspects the certificate
