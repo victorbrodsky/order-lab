@@ -72,15 +72,18 @@ class CertificateCronCommand extends Command {
             $organization = $resArr['Organization'];
         }
 
-        $output->writeln($daysRemaining);
+        //$output->writeln($daysRemaining);
 
+        $info = 'N/A';
         if( $organization && $organization == "Let's Encrypt" ) {
             if( $daysRemaining === NULL || $daysRemaining < 14 ) {
                 //renew certificate
-                $userServiceUtil->updateSslCertificate($domain, $daysRemaining, $organization);
+                $info = $userServiceUtil->updateSslCertificate($domain, $daysRemaining, $organization);
             }
         }
-        
+
+        $output->writeln("daysRemaining=".$daysRemaining.", info=".$info);
+
         //return true;
         return Command::SUCCESS;
     }

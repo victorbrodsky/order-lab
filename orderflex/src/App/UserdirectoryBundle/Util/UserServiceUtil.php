@@ -3164,6 +3164,7 @@ Pathology and Laboratory Medicine",
     //Update let's encrypt certificate
     public function updateSslCertificate( $domain, $daysRemaining, $organization ) {
 
+        echo "organization=$organization <br>";
         if( !$organization || !$organization == "Let's Encrypt" ) {
             return "Invalid organization $organization. Only Let's Encrypt is supported.";
         }
@@ -3186,7 +3187,7 @@ Pathology and Laboratory Medicine",
             throw new ProcessFailedException($process);
         }
         $info = $process->getOutput();
-        echo "info=$info <br>";
+        echo "update-certbot.sh => info=$info <br>";
 
         //siteEmail
         $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
