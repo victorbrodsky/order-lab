@@ -78,6 +78,7 @@ class CertificateCronCommand extends Command {
         if( $organization && $organization == "Let's Encrypt" ) {
             if( $daysRemaining === NULL || $daysRemaining < 14 ) {
                 //renew certificate
+                $output->writeln("renew certificate");
                 $info = $userServiceUtil->updateSslCertificate($domain, $daysRemaining, $organization);
             }
         }
