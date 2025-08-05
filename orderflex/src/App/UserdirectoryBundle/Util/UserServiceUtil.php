@@ -3058,9 +3058,12 @@ Pathology and Laboratory Medicine",
 
         // Build the shell command
         $cmd = "echo | openssl s_client -connect {$domain}:{$port} 2>/dev/null | openssl x509 -noout -dates";
+        echo "cmd=$cmd <br>";
 
         // Execute and capture output
         $output = shell_exec($cmd);
+        dump($output);
+        exit('111');
 
         // Parse the output
         $validFrom = $validTo = $organization = null;
