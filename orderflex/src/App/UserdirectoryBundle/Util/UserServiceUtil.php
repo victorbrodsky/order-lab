@@ -3074,11 +3074,13 @@ Pathology and Laboratory Medicine",
             $validTo = trim($matches[1]);
         }
 
-        if (preg_match('/Organization=(.+)/', $output, $matches)) {
-            $organization = trim($matches[1]);
-        }
-        $issuerCN = $output['issuer']['CN'] ?? 'N/A';
-        $issuerOrg = $output['issuer']['O'] ?? 'N/A';
+//        if (preg_match('/Organization=(.+)/', $output, $matches)) {
+//            $organization = trim($matches[1]);
+//        }
+//        $issuerCN = $output['issuer']['CN'] ?? 'N/A';
+//        $issuerOrg = $output['issuer']['O'] ?? 'N/A';
+        preg_match('/issuer=.*O=([^,]+)/', $output, $matches);
+        $issuerOrg = trim($matches[1] ?? 'N/A');
 
         // Optional: Convert to timestamp or calculate days remaining
         $validToTimestamp = strtotime($validTo);
