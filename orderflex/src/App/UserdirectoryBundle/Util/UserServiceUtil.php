@@ -3063,7 +3063,7 @@ Pathology and Laboratory Medicine",
         $output = shell_exec($cmd);
 
         // Parse the output
-        $validFrom = $validTo = null;
+        $validFrom = $validTo = $organization = null;
         if (preg_match('/notBefore=(.+)/', $output, $matches)) {
             $validFrom = trim($matches[1]);
         }
@@ -3080,7 +3080,7 @@ Pathology and Laboratory Medicine",
         $daysRemaining = floor(($validToTimestamp - time()) / 86400);
 
         // Output or use variables
-        echo "Organization: {$organization}\n<br>";
+        echo "Organization (Certificate issuer): {$organization}\n<br>";
         echo "Certificate for {$domain}\n<br>";
         echo "Valid From: {$validFrom}\n<br>";
         echo "Valid To:   {$validTo}\n<br>";
@@ -3105,8 +3105,10 @@ Pathology and Laboratory Medicine",
 
         $resArr = $this->getSslCertificateRemainingDays($domain);
         $daysRemaining = NULL;
+        $organization = NULL;
         if( $resArr ) {
             $daysRemaining = $resArr['DaysRemaining'];
+            $organization = $resArr['Organization'];
         }
 
         //Use two weeks (14 days) in advance notification
