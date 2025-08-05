@@ -3087,7 +3087,7 @@ Pathology and Laboratory Medicine",
         $daysRemaining = floor(($validToTimestamp - time()) / 86400);
 
         // Output or use variables
-        echo "Organization (Certificate issuer): {$issuerOrg}\n<br>";
+        echo "Organization (Certificate issuer): [{$issuerOrg}]\n<br>";
         echo "Certificate for {$domain}\n<br>";
         echo "Valid From: {$validFrom}\n<br>";
         echo "Valid To:   {$validTo}\n<br>";
