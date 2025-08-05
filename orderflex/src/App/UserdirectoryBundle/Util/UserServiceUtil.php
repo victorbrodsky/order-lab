@@ -3071,18 +3071,31 @@ Pathology and Laboratory Medicine",
             $validTo = trim($matches[1]);
         }
 
+        if (preg_match('/Organization=(.+)/', $output, $matches)) {
+            $organization = trim($matches[1]);
+        }
+
         // Optional: Convert to timestamp or calculate days remaining
         $validToTimestamp = strtotime($validTo);
         $daysRemaining = floor(($validToTimestamp - time()) / 86400);
 
         // Output or use variables
+        echo "Organization: {$organization}\n<br>";
         echo "Certificate for {$domain}\n<br>";
         echo "Valid From: {$validFrom}\n<br>";
         echo "Valid To:   {$validTo}\n<br>";
         echo "Days Remaining: {$daysRemaining}\n<br>";
 
         if( $daysRemaining ) {
-            return (int)$daysRemaining;
+            $resArr = array(
+                'Organization' => $organization,
+                'Domain' => $domain,
+                'ValidFrom' => $validFrom,
+                'ValidTo' => $validTo,
+                'DaysRemaining' => $daysRemaining,
+            );
+            return $resArr;
+            //return (int)$daysRemaining;
         }
 
         return NULL;
@@ -3090,7 +3103,11 @@ Pathology and Laboratory Medicine",
     public function checkSslCertificate( $domain=NULL, $renew=true ) {
         //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
 
-        $daysRemaining = $this->getSslCertificateRemainingDays($domain);
+        $resArr = $this->getSslCertificateRemainingDays($domain);
+        $daysRemaining = NULL;
+        if( $resArr ) {
+            $daysRemaining = $resArr['DaysRemaining'];
+        }
 
         //Use two weeks (14 days) in advance notification
         if( $daysRemaining === NULL || $daysRemaining < 14 ) {
@@ -3131,11 +3148,16 @@ Pathology and Laboratory Medicine",
             }
         }
 
-        return $daysRemaining;
+        return $resArr;
     }
 
     //Run as root
-    public function updateSslCertificate( $domain, $daysRemaining ) {
+    //Update let's encrypt certificate
+    public function updateSslCertificate( $domain, $daysRemaining, $organization ) {
+
+        if( !$organization || !$organization == "Let's Encrypt" ) {
+            return "Invalid organization $organization. Only Let's Encrypt is supported.";
+        }
 
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
