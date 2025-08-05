@@ -3062,7 +3062,7 @@ Pathology and Laboratory Medicine",
 
         // Execute and capture output
         $output = shell_exec($cmd);
-        dump($output);
+        //dump($output);
         //exit('111');
 
         // Parse the output
@@ -3087,11 +3087,11 @@ Pathology and Laboratory Medicine",
         $daysRemaining = floor(($validToTimestamp - time()) / 86400);
 
         // Output or use variables
-        echo "Organization (Certificate issuer): [{$issuerOrg}]\n<br>";
-        echo "Certificate for {$domain}\n<br>";
-        echo "Valid From: {$validFrom}\n<br>";
-        echo "Valid To:   {$validTo}\n<br>";
-        echo "Days Remaining: {$daysRemaining}\n<br>";
+//        echo "Organization (Certificate issuer): [{$issuerOrg}]\n<br>";
+//        echo "Certificate for {$domain}\n<br>";
+//        echo "Valid From: {$validFrom}\n<br>";
+//        echo "Valid To:   {$validTo}\n<br>";
+//        echo "Days Remaining: {$daysRemaining}\n<br>";
 
         if( $daysRemaining ) {
             $resArr = array(
@@ -3141,8 +3141,8 @@ Pathology and Laboratory Medicine",
             //dump($emails);
             //exit('111');
 
-            $subject = "Warning: SSL certificate expiration for $domain";
-            $msg = "The SSL certificate for server $domain will expire in $daysRemaining days.";
+            $subject = "Warning: SSL certificate expiration for $domain issued by $organization";
+            $msg = "The SSL certificate for server $domain issued by $organization will expire in $daysRemaining days.";
             //insert steps
 
             $emailUtil->sendEmail($emails,$subject,$msg);
