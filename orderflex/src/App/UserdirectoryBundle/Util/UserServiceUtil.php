@@ -3058,12 +3058,12 @@ Pathology and Laboratory Medicine",
 
         // Build the shell command
         $cmd = "echo | openssl s_client -connect {$domain}:{$port} 2>/dev/null | openssl x509 -noout -dates -issuer -subject";
-        echo "cmd=$cmd <br>";
+        //echo "cmd=$cmd <br>";
 
         // Execute and capture output
         $output = shell_exec($cmd);
         dump($output);
-        exit('111');
+        //exit('111');
 
         // Parse the output
         $validFrom = $validTo = $organization = null;
@@ -3077,13 +3077,15 @@ Pathology and Laboratory Medicine",
         if (preg_match('/Organization=(.+)/', $output, $matches)) {
             $organization = trim($matches[1]);
         }
+        $issuerCN = $output['issuer']['CN'] ?? 'N/A';
+        $issuerOrg = $output['issuer']['O'] ?? 'N/A';
 
         // Optional: Convert to timestamp or calculate days remaining
         $validToTimestamp = strtotime($validTo);
         $daysRemaining = floor(($validToTimestamp - time()) / 86400);
 
         // Output or use variables
-        echo "Organization (Certificate issuer): {$organization}\n<br>";
+        echo "Organization (Certificate issuer): {$issuerOrg}\n<br>";
         echo "Certificate for {$domain}\n<br>";
         echo "Valid From: {$validFrom}\n<br>";
         echo "Valid To:   {$validTo}\n<br>";
@@ -3091,7 +3093,7 @@ Pathology and Laboratory Medicine",
 
         if( $daysRemaining ) {
             $resArr = array(
-                'Organization' => $organization,
+                'Organization' => $issuerOrg,
                 'Domain' => $domain,
                 'ValidFrom' => $validFrom,
                 'ValidTo' => $validTo,
