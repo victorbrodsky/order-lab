@@ -3142,7 +3142,20 @@ Pathology and Laboratory Medicine",
         $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
 
         //Run bash packer/update-certbot.sh
+        //Do this only for view.online (DigitalOcean server) when certificate has Issuer Name "Organization Let's Encrypt"
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $bashScript = $projectDir . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packer' . DIRECTORY_SEPARATOR . 'update-certbot.sh';
 
+        $command = 'bash ' . $bashScript;
+
+        $process = Process::fromShellCommandline($command);
+        $process->setTimeout(120); //sec; 120 sec => 2 min
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        $info = $process->getOutput();
+        echo "info=$info <br>";
 
         //siteEmail
         $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
@@ -3158,8 +3171,8 @@ Pathology and Laboratory Medicine",
         //dump($emails);
         //exit('111');
 
-        $subject = "Warning: SSL certificate expiration for $domain";
-        $msg = "The SSL certificate for server $domain will expire in $daysRemaining days.";
+        $subject = "SSL certificate has been updated for $domain";
+        $msg = "The SSL certificate for server $domain has been updated. The previous certificate had $daysRemaining remaining days";
         //insert steps
 
         $emailUtil->sendEmail($emails,$subject,$msg);
@@ -3168,7 +3181,7 @@ Pathology and Laboratory Medicine",
         $eventType = "SSL Certificate Warning";
         $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
 
-        return true;
+        return $info;
     }
 
 //    //when HAProxy is terminating SSL with bind :443 ssl crt ...,
