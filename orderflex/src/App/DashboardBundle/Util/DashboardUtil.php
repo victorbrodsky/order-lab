@@ -7460,7 +7460,7 @@ class DashboardUtil
             $loginCountTrp = 0;
             $loginCountCrn = 0;
             $loginCountResapp = 0;
-            $loginCountDashboard = array();
+            $loginCountDashboard = 0;
             $counter = 0;
 
             //echo "1 StartDate=".$startDate->format('d-M-Y')."<br>";
@@ -7583,7 +7583,7 @@ class DashboardUtil
             //$loginsScanArr = array();
             $loginsCrnArr = array();
             $loginsResappArr = array();
-            //$loginsDashboardArr = array();
+            $loginsDashboardArr = array();
 
             $totalLoginCount = 0;
             $loginCountCalllog = 0;
@@ -7593,6 +7593,7 @@ class DashboardUtil
             $loginCountTrp = 0;
             $loginCountCrn = 0;
             $loginCountResapp = 0;
+            $loginCountDashboard = 0;
             $counter = 0;
 
             //$startDate->modify( 'first day of last month' );
@@ -7649,6 +7650,10 @@ class DashboardUtil
                 $loginsResappArr[$startDateLabel] = $loginResappCount;
                 $loginCountResapp = $loginCountResapp + $loginResappCount;
 
+                $loginDashboardCount = $transresUtil->getLoginCount($startDate,$thisEndDate,'dashboard',true);
+                $loginsDashboardArr[$startDateLabel] = $loginDashboardCount;
+                $loginCountDashboard = $loginCountDashboard + $loginDashboardCount;
+
                 $counter++;
             }
 
@@ -7660,6 +7665,7 @@ class DashboardUtil
             $loginCountAvgCalllog = 0;
             $loginCountAvgCrn = 0;
             $loginCountAvgResapp = 0;
+            $loginCountAvgDashboard = 0;
             if( $counter > 0 ) {
                 $loginCountAvgTrp = round($loginCountTrp/$counter,2);
                 $loginCountAvgEmpl = round($loginCountEmpl/$counter,2);
@@ -7668,6 +7674,7 @@ class DashboardUtil
                 $loginCountAvgCalllog = round($loginCountCalllog/$counter,2);
                 $loginCountAvgCrn = round($loginCountCrn/$counter,2);
                 $loginCountAvgResapp = round($loginCountResapp/$counter,2);
+                $loginCountAvgDashboard = round($loginCountDashboard/$counter,2);
             }
 
             //($loginCountTrp on average per week; 2 total)
@@ -7678,9 +7685,10 @@ class DashboardUtil
             $combinedData["Call Log Book Users ($loginCountAvgCalllog on average per week; $loginCountCalllog total)"] = $loginsCalllogArr;
             $combinedData["Critical Result Notification Users ($loginCountAvgCrn on average per week; $loginCountCrn total)"] = $loginsCrnArr;
             $combinedData["Residency Applications Users ($loginCountAvgResapp on average per week; $loginCountResapp total)"] = $loginsResappArr;
+            $combinedData["Dashboard Users ($loginCountAvgDashboard on average per week; $loginCountDashboard total)"] = $loginsDashboardArr;
             //$combinedData["Glass Slide Scan Orders Logins"] = $loginsScanArr;
 
-            $totalLoginCount = $loginCountTrp+$loginCountEmpl+$loginCountFellapp+$loginCountVacreq+$loginCountCalllog+$loginCountCrn+$loginCountResapp;
+            $totalLoginCount = $loginCountTrp+$loginCountEmpl+$loginCountFellapp+$loginCountVacreq+$loginCountCalllog+$loginCountCrn+$loginCountResapp+$loginCountDashboard;
 
 //            $chartName = $chartName . " (" . $totalLoginCount . " Total)";
             //$chartName = $chartName . " (" . $loginTotalUniqueCount . " Total)";
