@@ -28,3 +28,5 @@ cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online
 echo -e ${COLOR} Start HaProxy ${NC}
 sudo systemctl start haproxy.service
 
+echo -e ${COLOR} End of update-certbot.sh script ${NC}
+exit 0

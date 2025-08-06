@@ -3107,7 +3107,7 @@ Pathology and Laboratory Medicine",
 
         return NULL;
     }
-    public function checkSslCertificate( $domain=NULL, $renew=true ) {
+    public function checkSslCertificate( $domain=NULL, $sendEmail=true ) {
         //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
 
         $resArr = $this->getSslCertificateRemainingDays($domain);
@@ -3119,7 +3119,7 @@ Pathology and Laboratory Medicine",
         }
 
         //Use two weeks (14 days) in advance notification
-        if( $daysRemaining === NULL || $daysRemaining < 14 ) {
+        if( $sendEmail && ($daysRemaining === NULL || $daysRemaining < 14) ) {
             //send email
             $userSecUtil = $this->container->get('user_security_utility');
             $emailUtil = $this->container->get('user_mailer_utility');
@@ -3150,11 +3150,6 @@ Pathology and Laboratory Medicine",
             //Event Log
             $eventType = "SSL Certificate Warning";
             $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
-
-            //Renew SSL certificate
-            if( $renew ) {
-
-            }
         }
 
         return $resArr;

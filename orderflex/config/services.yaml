@@ -239,6 +239,9 @@ services:
     App\UserdirectoryBundle\Command\CertificateCronCommand:
             tags:
                 - { name: 'console.command', command: 'cron:certificate' }
+    App\UserdirectoryBundle\Command\CertificateUpdateCronCommand:
+            tags:
+                - { name: 'console.command', command: 'cron:certificate-update' }
 
     App\FellAppBundle\Command\GenerateReportRunCommand:
         tags:

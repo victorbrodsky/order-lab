@@ -18,8 +18,8 @@
 /**
  * Created by PhpStorm.
  * User: DevServer
- * Date: 8/20/15
- * Time: 2:33 PM
+ * Date: 8/06/2025
+ * Time: 10:25 AM
  */
 
 namespace App\UserdirectoryBundle\Command;
@@ -33,9 +33,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CertificateCronCommand extends Command {
+class CertificateUpdateCronCommand extends Command {
 
-    //protected static $defaultName = 'cron:certificate';
+    //protected static $defaultName = 'cron:certificate-update';
     private $container;
     private $em;
 
@@ -51,8 +51,8 @@ class CertificateCronCommand extends Command {
     {
         $this
             //->setName('console.command')
-            //->setCommand('cron:certificate')
-            ->setDescription('Cron job to check SSL certificate expiration date')
+            //->setCommand('cron:certificate-update')
+            ->setDescription('Cron job to update SSL certificate if expiration date is close')
             ->addArgument('domain', InputArgument::REQUIRED, 'Server domain, for example, view.online');
     }
 
@@ -66,26 +66,26 @@ class CertificateCronCommand extends Command {
 
         $daysRemaining = NULL;
         $organization = NULL;
-        $resArr = $userServiceUtil->checkSslCertificate($domain,$sendEmail=true);
+        $resArr = $userServiceUtil->checkSslCertificate($domain,$sendEmail=false);
         if( $resArr ) {
             $daysRemaining = $resArr['DaysRemaining'];
             $organization = $resArr['Organization'];
         }
 
-        $output->writeln("Certificate issued by" . $organization . " is expiring in " . $daysRemaining . " days");
+        //$output->writeln($daysRemaining);
 
-//        $minDaysRemaining = 14;
-//        $minDaysRemaining = 160;
-//        $info = 'N/A';
-//        if( $organization && $organization == "Let's Encrypt" ) {
-//            if( $daysRemaining === NULL || $daysRemaining < $minDaysRemaining ) {
-//                //renew certificate
-//                $output->writeln("renew certificate");
-//                $info = $userServiceUtil->updateSslCertificate($domain, $daysRemaining, $organization);
-//            }
-//        }
-//
-//        $output->writeln("daysRemaining=".$daysRemaining.", organization=".$organization.", info=".$info);
+        $minDaysRemaining = 14; //default
+        $minDaysRemaining = 160; //testing
+        $info = 'N/A';
+        if( $organization && $organization == "Let's Encrypt" ) {
+            if( $daysRemaining === NULL || $daysRemaining < $minDaysRemaining ) {
+                //renew certificate
+                $output->writeln("renew certificate");
+                $info = $userServiceUtil->updateSslCertificate($domain, $daysRemaining, $organization);
+            }
+        }
+
+        $output->writeln("daysRemaining=".$daysRemaining.", organization=".$organization.", info=".$info);
 
         //return true;
         return Command::SUCCESS;
