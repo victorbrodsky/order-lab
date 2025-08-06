@@ -57,7 +57,7 @@ class CertificateUpdateCronCommand extends Command {
     }
 
     
-    //php bin/console cron:certificate --env=prod view.online
+    //php bin/console cron:certificate-update --env=prod view.online
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $userServiceUtil = $this->container->get('user_service_utility');

@@ -3173,11 +3173,13 @@ Pathology and Laboratory Medicine",
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $bashScript = $projectDir . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packer' . DIRECTORY_SEPARATOR . 'update-certbot.sh';
 
+        //Interactive command asking to enter domain name
         $command = 'bash ' . $bashScript;
 
         $process = Process::fromShellCommandline($command);
         $process->setTimeout(120); //sec; 120 sec => 2 min
         $process->run();
+        
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
