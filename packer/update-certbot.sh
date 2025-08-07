@@ -30,7 +30,7 @@ echo -e "${COLOR} 1 Stop HAProxy Temporarily ${NC}"
 sudo systemctl stop haproxy.service
 
 echo -e "${COLOR} 2 Run Certbot to Obtain a Certificate ${NC}"
-sudo certbot certonly --standalone --agree-tos --non-interactive --email "$email" --domains "$domainname"
+sudo certbot certonly --standalone --agree-tos --non-interactive --domains "$domainname" --email "$email"
 
 #TODO: Interactive command asking to enter domain name
 echo -e ${COLOR} Generate new certificate ${NC}
