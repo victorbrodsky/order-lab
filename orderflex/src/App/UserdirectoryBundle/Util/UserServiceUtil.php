@@ -3173,6 +3173,9 @@ Pathology and Laboratory Medicine",
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $bashScript = $projectDir . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packer' . DIRECTORY_SEPARATOR . 'update-certbot.sh';
 
+        //Add parameter email
+        $bashScript = $bashScript . " " . $systemEmail;
+        
         //Interactive command asking to enter domain name
         $command = 'bash ' . $bashScript;
 

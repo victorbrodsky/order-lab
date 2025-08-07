@@ -8,14 +8,31 @@
 #3b) cat cert.pem privkey.pem > cert_key.pem
 #4) start haproxy: sudo systemctl start haproxy.service
 
+if [ -z "$domainname" ]
+  then
+    domainname=$1
+fi
+
+if [ -z "$email" ]
+  then
+    email=$2
+fi
+
+echo domainname=$domainname
+echo email=$email
+
 COLOR='\033[1;36m'
 NC='\033[0m' # No Color
 
 echo -e ${COLOR} Update SSL certificate via certbot and HaProxy ${NC}
 
-echo -e ${COLOR} Stop HaProxy ${NC}
+echo -e "${COLOR} 1 Stop HAProxy Temporarily ${NC}"
 sudo systemctl stop haproxy.service
 
+echo -e "${COLOR} 2 Run Certbot to Obtain a Certificate ${NC}"
+sudo certbot certonly --standalone --agree-tos --non-interactive --email "$email" --domains "$domainname"
+
+#TODO: Interactive command asking to enter domain name
 echo -e ${COLOR} Generate new certificate ${NC}
 sudo certbot certonly --standalone
 
