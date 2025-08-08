@@ -29,21 +29,22 @@ echo -e ${COLOR} Update SSL certificate via certbot and HaProxy ${NC}
 echo -e "${COLOR} 1 Stop HAProxy Temporarily ${NC}"
 sudo systemctl stop haproxy.service
 
+#If not expired => Certificate not yet due for renewal; no action taken
 echo -e "${COLOR} 2 Run Certbot to Obtain a Certificate ${NC}"
 sudo certbot certonly --standalone --agree-tos --non-interactive --domains "$domainname" --email "$email"
 
 #TODO: Interactive command asking to enter domain name
-echo -e ${COLOR} Generate new certificate ${NC}
-sudo certbot certonly --standalone
+#echo -e ${COLOR} Generate new certificate ${NC}
+#sudo certbot certonly --standalone
 
 #echo -e ${COLOR} cd /etc/letsencrypt/live/view.online/ ${NC}
 #cd /etc/letsencrypt/live/view.online/
 
-echo -e ${COLOR} Create pem certificate ${NC}
+echo -e "${COLOR} 3 Create pem certificate ${NC}"
 cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
 
-echo -e ${COLOR} Start HaProxy ${NC}
+echo -e "${COLOR} 4 Start HaProxy ${NC}"
 sudo systemctl start haproxy.service
 
-echo -e ${COLOR} End of update-certbot.sh script ${NC}
+echo -e "${COLOR} End of update-certbot.sh script ${NC}"
 exit 0
