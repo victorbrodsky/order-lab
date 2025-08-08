@@ -3178,6 +3178,7 @@ Pathology and Laboratory Medicine",
 
         //Run bash packer/update-certbot.sh
         //Do this only for view.online (DigitalOcean server) when certificate has Issuer Name "Organization Let's Encrypt"
+        //run as root, otherwise 'Permission denied'
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $bashScript = $projectDir . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packer' . DIRECTORY_SEPARATOR . 'update-certbot.sh';
 
@@ -3203,7 +3204,7 @@ Pathology and Laboratory Medicine",
         echo "STDERR:\n" . $errorOutput;
         $info = "<br> STDOUT=".$stdout . ", STDERR" . $stdout . "<br>";
         echo "update-certbot.sh => info=$info <br>";
-        
+
         //siteEmail
         $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
         if( $sender ) {
