@@ -3174,7 +3174,7 @@ Pathology and Laboratory Medicine",
         $bashScript = $projectDir . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packer' . DIRECTORY_SEPARATOR . 'update-certbot.sh';
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-        
+
         //Add parameter $domainname and $email
         $bashScript = $bashScript . " " . $domain . " " . $systemEmail;
         
@@ -3205,6 +3205,7 @@ Pathology and Laboratory Medicine",
         //dump($emails);
         //exit('111');
 
+        //TODO: check the return message 'If not expired => Certificate not yet due for renewal; no action taken'
         $subject = "SSL certificate has been updated for $domain";
         $msg = "The SSL certificate for server $domain has been updated. The previous certificate had $daysRemaining remaining days";
         //insert steps
