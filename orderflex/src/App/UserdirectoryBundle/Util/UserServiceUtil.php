@@ -3188,6 +3188,7 @@ Pathology and Laboratory Medicine",
         
         //Interactive command asking to enter domain name
         $command = 'bash ' . $bashScript;
+        echo "updateSslCertificate command={$command} <br>";
 
         $process = Process::fromShellCommandline($command);
         $process->setTimeout(120); //sec; 120 sec => 2 min

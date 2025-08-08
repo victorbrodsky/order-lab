@@ -82,6 +82,8 @@ class TestController extends TestBaseController
         }
 
         $res1 = $userServiceUtil->checkSslCertificate($domain);
+        $daysRemaining = $res1['DaysRemaining'];
+        $organization = $res1['Organization'];
 
         $daysRemaining = 14;
         $organization = "Let's Encrypt";
@@ -91,7 +93,7 @@ class TestController extends TestBaseController
             $organization
         );
 
-        exit("Test Certificate: res1={$res1}, res2={$res2}");
+        exit("Test Certificate: res1=>{$daysRemaining}, {$organization}, res2={$res2}");
     }
 
 }
