@@ -3197,9 +3197,13 @@ Pathology and Laboratory Medicine",
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        $info = $process->getOutput();
+        $stdout = $process->getOutput();              // stdout
+        $errorOutput = $process->getErrorOutput();  // stderr
+        echo "STDOUT:\n" . $stdout;
+        echo "STDERR:\n" . $errorOutput;
+        $info = "<br> STDOUT=".$stdout . ", STDERR" . $stdout . "<br>";
         echo "update-certbot.sh => info=$info <br>";
-
+        
         //siteEmail
         $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
         if( $sender ) {
