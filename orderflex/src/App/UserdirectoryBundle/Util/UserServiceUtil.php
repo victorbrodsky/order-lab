@@ -3159,9 +3159,17 @@ Pathology and Laboratory Medicine",
     //Update let's encrypt certificate
     public function updateSslCertificate( $domain, $daysRemaining, $organization ) {
 
+        if( !$domain ) {
+            return "Domain name is not provided.";
+        }
+
         echo "organization=$organization <br>";
         if( !$organization || !$organization == "Let's Encrypt" ) {
             return "Invalid organization $organization. Only Let's Encrypt is supported.";
+        }
+
+        if( !$daysRemaining ) {
+            $daysRemaining = 0;
         }
 
         $userSecUtil = $this->container->get('user_security_utility');

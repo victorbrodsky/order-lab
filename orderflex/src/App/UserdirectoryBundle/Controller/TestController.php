@@ -76,8 +76,22 @@ class TestController extends TestBaseController
         //$res = $userServiceUtil->checkSslCertificate2($domain);
         //echo "<br><br>";
 
-        $res = $userServiceUtil->checkSslCertificate($domain);
-        exit("Test Certificate: ".$res);
+        if(!$domain) {
+            $domain = 'view.online';
+            echo "testSslCertificateAction: use the default domain=$domain <br>";
+        }
+
+        $res1 = $userServiceUtil->checkSslCertificate($domain);
+
+        $daysRemaining = 14;
+        $organization = "Let's Encrypt";
+        $res2 = $userServiceUtil->updateSslCertificate(
+            $domain,
+            $daysRemaining,
+            $organization
+        );
+
+        exit("Test Certificate: res1={$res1}, res2={$res2}");
     }
 
 }
