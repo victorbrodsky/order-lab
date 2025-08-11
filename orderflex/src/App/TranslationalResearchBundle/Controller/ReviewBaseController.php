@@ -110,7 +110,7 @@ class ReviewBaseController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
         $cycle = "edit";
@@ -128,6 +128,13 @@ class ReviewBaseController extends OrderAbstractController
 //        }
         $review = $transresUtil->getReviewByReviewidAndState($reviewId,$stateStr);
         //echo "reviewID=".$review->getId();
+
+        if( !$review ) {
+            $this->addFlash(
+                'warning',
+                "Review edit: unable to find pending review by review ID $reviewId and project state ".$stateStr
+            );
+        }
 
         if( $transresUtil->isUserAllowedReview($review) === false || $transresUtil->isReviewCorrespondsToState($review) === false ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );

@@ -86,7 +86,7 @@ class TestController extends TestBaseController
         $organization = $res1['Organization'];
 
         $daysRemaining = 14;
-        $organization = "Let's Encrypt";
+        //$organization = "Let's Encrypt";
         $res2 = $userServiceUtil->updateSslCertificate(
             $domain,
             $daysRemaining,

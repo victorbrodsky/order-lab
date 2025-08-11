@@ -2444,7 +2444,8 @@ class TransResUtil
 
         $reviewEntityName = $this->getReviewClassNameByState($state);
         if( !$reviewEntityName ) {
-            throw new \Exception('Unable to find Review Entity Name by state='.$state);
+            return NULL;
+            //throw new \Exception('Unable to find Review Entity Name by state='.$state);
         }
 
         //echo "reviewId=".$reviewId."<br>";
@@ -2454,7 +2455,8 @@ class TransResUtil
         //$reviewObject = $this->em->getRepository('AppTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
         $reviewObject = $this->em->getRepository('App\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName)->find($reviewId);
         if( !$reviewObject ) {
-            throw new \Exception('Unable to find '.$reviewEntityName.' by id='.$reviewId."; state=$state");
+            return NULL;
+            //throw new \Exception('Unable to find '.$reviewEntityName.' by id='.$reviewId."; state=$state");
         }
         //exit('eof');
 

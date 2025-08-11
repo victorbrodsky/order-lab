@@ -301,9 +301,25 @@ class WorkflowController extends OrderAbstractController
     #[Route(path: '/project-review-transition/{transitionName}/{id}/{reviewId}', name: 'translationalresearch_transition_action_by_review', methods: ['GET'])]
     public function transitionReviewAction( $transitionName, Project $project, $reviewId )
     {
+        $this->addFlash(
+        //'warning',
+            'notice',
+            "Review transition: unable to find pending review by review ID $reviewId and project state ".$project->getState()
+        );
+
         $transresUtil = $this->container->get('transres_util');
         $review = $transresUtil->getReviewByReviewidAndState($reviewId,$project->getState());
+        echo "review=$review <br>";
 
+        if( !$review ) {
+            $this->addFlash(
+                //'warning',
+                'notice',
+                "Review transition: unable to find pending review by review ID $reviewId and project state ".$project->getState()
+            );
+            return $this->redirectToRoute('translationalresearch_home');
+        }
+        
         if(
             $transresUtil->isUserAllowedReview($review) === false &&
             $transresUtil->isReviewCorrespondsToState($review) === false &&
