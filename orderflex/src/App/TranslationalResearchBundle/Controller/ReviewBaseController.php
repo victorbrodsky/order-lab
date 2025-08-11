@@ -132,7 +132,7 @@ class ReviewBaseController extends OrderAbstractController
         if( !$review ) {
             $this->addFlash(
                 'warning',
-                "Review edit: unable to find pending review by review ID $reviewId and project state ".$stateStr
+                "Review edit: unable to find a pending review by review ID $reviewId and project state ".$stateStr
             );
         }
 
