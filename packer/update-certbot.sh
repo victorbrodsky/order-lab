@@ -1,11 +1,19 @@
 #!/bin/bash
 
 #To allow this script to run from apache cron job:
+#Option 1) Give apache permission to execute systemctl and make key
 #Edit the sudoers file to allow apache to run Certbot without a password: sudo visudo -f /etc/sudoers.d/certbot
 #Add: apache ALL=(ALL) NOPASSWD: /usr/bin/certbot
 #Make it executable by apache:
 #sudo chmod +x update-certbot.sh
 #sudo chown apache:apache update-certbot.sh
+#
+#Option 2) Add command to the root cron
+#sudo crontab -e
+#Add line to run at 2 am EDT (6 am UTC):
+# 0 6 * * * /usr/bin/php /srv/order-lab-tenantmanager/orderflex/bin/console cron:certificate-update --env=prod view.online
+#
+#
 
 #Renew certbot certificate with standalone option:
 #1) stop web server: sudo systemctl stop haproxy.service
