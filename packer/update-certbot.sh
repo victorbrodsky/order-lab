@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#To allow this script to run from apache cron job:
+#Edit the sudoers file to allow apache to run Certbot without a password: sudo visudo -f /etc/sudoers.d/certbot
+#Add: apache ALL=(ALL) NOPASSWD: /usr/bin/certbot
+#Make it executable by apache:
+#sudo chmod +x update-certbot.sh
+#sudo chown apache:apache update-certbot.sh
+
 #Renew certbot certificate with standalone option:
 #1) stop web server: sudo systemctl stop haproxy.service
 #2) run: sudo certbot certonly --standalone
@@ -31,7 +38,7 @@ sudo systemctl stop haproxy.service
 
 #If not expired => Certificate not yet due for renewal; no action taken
 echo -e "${COLOR} 2 Run Certbot to Obtain a Certificate ${NC}"
-sudo certbot certonly --standalone --agree-tos --non-interactive --domains "$domainname" --email "$email"
+sudo /usr/bin/certbot certonly --standalone --agree-tos --non-interactive --domains "$domainname" --email "$email"
 
 #TODO: Interactive command asking to enter domain name
 #echo -e ${COLOR} Generate new certificate ${NC}
