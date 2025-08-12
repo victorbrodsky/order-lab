@@ -194,6 +194,16 @@
                        href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:project-sync'}) }}">Remove</a>
                 </td>
             </tr>
+            <tr>
+                <td>SSL certificate check</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:certificate",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:certificate'}) }}">Remove</a>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
