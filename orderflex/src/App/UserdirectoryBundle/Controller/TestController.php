@@ -85,13 +85,15 @@ class TestController extends TestBaseController
         $daysRemaining = $res1['DaysRemaining'];
         $organization = $res1['Organization'];
 
-        $daysRemaining = 14;
-        //$organization = "Let's Encrypt";
-        $res2 = $userServiceUtil->updateSslCertificate(
-            $domain,
-            $daysRemaining,
-            $organization
-        );
+        if(0) {
+            $daysRemaining = 14;
+            //$organization = "Let's Encrypt";
+            $res2 = $userServiceUtil->updateSslCertificate(
+                $domain,
+                $daysRemaining,
+                $organization
+            );
+        }
 
         exit("Test Certificate: res1=>{$daysRemaining}, {$organization}, res2={$res2}");
     }

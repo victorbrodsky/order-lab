@@ -56,7 +56,7 @@ class CertificateCronCommand extends Command {
             ->addArgument('domain', InputArgument::REQUIRED, 'Server domain, for example, view.online');
     }
 
-    
+    //Can be executed as apache
     //php bin/console cron:certificate --env=prod view.online
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {

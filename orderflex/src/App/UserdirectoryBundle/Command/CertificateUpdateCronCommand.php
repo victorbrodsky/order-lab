@@ -56,7 +56,7 @@ class CertificateUpdateCronCommand extends Command {
             ->addArgument('domain', InputArgument::REQUIRED, 'Server domain, for example, view.online');
     }
 
-    
+    //Can be executed only as root
     //php bin/console cron:certificate-update --env=prod view.online
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
@@ -75,7 +75,7 @@ class CertificateUpdateCronCommand extends Command {
         //$output->writeln($daysRemaining);
 
         $minDaysRemaining = 14; //default
-        $minDaysRemaining = 160; //testing
+        //$minDaysRemaining = 160; //testing
         $info = 'N/A';
         if( $organization && $organization == "Let's Encrypt" ) {
             if( $daysRemaining === NULL || $daysRemaining < $minDaysRemaining ) {

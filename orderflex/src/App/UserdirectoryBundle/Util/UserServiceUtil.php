@@ -2833,7 +2833,7 @@ Pathology and Laboratory Medicine",
         //Every 2 minutes: */2 * * * *
         //Every day at 3 AM: 0 3 * * *
         //EDT to UTC 3am -> +4 -> 7am -> 0 7 * * *
-        $statusCronJob = "0 3 * * *" . " " . $statusCronJobCommand;
+        $statusCronJob = "0 7 * * *" . " " . $statusCronJobCommand;
 
         if( $this->getCronJobFullNameLinux($commandName) === false ) {
             $this->addCronJobLinux($statusCronJob);
@@ -3163,7 +3163,7 @@ Pathology and Laboratory Medicine",
             return "Domain name is not provided.";
         }
 
-        echo "organization=$organization <br>";
+        //echo "organization=$organization <br>";
         if( !$organization || !$organization == "Let's Encrypt" ) {
             return "Invalid organization $organization. Only Let's Encrypt is supported.";
         }
@@ -3189,7 +3189,7 @@ Pathology and Laboratory Medicine",
         
         //Interactive command asking to enter domain name
         $command = 'bash ' . $bashScript;
-        echo "updateSslCertificate command={$command} <br>";
+        //echo "updateSslCertificate command={$command} <br>";
 
         $process = Process::fromShellCommandline($command);
         $process->setTimeout(120); //sec; 120 sec => 2 min
@@ -3200,10 +3200,10 @@ Pathology and Laboratory Medicine",
         }
         $stdout = $process->getOutput();              // stdout
         $errorOutput = $process->getErrorOutput();  // stderr
-        echo "STDOUT:\n" . $stdout;
-        echo "STDERR:\n" . $errorOutput;
-        $info = "<br> STDOUT=".$stdout . ", STDERR" . $stdout . "<br>";
-        echo "update-certbot.sh => info=$info <br>";
+        echo "STDOUT=" . $stdout . "\n<br>";
+        echo "STDERR=" . $errorOutput . "\n<br>";
+        $info = "\n<br> STDOUT=".$stdout . ", STDERR" . $stdout . "\n<br>";
+        echo "update-certbot.sh => info=$info \n<br>";
 
         //siteEmail
         $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
