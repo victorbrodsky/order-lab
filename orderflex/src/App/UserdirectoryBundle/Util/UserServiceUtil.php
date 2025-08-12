@@ -3207,12 +3207,13 @@ Pathology and Laboratory Medicine",
 
         if( str_contains($info,'Certificate not yet due for renewal') ) {
             echo "update-certbot.sh: Nothing to do \n<br>";
-            return $info;
+            //return $info;
         }
 
         //siteEmail
         echo "update-certbot.sh: Send email \n<br>";
         $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
+        echo "update-certbot.sh: Send email to sender=[$sender] \n<br>";
         if( $sender ) {
             if( $emails ) {
                 $emails[] = $sender;
