@@ -3205,7 +3205,13 @@ Pathology and Laboratory Medicine",
         $info = "STDOUT=[".$stdout . "], STDERR=[" . $errorOutput . "]";
         //echo "update-certbot.sh => info=$info \n<br>";
 
+        if( str_contains($info,'Certificate not yet due for renewal') ) {
+            echo "update-certbot.sh: Nothing to do \n<br>";
+            return $info;
+        }
+
         //siteEmail
+        echo "update-certbot.sh: Send email \n<br>";
         $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
         if( $sender ) {
             if( $emails ) {
