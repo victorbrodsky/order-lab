@@ -3229,6 +3229,7 @@ Pathology and Laboratory Medicine",
         //TODO: check the return message 'If not expired => Certificate not yet due for renewal; no action taken'
         $subject = "SSL certificate has been updated for $domain";
         $msg = "The SSL certificate for server $domain has been updated. The previous certificate had $daysRemaining remaining days";
+        $msg = $msg . "<br><br>" . $info;
         //insert steps
 
         $emailUtil->sendEmail($emails,$subject,$msg);
