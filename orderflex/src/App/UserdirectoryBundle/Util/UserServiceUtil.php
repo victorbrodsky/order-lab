@@ -3203,7 +3203,7 @@ Pathology and Laboratory Medicine",
         //echo "STDOUT=[" . $stdout . "]\n<br>";
         //echo "STDERR=[" . $errorOutput . "]\n<br>";
         $info = "STDOUT=[".$stdout . "], STDERR=[" . $errorOutput . "]";
-        echo "update-certbot.sh => info=$info \n<br>";
+        //echo "update-certbot.sh => info=$info \n<br>";
 
         //siteEmail
         $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
