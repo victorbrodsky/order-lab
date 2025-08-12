@@ -3200,9 +3200,9 @@ Pathology and Laboratory Medicine",
         }
         $stdout = $process->getOutput();              // stdout
         $errorOutput = $process->getErrorOutput();  // stderr
-        echo "STDOUT=" . $stdout . "\n<br>";
-        echo "STDERR=" . $errorOutput . "\n<br>";
-        $info = "\n<br> STDOUT=".$stdout . ", STDERR" . $stdout . "\n<br>";
+        echo "STDOUT=[" . $stdout . "]\n<br>";
+        echo "STDERR=[" . $errorOutput . "]\n<br>";
+        $info = "STDOUT=[".$stdout . "], STDERR=[" . $stdout . "]";
         echo "update-certbot.sh => info=$info \n<br>";
 
         //siteEmail

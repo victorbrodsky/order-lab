@@ -85,7 +85,7 @@ class CertificateUpdateCronCommand extends Command {
             }
         }
 
-        $output->writeln("daysRemaining=".$daysRemaining.", organization=".$organization.", info=".$info);
+        $output->writeln("daysRemaining=".$daysRemaining.", organization=".$organization.", info=[".$info."]");
 
         //return true;
         return Command::SUCCESS;
