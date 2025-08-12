@@ -75,7 +75,7 @@ class CertificateUpdateCronCommand extends Command {
         //$output->writeln($daysRemaining);
 
         $minDaysRemaining = 14; //default
-        $minDaysRemaining = 160; //testing
+        //$minDaysRemaining = 160; //testing
         $info = 'N/A';
         if( $organization && $organization == "Let's Encrypt" ) {
             if( $daysRemaining === NULL || $daysRemaining < $minDaysRemaining ) {
