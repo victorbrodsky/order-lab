@@ -135,13 +135,22 @@ def get_site_status(url, sendSuccEmail=False):
     return 'down'
 
 #Testing
-def is_url_accessible(url):
+def is_url_accessible_1(url):
     try:
         # This will verify SSL by default
         response = requests.get(url, timeout=5)
         return response.status_code == 200
     except requests.exceptions.SSLError as e:
         print(f"SSL error: {e}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {e}")
+    return False
+def is_url_accessible(url):
+    try:
+        response = requests.get(url, timeout=5)  # verify=True by default
+        return response.status_code == 200
+    except requests.exceptions.SSLError as e:
+        print(f"SSL verification failed: {e}")
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
     return False
