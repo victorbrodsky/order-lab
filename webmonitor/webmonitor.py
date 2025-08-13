@@ -90,10 +90,10 @@ def get_site_status(url, sendSuccEmail=False):
         #return 'down: except'
 
     #print(response)
-    #print("status_code="+str(response.status_code))
+    print("status_code="+str(response.status_code))
     #logging.info("status_code="+str(response.status_code))
-    #print(response.headers)
-    #print(response.content)
+    print(response.headers)
+    print(response.content)
 
     if response != None:
         try:
