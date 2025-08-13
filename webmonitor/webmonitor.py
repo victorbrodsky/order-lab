@@ -80,6 +80,15 @@ def get_site_status(url, sendSuccEmail=False):
     status = ''
     response = None
 
+    if is_url_accessible(url):
+        print("URL is accessible.")
+        sendEmail(url, 'up')
+        return 'up'
+    else:
+        print("URL is not accessible.")
+        sendEmail(url, 'down')
+        return 'down'
+
     try:
         #is expired, self-signed, or invalid,  will still succeed and return a 200 if the server responds
         #response = requests.get(url,verify=False)
@@ -124,6 +133,20 @@ def get_site_status(url, sendSuccEmail=False):
 
     #print("get_site_status:","return=down","status=",status)
     return 'down'
+
+#Testing
+def is_url_accessible(url):
+    try:
+        # This will verify SSL by default
+        response = requests.get(url, timeout=5)
+        return response.status_code == 200
+    except requests.exceptions.SSLError as e:
+        print(f"SSL error: {e}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {e}")
+    return False
+
+
 
 def sendEmail(url, status):
     #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
