@@ -71,7 +71,7 @@ def help():
 
 
 def get_site_status(url, sendSuccEmail=False):
-    #print("url="+url)
+    print("get_site_status url="+url)
     #logging.info("get_site_status: url="+url)
 
     # if COMMAND_COUNTER > 0:
