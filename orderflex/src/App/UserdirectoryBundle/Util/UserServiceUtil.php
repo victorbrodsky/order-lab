@@ -2833,7 +2833,8 @@ Pathology and Laboratory Medicine",
         //Every 2 minutes: */2 * * * *
         //Every day at 3 AM: 0 3 * * *
         //EDT to UTC 3am -> +4 -> 7am -> 0 7 * * *
-        $statusCronJob = "0 7 * * *" . " " . $statusCronJobCommand;
+        //Test, Live servers have EDT time
+        $statusCronJob = "0 2 * * *" . " " . $statusCronJobCommand;
 
         if( $this->getCronJobFullNameLinux($commandName) === false ) {
             $this->addCronJobLinux($statusCronJob);
