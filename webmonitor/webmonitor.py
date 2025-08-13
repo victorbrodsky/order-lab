@@ -81,7 +81,9 @@ def get_site_status(url, sendSuccEmail=False):
     response = None
 
     try:
-        response = requests.get(url,verify=False)
+        #is expired, self-signed, or invalid,  will still succeed and return a 200 if the server responds
+        #response = requests.get(url,verify=False)
+        response = requests.get(url, timeout=5)
     except:
         status = "Exception: requests.get("+url+")"
         #sendEmail(url, 'down')
