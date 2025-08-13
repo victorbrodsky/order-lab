@@ -86,7 +86,7 @@ def get_site_status(url, sendSuccEmail=False):
         response = requests.get(url, timeout=5)
     except:
         print(response)
-        print("status_code=" + str(response.status_code))
+        #print("status_code=" + str(response.status_code))
         status = "Exception: requests.get("+url+")"
         print('get_site_status: status='+status)
         sendEmail(url, 'down')
