@@ -135,27 +135,18 @@ def get_site_status(url, sendSuccEmail=False):
     return 'down'
 
 #Testing
-def is_url_accessible_1(url):
+def is_url_accessible(url):
     try:
         # This will verify SSL by default
-        response = requests.get(url, timeout=5)
+        #If using HaProxy => fail
+        #Use: response = requests.get(url, verify="/path/to/certificate.crt")
+        response = requests.get(url, timeout=5, verify="/etc/letsencrypt/live/view.online/cert_key.pem")
         return response.status_code == 200
     except requests.exceptions.SSLError as e:
         print(f"SSL error: {e}")
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
     return False
-def is_url_accessible(url):
-    try:
-        response = requests.get(url, timeout=5)  # verify=True by default
-        return response.status_code == 200
-    except requests.exceptions.SSLError as e:
-        print(f"SSL verification failed: {e}")
-    except requests.exceptions.RequestException as e:
-        print(f"Request error: {e}")
-    return False
-
-
 
 def sendEmail(url, status):
     #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
