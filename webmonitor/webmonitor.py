@@ -34,6 +34,13 @@ from subprocess import PIPE
 import urllib
 from urllib.parse import urlsplit, urlunsplit
 #import yagmail
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.chrome.service import Service
+# from selenium.common.exceptions import NoSuchElementException
+# import time
+
+
 
 URL_TO_MONITOR = "" #change this to the URL you want to monitor
 MAILER_HOST = ""
@@ -80,19 +87,19 @@ def get_site_status(url, sendSuccEmail=False):
     status = ''
     response = None
 
-    if is_url_accessible(url):
-        print("URL is accessible.")
-        sendEmail(url, 'up')
-        return 'up'
-    else:
-        print("URL is not accessible.")
-        sendEmail(url, 'down')
-        return 'down'
+    # if is_url_accessible(url):
+    #     print("URL is accessible.")
+    #     sendEmail(url, 'up')
+    #     return 'up'
+    # else:
+    #     print("URL is not accessible.")
+    #     sendEmail(url, 'down')
+    #     return 'down'
 
     try:
         #is expired, self-signed, or invalid,  will still succeed and return a 200 if the server responds
-        #response = requests.get(url,verify=False)
-        response = requests.get(url, timeout=5)
+        response = requests.get(url,verify=False)
+        #response = requests.get(url, timeout=5)
     except:
         print('response=',response)
         #print("status_code=" + str(response.status_code))
@@ -111,6 +118,9 @@ def get_site_status(url, sendSuccEmail=False):
         try:
             if getattr(response, 'status_code') == 200:
                 if sendSuccEmail == True:
+                    #additional check if the web page is shown as expected (in case SSL certificate is invalid)
+                    soup = BeautifulSoup(response.text, 'html.parser')
+
                     sendEmail(url, 'up')
                 return 'up'
         except AttributeError:
