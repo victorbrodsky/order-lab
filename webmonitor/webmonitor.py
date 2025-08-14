@@ -119,7 +119,7 @@ def get_site_status(url, sendSuccEmail=False):
                 # cehck fo 'Welcome to' or 'id="display-username"'
                 # if 'id="display-username"' in response.text:
                 if 'Welcome to' in response.text:
-                    print("Element 'Welcome to' found => Site {url} is up")
+                    print(f"Element 'Welcome to' found => Site {url} is up")
                     if sendSuccEmail == True:
                         sendEmail(url, 'up')
                     return 'up'
