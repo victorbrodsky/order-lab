@@ -34,12 +34,6 @@ from subprocess import PIPE
 import urllib
 from urllib.parse import urlsplit, urlunsplit
 #import yagmail
-# from selenium import webdriver
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.chrome.service import Service
-# from selenium.common.exceptions import NoSuchElementException
-# import time
-
 
 
 URL_TO_MONITOR = "" #change this to the URL you want to monitor
@@ -119,7 +113,10 @@ def get_site_status(url, sendSuccEmail=False):
             if getattr(response, 'status_code') == 200:
                 if sendSuccEmail == True:
                     #additional check if the web page is shown as expected (in case SSL certificate is invalid)
-                    soup = BeautifulSoup(response.text, 'html.parser')
+                    if 'id="display-username"' in response.text:
+                        print("✅ Element with id='display-username' found.")
+                    else:
+                        print("❌ Element not found.")
 
                     sendEmail(url, 'up')
                 return 'up'
