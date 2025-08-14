@@ -114,20 +114,15 @@ def get_site_status(url, sendSuccEmail=False):
             print("before if")
             if getattr(response, 'status_code') == 200:
                 print("response status_code = 220")
-                if sendSuccEmail == True:
-                    #additional check if the web page is shown as expected (in case SSL certificate is invalid)
-                    #cehck fo 'Welcome to' or 'id="display-username"'
-                    #if 'id="display-username"' in response.text:
-                    if 'Welcome to' in response.text:
-                        print("Element with id='display-username' found.")
+                print("response.text=",response.text)
+                # additional check if the web page is shown as expected (in case SSL certificate is invalid)
+                # cehck fo 'Welcome to' or 'id="display-username"'
+                # if 'id="display-username"' in response.text:
+                if 'Welcome to' in response.text:
+                    print("Element with id='display-username' found.")
+                    if sendSuccEmail == True:
                         sendEmail(url, 'up')
-                    else:
-                        print("Element not found.")
-                        sendEmail(url, 'down')
-                        return 'down'
-
-                    #sendEmail(url, 'up')
-                return 'up'
+                        return 'up'
         except AttributeError:
             status = "Exception: AttributeError for " + url
             #sendEmail(url, 'down')
