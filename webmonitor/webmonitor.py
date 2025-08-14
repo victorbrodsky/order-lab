@@ -140,8 +140,10 @@ def is_url_accessible(url):
         # This will verify SSL by default
         #If using HaProxy => fail
         #explicitly specifying the path to the certificate file using the verify parameter
-        #Use: response = requests.get(url, timeout=5, verify="/path/to/certificate.crt")
-        response = requests.get(url, verify="/etc/letsencrypt/live/view.online/cert.pem")
+        #Use: response = requests.get(url, timeout=5, verify="/etc/letsencrypt/live/view.online/cert.pem")
+        #Python and  will use this path unless  is explicitly set. You can verify this by running:
+        # python -c "import ssl; print(ssl.get_default_verify_paths())"
+        response = requests.get(url, timeout=5)
         return response.status_code == 200
     except requests.exceptions.SSLError as e:
         print(f"SSL error: {e}")
