@@ -72,7 +72,7 @@ def help():
 
 
 def get_site_status(url, sendSuccEmail=False):
-    print("get_site_status url="+url)
+    print("### get_site_status url="+url)
     #logging.info("get_site_status: url="+url)
 
     # if COMMAND_COUNTER > 0:
@@ -103,13 +103,15 @@ def get_site_status(url, sendSuccEmail=False):
         return 'down: except'
 
     print(response)
-    #print("status_code="+str(response.status_code))
+    print("status_code="+str(response.status_code))
     #logging.info("status_code="+str(response.status_code))
     #print(response.headers)
     #print(response.content)
 
     if response != None:
+        print("response is not NULL")
         try:
+            print("before if")
             if getattr(response, 'status_code') == 200:
                 if sendSuccEmail == True:
                     #additional check if the web page is shown as expected (in case SSL certificate is invalid)
