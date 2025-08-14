@@ -161,7 +161,7 @@ def is_url_accessible(url):
             "https://view.online",
             cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
             #verify="/etc/letsencrypt/live/view.online/cert_key.pem"
-            verify = False
+            verify = True
         )
 
         return response.status_code == 200
