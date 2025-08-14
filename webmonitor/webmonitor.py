@@ -102,7 +102,7 @@ def get_site_status(url, sendSuccEmail=False):
         sendEmail(url, 'down')
         return 'down: except'
 
-    #print(response)
+    print(response)
     #print("status_code="+str(response.status_code))
     #logging.info("status_code="+str(response.status_code))
     #print(response.headers)
