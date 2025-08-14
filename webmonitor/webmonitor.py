@@ -160,8 +160,8 @@ def is_url_accessible(url):
         response = requests.get(
             "https://view.online",
             cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
-            #verify="/etc/letsencrypt/live/view.online/cert_key.pem"
-            verify = True
+            verify="/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" #Use trusted CA
+            #verify = True
         )
 
         return response.status_code == 200
