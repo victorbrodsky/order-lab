@@ -70,7 +70,7 @@ def help():
     )
 
 
-
+#TODO: test with expired SSL certificate
 def get_site_status(url, sendSuccEmail=False):
     #print("### get_site_status url="+url)
     #logging.info("get_site_status: url="+url)
