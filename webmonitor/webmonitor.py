@@ -152,7 +152,7 @@ def is_url_accessible(url):
             #url,
             #verify="/etc/letsencrypt/live/view.online/cert_key.pem"
             "https://view.online",
-            cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
+            cert=("/etc/letsencrypt/live/view.online/fullchain1.pem", "/etc/letsencrypt/live/view.online/privkey1.pem"),
             verify=True  # or path to CA bundle
         )
 
