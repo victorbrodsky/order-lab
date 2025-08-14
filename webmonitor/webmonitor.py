@@ -95,25 +95,27 @@ def get_site_status(url, sendSuccEmail=False):
         response = requests.get(url,verify=False)
         #response = requests.get(url, timeout=5)
     except:
-        print('response=',response)
+        #print('response=',response)
         #print("status_code=" + str(response.status_code))
         status = "Exception: requests.get("+url+")"
         print('get_site_status: status='+status)
         sendEmail(url, 'down')
         return 'down: except'
 
-    print(response)
-    print("status_code="+str(response.status_code))
+    #print(response)
+    #print("status_code="+str(response.status_code))
     #logging.info("status_code="+str(response.status_code))
-    print(response.headers)
-    print(response.content)
+    #print(response.headers)
+    #print(response.content)
 
     if response != None:
         try:
             if getattr(response, 'status_code') == 200:
                 if sendSuccEmail == True:
                     #additional check if the web page is shown as expected (in case SSL certificate is invalid)
-                    if 'id="display-username"' in response.text:
+                    #cehck fo 'Welcome to' or 'id="display-username"'
+                    #if 'id="display-username"' in response.text:
+                    if 'Welcome to' in response.text:
                         print("✅ Element with id='display-username' found.")
                     else:
                         print("❌ Element not found.")
