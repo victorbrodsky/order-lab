@@ -119,10 +119,10 @@ def get_site_status(url, sendSuccEmail=False):
                 # cehck fo 'Welcome to' or 'id="display-username"'
                 # if 'id="display-username"' in response.text:
                 if 'Welcome to' in response.text:
-                    print("Element with id='display-username' found.")
+                    print("Element 'Welcome to' found.")
                     if sendSuccEmail == True:
                         sendEmail(url, 'up')
-                        return 'up'
+                    return 'up'
         except AttributeError:
             status = "Exception: AttributeError for " + url
             #sendEmail(url, 'down')
