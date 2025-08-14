@@ -151,7 +151,7 @@ def is_url_accessible(url):
         response = requests.get(
             url,
             #verify="/etc/letsencrypt/live/view.online/cert_key.pem"
-            cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/cert_key.pem"),
+            cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
             verify=True  # or path to CA bundle
         )
         return response.status_code == 200
