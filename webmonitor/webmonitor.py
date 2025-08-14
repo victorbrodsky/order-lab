@@ -143,7 +143,11 @@ def is_url_accessible(url):
         #Use: response = requests.get(url, timeout=5, verify="/etc/letsencrypt/live/view.online/cert.pem")
         #Python and  will use this path unless  is explicitly set. You can verify this by running:
         # python -c "import ssl; print(ssl.get_default_verify_paths())"
-        response = requests.get(url, timeout=5)
+        #To add SSL_CERT_FILE permanently:
+        #1) nano ~/.bashrc
+        #2) export SSL_CERT_FILE=/etc/letsencrypt/live/view.online/cert.pem
+        #3) source ~/.bashrc
+        response = requests.get(url)
         return response.status_code == 200
     except requests.exceptions.SSLError as e:
         print(f"SSL error: {e}")
