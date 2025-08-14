@@ -148,14 +148,19 @@ def is_url_accessible(url):
         #2) export SSL_CERT_FILE=/etc/letsencrypt/live/view.online/cert.pem
         #2) expects a complete chain: export SSL_CERT_FILE=/etc/letsencrypt/live/view.online/fullchain.pem
         #3) source ~/.bashrc
+        # response = requests.get(
+        #     #url,
+        #     #verify="/etc/letsencrypt/live/view.online/cert_key.pem"
+        #     "https://view.online",
+        #     cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
+        #     #cert=("/etc/letsencrypt/archive/view.online/fullchain2.pem", "/etc/letsencrypt/archive/view.online/privkey2.pem"),
+        #     #verify=True,  # or path to CA bundle
+        #     verify = "/etc/letsencrypt/live/view.online/cert.pem"
+        # )
         response = requests.get(
-            #url,
-            #verify="/etc/letsencrypt/live/view.online/cert_key.pem"
             "https://view.online",
             cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
-            #cert=("/etc/letsencrypt/archive/view.online/fullchain2.pem", "/etc/letsencrypt/archive/view.online/privkey2.pem"),
-            #verify=True,  # or path to CA bundle
-            verify = "/etc/letsencrypt/live/view.online/cert.pem"
+            verify="/etc/letsencrypt/live/view.online/cert_key.pem"
         )
 
         return response.status_code == 200
