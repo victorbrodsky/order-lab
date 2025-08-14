@@ -72,7 +72,7 @@ def help():
 
 
 def get_site_status(url, sendSuccEmail=False):
-    print("### get_site_status url="+url)
+    #print("### get_site_status url="+url)
     #logging.info("get_site_status: url="+url)
 
     # if COMMAND_COUNTER > 0:
@@ -102,24 +102,24 @@ def get_site_status(url, sendSuccEmail=False):
         sendEmail(url, 'down')
         return 'down: except'
 
-    print(response)
-    print("status_code="+str(response.status_code))
+    #print(response)
+    #print("status_code="+str(response.status_code))
     #logging.info("status_code="+str(response.status_code))
     #print(response.headers)
     #print(response.content)
 
     if response != None:
-        print("response is not NULL")
+        #print("response is not NULL")
         try:
-            print("before if")
+            #print("before if")
             if getattr(response, 'status_code') == 200:
-                print("response status_code = 220")
-                print("response.text=",response.text)
+                #print("response status_code = 220")
+                #print("response.text=",response.text)
                 # additional check if the web page is shown as expected (in case SSL certificate is invalid)
                 # cehck fo 'Welcome to' or 'id="display-username"'
                 # if 'id="display-username"' in response.text:
                 if 'Welcome to' in response.text:
-                    print("Element 'Welcome to' found.")
+                    #print("Element 'Welcome to' found.")
                     if sendSuccEmail == True:
                         sendEmail(url, 'up')
                     return 'up'
