@@ -34,6 +34,8 @@ from subprocess import PIPE
 import urllib
 from urllib.parse import urlsplit, urlunsplit
 #import yagmail
+from requests.exceptions import SSLError, RequestException
+
 
 
 URL_TO_MONITOR = "" #change this to the URL you want to monitor
@@ -94,6 +96,10 @@ def get_site_status(url, sendSuccEmail=False):
     #     print("URL is not accessible.")
     #     sendEmail(url, 'down')
     #     return 'down'
+
+    #Testing
+    check_page(url)
+    sys.exit()
 
     try:
         #is expired, self-signed, or invalid,  will still succeed and return a 200 if the server responds
@@ -185,6 +191,25 @@ def is_url_accessible(url):
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
     return False
+
+#Testing
+def check_page(url):
+    try:
+        # Enforce SSL verification
+        response = requests.get(url, verify=True, timeout=5)
+        response.raise_for_status()
+
+        # Check for suspicious warning phrases in the page content
+        if "Warning: Potential Security Risk Ahead" in response.text:
+            print(f"⚠️ Security warning detected on {url}")
+        else:
+            print(f"✅ Site {url} is accessible and certificate is valid")
+    except SSLError as ssl_err:
+        print(f"❌ SSL certificate error on {url}: {ssl_err}")
+    except RequestException as req_err:
+        print(f"❌ Failed to access {url}: {req_err}")
+
+
 
 def sendEmail(url, status):
     #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
