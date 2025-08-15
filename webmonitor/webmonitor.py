@@ -71,6 +71,11 @@ def help():
 
 
 #TODO: test with expired SSL certificate
+#use archive:
+#cat
+# /etc/letsencrypt/live/view.online/cert.pem
+# /etc/letsencrypt/live/view.online/privkey.pem
+# > /etc/letsencrypt/live/view.online/cert_key_expired.pem
 def get_site_status(url, sendSuccEmail=False):
     #print("### get_site_status url="+url)
     #logging.info("get_site_status: url="+url)
