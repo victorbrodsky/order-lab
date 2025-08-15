@@ -97,8 +97,8 @@ def get_site_status(url, sendSuccEmail=False):
 
     try:
         #is expired, self-signed, or invalid,  will still succeed and return a 200 if the server responds
-        response = requests.get(url,verify=False)
-        #response = requests.get(url, timeout=5)
+        #response = requests.get(url,verify=False)
+        response = requests.get(url, timeout=5)
     except:
         #print('response=',response)
         #print("status_code=" + str(response.status_code))
@@ -119,7 +119,7 @@ def get_site_status(url, sendSuccEmail=False):
             #print("before if")
             if getattr(response, 'status_code') == 200:
                 #print("response status_code = 220")
-                print("response.text=",response.text)
+                #print("response.text=",response.text)
                 # additional check if the web page is shown as expected (in case SSL certificate is invalid)
                 # cehck fo 'Welcome to' or 'id="display-username"'
                 # if 'id="display-username"' in response.text:
