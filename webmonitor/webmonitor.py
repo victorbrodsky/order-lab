@@ -119,7 +119,7 @@ def get_site_status(url, sendSuccEmail=False):
             #print("before if")
             if getattr(response, 'status_code') == 200:
                 #print("response status_code = 220")
-                #print("response.text=",response.text)
+                print("response.text=",response.text)
                 # additional check if the web page is shown as expected (in case SSL certificate is invalid)
                 # cehck fo 'Welcome to' or 'id="display-username"'
                 # if 'id="display-username"' in response.text:
