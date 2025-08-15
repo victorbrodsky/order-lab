@@ -99,8 +99,8 @@ def get_site_status(url, sendSuccEmail=False):
 
     #Testing
     #check_page(url)
-    verify_https_page(url)
-    sys.exit()
+    #verify_https_page(url)
+    #sys.exit()
 
     try:
         #is expired, self-signed, or invalid,  will still succeed and return a 200 if the server responds
