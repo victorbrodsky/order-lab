@@ -98,7 +98,8 @@ def get_site_status(url, sendSuccEmail=False):
     #     return 'down'
 
     #Testing
-    check_page(url)
+    #check_page(url)
+    verify_https_page(url)
     sys.exit()
 
     try:
@@ -208,6 +209,34 @@ def check_page(url):
         print(f"❌ SSL certificate error on {url}: {ssl_err}")
     except RequestException as req_err:
         print(f"❌ Failed to access {url}: {req_err}")
+
+def verify_https_page(url):
+    try:
+        response = requests.get(url, timeout=5, verify=True)
+        response.raise_for_status()
+
+        # Check for browser-style warning content
+        warning_phrases = [
+            "Warning: Potential Security Risk Ahead",
+            "Your connection is not private",
+            "NET::ERR_CERT_AUTHORITY_INVALID",
+            "SEC_ERROR_UNKNOWN_ISSUER"
+        ]
+
+        if any(phrase in response.text for phrase in warning_phrases):
+            print(f"⚠️ Page loaded but contains security warning content: {url}")
+        else:
+            print(f"✅ Page is accessible and certificate is valid: {url}")
+
+    except SSLError as e:
+        print(f"❌ SSL error: {e}")
+    except ConnectionError as e:
+        print(f"❌ Connection error: {e}")
+    except Timeout:
+        print(f"❌ Timeout while trying to reach {url}")
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+
 
 
 
