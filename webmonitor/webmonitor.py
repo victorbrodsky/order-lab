@@ -242,8 +242,8 @@ def sendEmail(url, status):
     #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
     #url = urlsplit(url).path
     #url = urllib.parse.quote(url)
-    url = quote(url)
-    print(f"url={url}")
+    #url = quote(url)
+    #print(f"url={url}")
 
     if status == "up":
         # site is up
@@ -254,6 +254,8 @@ def sendEmail(url, status):
 
     # site is down
     emailSubject = "Site '" + url + "' appears inaccessible!"
+
+    url = urlsplit(url).path
     emailBody = "Site '" + url + "' does not appear to be accessible. Please verify the site is operational! \n\n Sent by the independent script webmonitor.py from "+ENV_NAME
     send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
     return False
