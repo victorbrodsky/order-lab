@@ -243,7 +243,8 @@ def sendEmail(url, status):
     #url = urlsplit(url).path
     #url = urllib.parse.quote(url)
     #url = quote(url)
-    #print(f"url={url}")
+    url = url.split("://")[1]
+    print(f"url={url}")
 
     if status == "up":
         # site is up
