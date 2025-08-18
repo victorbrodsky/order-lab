@@ -240,6 +240,7 @@ def get_site_status(url, sendSuccEmail=False):
 def sendEmail(url, status):
     #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
     #url = urlsplit(url).path
+    url = url.parse.quote()
     
     if status == "up":
         # site is up
