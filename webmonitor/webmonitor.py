@@ -156,93 +156,90 @@ def get_site_status(url, sendSuccEmail=False):
     #print("get_site_status:","return=down","status=",status)
     return 'down'
 
-#Testing
-def is_url_accessible(url):
-    try:
-        # This will verify SSL by default
-        #If using HaProxy => fail
-        #explicitly specifying the path to the certificate file using the verify parameter
-        #Use: response = requests.get(url, timeout=5, verify="/etc/letsencrypt/live/view.online/cert.pem")
-        #Python and  will use this path unless  is explicitly set. You can verify this by running:
-        # python -c "import ssl; print(ssl.get_default_verify_paths())"
-        #To add SSL_CERT_FILE permanently:
-        #1) nano ~/.bashrc
-        #2) export SSL_CERT_FILE=/etc/letsencrypt/live/view.online/cert.pem
-        #2) expects a complete chain: export SSL_CERT_FILE=/etc/letsencrypt/live/view.online/fullchain.pem
-        #3) source ~/.bashrc
-        # response = requests.get(
-        #     #url,
-        #     #verify="/etc/letsencrypt/live/view.online/cert_key.pem"
-        #     "https://view.online",
-        #     cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
-        #     #cert=("/etc/letsencrypt/archive/view.online/fullchain2.pem", "/etc/letsencrypt/archive/view.online/privkey2.pem"),
-        #     #verify=True,  # or path to CA bundle
-        #     verify = "/etc/letsencrypt/live/view.online/cert.pem"
-        # )
-        response = requests.get(
-            "https://view.online",
-            cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
-            verify="/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" #Use trusted CA
-            #verify = True
-        )
-
-        return response.status_code == 200
-    except requests.exceptions.SSLError as e:
-        print(f"SSL error: {e}")
-    except requests.exceptions.RequestException as e:
-        print(f"Request error: {e}")
-    return False
-
-#Testing
-def check_page(url):
-    try:
-        # Enforce SSL verification
-        response = requests.get(url, verify=True, timeout=5)
-        response.raise_for_status()
-
-        # Check for suspicious warning phrases in the page content
-        if "Warning: Potential Security Risk Ahead" in response.text:
-            print(f"⚠️ Security warning detected on {url}")
-        else:
-            print(f"✅ Site {url} is accessible and certificate is valid")
-    except SSLError as ssl_err:
-        print(f"❌ SSL certificate error on {url}: {ssl_err}")
-    except RequestException as req_err:
-        print(f"❌ Failed to access {url}: {req_err}")
-
-def verify_https_page(url):
-    try:
-        response = requests.get(url, timeout=5, verify=True)
-        response.raise_for_status()
-
-        # Check for browser-style warning content
-        warning_phrases = [
-            "Warning: Potential Security Risk Ahead",
-            "Your connection is not private",
-            "NET::ERR_CERT_AUTHORITY_INVALID",
-            "SEC_ERROR_UNKNOWN_ISSUER"
-        ]
-
-        if any(phrase in response.text for phrase in warning_phrases):
-            print(f"⚠️ Page loaded but contains security warning content: {url}")
-        else:
-            print(f"✅ Page is accessible and certificate is valid: {url}")
-
-    except SSLError as e:
-        print(f"❌ SSL error: {e}")
-    except ConnectionError as e:
-        print(f"❌ Connection error: {e}")
-    except Timeout:
-        print(f"❌ Timeout while trying to reach {url}")
-    except Exception as e:
-        print(f"❌ Unexpected error: {e}")
-
-
-
+# #Testing
+# def is_url_accessible(url):
+#     try:
+#         # This will verify SSL by default
+#         #If using HaProxy => fail
+#         #explicitly specifying the path to the certificate file using the verify parameter
+#         #Use: response = requests.get(url, timeout=5, verify="/etc/letsencrypt/live/view.online/cert.pem")
+#         #Python and  will use this path unless  is explicitly set. You can verify this by running:
+#         # python -c "import ssl; print(ssl.get_default_verify_paths())"
+#         #To add SSL_CERT_FILE permanently:
+#         #1) nano ~/.bashrc
+#         #2) export SSL_CERT_FILE=/etc/letsencrypt/live/view.online/cert.pem
+#         #2) expects a complete chain: export SSL_CERT_FILE=/etc/letsencrypt/live/view.online/fullchain.pem
+#         #3) source ~/.bashrc
+#         # response = requests.get(
+#         #     #url,
+#         #     #verify="/etc/letsencrypt/live/view.online/cert_key.pem"
+#         #     "https://view.online",
+#         #     cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
+#         #     #cert=("/etc/letsencrypt/archive/view.online/fullchain2.pem", "/etc/letsencrypt/archive/view.online/privkey2.pem"),
+#         #     #verify=True,  # or path to CA bundle
+#         #     verify = "/etc/letsencrypt/live/view.online/cert.pem"
+#         # )
+#         response = requests.get(
+#             "https://view.online",
+#             cert=("/etc/letsencrypt/live/view.online/fullchain.pem", "/etc/letsencrypt/live/view.online/privkey.pem"),
+#             verify="/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem" #Use trusted CA
+#             #verify = True
+#         )
+#
+#         return response.status_code == 200
+#     except requests.exceptions.SSLError as e:
+#         print(f"SSL error: {e}")
+#     except requests.exceptions.RequestException as e:
+#         print(f"Request error: {e}")
+#     return False
+#
+# #Testing
+# def check_page(url):
+#     try:
+#         # Enforce SSL verification
+#         response = requests.get(url, verify=True, timeout=5)
+#         response.raise_for_status()
+#
+#         # Check for suspicious warning phrases in the page content
+#         if "Warning: Potential Security Risk Ahead" in response.text:
+#             print(f"⚠️ Security warning detected on {url}")
+#         else:
+#             print(f"✅ Site {url} is accessible and certificate is valid")
+#     except SSLError as ssl_err:
+#         print(f"❌ SSL certificate error on {url}: {ssl_err}")
+#     except RequestException as req_err:
+#         print(f"❌ Failed to access {url}: {req_err}")
+#
+# def verify_https_page(url):
+#     try:
+#         response = requests.get(url, timeout=5, verify=True)
+#         response.raise_for_status()
+#
+#         # Check for browser-style warning content
+#         warning_phrases = [
+#             "Warning: Potential Security Risk Ahead",
+#             "Your connection is not private",
+#             "NET::ERR_CERT_AUTHORITY_INVALID",
+#             "SEC_ERROR_UNKNOWN_ISSUER"
+#         ]
+#
+#         if any(phrase in response.text for phrase in warning_phrases):
+#             print(f"⚠️ Page loaded but contains security warning content: {url}")
+#         else:
+#             print(f"✅ Page is accessible and certificate is valid: {url}")
+#
+#     except SSLError as e:
+#         print(f"❌ SSL error: {e}")
+#     except ConnectionError as e:
+#         print(f"❌ Connection error: {e}")
+#     except Timeout:
+#         print(f"❌ Timeout while trying to reach {url}")
+#     except Exception as e:
+#         print(f"❌ Unexpected error: {e}")
 
 def sendEmail(url, status):
     #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
-    url = urlsplit(url).path
+    #url = urlsplit(url).path
     
     if status == "up":
         # site is up
