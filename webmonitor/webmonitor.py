@@ -243,14 +243,14 @@ def sendEmail(url, status):
     
     if status == "up":
         # site is up
-        emailSubject = "Site " + url + " is accessible! (sent by webmonitor.py from "+ENV_NAME+")"
-        emailBody = "Site " + url + " is UP!"
+        emailSubject = "Site '" + url + "' is accessible! (sent by webmonitor.py from "+ENV_NAME+")"
+        emailBody = "Site '" + url + "' is UP!"
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
         return True
 
     # site is down
-    emailSubject = "Site " + url + " appears inaccessible!"
-    emailBody = "Site " + url + " does not appear to be accessible. Please verify the site is operational! \n\n Sent by the independent script webmonitor.py from "+ENV_NAME
+    emailSubject = "Site '" + url + "' appears inaccessible!"
+    emailBody = "Site '" + url + "' does not appear to be accessible. Please verify the site is operational! \n\n Sent by the independent script webmonitor.py from "+ENV_NAME
     send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
     return False
 
