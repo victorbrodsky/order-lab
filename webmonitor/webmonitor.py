@@ -33,8 +33,9 @@ import subprocess
 from subprocess import PIPE
 import urllib
 from urllib.parse import urlsplit, urlunsplit
+import smtplib
 #import yagmail
-from requests.exceptions import SSLError, RequestException
+#from requests.exceptions import SSLError, RequestException
 
 
 
@@ -240,7 +241,8 @@ def get_site_status(url, sendSuccEmail=False):
 def sendEmail(url, status):
     #Remove http from url, somehow gmail has problem with urls in the email body or wcm filter them out
     #url = urlsplit(url).path
-    url = url.quote()
+    url = url.parse.quote()
+    #url = url.quote()
     print(f"url={url}")
 
     if status == "up":
