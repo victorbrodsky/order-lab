@@ -253,10 +253,10 @@ def sendEmail(url, status):
         return True
 
     # site is down
-    emailSubject = "Site '" + url + "' appears inaccessible!"
+    emailSubject = f"Site {url} appears inaccessible!"
 
     #url = urlsplit(url).path
-    emailBody = "Site '" + url + "' does not appear to be accessible. Please verify the site is operational! \n\n Sent by the independent script webmonitor.py from "+ENV_NAME
+    emailBody = f"Site {url} does not appear to be accessible. Please verify the site is operational! \n\n Sent by the independent script webmonitor.py from "+ENV_NAME
     send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
     return False
 
