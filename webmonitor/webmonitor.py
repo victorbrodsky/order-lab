@@ -32,9 +32,8 @@ from datetime import datetime
 import subprocess
 from subprocess import PIPE
 import urllib
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit, quote, urlunsplit
 import smtplib
-from urllib.parse import quote
 #import yagmail
 #from requests.exceptions import SSLError, RequestException
 
