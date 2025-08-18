@@ -253,11 +253,11 @@ if true
         sudo certbot certonly --standalone --agree-tos --non-interactive --email "$email" --domains "view.online"
 
         #check if certificate and private key have been created
-        #[ -e /etc/letsencrypt/live/view.online/cert.pem ] && echo "File exists." || echo "File does not exist."
-        if [ -e /etc/letsencrypt/live/view.online/cert.pem ]; then
-            echo "cert.pem file exists => continue"
+        #[ -e /etc/letsencrypt/live/view.online/fullchain.pem ] && echo "File exists." || echo "File does not exist."
+        if [ -e /etc/letsencrypt/live/view.online/fullchain.pem ]; then
+            echo "fullchain.pem file exists => continue"
         else
-            echo "cert.pem file does not exist => exit script"
+            echo "fullchain.pem file does not exist => exit script"
             echo -e "${COLOR} Start HAProxy ${NC}"
             sudo systemctl start haproxy
             echo -e "${COLOR} Restart php-fpm ${NC}"
@@ -267,7 +267,7 @@ if true
         fi
 
         echo -e "${COLOR} 3 Combine the certificate and private key in cert_key.pem ${NC}"
-        cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
+        cat /etc/letsencrypt/live/view.online/fullchain.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
 
         echo -e "${COLOR} 4 Update your HAProxy configuration ${NC}"
         echo -e "${COLOR} 4a Enable *:443 ${NC}"
@@ -407,5 +407,5 @@ exit 0
 #3a) Verify Certificate is saved at: /etc/letsencrypt/live/view.online/fullchain.pem
      #Key is saved at:         /etc/letsencrypt/live/view.online/privkey.pem
 #3b) cd /etc/letsencrypt/live/view.online/
-#3c) cat cert.pem privkey.pem > cert_key.pem
+#3c) cat fullchain.pem privkey.pem > cert_key.pem
 #4) start haproxy: sudo systemctl start haproxy.service

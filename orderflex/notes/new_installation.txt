@@ -124,7 +124,7 @@ to test the functionality set mailerDeliveryAddresses to oli2002
 to avoid stealing fellapp, turn off imports
 
 Make certificate for HaProxy:
-cat cert.pem privkey.pem > cert_key.pem
+cat fullchain.pem privkey.pem > cert_key.pem
 
 Create config for manual backup
 
