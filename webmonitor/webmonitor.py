@@ -34,6 +34,7 @@ from subprocess import PIPE
 import urllib
 from urllib.parse import urlsplit, urlunsplit
 import smtplib
+from urllib.parse import quote
 #import yagmail
 #from requests.exceptions import SSLError, RequestException
 
