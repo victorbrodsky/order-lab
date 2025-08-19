@@ -18,9 +18,9 @@
 #Renew certbot certificate with standalone option:
 #1) stop web server: sudo systemctl stop haproxy.service
 #2) run: sudo certbot certonly --standalone
-#3) create /etc/letsencrypt/live/view.online/cert_key.pem containing both your server’s PEM-formatted TLS certificate and its private key
+#3) create /etc/letsencrypt/live/view.online/fullchain_key.pem containing both your server’s PEM-formatted TLS certificate and its private key
 #3a) cd /etc/letsencrypt/live/view.online/
-#3b) cat fullchain.pem privkey.pem > cert_key.pem
+#3b) cat fullchain.pem privkey.pem > fullchain_key.pem
 #4) start haproxy: sudo systemctl start haproxy.service
 
 if [ -z "$domainname" ]
@@ -55,10 +55,10 @@ sudo /usr/bin/certbot certonly --standalone --agree-tos --non-interactive --doma
 #echo -e ${COLOR} cd /etc/letsencrypt/live/view.online/ ${NC}
 #cd /etc/letsencrypt/live/view.online/
 
-#It's better to use fullchain.pem: cat fullchain.pem privkey.pem > cert_key.pem
+#It's better to use fullchain.pem: cat fullchain.pem privkey.pem > fullchain_key.pem
 echo -e "${COLOR} 3 Create pem certificate ${NC}"
-#cat /etc/letsencrypt/live/view.online/cert.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
-cat /etc/letsencrypt/live/view.online/fullchain.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
+#cat /etc/letsencrypt/live/view.online/fullchain.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/fullchain_key.pem
+cat /etc/letsencrypt/live/view.online/fullchain.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/fullchain_key.pem
 
 echo -e "${COLOR} 4 Start HaProxy ${NC}"
 sudo systemctl start haproxy.service

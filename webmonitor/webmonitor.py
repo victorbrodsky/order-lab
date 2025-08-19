@@ -158,6 +158,12 @@ def get_site_status(url, sendSuccEmail=False):
     #print("get_site_status:","return=down","status=",status)
     return 'down'
 
+#check if expected element exists on the web page
+#like: input type="hidden" id="heartbeatInput" name="status" value="alive"
+def check_element_on_webpage(url):
+    pass
+
+
 # #Testing
 # def is_url_accessible(url):
 #     try:

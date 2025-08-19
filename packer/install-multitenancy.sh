@@ -237,9 +237,9 @@ f_install_haproxy () {
   #By default, haproxy.cfg file is configured to use http.
   #Always keep "bind *:80" in haproxy.cfg.
   #If using https, then uncomment two lines:
-  # bind *:443 ssl crt /etc/letsencrypt/live/view.online/cert_key.pem
+  # bind *:443 ssl crt /etc/letsencrypt/live/view.online/fullchain_key.pem
   # http-request redirect scheme https unless { ssl_fc }
-  # Combine private key and certificate to one file: /etc/letsencrypt/live/view.online/cert_key.pem
+  # Combine private key and certificate to one file: /etc/letsencrypt/live/view.online/fullchain_key.pem
   #Therefore, no need to modify haproxy.cfg here. It will be configured to use https later on while executing install-certbot.sh
 #	if [ ! -z "$bashprotocol" ] && [ "$bashprotocol" = "https" ]
 #		then

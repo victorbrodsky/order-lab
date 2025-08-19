@@ -266,8 +266,8 @@ if true
             exit 0
         fi
 
-        echo -e "${COLOR} 3 Combine the certificate and private key in cert_key.pem ${NC}"
-        cat /etc/letsencrypt/live/view.online/fullchain.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/cert_key.pem
+        echo -e "${COLOR} 3 Combine the certificate and private key in fullchain_key.pem ${NC}"
+        cat /etc/letsencrypt/live/view.online/fullchain.pem /etc/letsencrypt/live/view.online/privkey.pem > /etc/letsencrypt/live/view.online/fullchain_key.pem
 
         echo -e "${COLOR} 4 Update your HAProxy configuration ${NC}"
         echo -e "${COLOR} 4a Enable *:443 ${NC}"
@@ -403,9 +403,9 @@ exit 0
 #Renew certbot certificate with standalone option:
 #1) stop web server: sudo systemctl stop haproxy.service
 #2) run: sudo certbot certonly --standalone
-#3) create /etc/letsencrypt/live/view.online/cert_key.pem containing both your server’s PEM-formatted TLS certificate and its private key
+#3) create /etc/letsencrypt/live/view.online/fullchain_key.pem containing both your server’s PEM-formatted TLS certificate and its private key
 #3a) Verify Certificate is saved at: /etc/letsencrypt/live/view.online/fullchain.pem
      #Key is saved at:         /etc/letsencrypt/live/view.online/privkey.pem
 #3b) cd /etc/letsencrypt/live/view.online/
-#3c) cat fullchain.pem privkey.pem > cert_key.pem
+#3c) cat fullchain.pem privkey.pem > fullchain_key.pem
 #4) start haproxy: sudo systemctl start haproxy.service
