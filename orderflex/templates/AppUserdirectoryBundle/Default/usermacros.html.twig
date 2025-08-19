@@ -82,6 +82,9 @@
 
 
 {% macro browserCheck() %}
+    {#add heartbeatInput to verify if the page is displayed or affected by the expired certificate#}
+    <input type="hidden" id="heartbeatInput" name="heartbeatInput-status" value="alive" />
+
     {#{% set browserCheck = user_service_utility.browserCheck() %}#}
     {#session has been set in loginPage method in SecurityController#}
     {% set browserCheck = app.session.get('browserWarningInfo') %}
