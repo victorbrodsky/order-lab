@@ -165,6 +165,7 @@ def get_site_status(url, sendSuccEmail=False):
     return 'down'
 
 def web_page_checker(url):
+    print("###web_page_checker###")
     checker = Checker(url)
     checker.check_element_on_webpage()
 
