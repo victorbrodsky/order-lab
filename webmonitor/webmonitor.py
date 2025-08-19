@@ -135,12 +135,13 @@ def get_site_status(url, sendSuccEmail=False):
                 # additional check if the web page is shown as expected (in case SSL certificate is invalid)
                 # cehck fo 'Welcome to' or 'id="display-username"'
                 # if 'id="display-username"' in response.text:
-                if 'Welcome to' in response.text:
-                    print(f"Element 'Welcome to' found => Site {url} is up")
-                    if sendSuccEmail == True:
-                        sendEmail(url, 'up')
-                    return 'up'
+                # if 'Welcome to' in response.text:
+                #     print(f"Element 'Welcome to' found => Site {url} is up")
+                #     if sendSuccEmail == True:
+                #         sendEmail(url, 'up')
+                #     return 'up'
 
+                web_page_checker(url)
 
         except AttributeError:
             status = "Exception: AttributeError for " + url
