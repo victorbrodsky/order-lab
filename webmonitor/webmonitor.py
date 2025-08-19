@@ -46,7 +46,7 @@ import urllib
 # print("scraper_path=",scraper_path)
 # from check_webpage import Checker
 
-from utils.scraper.check_webpage import Checker
+from ..utils.scraper.check_webpage import Checker
 
 
 
