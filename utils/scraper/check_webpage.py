@@ -1,5 +1,5 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+#from selenium import webdriver
+#from selenium.webdriver.common.by import By
 
 
 class Checker:
@@ -10,20 +10,22 @@ class Checker:
     # like: input type="hidden" id="heartbeatInput" name="status" value="alive"
     def check_element_on_webpage(self):
         # pass
-        driver = webdriver.Chrome()
+        print("check_element_on_webpage")
 
-        # Navigate to the webpage
-        driver.get(self.url)
-
-        # Check if the element exists
-        try:
-            element = driver.find_element(By.ID, "heartbeatInput")
-            print("Element exists.")
-        except NoSuchElementException:
-            print("Element does not exist.")
-
-        # Close the browser
-        driver.quit()
+        # driver = webdriver.Chrome()
+        #
+        # # Navigate to the webpage
+        # driver.get(self.url)
+        #
+        # # Check if the element exists
+        # try:
+        #     element = driver.find_element(By.ID, "heartbeatInput")
+        #     print("Element exists.")
+        # except NoSuchElementException:
+        #     print("Element does not exist.")
+        #
+        # # Close the browser
+        # driver.quit()
 
 
 
