@@ -175,8 +175,8 @@ def get_site_status(url, sendSuccEmail=False):
 
 def web_page_checker(url):
     print("###web_page_checker###")
-    checker = Checker(url)
-    checker.check_element_on_webpage()
+    checker = Checker()
+    checker.check_element_on_webpage(url)
 
 # #Testing
 # def is_url_accessible(url):

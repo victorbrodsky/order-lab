@@ -1,21 +1,21 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-
+from selenium.common.exceptions import NoSuchElementException
 
 class Checker:
-    def __init__(self, url):
-        self.url = url
+    #def __init__(self, url):
+    #    self.url = url
 
     # check if expected element exists on the web page
     # like: input type="hidden" id="heartbeatInput" name="status" value="alive"
-    def check_element_on_webpage(self):
+    def check_element_on_webpage(self,url):
         # pass
         print("###check_element_on_webpage###")
 
         driver = webdriver.Chrome()
 
         # Navigate to the webpage
-        driver.get(self.url)
+        driver.get(url)
 
         # Check if the element exists
         try:
@@ -27,7 +27,11 @@ class Checker:
         # Close the browser
         driver.quit()
 
-
+if __name__ == "__main__":
+    checker = Checker()
+    url = "https://view.online/c/wcm/pathology"
+    print("url=",url)
+    checker.check_element_on_webpage(url)
 
 
 
