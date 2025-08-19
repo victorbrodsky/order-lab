@@ -41,12 +41,12 @@ import urllib
 #scraper_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'utils', 'scraper'))
 #sys.path.insert(0, scraper_path)  # insert at beginning to prioritize
 
-# scraper_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'utils', 'scraper'))
-# sys.path.insert(0, scraper_path)
-# print("scraper_path=",scraper_path)
-# from check_webpage import Checker
+scraper_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'utils', 'scraper'))
+sys.path.insert(0, scraper_path)
+print("scraper_path=",scraper_path)
+from check_webpage import Checker
 
-from ..utils.scraper.check_webpage import Checker
+#from ..utils.scraper.check_webpage import Checker
 
 
 
