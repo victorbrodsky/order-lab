@@ -37,6 +37,9 @@ import urllib
 #import yagmail
 #from requests.exceptions import SSLError, RequestException
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'utils', 'scraper')))
+from check_webpage import Checker
+
 
 
 URL_TO_MONITOR = "" #change this to the URL you want to monitor
@@ -137,6 +140,8 @@ def get_site_status(url, sendSuccEmail=False):
                     if sendSuccEmail == True:
                         sendEmail(url, 'up')
                     return 'up'
+
+
         except AttributeError:
             status = "Exception: AttributeError for " + url
             #sendEmail(url, 'down')
@@ -158,11 +163,9 @@ def get_site_status(url, sendSuccEmail=False):
     #print("get_site_status:","return=down","status=",status)
     return 'down'
 
-#check if expected element exists on the web page
-#like: input type="hidden" id="heartbeatInput" name="status" value="alive"
-def check_element_on_webpage(url):
-    pass
-
+def web_page_checker(url):
+    checker = Checker(url)
+    checker.check_element_on_webpage()
 
 # #Testing
 # def is_url_accessible(url):
