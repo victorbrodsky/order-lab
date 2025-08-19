@@ -12,7 +12,10 @@ class Checker:
         # pass
         print("###check_element_on_webpage###")
 
-        driver = webdriver.Chrome()
+        #driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option("detach", True)
+        driver = webdriver.Chrome(options=options)
 
         # Navigate to the webpage
         driver.get(url)
