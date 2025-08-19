@@ -10,7 +10,7 @@ class Checker:
     # like: input type="hidden" id="heartbeatInput" name="status" value="alive"
     def check_element_on_webpage(self):
         # pass
-        print("check_element_on_webpage")
+        print("###check_element_on_webpage###")
 
         driver = webdriver.Chrome()
 
@@ -20,9 +20,9 @@ class Checker:
         # Check if the element exists
         try:
             element = driver.find_element(By.ID, "heartbeatInput")
-            print("Element exists.")
+            print("###Element exists.###")
         except NoSuchElementException:
-            print("Element does not exist.")
+            print("###Element does not exist.###")
 
         # Close the browser
         driver.quit()
