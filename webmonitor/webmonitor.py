@@ -42,8 +42,12 @@ import urllib
 #sys.path.insert(0, scraper_path)  # insert at beginning to prioritize
 
 #from check_webpage import Checker
-from ..utils.scraper.check_webpage import Checker
 #from ..utils.scraper.check_webpage import Checker
+#from ..utils.scraper.check_webpage import Checker
+scraper_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'utils', 'scrapper'))
+sys.path.insert(0, scraper_path)
+from check_webpage import Checker
+
 
 
 
