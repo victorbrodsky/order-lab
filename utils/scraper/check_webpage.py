@@ -12,20 +12,20 @@ class Checker:
         # pass
         print("check_element_on_webpage")
 
-        # driver = webdriver.Chrome()
-        #
-        # # Navigate to the webpage
-        # driver.get(self.url)
-        #
-        # # Check if the element exists
-        # try:
-        #     element = driver.find_element(By.ID, "heartbeatInput")
-        #     print("Element exists.")
-        # except NoSuchElementException:
-        #     print("Element does not exist.")
-        #
-        # # Close the browser
-        # driver.quit()
+        driver = webdriver.Chrome()
+
+        # Navigate to the webpage
+        driver.get(self.url)
+
+        # Check if the element exists
+        try:
+            element = driver.find_element(By.ID, "heartbeatInput")
+            print("Element exists.")
+        except NoSuchElementException:
+            print("Element does not exist.")
+
+        # Close the browser
+        driver.quit()
 
 
 
