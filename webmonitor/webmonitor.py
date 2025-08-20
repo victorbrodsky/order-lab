@@ -150,7 +150,12 @@ def get_site_status(url, sendSuccEmail=False):
                 #         sendEmail(url, 'up')
                 #     return 'up'
 
-                web_page_checker(url)
+                # additional check if the web page is shown as expected (in case SSL certificate is invalid)
+                # find element by ID heartbeatInput
+                if web_page_checker(url) == True:
+                    if sendSuccEmail == True:
+                        sendEmail(url, 'up')
+                    return 'up'
 
         except AttributeError:
             status = "Exception: AttributeError for " + url
@@ -176,7 +181,7 @@ def get_site_status(url, sendSuccEmail=False):
 def web_page_checker(url):
     print("###web_page_checker###")
     checker = Checker()
-    checker.check_element_on_webpage(url)
+    return checker.check_element_on_webpage(url)
 
 # #Testing
 # def is_url_accessible(url):

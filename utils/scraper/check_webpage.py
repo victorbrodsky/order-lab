@@ -11,6 +11,7 @@ class Checker:
     def check_element_on_webpage(self,url):
         # pass
         print("###check_element_on_webpage###")
+        status = False
 
         #driver = webdriver.Chrome()
         options = webdriver.ChromeOptions()
@@ -28,11 +29,14 @@ class Checker:
         try:
             element = driver.find_element(By.ID, "heartbeatInput")
             print("###Element exists.###")
+            status = True
         except NoSuchElementException:
             print("###Element does not exist.###")
 
         # Close the browser
         driver.quit()
+
+        return status
 
 if __name__ == "__main__":
     checker = Checker()
