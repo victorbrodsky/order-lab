@@ -28,10 +28,10 @@ class Checker:
         # Check if the element exists
         try:
             element = driver.find_element(By.ID, "heartbeatInput")
-            print("###Element exists.###")
+            print("###Element heartbeatInput exists.###")
             status = True
         except NoSuchElementException:
-            print("###Element does not exist.###")
+            print("###Element heartbeatInput does not exist.###")
 
         # Close the browser
         driver.quit()
