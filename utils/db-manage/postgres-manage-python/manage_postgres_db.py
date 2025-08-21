@@ -329,6 +329,7 @@ def main():
 
     args = args_parser.parse_args()
 
+    #Get DB parameters from db.config file passed by --configfile (default location: /postgres-manage-python/)
     config = configparser.ConfigParser()
     config.read(args.configfile)
 

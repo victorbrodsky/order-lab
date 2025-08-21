@@ -3678,6 +3678,7 @@ Pathology and Laboratory Medicine",
         //echo "parentRoot=".$parentRoot."<br>";
         //exit('111');
 
+        //Instead of db.config, use config/paramaters.yml
         $managePackagePath = $parentRoot .
             //DIRECTORY_SEPARATOR . 'order-lab' .
             //DIRECTORY_SEPARATOR . "utils" .
