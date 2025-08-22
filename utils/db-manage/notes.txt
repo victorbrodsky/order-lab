@@ -13,7 +13,7 @@ deactivate
 
 Windows:
 python -m venv venv
-.\venv\Scripts\activate
+source ./venv/Scripts/activate
 python -m pip install <package-name>
 python -m pip freeze > requirements.txt
 python -m pip install -r requirements.txt
