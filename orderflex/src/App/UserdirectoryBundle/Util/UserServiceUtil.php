@@ -3678,17 +3678,17 @@ Pathology and Laboratory Medicine",
         //echo "parentRoot=".$parentRoot."<br>";
         //exit('111');
 
-        //Instead of db.config, use config/paramaters.yml
-        $managePackagePath = $parentRoot .
-            //DIRECTORY_SEPARATOR . 'order-lab' .
-            //DIRECTORY_SEPARATOR . "utils" .
-            "utils" .
-            DIRECTORY_SEPARATOR . "db-manage" .
-            DIRECTORY_SEPARATOR . "postgres-manage-python";
-        echo '\n dbManagePython: managePackagePath='.$managePackagePath."\n<br>";
+//        //Instead of db.config, use config/paramaters.yml
+//        $managePackagePath = $parentRoot .
+//            //DIRECTORY_SEPARATOR . 'order-lab' .
+//            //DIRECTORY_SEPARATOR . "utils" .
+//            "utils" .
+//            DIRECTORY_SEPARATOR . "db-manage" .
+//            DIRECTORY_SEPARATOR . "postgres-manage-python";
+//        echo '\n dbManagePython: managePackagePath='.$managePackagePath."\n<br>";
 
         //config file
-        $configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";
+        //$configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";
 
         //TODO: check/create d.config file
         //[setup]
@@ -3737,7 +3737,8 @@ Pathology and Laboratory Medicine",
         $dbPassword = $this->container->getParameter('database_password');
 
         $command = "$pythonEnvPath $pythonScriptPath".
-            " --configfile $configFilePath --verbose true".
+            //" --configfile $configFilePath".
+            " --verbose true".
             " --path $networkDrivePath".
             " --source-db $dbName".
             " --user $dbUsername".

@@ -14,6 +14,9 @@ import boto3
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
+#use the PyYAML library to parse the YAML
+import yaml
+
 # Amazon S3 settings.
 # AWS_ACCESS_KEY_ID  in ~/.aws/credentials
 # AWS_SECRET_ACCESS_KEY in ~/.aws/credentials
@@ -65,12 +68,13 @@ def list_available_backups(storage_engine, manager_config):
                   f'Check your .config file settings')
             exit(1)
     elif storage_engine == 'S3':
+        pass
         #print("S3 storage")
         # logger.info('Listing S3 bucket s3://{}/{} content :'.format(aws_bucket_name, aws_bucket_path))
-        s3_client = boto3.client('s3')
-        s3_objects = s3_client.list_objects_v2(Bucket=manager_config.get('AWS_BUCKET_NAME'),
-                                               Prefix=manager_config.get('AWS_BUCKET_PATH'))
-        backup_list = [s3_content['Key'] for s3_content in s3_objects['Contents']]
+        #s3_client = boto3.client('s3')
+        #s3_objects = s3_client.list_objects_v2(Bucket=manager_config.get('AWS_BUCKET_NAME'),
+        #                                       Prefix=manager_config.get('AWS_BUCKET_PATH'))
+        #backup_list = [s3_content['Key'] for s3_content in s3_objects['Contents']]
     else:
         print("Invalid storage_engine=", storage_engine)
         exit(1)
@@ -330,24 +334,48 @@ def main():
     args = args_parser.parse_args()
 
     #Get DB parameters from db.config file passed by --configfile (default location: /postgres-manage-python/)
-    config = configparser.ConfigParser()
-    config.read(args.configfile)
+    #use config/paramaters.yml, instead of db.config
+    # config = configparser.ConfigParser()
+    # config.read(args.configfile)
+    #
+    # postgres_host = config.get('postgresql', 'host')
+    # postgres_port = config.get('postgresql', 'port')
+    # postgres_db = config.get('postgresql', 'db')
+    # postgres_restore = "{}_restore".format(postgres_db)
+    # postgres_user = config.get('postgresql', 'user')
+    # postgres_password = config.get('postgresql', 'password')
+    # aws_bucket_name = config.get('S3', 'bucket_name')
+    # aws_bucket_path = config.get('S3', 'bucket_backup_path')
+    # storage_engine = config.get('setup', 'storage_engine')
 
-    postgres_host = config.get('postgresql', 'host')
-    postgres_port = config.get('postgresql', 'port')
-    postgres_db = config.get('postgresql', 'db')
-    postgres_restore = "{}_restore".format(postgres_db)
-    postgres_user = config.get('postgresql', 'user')
-    postgres_password = config.get('postgresql', 'password')
-    aws_bucket_name = config.get('S3', 'bucket_name')
-    aws_bucket_path = config.get('S3', 'bucket_backup_path')
-    storage_engine = config.get('setup', 'storage_engine')
+    #current_folder = os.getcwd()
+    #yaml_path = os.path.join(current_folder, 'parameters.yml')
+    # Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Navigate up two levels and into 'orderflex/config'
+    yaml_path = os.path.join(script_dir, '..', '..', 'orderflex', 'config', 'parameters.yml')
+    # Normalize the path
+    yaml_path = os.path.normpath(yaml_path)
+    print("YAML path:", yaml_path)
+
+    with open(yaml_path, 'r') as file:
+        content = yaml.safe_load(file)
+
+    params = content.get('parameters', {})
+    postgres_host = params.get('database_host')
+    postgres_port = params.get('database_port')
+    postgres_db = params.get('database_name')
+    postgres_user = params.get('database_user')
+    postgres_password = params.get('database_password')
+    storage_engine = 'LOCAL'
+
+    #local_storage_path = config.get('local_storage', 'path', fallback='./backups/')
+
     timestr = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     filename = 'backup-{}-{}.dump'.format(timestr, postgres_db)
     filename_compressed = '{}.gz'.format(filename)
     restore_filename = '/tmp/restore.dump.gz'
     restore_uncompressed = '/tmp/restore.dump'
-    local_storage_path = config.get('local_storage', 'path', fallback='./backups/')
 
     if args.path:
         local_storage_path = args.path
@@ -375,8 +403,8 @@ def main():
     logger.info('Source database name postgres_db={}'.format(postgres_db))
 
     manager_config = {
-        'AWS_BUCKET_NAME': aws_bucket_name,
-        'AWS_BUCKET_PATH': aws_bucket_path,
+        #'AWS_BUCKET_NAME': aws_bucket_name,
+        #'AWS_BUCKET_PATH': aws_bucket_path,
         'BACKUP_PATH': '/tmp/',
         'LOCAL_BACKUP_PATH': local_storage_path
     }
