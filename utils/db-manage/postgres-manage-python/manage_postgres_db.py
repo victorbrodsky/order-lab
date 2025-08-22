@@ -368,6 +368,7 @@ def main():
     postgres_user = params.get('database_user')
     postgres_password = params.get('database_password')
     storage_engine = 'LOCAL'
+    print(f"postgres_host={postgres_host}, postgres_port={postgres_port}, postgres_db={postgres_db}, postgres_user={postgres_user}, postgres_password={postgres_password}")
 
     #local_storage_path = config.get('local_storage', 'path', fallback='./backups/')
 

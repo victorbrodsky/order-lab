@@ -3678,15 +3678,16 @@ Pathology and Laboratory Medicine",
         //echo "parentRoot=".$parentRoot."<br>";
         //exit('111');
 
-//        //Instead of db.config, use config/paramaters.yml
-//        $managePackagePath = $parentRoot .
-//            //DIRECTORY_SEPARATOR . 'order-lab' .
-//            //DIRECTORY_SEPARATOR . "utils" .
-//            "utils" .
-//            DIRECTORY_SEPARATOR . "db-manage" .
-//            DIRECTORY_SEPARATOR . "postgres-manage-python";
-//        echo '\n dbManagePython: managePackagePath='.$managePackagePath."\n<br>";
 
+        $managePackagePath = $parentRoot .
+            //DIRECTORY_SEPARATOR . 'order-lab' .
+            //DIRECTORY_SEPARATOR . "utils" .
+            "utils" .
+            DIRECTORY_SEPARATOR . "db-manage" .
+            DIRECTORY_SEPARATOR . "postgres-manage-python";
+        echo '\n dbManagePython: managePackagePath='.$managePackagePath."\n<br>";
+
+        //Instead of db.config, use config/paramaters.yml
         //config file
         //$configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";
 
