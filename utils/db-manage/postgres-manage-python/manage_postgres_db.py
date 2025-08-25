@@ -323,11 +323,11 @@ def main():
     args_parser.add_argument("--verbose",
                              default=False,
                              help="Verbose output")
-    args_parser.add_argument("--configfile",
-                             help="Database configuration file")
+    #args_parser.add_argument("--configfile",
+    #                         help="Database configuration file")
     args_parser.add_argument("--path",
                              default=False,
-                             help="Destination path to overwrite config's path")
+                             help="Destination path to overwrite config's path (i.e. /srv/order-lab-tenantapp1/orderflex/var/backups/)")
     args_parser.add_argument("--prefix",
                              default=False,
                              help="Prefix attach to the backup filename 'backup-prefix...'")
@@ -380,7 +380,7 @@ def main():
     postgres_password = params.get('database_password')
     storage_engine = 'LOCAL'
     print(f"postgres_host={postgres_host}, postgres_port={postgres_port}, postgres_db={postgres_db}, postgres_user={postgres_user}, postgres_password={postgres_password}")
-    exit(1)
+    #exit(1)
 
     #local_storage_path = config.get('local_storage', 'path', fallback='./backups/')
 
@@ -409,7 +409,18 @@ def main():
         filename = 'backupdb-{}-{}-{}.dump'.format(prefix, timestr, postgres_db)
         filename_compressed = '{}.gz'.format(filename)
 
-    #print("path=",local_storage_path)
+    print("path=",local_storage_path)
+    log_file_path = os.path.join(local_storage_path, 'pythondb.log')
+    # Check if the file exists
+    if not os.path.exists(log_file_path):
+        #os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+        # Create the file
+        with open(log_file_path, 'w') as f:
+            f.write('manage db log')  # Optionally write an initial line
+        print("Log file created:", log_file_path)
+    else:
+        print("Log file already exists:", log_file_path)
+
     logging.basicConfig(filename=local_storage_path+"pythondb.log")
     #print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
 
@@ -418,7 +429,7 @@ def main():
     manager_config = {
         #'AWS_BUCKET_NAME': aws_bucket_name,
         #'AWS_BUCKET_PATH': aws_bucket_path,
-        'BACKUP_PATH': '/tmp/',
+        'BACKUP_PATH': local_storage_path+'tmp/',
         'LOCAL_BACKUP_PATH': local_storage_path
     }
 
@@ -446,7 +457,9 @@ def main():
                                     postgres_port,
                                     postgres_user,
                                     postgres_password,
-                                    local_file_path, args.verbose)
+                                    local_file_path,
+                                    args.verbose
+                                    )
         if args.verbose:
             for line in result.splitlines():
                 logger.info(line)
