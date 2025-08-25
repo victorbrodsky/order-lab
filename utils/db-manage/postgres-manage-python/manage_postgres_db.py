@@ -297,6 +297,8 @@ def swap_after_restore(db_host, restore_database, new_active_database, db_port, 
 
         logger.info(f"swap_after_restore: RENAME DATABASE {restore_database} to {new_active_database}")
         cur.execute('ALTER DATABASE "{}" RENAME TO "{}";'.format(restore_database, new_active_database))
+
+        logger.info(f"swap_after_restore: swap completed!")
     except Exception as e:
         print(e)
         exit(1)
