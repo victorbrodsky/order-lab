@@ -495,8 +495,8 @@ def main():
         comp_file = compress_file(local_file_path)
 
         # Delete the original file after compression
-        #os.remove(local_file_path)
-        #logger.info(f"Deleted the temporary, not compressed db file {local_file_path} in BACKUP_PATH {manager_config.get('BACKUP_PATH')}")
+        os.remove(local_file_path)
+        logger.info(f"Deleted the temporary, not compressed db file {local_file_path} in BACKUP_PATH {manager_config.get('BACKUP_PATH')}")
 
         if storage_engine == 'LOCAL':
             logger.info('Moving {} to local storage...'.format(comp_file))
