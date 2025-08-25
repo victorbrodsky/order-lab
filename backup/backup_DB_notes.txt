@@ -135,4 +135,4 @@ efivarfs                                                              256K   34K
 
 tmpfs                                                                 769M     0  769M   0% /run/user/12211
 
-Problem is in /tmp folder used to generate temporary DB backup and deleting it after compressing with gzip (manage_postgres_db.py -> compress_file)
+Problem is in /tmp folder used to generate temporary DB backup and deleting it after compressing with gz (manage_postgres_db.py -> compress_file)
