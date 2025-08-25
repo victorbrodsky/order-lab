@@ -30,7 +30,7 @@ parameters:
     mailer_auth_mode: null
     mailer_encryption: null
     locale: en
-    secret: 563fd817cf2c4f1f692d90650b6fba50f782ccc9	
+    secret: 563fd817cf2c4f1f692d90650b6fba50f782ccc9
     delivery_strategy: realtime
     swift_delivery_addresses:
         - oli2002@med.cornell.edu

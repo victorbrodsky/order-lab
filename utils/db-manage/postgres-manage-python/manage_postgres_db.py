@@ -165,6 +165,8 @@ def compress_file(src_file):
         with gzip.open(compressed_file, 'wb') as f_out:
             for line in f_in:
                 f_out.write(line)
+    # Delete the original file after compression
+    os.remove(src_file)
     return compressed_file
 
 
