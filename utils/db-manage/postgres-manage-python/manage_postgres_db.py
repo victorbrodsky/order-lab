@@ -165,8 +165,6 @@ def compress_file(src_file):
         with gzip.open(compressed_file, 'wb') as f_out:
             for line in f_in:
                 f_out.write(line)
-    # Delete the original file after compression
-    os.remove(src_file)
     return compressed_file
 
 
@@ -276,7 +274,8 @@ def create_db(db_host, database, db_port, user_name, user_password):
     cur.execute("GRANT ALL PRIVILEGES ON DATABASE {} TO {} ;".format(database, user_name))
     return database
 
-
+#restore_database - restored db name (tenantapptest_restore)
+#new_active_database - original db name (tenantapptest)
 def swap_after_restore(db_host, restore_database, new_active_database, db_port, user_name, user_password):
     try:
         con = psycopg2.connect(dbname='postgres', port=db_port,
@@ -284,11 +283,19 @@ def swap_after_restore(db_host, restore_database, new_active_database, db_port, 
                                password=user_password)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
+
+        logger = logging.getLogger(__name__)
+        logger.info(f"swap_after_restore: pg_terminate_backend (disconnects a session from the original database {new_active_database})")
+
         cur.execute("SELECT pg_terminate_backend( pid ) "
                     "FROM pg_stat_activity "
                     "WHERE pid <> pg_backend_pid( ) "
                     "AND datname = '{}'".format(new_active_database))
+
+        logger.info(f"swap_after_restore: DROP DATABASE {new_active_database}")
         cur.execute("DROP DATABASE IF EXISTS {}".format(new_active_database))
+
+        logger.info(f"swap_after_restore: RENAME DATABASE {restore_database} to {new_active_database}")
         cur.execute('ALTER DATABASE "{}" RENAME TO "{}";'.format(restore_database, new_active_database))
     except Exception as e:
         print(e)
@@ -484,6 +491,9 @@ def main():
         #print("Backup complete.")
         logger.info("Compressing {}".format(local_file_path))
         comp_file = compress_file(local_file_path)
+        # Delete the original file after compression
+        os.remove(local_file_path)
+
         if storage_engine == 'LOCAL':
             logger.info('Moving {} to local storage...'.format(comp_file))
             move_to_local_storage(comp_file, filename_compressed, manager_config)
@@ -570,15 +580,15 @@ def main():
                 print(restoremsg)
 
             swap_after_restore(postgres_host,
-                               postgres_restore,
-                               restored_db_name,
+                               postgres_restore, #restored db name (tenantapptest_restore)
+                               restored_db_name, #original db name (tenantapptest)
                                postgres_port,
                                postgres_user,
                                postgres_password)
             logger.info("Database restored and active.")
             print("Database restored and active.")
     else:
-        logger.warn("No valid argument was given.")
+        logger.warn(f"No valid argument was given. action={args.action}")
         logger.warn(args)
 
 
