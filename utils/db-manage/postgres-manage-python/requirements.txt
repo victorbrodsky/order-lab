@@ -1,3 +1,2 @@
-psycopg2-binary
-boto3
 PyYAML==6.0.2
+urllib3==2.5.0

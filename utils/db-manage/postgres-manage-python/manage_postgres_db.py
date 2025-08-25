@@ -8,7 +8,7 @@ import shutil
 import tempfile
 from tempfile import mkstemp
 
-import configparser
+#import configparser
 import gzip
 import boto3
 import psycopg2
@@ -26,18 +26,19 @@ import yaml
 #Edit utils/db-manage/postgres-manage-python/db.config
 
 def upload_to_s3(file_full_path, dest_file, manager_config):
-    """
-    Upload a file to an AWS S3 bucket.
-    """
-    s3_client = boto3.client('s3')
-    try:
-        s3_client.upload_file(file_full_path,
-                              manager_config.get('AWS_BUCKET_NAME'),
-                              manager_config.get('AWS_BUCKET_PATH') + dest_file)
-        os.remove(file_full_path)
-    except boto3.exceptions.S3UploadFailedError as exc:
-        print(exc)
-        exit(1)
+    pass
+    # """
+    # Upload a file to an AWS S3 bucket.
+    # """
+    # s3_client = boto3.client('s3')
+    # try:
+    #     s3_client.upload_file(file_full_path,
+    #                           manager_config.get('AWS_BUCKET_NAME'),
+    #                           manager_config.get('AWS_BUCKET_PATH') + dest_file)
+    #     os.remove(file_full_path)
+    # except boto3.exceptions.S3UploadFailedError as exc:
+    #     print(exc)
+    #     exit(1)
 
 
 def download_from_s3(backup_s3_key, dest_file, manager_config):
@@ -289,6 +290,17 @@ def move_to_local_storage(comp_file, filename_compressed, manager_config):
 
 
 def main():
+
+    #Testing
+    # Get the directory of the current script
+    # script_dir = os.path.dirname(os.path.abspath(__file__))
+    # # Navigate up two levels and into 'orderflex/config'
+    # yaml_path = os.path.join(script_dir, '..', '..', 'orderflex', 'config', 'parameters.yml')
+    # # Normalize the path
+    # yaml_path = os.path.normpath(yaml_path)
+    # print("YAML path:", yaml_path)
+    # exit(1)
+
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     handler = logging.StreamHandler()
@@ -312,7 +324,6 @@ def main():
                              default=False,
                              help="Verbose output")
     args_parser.add_argument("--configfile",
-                             required=True,
                              help="Database configuration file")
     args_parser.add_argument("--path",
                              default=False,
@@ -353,7 +364,7 @@ def main():
     # Get the directory of the current script
     script_dir = os.path.dirname(os.path.abspath(__file__))
     # Navigate up two levels and into 'orderflex/config'
-    yaml_path = os.path.join(script_dir, '..', '..', 'orderflex', 'config', 'parameters.yml')
+    yaml_path = os.path.join(script_dir, '..', '..', '..', 'orderflex', 'config', 'parameters.yml')
     # Normalize the path
     yaml_path = os.path.normpath(yaml_path)
     print("YAML path:", yaml_path)
@@ -369,6 +380,7 @@ def main():
     postgres_password = params.get('database_password')
     storage_engine = 'LOCAL'
     print(f"postgres_host={postgres_host}, postgres_port={postgres_port}, postgres_db={postgres_db}, postgres_user={postgres_user}, postgres_password={postgres_password}")
+    exit(1)
 
     #local_storage_path = config.get('local_storage', 'path', fallback='./backups/')
 
