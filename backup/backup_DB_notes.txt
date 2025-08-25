@@ -103,3 +103,36 @@ echo $password | sudo -S mount -o username=svc_aperio_spectrum,password='*****',
 cp -R -u -v /home/local_account_name/apps/backup_data_to_upload/* $backup_destination
 sudo umount $backup_destination
 
+
+ITS
+xits-po-order-prd2/Disk-General is CRITICAL
+
+DISK CRITICAL - free space: / 5845 MiB (4.85% inode=92%): /tmp 5845 MiB (4.85% inode=92%): /boot 118 MiB (20.27% inode=100%):
+
+
+
+1@xits-po-order-prd2 ~]$ df -h
+
+Filesystem                                                            Size  Used Avail Use% Mounted on
+
+devtmpfs                                                              4.0M     0  4.0M   0% /dev
+
+tmpfs                                                                 3.8G  3.1M  3.8G   1% /dev/shm
+
+tmpfs                                                                 1.6G  153M  1.4G  10% /run
+
+efivarfs                                                              256K   34K  218K  14% /sys/firmware/efi/efivars
+
+/dev/mapper/rootvg-rootlv                                             118G  109G  9.6G  92% /
+
+/dev/sda2                                                             586M  468M  119M  80% /boot
+
+/dev/sda1                                                             649M  7.1M  642M   2% /boot/efi
+
+//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup  3.2P  2.6P  707T  79% /mnt/pathology/view-backup/upload-backup
+
+//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup      3.2P  2.6P  707T  79% /mnt/pathology/view-backup/db-backup
+
+tmpfs                                                                 769M     0  769M   0% /run/user/12211
+
+Problem is in /tmp folder used to generate temporary DB backup and deleting it after compressing with gzip (manage_postgres_db.py -> compress_file)
