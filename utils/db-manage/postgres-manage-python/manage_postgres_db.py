@@ -108,7 +108,19 @@ def backup_postgres_db(host, database_name, port, user, password, dest_file, ver
     """
     Backup postgres db to a file.
     """
+    print(f'backup_postgres_db: dest_file={dest_file}')
+    os.makedirs(os.path.dirname(dest_file), exist_ok=True)
+
+    # Check if the file exists, and create it if it doesn't
+    if not os.path.exists(dest_file):
+        with open(dest_file, 'w') as f:
+            pass  # Creates an empty file
+        print("File created:", dest_file)
+    else:
+        print("File already exists:", dest_file)
+
     if verbose:
+        print(f"backup_postgres_db: verbose={verbose}")
         try:
             process = subprocess.Popen(
                 ['pg_dump',
@@ -119,6 +131,7 @@ def backup_postgres_db(host, database_name, port, user, password, dest_file, ver
                 stdout=subprocess.PIPE
             )
             output = process.communicate()[0]
+            print('backup_postgres_db: verbose Command. Return code : {}'.format(process.returncode))
             if int(process.returncode) != 0:
                 print('Command failed. Return code : {}'.format(process.returncode))
                 exit(1)
@@ -127,7 +140,7 @@ def backup_postgres_db(host, database_name, port, user, password, dest_file, ver
             print(e)
             exit(1)
     else:
-
+        print(f"backup_postgres_db: non verbose={verbose}")
         try:
             process = subprocess.Popen(
                 ['pg_dump',
@@ -136,6 +149,7 @@ def backup_postgres_db(host, database_name, port, user, password, dest_file, ver
                 stdout=subprocess.PIPE
             )
             output = process.communicate()[0]
+            print('backup_postgres_db: Command. Return code : {}'.format(process.returncode))
             if process.returncode != 0:
                 print('Command failed. Return code : {}'.format(process.returncode))
                 exit(1)
