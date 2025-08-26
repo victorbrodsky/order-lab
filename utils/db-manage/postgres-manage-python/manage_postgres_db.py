@@ -7,6 +7,7 @@ import os
 import shutil
 import tempfile
 from tempfile import mkstemp
+import json
 
 #import configparser
 import gzip
@@ -247,6 +248,8 @@ def restore_postgres_db(db_host, db, port, user, password, backup_file, verbose)
         return output
     except Exception as e:
         print("Issue with the db restore : {}".format(e))
+        #exit(1)
+        return False
 
 
 def create_db(db_host, database, db_port, user_name, user_password):
@@ -299,9 +302,11 @@ def swap_after_restore(db_host, restore_database, new_active_database, db_port, 
         cur.execute('ALTER DATABASE "{}" RENAME TO "{}";'.format(restore_database, new_active_database))
 
         logger.info(f"swap_after_restore: swap completed!")
+        return True
     except Exception as e:
         print(e)
-        exit(1)
+        return False
+        #exit(1)
 
 
 def move_to_local_storage(comp_file, filename_compressed, manager_config):
@@ -551,15 +556,22 @@ def main():
                                      postgres_password)
             logger.info("Created temp database for restore : {}".format(tmp_database))
             logger.info("Restore starting")
-            result = restore_postgres_db(postgres_host,
+            result_restore = restore_postgres_db(postgres_host,
                                          postgres_restore,
                                          postgres_port,
                                          postgres_user,
                                          postgres_password,
                                          restore_uncompressed,
                                          args.verbose)
+
+            if result_restore == False:
+                print("DB restore failed")
+                exit(1)
+            else:
+                print("DB restore ok")
+
             if args.verbose:
-                for line in result.splitlines():
+                for line in result_restore.splitlines():
                     logger.info(line)
             logger.info("Restore complete")
             if args.dest_db is not None:
@@ -583,14 +595,24 @@ def main():
                 logger.info(restoremsg)
                 print(restoremsg)
 
-            swap_after_restore(postgres_host,
+            swap_res = swap_after_restore(postgres_host,
                                postgres_restore, #restored db name (tenantapptest_restore)
                                restored_db_name, #original db name (tenantapptest)
                                postgres_port,
                                postgres_user,
                                postgres_password)
-            logger.info("Database restored and active.")
-            print("Database restored and active.")
+
+            #result = {"status": "error"}
+            result = "Database swap failed"
+            if swap_res:
+                #result = {"status": "ok"}
+                result = "Database swap ok"
+
+            #logger.info("Database restored and active.")
+            #print("Database restored and active.")
+            logger.info(result)
+            print(result)
+            #print(json.dumps(result))
     else:
         logger.warn(f"No valid argument was given. action={args.action}")
         logger.warn(args)
