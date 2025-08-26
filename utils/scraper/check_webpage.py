@@ -22,8 +22,12 @@ class Checker:
         #options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(options=options)
 
+        print("###check_element_on_webpage: before driver.get(url) ###")
+
         # Navigate to the webpage
         driver.get(url)
+
+        print("###check_element_on_webpage: after driver.get(url) ###")
 
         # Check if the element exists
         try:
@@ -35,6 +39,8 @@ class Checker:
 
         # Close the browser
         driver.quit()
+
+        print(f"###check_element_on_webpage: return status={status} ###")
 
         return status
 
