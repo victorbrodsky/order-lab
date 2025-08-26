@@ -117,8 +117,8 @@ def get_site_status(url, sendSuccEmail=False):
 
     try:
         #is expired, self-signed, or invalid,  will still succeed and return a 200 if the server responds
-        response = requests.get(url,verify=False)
-        #response = requests.get(url, timeout=5)
+        #response = requests.get(url,verify=False)
+        response = requests.get(url, timeout=5)
     except:
         #print('response=',response)
         #print("status_code=" + str(response.status_code))
@@ -560,4 +560,5 @@ if __name__ == '__main__':
 
 
 #python /srv/order-lab-tenantapptest/webmonitor/webmonitor.py -l 'https://view-test.med.cornell.edu' -h smtp.med.cornell.edu --sender oli2002@med.cornell.edu -r oli2002@med.cornell.edu -c 'sudo systemctl restart postgresql-17, sudo systemctl restart haproxy, sudo systemctl restart php-fpm' --urlcommand 'https://view.online' -e TestServer2 >> /srv/order-lab-tenantapptest/orderflex/var/log/webmonitor.log
+#python /srv/order-lab-tenantapptest/webmonitor/webmonitor.py -l 'https://view.online' -h smtp.med.cornell.edu --sender oli2002@med.cornell.edu -r oli2002@med.cornell.edu -c 'sudo systemctl restart postgresql-17, sudo systemctl restart haproxy, sudo systemctl restart php-fpm' --urlcommand 'https://view.online' -e PublicTestServer >> /srv/order-lab-tenantapptest/orderflex/var/log/webmonitor.log
 
