@@ -53,7 +53,7 @@ class HomeController extends OrderAbstractController {
         //get primaryTenant from tenantmanager's DB
         //$primaryTenant = true;
         $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
-        exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName);
+        //exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName); //testing
         
         if( $tenantRole == $tenantManagerName ) {
             //if( !$primaryTenant ) {
@@ -262,7 +262,7 @@ class HomeController extends OrderAbstractController {
         }
         //echo 'tenantBaseUrlArr count='.count($tenantBaseUrlArr)."<br>";
         //dump($tenants);
-        //exit('multiTenancyHomePage: get Tenants');
+        exit('multiTenancyHomePage: get Tenants');
 
         $greetingText = $tenantManager->getGreeting();
         $mainText = $tenantManager->getMaintext();
