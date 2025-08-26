@@ -39,7 +39,7 @@ class HomeController extends OrderAbstractController {
 
     //Defined in routes-default.yaml, route name 'main_common_home'
     public function mainCommonHomeAction(Request $request) {
-
+        exit("mainCommonHomeAction");
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -129,7 +129,7 @@ class HomeController extends OrderAbstractController {
     //About Us Page Text: [free text form field, multi-line, accepts HTML, with default value: “This website hosts data for organizations using the Order platform.”]
     //About Us Page Footer: [free text form field, multi-line, accepts HTML, with default value: “[<a href=”/”>Home</a> | About Us | Follow Us]
     public function multiTenancyHomePage(Request $request) {
-
+        exit("multiTenancyHomePage");
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
 
@@ -262,7 +262,7 @@ class HomeController extends OrderAbstractController {
         }
         //echo 'tenantBaseUrlArr count='.count($tenantBaseUrlArr)."<br>";
         //dump($tenants);
-        exit('multiTenancyHomePage: get Tenants');
+        //exit('multiTenancyHomePage: get Tenants'); //testing
 
         $greetingText = $tenantManager->getGreeting();
         $mainText = $tenantManager->getMaintext();
