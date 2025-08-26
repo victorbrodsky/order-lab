@@ -117,11 +117,11 @@ def get_site_status(url, sendSuccEmail=False):
 
     try:
         #is expired, self-signed, or invalid,  will still succeed and return a 200 if the server responds
-        response = requests.get(url,verify=False)  #Use SSL verification - require fullchain.pem certificate
-        #response = requests.get(url, timeout=5)     #Don't use SSL verification - require only cert.pem
+        #response = requests.get(url,verify=False)  #Use SSL verification - require fullchain.pem certificate
+        response = requests.get(url, timeout=5)     #Don't use SSL verification - require only cert.pem
     except:
         #print('response=',response)
-        #print("status_code=" + str(response.status_code))
+        print("Exception: status_code=" + str(response.status_code))
         #status = "Exception: requests.get("+url+")"
         #print('get_site_status: status='+status)
         sendEmail(url, 'down')
