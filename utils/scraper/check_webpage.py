@@ -5,11 +5,14 @@ from selenium.common.exceptions import NoSuchElementException
 import tempfile
 import time
 
+#sudo -u apache google-chrome --headless --disable-gpu --no-sandbox
+#mkdir: cannot create directory ‘/usr/share/httpd/.local’: Permission denied
+#sudo -u apache env SE_CACHE_PATH=/srv/order-lab-tenantapptest/orderflex/var/cache google-chrome --headless --disable-gpu --no-sandbox
 
 class Checker:
     def __init__(self):
         #self.url = url
-        os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
+        #os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
         #os.environ['XDG_CACHE_HOME'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
         #user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-", dir="/var/www/.cache")
         # driver = webdriver.Chrome()
