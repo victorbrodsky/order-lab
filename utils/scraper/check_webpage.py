@@ -17,8 +17,8 @@ class Checker:
         # if self.run_by_symfony_command is True:
         options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
 
-        user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-",dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
-        options.add_argument(f"--user-data-dir={user_data_dir}")
+        #user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-",dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
+        #options.add_argument(f"--user-data-dir={user_data_dir}")
 
         # Change cache folder for selenium to be accessible by apache, or run as root
         # os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
