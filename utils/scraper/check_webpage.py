@@ -10,6 +10,7 @@ class Checker:
         # Set custom cache directory for selenium
         #cache_dir = '/var/www/.cache'
         cache_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'orderflex', 'var', 'cache'))
+        print(f"cache_dir={cache_dir}")
         #cache_dir = '/srv/order-lab-tenantapptest/orderflex/var/'
         os.environ['XDG_CACHE_HOME'] = cache_dir
 
