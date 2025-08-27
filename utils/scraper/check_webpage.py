@@ -22,11 +22,11 @@ class Checker:
         #user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-",dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
         #options.add_argument(f"--user-data-dir={user_data_dir}")
 
-        profile_path = os.path.join(os.getcwd(), f"chrome_profiles/{time.strftime('%m_%d_%Y_%H_%M_%S')}")
-        if not os.path.isdir(profile_path):
-            os.makedirs(profile_path)
+        #profile_path = os.path.join(os.getcwd(), f"chrome_profiles/{time.strftime('%m_%d_%Y_%H_%M_%S')}")
+        #if not os.path.isdir(profile_path):
+        #    os.makedirs(profile_path)
 
-        options.add_argument(f"--user-data-dir={profile_path}")
+        #options.add_argument(f"--user-data-dir={profile_path}")
         options.add_argument(f"--profile-directory=Default")
 
         # Change cache folder for selenium to be accessible by apache, or run as root
