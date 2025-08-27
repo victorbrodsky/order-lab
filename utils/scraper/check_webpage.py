@@ -67,8 +67,8 @@ class Checker:
 
 if __name__ == "__main__":
     checker = Checker()
-    #url = "https://view.online/c/wcm/pathology"
-    url = "https://view-test.med.cornell.edu"
+    url = "https://view.online/c/wcm/pathology"
+    #url = "https://view-test.med.cornell.edu"
     print("url=",url)
     checker.check_element_on_webpage(url)
 
