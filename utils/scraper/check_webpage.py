@@ -4,9 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
 class Checker:
-    def __init__(self):
+    #def __init__(self):
         #self.url = url
-        os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
+        #os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
     # def __init__(self):
     #     # Set custom cache directory for selenium
     #     #cache_dir = '/var/www/.cache'
