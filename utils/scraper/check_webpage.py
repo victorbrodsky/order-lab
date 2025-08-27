@@ -8,6 +8,7 @@ class Checker:
         #self.url = url
         os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
         os.environ['XDG_CACHE_HOME'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
+        user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-", dir="/var/www/.cache")
 
     # def __init__(self):
     #     # Set custom cache directory for selenium
@@ -42,6 +43,9 @@ class Checker:
 
         #if self.run_by_symfony_command is True:
         options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
+
+        user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-", dir="/var/www/.cache")
+        chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
 
         #Change cache folder for selenium to be accessible by apache, or run as root
         #os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
