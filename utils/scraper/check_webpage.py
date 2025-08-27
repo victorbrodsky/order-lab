@@ -22,7 +22,7 @@ class Checker:
         #user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-",dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
         #options.add_argument(f"--user-data-dir={user_data_dir}")
 
-        profile_path = os.path.join(os.getcwd(), f"chrome_profiles/{time.strftime('%m.%d.%Y_%H.%M.%S')}")
+        profile_path = os.path.join(os.getcwd(), f"chrome_profiles/{time.strftime('%m_%d_%Y_%H_%M_%S')}")
         if not os.path.isdir(profile_path):
             os.makedirs(profile_path)
 
