@@ -568,6 +568,9 @@ if __name__ == '__main__':
     main(sys.argv[1:])
 
 
+#To run as apache, check if apache has permission: grep apache /etc/passwd
+#If result is something like '/sbin/nologin' then cron won't work
+#Test apache: sudo -u apache python /srv/order-lab-tenantapptest/webmonitor/webmonitor.py
 #python /srv/order-lab-tenantapptest/webmonitor/webmonitor.py -l 'https://view-test.med.cornell.edu' -h smtp.med.cornell.edu --sender oli2002@med.cornell.edu -r oli2002@med.cornell.edu -c 'sudo systemctl restart postgresql-17, sudo systemctl restart haproxy, sudo systemctl restart php-fpm' --urlcommand 'https://view.online' -e TestServer2 >> /srv/order-lab-tenantapptest/orderflex/var/log/webmonitor.log
 #python /srv/order-lab-tenantapptest/webmonitor/webmonitor.py -l 'https://view.online' -h smtp.med.cornell.edu --sender oli2002@med.cornell.edu -r oli2002@med.cornell.edu -c 'sudo systemctl restart postgresql-17, sudo systemctl restart haproxy, sudo systemctl restart php-fpm' --urlcommand 'https://view.online' -e TestServer2 >> /srv/order-lab-tenantapptest/orderflex/var/log/webmonitor.log
 #view.online: python /srv/order-lab-tenantapptest/webmonitor/webmonitor.py -l 'https://view.online' -h smtp.gmail.com --sender view.online.administrator@pathologysystems.org -p 'mypassword' -r oli2002@med.cornell.edu -c 'sudo systemctl restart postgresql-17, sudo systemctl restart haproxy, sudo systemctl restart php-fpm' --urlcommand 'https://view.online' -e PublicTestServer >> /srv/order-lab-tenantapptest/orderflex/var/log/webmonitor.log
