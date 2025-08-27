@@ -20,6 +20,7 @@ class Checker:
         options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
 
         self.user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-", dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
+        import shutil
         shutil.rmtree(self.user_data_dir, ignore_errors=True)
         self.user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-",
                                               dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
