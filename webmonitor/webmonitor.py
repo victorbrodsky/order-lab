@@ -333,6 +333,7 @@ def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     msg['From'] = fromEmail
     msg['To'] = ', '.join(toEmailList)
 
+    print(f"MAILER_HOST={MAILER_HOST}, MAILER_USERNAME={MAILER_USERNAME}, MAILER_PASSWORD={MAILER_PASSWORD}")
     try:
         smtpObj = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     except SMTPException:
