@@ -6,24 +6,24 @@ from selenium.common.exceptions import NoSuchElementException
 class Checker:
     #def __init__(self, url):
     #    self.url = url
-    def __init__(self):
-        # Set custom cache directory for selenium
-        #cache_dir = '/var/www/.cache'
-        cache_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'orderflex', 'var', 'cache'))
-        print(f"cache_dir={cache_dir}")
-        #cache_dir = '/srv/order-lab-tenantapptest/orderflex/var/'
-        os.environ['XDG_CACHE_HOME'] = cache_dir
-
-        # Ensure the cache directory exists
-        if not os.path.exists(cache_dir):
-            print(f"create cache_dir={cache_dir}")
-            try:
-                os.makedirs(cache_dir, exist_ok=True)
-                os.chown(cache_dir, os.getuid(), os.getgid())  # Optional: set ownership
-            except PermissionError:
-                print(f"Permission denied: cannot create {cache_dir}. Run script with proper privileges.")
-        else:
-            print(f"existed cache_dir={cache_dir}")
+    # def __init__(self):
+    #     # Set custom cache directory for selenium
+    #     #cache_dir = '/var/www/.cache'
+    #     cache_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'orderflex', 'var', 'cache'))
+    #     print(f"cache_dir={cache_dir}")
+    #     #cache_dir = '/srv/order-lab-tenantapptest/orderflex/var/'
+    #     os.environ['XDG_CACHE_HOME'] = cache_dir
+    #
+    #     # Ensure the cache directory exists
+    #     if not os.path.exists(cache_dir):
+    #         print(f"create cache_dir={cache_dir}")
+    #         try:
+    #             os.makedirs(cache_dir, exist_ok=True)
+    #             os.chown(cache_dir, os.getuid(), os.getgid())  # Optional: set ownership
+    #         except PermissionError:
+    #             print(f"Permission denied: cannot create {cache_dir}. Run script with proper privileges.")
+    #     else:
+    #         print(f"existed cache_dir={cache_dir}")
 
     # check if expected element exists on the web page
     # like: input type="hidden" id="heartbeatInput" name="status" value="alive"
@@ -40,7 +40,10 @@ class Checker:
         #if self.run_by_symfony_command is True:
         options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
 
-        #options.add_argument("--cache /srv/order-lab-tenantapptest/orderflex/var/cache")
+        #Change cache folder for selenium to be accessible by apache, or run as root
+        options.add_argument("--cache=/srv/order-lab-tenantapptest/orderflex/var/cache")
+        #options.add_argument("--profile=/srv/order-lab-tenantapptest/orderflex/var/cache")
+        #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")
 
         #options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(options=options)
