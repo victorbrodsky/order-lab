@@ -39,7 +39,7 @@ class Checker:
         options.add_argument("--disable-dev-shm-usage")  # working in command. Prevent Chrome from using shared memory
 
         #if self.run_by_symfony_command is True:
-        #options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
+        options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
 
         #Change cache folder for selenium to be accessible by apache, or run as root
         #os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
