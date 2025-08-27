@@ -323,8 +323,17 @@ def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
 #https://mailtrap.io/blog/python-send-email-gmail/
 def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     #print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
+    print(f"MAILER_HOST={MAILER_HOST}, MAILER_USERNAME={MAILER_USERNAME}, MAILER_PASSWORD={MAILER_PASSWORD}")
     if MAILER_HOST == "":
         print("Error: unable to send gmail email: MAILER_HOST is not provided")
+        return False
+
+    if MAILER_USERNAME == "":
+        print("Error: unable to send gmail email: MAILER_USERNAME is not provided")
+        return False
+
+    if MAILER_PASSWORD == "":
+        print("Error: unable to send gmail email: MAILER_PASSWORD is not provided")
         return False
     
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
@@ -333,7 +342,6 @@ def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     msg['From'] = fromEmail
     msg['To'] = ', '.join(toEmailList)
 
-    print(f"MAILER_HOST={MAILER_HOST}, MAILER_USERNAME={MAILER_USERNAME}, MAILER_PASSWORD={MAILER_PASSWORD}")
     try:
         smtpObj = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     except SMTPException:
