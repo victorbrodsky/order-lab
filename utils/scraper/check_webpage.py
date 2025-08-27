@@ -36,7 +36,7 @@ class Checker:
         # options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")
 
         # options.add_experimental_option("detach", True)
-        self.driver = webdriver.Chrome(options=options)
+        self.driver = webdriver.Chrome()
 
     # def __init__(self):
     #     # Set custom cache directory for selenium
