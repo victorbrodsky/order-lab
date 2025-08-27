@@ -180,6 +180,23 @@ def get_site_status(url, sendSuccEmail=False):
 
 def web_page_checker(url):
     print("###web_page_checker###")
+
+    # Set custom cache directory for selenium
+    # cache_dir = '/var/www/.cache'
+    cache_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'orderflex', 'var', 'cache'))
+    print(f"cache_dir={cache_dir}")
+    # cache_dir = '/srv/order-lab-tenantapptest/orderflex/var/'
+    os.environ['XDG_CACHE_HOME'] = cache_dir
+
+    # Ensure the cache directory exists
+    if not os.path.exists(cache_dir):
+        print(f"create cache_dir={cache_dir}")
+        try:
+            os.makedirs(cache_dir, exist_ok=True)
+            os.chown(cache_dir, os.getuid(), os.getgid())  # Optional: set ownership
+        except PermissionError:
+            print(f"Permission denied: cannot create {cache_dir}. Run script with proper privileges.")
+
     checker = Checker()
     return checker.check_element_on_webpage(url)
 
