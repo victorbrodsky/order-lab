@@ -4,8 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
 class Checker:
-    #def __init__(self, url):
-    #    self.url = url
+    def __init__(self):
+        #self.url = url
+        os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
     # def __init__(self):
     #     # Set custom cache directory for selenium
     #     #cache_dir = '/var/www/.cache'
@@ -41,9 +42,9 @@ class Checker:
         options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
 
         #Change cache folder for selenium to be accessible by apache, or run as root
-        #options.add_argument("--cache-path=/srv/order-lab-tenantapptest/orderflex/var/cache")
+        options.add_argument("--cache-path=/srv/order-lab-tenantapptest/orderflex/var/cache") #or SE_CACHE_PATH
         #options.add_argument("--profile=/srv/order-lab-tenantapptest/orderflex/var/cache")
-        options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")
+        #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")
 
         #options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(options=options)
