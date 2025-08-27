@@ -10,6 +10,24 @@ class Checker:
         os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
         os.environ['XDG_CACHE_HOME'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
         #user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-", dir="/var/www/.cache")
+        # driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_argument("--no-sandbox")  # working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
+        options.add_argument("--disable-dev-shm-usage")  # working in command. Prevent Chrome from using shared memory
+        # if self.run_by_symfony_command is True:
+        options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
+
+        user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-",dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
+        options.add_argument(f"--user-data-dir={user_data_dir}")
+
+        # Change cache folder for selenium to be accessible by apache, or run as root
+        # os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
+        # options.add_argument("--cache-path=/srv/order-lab-tenantapptest/orderflex/var/cache") #or SE_CACHE_PATH
+        # options.add_argument("--profile=/srv/order-lab-tenantapptest/orderflex/var/cache")
+        # options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")
+
+        # options.add_experimental_option("detach", True)
+        self.driver = webdriver.Chrome(options=options)
 
     # def __init__(self):
     #     # Set custom cache directory for selenium
@@ -37,47 +55,48 @@ class Checker:
         print("###check_element_on_webpage###")
         status = False
 
-        #driver = webdriver.Chrome()
-        options = webdriver.ChromeOptions()
-        options.add_argument("--no-sandbox")  # working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
-        options.add_argument("--disable-dev-shm-usage")  # working in command. Prevent Chrome from using shared memory
-
-        #if self.run_by_symfony_command is True:
-        options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
-
-        user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-", dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
-        options.add_argument(f"--user-data-dir={user_data_dir}")
-
-        #Change cache folder for selenium to be accessible by apache, or run as root
-        #os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
-        #options.add_argument("--cache-path=/srv/order-lab-tenantapptest/orderflex/var/cache") #or SE_CACHE_PATH
-        #options.add_argument("--profile=/srv/order-lab-tenantapptest/orderflex/var/cache")
-        #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")
-
-        #options.add_experimental_option("detach", True)
-        driver = webdriver.Chrome(options=options)
+        # #driver = webdriver.Chrome()
+        # options = webdriver.ChromeOptions()
+        # options.add_argument("--no-sandbox")  # working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
+        # options.add_argument("--disable-dev-shm-usage")  # working in command. Prevent Chrome from using shared memory
+        #
+        # #if self.run_by_symfony_command is True:
+        # options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
+        #
+        # user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-", dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
+        # options.add_argument(f"--user-data-dir={user_data_dir}")
+        #
+        # #Change cache folder for selenium to be accessible by apache, or run as root
+        # #os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
+        # #options.add_argument("--cache-path=/srv/order-lab-tenantapptest/orderflex/var/cache") #or SE_CACHE_PATH
+        # #options.add_argument("--profile=/srv/order-lab-tenantapptest/orderflex/var/cache")
+        # #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")
+        #
+        # #options.add_experimental_option("detach", True)
+        # driver = webdriver.Chrome(options=options)
 
         print("###check_element_on_webpage: before driver.get(url) ###")
 
         # Navigate to the webpage
-        driver.get(url)
+        self.driver.get(url)
 
         print("###check_element_on_webpage: after driver.get(url) ###")
 
         # Check if the element exists
         try:
-            element = driver.find_element(By.ID, "heartbeatInput")
+            element = self.driver.find_element(By.ID, "heartbeatInput")
             print("###Element heartbeatInput exists.###")
             status = True
         except NoSuchElementException:
             print("###Element heartbeatInput does not exist.###")
 
         # Close the browser
-        driver.quit()
+        self.driver.quit()
 
         print(f"###check_element_on_webpage: return status={status} ###")
 
         return status
+
 
 if __name__ == "__main__":
     checker = Checker()
