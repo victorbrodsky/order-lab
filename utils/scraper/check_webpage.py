@@ -32,9 +32,9 @@ class Checker:
 
         #driver = webdriver.Chrome()
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")  # working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
-        options.add_argument("--disable-dev-shm-usage")  # working in command. Prevent Chrome from using shared memory
+        #options.add_argument("--headless")
+        #options.add_argument("--no-sandbox")  # working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
+        #options.add_argument("--disable-dev-shm-usage")  # working in command. Prevent Chrome from using shared memory
 
         options.add_argument("--cache /srv/order-lab-tenantapptest/orderflex/var/cache")
 
