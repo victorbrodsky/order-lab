@@ -23,8 +23,8 @@
 # -e --env
 
 import os
-os.environ['XDG_CACHE_HOME'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
-print("!!! Cache dir1:", os.environ.get('XDG_CACHE_HOME'))
+# os.environ['XDG_CACHE_HOME'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
+# print("!!! Cache dir1:", os.environ.get('XDG_CACHE_HOME'))
 
 import sys, getopt, logging
 import requests
@@ -408,7 +408,7 @@ def main(argv):
     #print(response)
     #sys.exit(2)
 
-    print("!!! Cache dir2:", os.environ.get('XDG_CACHE_HOME'))
+    # print("!!! Cache dir2:", os.environ.get('XDG_CACHE_HOME'))
 
     # # Set custom cache directory for selenium
     # # cache_dir = '/var/www/.cache'

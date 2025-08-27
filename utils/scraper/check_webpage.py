@@ -36,6 +36,8 @@ class Checker:
         options.add_argument("--no-sandbox")  # working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
         options.add_argument("--disable-dev-shm-usage")  # working in command. Prevent Chrome from using shared memory
 
+        options.add_argument("--cache /srv/order-lab-tenantapptest/orderflex/var/cache")
+
         #options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(options=options)
 
