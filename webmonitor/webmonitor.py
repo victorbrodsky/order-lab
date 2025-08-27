@@ -24,6 +24,7 @@
 
 import os
 os.environ['XDG_CACHE_HOME'] = '/var/www/.cache' #'/srv/order-lab-tenantapptest/orderflex/var/cache'
+print("!!! Cache dir:", os.environ.get('XDG_CACHE_HOME'))
 
 import sys, getopt, logging
 import requests
