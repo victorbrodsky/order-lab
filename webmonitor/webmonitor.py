@@ -398,7 +398,7 @@ def isLocalServer(url):
     return False
 
 def main(argv):
-
+    print("\n### webmonitor.py")
     #print("\n### webmonitor.py "+datetime.now().strftime('%Y-%B-%d %H:%M:%S')+"###")
     #logging.basicConfig(filename='checksites.log',level=logging.INFO)
     #logging.info('main start')
@@ -406,6 +406,8 @@ def main(argv):
     #response = requests.get('https://view-test.med.cornell.edu/',verify=False)
     #print(response)
     #sys.exit(2)
+
+    print("!!! Cache dir:", os.environ.get('XDG_CACHE_HOME'))
 
     # # Set custom cache directory for selenium
     # # cache_dir = '/var/www/.cache'
