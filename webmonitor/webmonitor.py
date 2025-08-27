@@ -23,7 +23,7 @@
 # -e --env
 
 import os
-os.environ['XDG_CACHE_HOME'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
+os.environ['XDG_CACHE_HOME'] = '/var/www/.cache' #'/srv/order-lab-tenantapptest/orderflex/var/cache'
 
 import sys, getopt, logging
 import requests
