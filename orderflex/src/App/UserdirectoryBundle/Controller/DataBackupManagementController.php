@@ -1042,10 +1042,11 @@ class DataBackupManagementController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
+    //NOT USED. Use dbManagePython in UserServiceUtil instead
     //Backup DB
     //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
-
+        exit("NOT USED. Use dbManagePython in UserServiceUtil instead");
         if ( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
