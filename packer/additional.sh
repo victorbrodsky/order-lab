@@ -28,7 +28,11 @@ cd "$bashpath"/utils/db-manage/postgres-manage-python/
 python3 -m venv venv
 source venv/bin/activate
 #sudo pip3 install -r requirements.txt
+
+echo -e ${COLOR} Upgrade pip for "$bashpath" ${NC}
 pip install --upgrade pip
+
+echo -e ${COLOR} Install requirements.txt for "$bashpath" ${NC}
 python -m pip install -r "$bashpath"/utils/db-manage/postgres-manage-python/requirements.txt
 deactivate
 cd "$bashpath"/orderflex/

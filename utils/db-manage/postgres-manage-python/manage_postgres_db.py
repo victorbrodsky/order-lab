@@ -16,6 +16,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 #use the PyYAML library to parse the YAML
+#pip install pyyaml
 import yaml
 
 # Amazon S3 settings.
