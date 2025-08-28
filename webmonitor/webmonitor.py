@@ -23,9 +23,6 @@
 # -e --env
 
 import os
-# os.environ['XDG_CACHE_HOME'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
-# print("!!! Cache dir1:", os.environ.get('XDG_CACHE_HOME'))
-
 import sys, getopt, logging
 import requests
 import smtplib
@@ -179,6 +176,8 @@ def get_site_status(url, sendSuccEmail=False):
     #print("get_site_status:","return=down","status=",status)
     return 'down'
 
+#web page check for heartbeatInput is using selenium and root access to /usr/share/httpd/.local
+#Therefore, it must be run by root cron: sudo crontab -l
 def web_page_checker(url):
     print("###web_page_checker###")
     checker = Checker()

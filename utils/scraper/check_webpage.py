@@ -5,9 +5,12 @@ from selenium.common.exceptions import NoSuchElementException
 import tempfile
 import time
 
+#Error if run by apache: Cache folder (/usr/share/httpd/.cache/selenium) cannot be created: Permission denied (os error 13)
 #sudo -u apache google-chrome --headless --disable-gpu --no-sandbox
 #mkdir: cannot create directory ‘/usr/share/httpd/.local’: Permission denied
 #sudo -u apache env SE_CACHE_PATH=/srv/order-lab-tenantapptest/orderflex/var/cache google-chrome --headless --disable-gpu --no-sandbox
+#Only Fix: sudo chown apache:apache /usr/share/httpd/
+#But then restart will not work => run cron as a root user
 
 class Checker:
     def __init__(self):
@@ -74,38 +77,18 @@ class Checker:
         print("###check_element_on_webpage###")
         status = False
 
-        # #driver = webdriver.Chrome()
-        # options = webdriver.ChromeOptions()
-        # options.add_argument("--no-sandbox")  # working in command. Disable the Chrome sandbox, which is a security feature that isolates browser processes
-        # options.add_argument("--disable-dev-shm-usage")  # working in command. Prevent Chrome from using shared memory
-        #
-        # #if self.run_by_symfony_command is True:
-        # options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
-        #
-        # user_data_dir = tempfile.mkdtemp(prefix="chrome-profile-", dir="/srv/order-lab-tenantapptest/orderflex/var/cache")
-        # options.add_argument(f"--user-data-dir={user_data_dir}")
-        #
-        # #Change cache folder for selenium to be accessible by apache, or run as root
-        # #os.environ['SE_CACHE_PATH'] = '/srv/order-lab-tenantapptest/orderflex/var/cache'
-        # #options.add_argument("--cache-path=/srv/order-lab-tenantapptest/orderflex/var/cache") #or SE_CACHE_PATH
-        # #options.add_argument("--profile=/srv/order-lab-tenantapptest/orderflex/var/cache")
-        # #options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")
-        #
-        # #options.add_experimental_option("detach", True)
-        # driver = webdriver.Chrome(options=options)
-
         print("###check_element_on_webpage: before driver.get(url) ###")
-
         # Navigate to the webpage
         self.driver.get(url)
 
-        print("###check_element_on_webpage: after driver.get(url) ###")
+        #print("###check_element_on_webpage: after driver.get(url) ###")
 
         # Check if the element exists
         try:
             element = self.driver.find_element(By.ID, "heartbeatInput")
-            print("###Element heartbeatInput exists.###")
-            status = True
+            if element:
+                print("###Element heartbeatInput exists.###")
+                status = True
         except NoSuchElementException:
             print("###Element heartbeatInput does not exist.###")
 
