@@ -574,7 +574,7 @@ class DataBackupManagementController extends OrderAbstractController
                 }
                 $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
                 if( $siteEmail ) {
-                    $usersEmails[] = $siteEmail();
+                    $usersEmails[] = $siteEmail;
                 }
                 //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
                 $emailUtil->sendEmail($usersEmails, $subject, $resStr);
