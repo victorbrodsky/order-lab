@@ -502,6 +502,68 @@ class DataBackupManagementController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
+    #[Route(path: '/create-backup-ajax/', name: 'employees_create_backup_ajax', methods: ['POST'], options: ['expose' => true])]
+    public function createBackupAjaxAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        //networkDrivePath
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            //exit("No networkDrivePath is defined");
+            $this->addFlash(
+                'pnotify-error',
+                //'notice',
+                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+            );
+            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+        }
+
+        if( $networkDrivePath ) {
+
+            //create backup
+            //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
+            // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
+            //exit($res);
+
+            $resStatus = $res['status'];
+            $resStr = $res['message'];
+
+            if( $resStatus == 'OK' ) {
+                $resStr = "Backup successfully created in folder $networkDrivePath";
+                //Event Log
+                $user = $this->getUser();
+                $sitename = $this->getParameter('employees.sitename');
+                $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Create Backup Database');
+            } else {
+//                $this->addFlash(
+//                    'pnotify-error',
+//                    $resStr
+//                );
+            }
+
+        } else {
+//            $this->addFlash(
+//                'pnotify-error',
+//                "Error backup"
+//            );
+            $res = array(
+                'message' => "Error backup",
+                'status' => 'Failed'
+            );
+        }
+
+        $response = new Response();
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+
     #[Route(path: '/restore-backup-ajax/', name: 'employees_restore_backup_ajax', methods: ['POST'], options: ['expose' => true])]
     public function restoreBackupAjaxAction( Request $request ) {
 

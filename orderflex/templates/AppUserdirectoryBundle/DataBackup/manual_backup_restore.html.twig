@@ -103,7 +103,7 @@
                         class="btn btn-danger"
                         type="button"
                         {{ disabledFalg }}
-                        onclick="userCreateBackup(this,'db')"
+                        onclick="userCreateBackup(this)"
                 >Create DB Backup</button>
 
             </div>
@@ -979,7 +979,7 @@
 
         function userCreateBackup(btn) {
             //Run create backup asynchronous and send an email when it is ready
-            var url = Routing.generate('employees_post_create_backup_ajax');
+            var url = Routing.generate('employees_create_backup_ajax');
             $.ajax({
                 url: url,
                 timeout: _backupAjaxTimeout,
