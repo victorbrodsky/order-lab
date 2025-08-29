@@ -579,11 +579,14 @@ class DataBackupManagementController extends OrderAbstractController
                 //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
                 $emailUtil->sendEmail($usersEmails, $subject, $resStr);
 
+//                $res = array(
+//                    'message' => "Backup successfully created in folder ".  addslashes($networkDrivePath),
+//                    'status' => 'OK'
+//                );
                 $res = array(
-                    'message' => "Backup successfully created in folder $networkDrivePath",
+                    'message' => sprintf("Backup successfully created in folder %s", $networkDrivePath),
                     'status' => 'OK'
                 );
-
             } else {
 //                $this->addFlash(
 //                    'pnotify-error',
@@ -603,6 +606,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $response = new Response();
+        //$response->headers->set('Content-Type', 'application/json');
         $response->setContent(json_encode($res));
         return $response;
     }
