@@ -523,15 +523,32 @@ class DataBackupManagementController extends OrderAbstractController
         //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
-            $this->addFlash(
-                'pnotify-error',
-                //'notice',
-                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+//            $this->addFlash(
+//                'pnotify-error',
+//                //'notice',
+//                "Cannot continue
+//                 with Backup: No Network Drive Path is defined in the Site Settings"
+//            );
+//            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+            $res = array(
+                'message' => "No Network Drive Path is defined in the Site Settings",
+                'status' => 'Error'
             );
-            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+            $response = new Response();
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         if( $networkDrivePath ) {
+
+            //Testing
+            $res = array(
+                'message' => "Test OK",
+                'status' => 'OK'
+            );
+            $response = new Response();
+            $response->setContent(json_encode($res));
+            return $response;
 
             //create backup
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
