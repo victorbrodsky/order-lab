@@ -554,14 +554,14 @@ class DataBackupManagementController extends OrderAbstractController
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
             // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             $userServiceUtil = $this->container->get('user_service_utility');
-            $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
+            $resPython = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
             //exit($res);
 
-            $resStatus = $res['status'];
-            $resStr = $res['message'];
+            //$resStatus = $resPython['status'];
+            //$resStr = $resPython['message'];
 
-            if( $resStatus == 'OK' ) {
-                $resStr = "Backup successfully created in folder $networkDrivePath" . ".<br>" . $res['message'];
+            if( $resPython['status'] == 'OK' ) {
+                $resStr = "Backup successfully created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
                 //Event Log
                 $user = $this->getUser();
                 $sitename = $this->getParameter('employees.sitename');
@@ -578,6 +578,12 @@ class DataBackupManagementController extends OrderAbstractController
                 }
                 //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
                 $emailUtil->sendEmail($usersEmails, $subject, $resStr);
+
+                $res = array(
+                    'message' => $resPython['message'],
+                    'status' => 'OK'
+                );
+
             } else {
 //                $this->addFlash(
 //                    'pnotify-error',
