@@ -96,6 +96,16 @@
                         class="btn btn-info" href="{{ path(employees_sitename~'_create_backup_upload') }}"
                     >Create Upload Folder Backup</a>
                 {#</div>#}
+
+                {#Use ajax to start backup process asynchronous, send an email when it's ready#}
+                <button
+                        id="btn-restore-backup"
+                        class="btn btn-danger"
+                        type="button"
+                        {{ disabledFalg }}
+                        onclick="userCreateBackup(this,'db')"
+                >Create DB Backup</button>
+
             </div>
 
             <br>
@@ -302,7 +312,7 @@
 
 
     {#Reset Demo Environment#}
-    {% if 1 %}
+    {% if 0 %}
     <div class="panel panel-default">
         <div class="panel-heading">Reset Demo Environment</div>
         <div class="panel-body">
@@ -326,7 +336,8 @@
                                     class="btn btn-danger"
                                     type="button"
                                     {#{{ disabledFalg }}#}
-                                    onclick="userVerifyRestoreBackup(this,'db')"
+                                    {#onclick="userVerifyRestoreBackup(this,'db')"#}
+                                    onclick="userRestoreDemo(this)"
                             >Reset Demo Environment</button>
                         </span>
                     </div><!-- /input-group -->
@@ -966,7 +977,43 @@
         }
 
 
-
+        function userCreateBackup(btn) {
+            //Run create backup asynchronous and send an email when it is ready
+            var url = Routing.generate('employees_post_create_backup_ajax');
+            $.ajax({
+                url: url,
+                timeout: _backupAjaxTimeout,
+                type: "POST",
+                async: true,
+                //data: {type: type, msg: msg},
+                dataType: 'json'
+            }).success(function(data) {
+                console.log("user userCreateBackup data="+data);
+                //console.log("user PostRestoreEventLogAjax data.status="+data.status);
+                //console.log("user PostRestoreEventLogAjax data.message="+data.message);
+                if( data.status == 'OK' ) {
+                    console.log("Create backup EventLog ok");
+                    $('#backup-msg-danger-box').html("");
+                    $('#backup-msg-danger-box').hide();
+                    //backup-msg-success-box
+                    //$('#backup-msg-success-box').html(data.message);
+                    //$('#backup-msg-success-box').show();
+                } else {
+                    console.log("Create backup EventLog error");
+                    $('#backup-msg-danger-box').html(data.message);
+                    $('#backup-msg-danger-box').show();
+                }
+            }).fail(function(jqXHR, textStatus, error) {
+                //alert(error);
+                var failMsg = "Create backup EventLog fail. textStatus="+textStatus+", error="+error;
+                console.log(failMsg);
+                $('#backup-msg-danger-box').html(failMsg);
+                $('#backup-msg-danger-box').show();
+            }).done(function() {
+                userStopBtn(btn,lbtn);
+                console.log("Create backup EventLog done");
+            });
+        }
 
 
         //NOT USED
