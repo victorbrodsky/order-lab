@@ -502,7 +502,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
-    #[Route(path: '/create-backup-ajax/', name: 'employees_create_backup_ajax', methods: ['POST'], options: ['expose' => true])]
+    #[Route(path: '/create-backup-ajax/', name: 'employees_create_backup_ajax', methods: ['GET','POST'], options: ['expose' => true])]
     public function createBackupAjaxAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
