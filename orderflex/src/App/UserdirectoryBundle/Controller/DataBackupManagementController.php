@@ -506,7 +506,14 @@ class DataBackupManagementController extends OrderAbstractController
     public function createBackupAjaxAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
+            //return $this->redirect( $this->generateUrl('employees-nopermission') );
+            $res = array(
+                'message' => "Error backup",
+                'status' => 'Error'
+            );
+            $response = new Response();
+            $response->setContent(json_encode($res));
+            return $response;
         }
 
         //networkDrivePath
@@ -537,7 +544,7 @@ class DataBackupManagementController extends OrderAbstractController
             $resStr = $res['message'];
 
             if( $resStatus == 'OK' ) {
-                $resStr = "Backup successfully created in folder $networkDrivePath";
+                $resStr = "Backup successfully created in folder $networkDrivePath" . ".<br>" . $res['message'];
                 //Event Log
                 $user = $this->getUser();
                 $sitename = $this->getParameter('employees.sitename');
@@ -568,7 +575,7 @@ class DataBackupManagementController extends OrderAbstractController
 //            );
             $res = array(
                 'message' => "Error backup",
-                'status' => 'Failed'
+                'status' => 'Error'
             );
         }
 
