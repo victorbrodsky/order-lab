@@ -542,13 +542,13 @@ class DataBackupManagementController extends OrderAbstractController
         if( $networkDrivePath ) {
 
             //Testing
-//            $res = array(
-//                'message' => "Test OK",
-//                'status' => 'OK'
-//            );
-//            $response = new Response();
-//            $response->setContent(json_encode($res));
-//            return $response;
+            $res = array(
+                'message' => "Test OK",
+                'status' => 'OK'
+            );
+            $response = new Response();
+            $response->setContent(json_encode($res));
+            return $response;
 
             //create backup
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
@@ -580,7 +580,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $emailUtil->sendEmail($usersEmails, $subject, $resStr);
 
                 $res = array(
-                    'message' => $resPython['message'],
+                    'message' => "Backup successfully created in folder $networkDrivePath",
                     'status' => 'OK'
                 );
 
