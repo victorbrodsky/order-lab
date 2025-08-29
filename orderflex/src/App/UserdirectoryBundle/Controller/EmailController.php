@@ -146,7 +146,7 @@ class EmailController extends OrderAbstractController
                     if( count($users) > 0 ) {
                         $user = $users[0];
                         echo "user=$user <br>";
-                        $usersEmails[] = $user->getSingleEmail();;
+                        $usersEmails[] = $user->getSingleEmail();
                     }
                 }
                 //dump($usersEmails);

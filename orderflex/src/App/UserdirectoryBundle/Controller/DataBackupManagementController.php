@@ -512,6 +512,7 @@ class DataBackupManagementController extends OrderAbstractController
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+
         //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
@@ -541,6 +542,18 @@ class DataBackupManagementController extends OrderAbstractController
                 $user = $this->getUser();
                 $sitename = $this->getParameter('employees.sitename');
                 $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Create Backup Database');
+                //Send email
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $subject = "Backup successfully created";
+                if( $user ) {
+                    $usersEmails[] = $user->getSingleEmail();
+                }
+                $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                if( $siteEmail ) {
+                    $usersEmails[] = $siteEmail();
+                }
+                //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
+                $emailUtil->sendEmail($usersEmails, $subject, $resStr);
             } else {
 //                $this->addFlash(
 //                    'pnotify-error',
@@ -1011,7 +1024,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $emailUtil = $this->container->get('user_mailer_utility');
+        //$emailUtil = $this->container->get('user_mailer_utility');
 
         $user = $this->getUser();
         $userStr = $user."";
