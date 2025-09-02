@@ -67,10 +67,11 @@ class StatusCronCommand extends Command {
             $userServiceUtil = $this->container->get('user_service_utility');
             $userSecUtil = $this->container->get('user_security_utility');
             $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-            $res = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
-            $resStr = implode(', ', $res);
-            $res = $userServiceUtil->createBackupUpload();
-            $resStr = $resStr . "; " . $res;
+            $resDbBackup = $userServiceUtil->dbManagePython($networkDrivePath, 'backup');
+            $resDbBackupStr = implode(', ', $resDbBackup);
+            $resUploadFolderBackup = $userServiceUtil->createBackupUpload();
+            $resUploadFolderBackupStr = implode(', ', $resUploadFolderBackup);
+            $resStr = $resDbBackupStr . "; " . $resUploadFolderBackupStr;
             $logger->notice("cron:status. after. resStr=" . $resStr);
         }
 

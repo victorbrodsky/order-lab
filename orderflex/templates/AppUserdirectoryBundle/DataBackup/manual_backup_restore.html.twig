@@ -1005,26 +1005,26 @@
                 //console.log("user PostRestoreEventLogAjax data.status="+data.status);
                 //console.log("user PostRestoreEventLogAjax data.message="+data.message);
                 if( data.status == 'OK' ) {
-                    console.log("Create backup EventLog ok");
+                    console.log("Create DB backup EventLog ok");
                     $('#backup-msg-danger-box').html("");
                     $('#backup-msg-danger-box').hide();
                     $('#backup-msg-success-box').html(data.message);
                     $('#backup-msg-success-box').show();
                     userStopBtn(btn,null);
                 } else {
-                    console.log("Create backup EventLog error");
+                    console.log("Create DB backup EventLog error");
                     $('#backup-msg-danger-box').html(data.message);
                     $('#backup-msg-danger-box').show();
                 }
             }).fail(function(jqXHR, textStatus, error) {
                 //alert(error);
-                var failMsg = "Create backup EventLog fail. textStatus="+textStatus+", error="+error;
+                var failMsg = "Create DB backup EventLog fail. textStatus="+textStatus+", error="+error;
                 console.log(failMsg);
                 $('#backup-msg-danger-box').html(failMsg);
                 $('#backup-msg-danger-box').show();
             }).done(function() {
                 userStopBtn(btn,null);
-                console.log("Create backup EventLog done");
+                console.log("Create DB backup EventLog done");
                 $('#backup-msg-success-box').html(
                     "Database backup is in progress. " +
                     "You’ll receive a confirmation email once it’s complete. " +
@@ -1038,44 +1038,44 @@
             userStartBtn(btn,null);
             $('#backup-msg-success-box').html("");
             $('#backup-msg-success-box').hide();
-            var url = Routing.generate('employees_create_backup_ajax');
+            var url = Routing.generate('employees_create_uploadfolder_backup_ajax');
             $.ajax({
                 url: url,
                 timeout: _backupAjaxTimeout,
-                type: "GET", //"POST",
+                type: "POST",
                 async: true,
                 //data: {type: type, msg: msg},
                 dataType: 'json'
             }).success(function(data) {
-                //console.log("user userCreateBackup data="+data);
-                console.log("userCreateBackup Success:", data);
+                //console.log("user userCreateUploadFolderBackup data="+data);
+                console.log("userCreateUploadFolderBackup Success:", data);
                 //console.log("user PostRestoreEventLogAjax data.status="+data.status);
                 //console.log("user PostRestoreEventLogAjax data.message="+data.message);
                 if( data.status == 'OK' ) {
-                    console.log("Create backup EventLog ok");
+                    console.log("Create uploadFolder backup EventLog ok");
                     $('#backup-msg-danger-box').html("");
                     $('#backup-msg-danger-box').hide();
                     $('#backup-msg-success-box').html(data.message);
                     $('#backup-msg-success-box').show();
                     userStopBtn(btn,null);
                 } else {
-                    console.log("Create backup EventLog error");
+                    console.log("Create uploadFolder backup EventLog error");
                     $('#backup-msg-danger-box').html(data.message);
                     $('#backup-msg-danger-box').show();
                 }
             }).fail(function(jqXHR, textStatus, error) {
                 //alert(error);
-                var failMsg = "Create backup EventLog fail. textStatus="+textStatus+", error="+error;
+                var failMsg = "Create uploadFolder backup EventLog fail. textStatus="+textStatus+", error="+error;
                 console.log(failMsg);
                 $('#backup-msg-danger-box').html(failMsg);
                 $('#backup-msg-danger-box').show();
             }).done(function() {
                 userStopBtn(btn,null);
-                console.log("Create backup EventLog done");
+                console.log("Create uploadFolder backup EventLog done");
                 $('#backup-msg-success-box').html(
-                        "Database backup is in progress. " +
+                        "Upload folder backup is in progress. " +
                         "You’ll receive a confirmation email once it’s complete. " +
-                        "To view the latest database files, please refresh the page on completion."
+                        "To view the latest backup files, please refresh the page on completion."
                 );
                 $('#backup-msg-success-box').show();
             });

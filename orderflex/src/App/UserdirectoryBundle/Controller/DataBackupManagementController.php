@@ -502,13 +502,13 @@ class DataBackupManagementController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
-    #[Route(path: '/create-db-backup-ajax/', name: 'employees_create_db_backup_ajax', methods: ['GET','POST'], options: ['expose' => true])]
+    #[Route(path: '/create-db-backup-ajax/', name: 'employees_create_db_backup_ajax', methods: ['POST'], options: ['expose' => true])]
     public function createDbBackupAjaxAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             //return $this->redirect( $this->generateUrl('employees-nopermission') );
             $res = array(
-                'message' => "Error backup",
+                'message' => "Error DB backup",
                 'status' => 'Error'
             );
             $response = new Response();
@@ -560,7 +560,7 @@ class DataBackupManagementController extends OrderAbstractController
             //$resStatus = $resPython['status'];
             //$resStr = $resPython['message'];
 
-            if( $resPython['status'] == 'OK' ) {
+            if( $resPython && $resPython['status'] == 'OK' ) {
                 $resStr = "DB backup successfully created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
                 //Event Log
                 $user = $this->getUser();
@@ -601,6 +601,115 @@ class DataBackupManagementController extends OrderAbstractController
 //            );
             $res = array(
                 'message' => "Error DB backup",
+                'status' => 'Error'
+            );
+        }
+
+        $response = new Response();
+        //$response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($res));
+        return $response;
+    }
+    #[Route(path: '/create-upload-folder-backup-ajax/', name: 'employees_create_uploadfolder_backup_ajax', methods: ['POST'], options: ['expose' => true])]
+    public function createUploadFolderBackupAjaxAction(Request $request) {
+
+        if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
+            //return $this->redirect( $this->generateUrl('employees-nopermission') );
+            $res = array(
+                'message' => "Error UploadFolder backup",
+                'status' => 'Error'
+            );
+            $response = new Response();
+            $response->setContent(json_encode($res));
+            return $response;
+        }
+
+        //networkDrivePath
+        $userSecUtil = $this->container->get('user_security_utility');
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            //exit("No networkDrivePath is defined");
+//            $this->addFlash(
+//                'pnotify-error',
+//                //'notice',
+//                "Cannot continue
+//                 with Backup: No Network Drive Path is defined in the Site Settings"
+//            );
+//            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
+            $res = array(
+                'message' => "No Network Drive Path is defined in the Site Settings",
+                'status' => 'Error'
+            );
+            $response = new Response();
+            $response->setContent(json_encode($res));
+            return $response;
+        }
+
+        if( $networkDrivePath ) {
+
+//            //Testing
+//            $res = array(
+//                'message' => "Test OK",
+//                'status' => 'OK'
+//            );
+//            $response = new Response();
+//            $response->setContent(json_encode($res));
+//            return $response;
+
+            //create backup
+            //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
+            // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
+            $userServiceUtil = $this->container->get('user_service_utility');
+            //$resPython = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
+            $resPython = $userServiceUtil->createBackupUpload();
+            //exit($res);
+
+            //$resStatus = $resPython['status'];
+            //$resStr = $resPython['message'];
+
+            if( $resPython && $resPython['status'] == 'OK' ) {
+                $resStr = "Backup of the uploaded folder has been successfully created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
+                //Event Log
+                $user = $this->getUser();
+                $sitename = $this->getParameter('employees.sitename');
+                $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Create Backup Database');
+                //Send email
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $subject = "Backup of the uploaded folder has been successfully created";
+                if( $user ) {
+                    $usersEmails[] = $user->getSingleEmail();
+                }
+                $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                if( $siteEmail ) {
+                    $usersEmails[] = $siteEmail;
+                }
+                //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
+                $emailUtil->sendEmail($usersEmails, $subject, $resStr);
+
+//                $res = array(
+//                    'message' => "Backup successfully created in folder ".  addslashes($networkDrivePath),
+//                    'status' => 'OK'
+//                );
+                $res = array(
+                    'message' => sprintf("Backup of the uploaded folder has been successfully created in folder %s", $networkDrivePath),
+                    'status' => 'OK'
+                );
+            } else {
+//                $this->addFlash(
+//                    'pnotify-error',
+//                    $resStr
+//                );
+            }
+
+        } else {
+//            $this->addFlash(
+//                'pnotify-error',
+//                "Error backup"
+//            );
+            $res = array(
+                'message' => "Error uploaded folder backup",
                 'status' => 'Error'
             );
         }
@@ -1315,7 +1424,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $res;
     }
 
-    //Create Upload Folder Backup order-lab\orderflex\public\Uploaded\
+    //Create a backup of the uploaded folder order-lab\orderflex\public\Uploaded\
     #[Route(path: '/create-backup-upload/', name: 'employees_create_backup_upload', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
     public function createUploadBackupAction(Request $request) {
@@ -1391,35 +1500,36 @@ class DataBackupManagementController extends OrderAbstractController
             }
             ////////// EOF Create upload backup ///////////////
 
-            $res = $userServiceUtil->createBackupUpload();
+            $resUploadFolderBackup = $userServiceUtil->createBackupUpload();
+            $resUploadFolderBackupStr = implode(', ', $resUploadFolderBackup);
 
-            if( $res ) {
+            if( $resUploadFolderBackup && $resUploadFolderBackup['status'] == 'OK' ) {
                 $this->addFlash(
                     'notice',
-                    $res
+                    $resUploadFolderBackupStr
                 );
             } else {
                 $res = "Error: Uploaded folder backup has not been created";
                 $this->addFlash(
                     'warning',
-                    $res
+                    $resUploadFolderBackupStr
                 );
             }
 
             //Event Log
             $user = $this->getUser();
             $sitename = $this->getParameter('employees.sitename');
-            $userSecUtil->createUserEditEvent($sitename,$res,$user,null,$request,'Create Backup Upload Files');
+            $userSecUtil->createUserEditEvent($sitename,$resUploadFolderBackupStr,$user,null,$request,'Create Backup Upload Files');
 
             $this->addFlash(
                 'notice',
-                $res
+                $resUploadFolderBackupStr
             );
 
         } else {
             $this->addFlash(
                 'pnotify-error',
-                "Error backup"
+                "Error creating backup of the uploaded folder"
             );
         }
 

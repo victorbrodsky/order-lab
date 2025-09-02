@@ -3820,7 +3820,12 @@ Pathology and Laboratory Medicine",
 //                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
 //            );
 //            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
-            return "Cannot continue with Backup: Backup location path is not provided and/or not defined in the Site Settings";
+            //return "Cannot continue with Backup: Backup location path is not provided and/or not defined in the Site Settings";
+            $res = array(
+                'status' => "NOTOK",
+                'message' => "Cannot continue with Backup: Backup location path is not provided and/or not defined in the Site Settings"
+            );
+            return $res;
         }
 
         $res = NULL;
