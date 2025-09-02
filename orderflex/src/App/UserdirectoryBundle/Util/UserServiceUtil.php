@@ -3685,7 +3685,7 @@ Pathology and Laboratory Medicine",
             "utils" .
             DIRECTORY_SEPARATOR . "db-manage" .
             DIRECTORY_SEPARATOR . "postgres-manage-python";
-        echo '\n dbManagePython: managePackagePath='.$managePackagePath."\n<br>";
+        //echo '\n dbManagePython: managePackagePath='.$managePackagePath."\n<br>";
 
         //Instead of db.config, use config/paramaters.yml
         //config file
