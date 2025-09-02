@@ -1016,7 +1016,11 @@
             }).done(function() {
                 userStopBtn(btn,null);
                 console.log("Create backup EventLog done");
-                $('#backup-msg-success-box').html("DB backup has started, you will get a confirmation email when it is done.");
+                $('#backup-msg-success-box').html(
+                    "Database backup is in progress. " +
+                    "You’ll receive a confirmation email once it’s complete. " +
+                    "To view the latest database files, please refresh the page on completion."
+                );
                 $('#backup-msg-success-box').show();
             });
         }
