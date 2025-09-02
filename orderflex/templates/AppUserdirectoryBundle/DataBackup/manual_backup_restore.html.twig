@@ -99,12 +99,20 @@
 
                 {#Use ajax to start backup process asynchronous, send an email when it's ready#}
                 <button
-                        id="btn-restore-backup"
+                        id="btn-create-backup"
                         class="btn btn-info"
                         type="button"
                         {{ disabledFalg }}
-                        onclick="userCreateBackup(this)"
+                        onclick="userCreateDbBackup(this)"
                 >Create DB Backup</button>
+
+                <button
+                        id="btn-create-backup-upload"
+                        class="btn btn-info"
+                        type="button"
+                        {{ disabledFalg }}
+                        onclick="userCreateUploadFolderBackup(this)"
+                >Create Backup of the Upload Folder</button>
 
             </div>
 
@@ -977,7 +985,55 @@
         }
 
 
-        function userCreateBackup(btn) {
+        function userCreateDbBackup(btn) {
+            //Run create backup asynchronous and send an email when it is ready
+            userStartBtn(btn,null);
+            $('#backup-msg-success-box').html("");
+            $('#backup-msg-success-box').hide();
+            var url = Routing.generate('employees_create_db_backup_ajax');
+            $.ajax({
+                url: url,
+                timeout: _backupAjaxTimeout,
+                //type: "GET", //"POST",
+                type: "POST",
+                async: true,
+                //data: {type: type, msg: msg},
+                dataType: 'json'
+            }).success(function(data) {
+                //console.log("user userCreateDbBackup data="+data);
+                console.log("userCreateDbBackup Success:", data);
+                //console.log("user PostRestoreEventLogAjax data.status="+data.status);
+                //console.log("user PostRestoreEventLogAjax data.message="+data.message);
+                if( data.status == 'OK' ) {
+                    console.log("Create backup EventLog ok");
+                    $('#backup-msg-danger-box').html("");
+                    $('#backup-msg-danger-box').hide();
+                    $('#backup-msg-success-box').html(data.message);
+                    $('#backup-msg-success-box').show();
+                    userStopBtn(btn,null);
+                } else {
+                    console.log("Create backup EventLog error");
+                    $('#backup-msg-danger-box').html(data.message);
+                    $('#backup-msg-danger-box').show();
+                }
+            }).fail(function(jqXHR, textStatus, error) {
+                //alert(error);
+                var failMsg = "Create backup EventLog fail. textStatus="+textStatus+", error="+error;
+                console.log(failMsg);
+                $('#backup-msg-danger-box').html(failMsg);
+                $('#backup-msg-danger-box').show();
+            }).done(function() {
+                userStopBtn(btn,null);
+                console.log("Create backup EventLog done");
+                $('#backup-msg-success-box').html(
+                    "Database backup is in progress. " +
+                    "You’ll receive a confirmation email once it’s complete. " +
+                    "To view the latest database files, please refresh the page on completion."
+                );
+                $('#backup-msg-success-box').show();
+            });
+        }
+        function userCreateUploadFolderBackup(btn) {
             //Run create backup asynchronous and send an email when it is ready
             userStartBtn(btn,null);
             $('#backup-msg-success-box').html("");
@@ -1017,9 +1073,9 @@
                 userStopBtn(btn,null);
                 console.log("Create backup EventLog done");
                 $('#backup-msg-success-box').html(
-                    "Database backup is in progress. " +
-                    "You’ll receive a confirmation email once it’s complete. " +
-                    "To view the latest database files, please refresh the page on completion."
+                        "Database backup is in progress. " +
+                        "You’ll receive a confirmation email once it’s complete. " +
+                        "To view the latest database files, please refresh the page on completion."
                 );
                 $('#backup-msg-success-box').show();
             });

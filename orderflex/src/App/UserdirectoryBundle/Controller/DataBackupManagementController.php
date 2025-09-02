@@ -502,8 +502,8 @@ class DataBackupManagementController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
-    #[Route(path: '/create-backup-ajax/', name: 'employees_create_backup_ajax', methods: ['GET','POST'], options: ['expose' => true])]
-    public function createBackupAjaxAction(Request $request) {
+    #[Route(path: '/create-db-backup-ajax/', name: 'employees_create_db_backup_ajax', methods: ['GET','POST'], options: ['expose' => true])]
+    public function createDbBackupAjaxAction(Request $request) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             //return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -561,14 +561,14 @@ class DataBackupManagementController extends OrderAbstractController
             //$resStr = $resPython['message'];
 
             if( $resPython['status'] == 'OK' ) {
-                $resStr = "Backup successfully created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
+                $resStr = "DB backup successfully created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
                 //Event Log
                 $user = $this->getUser();
                 $sitename = $this->getParameter('employees.sitename');
                 $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Create Backup Database');
                 //Send email
                 $emailUtil = $this->container->get('user_mailer_utility');
-                $subject = "Backup successfully created";
+                $subject = "DB backup successfully created";
                 if( $user ) {
                     $usersEmails[] = $user->getSingleEmail();
                 }
@@ -584,7 +584,7 @@ class DataBackupManagementController extends OrderAbstractController
 //                    'status' => 'OK'
 //                );
                 $res = array(
-                    'message' => sprintf("Backup successfully created in folder %s", $networkDrivePath),
+                    'message' => sprintf("DB backup successfully created in folder %s", $networkDrivePath),
                     'status' => 'OK'
                 );
             } else {
@@ -600,7 +600,7 @@ class DataBackupManagementController extends OrderAbstractController
 //                "Error backup"
 //            );
             $res = array(
-                'message' => "Error backup",
+                'message' => "Error DB backup",
                 'status' => 'Error'
             );
         }
