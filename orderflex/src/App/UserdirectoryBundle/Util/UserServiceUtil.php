@@ -3883,7 +3883,7 @@ Pathology and Laboratory Medicine",
             $logger->notice("createUploadBackupAction. after res=" . $resUploadFolder);
 
             if (!$resUploadFolder) {
-                $resStr = "Backup of the uploaded folder has been successfully created. Backup filename: $archiveFile";
+                $resStr = "Backup filename: $archiveFile";
                 $res = array(
                     'status' => "OK",
                     'message' => $resStr
