@@ -83,19 +83,16 @@
         <div class="panel-heading">Generate backup files</div>
         <div class="panel-body">
             <div class="row">
-                {#<div class="col-xs-1"></div>#}
-                {#<div class="col-xs-2" align="right">#}
-                    <a  id="btn-create-backup"
-                        general-data-confirm="Are you sure you want to create a database backup?"
-                        class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}"
-                    >Create DB Backup</a>
-                {#</div>#}
-                {#<div class="col-xs-2" align="left">#}
-                    <a  id="btn-create-backup-upload"
-                        general-data-confirm="Are you sure you want to create a upload folder backup?"
-                        class="btn btn-info" href="{{ path(employees_sitename~'_create_backup_upload') }}"
-                    >Create Upload Folder Backup</a>
-                {#</div>#}
+                {##### Don't use synchronous backup #####}
+                {#<a  id="btn-create-backup"#}
+                    {#general-data-confirm="Are you sure you want to create a database backup?"#}
+                    {#class="btn btn-info" href="{{ path(employees_sitename~'_create_backup') }}"#}
+                {#>Create DB Backup</a>#}
+                {#<a  id="btn-create-backup-upload"#}
+                    {#general-data-confirm="Are you sure you want to create a upload folder backup?"#}
+                    {#class="btn btn-info" href="{{ path(employees_sitename~'_create_backup_upload') }}"#}
+                {#>Create Upload Folder Backup</a>#}
+                {##### EOF Don't use synchronous backup #####}
 
                 {#Use ajax to start backup process asynchronous, send an email when it's ready#}
                 <button

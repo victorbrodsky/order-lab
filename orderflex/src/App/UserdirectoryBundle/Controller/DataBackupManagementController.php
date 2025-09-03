@@ -439,6 +439,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
 
+    //NOT USED. Use asynchronous version via ajax
     //TODO: from None\nconfigparser.NoSectionError: No section: 'postgresql'
     #[Route(path: '/create-backup/', name: 'employees_create_backup', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
@@ -1424,6 +1425,7 @@ class DataBackupManagementController extends OrderAbstractController
         return $res;
     }
 
+    //NOT USED. Use asynchronous version via ajax
     //Create a backup of the uploaded folder order-lab\orderflex\public\Uploaded\
     #[Route(path: '/create-backup-upload/', name: 'employees_create_backup_upload', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
