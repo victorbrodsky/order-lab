@@ -18,6 +18,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 #use the PyYAML library to parse the YAML
 #pip install pyyaml
 import yaml
+import asyncio
 
 # Amazon S3 settings.
 # AWS_ACCESS_KEY_ID  in ~/.aws/credentials
@@ -319,8 +320,69 @@ def move_to_local_storage(comp_file, filename_compressed, manager_config):
         os.mkdir(backup_folder)
     shutil.move(comp_file, '{}{}'.format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
 
+def create_restore_db(
+    postgres_host,
+    postgres_restore,  # temp DB name
+    postgres_port,
+    postgres_user,
+    postgres_password,
+    restore_filename,
+    restore_uncompressed,
+    verbose
+):
+    logger = logging.getLogger(__name__)
+    # Create temp DB
+    logger.info("Extracting {}".format(restore_filename))
+    ext_file = extract_file(restore_filename)
+    # cleaned_ext_file = remove_faulty_statement_from_dump(ext_file)
+    logger.info("Extracted to : {}".format(ext_file))
+    logger.info("Creating temp database for restore : {}".format(postgres_restore))
+    tmp_database = create_db(postgres_host,
+                             postgres_restore,  # temp DB name
+                             postgres_port,
+                             postgres_user,
+                             postgres_password)
+    logger.info("Created temp database for restore : {}".format(tmp_database))
 
-def main():
+    # Restore DB to postgres_restore
+    logger.info("Restore starting")
+    result_restore = restore_postgres_db(
+        postgres_host,
+        postgres_restore,  # DB name where to restore DB
+        postgres_port,
+        postgres_user,
+        postgres_password,
+        restore_uncompressed,  # backup_file used as a source
+        verbose
+    )
+    return result_restore
+
+async def async_restore_wrapper(
+    postgres_host,
+    postgres_restore,  # temp DB name
+    postgres_port,
+    postgres_user,
+    postgres_password,
+    restore_filename,
+    restore_uncompressed,
+    verbose
+):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(
+        None,
+        lambda: restore_postgres_db(
+            postgres_host,
+            postgres_restore,  # temp DB name
+            postgres_port,
+            postgres_user,
+            postgres_password,
+            restore_filename,
+            restore_uncompressed,
+            verbose
+        )
+    )
+                                                                        ))
+async def main():
 
     #Testing
     # Get the directory of the current script
@@ -407,6 +469,7 @@ def main():
     postgres_host = params.get('database_host')
     postgres_port = params.get('database_port')
     postgres_db = params.get('database_name')
+    postgres_restore = "{}_restore".format(postgres_db)
     postgres_user = params.get('database_user')
     postgres_password = params.get('database_password')
     storage_engine = 'LOCAL'
@@ -545,27 +608,63 @@ def main():
                 download_from_s3(backup_match[0], restore_filename, manager_config)
                 logger.info("Download complete")
 
+            #Create temp DB
             logger.info("Extracting {}".format(restore_filename))
             ext_file = extract_file(restore_filename)
             # cleaned_ext_file = remove_faulty_statement_from_dump(ext_file)
             logger.info("Extracted to : {}".format(ext_file))
             logger.info("Creating temp database for restore : {}".format(postgres_restore))
-            tmp_database = create_db(postgres_host,
-                                     postgres_restore,
-                                     postgres_port,
-                                     postgres_user,
-                                     postgres_password)
-            logger.info("Created temp database for restore : {}".format(tmp_database))
-            logger.info("Restore starting")
-            result_restore = restore_postgres_db(postgres_host,
-                                         postgres_restore,
-                                         postgres_port,
-                                         postgres_user,
-                                         postgres_password,
-                                         restore_uncompressed,
-                                         args.verbose)
 
-            if result_restore == False:
+            if 0:
+                tmp_database = create_db(
+                    postgres_host,
+                    postgres_restore, #temp DB name
+                    postgres_port,
+                    postgres_user,
+                    postgres_password
+                )
+                logger.info("Created temp database for restore : {}".format(tmp_database))
+
+            # Restore DB to postgres_restore
+            logger.info("Restore starting")
+
+            if 0:
+                result_restore = restore_postgres_db(
+                    postgres_host,
+                    postgres_restore,       #DB name where to restore DB
+                    postgres_port,
+                    postgres_user,
+                    postgres_password,
+                    restore_uncompressed,   #backup_file used as a source
+                    args.verbose
+                )
+
+            result_restore = False
+            if 0:
+                result_restore = create_restore_db(
+                    postgres_host,
+                    postgres_restore,  # temp DB name
+                    postgres_port,
+                    postgres_user,
+                    postgres_password,
+                    restore_filename,
+                    restore_uncompressed,
+                    args.verbose
+                )
+            else:
+                #pass
+                result_restore = await async_restore_wrapper(
+                    postgres_host,
+                    postgres_restore,  # temp DB name
+                    postgres_port,
+                    postgres_user,
+                    postgres_password,
+                    restore_filename,
+                    restore_uncompressed,
+                    args.verbose
+                )
+
+            if not result_restore:
                 print("DB restore failed")
                 exit(1)
             else:
@@ -574,6 +673,7 @@ def main():
             if args.verbose:
                 for line in result_restore.splitlines():
                     logger.info(line)
+
             logger.info("Restore complete")
             if args.dest_db is not None:
                 restored_db_name = args.dest_db
@@ -620,4 +720,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    #main()
+    asyncio.run(main())
+
