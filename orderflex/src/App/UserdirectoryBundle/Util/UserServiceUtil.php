@@ -3821,9 +3821,10 @@ Pathology and Laboratory Medicine",
 //            );
 //            return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
             //return "Cannot continue with Backup: Backup location path is not provided and/or not defined in the Site Settings";
+            $logger->warning("Cannot continue with uploaded folder backup: Backup location path is not provided and/or not defined in the Site Settings");
             $res = array(
                 'status' => "NOTOK",
-                'message' => "Cannot continue with Backup: Backup location path is not provided and/or not defined in the Site Settings"
+                'message' => "Cannot continue with uploaded folder backup: Backup location path is not provided and/or not defined in the Site Settings"
             );
             return $res;
         }
@@ -3876,13 +3877,22 @@ Pathology and Laboratory Medicine",
 
             $logger->notice("createUploadBackupAction. before command=" . $command);
 
-            $res = $this->runProcess($command);
-            //exit("res=".$res);
+            $resUploadFolder = $this->runProcess($command);
+            //exit("resUploadFolder=".$resUploadFolder);
 
-            $logger->notice("createUploadBackupAction. after res=" . $res);
+            $logger->notice("createUploadBackupAction. after res=" . $resUploadFolder);
 
-            if (!$res) {
-                $res = "Uploaded folder backup $archiveFile has been successfully created";
+            if (!$resUploadFolder) {
+                $resStr = "Backup of the uploaded folder has been successfully created. Backup filename: $archiveFile";
+                $res = array(
+                    'status' => "OK",
+                    'message' => $resStr
+                );
+            } else {
+                $res = array(
+                    'status' => "NOTOK",
+                    'message' => "Error in createBackupUpload: ".$resUploadFolder
+                );
             }
 
 //            //Event Log
