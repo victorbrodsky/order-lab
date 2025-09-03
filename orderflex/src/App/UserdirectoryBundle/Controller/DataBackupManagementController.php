@@ -722,7 +722,7 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     #[Route(path: '/restore-backup-ajax/', name: 'employees_restore_backup_ajax', methods: ['POST'], options: ['expose' => true])]
-    public function restoreBackupAjaxAction( Request $request ) {
+    public function restoreDbAjaxAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -735,11 +735,13 @@ class DataBackupManagementController extends OrderAbstractController
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
-            exit("Live server: Under construction!!!");
-            $logger->notice("Live server: restore not allowed");
+            $liveServerMsg = "Live server: restore not allowed. ".
+            "Change environment from 'live' to 'test', 'dev' or 'demo' in the site settings.";
+            exit($liveServerMsg);
+            $logger->notice($liveServerMsg);
             $output = array(
                 'status' => "NOTOK",
-                'message' => "Live server: restore not allowed. Change environment from 'live' to 'test' or 'dev' in the site settings."
+                'message' => $liveServerMsg
             );
             $response = new Response();
             $response->setContent(json_encode($output));
@@ -749,7 +751,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         $backupFileName = $request->get('fileId');
         $env = $request->get('env');
-        $logger->notice("backupFilePath=".$backupFileName."; env=".$env);
+        $logger->notice("restoreDbAjaxAction: backupFilePath=".$backupFileName."; env=".$env);
         //echo "backupFilePath=".$fileId."; env=".$env."<br>";
         //exit('111');
 
@@ -1210,7 +1212,7 @@ class DataBackupManagementController extends OrderAbstractController
 //
 //    }
 
-    //NOT USED, was replaced by restoreBackupAjaxAction. Call restore directly
+    //NOT USED, was replaced by restoreDbAjaxAction. Call restore directly
     #[Route(path: '/restore-backup/{backupFilePath}', name: 'employees_restore_backup', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppUserdirectoryBundle/DataBackup/data_backup_management.html.twig')]
     public function restoreDirectBackupAction( Request $request, $backupFilePath ) {

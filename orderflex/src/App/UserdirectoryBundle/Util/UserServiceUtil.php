@@ -3744,7 +3744,17 @@ Pathology and Laboratory Medicine",
             " --source-db $dbName".
             " --user $dbUsername".
             " --password $dbPassword"
+            //" --email $email".
+            //" --emailUser $emailUser".
+            //" --emailPassword $emailPassword"
         ;
+
+//        "-h, --mailerhost       mailer host\n" \
+//        "-o, --mailerport       mailer port\n" \
+//        "-u, --maileruser       mailer username\n" \
+//        "-p, --mailerpassword   mailer password\n" \
+//        "-r, --receivers        comma separated receiver's emails\n" \
+//        "-s, --sender           sender's emails\n" \
 
         if( $action == 'backup' ) {
             //backup

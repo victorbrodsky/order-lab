@@ -160,7 +160,14 @@
     <br>
 
     {#Restore panel#}
-    {#TODO: run it asynchronous#}
+    {#
+        TODO: run it asynchronous
+        1) Log out all users
+        2) Put in the maintanance mode
+        3) Run restore
+        4) Set environment
+        5) Send email when completed
+    #}
     <div class="panel panel-default">
         <div class="panel-heading">Restore from backup</div>
 
@@ -709,6 +716,7 @@
             var lbtn = null;
             //var lbtn = Ladda.create( btn );
             userStartBtn(btn,lbtn);
+            //delay execution of userVerifyRestoreBackupAction by 1 sec
             setTimeout(function(){
                 //do what you need here
                 userVerifyRestoreBackupAction(btn,lbtn,type);
@@ -719,7 +727,6 @@
                 $('#btn-create-backup-upload').removeAttr('disabled');
                 $('#btn-download-backup-href').removeAttr('disabled');
                 $('#btn-delete-file-href').removeAttr('disabled');
-
             }, 1000);
         }
 
@@ -733,7 +740,7 @@
             var file = $('#backup-file-id').select2('data');
             if( file ) {
 
-                //Verify password
+                ///// Verify password => run userRestoreBackupAjax /////
                 var token = $('#backup-user-token').val();
                 var error = "Incorrect password. Please try again.";
 
@@ -770,6 +777,7 @@
                     //userStopBtn(btn,lbtn);
                     console.log("token verification done");
                 });
+                ///// EOF Verify password /////
 
                 //userDirectRestoreBackup(btn,lbtn);
 
@@ -812,7 +820,10 @@
             } else if( type == 'files' ) {
                 url = Routing.generate('employees_restore_backup_files_ajax');
             } else if( type == 'demodb' ) {
-                url = Routing.generate('employees_reset_demo_data_ajax');
+                //url = Routing.generate('employees_reset_demo_data_ajax'); //?
+                $('#backup-msg-danger-box').html('Invalid restore type='+type);
+                $('#backup-msg-danger-box').show();
+                return;
             } else {
                 $('#backup-msg-danger-box').html('Invalid restore type='+type);
                 $('#backup-msg-danger-box').show();
