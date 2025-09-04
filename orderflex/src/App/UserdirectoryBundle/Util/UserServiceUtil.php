@@ -3728,7 +3728,7 @@ Pathology and Laboratory Medicine",
     //create-backup: result file: 'backupdb-...'
     //dbManagePython is a wraper for a python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     //$networkDrivePath = my/path/
-    public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
+    public function dbManagePython( $networkDrivePath, $action, $sync=true, $backupFileName=null ) {
 
 //        if ( false == $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            $res = array(
@@ -3899,8 +3899,8 @@ Pathology and Laboratory Medicine",
 
         $logger->notice("dbManagePython: command=[".$command."]");
 
-        //$sync = true; //synchronous process
-        $sync = false; //asynchronous process
+        //$sync = true; //asynchronous process
+        //$async = false; //synchronous process
         if( $sync ) {
             $res = $this->runProcess($command);
         } else {
