@@ -9,24 +9,25 @@ import tempfile
 from tempfile import mkstemp
 import json
 
-#import configparser
+# import configparser
 import gzip
 import boto3
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-#use the PyYAML library to parse the YAML
-#pip install pyyaml
+# use the PyYAML library to parse the YAML
+# pip install pyyaml
 import yaml
 import asyncio
+
 
 # Amazon S3 settings.
 # AWS_ACCESS_KEY_ID  in ~/.aws/credentials
 # AWS_SECRET_ACCESS_KEY in ~/.aws/credentials
 
-#db.config:
-#cp "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
-#Edit utils/db-manage/postgres-manage-python/db.config
+# db.config:
+# cp "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/sample.config "$bashpath"/order-lab/utils/db-manage/postgres-manage-python/db.config
+# Edit utils/db-manage/postgres-manage-python/db.config
 
 def upload_to_s3(file_full_path, dest_file, manager_config):
     pass
@@ -58,34 +59,34 @@ def download_from_s3(backup_s3_key, dest_file, manager_config):
 
 def list_available_backups(storage_engine, manager_config):
     key_list = []
-    #backup_list = []
-    #print("storage_engine=",storage_engine)
+    # backup_list = []
+    # print("storage_engine=",storage_engine)
     if storage_engine == 'LOCAL':
-        #print("Local storage")
+        # print("Local storage")
         try:
-            #print("Local storage")
+            # print("Local storage")
             backup_folder = manager_config.get('LOCAL_BACKUP_PATH')
             backup_list = os.listdir(backup_folder)
-            #print("backup_list",backup_list)
+            # print("backup_list",backup_list)
         except FileNotFoundError:
             print(f'Could not found {backup_folder} when searching for backups.'
                   f'Check your .config file settings')
             exit(1)
     elif storage_engine == 'S3':
         pass
-        #print("S3 storage")
+        # print("S3 storage")
         # logger.info('Listing S3 bucket s3://{}/{} content :'.format(aws_bucket_name, aws_bucket_path))
-        #s3_client = boto3.client('s3')
-        #s3_objects = s3_client.list_objects_v2(Bucket=manager_config.get('AWS_BUCKET_NAME'),
+        # s3_client = boto3.client('s3')
+        # s3_objects = s3_client.list_objects_v2(Bucket=manager_config.get('AWS_BUCKET_NAME'),
         #                                       Prefix=manager_config.get('AWS_BUCKET_PATH'))
-        #backup_list = [s3_content['Key'] for s3_content in s3_objects['Contents']]
+        # backup_list = [s3_content['Key'] for s3_content in s3_objects['Contents']]
     else:
         print("Invalid storage_engine=", storage_engine)
         exit(1)
 
     for bckp in backup_list:
         key_list.append(bckp)
-    #print("key_list=", key_list)
+    # print("key_list=", key_list)
     return key_list
 
 
@@ -250,7 +251,7 @@ def restore_postgres_db(db_host, db, port, user, password, backup_file, verbose)
         return output
     except Exception as e:
         print("Issue with the db restore : {}".format(e))
-        #exit(1)
+        # exit(1)
         return False
 
 
@@ -279,8 +280,9 @@ def create_db(db_host, database, db_port, user_name, user_password):
     cur.execute("GRANT ALL PRIVILEGES ON DATABASE {} TO {} ;".format(database, user_name))
     return database
 
-#restore_database - restored db name (tenantapptest_restore)
-#new_active_database - original db name (tenantapptest)
+
+# restore_database - restored db name (tenantapptest_restore)
+# new_active_database - original db name (tenantapptest)
 def swap_after_restore(db_host, restore_database, new_active_database, db_port, user_name, user_password):
     try:
         con = psycopg2.connect(dbname='postgres', port=db_port,
@@ -290,7 +292,8 @@ def swap_after_restore(db_host, restore_database, new_active_database, db_port, 
         cur = con.cursor()
 
         logger = logging.getLogger(__name__)
-        logger.info(f"swap_after_restore: pg_terminate_backend (disconnects a session from the original database {new_active_database})")
+        logger.info(
+            f"swap_after_restore: pg_terminate_backend (disconnects a session from the original database {new_active_database})")
 
         cur.execute("SELECT pg_terminate_backend( pid ) "
                     "FROM pg_stat_activity "
@@ -308,7 +311,7 @@ def swap_after_restore(db_host, restore_database, new_active_database, db_port, 
     except Exception as e:
         print(e)
         return False
-        #exit(1)
+        # exit(1)
 
 
 def move_to_local_storage(comp_file, filename_compressed, manager_config):
@@ -320,15 +323,16 @@ def move_to_local_storage(comp_file, filename_compressed, manager_config):
         os.mkdir(backup_folder)
     shutil.move(comp_file, '{}{}'.format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
 
+
 def create_restore_db(
-    postgres_host,
-    postgres_restore,  # temp DB name
-    postgres_port,
-    postgres_user,
-    postgres_password,
-    restore_filename,
-    restore_uncompressed,
-    verbose
+        postgres_host,
+        postgres_restore,  # temp DB name
+        postgres_port,
+        postgres_user,
+        postgres_password,
+        restore_filename,
+        restore_uncompressed,
+        verbose
 ):
     logger = logging.getLogger(__name__)
     # Create temp DB
@@ -357,15 +361,16 @@ def create_restore_db(
     )
     return result_restore
 
+
 async def async_restore_wrapper(
-    postgres_host,
-    postgres_restore,  # temp DB name
-    postgres_port,
-    postgres_user,
-    postgres_password,
-    restore_filename,
-    restore_uncompressed,
-    verbose
+        postgres_host,
+        postgres_restore,  # temp DB name
+        postgres_port,
+        postgres_user,
+        postgres_password,
+        restore_filename,
+        restore_uncompressed,
+        verbose
 ):
     loop = asyncio.get_running_loop()
     return await loop.run_in_executor(
@@ -381,345 +386,346 @@ async def async_restore_wrapper(
             verbose
         )
     )
-                                                                        ))
+
 async def main():
+        # Testing
+        # Get the directory of the current script
+        # script_dir = os.path.dirname(os.path.abspath(__file__))
+        # # Navigate up two levels and into 'orderflex/config'
+        # yaml_path = os.path.join(script_dir, '..', '..', 'orderflex', 'config', 'parameters.yml')
+        # # Normalize the path
+        # yaml_path = os.path.normpath(yaml_path)
+        # print("YAML path:", yaml_path)
+        # exit(1)
 
-    #Testing
-    # Get the directory of the current script
-    # script_dir = os.path.dirname(os.path.abspath(__file__))
-    # # Navigate up two levels and into 'orderflex/config'
-    # yaml_path = os.path.join(script_dir, '..', '..', 'orderflex', 'config', 'parameters.yml')
-    # # Normalize the path
-    # yaml_path = os.path.normpath(yaml_path)
-    # print("YAML path:", yaml_path)
-    # exit(1)
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.INFO)
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+        args_parser = argparse.ArgumentParser(description='Postgres database management')
+        args_parser.add_argument("--action",
+                                 metavar="action",
+                                 choices=['list', 'list_dbs', 'restore', 'backup'],
+                                 required=True)
+        args_parser.add_argument("--date",
+                                 metavar="YYYY-MM-dd",
+                                 help="Date to use for restore (show with --action list)")
+        args_parser.add_argument("--dest-db",
+                                 metavar="dest_db",
+                                 default=None,
+                                 help="Name of the new restored database")
+        args_parser.add_argument("--verbose",
+                                 default=False,
+                                 help="Verbose output")
+        # args_parser.add_argument("--configfile",
+        #                         help="Database configuration file")
+        args_parser.add_argument("--path",
+                                 default=False,
+                                 help="Destination path to overwrite config's path (i.e. /srv/order-lab-tenantapp1/orderflex/var/backups/)")
+        args_parser.add_argument("--prefix",
+                                 default=False,
+                                 help="Prefix attach to the backup filename 'backup-prefix...'")
+        args_parser.add_argument("--source-db",
+                                 metavar="source_db",
+                                 default=False,
+                                 help="Name of the source database to overwrite config's db")
+        args_parser.add_argument("--user",
+                                 default=False,
+                                 help="DB username")
+        args_parser.add_argument("--password",
+                                 default=False,
+                                 help="DB password")
 
-    args_parser = argparse.ArgumentParser(description='Postgres database management')
-    args_parser.add_argument("--action",
-                             metavar="action",
-                             choices=['list', 'list_dbs', 'restore', 'backup'],
-                             required=True)
-    args_parser.add_argument("--date",
-                             metavar="YYYY-MM-dd",
-                             help="Date to use for restore (show with --action list)")
-    args_parser.add_argument("--dest-db",
-                             metavar="dest_db",
-                             default=None,
-                             help="Name of the new restored database")
-    args_parser.add_argument("--verbose",
-                             default=False,
-                             help="Verbose output")
-    #args_parser.add_argument("--configfile",
-    #                         help="Database configuration file")
-    args_parser.add_argument("--path",
-                             default=False,
-                             help="Destination path to overwrite config's path (i.e. /srv/order-lab-tenantapp1/orderflex/var/backups/)")
-    args_parser.add_argument("--prefix",
-                             default=False,
-                             help="Prefix attach to the backup filename 'backup-prefix...'")
-    args_parser.add_argument("--source-db",
-                             metavar="source_db",
-                             default=False,
-                             help="Name of the source database to overwrite config's db")
-    args_parser.add_argument("--user",
-                             default=False,
-                             help="DB username")
-    args_parser.add_argument("--password",
-                             default=False,
-                             help="DB password")
+        args = args_parser.parse_args()
 
-    args = args_parser.parse_args()
+        # Get DB parameters from db.config file passed by --configfile (default location: /postgres-manage-python/)
+        # use config/paramaters.yml, instead of db.config
+        # config = configparser.ConfigParser()
+        # config.read(args.configfile)
+        #
+        # postgres_host = config.get('postgresql', 'host')
+        # postgres_port = config.get('postgresql', 'port')
+        # postgres_db = config.get('postgresql', 'db')
+        # postgres_restore = "{}_restore".format(postgres_db)
+        # postgres_user = config.get('postgresql', 'user')
+        # postgres_password = config.get('postgresql', 'password')
+        # aws_bucket_name = config.get('S3', 'bucket_name')
+        # aws_bucket_path = config.get('S3', 'bucket_backup_path')
+        # storage_engine = config.get('setup', 'storage_engine')
 
-    #Get DB parameters from db.config file passed by --configfile (default location: /postgres-manage-python/)
-    #use config/paramaters.yml, instead of db.config
-    # config = configparser.ConfigParser()
-    # config.read(args.configfile)
-    #
-    # postgres_host = config.get('postgresql', 'host')
-    # postgres_port = config.get('postgresql', 'port')
-    # postgres_db = config.get('postgresql', 'db')
-    # postgres_restore = "{}_restore".format(postgres_db)
-    # postgres_user = config.get('postgresql', 'user')
-    # postgres_password = config.get('postgresql', 'password')
-    # aws_bucket_name = config.get('S3', 'bucket_name')
-    # aws_bucket_path = config.get('S3', 'bucket_backup_path')
-    # storage_engine = config.get('setup', 'storage_engine')
+        # current_folder = os.getcwd()
+        # yaml_path = os.path.join(current_folder, 'parameters.yml')
+        # Get the directory of the current script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Navigate up two levels and into 'orderflex/config'
+        yaml_path = os.path.join(script_dir, '..', '..', '..', 'orderflex', 'config', 'parameters.yml')
+        # Normalize the path
+        yaml_path = os.path.normpath(yaml_path)
+        print("YAML path:", yaml_path)
 
-    #current_folder = os.getcwd()
-    #yaml_path = os.path.join(current_folder, 'parameters.yml')
-    # Get the directory of the current script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    # Navigate up two levels and into 'orderflex/config'
-    yaml_path = os.path.join(script_dir, '..', '..', '..', 'orderflex', 'config', 'parameters.yml')
-    # Normalize the path
-    yaml_path = os.path.normpath(yaml_path)
-    print("YAML path:", yaml_path)
+        with open(yaml_path, 'r') as file:
+            content = yaml.safe_load(file)
 
-    with open(yaml_path, 'r') as file:
-        content = yaml.safe_load(file)
-
-    params = content.get('parameters', {})
-    postgres_host = params.get('database_host')
-    postgres_port = params.get('database_port')
-    postgres_db = params.get('database_name')
-    postgres_restore = "{}_restore".format(postgres_db)
-    postgres_user = params.get('database_user')
-    postgres_password = params.get('database_password')
-    storage_engine = 'LOCAL'
-    print(f"postgres_host={postgres_host}, postgres_port={postgres_port}, postgres_db={postgres_db}, postgres_user={postgres_user}, postgres_password={postgres_password}")
-    #exit(1)
-
-    #local_storage_path = config.get('local_storage', 'path', fallback='./backups/')
-
-    timestr = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-    filename = 'backup-{}-{}.dump'.format(timestr, postgres_db)
-    filename_compressed = '{}.gz'.format(filename)
-    restore_filename = '/tmp/restore.dump.gz'
-    restore_uncompressed = '/tmp/restore.dump'
-
-    if args.path:
-        local_storage_path = args.path
-
-    if args.prefix:
-        prefix = args.prefix
-    else:
-        prefix = 'unknownenv'
-
-    if args.user:
-        postgres_user = args.user
-    if args.password:
-        postgres_password = args.password
-
-    if args.source_db:
-        postgres_db = args.source_db
+        params = content.get('parameters', {})
+        postgres_host = params.get('database_host')
+        postgres_port = params.get('database_port')
+        postgres_db = params.get('database_name')
         postgres_restore = "{}_restore".format(postgres_db)
-        filename = 'backupdb-{}-{}-{}.dump'.format(prefix, timestr, postgres_db)
+        postgres_user = params.get('database_user')
+        postgres_password = params.get('database_password')
+        storage_engine = 'LOCAL'
+        print(
+            f"postgres_host={postgres_host}, postgres_port={postgres_port}, postgres_db={postgres_db}, postgres_user={postgres_user}, postgres_password={postgres_password}")
+        # exit(1)
+
+        # local_storage_path = config.get('local_storage', 'path', fallback='./backups/')
+
+        timestr = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+        filename = 'backup-{}-{}.dump'.format(timestr, postgres_db)
         filename_compressed = '{}.gz'.format(filename)
+        restore_filename = '/tmp/restore.dump.gz'
+        restore_uncompressed = '/tmp/restore.dump'
 
-    print("path=",local_storage_path)
-    log_file_path = os.path.join(local_storage_path, 'pythondb.log')
-    # Check if the file exists
-    if not os.path.exists(log_file_path):
-        #os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
-        # Create the file
-        with open(log_file_path, 'w') as f:
-            f.write('manage db log')  # Optionally write an initial line
-        print("Log file created:", log_file_path)
-    else:
-        print("Log file already exists:", log_file_path)
+        if args.path:
+            local_storage_path = args.path
 
-    logging.basicConfig(filename=local_storage_path+"pythondb.log")
-    #print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
+        if args.prefix:
+            prefix = args.prefix
+        else:
+            prefix = 'unknownenv'
 
-    logger.info('Source database name postgres_db={}'.format(postgres_db))
+        if args.user:
+            postgres_user = args.user
+        if args.password:
+            postgres_password = args.password
 
-    manager_config = {
-        #'AWS_BUCKET_NAME': aws_bucket_name,
-        #'AWS_BUCKET_PATH': aws_bucket_path,
-        'BACKUP_PATH': local_storage_path+'tmp/',
-        'LOCAL_BACKUP_PATH': local_storage_path
-    }
+        if args.source_db:
+            postgres_db = args.source_db
+            postgres_restore = "{}_restore".format(postgres_db)
+            filename = 'backupdb-{}-{}-{}.dump'.format(prefix, timestr, postgres_db)
+            filename_compressed = '{}.gz'.format(filename)
 
-    local_file_path = '{}{}'.format(manager_config.get('BACKUP_PATH'), filename)
+        print("path=", local_storage_path)
+        log_file_path = os.path.join(local_storage_path, 'pythondb.log')
+        # Check if the file exists
+        if not os.path.exists(log_file_path):
+            # os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+            # Create the file
+            with open(log_file_path, 'w') as f:
+                f.write('manage db log')  # Optionally write an initial line
+            print("Log file created:", log_file_path)
+        else:
+            print("Log file already exists:", log_file_path)
 
-    # list task
-    if args.action == "list":
-        backup_objects = sorted(list_available_backups(storage_engine, manager_config), reverse=True)
-        for key in backup_objects:
-            logger.info("Key : {}".format(key))
-    # list databases task
-    elif args.action == "list_dbs":
-        result = list_postgres_databases(postgres_host,
-                                         postgres_db,
-                                         postgres_port,
-                                         postgres_user,
-                                         postgres_password)
-        for line in result.splitlines():
-            logger.info(line)
-    # backup task
-    elif args.action == "backup":
-        logger.info('Backing up {} database to {}'.format(postgres_db, local_file_path))
-        result = backup_postgres_db(postgres_host,
-                                    postgres_db,
-                                    postgres_port,
-                                    postgres_user,
-                                    postgres_password,
-                                    local_file_path,
-                                    args.verbose
-                                    )
-        if args.verbose:
+        logging.basicConfig(filename=local_storage_path + "pythondb.log")
+        # print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
+
+        logger.info('Source database name postgres_db={}'.format(postgres_db))
+
+        manager_config = {
+            # 'AWS_BUCKET_NAME': aws_bucket_name,
+            # 'AWS_BUCKET_PATH': aws_bucket_path,
+            'BACKUP_PATH': local_storage_path + 'tmp/',
+            'LOCAL_BACKUP_PATH': local_storage_path
+        }
+
+        local_file_path = '{}{}'.format(manager_config.get('BACKUP_PATH'), filename)
+
+        # list task
+        if args.action == "list":
+            backup_objects = sorted(list_available_backups(storage_engine, manager_config), reverse=True)
+            for key in backup_objects:
+                logger.info("Key : {}".format(key))
+        # list databases task
+        elif args.action == "list_dbs":
+            result = list_postgres_databases(postgres_host,
+                                             postgres_db,
+                                             postgres_port,
+                                             postgres_user,
+                                             postgres_password)
             for line in result.splitlines():
                 logger.info(line)
-
-        logger.info("Backup complete")
-        #print("Backup complete.")
-        logger.info("Compressing {}".format(local_file_path))
-        comp_file = compress_file(local_file_path)
-
-        # Delete the original file after compression
-        os.remove(local_file_path)
-        logger.info(f"Deleted the temporary, not compressed db file {local_file_path} in BACKUP_PATH {manager_config.get('BACKUP_PATH')}")
-
-        if storage_engine == 'LOCAL':
-            logger.info('Moving {} to local storage...'.format(comp_file))
-            move_to_local_storage(comp_file, filename_compressed, manager_config)
-            movedmsg = "Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed);
-            #logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
-            logger.info(movedmsg)
-            movedmsg = "Backup file has been created: {}".format(filename_compressed);
-            print(movedmsg)
-        elif storage_engine == 'S3':
-            logger.info('Uploading {} to Amazon S3...'.format(comp_file))
-            upload_to_s3(comp_file, filename_compressed, manager_config)
-            logger.info("Uploaded to {}".format(filename_compressed))
-    # restore task
-    elif args.action == "restore":
-        if not args.date:
-            logger.warn('No date was chosen for restore. Run again with the "list" '
-                        'action to see available restore dates')
-        else:
-            try:
-                os.remove(restore_filename)
-            except Exception as e:
-                logger.info(e)
-            all_backup_keys = list_available_backups(storage_engine, manager_config)
-            backup_match = [s for s in all_backup_keys if args.date in s]
-            if backup_match:
-                logger.info("Found the following backup : {}".format(backup_match))
-            else:
-                logger.error("No match found for backups with date : {}".format(args.date))
-                logger.info("Available keys : {}".format([s for s in all_backup_keys]))
-                exit(1)
-
-            if storage_engine == 'LOCAL':
-                logger.info("Choosing {} from local storage".format(backup_match[0]))
-                shutil.copy('{}/{}'.format(manager_config.get('LOCAL_BACKUP_PATH'), backup_match[0]),
-                            restore_filename)
-                logger.info("Fetch complete")
-            elif storage_engine == 'S3':
-                logger.info("Downloading {} from S3 into : {}".format(backup_match[0], restore_filename))
-                download_from_s3(backup_match[0], restore_filename, manager_config)
-                logger.info("Download complete")
-
-            #Create temp DB
-            logger.info("Extracting {}".format(restore_filename))
-            ext_file = extract_file(restore_filename)
-            # cleaned_ext_file = remove_faulty_statement_from_dump(ext_file)
-            logger.info("Extracted to : {}".format(ext_file))
-            logger.info("Creating temp database for restore : {}".format(postgres_restore))
-
-            if 0:
-                tmp_database = create_db(
-                    postgres_host,
-                    postgres_restore, #temp DB name
-                    postgres_port,
-                    postgres_user,
-                    postgres_password
-                )
-                logger.info("Created temp database for restore : {}".format(tmp_database))
-
-            # Restore DB to postgres_restore
-            logger.info("Restore starting")
-
-            if 0:
-                result_restore = restore_postgres_db(
-                    postgres_host,
-                    postgres_restore,       #DB name where to restore DB
-                    postgres_port,
-                    postgres_user,
-                    postgres_password,
-                    restore_uncompressed,   #backup_file used as a source
-                    args.verbose
-                )
-
-            result_restore = False
-            if 0:
-                result_restore = create_restore_db(
-                    postgres_host,
-                    postgres_restore,  # temp DB name
-                    postgres_port,
-                    postgres_user,
-                    postgres_password,
-                    restore_filename,
-                    restore_uncompressed,
-                    args.verbose
-                )
-            else:
-                #pass
-                result_restore = await async_restore_wrapper(
-                    postgres_host,
-                    postgres_restore,  # temp DB name
-                    postgres_port,
-                    postgres_user,
-                    postgres_password,
-                    restore_filename,
-                    restore_uncompressed,
-                    args.verbose
-                )
-
-            if not result_restore:
-                print("DB restore failed")
-                exit(1)
-            else:
-                print("DB restore ok")
-
+        # backup task
+        elif args.action == "backup":
+            logger.info('Backing up {} database to {}'.format(postgres_db, local_file_path))
+            result = backup_postgres_db(postgres_host,
+                                        postgres_db,
+                                        postgres_port,
+                                        postgres_user,
+                                        postgres_password,
+                                        local_file_path,
+                                        args.verbose
+                                        )
             if args.verbose:
-                for line in result_restore.splitlines():
+                for line in result.splitlines():
                     logger.info(line)
 
-            logger.info("Restore complete")
-            if args.dest_db is not None:
-                restored_db_name = args.dest_db
-                restoremsg = "Switching restored database with new one : {} > {}".format(
-                    postgres_restore, restored_db_name
-                )
-                #logger.info("Switching restored database with new one : {} > {}".format(
-                #    postgres_restore, restored_db_name
-                #))
-                logger.info(restoremsg)
-                print(restoremsg)
+            logger.info("Backup complete")
+            # print("Backup complete.")
+            logger.info("Compressing {}".format(local_file_path))
+            comp_file = compress_file(local_file_path)
+
+            # Delete the original file after compression
+            os.remove(local_file_path)
+            logger.info(
+                f"Deleted the temporary, not compressed db file {local_file_path} in BACKUP_PATH {manager_config.get('BACKUP_PATH')}")
+
+            if storage_engine == 'LOCAL':
+                logger.info('Moving {} to local storage...'.format(comp_file))
+                move_to_local_storage(comp_file, filename_compressed, manager_config)
+                movedmsg = "Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed);
+                # logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
+                logger.info(movedmsg)
+                movedmsg = "Backup file has been created: {}".format(filename_compressed);
+                print(movedmsg)
+            elif storage_engine == 'S3':
+                logger.info('Uploading {} to Amazon S3...'.format(comp_file))
+                upload_to_s3(comp_file, filename_compressed, manager_config)
+                logger.info("Uploaded to {}".format(filename_compressed))
+        # restore task
+        elif args.action == "restore":
+            if not args.date:
+                logger.warn('No date was chosen for restore. Run again with the "list" '
+                            'action to see available restore dates')
             else:
-                restored_db_name = postgres_db
-                restoremsg = "Switching restored database with active one : {} > {}".format(
-                    postgres_restore, restored_db_name
-                )
-                #logger.info("Switching restored database with active one : {} > {}".format(
-                #    postgres_restore, restored_db_name
-                #))
-                logger.info(restoremsg)
-                print(restoremsg)
+                try:
+                    os.remove(restore_filename)
+                except Exception as e:
+                    logger.info(e)
+                all_backup_keys = list_available_backups(storage_engine, manager_config)
+                backup_match = [s for s in all_backup_keys if args.date in s]
+                if backup_match:
+                    logger.info("Found the following backup : {}".format(backup_match))
+                else:
+                    logger.error("No match found for backups with date : {}".format(args.date))
+                    logger.info("Available keys : {}".format([s for s in all_backup_keys]))
+                    exit(1)
 
-            swap_res = swap_after_restore(postgres_host,
-                               postgres_restore, #restored db name (tenantapptest_restore)
-                               restored_db_name, #original db name (tenantapptest)
-                               postgres_port,
-                               postgres_user,
-                               postgres_password)
+                if storage_engine == 'LOCAL':
+                    logger.info("Choosing {} from local storage".format(backup_match[0]))
+                    shutil.copy('{}/{}'.format(manager_config.get('LOCAL_BACKUP_PATH'), backup_match[0]),
+                                restore_filename)
+                    logger.info("Fetch complete")
+                elif storage_engine == 'S3':
+                    logger.info("Downloading {} from S3 into : {}".format(backup_match[0], restore_filename))
+                    download_from_s3(backup_match[0], restore_filename, manager_config)
+                    logger.info("Download complete")
 
-            #result = {"status": "error"}
-            result = "Database swap failed"
-            if swap_res:
-                #result = {"status": "ok"}
-                result = "Database swap ok"
+                # Create temp DB
+                logger.info("Extracting {}".format(restore_filename))
+                ext_file = extract_file(restore_filename)
+                # cleaned_ext_file = remove_faulty_statement_from_dump(ext_file)
+                logger.info("Extracted to : {}".format(ext_file))
+                logger.info("Creating temp database for restore : {}".format(postgres_restore))
 
-            #logger.info("Database restored and active.")
-            #print("Database restored and active.")
-            logger.info(result)
-            print(result)
-            #print(json.dumps(result))
-    else:
-        logger.warn(f"No valid argument was given. action={args.action}")
-        logger.warn(args)
+                if 0:
+                    tmp_database = create_db(
+                        postgres_host,
+                        postgres_restore,  # temp DB name
+                        postgres_port,
+                        postgres_user,
+                        postgres_password
+                    )
+                    logger.info("Created temp database for restore : {}".format(tmp_database))
+
+                # Restore DB to postgres_restore
+                logger.info("Restore starting")
+
+                if 0:
+                    result_restore = restore_postgres_db(
+                        postgres_host,
+                        postgres_restore,  # DB name where to restore DB
+                        postgres_port,
+                        postgres_user,
+                        postgres_password,
+                        restore_uncompressed,  # backup_file used as a source
+                        args.verbose
+                    )
+
+                result_restore = False
+                if 1:
+                    result_restore = create_restore_db(
+                        postgres_host,
+                        postgres_restore,  # temp DB name
+                        postgres_port,
+                        postgres_user,
+                        postgres_password,
+                        restore_filename,
+                        restore_uncompressed,
+                        args.verbose
+                    )
+                else:
+                    pass
+                    # result_restore = await async_restore_wrapper(
+                    #     postgres_host,
+                    #     postgres_restore,  # temp DB name
+                    #     postgres_port,
+                    #     postgres_user,
+                    #     postgres_password,
+                    #     restore_filename,
+                    #     restore_uncompressed,
+                    #     args.verbose
+                    # )
+
+                if not result_restore:
+                    print("DB restore failed")
+                    exit(1)
+                else:
+                    print("DB restore ok")
+
+                if args.verbose:
+                    for line in result_restore.splitlines():
+                        logger.info(line)
+
+                logger.info("Restore complete")
+                if args.dest_db is not None:
+                    restored_db_name = args.dest_db
+                    restoremsg = "Switching restored database with new one : {} > {}".format(
+                        postgres_restore, restored_db_name
+                    )
+                    # logger.info("Switching restored database with new one : {} > {}".format(
+                    #    postgres_restore, restored_db_name
+                    # ))
+                    logger.info(restoremsg)
+                    print(restoremsg)
+                else:
+                    restored_db_name = postgres_db
+                    restoremsg = "Switching restored database with active one : {} > {}".format(
+                        postgres_restore, restored_db_name
+                    )
+                    # logger.info("Switching restored database with active one : {} > {}".format(
+                    #    postgres_restore, restored_db_name
+                    # ))
+                    logger.info(restoremsg)
+                    print(restoremsg)
+
+                swap_res = swap_after_restore(postgres_host,
+                                              postgres_restore,  # restored db name (tenantapptest_restore)
+                                              restored_db_name,  # original db name (tenantapptest)
+                                              postgres_port,
+                                              postgres_user,
+                                              postgres_password)
+
+                # result = {"status": "error"}
+                result = "Database swap failed"
+                if swap_res:
+                    # result = {"status": "ok"}
+                    result = "Database swap ok"
+
+                # logger.info("Database restored and active.")
+                # print("Database restored and active.")
+                logger.info(result)
+                print(result)
+                # print(json.dumps(result))
+        else:
+            logger.warn(f"No valid argument was given. action={args.action}")
+            logger.warn(args)
 
 
 if __name__ == '__main__':
     #main()
+    #import asyncio
     asyncio.run(main())
-
