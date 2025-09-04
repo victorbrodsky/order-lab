@@ -673,7 +673,7 @@ async def main():
                         #     args.verbose
                         # )
 
-                if not result_restore:
+                if result_restore == False:
                     logger.info("DB restore failed")
                     print("DB restore failed")
                     exit(1)
