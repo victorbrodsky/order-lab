@@ -349,7 +349,7 @@ def create_restore_db(
     logger.info("Created temp database for restore : {}".format(tmp_database))
 
     # Restore DB to postgres_restore
-    logger.info("Restore starting")
+    logger.info("create_restore_db: Restore starting")
     result_restore = restore_postgres_db(
         postgres_host,
         postgres_restore,  # DB name where to restore DB
@@ -359,6 +359,7 @@ def create_restore_db(
         restore_uncompressed,  # backup_file used as a source
         verbose
     )
+    logger.info("create_restore_db: Restore finished")
     return result_restore
 
 
@@ -621,7 +622,8 @@ async def main():
                 logger.info("Extracted to : {}".format(ext_file))
                 logger.info("Creating temp database for restore : {}".format(postgres_restore))
 
-                if 0:
+                # Old approach - separate create temp DB and separate restore DB methods
+                if 1:
                     tmp_database = create_db(
                         postgres_host,
                         postgres_restore,  # temp DB name
@@ -631,10 +633,9 @@ async def main():
                     )
                     logger.info("Created temp database for restore : {}".format(tmp_database))
 
-                # Restore DB to postgres_restore
-                logger.info("Restore starting")
+                    # Restore DB to postgres_restore
+                    logger.info("Restore starting")
 
-                if 0:
                     result_restore = restore_postgres_db(
                         postgres_host,
                         postgres_restore,  # DB name where to restore DB
@@ -645,30 +646,32 @@ async def main():
                         args.verbose
                     )
 
-                result_restore = False
-                if 1:
-                    result_restore = create_restore_db(
-                        postgres_host,
-                        postgres_restore,  # temp DB name
-                        postgres_port,
-                        postgres_user,
-                        postgres_password,
-                        restore_filename,
-                        restore_uncompressed,
-                        args.verbose
-                    )
-                else:
-                    pass
-                    # result_restore = await async_restore_wrapper(
-                    #     postgres_host,
-                    #     postgres_restore,  # temp DB name
-                    #     postgres_port,
-                    #     postgres_user,
-                    #     postgres_password,
-                    #     restore_filename,
-                    #     restore_uncompressed,
-                    #     args.verbose
-                    # )
+                #New approach - create temp DB and restore in one method
+                if 0:
+                    result_restore = False
+                    if 1:
+                        result_restore = create_restore_db(
+                            postgres_host,
+                            postgres_restore,  # temp DB name
+                            postgres_port,
+                            postgres_user,
+                            postgres_password,
+                            restore_filename,
+                            restore_uncompressed,
+                            args.verbose
+                        )
+                    else:
+                        pass
+                        # result_restore = await async_restore_wrapper(
+                        #     postgres_host,
+                        #     postgres_restore,  # temp DB name
+                        #     postgres_port,
+                        #     postgres_user,
+                        #     postgres_password,
+                        #     restore_filename,
+                        #     restore_uncompressed,
+                        #     args.verbose
+                        # )
 
                 if not result_restore:
                     logger.info("DB restore failed")
