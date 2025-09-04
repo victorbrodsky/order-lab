@@ -1987,6 +1987,8 @@ Pathology and Laboratory Medicine",
         return $res;
     }
     public function runAsyncProcessWithEmail($command) {
+        $logger = $this->container->get('logger');
+        $logger->info('runAsyncProcessWithEmail: Starting ...');
         //$process = new Process(['python3', 'path/to/your_script.py']);
         $process = Process::fromShellCommandline($command);
         $process->start(function ($type, $buffer) {
@@ -2013,6 +2015,8 @@ Pathology and Laboratory Medicine",
         return $res;
     }
     public function completeDbRestoreEmail( $success ) {
+        $logger = $this->container->get('logger');
+        $logger->info('completeDbRestoreEmail');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $user = $this->security->getUser();
@@ -2038,9 +2042,10 @@ Pathology and Laboratory Medicine",
             $msg = "DB restore completed with error";
         }
 
-        //insert steps
+        $logger->info('completeDbRestoreEmail: before send email');
         $emailUtil->sendEmail($emails,$subject,$msg);
 
+        $logger->info('completeDbRestoreEmail: before event log');
         //Event Log
         $eventType = "Restore Backup Database";
         $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, $user, null, null, $eventType);
