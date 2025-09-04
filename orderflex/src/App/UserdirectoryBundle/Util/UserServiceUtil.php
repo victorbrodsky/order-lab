@@ -1980,10 +1980,90 @@ Pathology and Laboratory Medicine",
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
-        $res = 'Started Python script with PID: ' . $process->getPid();
+        $res = 'Started Python script with PID: ' . $process->getPid() .
+        " You will get a notification email when completed.";
         $logger->info($res);
 
         return $res;
+    }
+    public function runAsyncProcessWithEmail($command) {
+
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $emailUtil = $this->container->get('user_mailer_utility');
+//        //$environment = $userSecUtil->getSiteSettingParameter('environment');
+//        $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
+//        //siteEmail
+//        $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
+//        if( $sender ) {
+//            if( $emails ) {
+//                $emails[] = $sender;
+//            } else {
+//                $emails = array($sender);
+//            }
+//        }
+//        $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
+
+        //$process = new Process(['python3', 'path/to/your_script.py']);
+        $process = Process::fromShellCommandline($command);
+        $process->start(function ($type, $buffer) {
+            if ($type === Process::OUT) {
+                if( str_contains($buffer, 'trigger-successful-email') ) {
+//                    $subject = "DB restore completed successfully";
+//                    $msg = "DB restore completed successfully by command: $command";
+//                    //insert steps
+//                    $emailUtil->sendEmail($emails,$subject,$msg);
+//
+//                    //Event Log
+//                    $eventType = "SSL Certificate Warning";
+//                    $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
+                    $this->completeDbRestoreEmail(TRUE);
+                }
+                if( str_contains($buffer, 'trigger-error-email') ) {
+                    $this->completeDbRestoreEmail(FALSE);
+                }
+            }
+        });
+
+        // Optional: log the PID or check if it's running
+        $logger = $this->container->get('logger');
+        $res = 'Started Python script with PID: ' . $process->getPid() .
+            " You will get a notification email when completed.";
+        $logger->info($res);
+
+        return $res;
+    }
+    public function completeDbRestoreEmail( $success ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $user = $this->security->getUser();
+        //$environment = $userSecUtil->getSiteSettingParameter('environment');
+        $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
+        //siteEmail
+        $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
+        if( $sender ) {
+            if( $emails ) {
+                $emails[] = $sender;
+            } else {
+                $emails = array($sender);
+            }
+        }
+        $emails[] = $user->getSingleEmail();
+        $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
+
+        if( $success ) {
+            $subject = "DB restore completed successfully";
+            $msg = "DB restore completed successfully";
+        } else {
+            $subject = "DB restore completed with error";
+            $msg = "DB restore completed with error";
+        }
+
+        //insert steps
+        $emailUtil->sendEmail($emails,$subject,$msg);
+
+        //Event Log
+        $eventType = "Restore Backup Database";
+        $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, $user, null, null, $eventType);
     }
 
     public function runProcess_NEW($script) {
@@ -3819,7 +3899,8 @@ Pathology and Laboratory Medicine",
         if( $sync ) {
             $res = $this->runProcess($command);
         } else {
-            $res = $this->runAsyncProcess($command);
+            //$res = $this->runAsyncProcess($command);
+            $res = $this->runAsyncProcessWithEmail($command);
         }
 
         //echo "python res=".$res."<br>";

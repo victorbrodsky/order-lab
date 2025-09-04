@@ -719,6 +719,9 @@ async def main():
                 if swap_res:
                     # result = {"status": "ok"}
                     result = "Database swap ok"
+                    print("trigger-successful-email")
+                else:
+                    print("trigger-error-email")
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
