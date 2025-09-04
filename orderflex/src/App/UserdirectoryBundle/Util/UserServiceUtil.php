@@ -3813,7 +3813,8 @@ Pathology and Laboratory Medicine",
 
         $logger->notice("dbManagePython: command=[".$command."]");
 
-        $sync = true; //synchronous process
+        //$sync = true; //synchronous process
+        $sync = false; //asynchronous process
         if( $sync ) {
             $res = $this->runProcess($command);
         } else {
