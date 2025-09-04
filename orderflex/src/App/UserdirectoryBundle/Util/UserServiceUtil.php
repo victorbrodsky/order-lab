@@ -1988,7 +1988,7 @@ Pathology and Laboratory Medicine",
     }
     public function runAsyncProcessWithEmail($command) {
 
-        $logger = $this->container->get('logger');
+//        $logger = $this->container->get('logger');
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $emailUtil = $this->container->get('user_mailer_utility');
 //        //$environment = $userSecUtil->getSiteSettingParameter('environment');
@@ -2018,8 +2018,8 @@ Pathology and Laboratory Medicine",
 //                    $emailUtil->sendEmail($emails,$subject,$msg);
 //
 //                    //Event Log
-//                    $eventType = "SSL Certificate Warning";
-//                    $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
+//                    //$eventType = "SSL Certificate Warning";
+//                    //$userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
                     $this->completeDbRestoreEmail(TRUE);
                 }
                 if( str_contains($buffer, 'trigger-error-email') ) {
