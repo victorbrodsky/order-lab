@@ -1980,9 +1980,10 @@ Pathology and Laboratory Medicine",
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
-        $logger->info('Started Python script with PID: ' . $process->getPid());
+        $res = 'Started Python script with PID: ' . $process->getPid();
+        $logger->info($res);
 
-        return $process->getPid();
+        return $res;
     }
 
     public function runProcess_NEW($script) {
