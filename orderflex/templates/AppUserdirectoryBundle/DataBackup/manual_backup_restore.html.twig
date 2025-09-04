@@ -853,13 +853,13 @@
                     //userPostRestoreAjax(btn,lbtn,type);
                     //userPostRestoreEventLogAjax(btn,lbtn,type,"restored");
 
-                    if( type == 'db' ) {
-                        var redirectUrl = Routing.generate('employees_post_restore_eventlog', {
-                            type: type,
-                            msg: "restored"
-                        });
-                        window.location.replace(redirectUrl);
-                    }
+//                    if( type == 'db' ) {
+//                        var redirectUrl = Routing.generate('employees_post_restore_eventlog', {
+//                            type: type,
+//                            msg: "restored"
+//                        });
+//                        window.location.replace(redirectUrl);
+//                    }
                 } else {
                     console.log("restore error");
                     $('#backup-msg-danger-box').html(data.message);
