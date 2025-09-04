@@ -1973,6 +1973,18 @@ Pathology and Laboratory Medicine",
         $process->wait();
     }
 
+    public function runAsyncProcess($command) {
+        //$process = new Process(['python3', 'path/to/your_script.py']);
+        $process = Process::fromShellCommandline($command);
+        $process->start(); // Starts the process asynchronously
+
+        // Optional: log the PID or check if it's running
+        $logger = $this->container->get('logger');
+        $logger->info('Started Python script with PID: ' . $process->getPid());
+
+        return $process->getPid();
+    }
+
     public function runProcess_NEW($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
@@ -3800,9 +3812,17 @@ Pathology and Laboratory Medicine",
         }
 
         $logger->notice("dbManagePython: command=[".$command."]");
-        $res = $this->runProcess($command);
+
+        $sync = true; //synchronous process
+        if( $sync ) {
+            $res = $this->runProcess($command);
+        } else {
+            $res = $this->runAsyncProcess($command);
+        }
+
         //echo "python res=".$res."<br>";
         //exit('111');
+
         $res = array(
             'status' => "OK",
             'message' => $res

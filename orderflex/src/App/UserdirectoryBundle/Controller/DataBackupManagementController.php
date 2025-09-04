@@ -770,7 +770,9 @@ class DataBackupManagementController extends OrderAbstractController
             return $response;
         }
 
+        //Restore DB
         $output = $this->restoreDBWrapper($backupFileName,$env);
+
         $response = new Response();
         $response->setContent(json_encode($output));
         return $response;
