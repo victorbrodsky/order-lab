@@ -1987,23 +1987,6 @@ Pathology and Laboratory Medicine",
         return $res;
     }
     public function runAsyncProcessWithEmail($command) {
-
-//        $logger = $this->container->get('logger');
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $emailUtil = $this->container->get('user_mailer_utility');
-//        //$environment = $userSecUtil->getSiteSettingParameter('environment');
-//        $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
-//        //siteEmail
-//        $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
-//        if( $sender ) {
-//            if( $emails ) {
-//                $emails[] = $sender;
-//            } else {
-//                $emails = array($sender);
-//            }
-//        }
-//        $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
-
         //$process = new Process(['python3', 'path/to/your_script.py']);
         $process = Process::fromShellCommandline($command);
         $process->start(function ($type, $buffer) {
@@ -2012,14 +1995,6 @@ Pathology and Laboratory Medicine",
                 $logger->info('runAsyncProcessWithEmail: $buffer='.$buffer);
                 if( str_contains($buffer, 'trigger-successful-email') ) {
                     $logger->info('runAsyncProcessWithEmail: trigger-successful-email');
-//                    $subject = "DB restore completed successfully";
-//                    $msg = "DB restore completed successfully by command: $command";
-//                    //insert steps
-//                    $emailUtil->sendEmail($emails,$subject,$msg);
-//
-//                    //Event Log
-//                    //$eventType = "SSL Certificate Warning";
-//                    //$userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
                     $this->completeDbRestoreEmail(TRUE);
                 }
                 if( str_contains($buffer, 'trigger-error-email') ) {
