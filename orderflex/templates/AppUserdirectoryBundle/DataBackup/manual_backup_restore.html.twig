@@ -870,20 +870,23 @@
                 //alert(error);
                 var failMsg = "restore might fail. jqXHR.status="+jqXHR.status+", textStatus="+textStatus+", error="+error;
                 console.log(failMsg);
-                if( error == 'Gateway Timeout' ) {
-                    var timeoutMsg = "Restore completed. Reloading ...";
-                    $('#backup-msg-success-box').html(timeoutMsg);
-                    $('#backup-msg-success-box').show();
+                $('#backup-msg-danger-box').html(failMsg);
+                $('#backup-msg-danger-box').show();
 
-                    //userPostRestoreEventLogAjax(btn,lbtn,type,"restore might fail");
-
-                    //var redirectUrl = Routing.generate('employees_post_restore_eventlog',{type: type, msg: "timeout"});
-                    //window.location.replace(redirectUrl);
-                    //location.reload();
-                } else {
-                    $('#backup-msg-danger-box').html(failMsg);
-                    $('#backup-msg-danger-box').show();
-                }
+//                if( error == 'Gateway Timeout' ) {
+//                    var timeoutMsg = "Restore completed. Reloading ...";
+//                    $('#backup-msg-success-box').html(timeoutMsg);
+//                    $('#backup-msg-success-box').show();
+//
+//                    //userPostRestoreEventLogAjax(btn,lbtn,type,"restore might fail");
+//
+//                    var redirectUrl = Routing.generate('employees_post_restore_eventlog',{type: type, msg: "timeout"});
+//                    window.location.replace(redirectUrl);
+//                    //location.reload();
+//                } else {
+//                    $('#backup-msg-danger-box').html(failMsg);
+//                    $('#backup-msg-danger-box').show();
+//                }
             })
             .done(function() {
                 userStopBtn(btn,lbtn);
