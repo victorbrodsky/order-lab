@@ -1988,6 +1988,7 @@ Pathology and Laboratory Medicine",
     }
     public function runAsyncProcessWithEmail($command) {
 
+        $logger = $this->container->get('logger');
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $emailUtil = $this->container->get('user_mailer_utility');
 //        //$environment = $userSecUtil->getSiteSettingParameter('environment');
@@ -2007,7 +2008,10 @@ Pathology and Laboratory Medicine",
         $process = Process::fromShellCommandline($command);
         $process->start(function ($type, $buffer) {
             if ($type === Process::OUT) {
+                $logger = $this->container->get('logger');
+                $logger->info('runAsyncProcessWithEmail: $buffer='.$buffer);
                 if( str_contains($buffer, 'trigger-successful-email') ) {
+                    $logger->info('runAsyncProcessWithEmail: trigger-successful-email');
 //                    $subject = "DB restore completed successfully";
 //                    $msg = "DB restore completed successfully by command: $command";
 //                    //insert steps
@@ -2019,6 +2023,7 @@ Pathology and Laboratory Medicine",
                     $this->completeDbRestoreEmail(TRUE);
                 }
                 if( str_contains($buffer, 'trigger-error-email') ) {
+                    $logger->info('runAsyncProcessWithEmail: trigger-error-email');
                     $this->completeDbRestoreEmail(FALSE);
                 }
             }
