@@ -1975,7 +1975,14 @@ Pathology and Laboratory Medicine",
 
     public function runAsyncProcess($command) {
         //$process = new Process(['python3', 'path/to/your_script.py']);
-        $process = Process::fromShellCommandline($command);
+        //$process = Process::fromShellCommandline($command);
+        $process = new Process(
+            [
+                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
+                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py'
+            ]
+        );
+
         $process->start(); // Starts the process asynchronously
 
         // Optional: log the PID or check if it's running
@@ -3943,7 +3950,7 @@ Pathology and Laboratory Medicine",
 
         $logger->notice("dbManagePython: sync=$sync, command=[".$command."]");
 
-        $sync = true; //asynchronous process
+        //$sync = true; //asynchronous process
         //$sync = false; //synchronous process
         if( $sync ) {
             $logger->notice("dbManagePython: sync=False => run synchronous");
