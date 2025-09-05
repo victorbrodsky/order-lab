@@ -3950,8 +3950,8 @@ Pathology and Laboratory Medicine",
             $res = $this->runProcess($command);
         } else {
             $logger->notice("dbManagePython: sync=True => run asynchronous");
-            //$res = $this->runAsyncProcess($command);
-            $res = $this->runAsyncProcessWithEmail($command);
+            $res = $this->runAsyncProcess($command);
+            //$res = $this->runAsyncProcessWithEmail($command);
         }
 
         //echo "python res=".$res."<br>";
