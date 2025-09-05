@@ -1992,26 +1992,37 @@ Pathology and Laboratory Medicine",
 
         //$process = new Process(['python3', 'path/to/your_script.py']);
         $process = Process::fromShellCommandline($command);
-        $process->start(function ($type, $buffer) {
-            $logger = $this->container->get('logger');
-            $logger->notice('runAsyncProcessWithEmail: any buffer='.$buffer);
-            if ($type === Process::ERR) {
-                echo "STDERR: " . $buffer;
-            }
-            if ($type === Process::OUT) {
-                echo "STDOUT: " . $buffer;
+
+        if(0) {
+            $process->start(function ($type, $buffer) {
                 $logger = $this->container->get('logger');
-                $logger->notice('runAsyncProcessWithEmail: out buffer='.$buffer);
-                if( str_contains($buffer, 'trigger-successful-email') ) {
-                    $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-                    $this->completeDbRestoreEmail(TRUE);
+                $logger->notice('runAsyncProcessWithEmail: any buffer=' . $buffer);
+                if ($type === Process::ERR) {
+                    echo "STDERR: " . $buffer;
                 }
-                if( str_contains($buffer, 'trigger-error-email') ) {
-                    $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
-                    $this->completeDbRestoreEmail(FALSE);
+                if ($type === Process::OUT) {
+                    echo "STDOUT: " . $buffer;
+                    $logger = $this->container->get('logger');
+                    $logger->notice('runAsyncProcessWithEmail: out buffer=' . $buffer);
+                    if (str_contains($buffer, 'trigger-successful-email')) {
+                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
+                        $this->completeDbRestoreEmail(TRUE);
+                    }
+                    if (str_contains($buffer, 'trigger-error-email')) {
+                        $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
+                        $this->completeDbRestoreEmail(FALSE);
+                    }
                 }
+            });
+        }
+
+        $process->start();
+        foreach ($process->getIterator() as $type => $data) {
+            if ($type === Process::OUT) {
+                $logger = $this->container->get('logger');
+                $logger->notice('runAsyncProcessWithEmail: out data=' . $data);
             }
-        });
+        }
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
