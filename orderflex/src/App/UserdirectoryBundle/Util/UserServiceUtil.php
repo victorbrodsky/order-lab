@@ -2021,6 +2021,10 @@ Pathology and Laboratory Medicine",
             if ($type === Process::OUT) {
                 $logger = $this->container->get('logger');
                 $logger->notice('runAsyncProcessWithEmail: out data=' . $data);
+                if (str_contains($data, 'trigger-successful-email')) {
+                    $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
+                    $this->completeDbRestoreEmail(TRUE);
+                }
             }
         }
 
