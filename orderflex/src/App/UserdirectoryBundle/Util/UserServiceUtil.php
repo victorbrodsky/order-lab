@@ -2032,11 +2032,11 @@ Pathology and Laboratory Medicine",
                     $logger->notice('runAsyncProcessWithEmail: out buffer=' . $buffer);
                     if (str_contains($buffer, 'trigger-successful-email')) {
                         $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-                        $this->completeDbRestoreEmail(TRUE);
+                        $this->completeDbRestoreEmail('Success');
                     }
                     if (str_contains($buffer, 'trigger-error-email')) {
                         $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
-                        $this->completeDbRestoreEmail(FALSE);
+                        $this->completeDbRestoreEmail('Fail');
                     }
                 }
             });
@@ -2080,7 +2080,7 @@ Pathology and Laboratory Medicine",
                     $logger->notice('runAsyncProcessWithEmail: out data=' . $data);
                     if (str_contains($data, 'trigger-successful-email')) {
                         $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-                        $this->completeDbRestoreEmail(TRUE);
+                        $this->completeDbRestoreEmail('Success');
                     }
                 }
             }
@@ -2094,7 +2094,7 @@ Pathology and Laboratory Medicine",
 
         return $res;
     }
-    public function completeDbRestoreEmail( $success ) {
+    public function completeDbRestoreEmail( $status ) {
         $logger = $this->container->get('logger');
         $logger->notice('completeDbRestoreEmail');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -2114,13 +2114,19 @@ Pathology and Laboratory Medicine",
         //$emails[] = $user->getSingleEmail();
         $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
 
-        if( $success ) {
-            $subject = "DB restore completed successfully";
-            $msg = "DB restore completed successfully";
-        } else {
-            $subject = "DB restore completed with error";
-            $msg = "DB restore completed with error";
-        }
+        $status = htmlspecialchars($status, ENT_QUOTES, 'UTF-8');
+        $status = escapeshellarg($status);
+        
+        $subject = "DB restore completed: status=$status";
+        $msg = "DB restore completed: status=$status";
+
+//        if( $success ) {
+//            $subject = "DB restore completed successfully";
+//            $msg = "DB restore completed successfully";
+//        } else {
+//            $subject = "DB restore completed with error";
+//            $msg = "DB restore completed with error";
+//        }
 
         $logger->notice('completeDbRestoreEmail: before send email, emails='.implode(", ",$emails));
         $emailUtil->sendEmail($emails,$subject,$msg);

@@ -3,11 +3,11 @@ import logging
 import os
 import requests
 
-def send_confirmation_email(msg):
+def send_confirmation_email(status):
     #http://127.0.0.1/directory/send-confirmation-email/
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
     #url = 'http://127.0.0.1/directory/send-confirmation-email'
-    url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
+    url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/?status={status}'
     response = requests.get(url,verify=False)
     if response.status_code == 200:
         print(f"Email triggered successfully! Status code: {response.status_code}")

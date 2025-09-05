@@ -1063,11 +1063,11 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     //http://127.0.0.1/directory/send-confirmation-email/
-    #[Route(path: '/send-confirmation-email/', name: 'employees_send_confirmation_email')]
-    public function sendConfirmationEmailAction( Request $request )
+    #[Route(path: '/send-confirmation-email/{status}', name: 'employees_send_confirmation_email')]
+    public function sendConfirmationEmailAction( Request $request, $status )
     {
         $userServiceUtil = $this->container->get('user_service_utility');
-        $userServiceUtil->completeDbRestoreEmail(true);
+        $userServiceUtil->completeDbRestoreEmail($status);
         return new Response('Email sent!');
     }
 
