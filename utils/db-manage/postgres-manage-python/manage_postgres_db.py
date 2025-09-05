@@ -449,7 +449,7 @@ def main():
         #     print("Log file not found")
 
         send_confirmation_email('Testing')
-        logger.info("Testing finished")
+        logger.info("Logger Testing finished")
         print("Testing finished")
         #exit(1)
 

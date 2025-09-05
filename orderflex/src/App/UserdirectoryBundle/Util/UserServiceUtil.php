@@ -1991,8 +1991,9 @@ Pathology and Laboratory Medicine",
         $logger->notice('runAsyncProcessWithEmail: Starting ...');
 
         //$process = new Process(['python3', 'path/to/your_script.py']);
+        $command = "/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python /srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py";
         $process = Process::fromShellCommandline($command);
-        $process->start();
+        $process->start(); //it looks like its not started
 
         if(0) {
             $process->start(function ($type, $buffer) {
