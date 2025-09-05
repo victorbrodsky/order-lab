@@ -1980,7 +1980,7 @@ Pathology and Laboratory Medicine",
             [
                 //'/usr/bin/python3',
                 '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
-                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py'
+                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py'
             ]
         );
 
