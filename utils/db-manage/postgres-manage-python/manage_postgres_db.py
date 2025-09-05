@@ -431,6 +431,8 @@ def main():
 
             print("Folder:", folder)
             print("Filename:", filename)
+        else:
+            print("Log file not found")
 
         send_confirmation_email('Testing')
         print("Testing finished")
