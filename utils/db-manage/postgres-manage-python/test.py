@@ -7,7 +7,7 @@ def send_confirmation_email(status,logger):
     #http://127.0.0.1/directory/send-confirmation-email/
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
     #url = 'http://127.0.0.1/directory/send-confirmation-email'
-    url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/?status={status}'
+    url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{status}'
     response = requests.get(url,verify=False)
     if response.status_code == 200:
         logger.info(f"Email triggered successfully! Status code: {response.status_code}")
