@@ -2016,18 +2016,20 @@ Pathology and Laboratory Medicine",
             });
         }
 
-//        $process->start(function ($type, $buffer) use ($logger) {
-//            $logger->notice("Output ($type): $buffer");
-//        });
+        $process->start(function ($type, $buffer) use ($logger) {
+            $logger->notice("Output ($type): $buffer");
+        });
 
-        $process->start();
-        while ($process->isRunning()) {
-            $logger->notice('runAsyncProcessWithEmail: running ...');
-        }
-        if ($process->isSuccessful()) {
-            $logger->notice('runAsyncProcessWithEmail: OK');
-        } else {
-            $logger->notice('runAsyncProcessWithEmail: Error');
+        if(0) {
+            $process->start();
+            while ($process->isRunning()) {
+                $logger->notice('runAsyncProcessWithEmail: running ...');
+            }
+            if ($process->isSuccessful()) {
+                $logger->notice('runAsyncProcessWithEmail: OK');
+            } else {
+                $logger->notice('runAsyncProcessWithEmail: Error');
+            }
         }
 
         if(0) {
