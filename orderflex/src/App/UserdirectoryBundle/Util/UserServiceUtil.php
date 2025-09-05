@@ -2016,16 +2016,30 @@ Pathology and Laboratory Medicine",
             });
         }
 
-        $process->start(function ($type, $buffer) {
-            $logger = $this->container->get('logger');
-            $logger->notice('runAsyncProcessWithEmail: starting...');
-            if (Process::ERR === $type) {
-                //echo 'Error: ' . $buffer;
-                $logger->notice('runAsyncProcessWithEmail: ERR='.$buffer);
-            } else {
-                $logger->notice('runAsyncProcessWithEmail: buffer='.$buffer);
-            }
-        });
+//        $process->start(function ($type, $buffer) use ($logger) {
+//            $logger->notice("Output ($type): $buffer");
+//        });
+
+        $process->start();
+        while ($process->isRunning()) {
+            $logger->notice('runAsyncProcessWithEmail: running ...');
+        }
+        if ( !$process->isSuccessful()) {
+            $logger->notice('runAsyncProcessWithEmail: Error');
+        }
+
+        if(0) {
+            $process->start(function ($type, $buffer) {
+                $logger = $this->container->get('logger');
+                $logger->notice('runAsyncProcessWithEmail: starting...');
+                if (Process::ERR === $type) {
+                    //echo 'Error: ' . $buffer;
+                    $logger->notice('runAsyncProcessWithEmail: ERR=' . $buffer);
+                } else {
+                    $logger->notice('runAsyncProcessWithEmail: buffer=' . $buffer);
+                }
+            });
+        }
 
         if(0) {
             $process->start();
