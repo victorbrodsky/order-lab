@@ -3980,7 +3980,7 @@ Pathology and Laboratory Medicine",
         }
 
         $logger->notice("dbManagePython: sync=$sync, command=[".$command."]");
-        $commandArrStr = implode(";)",$commandArr);
+        $commandArrStr = implode("; ",$commandArr);
         $logger->notice("dbManagePython: sync=$sync, commandArr=[".$commandArrStr."]");
 
         //$sync = true; //asynchronous process
@@ -3990,9 +3990,9 @@ Pathology and Laboratory Medicine",
             $res = $this->runProcess($command);
         } else {
             $logger->notice("dbManagePython: sync=True => run asynchronous");
-            $commandArr = array();
-            $commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python';
-            $commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py';
+            //$commandArr = array();
+            //$commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python';
+            //$commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py';
             $res = $this->runAsyncProcess($commandArr);
             //$res = $this->runAsyncProcessWithEmail($command);
         }
