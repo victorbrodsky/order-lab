@@ -3,16 +3,18 @@ import logging
 import os
 import requests
 
-def send_confirmation_email(status):
+def send_confirmation_email(status,logger):
     #http://127.0.0.1/directory/send-confirmation-email/
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
     #url = 'http://127.0.0.1/directory/send-confirmation-email'
     url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/?status={status}'
     response = requests.get(url,verify=False)
     if response.status_code == 200:
-        print(f"Email triggered successfully! Status code: {response.status_code}")
+        logger.info(f"Email triggered successfully! Status code: {response.status_code}")
+        #print(f"Email triggered successfully! Status code: {response.status_code}")
     else:
-        print(f"Failed to trigger email. Status code: {response.status_code}")
+        logger.info(f"Failed to trigger email. Status code: {response.status_code}")
+        #print(f"Failed to trigger email. Status code: {response.status_code}")
 
 def main():
     logger = logging.getLogger(__name__)
@@ -28,11 +30,11 @@ def main():
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
-    print("Testing started")
+    #print("Testing started")
 
-    send_confirmation_email('Testing')
+    send_confirmation_email('Testing',logger)
     logger.info("Logger Testing finished")
-    print("Testing finished")
+    #print("Testing finished")
 
 
 if __name__ == '__main__':
