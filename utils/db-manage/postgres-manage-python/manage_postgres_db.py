@@ -414,6 +414,8 @@ def main():
         # print("YAML path:", yaml_path)
         # exit(1)
 
+        send_confirmation_email('Testing')
+
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.INFO)
         handler = logging.StreamHandler()

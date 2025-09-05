@@ -19,6 +19,10 @@ python -m pip freeze > requirements.txt
 python -m pip install -r requirements.txt
 deactivate
 
+To just add one package without losing the rest:
+pip freeze | grep requests >> requirements.txt
+
+
 Setup (Windows):
 python -m venv venv
 .\venv\Scripts\activate
