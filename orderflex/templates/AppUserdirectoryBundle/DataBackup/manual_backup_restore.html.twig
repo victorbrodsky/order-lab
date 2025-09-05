@@ -794,6 +794,8 @@
             console.log("userRestoreBackupAjax: start");
             $('#backup-msg-danger-box').html("");
             $('#backup-msg-danger-box').hide();
+            $('#backup-msg-success-box').html("");
+            $('#backup-msg-success-box').hide();
 
             var file = $('#backup-file-id').select2('data');
             if( !file ) {
