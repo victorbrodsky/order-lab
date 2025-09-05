@@ -861,6 +861,7 @@ class DataBackupManagementController extends OrderAbstractController
         //$res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Use python script pg_restore
         $res = $userServiceUtil->dbManagePython($networkDrivePath,'restore',$sync=false,$backupFileName); //Use python script pg_restore
         //exit($res);
+        
         //Testing
         $output = array(
             'status' => 'OK',

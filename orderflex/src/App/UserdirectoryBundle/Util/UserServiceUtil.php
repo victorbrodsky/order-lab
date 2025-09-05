@@ -3877,7 +3877,7 @@ Pathology and Laboratory Medicine",
             return $res;
         }
 
-        $logger->notice("dbManagePython: command=[".$command."]");
+        $logger->notice("dbManagePython: sync=$sync, command=[".$command."]");
 
         //$sync = true; //asynchronous process
         //$async = false; //synchronous process
