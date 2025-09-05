@@ -393,7 +393,9 @@ async def async_restore_wrapper(
 
 def send_confirmation_email(msg):
     #http://127.0.0.1/directory/send-confirmation-email/
-    url = 'http://127.0.0.1/directory/send-confirmation-email'
+    #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
+    #url = 'http://127.0.0.1/directory/send-confirmation-email'
+    url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email'
     response = requests.get(url,verify=False)
     if response.status_code == 200:
         print("Email triggered successfully!")
