@@ -3883,8 +3883,10 @@ Pathology and Laboratory Medicine",
         //$sync = true; //asynchronous process
         //$async = false; //synchronous process
         if( $sync ) {
+            $logger->notice("dbManagePython: sync=$sync => run synchronous");
             $res = $this->runProcess($command);
         } else {
+            $logger->notice("dbManagePython: sync=$sync => run asynchronous");
             //$res = $this->runAsyncProcess($command);
             $res = $this->runAsyncProcessWithEmail($command);
         }
