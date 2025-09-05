@@ -1978,8 +1978,8 @@ Pathology and Laboratory Medicine",
         //$process = Process::fromShellCommandline($command);
         $process = new Process(
             [
-                '/usr/bin/python3',
-                //'/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
+                //'/usr/bin/python3',
+                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
                 '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py'
             ]
         );
