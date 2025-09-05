@@ -422,6 +422,8 @@ def main():
         logger.addHandler(handler)
 
         send_confirmation_email('Testing')
+        print("Testing finished")
+        exit(1)
 
         args_parser = argparse.ArgumentParser(description='Postgres database management')
         args_parser.add_argument("--action",
