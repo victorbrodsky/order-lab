@@ -1984,6 +1984,15 @@ Pathology and Laboratory Medicine",
             ]
         );
 
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        echo $process->getOutput();
+        return $process->getOutput();
+
+
         $process->start(); // Starts the process asynchronously
 
         // Optional: log the PID or check if it's running
