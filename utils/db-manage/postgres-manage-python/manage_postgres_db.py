@@ -18,7 +18,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 # use the PyYAML library to parse the YAML
 # pip install pyyaml
 import yaml
-import asyncio
+#import asyncio
 
 import requests
 
@@ -366,30 +366,30 @@ def create_restore_db(
     return result_restore
 
 
-async def async_restore_wrapper(
-        postgres_host,
-        postgres_restore,  # temp DB name
-        postgres_port,
-        postgres_user,
-        postgres_password,
-        restore_filename,
-        restore_uncompressed,
-        verbose
-):
-    loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(
-        None,
-        lambda: restore_postgres_db(
-            postgres_host,
-            postgres_restore,  # temp DB name
-            postgres_port,
-            postgres_user,
-            postgres_password,
-            restore_filename,
-            restore_uncompressed,
-            verbose
-        )
-    )
+# async def async_restore_wrapper(
+#         postgres_host,
+#         postgres_restore,  # temp DB name
+#         postgres_port,
+#         postgres_user,
+#         postgres_password,
+#         restore_filename,
+#         restore_uncompressed,
+#         verbose
+# ):
+#     loop = asyncio.get_running_loop()
+#     return await loop.run_in_executor(
+#         None,
+#         lambda: restore_postgres_db(
+#             postgres_host,
+#             postgres_restore,  # temp DB name
+#             postgres_port,
+#             postgres_user,
+#             postgres_password,
+#             restore_filename,
+#             restore_uncompressed,
+#             verbose
+#         )
+#     )
 
 def send_confirmation_email(msg):
     #http://127.0.0.1/directory/send-confirmation-email/
