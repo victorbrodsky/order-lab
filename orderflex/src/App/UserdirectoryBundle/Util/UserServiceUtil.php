@@ -1995,7 +1995,11 @@ Pathology and Laboratory Medicine",
         $process->start(function ($type, $buffer) {
             $logger = $this->container->get('logger');
             $logger->notice('runAsyncProcessWithEmail: any buffer='.$buffer);
+            if ($type === Process::ERR) {
+                echo "STDERR: " . $buffer;
+            }
             if ($type === Process::OUT) {
+                echo "STDOUT: " . $buffer;
                 $logger = $this->container->get('logger');
                 $logger->notice('runAsyncProcessWithEmail: out buffer='.$buffer);
                 if( str_contains($buffer, 'trigger-successful-email') ) {
