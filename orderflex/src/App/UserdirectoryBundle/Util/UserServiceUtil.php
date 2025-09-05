@@ -1993,9 +1993,11 @@ Pathology and Laboratory Medicine",
         //$process = new Process(['python3', 'path/to/your_script.py']);
         $process = Process::fromShellCommandline($command);
         $process->start(function ($type, $buffer) {
+            $logger = $this->container->get('logger');
+            $logger->notice('runAsyncProcessWithEmail: any buffer='.$buffer);
             if ($type === Process::OUT) {
                 $logger = $this->container->get('logger');
-                $logger->notice('runAsyncProcessWithEmail: $buffer='.$buffer);
+                $logger->notice('runAsyncProcessWithEmail: out buffer='.$buffer);
                 if( str_contains($buffer, 'trigger-successful-email') ) {
                     $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
                     $this->completeDbRestoreEmail(TRUE);
