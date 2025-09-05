@@ -2016,14 +2016,28 @@ Pathology and Laboratory Medicine",
             });
         }
 
-        $process->start();
-        foreach ($process->getIterator() as $type => $data) {
-            if ($type === Process::OUT) {
-                $logger = $this->container->get('logger');
-                $logger->notice('runAsyncProcessWithEmail: out data=' . $data);
-                if (str_contains($data, 'trigger-successful-email')) {
-                    $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-                    $this->completeDbRestoreEmail(TRUE);
+        $process->start(function ($type, $buffer) {
+            $logger = $this->container->get('logger');
+            $logger->notice('runAsyncProcessWithEmail: starting...');
+            if (Process::ERR === $type) {
+                //echo 'Error: ' . $buffer;
+                $logger->notice('runAsyncProcessWithEmail: ERR='.$buffer);
+            } else {
+                $logger->notice('runAsyncProcessWithEmail: buffer='.$buffer);
+            }
+        });
+
+        if(0) {
+            $process->start();
+            //foreach make it synchronous
+            foreach ($process->getIterator() as $type => $data) {
+                if ($type === Process::OUT) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice('runAsyncProcessWithEmail: out data=' . $data);
+                    if (str_contains($data, 'trigger-successful-email')) {
+                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
+                        $this->completeDbRestoreEmail(TRUE);
+                    }
                 }
             }
         }
