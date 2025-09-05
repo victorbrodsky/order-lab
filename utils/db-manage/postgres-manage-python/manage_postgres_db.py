@@ -398,7 +398,7 @@ def send_confirmation_email(msg):
     url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
     response = requests.get(url,verify=False)
     if response.status_code == 200:
-        print("Email triggered successfully!")
+        print(f"Email triggered successfully! Status code: {response.status_code}")
     else:
         print(f"Failed to trigger email. Status code: {response.status_code}")
 
@@ -414,14 +414,14 @@ def main():
         # print("YAML path:", yaml_path)
         # exit(1)
 
-        send_confirmation_email('Testing')
-
         logger = logging.getLogger(__name__)
         logger.setLevel(logging.INFO)
         handler = logging.StreamHandler()
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         logger.addHandler(handler)
+
+        send_confirmation_email('Testing')
 
         args_parser = argparse.ArgumentParser(description='Postgres database management')
         args_parser.add_argument("--action",
