@@ -1973,7 +1973,7 @@ Pathology and Laboratory Medicine",
         $process->wait();
     }
 
-    public function runAsyncProcess($command) {
+    public function runAsyncProcess($commandArr) {
         //$process = new Process(['python3', 'path/to/your_script.py']);
         //$process = Process::fromShellCommandline($command);
         $process = new Process(
@@ -1983,6 +1983,7 @@ Pathology and Laboratory Medicine",
                 '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py'
             ]
         );
+        $process = new Process($commandArr);
 
         $process->run();
 
@@ -3914,6 +3915,14 @@ Pathology and Laboratory Medicine",
             //" --emailPassword $emailPassword"
         ;
 
+        $commandArr = array();
+        $commandArr[] = $pythonEnvPath;
+        $commandArr[] = $pythonScriptPath;
+        $commandArr[] = "--path $networkDrivePath";
+        $commandArr[] = "--source-db $dbName";
+        $commandArr[] = "--user $dbUsername";
+        $commandArr[] = "--password $dbPassword";
+
 //        "-h, --mailerhost       mailer host\n" \
 //        "-o, --mailerport       mailer port\n" \
 //        "-u, --maileruser       mailer username\n" \
@@ -3941,11 +3950,17 @@ Pathology and Laboratory Medicine",
             //Maybe provide server name: gethostname() -> xits-po-order-prd2
 
             $command = $command . " --action backup --prefix ".$environment."-".$instanceId."-".gethostname();
+
+            $commandArr[] = "--action backup";
+            $commandArr[] = "--prefix ".$environment."-".$instanceId."-".gethostname();
+            
         } elseif( $action == 'restore' ) {
             //exit('DB restore is disabled');
             //restore
             if( $backupFileName ) {
                 $command = $command . " --action restore --date $backupFileName";
+                $commandArr[] = "--action restore";
+                $commandArr[] = "--date $backupFileName";
             } else {
                 $msg = "Error in DB management (action $action): backup file is not provided";
                 $res = array(
@@ -3965,6 +3980,8 @@ Pathology and Laboratory Medicine",
         }
 
         $logger->notice("dbManagePython: sync=$sync, command=[".$command."]");
+        $commandArrStr = implode(";)",$commandArr);
+        $logger->notice("dbManagePython: sync=$sync, commandArr=[".$commandArrStr."]");
 
         //$sync = true; //asynchronous process
         //$sync = false; //synchronous process
@@ -3973,7 +3990,10 @@ Pathology and Laboratory Medicine",
             $res = $this->runProcess($command);
         } else {
             $logger->notice("dbManagePython: sync=True => run asynchronous");
-            $res = $this->runAsyncProcess($command);
+            $commandArr = array();
+            $commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python';
+            $commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py';
+            $res = $this->runAsyncProcess($commandArr);
             //$res = $this->runAsyncProcessWithEmail($command);
         }
 
