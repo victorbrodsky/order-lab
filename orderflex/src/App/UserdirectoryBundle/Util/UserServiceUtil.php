@@ -1982,25 +1982,26 @@ Pathology and Laboratory Medicine",
         $logger = $this->container->get('logger');
         $res = 'Started Python script with PID: ' . $process->getPid() .
         " You will get a notification email when completed.";
-        $logger->info($res);
+        $logger->notice($res);
 
         return $res;
     }
     public function runAsyncProcessWithEmail($command) {
         $logger = $this->container->get('logger');
-        $logger->info('runAsyncProcessWithEmail: Starting ...');
+        $logger->notice('runAsyncProcessWithEmail: Starting ...');
+
         //$process = new Process(['python3', 'path/to/your_script.py']);
         $process = Process::fromShellCommandline($command);
         $process->start(function ($type, $buffer) {
             if ($type === Process::OUT) {
                 $logger = $this->container->get('logger');
-                $logger->info('runAsyncProcessWithEmail: $buffer='.$buffer);
+                $logger->notice('runAsyncProcessWithEmail: $buffer='.$buffer);
                 if( str_contains($buffer, 'trigger-successful-email') ) {
-                    $logger->info('runAsyncProcessWithEmail: trigger-successful-email');
+                    $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
                     $this->completeDbRestoreEmail(TRUE);
                 }
                 if( str_contains($buffer, 'trigger-error-email') ) {
-                    $logger->info('runAsyncProcessWithEmail: trigger-error-email');
+                    $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
                     $this->completeDbRestoreEmail(FALSE);
                 }
             }
@@ -2010,13 +2011,13 @@ Pathology and Laboratory Medicine",
         $logger = $this->container->get('logger');
         $res = 'Started Python script with PID: ' . $process->getPid() .
             " You will get a notification email when completed.";
-        $logger->info($res);
+        $logger->notice($res);
 
         return $res;
     }
     public function completeDbRestoreEmail( $success ) {
         $logger = $this->container->get('logger');
-        $logger->info('completeDbRestoreEmail');
+        $logger->notice('completeDbRestoreEmail');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $user = $this->security->getUser();
@@ -2042,10 +2043,10 @@ Pathology and Laboratory Medicine",
             $msg = "DB restore completed with error";
         }
 
-        $logger->info('completeDbRestoreEmail: before send email');
+        $logger->notice('completeDbRestoreEmail: before send email');
         $emailUtil->sendEmail($emails,$subject,$msg);
 
-        $logger->info('completeDbRestoreEmail: before event log');
+        $logger->notice('completeDbRestoreEmail: before event log');
         //Event Log
         $eventType = "Restore Backup Database";
         $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, $user, null, null, $eventType);
@@ -3883,10 +3884,10 @@ Pathology and Laboratory Medicine",
         //$sync = true; //asynchronous process
         //$async = false; //synchronous process
         if( $sync ) {
-            $logger->notice("dbManagePython: sync=$sync => run synchronous");
+            $logger->notice("dbManagePython: sync=False => run synchronous");
             $res = $this->runProcess($command);
         } else {
-            $logger->notice("dbManagePython: sync=$sync => run asynchronous");
+            $logger->notice("dbManagePython: sync=True => run asynchronous");
             //$res = $this->runAsyncProcess($command);
             $res = $this->runAsyncProcessWithEmail($command);
         }
