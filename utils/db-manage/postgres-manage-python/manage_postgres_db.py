@@ -451,7 +451,7 @@ def main():
         send_confirmation_email('Testing')
         logger.info("Testing finished")
         print("Testing finished")
-        exit(1)
+        #exit(1)
 
         args_parser = argparse.ArgumentParser(description='Postgres database management')
         args_parser.add_argument("--action",
