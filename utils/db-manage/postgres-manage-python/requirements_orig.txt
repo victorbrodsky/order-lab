@@ -1,2 +1,5 @@
+PyYAML==6.0.2
+urllib3==2.5.0
+
 psycopg2-binary
 boto3
