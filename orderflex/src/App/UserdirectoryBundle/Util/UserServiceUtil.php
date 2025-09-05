@@ -3935,8 +3935,8 @@ Pathology and Laboratory Medicine",
 
         $logger->notice("dbManagePython: sync=$sync, command=[".$command."]");
 
-        //$sync = true; //asynchronous process
-        //$async = false; //synchronous process
+        $sync = true; //asynchronous process
+        //$sync = false; //synchronous process
         if( $sync ) {
             $logger->notice("dbManagePython: sync=False => run synchronous");
             $res = $this->runProcess($command);
