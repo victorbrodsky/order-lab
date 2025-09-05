@@ -39,6 +39,8 @@ security:
 
        - { path: ^.*/access-requests/change-status/, role: ROLE_EDITOR }
 
+       - { path: ^.*/directory/send-confirmation-email/, role: PUBLIC_ACCESS }
+
        ############################## common idle time out logic ##############################
        - { path: ^.*/directory/common/, role: ROLE_USER }
        ############################## common institution tree ##############################
