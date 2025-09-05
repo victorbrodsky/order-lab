@@ -415,26 +415,41 @@ def main():
         # exit(1)
 
         logger = logging.getLogger(__name__)
-        logger.setLevel(logging.INFO)
-        handler = logging.StreamHandler()
+        #logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
+        #handler = logging.StreamHandler()
+
+        # Create file handler
+        handler = logging.FileHandler('/srv/order-lab-tenantapptest/orderflex/var/backup/python_restore_db.log')
+        handler.setLevel(logging.DEBUG)
+
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
-        if isinstance(handler, logging.FileHandler):
-            log_path = handler.baseFilename  # Full path to the log file
-            print("Log file path:", log_path)
+        # logging.basicConfig(
+        #     filename='app.log',  # Log file name
+        #     filemode='a',  # 'a' to append, 'w' to overwrite
+        #     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        #     level=logging.INFO  # Minimum log level
+        # )
 
-            #import os
-            folder = os.path.dirname(log_path)
-            filename = os.path.basename(log_path)
-
-            print("Folder:", folder)
-            print("Filename:", filename)
-        else:
-            print("Log file not found")
+        # handler = logger.handlers[0]
+        # if isinstance(handler, logging.FileHandler):
+        #     log_path = handler.baseFilename  # Full path to the log file
+        #     print("Log file path:", log_path)
+        #
+        #     #import os
+        #     folder = os.path.dirname(log_path)
+        #     filename = os.path.basename(log_path)
+        #
+        #     print("Folder:", folder)
+        #     print("Filename:", filename)
+        # else:
+        #     print("Log file not found")
 
         send_confirmation_email('Testing')
+        logger.info("Testing finished")
         print("Testing finished")
         exit(1)
 
