@@ -3718,6 +3718,9 @@ Pathology and Laboratory Medicine",
 //            return $res;
 //        }
 
+        $logger = $this->container->get('logger');
+        $logger->notice("dbManagePython: start: networkDrivePath=$networkDrivePath, action=$action, sync=$sync, backupFileName=$backupFileName");
+
         $userServiceUtil = $this->container->get('user_service_utility');
         if( $userServiceUtil->isWindows() ){
             $res = array(
@@ -3729,8 +3732,6 @@ Pathology and Laboratory Medicine",
 
         //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
         //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
-
-        $logger = $this->container->get('logger');
 
         $dbName = $this->container->getParameter('database_name');
         if( !$dbName ) {
