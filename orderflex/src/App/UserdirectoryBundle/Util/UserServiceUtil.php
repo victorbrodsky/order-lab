@@ -2024,7 +2024,9 @@ Pathology and Laboratory Medicine",
         while ($process->isRunning()) {
             $logger->notice('runAsyncProcessWithEmail: running ...');
         }
-        if ( !$process->isSuccessful()) {
+        if ($process->isSuccessful()) {
+            $logger->notice('runAsyncProcessWithEmail: OK');
+        } else {
             $logger->notice('runAsyncProcessWithEmail: Error');
         }
 
