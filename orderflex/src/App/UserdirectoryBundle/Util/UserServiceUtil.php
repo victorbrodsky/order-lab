@@ -3821,7 +3821,7 @@ Pathology and Laboratory Medicine",
 
         $command = "$pythonEnvPath $pythonScriptPath".
             //" --configfile $configFilePath".
-            " --verbose true".
+            //" --verbose true".
             " --path $networkDrivePath".
             " --source-db $dbName".
             " --user $dbUsername".
