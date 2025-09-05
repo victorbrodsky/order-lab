@@ -1976,13 +1976,13 @@ Pathology and Laboratory Medicine",
     public function runAsyncProcess($commandArr) {
         //$process = new Process(['python3', 'path/to/your_script.py']);
         //$process = Process::fromShellCommandline($command);
-        $process = new Process(
-            [
-                //'/usr/bin/python3',
-                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
-                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py'
-            ]
-        );
+//        $process = new Process(
+//            [
+//                //'/usr/bin/python3',
+//                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
+//                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py'
+//            ]
+//        );
         $process = new Process($commandArr);
 
         $process->run();
