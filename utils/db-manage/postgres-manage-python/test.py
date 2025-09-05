@@ -28,6 +28,8 @@ def main():
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
+    print("Testing started")
+
     send_confirmation_email('Testing')
     logger.info("Logger Testing finished")
     print("Testing finished")
