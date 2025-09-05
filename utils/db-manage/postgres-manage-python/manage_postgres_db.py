@@ -421,6 +421,17 @@ def main():
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
+        if isinstance(handler, logging.FileHandler):
+            log_path = handler.baseFilename  # Full path to the log file
+            print("Log file path:", log_path)
+
+            #import os
+            folder = os.path.dirname(log_path)
+            filename = os.path.basename(log_path)
+
+            print("Folder:", folder)
+            print("Filename:", filename)
+
         send_confirmation_email('Testing')
         print("Testing finished")
         exit(1)
