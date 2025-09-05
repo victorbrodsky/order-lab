@@ -1062,6 +1062,15 @@ class DataBackupManagementController extends OrderAbstractController
         return $output;
     }
 
+    //http://127.0.0.1/directory/send-confirmation-email/
+    #[Route(path: '/send-confirmation-email/', name: 'employees_send_confirmation_email')]
+    public function sendConfirmationEmailAction( Request $request )
+    {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userServiceUtil->completeDbRestoreEmail(true);
+        return new Response('Email sent!');
+    }
+
     #[Route(path: '/post-restore-ajax/', name: 'employees_post_restore_ajax', methods: ['POST'], options: ['expose' => true])]
     public function postRestoreAjaxAction( Request $request )
     {

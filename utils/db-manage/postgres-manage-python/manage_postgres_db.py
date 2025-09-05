@@ -20,6 +20,9 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import yaml
 import asyncio
 
+import requests
+
+
 
 # Amazon S3 settings.
 # AWS_ACCESS_KEY_ID  in ~/.aws/credentials
@@ -388,6 +391,15 @@ async def async_restore_wrapper(
         )
     )
 
+def send_confirmation_email(msg):
+    #http://127.0.0.1/directory/send-confirmation-email/
+    url = 'http://127.0.0.1/directory/send-confirmation-email/'
+    response = requests.get(url)
+    if response.status_code == 200:
+        print("Email triggered successfully!")
+    else:
+        print(f"Failed to trigger email. Status code: {response.status_code}")
+
 #async
 def main():
         # Testing
@@ -721,8 +733,10 @@ def main():
                     # result = {"status": "ok"}
                     result = "Database swap ok"
                     print("trigger-successful-email")
+                    send_confirmation_email('Success: Database has been restored successfully')
                 else:
                     print("trigger-error-email")
+                    send_confirmation_email('Error: Database has not been restored')
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")

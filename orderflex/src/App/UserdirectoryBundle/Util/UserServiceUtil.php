@@ -1992,6 +1992,7 @@ Pathology and Laboratory Medicine",
 
         //$process = new Process(['python3', 'path/to/your_script.py']);
         $process = Process::fromShellCommandline($command);
+        $process->start();
 
         if(0) {
             $process->start(function ($type, $buffer) {
@@ -2016,9 +2017,9 @@ Pathology and Laboratory Medicine",
             });
         }
 
-        $process->start(function ($type, $buffer) use ($logger) {
-            $logger->notice("Output ($type): $buffer");
-        });
+//        $process->start(function ($type, $buffer) use ($logger) {
+//            $logger->notice("Output ($type): $buffer");
+//        });
 
         if(0) {
             $process->start();
