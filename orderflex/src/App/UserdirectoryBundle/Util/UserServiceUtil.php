@@ -2086,7 +2086,7 @@ Pathology and Laboratory Medicine",
                 $emails = array($sender);
             }
         }
-        $emails[] = $user->getSingleEmail();
+        //$emails[] = $user->getSingleEmail();
         $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
 
         if( $success ) {
