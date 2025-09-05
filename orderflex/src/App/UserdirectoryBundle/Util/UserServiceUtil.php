@@ -2064,7 +2064,7 @@ Pathology and Laboratory Medicine",
             $msg = "DB restore completed with error";
         }
 
-        $logger->notice('completeDbRestoreEmail: before send email');
+        $logger->notice('completeDbRestoreEmail: before send email, emails='.implode(", ",$emails));
         $emailUtil->sendEmail($emails,$subject,$msg);
 
         $logger->notice('completeDbRestoreEmail: before event log');
