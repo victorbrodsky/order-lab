@@ -2025,7 +2025,7 @@ Pathology and Laboratory Medicine",
             if (Process::ERR === $type) {
                 //echo 'Error: ' . $buffer;
                 $logger->notice('runAsyncProcess: ERR=' . $buffer);
-            } 
+            }
             if ($type === Process::OUT) {
                 $logger->notice('runAsyncProcess: buffer=' . $buffer);
             }

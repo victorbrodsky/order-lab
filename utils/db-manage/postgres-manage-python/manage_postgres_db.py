@@ -434,10 +434,10 @@ def main():
         # print("YAML path:", yaml_path)
         # exit(1)
 
-        send_confirmation_email('Testing')
+        #send_confirmation_email('Testing')
         #logger.info("Logger Testing finished")
-        print("Testing finished")
-        exit(1)
+        #print("Testing finished")
+        #exit(1)
 
         logger = logging.getLogger(__name__)
         #logger.setLevel(logging.INFO)
@@ -476,7 +476,7 @@ def main():
         send_confirmation_email('Testing',logger)
         logger.info("Logger Testing finished")
         print("Testing finished")
-        exit(1)
+        #exit(1)
 
         args_parser = argparse.ArgumentParser(description='Postgres database management')
         args_parser.add_argument("--action",
