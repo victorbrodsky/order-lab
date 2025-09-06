@@ -2006,12 +2006,20 @@ Pathology and Laboratory Medicine",
             return $process->getOutput();
         }
 
-        if(0) {
+        if(1) {
             $process->start(); // Starts the process asynchronously
             if ($process->isRunning()) {
                 $logger->notice("Process started successfully");
             } else {
                 $logger->notice("Process failed to start");
+            }
+            while ($process->isRunning()) {
+                $logger->notice('runAsyncProcess: running ...');
+            }
+            if ($process->isSuccessful()) {
+                $logger->notice('runAsyncProcess: OK');
+            } else {
+                $logger->notice('runAsyncProcess: Error');
             }
             //sleep(60);
             //$logger->notice("After sleep: ".$process->getOutput()); // Should print "done"
@@ -2019,17 +2027,19 @@ Pathology and Laboratory Medicine",
             //$process->wait();
         }
 
-        $process->start(function ($type, $buffer) {
-            $logger = $this->container->get('logger');
-            $logger->notice('runAsyncProcess: starting...');
-            if (Process::ERR === $type) {
-                //echo 'Error: ' . $buffer;
-                $logger->notice('runAsyncProcess: ERR=' . $buffer);
-            }
-            if ($type === Process::OUT) {
-                $logger->notice('runAsyncProcess: buffer=' . $buffer);
-            }
-        });
+        if(0) {
+            $process->start(function ($type, $buffer) {
+                $logger = $this->container->get('logger');
+                $logger->notice('runAsyncProcess: starting...');
+                if (Process::ERR === $type) {
+                    //echo 'Error: ' . $buffer;
+                    $logger->notice('runAsyncProcess: ERR=' . $buffer);
+                }
+                if ($type === Process::OUT) {
+                    $logger->notice('runAsyncProcess: buffer=' . $buffer);
+                }
+            });
+        }
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
