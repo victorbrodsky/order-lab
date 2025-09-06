@@ -2007,7 +2007,7 @@ Pathology and Laboratory Medicine",
         } else {
             $logger->notice("Process failed to start");
         }
-        sleep(25);
+        sleep(60);
         $logger->notice("After sleep: ".$process->getOutput()); // Should print "done"
         return "Test: ".$process->getOutput();
 
