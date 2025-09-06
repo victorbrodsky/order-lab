@@ -2006,6 +2006,7 @@ Pathology and Laboratory Medicine",
             return $process->getOutput();
         }
 
+        //Working because of while
         if(1) {
             $process->start(); // Starts the process asynchronously
             if ($process->isRunning()) {
@@ -2013,9 +2014,9 @@ Pathology and Laboratory Medicine",
             } else {
                 $logger->notice("Process failed to start");
             }
-            while ($process->isRunning()) {
-                $logger->notice('runAsyncProcess: running ...');
-            }
+//            while ($process->isRunning()) {
+//                $logger->notice('runAsyncProcess: running ...');
+//            }
             if ($process->isSuccessful()) {
                 $logger->notice('runAsyncProcess: OK');
             } else {
