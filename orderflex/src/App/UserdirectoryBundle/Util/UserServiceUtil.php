@@ -2006,18 +2006,30 @@ Pathology and Laboratory Medicine",
             return $process->getOutput();
         }
 
-        $process->start(); // Starts the process asynchronously
-
-        if ($process->isRunning()) {
-            $logger->notice("Process started successfully");
-        } else {
-            $logger->notice("Process failed to start");
+        if(0) {
+            $process->start(); // Starts the process asynchronously
+            if ($process->isRunning()) {
+                $logger->notice("Process started successfully");
+            } else {
+                $logger->notice("Process failed to start");
+            }
+            //sleep(60);
+            //$logger->notice("After sleep: ".$process->getOutput()); // Should print "done"
+            //return "Test: ".$process->getOutput();
+            //$process->wait();
         }
-        //sleep(60);
-        //$logger->notice("After sleep: ".$process->getOutput()); // Should print "done"
-        //return "Test: ".$process->getOutput();
 
-        $process->wait();
+        $process->start(function ($type, $buffer) {
+            $logger = $this->container->get('logger');
+            $logger->notice('runAsyncProcess: starting...');
+            if (Process::ERR === $type) {
+                //echo 'Error: ' . $buffer;
+                $logger->notice('runAsyncProcess: ERR=' . $buffer);
+            } 
+            if ($type === Process::OUT) {
+                $logger->notice('runAsyncProcess: buffer=' . $buffer);
+            }
+        });
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
@@ -4037,8 +4049,8 @@ Pathology and Laboratory Medicine",
 //            $commandArr[] = 'ls';
 //            $commandArr[] = '-lsa';
 
-            //$res = $this->runAsyncProcess($commandArr);
-            $res = $this->runAsyncProcessWithEmail($commandArr);
+            $res = $this->runAsyncProcess($commandArr);
+            //$res = $this->runAsyncProcessWithEmail($commandArr);
         }
 
         //echo "python res=".$res."<br>";
