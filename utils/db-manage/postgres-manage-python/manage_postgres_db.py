@@ -398,11 +398,13 @@ def send_confirmation_email(status,logger):
     url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{status}'
     response = requests.get(url,verify=False)
     if response.status_code == 200:
-        logger.info(f"Email triggered successfully! Status code: {response.status_code}")
-        # print(f"Email triggered successfully! Status code: {response.status_code}")
+        if logger:
+            logger.info(f"Email triggered successfully! Status code: {response.status_code}")
+        print(f"Email triggered successfully! Status code: {response.status_code}")
     else:
-        logger.info(f"Failed to trigger email. Status code: {response.status_code}")
-        # print(f"Failed to trigger email. Status code: {response.status_code}")
+        if logger:
+            logger.info(f"Failed to trigger email. Status code: {response.status_code}")
+        print(f"Failed to trigger email. Status code: {response.status_code}")
 
 def main_test():
     logger = logging.getLogger(__name__)
@@ -431,6 +433,11 @@ def main():
         # yaml_path = os.path.normpath(yaml_path)
         # print("YAML path:", yaml_path)
         # exit(1)
+
+        send_confirmation_email('Testing')
+        #logger.info("Logger Testing finished")
+        print("Testing finished")
+        exit(1)
 
         logger = logging.getLogger(__name__)
         #logger.setLevel(logging.INFO)
@@ -469,7 +476,7 @@ def main():
         send_confirmation_email('Testing',logger)
         logger.info("Logger Testing finished")
         print("Testing finished")
-        #exit(1)
+        exit(1)
 
         args_parser = argparse.ArgumentParser(description='Postgres database management')
         args_parser.add_argument("--action",
@@ -505,8 +512,8 @@ def main():
                                  default=False,
                                  help="DB password")
 
-        send_confirmation_email('Testing-before', logger)
-        exit(1)
+        #send_confirmation_email('Testing-before', logger)
+        #exit(1)
 
         args = args_parser.parse_args()
 
