@@ -1973,6 +1973,12 @@ Pathology and Laboratory Medicine",
         $process->wait();
     }
 
+    //Process::start() initiates a process asynchronously, meaning PHP's execution
+    // continues without waiting for the external process to complete.
+    // If the PHP script finishes and returns a response before the
+    // Python script has fully spawned or executed,
+    // the operating system might terminate the Python process.
+    //Use $process->wait() after $process->start() to pause the PHP script until the external process finishes
     public function runAsyncProcess($commandArr) {
         //$process = new Process(['python3', 'path/to/your_script.py']);
         //$process = Process::fromShellCommandline($command);
@@ -2007,9 +2013,11 @@ Pathology and Laboratory Medicine",
         } else {
             $logger->notice("Process failed to start");
         }
-        sleep(60);
-        $logger->notice("After sleep: ".$process->getOutput()); // Should print "done"
-        return "Test: ".$process->getOutput();
+        //sleep(60);
+        //$logger->notice("After sleep: ".$process->getOutput()); // Should print "done"
+        //return "Test: ".$process->getOutput();
+
+        $process->wait();
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
