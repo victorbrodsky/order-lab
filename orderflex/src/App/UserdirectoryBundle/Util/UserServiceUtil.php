@@ -3918,13 +3918,18 @@ Pathology and Laboratory Medicine",
             //" --emailPassword $emailPassword"
         ;
 
-        $commandArr = array();
-        $commandArr[] = $pythonEnvPath;
-        $commandArr[] = $pythonScriptPath;
-        $commandArr[] = "--path $networkDrivePath";
-        $commandArr[] = "--source-db $dbName";
-        $commandArr[] = "--user $dbUsername";
-        $commandArr[] = "--password $dbPassword";
+        $commandArr = [];
+        $commandArr[] = $pythonEnvPath;           // e.g. '/usr/bin/python3'
+        $commandArr[] = $pythonScriptPath;        // e.g. '/path/to/script.py'
+        $commandArr[] = '--path';
+        $commandArr[] = $networkDrivePath;
+        $commandArr[] = '--source-db';
+        $commandArr[] = $dbName;
+        $commandArr[] = '--user';
+        $commandArr[] = $dbUsername;
+        $commandArr[] = '--password';
+        $commandArr[] = $dbPassword;
+
 
 //        "-h, --mailerhost       mailer host\n" \
 //        "-o, --mailerport       mailer port\n" \
@@ -3954,16 +3959,21 @@ Pathology and Laboratory Medicine",
 
             $command = $command . " --action backup --prefix ".$environment."-".$instanceId."-".gethostname();
 
-            $commandArr[] = "--action backup";
-            $commandArr[] = "--prefix ".$environment."-".$instanceId."-".gethostname();
+            $commandArr[] = "--action";
+            $commandArr[] = "backup";
+            $commandArr[] = "--prefix";
+            $commandArr[] = $environment."-".$instanceId."-".gethostname();
             
         } elseif( $action == 'restore' ) {
             //exit('DB restore is disabled');
             //restore
             if( $backupFileName ) {
                 $command = $command . " --action restore --date $backupFileName";
-                $commandArr[] = "--action restore";
-                $commandArr[] = "--date $backupFileName";
+                $commandArr[] = '--action';
+                $commandArr[] = 'restore';
+                $commandArr[] = '--date';
+                $commandArr[] = $backupFileName;
+
             } else {
                 $msg = "Error in DB management (action $action): backup file is not provided";
                 $res = array(
