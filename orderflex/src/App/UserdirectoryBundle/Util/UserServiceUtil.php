@@ -2007,7 +2007,9 @@ Pathology and Laboratory Medicine",
         } else {
             $logger->notice("Process failed to start");
         }
-        return "Test";
+        sleep(3);
+        $logger->notice($process->getOutput()); // Should print "done"
+        return "Test: ".$process->getOutput();
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
