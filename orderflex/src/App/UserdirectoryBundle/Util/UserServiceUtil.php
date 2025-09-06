@@ -1989,13 +1989,15 @@ Pathology and Laboratory Medicine",
         $process = new Process($commandArr);
 
         //Testing
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+        if(0) {
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+            //echo $process->getOutput();
+            $logger->notice($process->getOutput());
+            return $process->getOutput();
         }
-        //echo $process->getOutput();
-        $logger->notice($process->getOutput());
-        return $process->getOutput();
 
         $process->start(); // Starts the process asynchronously
 

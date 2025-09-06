@@ -404,6 +404,22 @@ def send_confirmation_email(status,logger):
         logger.info(f"Failed to trigger email. Status code: {response.status_code}")
         # print(f"Failed to trigger email. Status code: {response.status_code}")
 
+def main_test():
+    logger = logging.getLogger(__name__)
+    # logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
+    # handler = logging.StreamHandler()
+    # Create file handler
+    handler = logging.FileHandler('/srv/order-lab-tenantapptest/orderflex/var/backup/python_restore_db.log')
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    send_confirmation_email('Testing', logger)
+    logger.info("Logger Testing finished")
+    print("Testing finished")
+
 #async
 def main():
         # Testing
@@ -583,6 +599,9 @@ def main():
         }
 
         local_file_path = '{}{}'.format(manager_config.get('BACKUP_PATH'), filename)
+
+        send_confirmation_email('Testing-before', logger)
+        exit(1)
 
         # list task
         if args.action == "list":
