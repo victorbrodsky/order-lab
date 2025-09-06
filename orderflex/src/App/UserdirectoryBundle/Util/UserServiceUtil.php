@@ -2027,21 +2027,22 @@ Pathology and Laboratory Medicine",
 
         return $res;
     }
-    public function runAsyncProcessWithEmail($command) {
+    public function runAsyncProcessWithEmail($commandArr) {
         $logger = $this->container->get('logger');
         $logger->notice('runAsyncProcessWithEmail: Starting ...');
 
         //$process = new Process(['python3', 'path/to/your_script.py']);
         //$command = "/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python /srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py";
-        $process = Process::fromShellCommandline($command);
+        //$process = Process::fromShellCommandline($command);
+        $process = new Process($commandArr);
 
-        $process = new Process(
-            [
-                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
-                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py'
-            ]
-        );
-        $process->start(); //it looks like its not started
+//        $process = new Process(
+//            [
+//                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
+//                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py'
+//            ]
+//        );
+//        $process->start(); //it looks like its not started
 
         if(0) {
             $process->start(function ($type, $buffer) {
@@ -2082,7 +2083,7 @@ Pathology and Laboratory Medicine",
             }
         }
 
-        if(0) {
+        if(1) {
             $process->start(function ($type, $buffer) {
                 $logger = $this->container->get('logger');
                 $logger->notice('runAsyncProcessWithEmail: starting...');
@@ -4036,8 +4037,8 @@ Pathology and Laboratory Medicine",
 //            $commandArr[] = 'ls';
 //            $commandArr[] = '-lsa';
 
-            $res = $this->runAsyncProcess($commandArr);
-            //$res = $this->runAsyncProcessWithEmail($command);
+            //$res = $this->runAsyncProcess($commandArr);
+            $res = $this->runAsyncProcessWithEmail($commandArr);
         }
 
         //echo "python res=".$res."<br>";
