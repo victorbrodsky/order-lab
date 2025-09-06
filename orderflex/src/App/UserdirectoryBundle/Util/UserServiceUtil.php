@@ -4014,6 +4014,10 @@ Pathology and Laboratory Medicine",
 //            $commandArr[] = '--date';
 //            $commandArr[] = $backupFileName;
 
+            $commandArr = array();
+            $commandArr[] = 'ls';
+            $commandArr[] = '-lsa';
+
             $res = $this->runAsyncProcess($commandArr);
             //$res = $this->runAsyncProcessWithEmail($command);
         }
