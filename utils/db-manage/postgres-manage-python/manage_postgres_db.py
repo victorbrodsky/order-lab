@@ -505,6 +505,9 @@ def main():
                                  default=False,
                                  help="DB password")
 
+        send_confirmation_email('Testing-before', logger)
+        exit(1)
+
         args = args_parser.parse_args()
 
         # Get DB parameters from db.config file passed by --configfile (default location: /postgres-manage-python/)
@@ -600,8 +603,8 @@ def main():
 
         local_file_path = '{}{}'.format(manager_config.get('BACKUP_PATH'), filename)
 
-        send_confirmation_email('Testing-before', logger)
-        exit(1)
+        #send_confirmation_email('Testing-before', logger)
+        #exit(1)
 
         # list task
         if args.action == "list":
