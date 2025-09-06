@@ -2007,8 +2007,8 @@ Pathology and Laboratory Medicine",
         } else {
             $logger->notice("Process failed to start");
         }
-        sleep(3);
-        $logger->notice($process->getOutput()); // Should print "done"
+        sleep(15);
+        $logger->notice("After sleep: ".$process->getOutput()); // Should print "done"
         return "Test: ".$process->getOutput();
 
         // Optional: log the PID or check if it's running
