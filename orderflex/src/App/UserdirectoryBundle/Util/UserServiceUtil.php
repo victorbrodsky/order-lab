@@ -1983,6 +1983,7 @@ Pathology and Laboratory Medicine",
 //                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py'
 //            ]
 //        );
+
         $logger = $this->container->get('logger');
         $commandArrStr = implode(" ",$commandArr);
         $logger->notice("runAsyncProcess: commandArr=[".$commandArrStr."]");
@@ -2000,6 +2001,13 @@ Pathology and Laboratory Medicine",
         }
 
         $process->start(); // Starts the process asynchronously
+
+        if ($process->isRunning()) {
+            $logger->notice("Process started successfully");
+        } else {
+            $logger->notice("Process failed to start");
+        }
+        return "Test";
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
@@ -4014,9 +4022,9 @@ Pathology and Laboratory Medicine",
 //            $commandArr[] = '--date';
 //            $commandArr[] = $backupFileName;
 
-            $commandArr = array();
-            $commandArr[] = 'ls';
-            $commandArr[] = '-lsa';
+//            $commandArr = array();
+//            $commandArr[] = 'ls';
+//            $commandArr[] = '-lsa';
 
             $res = $this->runAsyncProcess($commandArr);
             //$res = $this->runAsyncProcessWithEmail($command);
