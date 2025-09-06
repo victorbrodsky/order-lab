@@ -4016,9 +4016,9 @@ Pathology and Laboratory Medicine",
         } else {
             $logger->notice("dbManagePython: sync=True => run asynchronous");
 
-            $commandArr = array();
-            $commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python';
-            $commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py';
+            //$commandArr = array();
+            //$commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python';
+            //$commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py';
 //            $commandArr[] = '--action';
 //            $commandArr[] = 'restore';
 //            $commandArr[] = '--date';
