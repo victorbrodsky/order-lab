@@ -1988,13 +1988,15 @@ Pathology and Laboratory Medicine",
         $logger->notice("runAsyncProcess: commandArr=[".$commandArrStr."]");
         $process = new Process($commandArr);
 
-//        $process->run();
-//        if (!$process->isSuccessful()) {
-//            throw new ProcessFailedException($process);
-//        }
-//        echo $process->getOutput();
-//        return $process->getOutput();
-        
+        //Testing
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        //echo $process->getOutput();
+        $logger->notice($process->getOutput());
+        return $process->getOutput();
+
         $process->start(); // Starts the process asynchronously
 
         // Optional: log the PID or check if it's running
