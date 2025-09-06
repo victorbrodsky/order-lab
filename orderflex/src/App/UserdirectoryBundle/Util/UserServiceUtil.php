@@ -1983,6 +1983,9 @@ Pathology and Laboratory Medicine",
 //                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py'
 //            ]
 //        );
+        $logger = $this->container->get('logger');
+        $commandArrStr = implode(" ",$commandArr);
+        $logger->notice("runAsyncProcess: commandArr=[".$commandArrStr."]");
         $process = new Process($commandArr);
 
         $process->run();
@@ -3980,7 +3983,7 @@ Pathology and Laboratory Medicine",
         }
 
         $logger->notice("dbManagePython: sync=$sync, command=[".$command."]");
-        $commandArrStr = implode("; ",$commandArr);
+        $commandArrStr = implode(" ",$commandArr);
         $logger->notice("dbManagePython: sync=$sync, commandArr=[".$commandArrStr."]");
 
         //$sync = true; //asynchronous process

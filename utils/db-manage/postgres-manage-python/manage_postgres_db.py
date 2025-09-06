@@ -391,16 +391,18 @@ def create_restore_db(
 #         )
 #     )
 
-def send_confirmation_email(msg):
+def send_confirmation_email(status,logger):
     #http://127.0.0.1/directory/send-confirmation-email/
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
     #url = 'http://127.0.0.1/directory/send-confirmation-email'
-    url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
+    url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{status}'
     response = requests.get(url,verify=False)
     if response.status_code == 200:
-        print(f"Email triggered successfully! Status code: {response.status_code}")
+        logger.info(f"Email triggered successfully! Status code: {response.status_code}")
+        # print(f"Email triggered successfully! Status code: {response.status_code}")
     else:
-        print(f"Failed to trigger email. Status code: {response.status_code}")
+        logger.info(f"Failed to trigger email. Status code: {response.status_code}")
+        # print(f"Failed to trigger email. Status code: {response.status_code}")
 
 #async
 def main():
@@ -448,7 +450,7 @@ def main():
         # else:
         #     print("Log file not found")
 
-        send_confirmation_email('Testing')
+        send_confirmation_email('Testing',logger)
         logger.info("Logger Testing finished")
         print("Testing finished")
         #exit(1)
@@ -767,10 +769,10 @@ def main():
                     # result = {"status": "ok"}
                     result = "Database swap ok"
                     print("trigger-successful-email")
-                    send_confirmation_email('Success: Database has been restored successfully')
+                    send_confirmation_email('Swap-Success',logger)
                 else:
                     print("trigger-error-email")
-                    send_confirmation_email('Error: Database has not been restored')
+                    send_confirmation_email('Swap-Error',logger)
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
