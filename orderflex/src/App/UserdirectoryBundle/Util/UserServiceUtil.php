@@ -2023,9 +2023,9 @@ Pathology and Laboratory Medicine",
                 $logger->notice("Process failed to start");
             }
             //Working because of while
-            while ($process->isRunning()) {
-                //$logger->notice('runAsyncProcess: running ...');
-            }
+//            while ($process->isRunning()) {
+//                $logger->notice('runAsyncProcess: running ...');
+//            }
             if ($process->isSuccessful()) {
                 $logger->notice('runAsyncProcess: OK');
             } else {
