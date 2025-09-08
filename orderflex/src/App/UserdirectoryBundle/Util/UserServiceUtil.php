@@ -1979,6 +1979,15 @@ Pathology and Laboratory Medicine",
     // Python script has fully spawned or executed,
     // the operating system might terminate the Python process.
     //Use $process->wait() after $process->start() to pause the PHP script until the external process finishes
+
+    //The most frequent reason is that the main PHP-FPM process finishes serving
+    // the web request and returns a response to the client. When this happens,
+    // PHP-FPM may terminate its child process, which in turn can kill any child
+    // processes it spawned, including the one started by Symfony's Process component.
+    // The Process::start() method initiates an asynchronous process,
+    // but it doesn't guarantee its independent execution beyond
+    // the life of the parent PHP-FPM process.
+
     public function runAsyncProcess($commandArr) {
         //$process = new Process(['python3', 'path/to/your_script.py']);
         //$process = Process::fromShellCommandline($command);
@@ -3963,6 +3972,7 @@ Pathology and Laboratory Medicine",
         ;
 
         $commandArr = [];
+        $commandArr[] = 'nohup';  //Prevents the process from being terminated when the session ends.
         $commandArr[] = $pythonEnvPath;           // e.g. '/usr/bin/python3'
         $commandArr[] = $pythonScriptPath;        // e.g. '/path/to/script.py'
         $commandArr[] = '--path';
