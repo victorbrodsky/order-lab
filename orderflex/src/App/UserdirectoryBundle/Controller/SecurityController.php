@@ -707,9 +707,9 @@ class SecurityController extends OrderAbstractController
 
         ///// Testing /////
         //echo "res=".$res."<br>";
-        //$response = new Response();
-        //$response->setContent("OK");
-        //return $response;
+        $response = new Response();
+        $response->setContent("OK");
+        return $response;
         ///// EOF Testing /////
 
         //$token = new UsernamePasswordToken($username, $password, $providerKey);
