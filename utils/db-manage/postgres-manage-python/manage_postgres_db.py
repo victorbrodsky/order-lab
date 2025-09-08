@@ -439,23 +439,23 @@ def main():
         #print("Testing finished")
         #exit(1)
 
-        logger = logging.getLogger(__name__)
-        #logger.setLevel(logging.INFO)
-        logger.setLevel(logging.DEBUG)
-        #handler = logging.StreamHandler()
+        # logger = logging.getLogger(__name__)
+        # #logger.setLevel(logging.INFO)
+        # logger.setLevel(logging.DEBUG)
+        # #handler = logging.StreamHandler()
 
         # Create file handler
         #TODO: use current location
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        #handler = logging.FileHandler('/srv/order-lab-tenantapptest/orderflex/var/backup/python_restore_db.log')
-        handler = os.path.join(script_dir, '..', '..', 'orderflex', 'var', 'backup', 'python_restore_db.log')
-        handler.setLevel(logging.DEBUG)
-
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-
-        logger.info("Starting main")
+        # script_dir = os.path.dirname(os.path.abspath(__file__))
+        # #handler = logging.FileHandler('/srv/order-lab-tenantapptest/orderflex/var/backup/python_restore_db.log')
+        # handler = os.path.join(script_dir, '..', '..', 'orderflex', 'var', 'backup', 'python_restore_db.log')
+        # handler.setLevel(logging.DEBUG)
+        #
+        # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        # handler.setFormatter(formatter)
+        # logger.addHandler(handler)
+        #
+        # logger.info("Starting main")
 
         # logging.basicConfig(
         #     filename='app.log',  # Log file name
@@ -478,9 +478,9 @@ def main():
         # else:
         #     print("Log file not found")
 
-        send_confirmation_email('Starting-backup',logger)
-        logger.info("Logger Starting-backup")
-        print("Starting-backup")
+        # send_confirmation_email('Starting-backup',logger)
+        # logger.info("Logger Starting-backup")
+        # print("Starting-backup")
         #exit(1)
 
         args_parser = argparse.ArgumentParser(description='Postgres database management')
@@ -589,6 +589,12 @@ def main():
             filename = 'backupdb-{}-{}-{}.dump'.format(prefix, timestr, postgres_db)
             filename_compressed = '{}.gz'.format(filename)
 
+        #Set up logger
+        logger = logging.getLogger(__name__)
+        # logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
+        # handler = logging.StreamHandler()
+
         print("path=", local_storage_path)
         log_file_path = os.path.join(local_storage_path, 'pythondb.log')
         # Check if the file exists
@@ -601,8 +607,14 @@ def main():
         else:
             print("Log file already exists:", log_file_path)
 
-        logging.basicConfig(filename=local_storage_path + "pythondb.log")
+        #logging.basicConfig(filename=local_storage_path + "pythondb.log")
+        log_path = os.path.join(local_storage_path, "pythondb.log") #It handles trailing slashes automatically
+        logging.basicConfig(filename=log_path, level=logging.INFO)
         # print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
+
+        send_confirmation_email(f'Starting-backup-{format(postgres_db)}', logger)
+        logger.info("Logger Starting-backup")
+        print("Starting-backup",format(postgres_db))
 
         logger.info('Source database name postgres_db={}'.format(postgres_db))
 
@@ -715,7 +727,8 @@ def main():
                         postgres_password
                     )
                     logger.info("Created temp database for restore : {}".format(tmp_database))
-                    send_confirmation_email('Temp-DB-created', logger)
+                    #send_confirmation_email('Temp-DB-created', logger)
+                    send_confirmation_email(f'Temp-DB-created-{format(postgres_db)}', logger)
 
                     # Restore DB to postgres_restore
                     logger.info("Restore starting")
@@ -758,12 +771,14 @@ def main():
                         # )
 
                 if result_restore == False:
-                    send_confirmation_email('DB-restore-failed', logger)
+                    #send_confirmation_email('DB-restore-failed', logger)
+                    send_confirmation_email(f'DB-restore-failed-{format(postgres_db)}', logger)
                     logger.info("DB restore failed")
                     print("DB restore failed")
                     exit(1)
                 else:
-                    send_confirmation_email('DB-restore-ok', logger)
+                    #send_confirmation_email('DB-restore-ok', logger)
+                    send_confirmation_email(f'DB-restore-ok-{format(postgres_db)}', logger)
                     logger.info("DB restore ok")
                     print("DB restore ok")
 
@@ -806,10 +821,12 @@ def main():
                     # result = {"status": "ok"}
                     result = "Database swap ok"
                     print("trigger-successful-email")
-                    send_confirmation_email('DB-swap-success',logger)
+                    #send_confirmation_email('DB-swap-success',logger)
+                    send_confirmation_email(f'DB-swap-success-{format(postgres_db)}', logger)
                 else:
                     print("trigger-error-email")
-                    send_confirmation_email('DB-swap-error',logger)
+                    #send_confirmation_email('DB-swap-error',logger)
+                    send_confirmation_email(f'DB-swap-error-{format(postgres_db)}', logger)
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
