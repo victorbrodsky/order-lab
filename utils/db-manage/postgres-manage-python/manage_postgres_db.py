@@ -445,7 +445,10 @@ def main():
         #handler = logging.StreamHandler()
 
         # Create file handler
-        handler = logging.FileHandler('/srv/order-lab-tenantapptest/orderflex/var/backup/python_restore_db.log')
+        #TODO: use current location
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        #handler = logging.FileHandler('/srv/order-lab-tenantapptest/orderflex/var/backup/python_restore_db.log')
+        handler = os.path.join(script_dir, '..', '..', 'orderflex', 'var', 'backup', 'python_restore_db.log')
         handler.setLevel(logging.DEBUG)
 
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
