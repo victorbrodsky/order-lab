@@ -1988,6 +1988,12 @@ Pathology and Laboratory Medicine",
     // but it doesn't guarantee its independent execution beyond
     // the life of the parent PHP-FPM process.
 
+    //Use: sudo dnf install audit
+    //sudo systemctl enable --now auditd
+//sudo auditctl -a always,exit -F arch=b64 -F pid=<your_pid> -S execve -k symfony_process_exec
+//sudo auditctl -a always,exit -F arch=b64 -F pid=<your_pid> -S exit -k symfony_process_exit
+
+
     public function runAsyncProcess($commandArr) {
         //$process = new Process(['python3', 'path/to/your_script.py']);
         //$process = Process::fromShellCommandline($command);

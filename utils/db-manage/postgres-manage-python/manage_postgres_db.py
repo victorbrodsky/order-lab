@@ -452,6 +452,8 @@ def main():
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
+        logger.info("Starting main")
+
         # logging.basicConfig(
         #     filename='app.log',  # Log file name
         #     filemode='a',  # 'a' to append, 'w' to overwrite
