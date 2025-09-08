@@ -475,9 +475,9 @@ def main():
         # else:
         #     print("Log file not found")
 
-        send_confirmation_email('Testing',logger)
-        logger.info("Logger Testing finished")
-        print("Testing finished")
+        send_confirmation_email('Starting-backup',logger)
+        logger.info("Logger Starting-backup")
+        print("Starting-backup")
         #exit(1)
 
         args_parser = argparse.ArgumentParser(description='Postgres database management')
@@ -712,6 +712,7 @@ def main():
                         postgres_password
                     )
                     logger.info("Created temp database for restore : {}".format(tmp_database))
+                    send_confirmation_email('Temp-DB-created', logger)
 
                     # Restore DB to postgres_restore
                     logger.info("Restore starting")
@@ -754,10 +755,12 @@ def main():
                         # )
 
                 if result_restore == False:
+                    send_confirmation_email('DB-restore-failed', logger)
                     logger.info("DB restore failed")
                     print("DB restore failed")
                     exit(1)
                 else:
+                    send_confirmation_email('DB-restore-ok', logger)
                     logger.info("DB restore ok")
                     print("DB restore ok")
 
@@ -800,10 +803,10 @@ def main():
                     # result = {"status": "ok"}
                     result = "Database swap ok"
                     print("trigger-successful-email")
-                    send_confirmation_email('Swap-Success',logger)
+                    send_confirmation_email('DB-swap-success',logger)
                 else:
                     print("trigger-error-email")
-                    send_confirmation_email('Swap-Error',logger)
+                    send_confirmation_email('DB-swap-error',logger)
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
