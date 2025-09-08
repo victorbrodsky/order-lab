@@ -2029,6 +2029,7 @@ tracepoint:sched:sched_process_exit
         $commandArrStr = implode(" ",$commandArr);
         $logger->notice("runAsyncProcess: commandArr=[".$commandArrStr."]");
         $process = new Process($commandArr);
+        $process->setTimeout(null);
 
         //Testing
         if(0) {
