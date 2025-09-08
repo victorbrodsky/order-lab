@@ -830,6 +830,7 @@ def main():
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
+                send_confirmation_email(f'DB-restored-completed-{format(postgres_db)}', logger)
                 logger.info(result)
                 print(result)
                 # print(json.dumps(result))
