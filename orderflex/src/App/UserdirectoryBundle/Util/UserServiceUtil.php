@@ -1988,6 +1988,26 @@ Pathology and Laboratory Medicine",
     // but it doesn't guarantee its independent execution beyond
     // the life of the parent PHP-FPM process.
 
+    //Installed:
+    //sudo dnf install audit
+    // sudo dnf install -y bpftrace
+    //sudo bpftrace -e 'tracepoint:syscalls:sys_enter_execve { printf("PID %d started %s\n", pid, comm); }'
+    //sudo bpftrace -e 'tracepoint:sched:sched_process_exit { printf("PID %d (%s) exited with code %d\n", pid, comm, args->exit_code >> 8); }'
+/*
+sudo bpftrace -e '
+tracepoint:syscalls:sys_enter_execve
+{
+  printf("(%s) + PID %d (%s)\n", strftime("%H:%M:%S", nsecs), pid, comm);
+}
+
+tracepoint:sched:sched_process_exit
+{
+  printf("(%s) - PID %d (%s) exited\n", strftime("%H:%M:%S", nsecs), pid, comm);
+}
+'
+*/
+
+
     //Use: sudo dnf install audit
     //sudo systemctl enable --now auditd
 //sudo auditctl -a always,exit -F arch=b64 -F pid=<your_pid> -S execve -k symfony_process_exec
@@ -2028,15 +2048,17 @@ Pathology and Laboratory Medicine",
             } else {
                 $logger->notice("Process failed to start");
             }
+            //usleep(500000); // wait 0.5 seconds
+            sleep(5); // Pauses for 5 seconds
             //Working because of while
 //            while ($process->isRunning()) {
 //                $logger->notice('runAsyncProcess: running ...');
 //            }
-            if ($process->isSuccessful()) {
-                $logger->notice('runAsyncProcess: OK');
-            } else {
-                $logger->notice('runAsyncProcess: Error');
-            }
+//            if ($process->isSuccessful()) {
+//                $logger->notice('runAsyncProcess: OK');
+//            } else {
+//                $logger->notice('runAsyncProcess: Error');
+//            }
             //sleep(60);
             //$logger->notice("After sleep: ".$process->getOutput()); // Should print "done"
             //return "Test: ".$process->getOutput();
@@ -3978,7 +4000,7 @@ Pathology and Laboratory Medicine",
         ;
 
         $commandArr = [];
-        $commandArr[] = 'nohup';  //Prevents the process from being terminated when the session ends.
+        //$commandArr[] = 'nohup';  //Prevents the process from being terminated when the session ends.
         $commandArr[] = $pythonEnvPath;           // e.g. '/usr/bin/python3'
         $commandArr[] = $pythonScriptPath;        // e.g. '/path/to/script.py'
         $commandArr[] = '--path';
