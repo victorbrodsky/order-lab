@@ -1973,6 +1973,17 @@ Pathology and Laboratory Medicine",
         $process->wait();
     }
 
+    //Similarly as execInBackground
+    public function runAsyncExecProcess( $cmd ) {
+        $logger = $this->container->get('logger');
+        $logger->notice("runAsyncExecProcess cmd=" . $cmd);
+        //echo exec($cmd, $oExec);
+        $oExec = exec($cmd . " > /dev/null &");
+        // /dev/null - discards all data written to it — like a black hole for output,
+        // & - Runs the command in the background, so PHP doesn’t wait for it to finish
+        return $oExec;
+    }
+
     //Process::start() initiates a process asynchronously, meaning PHP's execution
     // continues without waiting for the external process to complete.
     // If the PHP script finishes and returns a response before the
@@ -1987,6 +1998,12 @@ Pathology and Laboratory Medicine",
     // The Process::start() method initiates an asynchronous process,
     // but it doesn't guarantee its independent execution beyond
     // the life of the parent PHP-FPM process.
+
+    //Run similarly to execInBackground
+    //Or use Symfony Messenger or a queue system
+    //Option 1: Use  with  (Minimalist)
+    //exec('nohup /srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python /srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py > /tmp/db_restore.log 2>&1 &');
+
 
     //Installed:
     //sudo dnf install audit
@@ -4101,6 +4118,7 @@ tracepoint:sched:sched_process_exit
 
             $res = $this->runAsyncProcess($commandArr);
             //$res = $this->runAsyncProcessWithEmail($commandArr);
+            $res = $this->runAsyncExecProcess($command);
         }
 
         //echo "python res=".$res."<br>";
