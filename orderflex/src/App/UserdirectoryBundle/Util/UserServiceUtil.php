@@ -4116,7 +4116,7 @@ tracepoint:sched:sched_process_exit
 //            $commandArr[] = 'ls';
 //            $commandArr[] = '-lsa';
 
-            $res = $this->runAsyncProcess($commandArr);
+//            $res = $this->runAsyncProcess($commandArr);
             //$res = $this->runAsyncProcessWithEmail($commandArr);
             $res = $this->runAsyncExecProcess($command);
         }
