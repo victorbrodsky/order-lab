@@ -396,19 +396,22 @@ def send_confirmation_email(status,logger):
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
     #url = 'http://127.0.0.1/directory/send-confirmation-email'
 
-    status = "backup_2025-09-09_Error: file not found"
-    encoded_status = quote(status, safe='')  # encode everything, including slashes
-
-    url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{encoded_status}'
-    response = requests.get(url,verify=False)
+    #status = "backup_2025-09-09_Error: file not found"
+    #encoded_status = quote(status, safe='')  # encode everything, including slashes
+    #url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{encoded_status}'
+    url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email'
+    payload = {'status': status}
+    response = requests.post(url, json=payload, verify=False)
+    print(response.json())
+    #response = requests.get(url,verify=False)
     if response.status_code == 200:
         if logger:
-            logger.info(f"Email triggered successfully! Status code: {response.status_code}")
-        print(f"Email triggered successfully! Status code: {response.status_code}")
+            logger.info(f"Email triggered successfully! Status code: {response.status_code}, message={response.message}")
+        print(f"Email triggered successfully! Status code: {response.status_code}, message={response.message}")
     else:
         if logger:
-            logger.info(f"Failed to trigger email. Status code: {response.status_code}")
-        print(f"Failed to trigger email. Status code: {response.status_code}")
+            logger.info(f"Failed to trigger email. Status code: {response.status_code}, message={response.message}")
+        print(f"Failed to trigger email. Status code: {response.status_code}, message={response.message}")
 
 def main_test():
     logger = logging.getLogger(__name__)

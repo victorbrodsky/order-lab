@@ -34,6 +34,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -1063,12 +1064,14 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     //http://127.0.0.1/directory/send-confirmation-email/
-    #[Route(path: '/send-confirmation-email/{status}', name: 'employees_send_confirmation_email')]
-    public function sendConfirmationEmailAction( Request $request, $status )
+    #[Route(path: '/send-confirmation-email', name: 'employees_send_confirmation_email', methods: ['POST'])]
+    public function sendConfirmationEmailAction( Request $request )
     {
         $userServiceUtil = $this->container->get('user_service_utility');
+        $status = $request->get('status');
         $userServiceUtil->completeDbRestoreEmail($status);
-        return new Response('Email sent!');
+        //return new Response('Email sent!');
+        return new JsonResponse(['message' => 'Email sent', 'status' => 200]);
     }
 
     #[Route(path: '/post-restore-ajax/', name: 'employees_post_restore_ajax', methods: ['POST'], options: ['expose' => true])]
