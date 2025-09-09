@@ -403,6 +403,7 @@ def send_confirmation_email(status,logger):
     payload = {'status': status}
     response = requests.post(url, json=payload, verify=False)
     print("response: ",response)
+    logger.info("response: ",response)
     print("response.status_code=",response.status_code)
     #response = requests.get(url,verify=False)
     if response.status_code == 200:
