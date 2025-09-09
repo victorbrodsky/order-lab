@@ -468,7 +468,6 @@ class DataBackupManagementController extends OrderAbstractController
 
             //create backup
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
-            // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             $userServiceUtil = $this->container->get('user_service_utility');
             $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup',$sync=false); //Working: Use python script pg_dump
             //exit($res);
@@ -554,7 +553,6 @@ class DataBackupManagementController extends OrderAbstractController
 
             //create backup
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
-            // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             $userServiceUtil = $this->container->get('user_service_utility');
             $resPython = $userServiceUtil->dbManagePython($networkDrivePath,'backup',$sync=false); //Working: Use python script pg_dump
             //exit($res);
@@ -671,10 +669,7 @@ class DataBackupManagementController extends OrderAbstractController
 //            return $response;
 
             //create backup
-            //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
-            // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             $userServiceUtil = $this->container->get('user_service_utility');
-            //$resPython = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
             $resPython = $userServiceUtil->createBackupUpload();
             //exit($res);
 
@@ -867,9 +862,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //$res = $this->restoringBackupSQLFull($backupFilePath);
         //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
-        //$res = $this->dbManagePython($networkDrivePath,'restore',$backupFileName); //Working: Use python script pg_restore
         $userServiceUtil = $this->container->get('user_service_utility');
-        //$res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Use python script pg_restore
         $res = $userServiceUtil->dbManagePython($networkDrivePath,'restore',$sync=false,$backupFileName); //Use python script pg_restore
         //exit($res);
         
@@ -1074,7 +1067,7 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     //http://127.0.0.1/directory/send-confirmation-email/
-    #[Route(path: '/send-confirmation-email', name: 'employees_send_confirmation_email', methods: ['POST'])]
+    #[Route(path: '/send-confirmation-email/', name: 'employees_send_confirmation_email', methods: ['POST'])]
     public function sendConfirmationEmailAction( Request $request )
     {
         //TODO: add Rate Limiter
@@ -1084,9 +1077,11 @@ class DataBackupManagementController extends OrderAbstractController
 //        if (false === $limiter->consume(1)->isAccepted()) {
 //            throw new TooManyRequestsHttpException();
 //        }
-
+        $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
+        $logger->notice("sendConfirmationEmailAction");
         $status = $request->get('status');
+        $logger->notice("sendConfirmationEmailAction: status=$status");
         $userServiceUtil->completeDbRestoreEmail($status);
         return new Response('Email sent!');
         //return new JsonResponse(['message' => 'Email sent', 'status' => 200]);

@@ -400,7 +400,7 @@ def send_confirmation_email(status,logger):
     #status = "backup_2025-09-09_Error: file not found"
     #encoded_status = quote(status, safe='')  # encode everything, including slashes
     #url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{encoded_status}'
-    url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email'
+    url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
     payload = {'status': status}
     response = requests.post(url, json=payload, verify=False)
     #print("response: ",response)

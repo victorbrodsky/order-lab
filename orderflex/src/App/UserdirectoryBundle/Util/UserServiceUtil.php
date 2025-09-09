@@ -4103,19 +4103,6 @@ tracepoint:sched:sched_process_exit
             $res = $this->runProcess($command);
         } else {
             $logger->notice("dbManagePython: sync=True => run asynchronous");
-
-            //$commandArr = array();
-            //$commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python';
-            //$commandArr[] = '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py';
-//            $commandArr[] = '--action';
-//            $commandArr[] = 'restore';
-//            $commandArr[] = '--date';
-//            $commandArr[] = $backupFileName;
-
-//            $commandArr = array();
-//            $commandArr[] = 'ls';
-//            $commandArr[] = '-lsa';
-
 //            $res = $this->runAsyncProcess($commandArr);
             //$res = $this->runAsyncProcessWithEmail($commandArr);
             $res = $this->runAsyncExecProcess($command);
