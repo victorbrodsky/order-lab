@@ -562,21 +562,21 @@ class DataBackupManagementController extends OrderAbstractController
             //$resStatus = $resPython['status'];
             //$resStr = $resPython['message'];
 
-            $output = array(
-                'status' => 'OK',
-                'message' => "dbManagePython Backup Message=".implode("; ",$resPython)
-            );
-            return $output;
+//            $output = array(
+//                'status' => 'OK',
+//                'message' => "dbManagePython Backup Message=".implode("; ",$resPython)
+//            );
+//            return $output;
 
             if( $resPython && $resPython['status'] == 'OK' ) {
-                $resStr = "DB backup successfully created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
+                $resStr = "DB backup started asynchronously. Backup will be created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
                 //Event Log
                 $user = $this->getUser();
                 $sitename = $this->getParameter('employees.sitename');
                 $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,$request,'Create Backup Database');
                 //Send email
                 $emailUtil = $this->container->get('user_mailer_utility');
-                $subject = "DB backup successfully created";
+                $subject = "DB backup started asynchronously";
                 if( $user ) {
                     $usersEmails[] = $user->getSingleEmail();
                 }
@@ -592,7 +592,7 @@ class DataBackupManagementController extends OrderAbstractController
 //                    'status' => 'OK'
 //                );
                 $res = array(
-                    'message' => sprintf("DB backup successfully created in folder %s", $networkDrivePath),
+                    'message' => sprintf("DB backup started asynchronously. Backup will be created in folder %s", $networkDrivePath),
                     'status' => 'OK'
                 );
             } else {
