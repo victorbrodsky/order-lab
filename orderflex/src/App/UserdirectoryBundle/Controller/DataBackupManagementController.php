@@ -1079,14 +1079,14 @@ class DataBackupManagementController extends OrderAbstractController
 //        }
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
-        $logger->notice("sendConfirmationEmailAction");
+        //$logger->notice("sendConfirmationEmailAction");
         //$status = $request->get('status');
-        $status = $request->request->get('status');
-        $logger->notice("sendConfirmationEmailAction: 1status=$status");
+        //$status = $request->request->get('status');
+        //$logger->notice("sendConfirmationEmailAction: 1status=$status");
 
         $data = json_decode($request->getContent(), true);  // decode JSON body
         $status = $data['status'] ?? null;
-        $logger->notice("sendConfirmationEmailAction: 2status=$status");
+        $logger->notice("sendConfirmationEmailAction: status=$status");
         if (!$status) {
             return new Response('Missing status', 400);
         }
