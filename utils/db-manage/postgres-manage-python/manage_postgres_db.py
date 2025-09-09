@@ -21,7 +21,7 @@ import yaml
 #import asyncio
 
 import requests
-
+from urllib.parse import quote
 
 
 # Amazon S3 settings.
@@ -395,7 +395,11 @@ def send_confirmation_email(status,logger):
     #http://127.0.0.1/directory/send-confirmation-email/
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
     #url = 'http://127.0.0.1/directory/send-confirmation-email'
-    url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{status}'
+
+    status = "backup_2025-09-09_Error: file not found"
+    encoded_status = quote(status, safe='')  # encode everything, including slashes
+
+    url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{encoded_status}'
     response = requests.get(url,verify=False)
     if response.status_code == 200:
         if logger:
@@ -612,9 +616,9 @@ def main():
         logging.basicConfig(filename=log_path, level=logging.INFO)
         # print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
 
-        send_confirmation_email(f'Starting-backup-{format(postgres_db)}', logger)
-        logger.info("Logger Starting-backup")
-        print("Starting-backup",format(postgres_db))
+        send_confirmation_email(f'Starting-{args.action}-{format(postgres_db)}', logger)
+        logger.info(f"Logger Starting-{args.action}")
+        print(f"Starting-{args.action}",format(postgres_db))
 
         logger.info('Source database name postgres_db={}'.format(postgres_db))
 
@@ -646,6 +650,7 @@ def main():
                 logger.info(line)
         # backup task
         elif args.action == "backup":
+            send_confirmation_email(f'Starting-{args.action}-{format(postgres_db)}-to-{local_file_path}', logger)
             logger.info('Backing up {} database to {}'.format(postgres_db, local_file_path))
             result = backup_postgres_db(postgres_host,
                                         postgres_db,
@@ -676,6 +681,7 @@ def main():
                 # logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
                 logger.info(movedmsg)
                 movedmsg = "Backup file has been created: {}".format(filename_compressed);
+                send_confirmation_email(f'Finished-{args.action}-{format(filename_compressed)}', logger)
                 print(movedmsg)
             elif storage_engine == 'S3':
                 logger.info('Uploading {} to Amazon S3...'.format(comp_file))
