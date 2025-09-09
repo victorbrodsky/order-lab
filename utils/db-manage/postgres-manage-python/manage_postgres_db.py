@@ -407,12 +407,12 @@ def send_confirmation_email(status,logger):
     #response = requests.get(url,verify=False)
     if response.status_code == 200:
         if logger:
-            logger.info(f"Email triggered successfully! Status code: {response.status_code}, message={response.message}")
-        print(f"Email triggered successfully! Status code: {response.status_code}, message={response.message}")
+            logger.info(f"Email triggered successfully! Status code: {response.status_code}")
+        print(f"Email triggered successfully! Status code: {response.status_code}")
     else:
         if logger:
-            logger.info(f"Failed to trigger email. Status code: {response.status_code}, message={response.message}")
-        print(f"Failed to trigger email. Status code: {response.status_code}, message={response.message}")
+            logger.info(f"Failed to trigger email. Status code: {response.status_code}")
+        print(f"Failed to trigger email. Status code: {response.status_code}")
 
 def main_test():
     logger = logging.getLogger(__name__)
