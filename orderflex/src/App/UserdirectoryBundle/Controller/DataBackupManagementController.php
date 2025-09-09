@@ -569,7 +569,7 @@ class DataBackupManagementController extends OrderAbstractController
 //            return $output;
 
             if( $resPython && $resPython['status'] == 'OK' ) {
-                $resStr = "DB backup started asynchronously. Backup will be created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
+                $resStr = "DB backup started asynchronously with the python script. Backup will be created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
                 //Event Log
                 $user = $this->getUser();
                 $sitename = $this->getParameter('employees.sitename');
@@ -592,7 +592,7 @@ class DataBackupManagementController extends OrderAbstractController
 //                    'status' => 'OK'
 //                );
                 $res = array(
-                    'message' => sprintf("DB backup started asynchronously. Backup will be created in folder %s", $networkDrivePath),
+                    'message' => sprintf("DB backup started asynchronously with the python script. Backup will be created in folder %s", $networkDrivePath),
                     'status' => 'OK'
                 );
             } else {
@@ -600,6 +600,10 @@ class DataBackupManagementController extends OrderAbstractController
 //                    'pnotify-error',
 //                    $resStr
 //                );
+                $res = array(
+                    'message' => "Unexpected error DB backup",
+                    'status' => 'Error'
+                );
             }
 
         } else {
@@ -608,7 +612,7 @@ class DataBackupManagementController extends OrderAbstractController
 //                "Error backup"
 //            );
             $res = array(
-                'message' => "Error DB backup",
+                'message' => "Error DB backup. No Network Drive Path is defined in the Site Settings",
                 'status' => 'Error'
             );
         }
