@@ -1067,6 +1067,14 @@ class DataBackupManagementController extends OrderAbstractController
     #[Route(path: '/send-confirmation-email', name: 'employees_send_confirmation_email', methods: ['POST'])]
     public function sendConfirmationEmailAction( Request $request )
     {
+        //TODO: add Rate Limiter
+        //$limiter = $anonymousApiLimiter->create($request->getClientIp());
+        // the argument of consume() is the number of tokens to consume
+        // and returns an object of type Limit
+//        if (false === $limiter->consume(1)->isAccepted()) {
+//            throw new TooManyRequestsHttpException();
+//        }
+
         $userServiceUtil = $this->container->get('user_service_utility');
         $status = $request->get('status');
         $userServiceUtil->completeDbRestoreEmail($status);

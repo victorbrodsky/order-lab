@@ -402,7 +402,8 @@ def send_confirmation_email(status,logger):
     url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email'
     payload = {'status': status}
     response = requests.post(url, json=payload, verify=False)
-    print(response.json())
+    #print(response.json())
+    print("response.status_code=",response.status_code)
     #response = requests.get(url,verify=False)
     if response.status_code == 200:
         if logger:
