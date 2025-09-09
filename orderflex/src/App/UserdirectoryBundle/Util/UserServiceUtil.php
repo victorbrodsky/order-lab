@@ -1973,7 +1973,14 @@ Pathology and Laboratory Medicine",
         $process->wait();
     }
 
-    //Similarly as execInBackground
+    //Use this simple exec similarly to execInBackground, instead of using runAsyncProcess
+    //The most frequent reason is that the main PHP-FPM process finishes serving
+    // the web request and returns a response to the client. When this happens,
+    // PHP-FPM may terminate its child process, which in turn can kill any child
+    // processes it spawned, including the one started by Symfony's Process component.
+    // The Process::start() method initiates an asynchronous process,
+    // but it doesn't guarantee its independent execution beyond
+    // the life of the parent PHP-FPM process.
     public function runAsyncExecProcess( $cmd ) {
         $logger = $this->container->get('logger');
         $logger->notice("runAsyncExecProcess cmd=" . $cmd);
@@ -2007,7 +2014,6 @@ Pathology and Laboratory Medicine",
     //Option 1: Use  with  (Minimalist)
     //exec('nohup /srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python /srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py > /tmp/db_restore.log 2>&1 &');
 
-
     //Installed:
     //sudo dnf install audit
     // sudo dnf install -y bpftrace
@@ -2026,7 +2032,6 @@ tracepoint:sched:sched_process_exit
 }
 '
 */
-
 
     //Use: sudo dnf install audit
     //sudo systemctl enable --now auditd
@@ -2138,11 +2143,11 @@ tracepoint:sched:sched_process_exit
 //                    $logger->notice('runAsyncProcessWithEmail: out buffer=' . $buffer);
 //                    if (str_contains($buffer, 'trigger-successful-email')) {
 //                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-//                        $this->completeDbRestoreEmail('Success');
+//                        $this->completeDbActionEmail('Success');
 //                    }
 //                    if (str_contains($buffer, 'trigger-error-email')) {
 //                        $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
-//                        $this->completeDbRestoreEmail('Fail');
+//                        $this->completeDbActionEmail('Fail');
 //                    }
 //                }
 //            });
@@ -2186,7 +2191,7 @@ tracepoint:sched:sched_process_exit
 //                    $logger->notice('runAsyncProcessWithEmail: out data=' . $data);
 //                    if (str_contains($data, 'trigger-successful-email')) {
 //                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-//                        $this->completeDbRestoreEmail('Success');
+//                        $this->completeDbActionEmail('Success');
 //                    }
 //                }
 //            }

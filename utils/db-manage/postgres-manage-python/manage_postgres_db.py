@@ -366,32 +366,6 @@ def create_restore_db(
     logger.info("create_restore_db: Restore finished")
     return result_restore
 
-
-# async def async_restore_wrapper(
-#         postgres_host,
-#         postgres_restore,  # temp DB name
-#         postgres_port,
-#         postgres_user,
-#         postgres_password,
-#         restore_filename,
-#         restore_uncompressed,
-#         verbose
-# ):
-#     loop = asyncio.get_running_loop()
-#     return await loop.run_in_executor(
-#         None,
-#         lambda: restore_postgres_db(
-#             postgres_host,
-#             postgres_restore,  # temp DB name
-#             postgres_port,
-#             postgres_user,
-#             postgres_password,
-#             restore_filename,
-#             restore_uncompressed,
-#             verbose
-#         )
-#     )
-
 def send_confirmation_email(status,message,logger):
     #http://127.0.0.1/directory/send-confirmation-email/
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
@@ -563,8 +537,8 @@ def main():
         timestr = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
         filename = 'backup-{}-{}.dump'.format(timestr, postgres_db)
         filename_compressed = '{}.gz'.format(filename)
-        restore_filename = '/tmp/restore.dump.gz'
-        restore_uncompressed = '/tmp/restore.dump'
+        #restore_filename = '/tmp/restore.dump.gz'
+        #restore_uncompressed = '/tmp/restore.dump'
 
         if args.path:
             local_storage_path = args.path
@@ -678,10 +652,16 @@ def main():
                 logger.info("Uploaded to {}".format(filename_compressed))
         # restore task
         elif args.action == "restore":
+            #restore_filename = local_storage_path+'/tmp/restore.dump.gz'
+            #restore_uncompressed = local_storage_path+'/tmp/restore.dump'
+            restore_filename = os.path.join(local_storage_path, 'tmp', 'restore.dump.gz')
+            restore_uncompressed = os.path.join(local_storage_path, 'tmp', 'restore.dump')
+
             if not args.date:
                 logger.warn('No date was chosen for restore. Run again with the "list" '
                             'action to see available restore dates')
             else:
+                logger.info('args.date=',args.date)
                 try:
                     os.remove(restore_filename)
                 except Exception as e:
@@ -736,33 +716,6 @@ def main():
                         restore_uncompressed,  # backup_file used as a source
                         args.verbose
                     )
-
-                #New approach - create temp DB and restore in one method
-                if 0:
-                    result_restore = False
-                    if 1:
-                        result_restore = create_restore_db(
-                            postgres_host,
-                            postgres_restore,  # temp DB name
-                            postgres_port,
-                            postgres_user,
-                            postgres_password,
-                            restore_filename,
-                            restore_uncompressed,
-                            args.verbose
-                        )
-                    else:
-                        pass
-                        # result_restore = await async_restore_wrapper(
-                        #     postgres_host,
-                        #     postgres_restore,  # temp DB name
-                        #     postgres_port,
-                        #     postgres_user,
-                        #     postgres_password,
-                        #     restore_filename,
-                        #     restore_uncompressed,
-                        #     args.verbose
-                        # )
 
                 if result_restore == False:
                     send_confirmation_email(args.action, f'Temp DB restored failed {format(postgres_db)}. Process terminated', logger)
