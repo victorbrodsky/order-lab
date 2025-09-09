@@ -23,7 +23,7 @@ import yaml
 import requests
 #from urllib.parse import quote
 import time
-
+import errno
 
 
 # Amazon S3 settings.
@@ -60,6 +60,13 @@ def download_from_s3(backup_s3_key, dest_file, manager_config):
     except Exception as e:
         print(e)
         exit(1)
+
+def safe_remove(path):
+    try:
+        os.remove(path)
+    except OSError as e:
+        if e.errno != errno.ENOENT:  # ENOENT = No such file or directory
+            raise
 
 
 def list_available_backups(storage_engine, manager_config):
@@ -206,7 +213,8 @@ def remove_faulty_statement_from_dump(src_file):
                 print('Command failed. Return code : {}'.format(process.returncode))
                 exit(1)
 
-            os.remove(src_file)
+            #os.remove(src_file)
+            safe_remove(src_file)
             with open(src_file, 'w+') as cleaned_dump:
                 subprocess.call(
                     ['pg_restore',
@@ -226,7 +234,8 @@ def change_user_from_dump(source_dump_path, old_user, new_user):
             for line in old_file:
                 new_file.write(line.replace(old_user, new_user))
     # Remove original file
-    os.remove(source_dump_path)
+    #os.remove(source_dump_path)
+    safe_remove(source_dump_path)
     # Move new file
     shutil.move(abs_path, source_dump_path)
 
@@ -636,7 +645,8 @@ def main():
             comp_file = compress_file(local_file_path)
 
             # Delete the original file after compression
-            os.remove(local_file_path)
+            #os.remove(local_file_path)
+            safe_remove(local_file_path)
             logger.info(
                 f"Deleted the temporary, not compressed db file {local_file_path} in BACKUP_PATH {manager_config.get('BACKUP_PATH')}")
 
@@ -665,10 +675,11 @@ def main():
                             'action to see available restore dates')
             else:
                 logger.info('args.date=',args.date)
-                try:
-                    os.remove(restore_filename)
-                except Exception as e:
-                    logger.info(e)
+                #try:
+                #    os.remove(restore_filename)
+                #except Exception as e:
+                #    logger.info(e)
+                safe_remove(restore_filename)
                 all_backup_keys = list_available_backups(storage_engine, manager_config)
                 backup_match = [s for s in all_backup_keys if args.date in s]
                 if backup_match:
