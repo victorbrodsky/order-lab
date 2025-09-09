@@ -1981,7 +1981,10 @@ Pathology and Laboratory Medicine",
         $oExec = exec($cmd . " > /dev/null &");
         // /dev/null - discards all data written to it — like a black hole for output,
         // & - Runs the command in the background, so PHP doesn’t wait for it to finish
-        return $oExec;
+        //return $oExec;
+        $res = "The Python script has been launched asynchronously.".
+            " Progress updates will be sent to the admin via email.";
+        return $res;
     }
 
     //Process::start() initiates a process asynchronously, meaning PHP's execution

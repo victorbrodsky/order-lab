@@ -869,6 +869,7 @@ class DataBackupManagementController extends OrderAbstractController
         //Testing
         $output = array(
             'status' => 'OK',
+            //'message' => "dbManagePython Restore Message=".implode("; ",$res)
             'message' => "dbManagePython Restore Message=".implode("; ",$res)
         );
         return $output;
