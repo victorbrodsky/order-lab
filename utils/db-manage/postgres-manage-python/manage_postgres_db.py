@@ -786,6 +786,9 @@ def main():
                     print("trigger-error-email")
                     send_confirmation_email(args.action, f'DB swap error {format(postgres_db)}', logger)
 
+                safe_remove(restore_filename)
+                safe_remove(restore_uncompressed)
+
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
                 send_confirmation_email(args.action, f'DB restored completed {format(postgres_db)}', logger)
