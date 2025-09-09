@@ -670,7 +670,7 @@ def main():
                 # logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
                 logger.info(movedmsg)
                 movedmsg = "Backup file has been created: {}".format(filename_compressed);
-                send_confirmation_email(args.action, f'Completed {args.action} {format(filename_compressed)}', logger)
+                send_confirmation_email(args.action, movedmsg, logger)
                 print(movedmsg)
             elif storage_engine == 'S3':
                 logger.info('Uploading {} to Amazon S3...'.format(comp_file))
