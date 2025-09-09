@@ -392,7 +392,7 @@ def create_restore_db(
 #         )
 #     )
 
-def send_confirmation_email(status,logger):
+def send_confirmation_email(status,message,logger):
     #http://127.0.0.1/directory/send-confirmation-email/
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
     #url = 'http://127.0.0.1/directory/send-confirmation-email'
@@ -401,7 +401,7 @@ def send_confirmation_email(status,logger):
     #encoded_status = quote(status, safe='')  # encode everything, including slashes
     #url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{encoded_status}'
     url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
-    payload = {'status': status}
+    payload = {'status': status, 'message': message}
     logger.info(f"send_confirmation_email status: {status}")
     response = requests.post(url, json=payload, verify=False)
     #print("response: ",response)
@@ -417,22 +417,6 @@ def send_confirmation_email(status,logger):
         if logger:
             logger.info(f"Failed to trigger email. Status code: {response.status_code}")
         print(f"Failed to trigger email. Status code: {response.status_code}")
-
-def main_test():
-    logger = logging.getLogger(__name__)
-    # logger.setLevel(logging.INFO)
-    logger.setLevel(logging.DEBUG)
-    # handler = logging.StreamHandler()
-    # Create file handler
-    handler = logging.FileHandler('/srv/order-lab-tenantapptest/orderflex/var/backup/python_restore_db.log')
-    handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-
-    send_confirmation_email('Testing', logger)
-    logger.info("Logger Testing finished")
-    print("Testing finished")
 
 #async
 def main():
@@ -624,7 +608,7 @@ def main():
         logging.basicConfig(filename=log_path, level=logging.INFO)
         # print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
 
-        send_confirmation_email(f'Starting-{args.action}-{format(postgres_db)}', logger)
+        send_confirmation_email(args.action, f'Starting {args.action} {format(postgres_db)}', logger)
         logger.info(f"Logger Starting-{args.action}")
         print(f"Starting-{args.action}",format(postgres_db))
 
@@ -638,9 +622,6 @@ def main():
         }
 
         local_file_path = '{}{}'.format(manager_config.get('BACKUP_PATH'), filename)
-
-        #send_confirmation_email('Testing-before', logger)
-        #exit(1)
 
         # list task
         if args.action == "list":
@@ -658,7 +639,7 @@ def main():
                 logger.info(line)
         # backup task
         elif args.action == "backup":
-            send_confirmation_email(f'Starting-{args.action}-{format(postgres_db)}-to-{local_file_path}', logger)
+            send_confirmation_email(args.action, f'Starting {args.action} {format(postgres_db)} to {local_file_path}', logger)
             logger.info('Backing up {} database to {}'.format(postgres_db, local_file_path))
             result = backup_postgres_db(postgres_host,
                                         postgres_db,
@@ -689,7 +670,7 @@ def main():
                 # logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
                 logger.info(movedmsg)
                 movedmsg = "Backup file has been created: {}".format(filename_compressed);
-                send_confirmation_email(f'Finished-{args.action}-{format(filename_compressed)}', logger)
+                send_confirmation_email(args.action, f'Completed {args.action} {format(filename_compressed)}', logger)
                 print(movedmsg)
             elif storage_engine == 'S3':
                 logger.info('Uploading {} to Amazon S3...'.format(comp_file))
@@ -741,8 +722,7 @@ def main():
                         postgres_password
                     )
                     logger.info("Created temp database for restore : {}".format(tmp_database))
-                    #send_confirmation_email('Temp-DB-created', logger)
-                    send_confirmation_email(f'Temp-DB-created-{format(postgres_db)}', logger)
+                    send_confirmation_email(args.action, f'Temp DB created {format(postgres_db)}', logger)
 
                     # Restore DB to postgres_restore
                     logger.info("Restore starting")
@@ -785,14 +765,12 @@ def main():
                         # )
 
                 if result_restore == False:
-                    #send_confirmation_email('DB-restore-failed', logger)
-                    send_confirmation_email(f'DB-restore-failed-{format(postgres_db)}', logger)
+                    send_confirmation_email(args.action, f'DB restore failed {format(postgres_db)}', logger)
                     logger.info("DB restore failed")
                     print("DB restore failed")
                     exit(1)
                 else:
-                    #send_confirmation_email('DB-restore-ok', logger)
-                    send_confirmation_email(f'DB-restore-ok-{format(postgres_db)}', logger)
+                    send_confirmation_email(args.action,f'DB restore completed successfully {format(postgres_db)}', logger)
                     logger.info("DB restore ok")
                     print("DB restore ok")
 
@@ -835,16 +813,14 @@ def main():
                     # result = {"status": "ok"}
                     result = "Database swap ok"
                     print("trigger-successful-email")
-                    #send_confirmation_email('DB-swap-success',logger)
-                    send_confirmation_email(f'DB-swap-success-{format(postgres_db)}', logger)
+                    send_confirmation_email(args.action, f'DB swap completed successfully {format(postgres_db)}', logger)
                 else:
                     print("trigger-error-email")
-                    #send_confirmation_email('DB-swap-error',logger)
-                    send_confirmation_email(f'DB-swap-error-{format(postgres_db)}', logger)
+                    send_confirmation_email(args.action, f'DB swap error {format(postgres_db)}', logger)
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
-                send_confirmation_email(f'DB-restored-completed-{format(postgres_db)}', logger)
+                send_confirmation_email(args.action, f'DB restored completed {format(postgres_db)}', logger)
                 logger.info(result)
                 print(result)
                 # print(json.dumps(result))

@@ -1086,12 +1086,13 @@ class DataBackupManagementController extends OrderAbstractController
 
         $data = json_decode($request->getContent(), true);  // decode JSON body
         $status = $data['status'] ?? null;
-        $logger->notice("sendConfirmationEmailAction: status=$status");
+        $message = $data['message'] ?? null;
+        $logger->notice("sendConfirmationEmailAction: status=$status, message=$message");
         if (!$status) {
             return new Response('Missing status', 400);
         }
 
-        $userServiceUtil->completeDbRestoreEmail($status);
+        $userServiceUtil->completeDbActionEmail($status,$message);
         return new Response('Email sent!');
         //return new JsonResponse(['message' => 'Email sent', 'status' => 200]);
     }

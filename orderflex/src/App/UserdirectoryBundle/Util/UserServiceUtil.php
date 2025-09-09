@@ -2122,28 +2122,28 @@ tracepoint:sched:sched_process_exit
 //        );
 //        $process->start(); //it looks like its not started
 
-        if(0) {
-            $process->start(function ($type, $buffer) {
-                $logger = $this->container->get('logger');
-                $logger->notice('runAsyncProcessWithEmail: any buffer=' . $buffer);
-                if ($type === Process::ERR) {
-                    echo "STDERR: " . $buffer;
-                }
-                if ($type === Process::OUT) {
-                    echo "STDOUT: " . $buffer;
-                    $logger = $this->container->get('logger');
-                    $logger->notice('runAsyncProcessWithEmail: out buffer=' . $buffer);
-                    if (str_contains($buffer, 'trigger-successful-email')) {
-                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-                        $this->completeDbRestoreEmail('Success');
-                    }
-                    if (str_contains($buffer, 'trigger-error-email')) {
-                        $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
-                        $this->completeDbRestoreEmail('Fail');
-                    }
-                }
-            });
-        }
+//        if(0) {
+//            $process->start(function ($type, $buffer) {
+//                $logger = $this->container->get('logger');
+//                $logger->notice('runAsyncProcessWithEmail: any buffer=' . $buffer);
+//                if ($type === Process::ERR) {
+//                    echo "STDERR: " . $buffer;
+//                }
+//                if ($type === Process::OUT) {
+//                    echo "STDOUT: " . $buffer;
+//                    $logger = $this->container->get('logger');
+//                    $logger->notice('runAsyncProcessWithEmail: out buffer=' . $buffer);
+//                    if (str_contains($buffer, 'trigger-successful-email')) {
+//                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
+//                        $this->completeDbRestoreEmail('Success');
+//                    }
+//                    if (str_contains($buffer, 'trigger-error-email')) {
+//                        $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
+//                        $this->completeDbRestoreEmail('Fail');
+//                    }
+//                }
+//            });
+//        }
 
 //        $process->start(function ($type, $buffer) use ($logger) {
 //            $logger->notice("Output ($type): $buffer");
@@ -2174,20 +2174,20 @@ tracepoint:sched:sched_process_exit
             });
         }
 
-        if(0) {
-            $process->start();
-            //foreach make it synchronous
-            foreach ($process->getIterator() as $type => $data) {
-                if ($type === Process::OUT) {
-                    $logger = $this->container->get('logger');
-                    $logger->notice('runAsyncProcessWithEmail: out data=' . $data);
-                    if (str_contains($data, 'trigger-successful-email')) {
-                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-                        $this->completeDbRestoreEmail('Success');
-                    }
-                }
-            }
-        }
+//        if(0) {
+//            $process->start();
+//            //foreach make it synchronous
+//            foreach ($process->getIterator() as $type => $data) {
+//                if ($type === Process::OUT) {
+//                    $logger = $this->container->get('logger');
+//                    $logger->notice('runAsyncProcessWithEmail: out data=' . $data);
+//                    if (str_contains($data, 'trigger-successful-email')) {
+//                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
+//                        $this->completeDbRestoreEmail('Success');
+//                    }
+//                }
+//            }
+//        }
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
@@ -2197,9 +2197,9 @@ tracepoint:sched:sched_process_exit
 
         return $res;
     }
-    public function completeDbRestoreEmail( $status ) {
+    public function completeDbActionEmail( $status, $message ) {
         $logger = $this->container->get('logger');
-        $logger->notice('completeDbRestoreEmail');
+        $logger->notice('completeDbActionEmail');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
         $user = $this->security->getUser();
@@ -2219,9 +2219,12 @@ tracepoint:sched:sched_process_exit
 
         $status = htmlspecialchars($status, ENT_QUOTES, 'UTF-8');
         $status = escapeshellarg($status);
+
+        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+        $message = escapeshellarg($message);
         
-        $subject = "DB restore completed: status=$status";
-        $msg = "DB restore completed: status=$status";
+        $subject = "DB action completed: status=$status";
+        $msg = "DB action completed: status=$status, message=$message";
 
 //        if( $success ) {
 //            $subject = "DB restore completed successfully";
@@ -2231,12 +2234,18 @@ tracepoint:sched:sched_process_exit
 //            $msg = "DB restore completed with error";
 //        }
 
-        $logger->notice('completeDbRestoreEmail: before send email, emails='.implode(", ",$emails));
+        $logger->notice('completeDbActionEmail: before send email, emails='.implode(", ",$emails));
         $emailUtil->sendEmail($emails,$subject,$msg);
 
-        $logger->notice('completeDbRestoreEmail: before event log');
+        $logger->notice('completeDbActionEmail: before event log');
         //Event Log
-        $eventType = "Restore Backup Database";
+        if( $status == 'backup' ) {
+            $eventType = "Create Backup Database";
+        } elseif ( $status == 'restore' ) {
+            $eventType = "Restore Backup Database";
+        } else {
+            $eventType = "Unknown Action Database";
+        }
         $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, $user, null, null, $eventType);
     }
 
