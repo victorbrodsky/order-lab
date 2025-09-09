@@ -470,7 +470,7 @@ class DataBackupManagementController extends OrderAbstractController
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
             // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             $userServiceUtil = $this->container->get('user_service_utility');
-            $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
+            $res = $userServiceUtil->dbManagePython($networkDrivePath,'backup',$sync=false); //Working: Use python script pg_dump
             //exit($res);
 
             $resStatus = $res['status'];
@@ -556,11 +556,17 @@ class DataBackupManagementController extends OrderAbstractController
             //$res = $this->creatingBackupSQLFull($networkDrivePath); //Use php based pg_dump
             // $res = $this->dbManagePython($networkDrivePath,'backup'); //Use python script pg_dump
             $userServiceUtil = $this->container->get('user_service_utility');
-            $resPython = $userServiceUtil->dbManagePython($networkDrivePath,'backup'); //Working: Use python script pg_dump
+            $resPython = $userServiceUtil->dbManagePython($networkDrivePath,'backup',$sync=false); //Working: Use python script pg_dump
             //exit($res);
 
             //$resStatus = $resPython['status'];
             //$resStr = $resPython['message'];
+
+            $output = array(
+                'status' => 'OK',
+                'message' => "dbManagePython Backup Message=".implode("; ",$resPython)
+            );
+            return $output;
 
             if( $resPython && $resPython['status'] == 'OK' ) {
                 $resStr = "DB backup successfully created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
@@ -866,7 +872,7 @@ class DataBackupManagementController extends OrderAbstractController
         //Testing
         $output = array(
             'status' => 'OK',
-            'message' => "dbManagePython Message=".implode("; ",$res)
+            'message' => "dbManagePython Restore Message=".implode("; ",$res)
         );
         return $output;
 
