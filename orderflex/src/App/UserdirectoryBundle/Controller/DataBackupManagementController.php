@@ -1078,8 +1078,8 @@ class DataBackupManagementController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
         $status = $request->get('status');
         $userServiceUtil->completeDbRestoreEmail($status);
-        //return new Response('Email sent!');
-        return new JsonResponse(['message' => 'Email sent', 'status' => 200]);
+        return new Response('Email sent!');
+        //return new JsonResponse(['message' => 'Email sent', 'status' => 200]);
     }
 
     #[Route(path: '/post-restore-ajax/', name: 'employees_post_restore_ajax', methods: ['POST'], options: ['expose' => true])]

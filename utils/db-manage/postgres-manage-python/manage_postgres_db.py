@@ -408,7 +408,7 @@ def send_confirmation_email(status,logger):
     #response = requests.get(url,verify=False)
     if response.status_code == 200:
         if logger:
-            logger.info(f"Email triggered successfully1! Status code: {response.status_code}")
+            logger.info(f"Email triggered successfully! Status code: {response.status_code}")
             #logger.info("response: ", response)
         print(f"Email triggered successfully! Status code: {response.status_code}")
     else:
