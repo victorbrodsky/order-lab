@@ -2629,7 +2629,7 @@ class DataBackupManagementController extends OrderAbstractController
 //        return $msg;
 //    }
     public function creatingBackupSQLFull( $filepath ) {
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $msg = null;
 
         $timePrefix = date("d-m-Y-H-i-s");

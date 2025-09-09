@@ -152,6 +152,7 @@ def backup_postgres_db(host, database_name, port, user, password, dest_file, ver
             process = subprocess.Popen(
                 ['pg_dump',
                  '--dbname=postgresql://{}:{}@{}:{}/{}'.format(user, password, host, port, database_name),
+                 '-Fc',
                  '-f', dest_file],
                 stdout=subprocess.PIPE
             )
