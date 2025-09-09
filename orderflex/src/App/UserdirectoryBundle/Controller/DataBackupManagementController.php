@@ -1081,7 +1081,15 @@ class DataBackupManagementController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
         $logger->notice("sendConfirmationEmailAction");
         $status = $request->get('status');
-        $logger->notice("sendConfirmationEmailAction: status=$status");
+        $logger->notice("sendConfirmationEmailAction: 1status=$status");
+
+        $data = json_decode($request->getContent(), true);  // decode JSON body
+        $status = $data['status'] ?? null;
+        $logger->notice("sendConfirmationEmailAction: 2status=$status");
+        if (!$status) {
+            return new Response('Missing status', 400);
+        }
+        
         $userServiceUtil->completeDbRestoreEmail($status);
         return new Response('Email sent!');
         //return new JsonResponse(['message' => 'Email sent', 'status' => 200]);
