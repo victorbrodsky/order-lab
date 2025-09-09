@@ -765,20 +765,21 @@ def main():
                         # )
 
                 if result_restore == False:
-                    send_confirmation_email(args.action, f'DB restore failed {format(postgres_db)}', logger)
-                    logger.info("DB restore failed")
-                    print("DB restore failed")
+                    send_confirmation_email(args.action, f'Temp DB restored failed {format(postgres_db)}. Process terminated', logger)
+                    logger.info("Temp DB restore failed")
+                    print("Temp DB restore failed")
                     exit(1)
                 else:
-                    send_confirmation_email(args.action,f'DB restore completed successfully {format(postgres_db)}', logger)
+                    send_confirmation_email(args.action,f'Temp DB restored successfully {format(postgres_db)}', logger)
                     logger.info("DB restore ok")
-                    print("DB restore ok")
+                    print("Temp DB restore ok")
 
                 if args.verbose:
                     for line in result_restore.splitlines():
                         logger.info(line)
 
                 logger.info("Restore complete")
+                restoremsg = "Unknown switching logical error"
                 if args.dest_db is not None:
                     restored_db_name = args.dest_db
                     restoremsg = "Switching restored database with new one : {} > {}".format(
@@ -787,8 +788,6 @@ def main():
                     # logger.info("Switching restored database with new one : {} > {}".format(
                     #    postgres_restore, restored_db_name
                     # ))
-                    logger.info(restoremsg)
-                    print(restoremsg)
                 else:
                     restored_db_name = postgres_db
                     restoremsg = "Switching restored database with active one : {} > {}".format(
@@ -797,8 +796,10 @@ def main():
                     # logger.info("Switching restored database with active one : {} > {}".format(
                     #    postgres_restore, restored_db_name
                     # ))
-                    logger.info(restoremsg)
-                    print(restoremsg)
+
+                logger.info(restoremsg)
+                print(restoremsg)
+                send_confirmation_email(args.action, restoremsg, logger)
 
                 swap_res = swap_after_restore(postgres_host,
                                               postgres_restore,  # restored db name (tenantapptest_restore)
