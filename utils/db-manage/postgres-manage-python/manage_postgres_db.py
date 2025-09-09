@@ -21,7 +21,9 @@ import yaml
 #import asyncio
 
 import requests
-from urllib.parse import quote
+#from urllib.parse import quote
+import time
+
 
 
 # Amazon S3 settings.
@@ -391,6 +393,7 @@ def send_confirmation_email(status,message,logger):
         if logger:
             logger.info(f"Failed to trigger email. Status code: {response.status_code}")
         print(f"Failed to trigger email. Status code: {response.status_code}")
+    time.sleep(1)  # Pauses execution for 1 second to receive emails in execution order
 
 #async
 def main():
