@@ -797,7 +797,7 @@ class DataBackupManagementController extends OrderAbstractController
         ini_set("default_socket_timeout", 6000); //sec
 
         $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
 
