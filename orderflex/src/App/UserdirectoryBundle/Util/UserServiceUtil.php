@@ -4274,6 +4274,7 @@ tracepoint:sched:sched_process_exit
         $request = null;
 
         $this->completeDbActionEmail('folder-backup','Starting to restore upload folder backup');
+        sleep(1);
 
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         //echo "networkDrivePath=".$networkDrivePath."<br>";
@@ -4319,6 +4320,7 @@ tracepoint:sched:sched_process_exit
         $res = $this->runProcess($command);
 
         $this->completeDbActionEmail('folder-backup','Moved target folder to folder_date. res='.$res);
+        sleep(1);
 
         //Create new folder instead of moved
         $command = "mkdir $folder".DIRECTORY_SEPARATOR.$targetFolder;
@@ -4326,6 +4328,7 @@ tracepoint:sched:sched_process_exit
         $logger->notice("restore BackupFilesAjaxAction mkdir command=".$command);
         $res = $this->runProcess($command);
         $this->completeDbActionEmail('folder-backup','Created new folder instead of moved. res='.$res);
+        sleep(1);
 
         //use tar.gz un-archive
         $command = "tar -xf $archiveFile -C $folder";
@@ -4349,7 +4352,7 @@ tracepoint:sched:sched_process_exit
             }
 
             //Event Log
-            $sitename = $this->getParameter('employees.sitename');
+            $sitename = $this->container->getParameter('employees.sitename');
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
         } else {
             $extractionTime = null;
@@ -4371,9 +4374,10 @@ tracepoint:sched:sched_process_exit
                 " It might take up to $extractionTime minutes.".
                 " As a precaution, the original $targetFolder folder has been moved to " .
                 $targetFolder."_".$date . " and can be deleted later";
-            $sitename = $this->getParameter('employees.sitename');
+            $sitename = $this->container->getParameter('employees.sitename');
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
             $this->completeDbActionEmail('folder-backup',$msg);
+            sleep(1);
 
             $process = $this->runProcess($command);
 
@@ -4395,10 +4399,11 @@ tracepoint:sched:sched_process_exit
                 " As a precaution, the original $targetFolder folder has been moved to " .
                 $targetFolder."_".$date . " and can be deleted later."."; process=".$process;
             //Event Log
-            $sitename = $this->getParameter('employees.sitename');
+            $sitename = $this->container->getParameter('employees.sitename');
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
 
             $this->completeDbActionEmail('folder-backup',$msg);
+            sleep(1);
         }
     }
 
