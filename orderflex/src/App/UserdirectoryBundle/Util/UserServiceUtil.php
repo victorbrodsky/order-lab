@@ -4142,7 +4142,7 @@ tracepoint:sched:sched_process_exit
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $this->completeDbActionEmail('folder-backup','Starting to create uplaod folder backup');
+        $this->completeDbActionEmail('folder-backup','Starting to create upload folder backup');
 
         if( !$backupPath ) {
             $backupPath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
