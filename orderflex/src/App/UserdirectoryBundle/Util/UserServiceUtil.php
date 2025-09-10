@@ -4123,7 +4123,7 @@ tracepoint:sched:sched_process_exit
         $logger = $this->container->get('logger');
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         $phpPath = $this->getPhpPath();
-        $command = $phpPath . " " . $projectRoot . "cron:upload-folder-backup-command --env=prod";
+        $command = $phpPath . " " . $projectRoot . "/bin/console" . " cron:upload-folder-backup-command --env=prod";
         $resStr = $this->runAsyncExecProcess($command);
         $logger->notice("startCommandBackupUpload: run command=" . $command);
 
@@ -4255,7 +4255,7 @@ tracepoint:sched:sched_process_exit
         $logger = $this->container->get('logger');
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         $phpPath = $this->getPhpPath();
-        $command = $phpPath . " " . $projectRoot . "cron:upload-folder-restore-command --env=prod --backupfilename " . $backupPath;
+        $command = $phpPath . " " . $projectRoot . "/bin/console" . " cron:upload-folder-restore-command --env=prod --backupfilename " . $backupPath;
         $resStr = $this->runAsyncExecProcess($command);
         $logger->notice("startCommandRestoreUpload: run command=" . $command);
 
