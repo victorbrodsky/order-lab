@@ -84,10 +84,11 @@ class UploadFolderBackupCommand extends Command {
             //$logger->notice("cron:db-backup-command. after. resStr=".$resStr);
         } else {
             $logger->notice("cron:upload-folder-backup-command. Error: no networkDrivePath.");
+            $output->writeln("cron:upload-folder-backup-command. Error: no networkDrivePath.");
+            return Command::FAILURE;
         }
 
         $output->writeln($resStr);
-
         return Command::SUCCESS;
     }
     

@@ -49,7 +49,7 @@ class DbBackupCommand extends Command {
         $this
             ->setName('cron:db-backup-command')
             ->setDescription('Backup DB')
-            ->addArgument('backuppath', InputArgument::REQUIRED, 'Backup location with ending / (i.e. /mnt/pathology/view-backup/db-backup/)')
+            ->addArgument('backuppath', InputArgument::OPTIONAL, 'Backup location with ending / (i.e. /mnt/pathology/view-backup/db-backup/)')
         ;
     }
 
@@ -93,6 +93,7 @@ class DbBackupCommand extends Command {
             //$logger->notice("cron:db-backup-command. after. resStr=".$resStr);
         } else {
             $logger->notice("cron:db-backup-command. Error: no networkDrivePath.");
+            return Command::FAILURE;
         }
 
         $output->writeln($resStr);
