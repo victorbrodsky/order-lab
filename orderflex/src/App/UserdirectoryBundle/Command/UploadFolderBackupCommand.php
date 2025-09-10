@@ -49,7 +49,7 @@ class UploadFolderBackupCommand extends Command {
         $this
             ->setName('cron:upload-folder-backup-command')
             ->setDescription('Create backup of the upload folder')
-            ->addArgument('backuppath', InputArgument::REQUIRED, 'Backup location with ending / (i.e. /mnt/pathology/view-backup/db-backup/)')
+            ->addArgument('backuppath', InputArgument::OPTIONAL, 'Backup location with ending / (i.e. /mnt/pathology/view-backup/db-backup/)')
         ;
     }
 
