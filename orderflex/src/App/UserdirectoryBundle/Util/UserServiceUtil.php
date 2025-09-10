@@ -4223,14 +4223,14 @@ tracepoint:sched:sched_process_exit
                     'status' => "OK",
                     'message' => $resStr
                 );
+                $this->completeDbActionEmail('folder-backup','Created upload folder backup completed successfully');
             } else {
                 $res = array(
                     'status' => "NOTOK",
                     'message' => "Error. processOutput: ".$processOutput
                 );
+                $this->completeDbActionEmail('folder-backup','Created upload folder backup completed with error. processOutput='.$processOutput);
             }
-
-            $this->completeDbActionEmail('folder-backup','Creating upload folder backup completed. processOutput='.$processOutput);
 
 //            $resStr = $this->runAsyncProcessWithEmail($command,'folder-backup');
 //            $logger->notice("createUploadBackupAction. after resStr=" . $resStr);
