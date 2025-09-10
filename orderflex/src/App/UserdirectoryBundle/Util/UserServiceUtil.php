@@ -4120,15 +4120,17 @@ tracepoint:sched:sched_process_exit
     //Run asynchronously
     public function startCommandBackupUpload( $backupPath=null ) {
         //$res = $this->createBackupUpload($backupPath);
-
-        $command = "/bin/php bin/console cron:upload-folder-backup-command --env=prod";
+        $logger = $this->container->get('logger');
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $phpPath = $this->getPhpPath();
+        $command = $phpPath . " " . $projectRoot . "cron:upload-folder-backup-command --env=prod";
         $resStr = $this->runAsyncExecProcess($command);
+        $logger->notice("startCommandBackupUpload: run command=" . $command);
 
         $res = array(
             'status' => "OK",
             'message' => $resStr
         );
-        
         return $res;
     }
 
@@ -4139,6 +4141,8 @@ tracepoint:sched:sched_process_exit
     public function createBackupUpload( $backupPath=null ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+
+        $this->completeDbActionEmail('folder-backup','Starting to create uplaod folder backup');
 
         if( !$backupPath ) {
             $backupPath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -4225,6 +4229,8 @@ tracepoint:sched:sched_process_exit
                     'message' => "Error. processOutput: ".$processOutput
                 );
             }
+
+            $this->completeDbActionEmail('folder-backup','Creating upload folder backup completed. processOutput='.$processOutput);
 
 //            $resStr = $this->runAsyncProcessWithEmail($command,'folder-backup');
 //            $logger->notice("createUploadBackupAction. after resStr=" . $resStr);
