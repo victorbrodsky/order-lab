@@ -240,6 +240,10 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:upload-folder-backup-command' }
 
+    App\UserdirectoryBundle\Command\UploadFolderRestoreCommand:
+          tags:
+              - { name: 'console.command', command: 'cron:upload-folder-restore-command' }
+
     App\UserdirectoryBundle\Command\CertificateCronCommand:
             tags:
                 - { name: 'console.command', command: 'cron:certificate' }
