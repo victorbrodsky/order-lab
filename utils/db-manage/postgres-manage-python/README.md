@@ -50,11 +50,15 @@ Utility to backup, restore and list Postgresql databases from/to AWS S3 (or loca
 
 * Restore previously created database backups available on storage engine (check available dates with *list* action)
 
-      python3 manage_postgres_db.py --configfile sample.config --action restore --date "YYYY-MM-dd" --verbose true
+      #python3 manage_postgres_db.py --configfile sample.config --action restore --date "YYYY-MM-dd" --verbose true
+      --date is replaced by --dump_file - a full file name of the db dump
+      --configfile sample.config is not used anymore and conf/parameters.yml is used to get database's parameters
+      postgres-manage-python/venv/bin/python manage_postgres_db.py --action restore --dump_file tenantapptest.dump.gz --verbose true
 
 * Restore previously created database backups into a new destination database
 
-      python3 manage_postgres_db.py --configfile sample.config --action restore --date "YYYY-MM-dd" --dest-db new_DB_name
+      #python3 manage_postgres_db.py --configfile sample.config --action restore --date "YYYY-MM-dd" --dest-db new_DB_name
+      postgres-manage-python/venv/bin/python manage_postgres_db.py --action restore --dump_file tenantapptest.dump.gz --verbose true --dest-db new_DB_name
 
 ## Authors
 

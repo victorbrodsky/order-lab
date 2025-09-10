@@ -4085,10 +4085,10 @@ tracepoint:sched:sched_process_exit
             //exit('DB restore is disabled');
             //restore
             if( $backupFileName ) {
-                $command = $command . " --action restore --date $backupFileName";
+                $command = $command . " --action restore --dump_file $backupFileName";
                 $commandArr[] = '--action';
                 $commandArr[] = 'restore';
-                $commandArr[] = '--date';
+                $commandArr[] = '--dump_file';
                 $commandArr[] = $backupFileName;
 
             } else {

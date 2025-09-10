@@ -470,9 +470,10 @@ def main():
                                  metavar="action",
                                  choices=['list', 'list_dbs', 'restore', 'backup'],
                                  required=True)
-        args_parser.add_argument("--date",
-                                 metavar="YYYY-MM-dd",
-                                 help="Date to use for restore (show with --action list)")
+        args_parser.add_argument("--dump_file",
+                                 metavar="dump_file", #source_dump - source dump file to restore db
+                                 #help="Data to use for restore (show with --action list)")
+                                 help = "Source dump file containing db to restore")
         args_parser.add_argument("--dest-db",
                                  metavar="dest_db",
                                  default=None,
@@ -670,22 +671,22 @@ def main():
             restore_filename = os.path.join(local_storage_path, 'tmp', 'restore.dump.gz')
             restore_uncompressed = os.path.join(local_storage_path, 'tmp', 'restore.dump')
 
-            if not args.date:
-                logger.warn('No date was chosen for restore. Run again with the "list" '
-                            'action to see available restore dates')
+            if not args.dump_file:
+                logger.warn('No dump_file was chosen for restore. Run again with the "list" '
+                            'action to see available restore source files')
             else:
-                logger.info('args.date=',args.date)
+                logger.info('args.dump_file=',args.dump_file)
                 #try:
                 #    os.remove(restore_filename)
                 #except Exception as e:
                 #    logger.info(e)
                 safe_remove(restore_filename)
                 all_backup_keys = list_available_backups(storage_engine, manager_config)
-                backup_match = [s for s in all_backup_keys if args.date in s]
+                backup_match = [s for s in all_backup_keys if args.dump_file in s]
                 if backup_match:
                     logger.info("Found the following backup : {}".format(backup_match))
                 else:
-                    logger.error("No match found for backups with date : {}".format(args.date))
+                    logger.error("No match found for backups with dump_file : {}".format(args.dump_file))
                     logger.info("Available keys : {}".format([s for s in all_backup_keys]))
                     exit(1)
 
