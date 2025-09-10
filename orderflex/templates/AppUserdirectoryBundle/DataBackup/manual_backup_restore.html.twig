@@ -997,7 +997,8 @@
             $(btn).text(_origBtnTitle); //'Restore Backup'
         }
 
-
+        //Run asynchronously by calling python script from the controller
+        // (createDbBackupAjaxAction->dbManagePython->runAsyncExecProcess)
         function userCreateDbBackup(btn) {
             //Run create backup asynchronous and send an email when it is ready
             userStartBtn(btn,null);
@@ -1046,6 +1047,8 @@
                 $('#backup-msg-success-box').show();
             });
         }
+        //Run ajax asynchronously by controller createUploadFolderBackupAjaxAction
+        // (createUploadFolderBackupAjaxAction->createBackupUpload->runAsyncExecProcess)
         function userCreateUploadFolderBackup(btn) {
             //Run create backup asynchronous and send an email when it is ready
             userStartBtn(btn,null);

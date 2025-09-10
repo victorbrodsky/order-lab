@@ -670,14 +670,19 @@ class DataBackupManagementController extends OrderAbstractController
 
             //create backup
             $userServiceUtil = $this->container->get('user_service_utility');
-            $resPython = $userServiceUtil->createBackupUpload();
+            $resBackup = $userServiceUtil->createBackupUpload();
             //exit($res);
 
-            //$resStatus = $resPython['status'];
-            //$resStr = $resPython['message'];
+            //$resStatus = $resBackup['status'];
+            //$resStr = $resBackup['message'];
+            
+            $response = new Response();
+            $response->setContent(json_encode($resBackup));
+            return $response;
 
-            if( $resPython && $resPython['status'] == 'OK' ) {
-                $resStr = "Backup of the uploaded folder has been successfully created in folder $networkDrivePath" . ".<br>" . $resPython['message'];
+            if( $resBackup && $resBackup['status'] == 'OK' ) {
+                $resStr = "Backup of the uploaded folder has been successfully created in folder $networkDrivePath" .
+                    ".<br>" . $resBackup['message'];
                 //Event Log
                 $user = $this->getUser();
                 $sitename = $this->getParameter('employees.sitename');

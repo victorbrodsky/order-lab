@@ -2040,16 +2040,6 @@ tracepoint:sched:sched_process_exit
 
 
     public function runAsyncProcess($commandArr) {
-        //$process = new Process(['python3', 'path/to/your_script.py']);
-        //$process = Process::fromShellCommandline($command);
-//        $process = new Process(
-//            [
-//                //'/usr/bin/python3',
-//                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
-//                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/test.py'
-//            ]
-//        );
-
         $logger = $this->container->get('logger');
         $commandArrStr = implode(" ",$commandArr);
         $logger->notice("runAsyncProcess: commandArr=[".$commandArrStr."]");
@@ -2113,45 +2103,35 @@ tracepoint:sched:sched_process_exit
 
         return $res;
     }
-    public function runAsyncProcessWithEmail($commandArr) {
+    public function runAsyncProcessWithEmail( $action, $command ) {
         $logger = $this->container->get('logger');
         $logger->notice('runAsyncProcessWithEmail: Starting ...');
 
-        //$process = new Process(['python3', 'path/to/your_script.py']);
-        //$command = "/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python /srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py";
-        //$process = Process::fromShellCommandline($command);
-        $process = new Process($commandArr);
+        $process = Process::fromShellCommandline($command);
+        //$process = new Process($commandArr);
 
-//        $process = new Process(
-//            [
-//                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/venv/bin/python',
-//                '/srv/order-lab-tenantapptest/utils/db-manage/postgres-manage-python/manage_postgres_db.py'
-//            ]
-//        );
-//        $process->start(); //it looks like its not started
-
-//        if(0) {
-//            $process->start(function ($type, $buffer) {
-//                $logger = $this->container->get('logger');
-//                $logger->notice('runAsyncProcessWithEmail: any buffer=' . $buffer);
-//                if ($type === Process::ERR) {
-//                    echo "STDERR: " . $buffer;
-//                }
-//                if ($type === Process::OUT) {
-//                    echo "STDOUT: " . $buffer;
-//                    $logger = $this->container->get('logger');
-//                    $logger->notice('runAsyncProcessWithEmail: out buffer=' . $buffer);
-//                    if (str_contains($buffer, 'trigger-successful-email')) {
-//                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
-//                        $this->completeDbActionEmail('Success');
-//                    }
-//                    if (str_contains($buffer, 'trigger-error-email')) {
-//                        $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
-//                        $this->completeDbActionEmail('Fail');
-//                    }
-//                }
-//            });
-//        }
+        if(1) {
+            $process->start(function ($type, $buffer) use ($action) {
+                $logger = $this->container->get('logger');
+                $logger->notice('runAsyncProcessWithEmail: any buffer=' . $buffer);
+                if ($type === Process::ERR) {
+                    echo "STDERR: " . $buffer;
+                }
+                if ($type === Process::OUT) {
+                    echo "STDOUT: " . $buffer;
+                    $logger = $this->container->get('logger');
+                    $logger->notice('runAsyncProcessWithEmail: out buffer=' . $buffer);
+                    if (str_contains($buffer, 'trigger-successful-email')) {
+                        $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
+                        $this->completeDbActionEmail($action,'Success');
+                    }
+                    if (str_contains($buffer, 'trigger-error-email')) {
+                        $logger->notice('runAsyncProcessWithEmail: trigger-error-email');
+                        $this->completeDbActionEmail($action,'Fail');
+                    }
+                }
+            });
+        }
 
 //        $process->start(function ($type, $buffer) use ($logger) {
 //            $logger->notice("Output ($type): $buffer");
@@ -2169,7 +2149,7 @@ tracepoint:sched:sched_process_exit
             }
         }
 
-        if(1) {
+        if(0) {
             $process->start(function ($type, $buffer) {
                 $logger = $this->container->get('logger');
                 $logger->notice('runAsyncProcessWithEmail: starting...');
@@ -2199,7 +2179,7 @@ tracepoint:sched:sched_process_exit
 
         // Optional: log the PID or check if it's running
         $logger = $this->container->get('logger');
-        $res = 'Started Python script with PID: ' . $process->getPid() .
+        $res = 'Started script with PID: ' . $process->getPid() .
             " You will get a notification email when completed.";
         $logger->notice($res);
 
@@ -2251,7 +2231,9 @@ tracepoint:sched:sched_process_exit
             $eventType = "Create Backup Database";
         } elseif ( $status == 'restore' ) {
             $eventType = "Restore Backup Database";
-        } else {
+        } elseif ( $status == 'folder-backup' ) {
+            $eventType = "Create Backup Files";
+        }else {
             $eventType = "Unknown Action Database";
         }
         $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, $user, null, null, $eventType);
@@ -4212,23 +4194,28 @@ tracepoint:sched:sched_process_exit
 
             $logger->notice("createUploadBackupAction. before command=" . $command);
 
-            $resUploadFolder = $this->runProcess($command);
-            //exit("resUploadFolder=".$resUploadFolder);
+            #$resUploadFolder = $this->runProcess($command);
+            //$resUploadFolder = $this->runAsyncExecProcess($command);
+//            if (!$resUploadFolder) {
+//                $resStr = "Backup filename: $archiveFile";
+//                $res = array(
+//                    'status' => "OK",
+//                    'message' => $resStr
+//                );
+//            } else {
+//                $res = array(
+//                    'status' => "NOTOK",
+//                    'message' => "Error in createBackupUpload: ".$resUploadFolder
+//                );
+//            }
 
-            $logger->notice("createUploadBackupAction. after res=" . $resUploadFolder);
-
-            if (!$resUploadFolder) {
-                $resStr = "Backup filename: $archiveFile";
-                $res = array(
-                    'status' => "OK",
-                    'message' => $resStr
-                );
-            } else {
-                $res = array(
-                    'status' => "NOTOK",
-                    'message' => "Error in createBackupUpload: ".$resUploadFolder
-                );
-            }
+            $resStr = $this->runAsyncProcessWithEmail('folder-backup',$command);
+            $logger->notice("createUploadBackupAction. after res=" . $res);
+            $resStr = $resStr . "; " . "Folder backup started. Archive filename: $archiveFile";
+            $res = array(
+                'status' => "OK",
+                'message' => $resStr
+            );
 
 //            //Event Log
 //            $user = $this->security->getUser();
