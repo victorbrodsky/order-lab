@@ -2211,8 +2211,8 @@ tracepoint:sched:sched_process_exit
         $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
         $message = escapeshellarg($message);
         
-        $subject = "DB action completed: status=$status";
-        $msg = "DB action completed: status=$status, message=$message";
+        $subject = "Action completed: status=$status";
+        $msg = "Action completed: status=$status, message=$message";
 
 //        if( $success ) {
 //            $subject = "DB restore completed successfully";
@@ -4210,8 +4210,8 @@ tracepoint:sched:sched_process_exit
 //            }
 
             $resStr = $this->runAsyncProcessWithEmail('folder-backup',$command);
-            $logger->notice("createUploadBackupAction. after res=" . $res);
-            $resStr = $resStr . "; " . "Folder backup started. Archive filename: $archiveFile";
+            $logger->notice("createUploadBackupAction. after resStr=" . $resStr);
+            $resStr = "Folder backup started. Archive filename: $archiveFile" . "; " . $resStr;
             $res = array(
                 'status' => "OK",
                 'message' => $resStr
