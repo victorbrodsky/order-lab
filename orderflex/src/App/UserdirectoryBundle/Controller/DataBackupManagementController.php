@@ -670,12 +670,13 @@ class DataBackupManagementController extends OrderAbstractController
 
             //create backup
             $userServiceUtil = $this->container->get('user_service_utility');
-            $resBackup = $userServiceUtil->createBackupUpload();
+            //$resBackup = $userServiceUtil->createBackupUpload();
+            $resBackup = $userServiceUtil->startCommandBackupUpload();
             //exit($res);
 
             //$resStatus = $resBackup['status'];
             //$resStr = $resBackup['message'];
-            
+
             $response = new Response();
             $response->setContent(json_encode($resBackup));
             return $response;

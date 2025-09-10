@@ -1989,7 +1989,7 @@ Pathology and Laboratory Medicine",
         // /dev/null - discards all data written to it — like a black hole for output,
         // & - Runs the command in the background, so PHP doesn’t wait for it to finish
         //return $oExec;
-        $res = "The Python script has been launched asynchronously.".
+        $res = "The command [$cmd] has been launched asynchronously.".
             " Progress updates will be sent to the admin via email.";
         return $res;
     }
@@ -4117,6 +4117,22 @@ tracepoint:sched:sched_process_exit
         return $res;
     }
 
+    //Run asynchronously
+    public function startCommandBackupUpload( $backupPath=null ) {
+        //$res = $this->createBackupUpload($backupPath);
+
+        $command = "/bin/php bin/console cron:upload-folder-backup-command --env=prod";
+        $resStr = $this->runAsyncExecProcess($command);
+
+        $res = array(
+            'status' => "OK",
+            'message' => $resStr
+        );
+        
+        return $res;
+    }
+
+    //Run synchronously
     //Use tar command directly 'tar -zcf ...'.
     //Alternatively, backup/filesbackup.py can be used
     //create-backup-upload: result file: 'backupfiles-...'
@@ -4194,28 +4210,29 @@ tracepoint:sched:sched_process_exit
 
             $logger->notice("createUploadBackupAction. before command=" . $command);
 
-            #$resUploadFolder = $this->runProcess($command);
-            //$resUploadFolder = $this->runAsyncExecProcess($command);
-//            if (!$resUploadFolder) {
-//                $resStr = "Backup filename: $archiveFile";
-//                $res = array(
-//                    'status' => "OK",
-//                    'message' => $resStr
-//                );
-//            } else {
-//                $res = array(
-//                    'status' => "NOTOK",
-//                    'message' => "Error in createBackupUpload: ".$resUploadFolder
-//                );
-//            }
+            $processOutput = $this->runProcess($command);
 
-            $resStr = $this->runAsyncProcessWithEmail($command,'folder-backup');
-            $logger->notice("createUploadBackupAction. after resStr=" . $resStr);
-            $resStr = "Folder backup started. Archive filename: $archiveFile" . "; " . $resStr;
-            $res = array(
-                'status' => "OK",
-                'message' => $resStr
-            );
+            //$resUploadFolder = $this->runAsyncExecProcess($command);
+            if (!$processOutput) {
+                $resStr = "Backup filename: $archiveFile. processOutput=$processOutput";
+                $res = array(
+                    'status' => "OK",
+                    'message' => $resStr
+                );
+            } else {
+                $res = array(
+                    'status' => "NOTOK",
+                    'message' => "Error. processOutput: ".$processOutput
+                );
+            }
+
+//            $resStr = $this->runAsyncProcessWithEmail($command,'folder-backup');
+//            $logger->notice("createUploadBackupAction. after resStr=" . $resStr);
+//            $resStr = "Folder backup started. Archive filename: $archiveFile" . "; " . $resStr;
+//            $res = array(
+//                'status' => "OK",
+//                'message' => $resStr
+//            );
 
 //            //Event Log
 //            $user = $this->security->getUser();
