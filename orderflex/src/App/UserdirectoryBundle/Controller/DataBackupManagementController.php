@@ -1506,54 +1506,54 @@ class DataBackupManagementController extends OrderAbstractController
 
         if( $networkDrivePath ) {
 
-            ////////// Create upload backup ///////////////
-            if(0) {
-                set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
-                //set_time_limit(900); //900 sec => 15 min
-
-                //create backup tar -zcvf archive.tar.gz directory/
-                $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
-                //exit($networkDrivePath);
-
-                $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if (!$environment) {
-                    $environment = "unknownenv";
-                }
-
-                $date = date('Y-m-d-H-i-s');
-                $archiveFile = "backupfiles-" . $environment . "_" . $date . ".tar.gz";
-                $archiveFile = $networkDrivePath . DIRECTORY_SEPARATOR . $archiveFile;
-                //echo "archiveFile=".$archiveFile."<br>";
-
-                $projectRoot = $this->container->get('kernel')->getProjectDir();
-                //echo "projectRoot=".$projectRoot."<br>";
-                $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";//.DIRECTORY_SEPARATOR."Uploaded";
-                //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
-                //echo "folder=".$folder."<br>";
-                //exit('111');
-
-                //Error: The command "tar -zcvf /opt/order-lab/orderflex/var/backups/backupfiles-test_2023-09-12-20-28-20.tar.gz
-                // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
-
-                $targetFolder = "Uploaded";
-                //$targetFolder = "UploadedTest"; //testing
-
-                //use tar.gz archive
-                $command = "tar -zcf $archiveFile -C $folder $targetFolder"; //create backup
-                //echo "command=".$command."<br>";
-
-                $logger->notice("createUploadBackupAction. before command=" . $command);
-
-                $res = $this->runProcess($command);
-                //exit("res=".$res);
-
-                $logger->notice("createUploadBackupAction. after res=" . $res);
-
-                if (!$res) {
-                    $res = "Uploaded folder backup $archiveFile has been successfully created";
-                }
-            }
-            ////////// EOF Create upload backup ///////////////
+//            ////////// Create upload backup ///////////////
+//            if(0) {
+//                set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
+//                //set_time_limit(900); //900 sec => 15 min
+//
+//                //create backup tar -zcvf archive.tar.gz directory/
+//                $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
+//                //exit($networkDrivePath);
+//
+//                $environment = $userSecUtil->getSiteSettingParameter('environment');
+//                if (!$environment) {
+//                    $environment = "unknownenv";
+//                }
+//
+//                $date = date('Y-m-d-H-i-s');
+//                $archiveFile = "backupfiles-" . $environment . "_" . $date . ".tar.gz";
+//                $archiveFile = $networkDrivePath . DIRECTORY_SEPARATOR . $archiveFile;
+//                //echo "archiveFile=".$archiveFile."<br>";
+//
+//                $projectRoot = $this->container->get('kernel')->getProjectDir();
+//                //echo "projectRoot=".$projectRoot."<br>";
+//                $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";//.DIRECTORY_SEPARATOR."Uploaded";
+//                //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
+//                //echo "folder=".$folder."<br>";
+//                //exit('111');
+//
+//                //Error: The command "tar -zcvf /opt/order-lab/orderflex/var/backups/backupfiles-test_2023-09-12-20-28-20.tar.gz
+//                // /opt/order-lab/orderflex/public/Uploaded" failed. Exit Code: 2(Misuse of shell builtins)
+//
+//                $targetFolder = "Uploaded";
+//                //$targetFolder = "UploadedTest"; //testing
+//
+//                //use tar.gz archive
+//                $command = "tar -zcf $archiveFile -C $folder $targetFolder"; //create backup
+//                //echo "command=".$command."<br>";
+//
+//                $logger->notice("createUploadBackupAction. before command=" . $command);
+//
+//                $res = $this->runProcess($command);
+//                //exit("res=".$res);
+//
+//                $logger->notice("createUploadBackupAction. after res=" . $res);
+//
+//                if (!$res) {
+//                    $res = "Uploaded folder backup $archiveFile has been successfully created";
+//                }
+//            }
+//            ////////// EOF Create upload backup ///////////////
 
             $resUploadFolderBackup = $userServiceUtil->createBackupUpload();
             $resUploadFolderBackupStr = implode(', ', $resUploadFolderBackup);
@@ -1600,7 +1600,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
 
@@ -1642,121 +1642,120 @@ class DataBackupManagementController extends OrderAbstractController
         //get backup files
         //$backupFiles = $this->getBackupFiles($networkDrivePath);
 
-        //networkDrivePath
-        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        //echo "networkDrivePath=".$networkDrivePath."<br>";
-        if( !$networkDrivePath ) {
-            //exit("No networkDrivePath is defined");
-            $output = array(
-                'status' => 'NOTOK',
-                'message' => 'Network Drive Path is not defined in the Site Settings'
-            );
-            $response = new Response();
-            $response->setContent(json_encode($output));
-            return $response;
-        }
-
-        $sitename = "employees";
+//        //networkDrivePath
+//        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+//        //echo "networkDrivePath=".$networkDrivePath."<br>";
+//        if( !$networkDrivePath ) {
+//            //exit("No networkDrivePath is defined");
+//            $output = array(
+//                'status' => 'NOTOK',
+//                'message' => 'Network Drive Path is not defined in the Site Settings'
+//            );
+//            $response = new Response();
+//            $response->setContent(json_encode($output));
+//            return $response;
+//        }
+//        $sitename = "employees";
 
         if( $backupFileName ) {
 
-            set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
+            ////////////////
+//            set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
+//
+//            $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
+//
+//            $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$backupFileName;
+//            //echo "archiveFile=".$archiveFile."<br>";
+//
+//            $projectRoot = $this->container->get('kernel')->getProjectDir();
+//            //echo "projectRoot=".$projectRoot."<br>";
+//            $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";
+//            //echo "folder=".$folder."<br>";
+//
+//            $targetFolder = "Uploaded";
+//            //$targetFolder = "UploadedTest"; //testing
+//
+//            $date = date('Y-m-d-H-i-s');
+//
+//            //Rename current Upload folder (Windows 'move')
+//            $moveCommand = "mv";
+//            if( $userServiceUtil->isWindows() ){
+//                $moveCommand = "move";
+//            }
+//
+//            //Move target folder to folder_date
+//            $command = $moveCommand . " " . $folder . DIRECTORY_SEPARATOR . $targetFolder .
+//                " " . $folder . DIRECTORY_SEPARATOR . $targetFolder."_".$date; //restore
+//            //echo "mv command=".$command."<br>";
+//            $logger->notice("restore BackupFilesAjaxAction mv command=".$command);
+//            $res = $this->runProcess($command);
+//
+//            //Create new folder instead of moved
+//            $command = "mkdir $folder".DIRECTORY_SEPARATOR.$targetFolder;
+//            //echo "mkdir command=".$command."<br>";
+//            $logger->notice("restore BackupFilesAjaxAction mkdir command=".$command);
+//            $res = $this->runProcess($command);
+//
+//            //use tar.gz un-archive
+//            $command = "tar -xf $archiveFile -C $folder";
+//            //echo "tar command=".$command."<br>";
+//            $logger->notice("restore BackupFilesAjaxAction tar command=".$command);
+//
+//            if(0) {
+//                $res = $this->runProcess($command);
+//                //exit("res=".$res);
+//                $logger->notice("restore BackupFilesAjaxAction: after tar");
+//
+//                $msg = "Uploaded folder backup $archiveFile has been successfully created.".
+//                    " As a precaution, the original $targetFolder folder has been moved to " .
+//                    $targetFolder."_".$date . " and can be deleted later";
+//
+//                if( !$res ) {
+//                    //$logger->notice("restore res is empty");
+//                } else {
+//                    //$logger->notice("restore res is not empty. res=".$res);
+//                    $msg = $msg . "; res=".$res;
+//                }
+//
+//                //Event Log
+//                $user = $this->getUser();
+//                $sitename = $this->getParameter('employees.sitename');
+//                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+//            } else {
+//                $extractionTime = null;
+//                $filesize = filesize($archiveFile);
+//                if( $filesize ) {
+//                    $extractionTime = round( ($filesize/1024*1024) / 10 ); //kB,MB / 10 ~ min
+//                }
+//
+//                $commandArr = explode(" ",$command);
+//                $process = $this->runAsyncProcess($commandArr);
+//                $logger->notice("restore BackupFilesAjaxAction: after tar async");
+//
+//                $msg = "Uploaded folder backup $archiveFile has been started asynchronously.".
+//                    " It might take up to $extractionTime minutes.".
+//                    " As a precaution, the original $targetFolder folder has been moved to " .
+//                    $targetFolder."_".$date . " and can be deleted later";
+//                //Event Log
+//                $user = $this->getUser();
+//                $sitename = $this->getParameter('employees.sitename');
+//                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+//
+//                $process->wait();
+//                // ... do things after the process has finished
+//                $logger->notice("restore BackupFilesAjaxAction: after wait");
+//                $msg = "Restore of uploaded folder backup $archiveFile has been successfully completed.".
+//                    " As a precaution, the original $targetFolder folder has been moved to " .
+//                    $targetFolder."_".$date . " and can be deleted later";
+//                //Event Log
+//                $user = $this->getUser();
+//                $sitename = $this->getParameter('employees.sitename');
+//                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+//            }
+            //////////////
 
-            $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
-
-            $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$backupFileName;
-            //echo "archiveFile=".$archiveFile."<br>";
-
-            $projectRoot = $this->container->get('kernel')->getProjectDir();
-            //echo "projectRoot=".$projectRoot."<br>";
-            $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";
-            //echo "folder=".$folder."<br>";
-
-            $targetFolder = "Uploaded";
-            //$targetFolder = "UploadedTest"; //testing
-
-            $date = date('Y-m-d-H-i-s');
-
-            //Rename current Upload folder (Windows 'move')
-            $moveCommand = "mv";
-            if( $userServiceUtil->isWindows() ){
-                $moveCommand = "move";
-            }
-
-            //Move target folder to folder_date
-            $command = $moveCommand . " " . $folder . DIRECTORY_SEPARATOR . $targetFolder .
-                " " . $folder . DIRECTORY_SEPARATOR . $targetFolder."_".$date; //restore
-            //echo "mv command=".$command."<br>";
-            $logger->notice("restore BackupFilesAjaxAction mv command=".$command);
-            $res = $this->runProcess($command);
-
-            //Create new folder instead of moved
-            $command = "mkdir $folder".DIRECTORY_SEPARATOR.$targetFolder;
-            //echo "mkdir command=".$command."<br>";
-            $logger->notice("restore BackupFilesAjaxAction mkdir command=".$command);
-            $res = $this->runProcess($command);
-
-            //use tar.gz un-archive
-            $command = "tar -xf $archiveFile -C $folder";
-            //echo "tar command=".$command."<br>";
-            $logger->notice("restore BackupFilesAjaxAction tar command=".$command);
-
-            if(0) {
-                $res = $this->runProcess($command);
-                //exit("res=".$res);
-                $logger->notice("restore BackupFilesAjaxAction: after tar");
-
-                $msg = "Uploaded folder backup $archiveFile has been successfully created.".
-                    " As a precaution, the original $targetFolder folder has been moved to " .
-                    $targetFolder."_".$date . " and can be deleted later";
-
-                if( !$res ) {
-                    //$logger->notice("restore res is empty");
-                } else {
-                    //$logger->notice("restore res is not empty. res=".$res);
-                    $msg = $msg . "; res=".$res;
-                }
-
-                //Event Log
-                $user = $this->getUser();
-                $sitename = $this->getParameter('employees.sitename');
-                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
-            } else {
-                $extractionTime = null;
-                $filesize = filesize($archiveFile);
-                if( $filesize ) {
-                    $extractionTime = round( ($filesize/1024*1024) / 10 ); //kB,MB / 10 ~ min
-                }
-
-                $commandArr = explode(" ",$command);
-                $process = $this->runAsyncProcess($commandArr);
-                $logger->notice("restore BackupFilesAjaxAction: after tar async");
-
-                $msg = "Uploaded folder backup $archiveFile has been started asynchronously.".
-                    " It might take up to $extractionTime minutes.".
-                    " As a precaution, the original $targetFolder folder has been moved to " .
-                    $targetFolder."_".$date . " and can be deleted later";
-                //Event Log
-                $user = $this->getUser();
-                $sitename = $this->getParameter('employees.sitename');
-                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
-
-                $process->wait();
-                // ... do things after the process has finished
-                $logger->notice("restore BackupFilesAjaxAction: after wait");
-                $msg = "Restore of uploaded folder backup $archiveFile has been successfully completed.".
-                    " As a precaution, the original $targetFolder folder has been moved to " .
-                    $targetFolder."_".$date . " and can be deleted later";
-                //Event Log
-                $user = $this->getUser();
-                $sitename = $this->getParameter('employees.sitename');
-                $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
-            }
-
-            $output = array(
-                'status' => 'OK',
-                'message' => $msg
-            );
+            $resUploadFolderRestore = $userServiceUtil->startCommandRestoreUpload($backupFileName);
+            return $resUploadFolderRestore;
 
         } else {
             $output = array(

@@ -4249,6 +4249,162 @@ tracepoint:sched:sched_process_exit
         return $res;
     }
 
+    //Run asynchronously
+    public function startCommandRestoreUpload( $backupPath=null ) {
+        //$res = $this->createBackupUpload($backupPath);
+        $logger = $this->container->get('logger');
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $phpPath = $this->getPhpPath();
+        $command = $phpPath . " " . $projectRoot . "cron:upload-folder-restore-command --env=prod --backupfilename " . $backupPath;
+        $resStr = $this->runAsyncExecProcess($command);
+        $logger->notice("startCommandRestoreUpload: run command=" . $command);
+
+        $res = array(
+            'status' => "OK",
+            'message' => $resStr
+        );
+        return $res;
+    }
+    //Run synchronous
+    public function restoreBackupUpload( $backupFileName ) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $request = null;
+
+        $this->completeDbActionEmail('folder-backup','Starting to restore upload folder backup');
+
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        if( !$networkDrivePath ) {
+            //exit("No networkDrivePath is defined");
+            $output = array(
+                'status' => 'NOTOK',
+                'message' => 'Network Drive Path is not defined in the Site Settings'
+            );
+            $response = new Response();
+            $response->setContent(json_encode($output));
+            return $response;
+        }
+
+        set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
+
+        $networkDrivePath = realpath($networkDrivePath); //C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag
+
+        $archiveFile = $networkDrivePath.DIRECTORY_SEPARATOR.$backupFileName;
+        //echo "archiveFile=".$archiveFile."<br>";
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        //echo "projectRoot=".$projectRoot."<br>";
+        $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";
+        //echo "folder=".$folder."<br>";
+
+        $targetFolder = "Uploaded";
+        //$targetFolder = "UploadedTest"; //testing
+
+        $date = date('Y-m-d-H-i-s');
+
+        //Rename current Upload folder (Windows 'move')
+        $moveCommand = "mv";
+        if( $this->isWindows() ){
+            $moveCommand = "move";
+        }
+
+        //Move target folder to folder_date
+        $command = $moveCommand . " " . $folder . DIRECTORY_SEPARATOR . $targetFolder .
+            " " . $folder . DIRECTORY_SEPARATOR . $targetFolder."_".$date; //restore
+        //echo "mv command=".$command."<br>";
+        $logger->notice("restore BackupFilesAjaxAction mv command=".$command);
+        $res = $this->runProcess($command);
+
+        $this->completeDbActionEmail('folder-backup','Moved target folder to folder_date. res='.$res);
+
+        //Create new folder instead of moved
+        $command = "mkdir $folder".DIRECTORY_SEPARATOR.$targetFolder;
+        //echo "mkdir command=".$command."<br>";
+        $logger->notice("restore BackupFilesAjaxAction mkdir command=".$command);
+        $res = $this->runProcess($command);
+        $this->completeDbActionEmail('folder-backup','Created new folder instead of moved. res='.$res);
+
+        //use tar.gz un-archive
+        $command = "tar -xf $archiveFile -C $folder";
+        //echo "tar command=".$command."<br>";
+        $logger->notice("restore BackupFilesAjaxAction tar command=".$command);
+
+        if(0) {
+            $res = $this->runProcess($command);
+            //exit("res=".$res);
+            $logger->notice("restore BackupFilesAjaxAction: after tar");
+
+            $msg = "Uploaded folder backup $archiveFile has been successfully created.".
+                " As a precaution, the original $targetFolder folder has been moved to " .
+                $targetFolder."_".$date . " and can be deleted later";
+
+            if( !$res ) {
+                //$logger->notice("restore res is empty");
+            } else {
+                //$logger->notice("restore res is not empty. res=".$res);
+                $msg = $msg . "; res=".$res;
+            }
+
+            //Event Log
+            $user = $this->getUser();
+            $sitename = $this->getParameter('employees.sitename');
+            $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+        } else {
+            $extractionTime = null;
+            $filesize = filesize($archiveFile);
+            if( $filesize ) {
+                $extractionTime = round( ($filesize/1024*1024) / 10 ); //kB,MB / 10 ~ min
+            }
+
+//            $commandArr = explode(" ",$command);
+//            $process = $this->runAsyncProcess($commandArr);
+//            $logger->notice("restore BackupFilesAjaxAction: after tar async");
+//            $msg = "Uploaded folder backup $archiveFile has been started asynchronously.".
+//                " It might take up to $extractionTime minutes.".
+//                " As a precaution, the original $targetFolder folder has been moved to " .
+//                $targetFolder."_".$date . " and can be deleted later";
+
+            //Event Log
+            $msg = "Extract from archive of the uploaded folder backup $archiveFile has been started.".
+                " It might take up to $extractionTime minutes.".
+                " As a precaution, the original $targetFolder folder has been moved to " .
+                $targetFolder."_".$date . " and can be deleted later";
+            $user = $this->getUser();
+            $sitename = $this->getParameter('employees.sitename');
+            $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+            $this->completeDbActionEmail('folder-backup',$msg);
+
+            $process = $this->runProcess($command);
+
+            $logger->notice("Extract from archive is completed. process=$process");
+
+//            $msg = "Uploaded folder backup $archiveFile has been started.".
+//            " It might take up to $extractionTime minutes.".
+//            " As a precaution, the original $targetFolder folder has been moved to " .
+//            $targetFolder."_".$date . " and can be deleted later";
+//
+//            //Event Log
+//            $user = $this->getUser();
+//            $sitename = $this->getParameter('employees.sitename');
+//            $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+            //$process->wait();
+            // ... do things after the process has finished
+
+            $logger->notice("restore BackupFilesAjaxAction: after wait");
+            $msg = "Restore of uploaded folder backup $archiveFile has been successfully completed.".
+                " As a precaution, the original $targetFolder folder has been moved to " .
+                $targetFolder."_".$date . " and can be deleted later."."; process=".$process;
+            //Event Log
+            $user = $this->getUser();
+            $sitename = $this->getParameter('employees.sitename');
+            $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
+
+            $this->completeDbActionEmail('folder-backup',$msg);
+        }
+    }
+
     public function removeOldBackupFiles( $networkDrivePath=NULL ) {
         $keepNumber = 5;
 
