@@ -236,6 +236,10 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:sync-backup-command' }
 
+    App\UserdirectoryBundle\Command\UploadFolderBackupCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:upload-folder-backup-command' }
+
     App\UserdirectoryBundle\Command\CertificateCronCommand:
             tags:
                 - { name: 'console.command', command: 'cron:certificate' }
