@@ -2103,23 +2103,23 @@ tracepoint:sched:sched_process_exit
 
         return $res;
     }
-    public function runAsyncProcessWithEmail( $action, $command ) {
+    public function runAsyncProcessWithEmail( $command, $action ) {
         $logger = $this->container->get('logger');
         $logger->notice('runAsyncProcessWithEmail: Starting ...');
 
         $process = Process::fromShellCommandline($command);
         //$process = new Process($commandArr);
 
-        if(1) {
-            $process->start(function ($type, $buffer) use ($action) {
-                $logger = $this->container->get('logger');
+        if(0) {
+            $process->start(function ($type, $buffer) use ($logger,$action) {
+                //$logger = $this->container->get('logger');
                 $logger->notice('runAsyncProcessWithEmail: any buffer=' . $buffer);
                 if ($type === Process::ERR) {
                     echo "STDERR: " . $buffer;
                 }
                 if ($type === Process::OUT) {
                     echo "STDOUT: " . $buffer;
-                    $logger = $this->container->get('logger');
+                    //$logger = $this->container->get('logger');
                     $logger->notice('runAsyncProcessWithEmail: out buffer=' . $buffer);
                     if (str_contains($buffer, 'trigger-successful-email')) {
                         $logger->notice('runAsyncProcessWithEmail: trigger-successful-email');
@@ -2133,9 +2133,9 @@ tracepoint:sched:sched_process_exit
             });
         }
 
-//        $process->start(function ($type, $buffer) use ($logger) {
-//            $logger->notice("Output ($type): $buffer");
-//        });
+        $process->start(function ($type, $buffer) use ($logger) {
+            $logger->notice("runAsyncProcessWithEmail: Output ($type): $buffer");
+        });
 
         if(0) {
             $process->start();
@@ -4209,7 +4209,7 @@ tracepoint:sched:sched_process_exit
 //                );
 //            }
 
-            $resStr = $this->runAsyncProcessWithEmail('folder-backup',$command);
+            $resStr = $this->runAsyncProcessWithEmail($command,'folder-backup');
             $logger->notice("createUploadBackupAction. after resStr=" . $resStr);
             $resStr = "Folder backup started. Archive filename: $archiveFile" . "; " . $resStr;
             $res = array(
