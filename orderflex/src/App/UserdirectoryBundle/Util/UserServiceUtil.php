@@ -4270,6 +4270,7 @@ tracepoint:sched:sched_process_exit
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $user = $this->security->getUser();
         $request = null;
 
         $this->completeDbActionEmail('folder-backup','Starting to restore upload folder backup');
@@ -4348,7 +4349,6 @@ tracepoint:sched:sched_process_exit
             }
 
             //Event Log
-            $user = $this->getUser();
             $sitename = $this->getParameter('employees.sitename');
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
         } else {
@@ -4371,7 +4371,6 @@ tracepoint:sched:sched_process_exit
                 " It might take up to $extractionTime minutes.".
                 " As a precaution, the original $targetFolder folder has been moved to " .
                 $targetFolder."_".$date . " and can be deleted later";
-            $user = $this->getUser();
             $sitename = $this->getParameter('employees.sitename');
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
             $this->completeDbActionEmail('folder-backup',$msg);
@@ -4386,7 +4385,6 @@ tracepoint:sched:sched_process_exit
 //            $targetFolder."_".$date . " and can be deleted later";
 //
 //            //Event Log
-//            $user = $this->getUser();
 //            $sitename = $this->getParameter('employees.sitename');
 //            $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
             //$process->wait();
@@ -4397,7 +4395,6 @@ tracepoint:sched:sched_process_exit
                 " As a precaution, the original $targetFolder folder has been moved to " .
                 $targetFolder."_".$date . " and can be deleted later."."; process=".$process;
             //Event Log
-            $user = $this->getUser();
             $sitename = $this->getParameter('employees.sitename');
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
 
