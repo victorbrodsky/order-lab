@@ -2211,8 +2211,8 @@ tracepoint:sched:sched_process_exit
         $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
         $message = escapeshellarg($message);
         
-        $subject = "Action completed: status=$status";
-        $msg = "Action completed: status=$status, message=$message";
+        $subject = "Action confirmation: status=$status";
+        $msg = "Action confirmation: status=$status, message=$message";
 
 //        if( $success ) {
 //            $subject = "DB restore completed successfully";
