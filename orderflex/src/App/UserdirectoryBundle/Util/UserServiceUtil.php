@@ -4003,11 +4003,14 @@ tracepoint:sched:sched_process_exit
 
         //create call back url: https://view.online/c/test-institution/test-department/
         //$request = $this->container->get('request_stack')->getCurrentRequest();
-        $callbackUrl = $this->container->get('router')->generate(
-            "employees_send_confirmation_email",
-            array(),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+//        $callbackUrl = $this->container->get('router')->generate(
+//            "employees_send_confirmation_email",
+//            array(),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+        //routerGenerateWrapper
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $callbackUrl = $userTenantUtil->routerGenerateExternalChanelWrapper("employees_send_confirmation_email");
         //exit('$callbackUrl='.$callbackUrl); //http://view.online/c/test-institution/test-department/directory/send-confirmation-email/
 
         $dbUsername = $this->container->getParameter('database_user');

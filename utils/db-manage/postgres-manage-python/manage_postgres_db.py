@@ -378,7 +378,7 @@ def create_restore_db(
     logger.info("create_restore_db: Restore finished")
     return result_restore
 
-def send_confirmation_email(callback_url, status,message,logger):
+def send_confirmation_email( callback_url, status, message, logger ):
     #http://127.0.0.1/directory/send-confirmation-email/
     #https://view.online/c/test-institution/test-department/directory/send-confirmation-email/
     #url = 'http://127.0.0.1/directory/send-confirmation-email'
