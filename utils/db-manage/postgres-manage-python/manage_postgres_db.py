@@ -675,7 +675,7 @@ def main():
                 logger.warn('No dump_file was chosen for restore. Run again with the "list" '
                             'action to see available restore source files')
             else:
-                logger.info('args.dump_file=',args.dump_file)
+                logger.info(f'args.dump_file={args.dump_file}')
                 #try:
                 #    os.remove(restore_filename)
                 #except Exception as e:
