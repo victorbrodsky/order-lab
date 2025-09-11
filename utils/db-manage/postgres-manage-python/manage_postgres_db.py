@@ -390,6 +390,8 @@ def send_confirmation_email(callback_url, status,message,logger):
     if not callback_url:
         callback_url = 'http://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
 
+    callback_url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
+
     #callback_url = callback_url + "send-confirmation-email"
     #callback_url = urljoin(callback_url, "directory/send-confirmation-email")
     #print(callback_url)
