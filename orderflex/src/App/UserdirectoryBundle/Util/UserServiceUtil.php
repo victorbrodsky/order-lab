@@ -4091,9 +4091,14 @@ tracepoint:sched:sched_process_exit
             return $res;
         }
 
+        //Add >> to file > output.txt 2>&1
+        //$networkDrivePath = /srv/order-lab-tenantapp1/orderflex/var/backups/
+        $logOutput = $networkDrivePath."db-management.log 2>&1";
+        $command = $command . " > " . $logOutput;
+
         $logger->notice("dbManagePython: sync=$sync, command=[".$command."]");
-        $commandArrStr = implode(" ",$commandArr);
-        $logger->notice("dbManagePython: sync=$sync, commandArr=[".$commandArrStr."]");
+        //$commandArrStr = implode(" ",$commandArr);
+        //$logger->notice("dbManagePython: sync=$sync, commandArr=[".$commandArrStr."]");
 
         //$sync = true; //asynchronous process
         //$sync = false; //synchronous process
