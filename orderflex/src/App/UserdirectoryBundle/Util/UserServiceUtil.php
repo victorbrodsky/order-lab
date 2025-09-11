@@ -4217,6 +4217,11 @@ tracepoint:sched:sched_process_exit
             $command = "tar -zcf $archiveFile -C $folder $targetFolder"; //create backup
             //echo "command=".$command."<br>";
 
+            //Add >> to file > output.txt 2>&1
+            //$networkDrivePath = $backupPath = /srv/order-lab-tenantapp1/orderflex/var/backups/
+            $logOutput = $backupPath.DIRECTORY_SEPARATOR."upload-folder-management.log 2>&1";
+            $command = $command . " > " . $logOutput;
+
             $logger->notice("createUploadBackupAction. before command=" . $command);
 
             $processOutput = $this->runProcess($command);
