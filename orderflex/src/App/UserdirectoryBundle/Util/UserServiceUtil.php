@@ -4001,6 +4001,15 @@ tracepoint:sched:sched_process_exit
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
         //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
 
+        //create call back url: https://view.online/c/test-institution/test-department/
+        //$request = $this->container->get('request_stack')->getCurrentRequest();
+        $callbackUrl = $this->container->get('router')->generate(
+            "employees_send_confirmation_email",
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        exit('$callbackUrl='.$callbackUrl);
+
         $dbUsername = $this->container->getParameter('database_user');
         $dbPassword = $this->container->getParameter('database_password');
 
@@ -4010,7 +4019,8 @@ tracepoint:sched:sched_process_exit
             " --path $networkDrivePath".
             " --source-db $dbName".
             " --user $dbUsername".
-            " --password $dbPassword"
+            " --password $dbPassword".
+            " --callback_url $callbackUrl"
             //" --email $email".
             //" --emailUser $emailUser".
             //" --emailPassword $emailPassword"
