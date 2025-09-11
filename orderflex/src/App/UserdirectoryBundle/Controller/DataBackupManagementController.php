@@ -749,7 +749,7 @@ class DataBackupManagementController extends OrderAbstractController
         if( $environment == 'live' ) {
             $liveServerMsg = "Live server: restore not allowed. ".
             "Change environment from 'live' to 'test', 'dev' or 'demo' in the site settings.";
-            exit($liveServerMsg);
+            //exit($liveServerMsg);
             $logger->notice($liveServerMsg);
             $output = array(
                 'status' => "NOTOK",
