@@ -390,7 +390,8 @@ def send_confirmation_email(callback_url, status,message,logger):
     if not callback_url:
         callback_url = 'http://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
 
-    callback_url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
+    # if use http => Method Not Allowed (Allow: POST)
+    #callback_url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
 
     #callback_url = callback_url + "send-confirmation-email"
     #callback_url = urljoin(callback_url, "directory/send-confirmation-email")
@@ -399,7 +400,7 @@ def send_confirmation_email(callback_url, status,message,logger):
 
     payload = {'status': status, 'message': message}
     logger.info(f"send_confirmation_email status: {status}")
-    response = requests.post(callback_url, json=payload, verify=False)
+    response = requests.post(callback_url, json=payload, verify=False, allow_redirects=False)
     #print("response: ",response)
     #logger.info("response: ",response)
     #print("response.status_code=",response.status_code)
