@@ -1754,8 +1754,11 @@ class DataBackupManagementController extends OrderAbstractController
 //            }
             //////////////
 
-            $resUploadFolderRestore = $userServiceUtil->startCommandRestoreUpload($backupFileName);
-            return $resUploadFolderRestore;
+            $output = $userServiceUtil->startCommandRestoreUpload($backupFileName);
+            //return $resUploadFolderRestore;
+            $response = new Response();
+            $response->setContent(json_encode($output));
+            return $response;
 
         } else {
             $output = array(
