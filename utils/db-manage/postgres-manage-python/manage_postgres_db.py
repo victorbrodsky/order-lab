@@ -595,9 +595,9 @@ def main():
         logging.basicConfig(filename=log_path, level=logging.INFO)
         # print("logger=", logging.getLoggerClass().root.handlers[0].baseFilename)
 
-        send_confirmation_email(args.action, f'Starting {args.action} {format(postgres_db)}', logger)
-        logger.info(f"Logger Starting-{args.action}")
-        print(f"Starting-{args.action}",format(postgres_db))
+        send_confirmation_email(args.action, f'Initiating {args.action} {format(postgres_db)}', logger)
+        logger.info(f"Logger Initiating-{args.action}")
+        print(f"Initiating-{args.action}",format(postgres_db))
 
         logger.info('Source database name postgres_db={}'.format(postgres_db))
 
@@ -626,7 +626,7 @@ def main():
                 logger.info(line)
         # backup task
         elif args.action == "backup":
-            send_confirmation_email(args.action, f'Starting {args.action} {format(postgres_db)} to {local_file_path}', logger)
+            send_confirmation_email(args.action, f'DB Backup (Step 1/2): Starting {args.action} {format(postgres_db)} to {local_file_path}', logger)
             logger.info('Backing up {} database to {}'.format(postgres_db, local_file_path))
             result = backup_postgres_db(postgres_host,
                                         postgres_db,
@@ -657,7 +657,7 @@ def main():
                 movedmsg = "Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed);
                 # logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
                 logger.info(movedmsg)
-                movedmsg = "Backup file has been created: {}".format(filename_compressed);
+                movedmsg = "DB Backup (Step 2/2): Backup file has been created: {}".format(filename_compressed);
                 send_confirmation_email(args.action, movedmsg, logger)
                 print(movedmsg)
             elif storage_engine == 'S3':
@@ -717,7 +717,7 @@ def main():
                         postgres_password
                     )
                     logger.info("Created temp database for restore : {}".format(tmp_database))
-                    send_confirmation_email(args.action, f'Temp DB created {format(postgres_db)}', logger)
+                    send_confirmation_email(args.action, f'Restore DB (Step 1/5): Temp DB created {format(postgres_db)}', logger)
 
                     # Restore DB to postgres_restore
                     logger.info("Restore starting")
@@ -733,12 +733,12 @@ def main():
                     )
 
                 if result_restore == False:
-                    send_confirmation_email(args.action, f'Temp DB restored failed {format(postgres_db)}. Process terminated', logger)
+                    send_confirmation_email(args.action, f'Restore DB (Step 2/5): Temp DB restored failed {format(postgres_db)}. Process terminated', logger)
                     logger.info("Temp DB restore failed")
                     print("Temp DB restore failed")
                     exit(1)
                 else:
-                    send_confirmation_email(args.action,f'Temp DB restored successfully {format(postgres_db)}', logger)
+                    send_confirmation_email(args.action,f'Restore DB (Step 2/5): Temp DB restored successfully {format(postgres_db)}', logger)
                     logger.info("DB restore ok")
                     print("Temp DB restore ok")
 
@@ -758,7 +758,7 @@ def main():
                     # ))
                 else:
                     restored_db_name = postgres_db
-                    restoremsg = "Switching restored database with active one : {} > {}".format(
+                    restoremsg = "Restore DB (Step 3/5): Switching restored database with active one : {} > {}".format(
                         postgres_restore, restored_db_name
                     )
                     # logger.info("Switching restored database with active one : {} > {}".format(
@@ -782,17 +782,18 @@ def main():
                     # result = {"status": "ok"}
                     result = "Database swap ok"
                     print("trigger-successful-email")
-                    send_confirmation_email(args.action, f'DB swap completed successfully {format(postgres_db)}', logger)
+                    send_confirmation_email(args.action, f'Restore DB (Step 4/5): DB swap completed successfully {format(postgres_db)}', logger)
                 else:
                     print("trigger-error-email")
-                    send_confirmation_email(args.action, f'DB swap error {format(postgres_db)}', logger)
+                    send_confirmation_email(args.action, f'Restore DB (Step 4/5): DB swap error {format(postgres_db)}. Process terminated.', logger)
+                    exit(1)
 
                 safe_remove(restore_filename)
                 safe_remove(restore_uncompressed)
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
-                send_confirmation_email(args.action, f'DB restored completed {format(postgres_db)}', logger)
+                send_confirmation_email(args.action, f'Restore DB (Step 5/5): DB restored completed {format(postgres_db)}', logger)
                 logger.info(result)
                 print(result)
                 # print(json.dumps(result))
