@@ -4134,7 +4134,7 @@ tracepoint:sched:sched_process_exit
         return $res;
     }
 
-    //Run synchronously
+    //Run synchronously by cron:upload-folder-backup-command
     //Use tar command directly 'tar -zcf ...'.
     //Alternatively, backup/filesbackup.py can be used
     //create-backup-upload: result file: 'backupfiles-...'
@@ -4142,7 +4142,7 @@ tracepoint:sched:sched_process_exit
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $this->completeDbActionEmail('folder-backup','Starting to create upload folder backup');
+        $this->completeDbActionEmail('folder-backup','Create folder backup (Step 1/2): Starting to create upload folder backup');
 
         if( !$backupPath ) {
             $backupPath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -4223,13 +4223,13 @@ tracepoint:sched:sched_process_exit
                     'status' => "OK",
                     'message' => $resStr
                 );
-                $this->completeDbActionEmail('folder-backup','Created upload folder backup completed successfully');
+                $this->completeDbActionEmail('folder-backup','Create folder backup (Step 2/2): Created upload folder backup completed successfully');
             } else {
                 $res = array(
                     'status' => "NOTOK",
                     'message' => "Error. processOutput: ".$processOutput
                 );
-                $this->completeDbActionEmail('folder-backup','Created upload folder backup completed with error. processOutput='.$processOutput);
+                $this->completeDbActionEmail('folder-backup','Create folder backup (Step 2/2): Error - Created upload folder backup completed with error. processOutput='.$processOutput);
             }
 
 //            $resStr = $this->runAsyncProcessWithEmail($command,'folder-backup');
@@ -4265,7 +4265,7 @@ tracepoint:sched:sched_process_exit
         );
         return $res;
     }
-    //Run synchronous
+    //Run synchronously by cron:upload-folder-restore-command
     public function restoreBackupUpload( $backupFileName ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -4273,7 +4273,7 @@ tracepoint:sched:sched_process_exit
         $user = $this->security->getUser();
         $request = null;
 
-        $this->completeDbActionEmail('folder-backup','Starting to restore upload folder backup');
+        $this->completeDbActionEmail('folder-backup','Restore upload (Step 1/5): Starting to restore upload folder backup');
         sleep(1);
 
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -4284,9 +4284,11 @@ tracepoint:sched:sched_process_exit
                 'status' => 'NOTOK',
                 'message' => 'Network Drive Path is not defined in the Site Settings'
             );
-            $response = new Response();
-            $response->setContent(json_encode($output));
-            return $response;
+            return $output;
+//            $response = new Response();
+//            $response->setContent(json_encode($output));
+//            return $response;
+//            return 'Network Drive Path is not defined in the Site Settings';
         }
 
         set_time_limit(7200); //3600 seconds => 1 hours, 7200 sec => 2 hours
@@ -4319,7 +4321,7 @@ tracepoint:sched:sched_process_exit
         $logger->notice("restore BackupFilesAjaxAction mv command=".$command);
         $res = $this->runProcess($command);
 
-        $this->completeDbActionEmail('folder-backup','Moved target folder to folder_date. res='.$res);
+        $this->completeDbActionEmail('folder-backup','Restore upload (Step 2/5): Moved target folder to folder_date. res='.$res);
         sleep(1);
 
         //Create new folder instead of moved
@@ -4327,7 +4329,7 @@ tracepoint:sched:sched_process_exit
         //echo "mkdir command=".$command."<br>";
         $logger->notice("restore BackupFilesAjaxAction mkdir command=".$command);
         $res = $this->runProcess($command);
-        $this->completeDbActionEmail('folder-backup','Created new folder instead of moved. res='.$res);
+        $this->completeDbActionEmail('folder-backup','Restore upload (Step 3/5): Created new folder instead of moved. res='.$res);
         sleep(1);
 
         //use tar.gz un-archive
@@ -4376,7 +4378,7 @@ tracepoint:sched:sched_process_exit
                 $targetFolder."_".$date . " and can be deleted later";
             $sitename = $this->container->getParameter('employees.sitename');
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
-            $this->completeDbActionEmail('folder-backup',$msg);
+            $this->completeDbActionEmail('folder-backup',"Restore upload (Step 4/5): ".$msg);
             sleep(1);
 
             $process = $this->runProcess($command);
@@ -4402,8 +4404,14 @@ tracepoint:sched:sched_process_exit
             $sitename = $this->container->getParameter('employees.sitename');
             $userSecUtil->createUserEditEvent($sitename,$msg,$user,null,$request,'Restore Backup Upload Files');
 
-            $this->completeDbActionEmail('folder-backup',$msg);
+            $this->completeDbActionEmail('folder-backup',"Restore upload (Step 5/5): ".$msg);
             sleep(1);
+            //return $msg;
+            $output = array(
+                'status' => 'OK',
+                'message' => $msg
+            );
+            return $output;
         }
     }
 

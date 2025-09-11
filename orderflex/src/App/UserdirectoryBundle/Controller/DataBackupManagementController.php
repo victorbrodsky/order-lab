@@ -1555,7 +1555,7 @@ class DataBackupManagementController extends OrderAbstractController
 //            }
 //            ////////// EOF Create upload backup ///////////////
 
-            $resUploadFolderBackup = $userServiceUtil->createBackupUpload();
+            $resUploadFolderBackup = $userServiceUtil->createBackupUpload(); //NOT USED
             $resUploadFolderBackupStr = implode(', ', $resUploadFolderBackup);
 
             if( $resUploadFolderBackup && $resUploadFolderBackup['status'] == 'OK' ) {

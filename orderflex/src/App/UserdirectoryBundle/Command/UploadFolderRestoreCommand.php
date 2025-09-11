@@ -68,8 +68,16 @@ class UploadFolderRestoreCommand extends Command {
 
             $logger->notice("cron:upload-folder-restore-command. start.");
 
-            $res = $userServiceUtil->restoreBackupUpload($backupfilename);
-            $resStr = $res;
+            $resArr = $userServiceUtil->restoreBackupUpload($backupfilename);
+//            $output = array(
+//                'status' => 'OK',
+//                'message' => $msg
+//            );
+            $resStr = $resArr['message'];
+            if( $resArr['status'] != 'OK' ) {
+                $output->writeln('cron:upload-folder-restore-command: '.$resArr['message']);
+                return Command::FAILURE;
+            }
 
             $logger->notice("cron:upload-folder-restore-command. after. resStr=".$resStr);
         } else {

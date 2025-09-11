@@ -74,8 +74,12 @@ class UploadFolderBackupCommand extends Command {
 
             //Create backup of 'Uploaded' folder using command directly 'tar -zcf ...'
             //Alternatively, backup/filesbackup.py can be used
-            $res = $userServiceUtil->createBackupUpload($backupPath);
-            $resStr = $res;
+            $resArr = $userServiceUtil->createBackupUpload($backupPath);
+            $resStr = $resArr['message'];
+            if( $resArr['status'] != 'OK' ) {
+                $output->writeln('cron:upload-folder-backup-command. Error: '.$resArr['message']);
+                return Command::FAILURE;
+            }
 
             //Remove previously created backups: keep only number of backup files (keepnumber)
             //$res = $userServiceUtil->removeOldBackupFiles($backupPath);
