@@ -1074,7 +1074,7 @@ class DataBackupManagementController extends OrderAbstractController
     }
 
     //http://127.0.0.1/directory/send-confirmation-email/
-    #[Route(path: '/send-confirmation-email/', name: 'employees_send_confirmation_email', methods: ['POST'])]
+    #[Route(path: '/send-confirmation-email/', name: 'employees_send_confirmation_email', methods: ['GET', 'POST'])]
     public function sendConfirmationEmailAction( Request $request )
     {
         //TODO: add Rate Limiter
