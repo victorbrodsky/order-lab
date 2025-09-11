@@ -388,7 +388,7 @@ def send_confirmation_email(callback_url, status,message,logger):
     #url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{encoded_status}'
 
     if not callback_url:
-        callback_url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
+        callback_url = 'http://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
 
     #callback_url = callback_url + "send-confirmation-email"
     #callback_url = urljoin(callback_url, "directory/send-confirmation-email")
@@ -511,7 +511,7 @@ def main():
         args_parser.add_argument("--callback_url",
                                  metavar="callback_url",
                                  default=False,
-                                 help="callback url, for example: https://view.online/c/test-institution/test-department/")
+                                 help="callback url, for example: http://view.online/c/test-institution/test-department/directory/send-confirmation-email/")
 
         #send_confirmation_email('Testing-before', logger)
         #exit(1)
@@ -588,7 +588,7 @@ def main():
         if args.callback_url:
             callback_url = args.callback_url
         else:
-            callback_url = "https://view.online/c/test-institution/test-department/"
+            callback_url = "http://view.online/c/test-institution/test-department/directory/send-confirmation-email/"
 
         #Set up logger
         logger = logging.getLogger(__name__)

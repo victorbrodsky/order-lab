@@ -4008,7 +4008,7 @@ tracepoint:sched:sched_process_exit
             array(),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        exit('$callbackUrl='.$callbackUrl);
+        //exit('$callbackUrl='.$callbackUrl); //http://view.online/c/test-institution/test-department/directory/send-confirmation-email/
 
         $dbUsername = $this->container->getParameter('database_user');
         $dbPassword = $this->container->getParameter('database_password');
