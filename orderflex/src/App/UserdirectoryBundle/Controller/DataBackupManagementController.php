@@ -1140,6 +1140,14 @@ class DataBackupManagementController extends OrderAbstractController
         $data = json_decode($request->getContent(), true);  // decode JSON body
         $status = $data['status'] ?? null;
         $message = $data['message'] ?? null;
+        $hashKey = $data['key'] ?? null;
+
+        $thisHashKey = "";
+
+        if( $hashKey != $thisHashKey ) {
+            return new Response('Error', 400);
+        }
+
         $logger->notice("triggerPostDbUpdatesAction: status=$status, message=$message");
         if (!$status) {
             return new Response('Missing status', 400);
