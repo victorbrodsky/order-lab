@@ -388,19 +388,19 @@ def send_confirmation_email( callback_url, status, message, logger ):
     #url = f'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/{encoded_status}'
 
     if not callback_url:
-        callback_url = 'http://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
+        callback_url = 'http://view.online/c/test-institution/test-department/directory/'
 
     # if use http => Method Not Allowed (Allow: POST)
     #callback_url = 'https://view.online/c/test-institution/test-department/directory/send-confirmation-email/'
 
     #callback_url = callback_url + "send-confirmation-email"
-    #callback_url = urljoin(callback_url, "directory/send-confirmation-email")
+    callback_url = urljoin(callback_url, "directory/send-confirmation-email/")
     #print(callback_url)
     logger.info(f"send_confirmation_email callback_url={callback_url}")
 
     payload = {'status': status, 'message': message}
     logger.info(f"send_confirmation_email status: {status}")
-    response = requests.post(callback_url, json=payload, verify=False, allow_redirects=False)
+    response = requests.post(callback_url, json=payload, verify=False)
     #print("response: ",response)
     #logger.info("response: ",response)
     #print("response.status_code=",response.status_code)
@@ -414,6 +414,32 @@ def send_confirmation_email( callback_url, status, message, logger ):
         if logger:
             logger.info(f"Failed to trigger email. Status code: {response.status_code}")
         print(f"Failed to trigger email. Status code: {response.status_code}")
+    time.sleep(1)  # Pauses execution for 1 second to receive emails in execution order
+
+def trigger_post_db_updates( callback_url, status, message, logger ):
+    if not callback_url:
+        callback_url = 'http://view.online/c/test-institution/test-department/directory/'
+
+    callback_url = urljoin(callback_url, "directory/trigger-post-db-updates/")
+    # print(callback_url)
+    logger.info(f"trigger_post_db_updates callback_url={callback_url}")
+
+    payload = {'status': status, 'message': message}
+    logger.info(f"trigger-post-db-updates status: {status}")
+    response = requests.post(callback_url, json=payload, verify=False)
+    #print("response: ",response)
+    #logger.info("response: ",response)
+    #print("response.status_code=",response.status_code)
+    #response = requests.get(callback_url,verify=False)
+    if response.status_code == 200:
+        if logger:
+            logger.info(f"trigger-post-db-updates triggered successfully! Status code: {response.status_code}")
+            #logger.info("response: ", response)
+        print(f"trigger-post-db-updates triggered successfully! Status code: {response.status_code}")
+    else:
+        if logger:
+            logger.info(f"Failed to trigger trigger-post-db-updates. Status code: {response.status_code}")
+        print(f"Failed to trigger trigger-post-db-updates. Status code: {response.status_code}")
     time.sleep(1)  # Pauses execution for 1 second to receive emails in execution order
 
 #async
@@ -514,7 +540,7 @@ def main():
         args_parser.add_argument("--callback_url",
                                  metavar="callback_url",
                                  default=False,
-                                 help="callback url, for example: http://view.online/c/test-institution/test-department/directory/send-confirmation-email/")
+                                 help="callback url, for example: http://view.online/c/test-institution/test-department/directory/")
 
         #send_confirmation_email('Testing-before', logger)
         #exit(1)
@@ -591,7 +617,7 @@ def main():
         if args.callback_url:
             callback_url = args.callback_url
         else:
-            callback_url = "http://view.online/c/test-institution/test-department/directory/send-confirmation-email/"
+            callback_url = "http://view.online/c/test-institution/test-department/directory/"
 
         #Set up logger
         logger = logging.getLogger(__name__)
@@ -811,6 +837,9 @@ def main():
 
                 safe_remove(restore_filename)
                 safe_remove(restore_uncompressed)
+
+                #TODO: use callback url to trigger to Update site parameters for newly restored DB
+                trigger_post_db_updates(callback_url,args.action,f'Post DB updates for {format(postgres_db)}',logger)
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")

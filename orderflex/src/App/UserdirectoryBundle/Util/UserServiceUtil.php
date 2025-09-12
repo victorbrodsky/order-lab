@@ -2239,6 +2239,10 @@ tracepoint:sched:sched_process_exit
         $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, $user, null, null, $eventType);
     }
 
+    public function postDbUpdates() {
+        exit('postDbUpdates');
+    }
+
     public function runProcess_NEW($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
@@ -4011,6 +4015,10 @@ tracepoint:sched:sched_process_exit
         //routerGenerateWrapper
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $callbackUrl = $userTenantUtil->routerGenerateExternalChanelWrapper("employees_send_confirmation_email");
+        //remove 'send-confirmation-email' from $callbackUrl
+        if (str_ends_with($callbackUrl, 'send-confirmation-email/')) {
+            $callbackUrl = substr($callbackUrl, 0, -strlen('send-confirmation-email/'));
+        }
         //exit('$callbackUrl='.$callbackUrl); //http://view.online/c/test-institution/test-department/directory/send-confirmation-email/
 
         $dbUsername = $this->container->getParameter('database_user');
