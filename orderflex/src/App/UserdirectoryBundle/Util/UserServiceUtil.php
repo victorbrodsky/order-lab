@@ -3900,7 +3900,7 @@ tracepoint:sched:sched_process_exit
     //create-backup: result file: 'backupdb-...'
     //dbManagePython is a wraper for a python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     //$networkDrivePath = my/path/
-    public function dbManagePython( $networkDrivePath, $action, $sync=true, $backupFileName=null ) {
+    public function dbManagePython( $networkDrivePath, $action, $sync=true, $backupFileName=null, $silent='no' ) {
 
 //        if ( false == $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            $res = array(
@@ -4031,7 +4031,8 @@ tracepoint:sched:sched_process_exit
             " --source-db $dbName".
             " --user $dbUsername".
             " --password $dbPassword".
-            " --callback_url $callbackUrl"
+            " --callback_url $callbackUrl".
+            " --silent $silent" //if silent 'yes' - don't send status emails, if silent 'no' - send status emails
             //" --email $email".
             //" --emailUser $emailUser".
             //" --emailPassword $emailPassword"

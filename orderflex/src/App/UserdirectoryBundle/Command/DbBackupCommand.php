@@ -76,7 +76,14 @@ class DbBackupCommand extends Command {
 
             $resStr = NULL;
             //dbManagePython is a wraper for a python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
-            $res = $userServiceUtil->dbManagePython($backupPath, 'backup');
+            //$networkDrivePath, $action, $sync=true, $backupFileName=null, $silent=false
+            $res = $userServiceUtil->dbManagePython(
+                $backupPath, 
+                'backup',
+                $sync=true,
+                $backupFileName=null,
+                $silent='yes'            //true-don't send status emails
+            );
             $resStr = implode(', ', $res);
 
             if(0) {
