@@ -427,9 +427,9 @@ def trigger_post_db_updates( callback_url, token, target_env, status, message, l
         return  # Stops the function here
 
     if not callback_url:
-        callback_url = 'http://view.online/c/test-institution/test-department/'
+        callback_url = 'http://view.online/c/test-institution/test-department/directory/'
 
-    callback_url = urljoin(callback_url, "directory/trigger-post-db-updates/")
+    callback_url = urljoin(callback_url, "trigger-post-db-updates/")
     # print(callback_url)
     logger.info(f"trigger_post_db_updates callback_url={callback_url}")
 
