@@ -2352,7 +2352,7 @@ tracepoint:sched:sched_process_exit
         //Can't use doctrine directly: SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
         //Event Log
         //$user = $this->getUser();
-        $sitename = $this->getParameter('employees.sitename');
+        $sitename = $this->container->getParameter('employees.sitename');
         $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,null,'Restore Backup Database');
     }
 
