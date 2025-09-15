@@ -4252,7 +4252,7 @@ tracepoint:sched:sched_process_exit
 
         //Add >> to file > output.txt 2>&1
         //$networkDrivePath = /srv/order-lab-tenantapp1/orderflex/var/backups/
-        $logOutput = $networkDrivePath."db-management.log 2>&1";
+        $logOutput = $networkDrivePath.DIRECTORY_SEPARATOR."db-management.log 2>&1";
         $command = $command . " > " . $logOutput;
 
         $logger->notice("dbManagePython: sync=$sync, command=[".$command."]");
