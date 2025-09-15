@@ -2318,7 +2318,7 @@ tracepoint:sched:sched_process_exit
 
         //$logger->notice("postDbUpdates: before deploy");
 
-        $param->flush();
+        $this->em->flush();
 
         //re-deploy
         $projectRoot = $this->container->get('kernel')->getProjectDir();
