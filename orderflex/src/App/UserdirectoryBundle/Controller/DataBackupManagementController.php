@@ -741,9 +741,9 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $logger = $this->container->get('logger');
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
-        $userServiceUtil = $this->container->get('user_service_utility');
+        //$userServiceUtil = $this->container->get('user_service_utility');
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'live' ) {
@@ -798,9 +798,9 @@ class DataBackupManagementController extends OrderAbstractController
             return $output;
         }
 
-        ini_set('max_execution_time', 0);
-        ini_set('max_input_time', 0);
-        ini_set("default_socket_timeout", 6000); //sec
+        //ini_set('max_execution_time', 0);
+        //ini_set('max_input_time', 0);
+        //ini_set("default_socket_timeout", 6000); //sec
 
         $logger = $this->container->get('logger');
         //$em = $this->getDoctrine()->getManager();
@@ -869,7 +869,7 @@ class DataBackupManagementController extends OrderAbstractController
         //$res = $this->restoringBackupSQLFull($backupFilePath);
         //$res = $this->restoringBackupSQLFull_Plain($backupFilePath);
         $userServiceUtil = $this->container->get('user_service_utility');
-        $res = $userServiceUtil->dbManagePython($networkDrivePath,'restore',$sync=false,$backupFileName); //Use python script pg_restore
+        $res = $userServiceUtil->dbManagePython($networkDrivePath,'restore',$sync=false,$backupFileName,$sendStatusEmail='yes'); //Use python script pg_restore
         //exit($res);
         
         //Testing
@@ -1141,6 +1141,7 @@ class DataBackupManagementController extends OrderAbstractController
         $status = $data['status'] ?? null;
         $message = $data['message'] ?? null;
         $token = $data['token'] ?? null;
+        $targetEnv = $data['target_env'] ?? null;
 
         //use the hash derived from the secret, database_port, database_name, database_user from parameters.yml
         
@@ -1155,7 +1156,7 @@ class DataBackupManagementController extends OrderAbstractController
             return new Response('Missing status', 400);
         }
 
-        $userServiceUtil->postDbUpdates($status,$message);
+        $userServiceUtil->postDbUpdates($targetEnv,$status,$message);
 
         return new Response('trigger-post-db-updates done!');
         //return new JsonResponse(['message' => 'Email sent', 'status' => 200]);
@@ -1370,170 +1371,6 @@ class DataBackupManagementController extends OrderAbstractController
 
         return $this->redirect($this->generateUrl('employees_manual_backup_restore'));
     }
-
-//    //NOT USED. Use dbManagePython in UserServiceUtil instead
-//    //Backup DB
-//    //Use python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
-//    public function dbManagePython( $networkDrivePath, $action, $backupFileName=null ) {
-//        exit("NOT USED. Use dbManagePython in UserServiceUtil instead");
-//        if ( false == $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            return $this->redirect($this->generateUrl('employees-nopermission'));
-//        }
-//
-//        $userServiceUtil = $this->container->get('user_service_utility');
-//        if( $userServiceUtil->isWindows() ){
-//            $res = array(
-//                'status' => "NOTOK",
-//                'message' => "DB management is not implemented for Windows"
-//            );
-//            return $res;
-//        }
-//
-//        //manage_postgres_db.py is using sample.config file with a local storage as a destination path=/tmp/backups/
-//        //$filepath is provided by site settings networkDrivePath => manage_postgres_db.py should accept --path
-//
-//        $logger = $this->container->get('logger');
-//
-//        $dbName = $this->getParameter('database_name');
-//        if( !$dbName ) {
-//            $res = array(
-//                'status' => "NOTOK",
-//                'message' => "Logical error: database_name is not defined in the parameters.yml"
-//            );
-//            return $res;
-//        }
-//
-//        //ini_set('memory_limit', 0);
-////        ini_set('max_execution_time', 0);
-////        ini_set('max_input_time', 0);
-////        ini_set("default_socket_timeout", 6000); //sec
-//
-//        $projectRoot = $this->container->get('kernel')->getProjectDir();
-//        //echo "projectRoot=".$projectRoot."<br>";
-//
-//        //For multitenancy is not 'order-lab' anymore, but 'order-lab-tenantapp1'
-//        //$projectRoot = str_replace('order-lab', '', $projectRoot);
-//        $parentRoot = str_replace('orderflex', '', $projectRoot);
-//        $parentRoot = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, '', $parentRoot);
-//        //echo "parentRoot=".$parentRoot."<br>";
-//        //exit('111');
-//
-//        $managePackagePath = $parentRoot .
-//            //DIRECTORY_SEPARATOR . 'order-lab' .
-//            //DIRECTORY_SEPARATOR . "utils" .
-//            "utils" .
-//            DIRECTORY_SEPARATOR . "db-manage" .
-//            DIRECTORY_SEPARATOR . "postgres-manage-python";
-//        //echo 'scriptPath='.$scriptPath."<br>";
-//
-//        //config file
-//        $configFilePath = $managePackagePath . DIRECTORY_SEPARATOR . "db.config";
-//
-//        //TODO: check/create d.config file
-//        //[setup]
-//        //storage_engine=LOCAL
-//        //[local_storage]
-//        //path=C:\Users\ch3\Documents\MyDocs\WCMC\Backup\db_backup_manag\
-//        //[postgresql]
-//        //host=127.0.0.1
-//        //port=5432
-//        //db=ScanOrder
-//        //user=username
-//        //password=userpassword
-//
-//        $pythonScriptPath = $managePackagePath . DIRECTORY_SEPARATOR . "manage_postgres_db.py";
-//        //exit('pythonScriptPath='.$pythonScriptPath);
-//
-//        //python in virtualenv'ed scripts: /path/to/venv/bin/python3
-//        if( $userServiceUtil->isWindows() ){
-//            $pythonEnvPath = $managePackagePath .
-//                DIRECTORY_SEPARATOR . "venv" .
-//                DIRECTORY_SEPARATOR . "Scripts" . //Windows
-//                DIRECTORY_SEPARATOR . "python";
-//        } else {
-//            $pythonEnvPath = $managePackagePath .
-//                DIRECTORY_SEPARATOR . "venv" .
-//                DIRECTORY_SEPARATOR . "bin" . //Linux
-//                DIRECTORY_SEPARATOR . "python";
-//        }
-//        //echo "pythonEnvPath=".$pythonEnvPath."<br>";
-//        if( file_exists($pythonEnvPath) ) {
-//            //echo "The file $filename exists";
-//        } else {
-//            $msg = "Error in DB management (action $action): The file $pythonEnvPath does not exist.".
-//                " Make sure pytnon's environment venv has been installed";
-//            $res = array(
-//                'status' => "NOTOK",
-//                'message' => $msg
-//            );
-//            return $res;
-//        }
-//
-//        //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list --verbose true --path $networkDrivePath";
-//        //$command = "$pythonEnvPath $pythonScriptPath --configfile $configFilePath --action list_dbs --verbose true --path $networkDrivePath";
-//
-//        $dbUsername = $this->getParameter('database_user');
-//        $dbPassword = $this->getParameter('database_password');
-//
-//        $command = "$pythonEnvPath $pythonScriptPath".
-//            " --configfile $configFilePath --verbose true".
-//            " --path $networkDrivePath".
-//            " --source-db $dbName".
-//            " --user $dbUsername".
-//            " --password $dbPassword"
-//        ;
-//
-//        if( $action == 'backup' ) {
-//            //backup
-//
-//            //prefix - string to add to the backup filename "backup-prefix-..."
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $environment = $userSecUtil->getSiteSettingParameter('environment');
-//            if( !$environment ) {
-//                $environment = "unknownenv";
-//            }
-//            //better to use instanceId
-//            $instanceId = $userSecUtil->getSiteSettingParameter('instanceId');
-//            if( !$instanceId ) {
-//                $instanceId = "unknowinstanceId";
-//            }
-//
-//            //TODO: check error
-//            // /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/venv/bin/python /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/manage_postgres_db.py --configfile /usr/local/bin/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/db.config --verbose true --path /usr/local/bin/order-lab-tenantapp1/orderflex/var/backups/ --source-db tenantapp1 --user symfony --password symfony --action backup --prefix live
-//
-//            $command = $command . " --action backup --prefix ".$environment."-".$instanceId;
-//        } elseif( $action == 'restore' ) {
-//            //restore
-//            if( $backupFileName ) {
-//                $command = $command . " --action restore --date $backupFileName";
-//            } else {
-//                $msg = "Error in DB management (action $action): backup file is not provided";
-//                $res = array(
-//                    'status' => "NOTOK",
-//                    'message' => $msg
-//                );
-//                return $res;
-//            }
-//        } else {
-//            //Invalid action
-//            $msg = "Error in DB management (action $action): invalid action ".$action;
-//            $res = array(
-//                'status' => "NOTOK",
-//                'message' => $msg
-//            );
-//            return $res;
-//        }
-//
-//        $logger->notice("command=[".$command."]");
-//        $res = $this->runProcess($command);
-//        //echo "python res=".$res."<br>";
-//        //exit('111');
-//        $res = array(
-//            'status' => "OK",
-//            'message' => $res
-//        );
-//        return $res;
-//    }
 
     //NOT USED. Use asynchronous version via ajax
     //Create a backup of the uploaded folder order-lab\orderflex\public\Uploaded\

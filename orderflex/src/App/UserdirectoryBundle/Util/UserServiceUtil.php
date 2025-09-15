@@ -1903,6 +1903,7 @@ Pathology and Laboratory Medicine",
 //        $version['full'] = "v1.".trim((string)$version_number[0]).".$version_mini_hash[0] (".str_replace('commit ','',$line[0]).")";
 //        return $version;
 //    }
+    //Run process synchronous
     public function runProcess($command) {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             //echo 'This is a server using Windows!';
@@ -2190,16 +2191,18 @@ tracepoint:sched:sched_process_exit
         $logger->notice('completeDbActionEmail');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $user = $this->security->getUser();
+        //$user = $this->security->getUser();
+        $user = $userSecUtil->findSystemUser();
+        //$user = NULL;
         //$environment = $userSecUtil->getSiteSettingParameter('environment');
         $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
         //siteEmail
-        $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
-        if( $sender ) {
+        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
+        if( $siteEmail ) {
             if( $emails ) {
-                $emails[] = $sender;
+                $emails[] = $siteEmail;
             } else {
-                $emails = array($sender);
+                $emails = array($siteEmail);
             }
         }
         //$emails[] = $user->getSingleEmail();
@@ -2239,8 +2242,118 @@ tracepoint:sched:sched_process_exit
         $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, $user, null, null, $eventType);
     }
 
-    public function postDbUpdates() {
-        exit('postDbUpdates');
+    public function postDbUpdates( $targetEnv, $status, $message ) {
+        //exit('postDbUpdates');
+        //$param = $userSecUtil->getSingleSiteSettingsParam();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
+
+        $param = $this->getSingleSiteSettingParameter();
+        $logger->notice("After get settings parameters. paramId=" . $param->getId());
+
+        $user = $userSecUtil->findSystemUser();
+        $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
+
+        $version = date('Y-m-d H:i:s'); //date('Ymd_His'); // e.g., 20250915_113245
+
+        //Update mailerdeliveryaddresses, environment, version, networkDrivePath (default: var/backups/)
+
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
+
+        $param->setEnvironment($targetEnv);
+
+        $originalVersion = $param->getVersion();
+        if( $originalVersion ) {
+            $newVerson = $originalVersion . "; Restored: " . $version;
+        } else {
+            $newVerson = "1; " . "Restored: " . $version;
+        }
+        $param->setVersion($newVerson);
+
+        $originalMailerDeliveryAddresses = $param->getMailerDeliveryAddresses();
+        if( $targetEnv != 'live' && !$originalMailerDeliveryAddresses ) {
+            $param->setMailerDeliveryAddresses($siteEmail);
+        }
+
+        $originalNetworkDrivePath = $param->getNetworkDrivePath();
+        if( !is_dir($originalNetworkDrivePath) ) {
+            mkdir($originalNetworkDrivePath, 0755, true); // 0755 permissions, true = recursive
+            //echo "Directory created: $originalNetworkDrivePath";
+            $logger->notice("Create NetworkDrivePath: $originalNetworkDrivePath");
+        } else {
+            $logger->notice("NetworkDrivePath is already exists: $originalNetworkDrivePath");
+        }
+
+//        $setparams =
+//            "mailerdeliveryaddresses='$siteEmail', environment='$targetEnv', version='$version'"
+//            //", filesBackupConfig='$filesBackupConfig'".
+//            //", monitorScript='$monitorScript'" .
+//            //", connectionChannel='$connectionChannel'" .
+//            //", networkDrivePath='$networkDrivePathOrig'"
+//        ;
+
+        //if( $filesBackupConfig ) {
+        //    $setparams = $setparams . ", filesBackupConfig='$filesBackupConfig'";
+        //}
+
+        if( $targetEnv == 'live' ) {
+            //Generate cron jobs:
+            //1) Create cron jobs (Email spooling, Fellowship Import, Fellowship Verification, Unpaid Invoices, Project Expiration)
+            // - directory/admin/list/generate-cron-jobs/
+            $this->createCrons();
+
+            //2) Create status cron job (check if the system in the maintenance mode):
+            // - directory/admin/list/generate-cron-jobs/status
+            //$this->createStatusCronLinux(); //included in $this->createCrons();
+
+            //3) Create useradstatus cron job (update users AD status)
+            // - directory/admin/list/generate-useradstatus-cron/
+            $this->createUserADStatusCron('6h');
+
+            //4) Create backup cron jobs based on the JSON file
+            // - /directory/admin/list/update-cron-job/uploads-live-HOURLY/filesBackupConfig
+            // - /directory/admin/list/update-cron-job/db-mount-HOURLY/filesBackupConfig
+        }
+
+        //$logger->notice("postDbUpdates: before deploy");
+
+        $param->flush();
+
+        //re-deploy
+        $projectRoot = $this->container->get('kernel')->getProjectDir();
+        $this->runProcess("bash " . $projectRoot . DIRECTORY_SEPARATOR . "deploy_prod.sh");
+
+        $logger->notice("postDbUpdates: Deploy completed. Post restore completed");
+
+        $resStr =
+            $message . "<br>" .
+            "<br>The next steps would be:".
+            " <br>- Make sure that the local administrator user and associated password".
+            " is set if the backup is used outside the institutional intranet network".
+            " <br>- Make sure the  public 'Uploaded' folder corresponds to the restored DB.".
+            " <br>- Verify the site settings.".
+            //" Specifically, currently, connectionChannel=$connectionChannel, mailerdeliveryaddresses=$siteEmail".
+            //" The following site settings parameters were preserved from the original DB:".
+            //" mailerdeliveryaddresses, monitorScript, connectionChannel, networkDrivePath, filesBackupConfig".
+            " <br>- Verify cron jobs. Replace the working paths if the server is different".
+            " <br>- It might be necessary to run the deploy_prod.sh script."
+        ;
+
+        if( $siteEmail ) {
+            //sendEmail uses DB => don't do call it here
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $subject = "Warning: Database restored";
+            //                 $email, $subject, $message, $em, $ccs=null, $adminemail=null
+            $emailUtil->sendEmail($siteEmail, $subject, $resStr);
+            $logger->notice("restore DBWrapper: after send email");
+        }
+
+        //Can't use doctrine directly: SQLSTATE[HY000]: General error: 7 FATAL:  terminating connection due to administrator command server closed the connection unexpectedly
+        //Event Log
+        //$user = $this->getUser();
+        $sitename = $this->getParameter('employees.sitename');
+        $userSecUtil->createUserEditEvent($sitename,$resStr,$user,null,null,'Restore Backup Database');
     }
 
     //use the hash derived from the secret, database_port, database_name, database_user from parameters.yml
@@ -3917,7 +4030,7 @@ tracepoint:sched:sched_process_exit
     //create-backup: result file: 'backupdb-...'
     //dbManagePython is a wraper for a python's script order-lab\utils\db-manage\postgres-manage-python\manage_postgres_db.py
     //$networkDrivePath = my/path/
-    public function dbManagePython( $networkDrivePath, $action, $sync=true, $backupFileName=null, $sendStatusEmail='yes' ) {
+    public function dbManagePython( $networkDrivePath, $action, $sync=true, $backupFileName=null, $sendStatusEmail='yes', $env=null ) {
 
 //        if ( false == $this->security->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            $res = array(
@@ -4051,7 +4164,8 @@ tracepoint:sched:sched_process_exit
             " --password $dbPassword".
             " --callback_url $callbackUrl".
             " --send-email $sendStatusEmail". //if send-email 'yes' - send status emails, if send-email 'no' - don't send status emails
-            " --token $token"
+            " --token $token".
+            " --target-env $env" //set environment after restore
             //" --email $email".
             //" --emailUser $emailUser".
             //" --emailPassword $emailPassword"

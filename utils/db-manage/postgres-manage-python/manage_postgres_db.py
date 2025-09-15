@@ -242,8 +242,11 @@ def change_user_from_dump(source_dump_path, old_user, new_user):
 
 
 def restore_postgres_db(db_host, db, port, user, password, backup_file, verbose):
-    """Restore postgres db from a file."""
+    """Restore postgres db from a file backup_file."""
     try:
+        logger = logging.getLogger(__name__)
+        logger.info('restore_postgres_db: backup_file={}, db={} content :'.format(backup_file, db))
+
         subprocess_params = [
             'pg_restore',
             '--no-owner',
@@ -340,43 +343,43 @@ def move_to_local_storage(comp_file, filename_compressed, manager_config):
     shutil.move(comp_file, '{}{}'.format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
 
 
-def create_restore_db(
-        postgres_host,
-        postgres_restore,  # temp DB name
-        postgres_port,
-        postgres_user,
-        postgres_password,
-        restore_filename,
-        restore_uncompressed,
-        verbose
-):
-    logger = logging.getLogger(__name__)
-    # Create temp DB
-    logger.info("Extracting {}".format(restore_filename))
-    ext_file = extract_file(restore_filename)
-    # cleaned_ext_file = remove_faulty_statement_from_dump(ext_file)
-    logger.info("Extracted to : {}".format(ext_file))
-    logger.info("Creating temp database for restore : {}".format(postgres_restore))
-    tmp_database = create_db(postgres_host,
-                             postgres_restore,  # temp DB name
-                             postgres_port,
-                             postgres_user,
-                             postgres_password)
-    logger.info("Created temp database for restore : {}".format(tmp_database))
-
-    # Restore DB to postgres_restore
-    logger.info("create_restore_db: Restore starting")
-    result_restore = restore_postgres_db(
-        postgres_host,
-        postgres_restore,  # DB name where to restore DB
-        postgres_port,
-        postgres_user,
-        postgres_password,
-        restore_uncompressed,  # backup_file used as a source
-        verbose
-    )
-    logger.info("create_restore_db: Restore finished")
-    return result_restore
+# def create_restore_db(
+#         postgres_host,
+#         postgres_restore,  # temp DB name
+#         postgres_port,
+#         postgres_user,
+#         postgres_password,
+#         restore_filename,
+#         restore_uncompressed,
+#         verbose
+# ):
+#     logger = logging.getLogger(__name__)
+#     # Create temp DB
+#     logger.info("Extracting {}".format(restore_filename))
+#     ext_file = extract_file(restore_filename)
+#     # cleaned_ext_file = remove_faulty_statement_from_dump(ext_file)
+#     logger.info("Extracted to : {}".format(ext_file))
+#     logger.info("Creating temp database for restore : {}".format(postgres_restore))
+#     tmp_database = create_db(postgres_host,
+#                              postgres_restore,  # temp DB name
+#                              postgres_port,
+#                              postgres_user,
+#                              postgres_password)
+#     logger.info("Created temp database for restore : {}".format(tmp_database))
+#
+#     # Restore DB to postgres_restore
+#     logger.info("create_restore_db: Restore starting")
+#     result_restore = restore_postgres_db(
+#         postgres_host,
+#         postgres_restore,  # DB name where to restore DB
+#         postgres_port,
+#         postgres_user,
+#         postgres_password,
+#         restore_uncompressed,  # backup_file used as a source
+#         verbose
+#     )
+#     logger.info("create_restore_db: Restore finished")
+#     return result_restore
 
 def send_confirmation_email( callback_url, token, status, message, logger ):
     #http://127.0.0.1/directory/send-confirmation-email/
@@ -416,7 +419,7 @@ def send_confirmation_email( callback_url, token, status, message, logger ):
         print(f"Failed to trigger email. Status code: {response.status_code}")
     time.sleep(1)  # Pauses execution for 1 second to receive emails in execution order
 
-def trigger_post_db_updates( callback_url, token, status, message, logger ):
+def trigger_post_db_updates( callback_url, token, target_env, status, message, logger ):
     if not token:
         if logger:
             logger.info(f"trigger-post-db-updates triggered error! Token is not provided")
@@ -430,7 +433,7 @@ def trigger_post_db_updates( callback_url, token, status, message, logger ):
     # print(callback_url)
     logger.info(f"trigger_post_db_updates callback_url={callback_url}")
 
-    payload = {'status': status, 'message': message, 'token': token}
+    payload = {'status': status, 'message': message, 'token': token, 'target_env': target_env}
     logger.info(f"trigger-post-db-updates status: {status}")
     response = requests.post(callback_url, json=payload, verify=False)
     #print("response: ",response)
@@ -555,6 +558,11 @@ def main():
                                  metavar="token",
                                  default=False,
                                  help="secret shared token/key")
+        #" --target-env $env" //set environment after restore
+        args_parser.add_argument("--target-env",
+                                 metavar="target_env",
+                                 default=False,
+                                 help="Set environment after DB restore")
 
 
         #send_confirmation_email('Testing-before', logger)
@@ -643,6 +651,12 @@ def main():
             token = args.token
         else:
             token = None
+
+        #target-env
+        if args.target_env:
+            target_env = args.target_env
+        else:
+            target_env = None
 
         #Set up logger
         logger = logging.getLogger(__name__)
@@ -767,6 +781,7 @@ def main():
 
                 if storage_engine == 'LOCAL':
                     logger.info("Choosing {} from local storage".format(backup_match[0]))
+                    #restore_filename - The full path (or filename) where the backup should be copied to.
                     shutil.copy('{}/{}'.format(manager_config.get('LOCAL_BACKUP_PATH'), backup_match[0]),
                                 restore_filename)
                     logger.info("Fetch complete")
@@ -783,30 +798,29 @@ def main():
                 logger.info("Creating temp database for restore : {}".format(postgres_restore))
 
                 # Old approach - separate create temp DB and separate restore DB methods
-                if 1:
-                    tmp_database = create_db(
-                        postgres_host,
-                        postgres_restore,  # temp DB name
-                        postgres_port,
-                        postgres_user,
-                        postgres_password
-                    )
-                    logger.info("Created temp database for restore : {}".format(tmp_database))
-                    if send_email == 'yes':
-                        send_confirmation_email(callback_url, token, args.action, f'Restore DB (Step 1/5): Temp DB created {format(postgres_db)}', logger)
+                tmp_database = create_db(
+                    postgres_host,
+                    postgres_restore,  # temp DB name
+                    postgres_port,
+                    postgres_user,
+                    postgres_password
+                )
+                logger.info("Created temp database for restore : {}".format(tmp_database))
+                if send_email == 'yes':
+                    send_confirmation_email(callback_url, token, args.action, f'Restore DB (Step 1/5): Temp DB created {format(postgres_db)}', logger)
 
-                    # Restore DB to postgres_restore
-                    logger.info("Restore starting")
+                # Restore DB to postgres_restore
+                logger.info("Restore starting")
 
-                    result_restore = restore_postgres_db(
-                        postgres_host,
-                        postgres_restore,  # DB name where to restore DB
-                        postgres_port,
-                        postgres_user,
-                        postgres_password,
-                        restore_uncompressed,  # backup_file used as a source
-                        args.verbose
-                    )
+                result_restore = restore_postgres_db(
+                    postgres_host,
+                    postgres_restore,  # DB name where to restore DB
+                    postgres_port,
+                    postgres_user,
+                    postgres_password,
+                    restore_uncompressed,  # backup_file used as a source
+                    args.verbose
+                )
 
                 if result_restore == False:
                     if send_email == 'yes':
@@ -873,7 +887,7 @@ def main():
                 safe_remove(restore_uncompressed)
 
                 #TODO: use callback url to trigger to Update site parameters for newly restored DB
-                trigger_post_db_updates(callback_url,token,args.action,f'Post DB updates for {format(postgres_db)}',logger)
+                trigger_post_db_updates(callback_url,token,target_env,args.action,f'Post DB updates for {format(postgres_db)}. the source backup file is {restore_filename}',logger)
 
                 # logger.info("Database restored and active.")
                 # print("Database restored and active.")
