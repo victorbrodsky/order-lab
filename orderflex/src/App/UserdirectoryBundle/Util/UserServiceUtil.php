@@ -4164,12 +4164,16 @@ tracepoint:sched:sched_process_exit
             " --password $dbPassword".
             " --callback_url $callbackUrl".
             " --send-email $sendStatusEmail". //if send-email 'yes' - send status emails, if send-email 'no' - don't send status emails
-            " --token $token".
-            " --target-env $env" //set environment after restore
+            " --token $token"
+            //" --target-env $env" //set environment after restore
             //" --email $email".
             //" --emailUser $emailUser".
             //" --emailPassword $emailPassword"
         ;
+
+        if( $env ) {
+            $command = $command . " --target-env $env";
+        }
 
         $commandArr = [];
         //$commandArr[] = 'nohup';  //Prevents the process from being terminated when the session ends.
