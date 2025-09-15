@@ -1145,7 +1145,7 @@ class DataBackupManagementController extends OrderAbstractController
 
         //use the hash derived from the secret, database_port, database_name, database_user from parameters.yml
         
-        $thisToken = $this->generateSharedSecretToken();
+        $thisToken = $userServiceUtil->generateSharedSecretToken();
 
         if( $token != $thisToken ) {
             return new Response('Error', 400);
