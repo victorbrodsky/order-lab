@@ -401,7 +401,7 @@ def send_confirmation_email( callback_url, token, status, message, logger ):
     #print(callback_url)
     logger.info(f"send_confirmation_email callback_url={callback_url}")
 
-    payload = {'status': status, 'message': message}
+    payload = {'status': status, 'message': message, 'token': token}
     logger.info(f"send_confirmation_email status: {status}")
     response = requests.post(callback_url, json=payload, verify=False)
     #print("response: ",response)
