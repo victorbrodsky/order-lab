@@ -241,10 +241,10 @@ def change_user_from_dump(source_dump_path, old_user, new_user):
     shutil.move(abs_path, source_dump_path)
 
 
-def restore_postgres_db(db_host, db, port, user, password, backup_file, verbose):
+def restore_postgres_db(db_host, db, port, user, password, backup_file, verbose, logger):
     """Restore postgres db from a file backup_file."""
     try:
-        logger = logging.getLogger(__name__)
+        #logger = logging.getLogger(__name__)
         logger.info('restore_postgres_db: backup_file={}, db={} content :'.format(backup_file, db))
 
         subprocess_params = [
@@ -819,7 +819,8 @@ def main():
                     postgres_user,
                     postgres_password,
                     restore_uncompressed,  # backup_file used as a source
-                    args.verbose
+                    args.verbose,
+                    logger
                 )
 
                 if result_restore == False:
