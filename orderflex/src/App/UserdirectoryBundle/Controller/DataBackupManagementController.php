@@ -1140,11 +1140,13 @@ class DataBackupManagementController extends OrderAbstractController
         $data = json_decode($request->getContent(), true);  // decode JSON body
         $status = $data['status'] ?? null;
         $message = $data['message'] ?? null;
-        $hashKey = $data['key'] ?? null;
+        $token = $data['token'] ?? null;
 
-        $thisHashKey = "";
+        //use the hash derived from the secret, database_port, database_name, database_user from parameters.yml
+        
+        $thisToken = $this->generateSharedSecretToken();
 
-        if( $hashKey != $thisHashKey ) {
+        if( $token != $thisToken ) {
             return new Response('Error', 400);
         }
 
@@ -1154,6 +1156,7 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         $userServiceUtil->postDbUpdates($status,$message);
+
         return new Response('trigger-post-db-updates done!');
         //return new JsonResponse(['message' => 'Email sent', 'status' => 200]);
     }

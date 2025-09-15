@@ -2243,6 +2243,23 @@ tracepoint:sched:sched_process_exit
         exit('postDbUpdates');
     }
 
+    //use the hash derived from the secret, database_port, database_name, database_user from parameters.yml
+    public function generateSharedSecretToken() {
+        //exit('postDbUpdates');
+        $token = NULL;
+        $dbName = $this->container->getParameter('database_name');
+        $dbPort = $this->container->getParameter('database_port');
+        $secret = $this->container->getParameter('secret');
+
+        // Combine parameters into a single string
+        $raw = $dbName . ':' . $dbPort . ':' . $secret;
+
+        // Generate SHA-256 hash
+        $token = hash('sha256', $raw);
+
+        return $token;
+    }
+
     public function runProcess_NEW($script) {
         //$process = new Process($script);
         $process = Process::fromShellCommandline($script);
@@ -4023,6 +4040,7 @@ tracepoint:sched:sched_process_exit
 
         $dbUsername = $this->container->getParameter('database_user');
         $dbPassword = $this->container->getParameter('database_password');
+        $token = $this->generateSharedSecretToken();
 
         $command = "$pythonEnvPath $pythonScriptPath".
             //" --configfile $configFilePath".
@@ -4032,7 +4050,8 @@ tracepoint:sched:sched_process_exit
             " --user $dbUsername".
             " --password $dbPassword".
             " --callback_url $callbackUrl".
-            " --send-email $sendStatusEmail" //if send-email 'yes' - send status emails, if send-email 'no' - don't send status emails
+            " --send-email $sendStatusEmail". //if send-email 'yes' - send status emails, if send-email 'no' - don't send status emails
+            " --token $token"
             //" --email $email".
             //" --emailUser $emailUser".
             //" --emailPassword $emailPassword"
