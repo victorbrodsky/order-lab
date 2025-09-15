@@ -1096,6 +1096,13 @@ class DataBackupManagementController extends OrderAbstractController
         $data = json_decode($request->getContent(), true);  // decode JSON body
         $status = $data['status'] ?? null;
         $message = $data['message'] ?? null;
+        $token = $data['token'] ?? null;
+
+        $thisToken = $userServiceUtil->generateSharedSecretToken();
+        if( $token != $thisToken ) {
+            return new Response('Error', 400);
+        }
+
         $logger->notice("sendConfirmationEmailAction: status=$status, message=$message");
         if (!$status) {
             return new Response('Missing status', 400);
@@ -1146,7 +1153,6 @@ class DataBackupManagementController extends OrderAbstractController
         //use the hash derived from the secret, database_port, database_name, database_user from parameters.yml
         
         $thisToken = $userServiceUtil->generateSharedSecretToken();
-
         if( $token != $thisToken ) {
             return new Response('Error', 400);
         }
