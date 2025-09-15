@@ -877,10 +877,12 @@ def main():
                     print("trigger-successful-email")
                     if send_email == 'yes':
                         send_confirmation_email(callback_url, token, args.action, f'Restore DB (Step 4/5): DB swap completed successfully {format(postgres_db)}', logger)
+                        logger.info(f'Restore DB (Step 4/5): DB swap completed successfully {format(postgres_db)}')
                 else:
                     print("trigger-error-email")
                     if send_email == 'yes':
                         send_confirmation_email(callback_url, token, args.action, f'Restore DB (Step 4/5): DB swap error {format(postgres_db)}. Process terminated.', logger)
+                        logger.info(f'Restore DB (Step 4/5): DB swap error {format(postgres_db)}. Process terminated.')
                     exit(1)
 
                 safe_remove(restore_filename)
@@ -893,6 +895,7 @@ def main():
                 # print("Database restored and active.")
                 if send_email == 'yes':
                     send_confirmation_email(callback_url, token, args.action, f'Restore DB (Step 5/5): DB restored completed {format(postgres_db)}', logger)
+                    logger.info(f'Restore DB (Step 5/5): DB restored completed {format(postgres_db)}')
                 logger.info(result)
                 print(result)
                 # print(json.dumps(result))
