@@ -11,7 +11,7 @@ import json
 
 # import configparser
 import gzip
-import boto3
+#import boto3
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -52,15 +52,16 @@ def upload_to_s3(file_full_path, dest_file, manager_config):
 
 
 def download_from_s3(backup_s3_key, dest_file, manager_config):
-    """
-    Upload a file to an AWS S3 bucket.
-    """
-    s3_client = boto3.resource('s3')
-    try:
-        s3_client.meta.client.download_file(manager_config.get('AWS_BUCKET_NAME'), backup_s3_key, dest_file)
-    except Exception as e:
-        print(e)
-        exit(1)
+    pass
+    # """
+    # Upload a file to an AWS S3 bucket.
+    # """
+    # s3_client = boto3.resource('s3')
+    # try:
+    #     s3_client.meta.client.download_file(manager_config.get('AWS_BUCKET_NAME'), backup_s3_key, dest_file)
+    # except Exception as e:
+    #     print(e)
+    #     exit(1)
 
 def safe_remove(path):
     try:
