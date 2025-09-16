@@ -714,7 +714,11 @@ def main():
         # backup task
         elif args.action == "backup":
             if send_email == 'yes':
-                send_confirmation_email(callback_url, token, args.action, f'DB Backup (Step 1/2): Starting {args.action} {format(postgres_db)} to {local_file_path}', logger)
+                send_confirmation_email(callback_url,
+                                        token,
+                                        args.action,
+                                        f'DB Backup (Step 1/2): Starting to {args.action} {format(postgres_db)} database to {local_file_path}',
+                                        logger)
             logger.info('Backing up {} database to {}'.format(postgres_db, local_file_path))
             result = backup_postgres_db(postgres_host,
                                         postgres_db,

@@ -4306,7 +4306,7 @@ tracepoint:sched:sched_process_exit
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $this->completeDbActionEmail('folder-backup','Create folder backup (Step 1/3): Initiating to create upload folder backup');
+        $this->completeDbActionEmail('folder-backup','Create folder backup (Step 1/3): Starting uploaded files folder backup');
 
         if( !$backupPath ) {
             $backupPath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -4393,13 +4393,13 @@ tracepoint:sched:sched_process_exit
                     'status' => "OK",
                     'message' => $resStr
                 );
-                $this->completeDbActionEmail('folder-backup','Create folder backup (Step 3/3): Created upload folder backup completed successfully');
+                $this->completeDbActionEmail('folder-backup','eCreate folder backup (Step 3/3): Created upload folder backup completed successfully');
             } else {
                 $res = array(
                     'status' => "NOTOK",
                     'message' => "Error. processOutput: ".$processOutput
                 );
-                $this->completeDbActionEmail('folder-backup','Create folder backup (Step 3/3): Error - Created upload folder backup completed with error. processOutput='.$processOutput);
+                $this->completeDbActionEmail('folder-backup','eCreate folder backup (Step 3/3): Error - Created upload folder backup process completed with error. processOutput='.$processOutput);
             }
 
 //            $resStr = $this->runAsyncProcessWithEmail($command,'folder-backup');
