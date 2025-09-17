@@ -1,7 +1,20 @@
 #!/usr/bin/env bash
 
 # Automatically resolve the path to parameters.yml
-PARAM_FILE="$(dirname "$0")/config/parameters.yml"
+#PARAM_FILE="$(dirname "$0")/config/parameters.yml"
+
+if [ -z "$bashpath" ]
+  then
+    bashpath=$1
+fi
+
+if [ -z "$bashpath" ]; then
+    #bashpath="/usr/local/bin"
+    bashpath="/srv/order-lab"
+fi
+
+echo secret_update.sh: bashpath=$bashpath
+PARAM_FILE="$bashpath/order-lab-$1/orderflex/config/parameters.yml"
 
 # Ensure the file exists
 if [[ ! -f "$PARAM_FILE" ]]; then

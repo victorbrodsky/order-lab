@@ -145,6 +145,11 @@ f_sync() {
             sed -i -e "s/dbuserpassword/symfony/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
     fi
 
+    if [ -n "$type" ] && [ "$type" == "secret" ]
+        then
+            echo -e ${COLOR} Update secret key in parameters.yml for "$1" ${NC}
+            bash "$homedir"/order-lab-"$1"/orderflex/secret_update.sh "$homedir"/order-lab-"$1"
+    fi
 
     #echo -e ${COLOR} cd to "$1"${NC}
     #cd "$homedir"/order-lab-$1/orderflex
