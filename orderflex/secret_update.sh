@@ -14,7 +14,7 @@ if [ -z "$bashpath" ]; then
 fi
 
 echo secret_update.sh: bashpath=$bashpath
-PARAM_FILE="$bashpath/order-lab-$1/orderflex/config/parameters.yml"
+PARAM_FILE="$bashpath/orderflex/config/parameters.yml"
 
 # Ensure the file exists
 if [[ ! -f "$PARAM_FILE" ]]; then
