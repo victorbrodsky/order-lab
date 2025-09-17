@@ -911,7 +911,7 @@ class AuthUtil {
     //return 1 if bind successful
     //return NULL if failed
     public function ldapBind( $username, $password, $ldapType=1 ) {
-        return 1; //testing
+        return 1; //testing: enable testing login
         //step 1
         if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
             return 1;
@@ -1827,6 +1827,8 @@ class AuthUtil {
         return $hashedPassword;
     }
     public function isPasswordValid($user,$plaintextPassword) {
+        $passwordHasherRes = $this->passwordHasher->isPasswordValid($user, $plaintextPassword);
+        $this->logger->notice("passwordHasherRes=[$passwordHasherRes]");
         if( $this->passwordHasher->isPasswordValid($user, $plaintextPassword) ) {
             return true;
         }
