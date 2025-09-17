@@ -40,16 +40,16 @@ f_sync() {
     if [ -n "$type" ] && [ "$type" == "basic" ]
     	then
     		echo -e ${COLOR} cd to "$1"${NC}
-                cd "$homedir"/order-lab-$1/orderflex
+            cd "$homedir"/order-lab-$1/orderflex
 
-            	echo -e ${COLOR} git pull for "$1" ${NC}
-            	git pull
+            echo -e ${COLOR} git pull for "$1" ${NC}
+            git pull
 
-            	echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
-            	bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
+            echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
+            bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
 
-            	echo -e ${COLOR} check migration status for "$1" ${NC}
-                php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
+            echo -e ${COLOR} check migration status for "$1" ${NC}
+            php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
 
                 #echo -e ${COLOR} install python env for "$1" ${NC}
                 #bash "$homedir"/order-lab-"$1"/packer/additional.sh
