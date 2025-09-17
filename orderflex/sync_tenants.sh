@@ -149,6 +149,9 @@ f_sync() {
         then
             echo -e ${COLOR} Update secret key in parameters.yml for "$1" ${NC}
             bash "$homedir"/order-lab-"$1"/orderflex/secret_update.sh "$homedir"/order-lab-"$1"
+
+            echo -e ${COLOR} bash deploy.sh for "$1" ${NC}
+            bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
     fi
 
     #echo -e ${COLOR} cd to "$1"${NC}
