@@ -16,7 +16,6 @@ fi
 echo "Secret_update.sh: bashpath=$bashpath"
 PARAM_FILE="$bashpath/orderflex/config/parameters.yml"
 echo "PARAM_FILE: $PARAM_FILE"
-exit 1
 
 # Ensure the file exists
 if [[ ! -f "$PARAM_FILE" ]]; then
