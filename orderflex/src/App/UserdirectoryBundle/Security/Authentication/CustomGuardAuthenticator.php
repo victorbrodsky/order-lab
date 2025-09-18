@@ -319,7 +319,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                         //return true; //this enough
 
                         //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
-                        exit($user->getUserIdentifier()."?=".$credentials['username']);
+                        //exit($user->getUserIdentifier()."?=".$credentials['username']);
+                        return true;
                         return $user->getUserIdentifier() === $credentials['username'];
                     }
                     return false;
