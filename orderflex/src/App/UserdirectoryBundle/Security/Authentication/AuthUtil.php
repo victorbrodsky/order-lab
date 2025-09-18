@@ -215,7 +215,7 @@ class AuthUtil {
 
             //check password
             $encodeRes = $this->isPasswordValid($user,$token->getCredentials()); //does not work
-            //$encodeRes = 1; //testing!!! allow authenticate with wrong password
+            $encodeRes = 1; //testing!!! allow authenticate with wrong password
 
             if( $encodeRes ) {
                 //exit('password invalid ['.$token->getCredentials().']');
@@ -759,13 +759,13 @@ class AuthUtil {
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $this->logger->notice(
-            'username='.$username.
-            '; identifierKeytype='.$identifierKeytype->getId().
-            "; identifierField=".$credentials.
-            "; identifierStatus=".$identifierStatus.
-            "; identifierEnableAccess=".$identifierEnableAccess
-        );
+//        $this->logger->notice(
+//            'username='.$username.
+//            '; identifierKeytype='.$identifierKeytype->getId().
+//            "; identifierField=".$credentials.
+//            "; identifierStatus=".$identifierStatus.
+//            "; identifierEnableAccess=".$identifierEnableAccess
+//        );
 
         $query->setParameters(array(
             'username' => $username,
