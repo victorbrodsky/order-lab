@@ -594,6 +594,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
     public function getUsernamePasswordToken(UserInterface $user,$providerKey) {
 
+        $logger = $this->container->get('logger');
+        $logger->notice("getUsernamePasswordToken: start");
+
         if( !$user ) {
             //exit('User is not defined. Invalid username or password');
             throw new AuthenticationException('User is not defined. Invalid username or password');
@@ -607,6 +610,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             throw new AuthenticationException('User is not UserInterface. Invalid username or password');
         }
 
+        $logger->notice("getUsernamePasswordToken: before UsernamePasswordToken");
         //exit('get UsernamePasswordToken '.$user);
         return new UsernamePasswordToken(
             $user,
