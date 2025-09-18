@@ -1606,7 +1606,7 @@ class FellAppController extends OrderAbstractController {
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function createApplicantAction( Request $request, Security $security )
     {
-
+        exit("createApplicantAction");
         if( false == $this->isGranted("create","FellowshipApplication") ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -1619,11 +1619,15 @@ class FellAppController extends OrderAbstractController {
         $fellowshipApplication = new FellowshipApplication($user);
 
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppStatus'] by [FellAppStatus::class]
-        $activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
-        if( !$activeStatus ) {
-            throw new EntityNotFoundException('Unable to find FellAppStatus by name='."active");
+        //$activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
+        //$initialStatusName = "active";
+        $initialStatusName = "draft";
+        $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
+        if( !$initialStatus ) {
+            exit("Unable to find FellAppStatus by name=$initialStatusName");
+            throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
         }
-        $fellowshipApplication->setAppStatus($activeStatus);
+        $fellowshipApplication->setAppStatus($initialStatus);
 
         if( !$fellowshipApplication->getUser() ) {
             //new applicant
@@ -1659,6 +1663,19 @@ class FellAppController extends OrderAbstractController {
 
         $form->handleRequest($request);
 
+//        ///////// testing "Save as Draft"
+//        dump($request->request);
+//        $btnSubmit = $request->request->get('btnSubmit');
+//        echo "btnSubmit=$btnSubmit <br>";
+//        if ($btnSubmit === 'draft') {
+//            exit("Handle draft logic: skip required fields, save partial data");
+//        } elseif ($btnSubmit === 'submit') {
+//            exit("Validate and process full application");
+//        } else {
+//            exit("Unknown button");
+//        }
+//        /////////
+
         if( !$form->isSubmitted() ) {
             //echo "form is not submitted<br>";
             $form->submit($request);
@@ -1680,6 +1697,28 @@ class FellAppController extends OrderAbstractController {
         }
 
         if( $form->isValid() ) {
+
+            //set status
+            $btnSubmit = $request->request->get('btnSubmit');
+            echo "btnSubmit=$btnSubmit <br>";
+            if ($btnSubmit === 'draft') {
+                $initialStatusName = "draft";
+                //exit("Handle draft logic: skip required fields, save partial data");
+            } elseif ($btnSubmit === 'submit') {
+                $initialStatusName = "active";
+                //exit("Validate and process full application");
+            } else {
+                //exit("Unknown button");
+                $initialStatusName = "draft";
+            }
+            $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
+            exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            if( !$initialStatus ) {
+                exit("Unable to find FellAppStatus by name=$initialStatusName");
+                throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
+            }
+            $fellowshipApplication->setAppStatus($initialStatus);
+            exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
 
             //set user
             $userSecUtil = $this->container->get('user_security_utility');

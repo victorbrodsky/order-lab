@@ -226,7 +226,13 @@
 {% if cycle == "new" %}
     <p>
         {#<button class="btn btn-warning" type="submit">Add Applicant</button>#}
-        <button class="btn btn-warning" name="btnSubmit" type="button" form="fellapp-applicant-form" onclick="validateFellapp()">Add Applicant</button>
+        {#<button class="btn btn-warning" name="btnSubmit" type="button" value="submit" form="fellapp-applicant-form" onclick="validateFellapp()">Submit Application</button>#}
+        <button class="btn btn-warning" name="btnSubmit" type="submit" value="submit" form="fellapp-applicant-form" onclick="validateFellapp()">Submit Application</button>
+    </p>
+    <p>
+        {#<button class="btn btn-warning" type="submit">Add Applicant</button>#}
+        {#<button class="btn btn-warning" name="btnSubmit" type="button" value="draft" form="fellapp-applicant-form" onclick="validateFellapp()">Save as Draft</button>#}
+        <button class="btn btn-warning" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form" onclick="validateFellapp()">Save as Draft</button>
     </p>
 {% endif %}
 

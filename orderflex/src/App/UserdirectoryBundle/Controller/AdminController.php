@@ -6449,6 +6449,7 @@ class AdminController extends OrderAbstractController
         //}
 
         $elements = array(
+            'draft'=>'Draft',
             'active'=>'Active',
             'complete'=>'Complete',
             'interviewee'=>'Interviewee',
