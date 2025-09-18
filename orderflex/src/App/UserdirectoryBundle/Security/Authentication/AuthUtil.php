@@ -1829,7 +1829,7 @@ class AuthUtil {
     public function isPasswordValid($user,$plaintextPassword) {
 
         $encoded = $user->getPassword();
-        $thisEncoded = getEncodedPassword($user,$plaintextPassword);
+        $thisEncoded = $this->getEncodedPassword($user,$plaintextPassword);
         $this->logger->notice("encoded=[$encoded], "."thisEncoded=[$thisEncoded]");
 
         $passwordHasherRes = $this->passwordHasher->isPasswordValid($user, $plaintextPassword);
