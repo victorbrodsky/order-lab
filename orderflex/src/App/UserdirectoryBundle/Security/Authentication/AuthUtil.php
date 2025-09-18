@@ -215,7 +215,7 @@ class AuthUtil {
 
             //check password
             $encodeRes = $this->isPasswordValid($user,$token->getCredentials()); //does not work
-            $encodeRes = true; //testing!!! allow authenticate with wrong password
+            //$encodeRes = true; //testing!!! allow authenticate with wrong password
 
             if( $encodeRes ) {
                 //exit('password invalid ['.$token->getCredentials().']');
@@ -917,7 +917,7 @@ class AuthUtil {
     //return 1 if bind successful
     //return NULL if failed
     public function ldapBind( $username, $password, $ldapType=1 ) {
-        //return 1; //testing: enable testing login
+        //return 1; //testing!!!: enable testing login
         //step 1
         if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
             return 1;
@@ -1281,7 +1281,7 @@ class AuthUtil {
             $this->logger->error("search Ldap: ldap_bind failed with admin authentication username="."[".$LDAPUserAdmin."]");
                 //."; LDAPUserPasswordAdmin="."[".$LDAPUserPasswordAdmin."]");
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            //testing: allow to login without LDAP admin bind
+            //testing!!!: allow to login without LDAP admin bind
             $adminLdapBindRequired = true;
             //$adminLdapBindRequired = false;
             if( $adminLdapBindRequired ) {
@@ -1900,7 +1900,7 @@ class AuthUtil {
         if (!$res) {
             $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . "[" . $LDAPUserAdmin . "]" . "; LDAPUserPasswordAdmin=" . "[" . $LDAPUserPasswordAdmin . "]");
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            //testing: allow to login without LDAP admin bind
+            //testing!!!: allow to login without LDAP admin bind
             $adminLdapBindRequired = true;
             //$adminLdapBindRequired = false;
             if ($adminLdapBindRequired) {
@@ -2100,7 +2100,7 @@ class AuthUtil {
         if (!$res) {
             $this->logger->error("checkUsersAD: ldap_bind failed with admin authentication username=" . "[" . $LDAPUserAdmin . "]" . "; LDAPUserPasswordAdmin=" . "[" . $LDAPUserPasswordAdmin . "]");
             //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            //testing: allow to login without LDAP admin bind
+            //testing!!!: allow to login without LDAP admin bind
             $adminLdapBindRequired = true;
             //$adminLdapBindRequired = false; //testing. For live, use $adminLdapBindRequired = true
             if ($adminLdapBindRequired) {
