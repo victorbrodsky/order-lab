@@ -759,7 +759,13 @@ class AuthUtil {
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        //$this->logger->notice('username='.$username.'; identifierKeytype='.$identifierKeytype->getId()."; identifierField=".$credentials."; identifierStatus=".$identifierStatus."; identifierEnableAccess=".$identifierEnableAccess);
+        $this->logger->notice(
+            'username='.$username.
+            '; identifierKeytype='.$identifierKeytype->getId().
+            "; identifierField=".$credentials.
+            "; identifierStatus=".$identifierStatus.
+            "; identifierEnableAccess=".$identifierEnableAccess
+        );
 
         $query->setParameters(array(
             'username' => $username,
