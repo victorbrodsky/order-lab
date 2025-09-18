@@ -1827,6 +1827,11 @@ class AuthUtil {
         return $hashedPassword;
     }
     public function isPasswordValid($user,$plaintextPassword) {
+
+        $encoded = $user->getPassword();
+        $thisEncoded = getEncodedPassword($user,$plaintextPassword);
+        $this->logger->notice("encoded=[$encoded], "."thisEncoded=[$thisEncoded]");
+
         $passwordHasherRes = $this->passwordHasher->isPasswordValid($user, $plaintextPassword);
         $this->logger->notice("plaintextPassword=$plaintextPassword, "."passwordHasherRes=[$passwordHasherRes]");
         if( $this->passwordHasher->isPasswordValid($user, $plaintextPassword) ) {
