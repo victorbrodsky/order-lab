@@ -181,6 +181,21 @@
                     {% set tooltipBadge = '' %}
 
                     <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.draft) }}   {{ form_label(fellappfilter.draft) }}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[draft]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                    {{ draft }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[draft]':1,'filter[filter]':filter}) }}">{{ draftTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('draft') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, active, activeTotal, 'active' ) }}#}
                     {#<span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">#}
@@ -464,6 +479,13 @@
                 {% endif %}
 
                 {% if entity.appStatus.name == 'hide' %}
+                    {#urgent attention required#}
+                    {#{% set trclassname = "order-urgent-status" %}#}
+                    {#{% set trclassname = "danger" %}#}
+                    {% set trclassname = "fell-app-status-legend-hidden" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'draft' %}
                     {#urgent attention required#}
                     {#{% set trclassname = "order-urgent-status" %}#}
                     {#{% set trclassname = "danger" %}#}
@@ -922,6 +944,16 @@
                                                         general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
                                                         general-data-callback="refreshpage"
                                                         href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'active' }, true) }}">Mark as Active
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'draft' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Draft'?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'draft' }, true) }}">Mark as Draft
                                                 </a>
                                             </li>
                                         {% endif %}

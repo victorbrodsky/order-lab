@@ -245,7 +245,7 @@ class FellowshipApplicationType extends AbstractType
         $builder->add('signatureName', null, array(
             'label' => 'Signature:',
             'required' => false,
-            'attr' => array('class' => 'form-control'),
+            'attr' => array('class' => 'form-control signature-name'),
         ));
 
         $builder->add('signatureDate', null, array(
@@ -254,7 +254,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'html5' => false,
-            'attr' => array('class' => 'datepicker form-control'),
+            'attr' => array('class' => 'datepicker form-control signature-date'),
         ));
 
 

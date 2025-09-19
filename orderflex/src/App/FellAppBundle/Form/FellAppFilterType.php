@@ -98,6 +98,11 @@ class FellAppFilterType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
+        $builder->add('draft', CheckboxType::class, array(
+            'required'=>false,
+            'label' => 'Draft',
+            'attr' => array('class' => 'filter-status-checkbox'),
+        ));
 
         $builder->add('hidden', CheckboxType::class, array(
             'required'=>false,

@@ -565,6 +565,9 @@ class FellAppController extends OrderAbstractController {
         $archived = $fellappUtil->getFellAppByStatusAndYear('archive',$fellSubspecId,$startYearStr);
         $archivedTotal = $fellappUtil->getFellAppByStatusAndYear('archive',$fellSubspecId);
 
+        $draft = $fellappUtil->getFellAppByStatusAndYear('draft',$fellSubspecId,$startYearStr);
+        $draftTotal = $fellappUtil->getFellAppByStatusAndYear('draft',$fellSubspecId);
+
         $active = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId,$startYearStr);
         $activeTotal = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId);
 
@@ -669,6 +672,8 @@ class FellAppController extends OrderAbstractController {
             'archived' => count($archived),
             'active' => count($active),
             'activeTotal' => count($activeTotal),
+            'draft' => count($draft),
+            'draftTotal' => count($draftTotal),
             'reject' => count($reject),
             'rejectTotal' => count($rejectTotal),
             'declined' => count($declined),
@@ -1606,7 +1611,7 @@ class FellAppController extends OrderAbstractController {
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function createApplicantAction( Request $request, Security $security )
     {
-        exit("createApplicantAction");
+        //exit("createApplicantAction");
         if( false == $this->isGranted("create","FellowshipApplication") ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -1618,16 +1623,15 @@ class FellAppController extends OrderAbstractController {
 
         $fellowshipApplication = new FellowshipApplication($user);
 
-        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppStatus'] by [FellAppStatus::class]
-        //$activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
-        //$initialStatusName = "active";
-        $initialStatusName = "draft";
-        $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
-        if( !$initialStatus ) {
-            exit("Unable to find FellAppStatus by name=$initialStatusName");
-            throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
-        }
-        $fellowshipApplication->setAppStatus($initialStatus);
+//        //$activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
+//        //$initialStatusName = "active";
+//        $initialStatusName = "draft";
+//        $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
+//        if( !$initialStatus ) {
+//            exit("Unable to find FellAppStatus by name=$initialStatusName");
+//            throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
+//        }
+//        $fellowshipApplication->setAppStatus($initialStatus);
 
         if( !$fellowshipApplication->getUser() ) {
             //new applicant
@@ -1663,7 +1667,7 @@ class FellAppController extends OrderAbstractController {
 
         $form->handleRequest($request);
 
-//        ///////// testing "Save as Draft"
+        ///////// testing "Save as Draft"
 //        dump($request->request);
 //        $btnSubmit = $request->request->get('btnSubmit');
 //        echo "btnSubmit=$btnSubmit <br>";
@@ -1674,7 +1678,7 @@ class FellAppController extends OrderAbstractController {
 //        } else {
 //            exit("Unknown button");
 //        }
-//        /////////
+        /////////
 
         if( !$form->isSubmitted() ) {
             //echo "form is not submitted<br>";
@@ -1698,7 +1702,7 @@ class FellAppController extends OrderAbstractController {
 
         if( $form->isValid() ) {
 
-            //set status
+            ////// set status //////
             $btnSubmit = $request->request->get('btnSubmit');
             echo "btnSubmit=$btnSubmit <br>";
             if ($btnSubmit === 'draft') {
@@ -1712,13 +1716,14 @@ class FellAppController extends OrderAbstractController {
                 $initialStatusName = "draft";
             }
             $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
-            exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
             if( !$initialStatus ) {
-                exit("Unable to find FellAppStatus by name=$initialStatusName");
+                //exit("Unable to find FellAppStatus by name=$initialStatusName");
                 throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
             }
             $fellowshipApplication->setAppStatus($initialStatus);
-            exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            ////// set status //////
 
             //set user
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1788,7 +1793,6 @@ class FellAppController extends OrderAbstractController {
             $userSecUtil = $this->container->get('user_security_utility');
             $event = "Fellowship Application with ID " . $fellowshipApplication->getId() . " has been created by " . $user;
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
-
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
         }

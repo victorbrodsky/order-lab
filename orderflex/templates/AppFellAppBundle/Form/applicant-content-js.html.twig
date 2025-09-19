@@ -136,38 +136,52 @@
         //required: fellowshipSubspecialty
         var fellowshipSubspecialty = $('.fellapp-fellowshipSubspecialty').first().select2('val');
         //console.log('fellowshipSubspecialty=('+fellowshipSubspecialty+')');
-        if( !error && !fellowshipSubspecialty ) {
+        if (!error && !fellowshipSubspecialty) {
             error = "Please select in the Fellowship Type before uploading";
         }
 
-        var startDate = $('.fellapp-startDate').first().val();
-        //console.log('startDate=('+startDate+')');
-        if( !error && !startDate ) {
-            error = "Please fill in the Start Date before uploading";
-        }
+        if(1) {
+            var startDate = $('.fellapp-startDate').first().val();
+            //console.log('startDate=('+startDate+')');
+            if (!error && !startDate) {
+                error = "Please fill in the Start Date before uploading";
+            }
 
-        //required: user-firstName
-        var endDate = $('.fellapp-endDate').first().val();
-        if( !error && !endDate ) {
-            error = "Please fill in the Expected Graduation Date before uploading";
-        }
+            //required: user-firstName
+            var endDate = $('.fellapp-endDate').first().val();
+            if (!error && !endDate) {
+                error = "Please fill in the Expected Graduation Date before uploading";
+            }
 
-        //required: user-firstName
-        var firstName = $('.user-firstName').first().val();
-        if( !error && !firstName ) {
-            error = "Please fill in the First Name before uploading";
-        }
+            //required: user-firstName
+            var firstName = $('.user-firstName').first().val();
+            if (!error && !firstName) {
+                error = "Please fill in the First Name before uploading";
+            }
 
-        //required: user-lastName
-        var lastName = $('.user-lastName').first().val();
-        if( !error && !lastName ) {
-            error = "Please fill in the Last Name before uploading";
-        }
+            //required: user-lastName
+            var lastName = $('.user-lastName').first().val();
+            if (!error && !lastName) {
+                error = "Please fill in the Last Name before uploading";
+            }
 
-        //required: user-email
-        var email = $('.user-email').first().val();
-        if( !error && !email ) {
-            error = "Please fill in the email before uploading";
+            //required: user-email
+            var email = $('.user-email').first().val();
+            if (!error && !email) {
+                error = "Please fill in the email before uploading";
+            }
+
+            //required: user-email
+            var email = $('.signature-name').first().val();
+            if (!error && !email) {
+                error = "Please sign the form - print your first and last name";
+            }
+
+            //required: user-email
+            var email = $('.signature-date').first().val();
+            if (!error && !email) {
+                error = "Please put the date on the form";
+            }
         }
 
         //console.log('error='+error);
@@ -178,7 +192,8 @@
             return false;
         }
 
-        $('#fellapp-applicant-form').submit();
+        //$('#fellapp-applicant-form').submit();
+        return true;
     }
 
 
