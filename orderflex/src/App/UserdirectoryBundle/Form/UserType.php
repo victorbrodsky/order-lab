@@ -100,15 +100,19 @@ class UserType extends AbstractType
             //$readonlyAttr = 'true';
         }
 
+        $loggedinUser = $this->container->get('user_utility')->getLoggedinUser();
         $this->currentUser = false;
-        $user = $this->container->get('user_utility')->getLoggedinUser();
-        if( $user->getId() === $this->subjectUser->getId() ) {
-            $this->currentUser = true;
-        }
-
         $this->hasRoleSimpleView = false;
-        if( array_key_exists('container', $this->params) ) {
-            $this->hasRoleSimpleView = $this->params['container']->get('user_utility')->getLoggedinUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+        if( $loggedinUser ) {
+            //echo "user=" . $user->getId() . "<br>";
+            //echo "subjectUser=" . $this->subjectUser->getId() . "<br>";
+            if ($loggedinUser->getId() === $this->subjectUser->getId()) {
+                $this->currentUser = true;
+            }
+
+            if( array_key_exists('container', $this->params) ) {
+                $this->hasRoleSimpleView = $loggedinUser->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+            }
         }
     }
 

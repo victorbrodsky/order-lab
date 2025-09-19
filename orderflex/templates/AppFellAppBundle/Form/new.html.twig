@@ -29,6 +29,8 @@
 
 {% block content %}
 
+    <input type="hidden" id="disableIdleTimeout" value="1" />
+
     {% if cycle == "download" %}
         {% set collapsein = "in" %}
     {% else %}
@@ -51,6 +53,8 @@
 
 {% endblock %}
 
+{#{% block mainjs %}#}
+{#{% endblock %}#}
 
 {% block additionaljs %}
     {% include 'AppFellAppBundle/Form/applicant-content-js.html.twig' %}

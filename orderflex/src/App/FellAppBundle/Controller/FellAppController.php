@@ -832,7 +832,7 @@ class FellAppController extends OrderAbstractController {
 //            }
 //        }
 
-        $args = $this->getShowParameters($routeName,$entity,$security);
+        $args = $this->getShowParameters($routeName,$entity,$security); //edit
 
         if( $routeName == 'fellapp_download' ) {
             return $this->render('AppFellAppBundle/Form/download.html.twig', $args);
@@ -842,6 +842,59 @@ class FellAppController extends OrderAbstractController {
         //$event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
         //$userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         
+        return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
+    }
+
+    //Public open fellowship application
+    #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
+    #[Template('AppFellAppBundle/Form/new.html.twig')]
+    public function applyAction(Request $request, Security $security) {
+
+//        if( false == $this->isGranted("create","FellowshipApplication") ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+
+        //$user = $this->getUser();
+        $user = $this->getUser();
+        echo "user=".$user."<br>";
+        if( !( $user instanceof User ) ) {
+            echo "no user object <br>";
+            $userSecUtil = $this->container->get('user_security_utility');
+            $user = $userSecUtil->findSystemUser();
+        }
+
+        //$user = new User();
+        $addobjects = true;
+        $applicant = new User($addobjects);
+        $applicant->setPassword("");
+        $applicant->setCreatedby('manual');
+        $applicant->setAuthor($user);
+
+        $fellowshipApplication = new FellowshipApplication($user);
+        $fellowshipApplication->setTimestamp(new \DateTime());
+
+        $applicant->addFellowshipApplication($fellowshipApplication);
+
+        $routeName = $request->get('_route');
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); //apply
+
+        if( count($args) == 0 ) {
+            $linkUrl = $this->generateUrl(
+                "fellapp_fellowshiptype_settings",
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $warningMsg = "No fellowship types (subspecialties) are found.";
+            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
+
+            $this->addFlash(
+                'warning',
+                $warningMsg
+            );
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
+        }
+
         return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
     }
 
@@ -873,7 +926,7 @@ class FellAppController extends OrderAbstractController {
         $applicant->addFellowshipApplication($fellowshipApplication);
 
         $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$security);
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); // new
 
         if( count($args) == 0 ) {
             $linkUrl = $this->generateUrl(
@@ -896,17 +949,16 @@ class FellAppController extends OrderAbstractController {
     }
 
 
-    public function getShowParameters($routeName, $entity, $security) {
+    public function getShowParameters($routeName, $entity, $user=null, $security=null) {
              
         //$user = $this->getUser();
-        $user = $this->getUser();
 
 //        echo "user=".$user."<br>";
-//        if( !($user instanceof User) ) {
-//            echo "no user object <br>";
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $user = $userSecUtil->findSystemUser();
-//        }               
+        if( !$user || !($user instanceof User) ) {
+            //echo "no user object <br>";
+            $userSecUtil = $this->container->get('user_security_utility');
+            $user = $userSecUtil->findSystemUser();
+        }
         
         $em = $this->getDoctrine()->getManager();
 
@@ -944,7 +996,7 @@ class FellAppController extends OrderAbstractController {
             $action = $this->generateUrl('fellapp_edit', array('id' => $entity->getId()));
         }
 
-        if( $routeName == "fellapp_new" ) {
+        if( $routeName == "fellapp_new" || $routeName == "fellapp_apply" ) {
             $cycle = 'new';
             $disabled = false;
             $method = "POST";
@@ -1258,6 +1310,9 @@ class FellAppController extends OrderAbstractController {
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application');
         }
+
+        $em = $this->getDoctrine()->getManager();
+
         $id = $entity->getId();
 
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1301,6 +1356,31 @@ class FellAppController extends OrderAbstractController {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() ) {
+
+            ////// set status edit application//////
+            $btnSubmit = $request->request->get('btnSubmit');
+            if( $btnSubmit !== 'update' ) {
+                //echo "btnSubmit=$btnSubmit <br>";
+                if ($btnSubmit === 'draft') {
+                    $initialStatusName = "draft";
+                    //exit("Handle draft logic: skip required fields, save partial data");
+                } elseif ($btnSubmit === 'active') {
+                    $initialStatusName = "active";
+                    //exit("Validate and process full application");
+                } else {
+                    //exit("Unknown button");
+                    $initialStatusName = "draft";
+                }
+                $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
+                //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+                if (!$initialStatus) {
+                    //exit("Unable to find FellAppStatus by name=$initialStatusName");
+                    throw new EntityNotFoundException('Unable to find FellAppStatus by name=' . "$initialStatusName");
+                }
+                $entity->setAppStatus($initialStatus);
+            }
+            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            ////// EOF set status //////
 
             //$this->getDoctrine()->getManager()->flush();
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
@@ -1607,6 +1687,7 @@ class FellAppController extends OrderAbstractController {
         return "New";
     }
 
+
     #[Route(path: '/applicant/new', name: 'fellapp_create_applicant', methods: ['POST'])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function createApplicantAction( Request $request, Security $security )
@@ -1673,7 +1754,7 @@ class FellAppController extends OrderAbstractController {
 //        echo "btnSubmit=$btnSubmit <br>";
 //        if ($btnSubmit === 'draft') {
 //            exit("Handle draft logic: skip required fields, save partial data");
-//        } elseif ($btnSubmit === 'submit') {
+//        } elseif ($btnSubmit === 'active') {
 //            exit("Validate and process full application");
 //        } else {
 //            exit("Unknown button");
@@ -1702,13 +1783,13 @@ class FellAppController extends OrderAbstractController {
 
         if( $form->isValid() ) {
 
-            ////// set status //////
+            ////// set status new post application //////
             $btnSubmit = $request->request->get('btnSubmit');
-            echo "btnSubmit=$btnSubmit <br>";
+            //echo "btnSubmit=$btnSubmit <br>";
             if ($btnSubmit === 'draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
-            } elseif ($btnSubmit === 'submit') {
+            } elseif ($btnSubmit === 'active') {
                 $initialStatusName = "active";
                 //exit("Validate and process full application");
             } else {
@@ -1723,7 +1804,7 @@ class FellAppController extends OrderAbstractController {
             }
             $fellowshipApplication->setAppStatus($initialStatus);
             //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
-            ////// set status //////
+            ////// EOF set status //////
 
             //set user
             $userSecUtil = $this->container->get('user_security_utility');

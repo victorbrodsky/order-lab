@@ -30,6 +30,11 @@
 
 //jquery ui modal class modified = ui-dialog ui-widget ui-widget-content ui-corner-all ui-front ui-dialog-buttons ui-draggable ui-resizable
 
+//To disable timeout (for example for publicly available pages when user is nit logged in),
+// add somewhere
+// <input type="hidden" id="disableIdleTimeout" value="1" />
+// inside {% block content %} or after header
+
 var _idleAfter = 0; //in seconds
 var _ajaxTimeout = 300000;  //15000 => 15 sec, 180000 => 180 sec
 var _maxIdleTime = $("#maxIdleTime").val(); //in seconds. set on login
@@ -90,7 +95,7 @@ $(document).ready(function() {
 
         var delayInMilliseconds = 2000; //1 second
         setTimeout(function(){
-            //console.debug("initIdleTimeout after "+delayInMilliseconds+" milliseconds");
+            console.debug("initIdleTimeout after "+delayInMilliseconds+" milliseconds");
             initIdleTimeout();
         }, delayInMilliseconds);
     }

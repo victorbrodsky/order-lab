@@ -235,9 +235,21 @@
 
 {% if cycle == "edit" %}
     <p>
-        <button class="btn btn-warning" type="submit">Update</button>
+        {#<button class="btn btn-warning" type="submit">Update</button>#}
         {#<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>#}
         {#<button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>#}
+
+        {#for any status show update#}
+        <button class="btn btn-warning" name="btnSubmit" type="submit" value="update">Update</button>
+
+        {#if active => show draft#}
+        {% if entity.appStatus == 'active' %}
+            <button class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>
+        {% endif %}
+        {#if draft => show active#}
+        {% if entity.appStatus == 'draft' %}
+            <button class="btn btn-info" name="btnSubmit" type="submit" value="active" form="fellapp-applicant-form">Submit Application</button>
+        {% endif %}
 
         <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
     </p>
@@ -255,7 +267,7 @@
         {#<button class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>#}
 
         <button class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>
-        <button class="btn btn-warning" name="btnSubmit" type="submit" value="submit" form="fellapp-applicant-form">Submit Application</button>
+        <button class="btn btn-warning" name="btnSubmit" type="submit" value="active" form="fellapp-applicant-form">Submit Application</button>
     </p>
 {% endif %}
 

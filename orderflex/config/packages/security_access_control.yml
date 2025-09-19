@@ -142,6 +142,7 @@ security:
        - { path: ^.*/fellowship-applications/forgot-password, role: PUBLIC_ACCESS }
        - { path: ^.*/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
   #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
+       - { path: ^.*/fellowship-applications/apply, role: PUBLIC_ACCESS }
 
        - { path: ^.*/fellowship-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
        - { path: ^.*/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }
