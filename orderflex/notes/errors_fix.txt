@@ -1,0 +1,76 @@
+Warning: Potential Security Risk Ahead
+HaProxy status journalctl -xeu haproxy.service:
+Starting frontend http_front: cannot bind socket (Address already in use) [0.0.0.0:443]
+sudo ss -lnp sport = :443
+
+Who uses the port 443:
+sudo ss -lnp sport = :443
+users:(("httpd",pid=29396,fd=6),("httpd",pid=1044,fd=6),("httpd",pid=1043,fd=6),("httpd",pid=1042,fd=6),("httpd",pid=1040,fd=6))
+
+When http tenant is started (sudo systemctl restart httpdtenantapp1)
+cd /etc/httpd/conf
+each httpd config (i.e. tenantapp1-httpd.conf) has
+Include conf.modules.d/*.conf
+IncludeOptional conf.d/*.conf
+
+Reason: httpd tenant servises restarted (sudo systemctl restart httpdtenantapp1),
+with line IncludeOptional conf.d/*.conf.
+This in turn include all conf files in conf.d/, but somehow this folder has file ssl.conf which should not be there.
+Rename (disable) ssl.conf to ssl.conf_20Sept2025 if there is ssl.conf with Listen 443 https
+
+Then check current date:
+[root@xits-po-order-prd2 conf.d]# date
+Sat Sep 20 08:31:28 AM EDT 2025
+
+Check stat for file /etc/httpd/conf.d/ssl.conf_20Sept2025
+##################
+[root@xits-po-order-prd2 conf.d]# stat /etc/httpd/conf.d/ssl.conf_20Sept2025
+  File: /etc/httpd/conf.d/ssl.conf_20Sept2025
+  Size: 8720            Blocks: 24         IO Block: 4096   regular file
+Device: fd00h/64768d    Inode: 22804       Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Context: system_u:object_r:httpd_config_t:s0
+Access: 2025-09-20 06:06:57.598692856 -0400
+Modify: 2025-07-28 12:24:50.000000000 -0400
+Change: 2025-09-20 08:25:28.265098331 -0400
+Birth: 2025-09-20 06:03:57.247700620 -0400
+##################
+
+The file was created on: Birth: 2025-09-20 06:03:57.247700620 -0400 (New York time: 02:03:57 (EDT))
+
+Probably caused by system reboot:
+[root@xits-po-order-prd2 haproxy]# last -F | grep 'Sep 20' | grep '2025'
+oli2002  pts/1        157.139.82.139   Sat Sep 20 07:45:36 2025   still logged in
+oli2002  pts/0        157.139.82.139   Sat Sep 20 07:44:22 2025   still logged in
+reboot   system boot  5.14.0-570.41.1. Sat Sep 20 06:07:42 2025   still running
+reboot   system boot  5.14.0-570.32.1. Sat Aug 16 06:10:30 2025 - Sat Sep 20 06:07:04 2025 (34+23:56)
+svcpamsc pts/0        157.139.238.83   Fri Sep 20 09:45:10 2024 - Fri Sep 20 10:03:02 2024  (00:17)
+
+
+Verify:
+sudo systemctl status httpd.service
+sudo systemctl status haproxy
+sudo systemctl status php-fpm
+sudo systemctl status httpdhomepagemanager
+sudo systemctl status httpdtenantmanager
+sudo systemctl status httpdtenantapp1
+sudo systemctl status httpdtenantapp2
+sudo systemctl status httpdtenantappdemo
+
+Restart all apache/php services:
+sudo systemctl restart httpdhomepagemanager
+sudo systemctl restart httpdtenantmanager
+sudo systemctl restart httpdtenantapp1
+sudo systemctl restart httpdtenantapp2
+sudo systemctl restart httpdtenantappdemo
+sudo systemctl restart haproxy
+sudo systemctl restart php-fpm
+
+Verify if everything is working:
+https://view.med.cornell.edu/homepage-manager
+https://view.med.cornell.edu/tenant-manager/
+https://view.med.cornell.edu/c/wcm/pathology
+https://view.med.cornell.edu/c/wcm/psychiatry
+https://view.med.cornell.edu/c/demo-institution/demo-department
+https://view.med.cornell.edu/c/test-institution/test-department
+

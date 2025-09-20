@@ -443,6 +443,10 @@ function getComboboxResidencyspecialty(holder) {
 
     var url = getCommonBaseUrl("util/common/generic/"+"residencyspecialty"+cycleStr,"employees");
 
+    if( !_ajaxTimeout ) {
+        var _ajaxTimeout = 300000; //300 000 => 300sec
+    }
+
     //console.log('cycle='+cycle);
 
     if( _residencySpecialtys.length == 0 ) {

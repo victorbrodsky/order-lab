@@ -34,6 +34,10 @@ if( !user_id ) {
     user_id = 'undefined';
 }
 
+if( !_ajaxTimeout ) {
+    var _ajaxTimeout = 300000; //300 000 => 300sec
+}
+
 //Window.prototype.setCicleShow = setCicleShow;
 //Window.prototype.getSitename  = getSitename;
 //Window.prototype.fieldInputMask = fieldInputMask;
