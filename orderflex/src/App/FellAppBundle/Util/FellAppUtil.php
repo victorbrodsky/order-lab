@@ -666,6 +666,15 @@ class FellAppUtil {
         return null;
     }
 
+    //Generic fell app user to submit the form without login.
+    // This user will be logged in programmatically on the /apply/ page,
+    // so the fellapp form will open/work correctly (mainly required by JS to populate the form correctly)
+    public function findFellappDefaultUser() {
+        //error_reporting(E_ALL ^ E_WARNING);
+        $systemusers = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('fellapp_submitter');
+        return $systemusers;
+    }
+
     public function getEmailsOfFellApp( $fellapp, $roleName ) {
 
         $users = $this->getUsersOfFellAppByRole( $fellapp, $roleName );

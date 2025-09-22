@@ -867,15 +867,20 @@ class FellAppController extends OrderAbstractController {
 
         if( !($user instanceof User) ) {
             $firewall = 'ldap_fellapp_firewall';
-            $userSecUtil = $this->container->get('user_security_utility');
-            $user = $userSecUtil->findSystemUser();
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //$user = $userSecUtil->findSystemUser();
+            //fellapp_submitter
+            $fellappUtil = $this->container->get('fellapp_util');
+            $user = $fellappUtil->findFellappDefaultUser();
             if( $user ) {
                 //$token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
                 $token = new UsernamePasswordToken($user, $firewall, $user->getRoles());
                 //$this->container->get('security.token_storage')->setToken($token);
                 $tokenStorage->setToken($token);
+                $logger->notice("applyAction: Logged in as ldap_fellapp_firewall=".$user);
+            } else {
+                $logger->notice("applyAction: ldap_fellapp_firewall not found");
             }
-            $logger->notice("applyAction: Logged in as systemUser=".$user);
         } else {
             $logger->notice("applyAction: Token user is valid security user=".$user);
         }

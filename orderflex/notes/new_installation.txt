@@ -181,3 +181,6 @@ for user in $(cut -f1 -d: /etc/passwd); do echo $user; crontab -u $user -l; done
 
 Check space usage: df -h
 Get total folder size: du -sh upload-backup/
+
+Sort folders by size (largest first)
+du -sh * | sort -hr

@@ -5461,7 +5461,9 @@ class AdminController extends OrderAbstractController
 
             "testuseradministrator" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_ADMIN"),
             "testusereditor" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_EDITOR"),  //TODO: check auth logic: it ask for access request for directory site
-            "testuserobserver" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_OBSERVER")
+            "testuserobserver" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_OBSERVER"),
+
+            "fellapp_submitter" => array("ROLE_USERDIRECTORY_OBSERVER","ROLE_FELLAPP_USER"),
         );
 
         $userSecUtil = $this->container->get('user_security_utility');

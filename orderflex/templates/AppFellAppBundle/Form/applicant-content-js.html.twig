@@ -16,6 +16,7 @@
 
 <script language="Javascript">
 
+    let clickedButtonValue = null;
 
     $(document).ready(function() {
 
@@ -47,6 +48,14 @@
         //$('[data-toggle="tooltip"]').tooltip();
         
         setUploadItineraryAndListener();
+
+        document.querySelectorAll('button[name="btnSubmit"]').forEach(button => {
+            button.addEventListener('click', function () {
+                clickedButtonValue = this.value;
+            });
+        });
+
+
 
 
         ////////////// overwrite idle time out //////////////
@@ -129,6 +138,8 @@
 
     function validateFellapp() {
 
+        console.log("Clicked button value:", clickedButtonValue);
+
         $('#error-box').hide();
 
         var error = null;
@@ -140,49 +151,61 @@
             error = "Please select in the Fellowship Type before uploading";
         }
 
-        if(1) {
-            var startDate = $('.fellapp-startDate').first().val();
-            //console.log('startDate=('+startDate+')');
-            if (!error && !startDate) {
-                error = "Please fill in the Start Date before uploading";
-            }
+        //required: user-firstName
+        var firstName = $('.user-firstName').first().val();
+        if (!error && !firstName) {
+            error = "Please fill in the First Name before uploading";
+        }
 
-            //required: user-firstName
-            var endDate = $('.fellapp-endDate').first().val();
-            if (!error && !endDate) {
-                error = "Please fill in the Expected Graduation Date before uploading";
-            }
+        //required: user-lastName
+        var lastName = $('.user-lastName').first().val();
+        if (!error && !lastName) {
+            error = "Please fill in the Last Name before uploading";
+        }
 
-            //required: user-firstName
-            var firstName = $('.user-firstName').first().val();
-            if (!error && !firstName) {
-                error = "Please fill in the First Name before uploading";
-            }
+        //required: user-email
+        var email = $('.user-email').first().val();
+        if (!error && !email) {
+            error = "Please fill in the email before uploading";
+        }
 
-            //required: user-lastName
-            var lastName = $('.user-lastName').first().val();
-            if (!error && !lastName) {
-                error = "Please fill in the Last Name before uploading";
-            }
-
-            //required: user-email
-            var email = $('.user-email').first().val();
-            if (!error && !email) {
-                error = "Please fill in the email before uploading";
-            }
-
-            //required: user-email
-            var email = $('.signature-name').first().val();
-            if (!error && !email) {
-                error = "Please sign the form - print your first and last name";
-            }
-
-            //required: user-email
-            var email = $('.signature-date').first().val();
-            if (!error && !email) {
-                error = "Please put the date on the form";
+        //We will have to create a new user for the draft submission,
+        //therefore we will need minimum fields:
+        //First Name, Last Name, E-Mail address, Phone number, Captcha answer, Fellowship Institution, Fellowship Department, Fellowship Specialty
+        if( clickedButtonValue == 'draft' ) {
+            if( error ) {
+                $('#error-box').html(error);
+                $('#error-box').show();
+                return false;
+            } else {
+                return true;
             }
         }
+
+        var startDate = $('.fellapp-startDate').first().val();
+        //console.log('startDate=('+startDate+')');
+        if (!error && !startDate) {
+            error = "Please fill in the Start Date before uploading";
+        }
+
+        //required: user-firstName
+        var endDate = $('.fellapp-endDate').first().val();
+        if (!error && !endDate) {
+            error = "Please fill in the Expected Graduation Date before uploading";
+        }
+
+        //required: user-email
+        var email = $('.signature-name').first().val();
+        if (!error && !email) {
+            error = "Please sign the form - print your first and last name";
+        }
+
+        //required: user-email
+        var email = $('.signature-date').first().val();
+        if (!error && !email) {
+            error = "Please put the date on the form";
+        }
+
 
         //console.log('error='+error);
 
