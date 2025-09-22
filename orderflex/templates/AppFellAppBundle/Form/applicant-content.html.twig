@@ -142,7 +142,8 @@
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
 
-
+    {#user.id={{ form.vars.value.user.id }}#}
+    {#user.username={{ form.vars.value.user.username }}#}
 
 {% if form.timestamp is defined %}
     <div class="row">

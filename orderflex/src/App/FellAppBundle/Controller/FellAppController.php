@@ -848,19 +848,36 @@ class FellAppController extends OrderAbstractController {
     //Public open fellowship application
     #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
-    public function applyAction(Request $request, Security $security) {
+    public function applyAction(Request $request, Security $security, TokenStorageInterface $tokenStorage) {
 
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
+        $logger = $this->container->get('logger');
+
         //$user = $this->getUser();
         $user = $this->getUser();
-        echo "user=".$user."<br>";
-        if( !( $user instanceof User ) ) {
-            echo "no user object <br>";
+        //echo "user=".$user."<br>";
+//        if( !( $user instanceof User ) ) {
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $user = $userSecUtil->findSystemUser();
+//            //echo "no user object => use system user=[".$user."]<br>";
+//        }
+
+        if( !($user instanceof User) ) {
+            $firewall = 'ldap_fellapp_firewall';
             $userSecUtil = $this->container->get('user_security_utility');
             $user = $userSecUtil->findSystemUser();
+            if( $user ) {
+                //$token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
+                $token = new UsernamePasswordToken($user, $firewall, $user->getRoles());
+                //$this->container->get('security.token_storage')->setToken($token);
+                $tokenStorage->setToken($token);
+            }
+            $logger->notice("applyAction: Logged in as systemUser=".$user);
+        } else {
+            $logger->notice("applyAction: Token user is valid security user=".$user);
         }
 
         //$user = new User();

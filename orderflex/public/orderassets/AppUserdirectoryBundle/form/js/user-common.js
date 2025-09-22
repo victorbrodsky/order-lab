@@ -32,6 +32,7 @@ var _authuser_id = $("#authuser_id").val();
 
 if( !user_id ) {
     user_id = 'undefined';
+    //user_id = '1';
 }
 
 if( !_ajaxTimeout ) {
@@ -307,6 +308,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
             timeout: _ajaxTimeout,
             async: thisAsyncflag
         }).done(function(data) {
+            // console.log('data=',data);
             $.each(data, function(key, val) {
                 //console.log("val="+val);
                 globalDataArray.push(val);
