@@ -266,7 +266,7 @@ class FellowshipApplication extends BaseUserAttributes {
     
 
     public function __construct($author=null) {
-        parent::__construct($author);
+        parent::__construct($author); //use only in $this->setAuthor($author);
 
         $this->cvs = new ArrayCollection();
         $this->coverLetters = new ArrayCollection();
