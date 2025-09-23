@@ -2331,4 +2331,14 @@ class FellAppUtil {
 
     //recBackupTemplateFileId
 
+    //Send a confirmation email after submitting public fellapp application
+    public function confirmationEmail() {
+        //1) Check if a user is already registered
+
+        //2) Check if it's a new user
+
+        //3) Send email with a hash to confirm email
+        // https://view.online/fellowship-applications/activate-account-to-edit-draft/12345
+        // If click on this email, find signUp with this hash. Do the same as in employees_activate_account
+    }
 } 
