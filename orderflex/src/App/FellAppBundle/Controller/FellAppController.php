@@ -1925,7 +1925,7 @@ class FellAppController extends OrderAbstractController {
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function applyApplicantAction( Request $request, Security $security )
     {
-        //exit("applyApplicantAction");
+        exit("applyApplicantAction");
         if( false == $this->isGranted("create","FellowshipApplication") ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
