@@ -254,12 +254,12 @@
         {#if active => show draft#}
         {% if entity.appStatus == 'active' %}
             {#<button class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>#}
-            <button id="triggerDraft" class="btn btn-info" name="btnSubmit" value="draft">Save as Draft</button>
+            <button id="triggerDraft" class="btn btn-info" name="btnSubmit" value="fellapp-draft">Save as Draft</button>
         {% endif %}
         {#if draft => show active#}
         {% if entity.appStatus == 'draft' %}
             {#<button class="btn btn-info" name="btnSubmit" type="submit" value="active" form="fellapp-applicant-form">Submit Application</button>#}
-            <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="active">Submit Application</button>
+            <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="fellapp-submit">Submit Application</button>
         {% endif %}
 
         <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
@@ -280,8 +280,8 @@
         {#<button id="triggerDraft" class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>#}
         {#<button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" type="submit" value="active" form="fellapp-applicant-form">Submit Application</button>#}
 
-        <button id="triggerDraft" class="btn btn-info" name="btnSubmit" value="draft">Save as Draft</button>
-        <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="active">Submit Application</button>
+        <button id="triggerDraft" class="btn btn-info" name="btnSubmit" value="fellapp-draft">Save as Draft</button>
+        <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="fellapp-submit">Submit Application</button>
 
     </p>
 {% endif %}
@@ -300,6 +300,9 @@
 {% endif %}
 
 {{ fellappmacros.submitConfirmationModal() }}
+{{ fellappmacros.draftConfirmationModal() }}
+{{ fellappmacros.confirmDraftUserExistModal() }}
+
 
 {#{% if cycle == "edit" %}#}
     {#<p>#}

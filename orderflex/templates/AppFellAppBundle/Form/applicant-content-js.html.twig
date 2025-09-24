@@ -51,65 +51,38 @@
         
         setUploadItineraryAndListener();
 
-//        document.querySelectorAll('button[name="btnSubmit"]').forEach(button => {
-//            button.addEventListener('click', function () {
-//                clickedButtonValue = this.value;
-//                //formToSubmit = document.getElementById(this.getAttribute('form'));
-//            });
-//        });
-//
-//        // Handle modal confirmation
-//        document.addEventListener('DOMContentLoaded', function () {
-//            document.getElementById('modalConfirmSubmit').addEventListener('click', function () {
-//                // Optionally set a hidden input
-//                document.getElementById('btnSubmitHidden').value = clickedButtonValue;
-//                console.log("modalConfirmSubmit: submit");
-//                $('#confirmSubmitModal').modal('hide');
-//                formToSubmit.submit();
-//            });
-//        });
-
-//        // Capture which button was clicked
-//        $('button[name="btnSubmit"]').on('click', function () {
-//            clickedButtonValue = $(this).val();
-//            formToSubmit = $('#' + $(this).attr('form'))[0];
-//        });
-//
-//        // Intercept form submission
-//        $('#fellapp-applicant-form').on('submit', function (e) {
-//            if (clickedButtonValue === 'active') {
-//                e.preventDefault(); // Stop form from submitting
-//                $('#confirmSubmitModal').modal('show');
-//            }
-//            // If it's a draft, allow normal submission
-//        });
-//
-//        // Handle modal confirmation
-//        $('#modalConfirmSubmit').on('click', function () {
-//            $('#btnSubmitHidden').val(clickedButtonValue); // Optional hidden field
-//            $('#confirmSubmitModal').modal('hide');
-//            formToSubmit.submit(); // Submit manually
-//        });
-
         $('#triggerDraft').on('click', function(e) {
-            $('#btnSubmitHidden').val('draft'); // Optional hidden field
+            $('#btnSubmitHidden').val('fellapp-draft'); // Optional hidden field
             console.log('Click triggerDraft');
             e.preventDefault(); // prevent default form submission
 
+            var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
+            $('.submitterEmailDisplay').text(submitterEmail || '[no email provided]');
+            console.log('submitterEmail='+submitterEmail);
+
             if (validateFellapp('draft')) {
-                $('#fellapp-applicant-form').submit(); // proceed with actual submission
+                console.log('Click triggerDraft => show modal for draft');
+                if( checkExistUser() ) {
+                    //user exists
+                    $('#confirmDraftUserExistModal').modal('show');
+                } else {
+                    //user does not exist
+                    $('#confirmDraftModal').modal('show');
+                }
+//                $('#fellapp-applicant-form').submit(); // proceed with actual submission
             } else {
                 console.log('Draft Validation failed.');
             }
         });
 
         $('#triggerSubmit').on('click', function(e) {
-            console.log('Click triggerSubmit 1');
-            $('#btnSubmitHidden').val('active'); // Optional hidden field
+            //console.log('Click triggerSubmit 1');
+            $('#btnSubmitHidden').val('fellapp-submit'); // Optional hidden field
+            console.log('Click triggerSubmit');
             e.preventDefault(); // prevent default form submission
-            console.log('Click triggerSubmit 2');
+            //console.log('Click triggerSubmit 2');
             if (validateFellapp('active')) {
-                console.log('Click triggerSubmit => show modal');
+                console.log('Click triggerSubmit => show modal for submit');
                 //$('#confirmSubmitModal').fadeIn(); // show confirmation modal
                 $('#confirmSubmitModal').modal('show');
             } else {
@@ -117,24 +90,41 @@
             }
         });
 
-        $('#submitBtn').on('click', function() {
-            console.log('Modal submit');
+        $('#submitSubmitBtn').on('click', function() {
+            //console.log('Modal submit');
             //$('#confirmSubmitModal').fadeOut();
             $('#confirmSubmitModal').modal('hide');
             $('#fellapp-applicant-form').submit(); // proceed with actual submission
         });
-
-        $('#cancelBtn').on('click', function() {
-            console.log('Modal cancel');
+        $('#cancelSubmitBtn').on('click', function() {
+            //console.log('Modal cancel');
             //$('#confirmSubmitModal').fadeOut(); // just close modal
             $('#confirmSubmitModal').modal('hide');
+        });
+
+        $('#submitDraftBtn').on('click', function() {
+            $('#confirmDraftModal').modal('hide');
+            $('#fellapp-applicant-form').submit(); // proceed with actual submission
+        });
+        $('#cancelDraftBtn').on('click', function() {
+            $('#confirmDraftModal').modal('hide');
+        });
+
+        $('#submitDrafUserExistBtn').on('click', function() {
+            $('#confirmDraftUserExistModal').modal('hide');
+            $('#fellapp-applicant-form').submit(); // proceed with actual submission
+        });
+        $('#cancelDraftUserExistBtn').on('click', function() {
+            $('#confirmDraftUserExistModal').modal('hide');
         });
 
 
     });
 
 
-
+    function checkExistUser() {
+        return true;
+    }
 
 
     //http://stackoverflow.com/questions/4435906/print-when-textarea-has-overflow
@@ -181,11 +171,6 @@
         });
     }
 
-//    function validateFellappTest() {
-//        //testing
-//        $('#error-box').hide();
-//        $('#fellapp-applicant-form').submit();
-//    }
 
     function validateFellapp( clickedButtonValue ) {
 

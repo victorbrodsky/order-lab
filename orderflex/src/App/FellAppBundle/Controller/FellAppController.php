@@ -1971,16 +1971,16 @@ class FellAppController extends OrderAbstractController {
         $form->handleRequest($request);
 
         ///////// testing "Save as Draft"
-        dump($request->request);
-        $btnSubmit = $request->request->get('btnSubmit');
-        echo "/applicant/apply POST: btnSubmit=$btnSubmit <br>";
-        if ($btnSubmit === 'draft') {
-            exit("Handle draft logic: skip required fields, save partial data");
-        } elseif ($btnSubmit === 'active') {
-            exit("Validate and process full application");
-        } else {
-            exit("Unknown button");
-        }
+//        dump($request->request);
+//        $btnSubmit = $request->request->get('btnSubmit');
+//        echo "/applicant/apply POST: btnSubmit=$btnSubmit <br>";
+//        if ($btnSubmit === 'fellapp-draft') {
+//            exit("Handle draft logic: skip required fields, save partial data");
+//        } elseif ($btnSubmit === 'fellapp-submit') {
+//            exit("Validate and process full application");
+//        } else {
+//            exit("Unknown button");
+//        }
         /////////
 
         if( !$form->isSubmitted() ) {
@@ -2009,11 +2009,11 @@ class FellAppController extends OrderAbstractController {
 
             ////// set status new post application //////
             $btnSubmit = $request->request->get('btnSubmit');
-            //echo "btnSubmit=$btnSubmit <br>";
-            if ($btnSubmit === 'draft') {
+//            //echo "btnSubmit=$btnSubmit <br>";
+            if ($btnSubmit === 'fellapp-draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
-            } elseif ($btnSubmit === 'active' || $btnSubmit === 'submit') {
+            } elseif ($btnSubmit === 'fellapp-submit' ) {
                 $initialStatusName = "active";
                 //exit("Validate and process full application");
             } else {
