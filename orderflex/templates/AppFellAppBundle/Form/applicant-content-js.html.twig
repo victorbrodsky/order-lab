@@ -17,7 +17,7 @@
 <script language="Javascript">
 
     let clickedButtonValue = null;
-    let formToSubmit = null;
+//    let formToSubmit = null;
 
 
     $(document).ready(function() {
@@ -69,27 +69,65 @@
 //            });
 //        });
 
-        // Capture which button was clicked
-        $('button[name="btnSubmit"]').on('click', function () {
-            clickedButtonValue = $(this).val();
-            formToSubmit = $('#' + $(this).attr('form'))[0];
-        });
+//        // Capture which button was clicked
+//        $('button[name="btnSubmit"]').on('click', function () {
+//            clickedButtonValue = $(this).val();
+//            formToSubmit = $('#' + $(this).attr('form'))[0];
+//        });
+//
+//        // Intercept form submission
+//        $('#fellapp-applicant-form').on('submit', function (e) {
+//            if (clickedButtonValue === 'active') {
+//                e.preventDefault(); // Stop form from submitting
+//                $('#confirmSubmitModal').modal('show');
+//            }
+//            // If it's a draft, allow normal submission
+//        });
+//
+//        // Handle modal confirmation
+//        $('#modalConfirmSubmit').on('click', function () {
+//            $('#btnSubmitHidden').val(clickedButtonValue); // Optional hidden field
+//            $('#confirmSubmitModal').modal('hide');
+//            formToSubmit.submit(); // Submit manually
+//        });
 
-        // Intercept form submission
-        $('#fellapp-applicant-form').on('submit', function (e) {
-            if (clickedButtonValue === 'active') {
-                e.preventDefault(); // Stop form from submitting
-                $('#confirmSubmitModal').modal('show');
+        $('#triggerDraft').on('click', function(e) {
+            console.log('Click triggerDraft');
+            e.preventDefault(); // prevent default form submission
+
+            if (validateFellapp()) {
+                $('#fellapp-applicant-form').submit(); // proceed with actual submission
+            } else {
+                console.log('Draft Validation failed.');
             }
-            // If it's a draft, allow normal submission
         });
 
-        // Handle modal confirmation
-        $('#modalConfirmSubmit').on('click', function () {
-            $('#btnSubmitHidden').val(clickedButtonValue); // Optional hidden field
-            $('#confirmSubmitModal').modal('hide');
-            formToSubmit.submit(); // Submit manually
+        $('#triggerSubmit').on('click', function(e) {
+            console.log('Click triggerSubmit 1');
+            e.preventDefault(); // prevent default form submission
+            console.log('Click triggerSubmit 2');
+            if (validateFellapp()) {
+                console.log('Click triggerSubmit => show modal');
+                //$('#confirmSubmitModal').fadeIn(); // show confirmation modal
+                $('#confirmSubmitModal').modal('show');
+            } else {
+                console.log('Submit Validation failed.');
+            }
         });
+
+        $('#submitBtn').on('click', function() {
+            console.log('Modal submit');
+            //$('#confirmSubmitModal').fadeOut();
+            $('#confirmSubmitModal').modal('hide');
+            $('#fellapp-applicant-form').submit(); // proceed with actual submission
+        });
+
+        $('#cancelBtn').on('click', function() {
+            console.log('Modal cancel');
+            $('#confirmSubmitModal').fadeOut(); // just close modal
+        });
+
+
 
         ////////////// overwrite idle time out //////////////
 //        idleTimeoutClass.prototype.onTimeout = function() {

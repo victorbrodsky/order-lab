@@ -1925,10 +1925,10 @@ class FellAppController extends OrderAbstractController {
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function applyApplicantAction( Request $request, Security $security )
     {
-        exit("applyApplicantAction");
-        if( false == $this->isGranted("create","FellowshipApplication") ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-        }
+        //exit("applyApplicantAction");
+//        if( false == $this->isGranted("create","FellowshipApplication") ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $em = $this->getDoctrine()->getManager();
@@ -2027,7 +2027,7 @@ class FellAppController extends OrderAbstractController {
                 throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
             }
             $fellowshipApplication->setAppStatus($initialStatus);
-            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
             ////// EOF set status //////
 
             //set user

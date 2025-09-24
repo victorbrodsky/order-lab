@@ -106,15 +106,21 @@
     {#'onsubmit': 'return validateFellapp();'#}
     {#}#}
 {#})#}
+{#{{#}
+    {#form_start(form, {#}
+        {#'attr': {#}
+            {#'id': 'fellapp-applicant-form',#}
+            {#'onsubmit': 'return validateFellapp();'#}
+        {#}#}
+    {#})#}
+{#}}#}
 {{
     form_start(form, {
         'attr': {
-            'id': 'fellapp-applicant-form',
-            'onsubmit': 'return validateFellapp();'
+            'id': 'fellapp-applicant-form'
         }
     })
 }}
-
 
 
 
@@ -269,8 +275,12 @@
         {#<button class="btn btn-warning" name="btnSubmit" type="button" value="draft" form="fellapp-applicant-form" onclick="validateFellapp()">Save as Draft</button>#}
         {#<button class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>#}
 
-        <button class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>
-        <button class="btn btn-warning" name="btnSubmit" type="submit" value="active" form="fellapp-applicant-form">Submit Application</button>
+        {#<button id="triggerDraft" class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>#}
+        {#<button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" type="submit" value="active" form="fellapp-applicant-form">Submit Application</button>#}
+
+        <button id="triggerDraft">Save as Draft</button>
+        <button id="triggerSubmit">Submit Application</button>
+
     </p>
 {% endif %}
 
