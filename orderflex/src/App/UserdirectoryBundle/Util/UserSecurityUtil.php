@@ -529,9 +529,11 @@ class UserSecurityUtil {
 
         $this->tokenStorage->setToken(null);
 
-        //return $this->redirect($this->generateUrl($sitename.'_login'));
-        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
-        //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
+        if( $sitename ) {
+            //return $this->redirect($this->generateUrl($sitename.'_login'));
+            return new RedirectResponse($this->container->get('router')->generate($sitename . '_login'));
+            //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
+        }
     }
     function userLogoutSymfony7( $stay = false ) {
 

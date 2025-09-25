@@ -869,7 +869,7 @@ class FellAppController extends OrderAbstractController {
             $firewall = 'ldap_fellapp_firewall';
             //$userSecUtil = $this->container->get('user_security_utility');
             //$user = $userSecUtil->findSystemUser();
-            //fellapp_submitter
+            //fellapp_public_submitter
             $fellappUtil = $this->container->get('fellapp_util');
             $user = $fellappUtil->findFellappDefaultUser();
             if( $user ) {
@@ -880,10 +880,21 @@ class FellAppController extends OrderAbstractController {
                 $logger->notice("applyAction: Logged in as ldap_fellapp_firewall=".$user);
             } else {
                 $logger->notice("applyAction: ldap_fellapp_firewall not found");
+                $this->addFlash(
+                    'warning',
+                    "Fellowship public submitter not found. Please contact the system administrator."
+                );
+                return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
             }
         } else {
             $logger->notice("applyAction: Token user is valid security user=".$user);
         }
+        //testing logout
+        //$security->logout();
+        //$security->logout(false); //This will trigger onLogout event
+        //$this->tokenStorage->setToken(null);
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil->userLogout(null);
 
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
 //            exit('no');
@@ -1005,7 +1016,6 @@ class FellAppController extends OrderAbstractController {
         //add empty fields if they are not exist
         $fellappUtil = $this->container->get('fellapp_util');
 
-        //$showNavBar = true;
         
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
         if( count($fellTypes) == 0 ) {
@@ -1037,7 +1047,6 @@ class FellAppController extends OrderAbstractController {
             $disabled = false;
             $method = "POST";
             $action = $this->generateUrl('fellapp_apply_applicant'); // /apply use the same post submit as /new form
-            //$showNavBar = false;
         }
 
         if( $routeName == "fellapp_edit" ) {
@@ -1118,7 +1127,6 @@ class FellAppController extends OrderAbstractController {
             'cycle' => $cycle,
             'sitename' => $this->getParameter('fellapp.sitename'),
             'route' => $routeName,
-            //'showNavBar' => $showNavBar
         );
     }
 
@@ -1941,7 +1949,7 @@ class FellAppController extends OrderAbstractController {
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser(); //in case of apply, it might be fellapp_submitter user
+        $user = $this->getUser(); //in case of apply, it might be fellapp_public_submitter user
 
         $fellowshipApplication = new FellowshipApplication($user);
 
@@ -2115,10 +2123,32 @@ class FellAppController extends OrderAbstractController {
 
             //set logger for update
             $userSecUtil = $this->container->get('user_security_utility');
-            $event = "Fellowship Application with ID " . $fellowshipApplication->getId() . " has been created by " . $user;
+            $event = "Fellowship Application with ID " .
+                $fellowshipApplication->getId() .
+                " has been created by " .
+                $applicant->getDisplayOrFirstLastname();
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
 
-            return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
+            //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
+
+
+            $this->addFlash(
+                'notice',
+                $event
+            );
+
+            //$security->logout();
+            //$security->logout(false); //This will trigger onLogout event
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->userLogout(null);
+
+            if( $initialStatusName == "draft" ) {
+                return $this->redirect($this->generateUrl('fellapp_login'));
+            }
+            if( $initialStatusName == "active" ) {
+                //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
+                return $this->redirect($this->generateUrl('fellapp_login'));
+            }
         }
 
         //echo 'form invalid <br>';

@@ -671,7 +671,7 @@ class FellAppUtil {
     // so the fellapp form will open/work correctly (mainly required by JS to populate the form correctly)
     public function findFellappDefaultUser() {
         //error_reporting(E_ALL ^ E_WARNING);
-        $systemusers = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('fellapp_submitter');
+        $systemusers = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId('fellapp_public_submitter');
         return $systemusers;
     }
 

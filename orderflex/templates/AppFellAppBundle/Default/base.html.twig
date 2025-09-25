@@ -21,15 +21,7 @@
     {#{% include 'AppFellAppBundle/Default/navbar.html.twig' %}#}
 {#{% endblock %}#}
 {% block header %}
-    {#{% if showNavBar is not defined %}#}
-        {#{% set showNavBar = true %}#}
-    {#{% endif %}#}
-    {#{% if showNavBar %}#}
-        {#{% include 'AppFellAppBundle/Default/navbar.html.twig' %}#}
-    {#{% else %}#}
-        {#don't show navbar#}
-    {#{% endif %}#}
-    {% if app.user and app.user.getPrimaryPublicUserId() != 'fellapp_submitter' %}
+    {% if app.user and app.user.getPrimaryPublicUserId() != 'fellapp_public_submitter' %}
         {% include 'AppFellAppBundle/Default/navbar.html.twig' %}
     {% endif %}
 

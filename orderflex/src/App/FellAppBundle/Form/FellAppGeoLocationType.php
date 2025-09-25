@@ -65,12 +65,22 @@ class FellAppGeoLocationType extends AbstractType
 
         $builder->add('street1',null,array(
             'label'=>'Street Address [Line 1]:',
-            'attr' => array('class'=>'form-control geo-field-street1')
+            'attr' => array(
+                'class'=>'form-control geo-field-street1',
+                'autocomplete' => 'off',
+                //'readonly' => true,
+                //'onfocus' => 'this.removeAttribute("readonly");'
+            )
         ));
 
         $builder->add('street2',null,array(
             'label'=>'Street Address [Line 2]:',
-            'attr' => array('class'=>'form-control geo-field-street2')
+            'attr' => array(
+                'class'=>'form-control geo-field-street2',
+                'autocomplete' => 'off',
+                //'readonly' => true,
+                //'onfocus' => 'this.removeAttribute("readonly");'
+            )
         ));
 
         if( $this->params['cycle'] != "download" && $this->params['cycle'] != "show" ) {
@@ -78,19 +88,29 @@ class FellAppGeoLocationType extends AbstractType
             $builder->add('city', CustomSelectorType::class, array(
                 'label' => 'City:',
                 'required' => false,
-                'attr' => array('class' => 'combobox ajax-combobox-city', 'type' => 'hidden'),
+                'attr' => array(
+                    'class' => 'combobox ajax-combobox-city',
+                    'type' => 'hidden',
+                    'autocomplete' => 'off',
+                    //'readonly' => true,
+                    //'onfocus' => 'this.removeAttribute("readonly");'
+                ),
                 'classtype' => 'city'
             ));
 
             //state
             $stateArray = array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
                 'class' => States::class,
                 //'choice_label' => 'name',
                 'label'=>'State:',
                 'required'=> false,
                 'multiple' => false,
-                'attr' => array('class'=>'combobox combobox-width geo-field-state'),
+                'attr' => array(
+                    'class'=>'combobox combobox-width geo-field-state',
+                    'autocomplete' => 'off',
+                    //'readonly' => true,
+                    //'onfocus' => 'this.removeAttribute("readonly");'
+                ),
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
@@ -102,14 +122,12 @@ class FellAppGeoLocationType extends AbstractType
                 },
             );
             if( $this->params['cycle'] == 'new_standalone' ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:States'] by [States::class]
                 $stateArray['data'] = $this->params['em']->getRepository(States::class)->findOneByName('New York');
             }
             $builder->add( 'state', EntityType::class, $stateArray);
 
             //country
             $countryArray = array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]
                 'class' => Countries::class,
                 'choice_label' => 'name',
                 'label'=>'Country:',
@@ -139,32 +157,57 @@ class FellAppGeoLocationType extends AbstractType
             $builder->add('city', null, array(
                 'label' => 'City:',
                 'required' => false,
-                'attr' => array('class' => 'form-control'),
+                'attr' => array(
+                    'class' => 'form-control',
+                    'autocomplete' => 'off',
+                    //'readonly' => true,
+                    //'onfocus' => 'this.removeAttribute("readonly");'
+                ),
             ));
 
             $builder->add('state', null, array(
                 'label' => 'State:',
                 'required' => false,
-                'attr' => array('class' => 'form-control'),
+                'attr' => array(
+                    'class' => 'form-control',
+                    'autocomplete' => 'off',
+                    //'readonly' => true,
+                    //'onfocus' => 'this.removeAttribute("readonly");'
+                ),
             ));
 
             $builder->add('country', null, array(
                 'label' => 'Country:',
                 'required' => false,
-                'attr' => array('class' => 'form-control'),
+                'attr' => array(
+                    'class' => 'form-control',
+                    'autocomplete' => 'off',
+                    //'readonly' => true,
+                    //'onfocus' => 'this.removeAttribute("readonly");'
+                ),
             ));
         }
 
         if( !$hasRoleSimpleView ) {
             $builder->add('county', null, array(
                 'label' => 'County:',
-                'attr' => array('class' => 'form-control geo-field-county')
+                'attr' => array(
+                    'class' => 'form-control geo-field-county',
+                    'autocomplete' => 'off',
+                    //'readonly' => true,
+                    //'onfocus' => 'this.removeAttribute("readonly");'
+                )
             ));
         }
 
         $builder->add('zip',null,array(
             'label'=>'Zip Code:',
-            'attr' => array('class'=>'form-control geo-field-zip')
+            'attr' => array(
+                'class'=>'form-control geo-field-zip',
+                'autocomplete' => 'off',
+                //'readonly' => true,
+                //'onfocus' => 'this.removeAttribute("readonly");'
+            )
         ));
 
     }

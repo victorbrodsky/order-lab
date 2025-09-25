@@ -26,15 +26,6 @@
     Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
 {% endblock %}
 
-{#{% block header %}#}
-    {#{% if showNavBar %}#}
-        {#{% include 'AppFellAppBundle/Default/navbar.html.twig' %}#}
-    {#{% else %}#}
-        {#don't show navbar#}
-    {#{% endif %}#}
-{#{% endblock %}#}
-
-
 {% block content %}
 
     <input type="hidden" id="disableIdleTimeout" value="1" />
