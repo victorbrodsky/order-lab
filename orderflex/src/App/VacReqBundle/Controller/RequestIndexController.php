@@ -132,8 +132,9 @@ class RequestIndexController extends OrderAbstractController
         $approver = ( array_key_exists('approver', $params) ? $params['approver'] : null);
         //echo "approver=".$approver."<br>";s
 
-        //$forceShowAllRows = true;
-        $forceShowAllRows = false;
+        //admin or proxy submitter can submit for someone else, so the list always will show the "Person Away" column
+        $forceShowAllRows = true; //show all columns including "Person Away"
+        //$forceShowAllRows = false;
 
         $routeName = $request->get('_route');
 
@@ -214,10 +215,12 @@ class RequestIndexController extends OrderAbstractController
         }
 
         //always show it to proxy submitters
-        if( $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') ) {
-            //echo "user=" . $user->getId() . "<br>";
-            $dql->orWhere("request.submitter=" . $user->getId());
-            $forceShowAllRows = true; //proxy submitter can submit for someone else, so the list always will show the "Person Away" column
+        if( $this->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+            if ($this->isGranted('ROLE_VACREQ_PROXYSUBMITTER')) {
+                //echo "user=" . $user->getId() . "<br>";
+                $dql->orWhere("request.submitter=" . $user->getId());
+                //$forceShowAllRows = true; //proxy submitter can submit for someone else, so the list always will show the "Person Away" column
+            }
         }
 
         //process filter
