@@ -885,6 +885,11 @@ class FellAppController extends OrderAbstractController {
             $logger->notice("applyAction: Token user is valid security user=".$user);
         }
 
+//        if( false == $this->isGranted("create","FellowshipApplication") ){
+//            exit('no');
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+
         //$user = new User();
         $addobjects = true;
         $applicant = new User($addobjects);
@@ -1000,6 +1005,8 @@ class FellAppController extends OrderAbstractController {
         //add empty fields if they are not exist
         $fellappUtil = $this->container->get('fellapp_util');
 
+        //$showNavBar = true;
+        
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
         if( count($fellTypes) == 0 ) {
             return array();
@@ -1030,6 +1037,7 @@ class FellAppController extends OrderAbstractController {
             $disabled = false;
             $method = "POST";
             $action = $this->generateUrl('fellapp_apply_applicant'); // /apply use the same post submit as /new form
+            //$showNavBar = false;
         }
 
         if( $routeName == "fellapp_edit" ) {
@@ -1109,7 +1117,8 @@ class FellAppController extends OrderAbstractController {
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
             'sitename' => $this->getParameter('fellapp.sitename'),
-            'route' => $routeName
+            'route' => $routeName,
+            //'showNavBar' => $showNavBar
         );
     }
 
@@ -2017,7 +2026,7 @@ class FellAppController extends OrderAbstractController {
                 $initialStatusName = "active";
                 //exit("Validate and process full application");
             } else {
-                exit("Unknown button");
+                //exit("Unknown button");
                 $initialStatusName = "draft";
             }
             $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
@@ -2027,7 +2036,7 @@ class FellAppController extends OrderAbstractController {
                 throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
             }
             $fellowshipApplication->setAppStatus($initialStatus);
-            exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
             ////// EOF set status //////
 
             //set user

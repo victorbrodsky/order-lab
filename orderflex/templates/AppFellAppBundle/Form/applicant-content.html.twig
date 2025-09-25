@@ -182,49 +182,52 @@
 
 {% if not testing %}
 
-<!-- Education -->
-{% include 'AppFellAppBundle/Form/Education.html.twig' %}
+    <!-- Education -->
+    {% include 'AppFellAppBundle/Form/Education.html.twig' %}
 
-<!-- National Boards -->
-{% include 'AppFellAppBundle/Form/NationalBoards.html.twig' %}
+    <!-- National Boards -->
+    {% include 'AppFellAppBundle/Form/NationalBoards.html.twig' %}
 
-<!-- MedicalLicensure -->
-{% include 'AppFellAppBundle/Form/MedicalLicensure.html.twig' %}
+    <!-- MedicalLicensure -->
+    {% include 'AppFellAppBundle/Form/MedicalLicensure.html.twig' %}
 
-<!-- Board Certification -->
-{% include 'AppFellAppBundle/Form/BoardCertification.html.twig' %}
+    <!-- Board Certification -->
+    {% include 'AppFellAppBundle/Form/BoardCertification.html.twig' %}
 
-<!-- Recommendations -->
-{% include 'AppFellAppBundle/Form/Recommendations.html.twig' %}
+    <!-- Recommendations -->
+    {% include 'AppFellAppBundle/Form/Recommendations.html.twig' %}
 
-{#testing#}
-{#{% set cycle = "download" %}#}
+    {#testing#}
+    {#{% set cycle = "download" %}#}
 
-<!-- Uploads -->
-{% if cycle != "download" %}
-    {% include 'AppFellAppBundle/Form/Uploads.html.twig' %}
-{% endif %}
-
-<!-- Honors and Awards -->
-{% include 'AppFellAppBundle/Form/Honors.html.twig' %}
-
-<!-- PDF Reports -->
-{#and cycle != "new"#}
-{% if cycle != "download" %}
-    {% include 'AppFellAppBundle/Form/reportsPDF.html.twig' %}
-{% endif %}
-
-<!-- Itinerary -->
-{% if cycle != "download" %}
-    {% include 'AppFellAppBundle/Form/Itinerary.html.twig' %}
-{% endif %}
-
-<!-- Interviews -->
-{% if cycle != "download" %}
-    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_INTERVIEWER') %}
-        {% include 'AppFellAppBundle/Form/Interviews.html.twig' %}
+    <!-- Uploads -->
+    {% if cycle != "download" %}
+        {% include 'AppFellAppBundle/Form/Uploads.html.twig' %}
     {% endif %}
-{% endif %}
+
+    <!-- Honors and Awards -->
+    {% include 'AppFellAppBundle/Form/Honors.html.twig' %}
+
+
+    <!-- Itinerary -->
+    {% if route != 'fellapp_apply' %}
+        <!-- PDF Reports -->
+        {#and cycle != "new"#}
+        {% if cycle != "download" %}
+            {% include 'AppFellAppBundle/Form/reportsPDF.html.twig' %}
+        {% endif %}
+
+        {% if cycle != "download" %}
+            {% include 'AppFellAppBundle/Form/Itinerary.html.twig' %}
+        {% endif %}
+
+        <!-- Interviews -->
+        {% if cycle != "download" %}
+            {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_INTERVIEWER') %}
+                {% include 'AppFellAppBundle/Form/Interviews.html.twig' %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
 
 {% endif %}
 

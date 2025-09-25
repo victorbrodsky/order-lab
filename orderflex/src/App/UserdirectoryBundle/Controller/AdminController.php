@@ -1713,7 +1713,11 @@ class AdminController extends OrderAbstractController
                 "Does not allow to visit Fellowship Applications site",
                 0
             ),
-
+            "ROLE_FELLAPP_PUBLIC_SUBMITTER" => array(
+                "Fellowship Applications Public Submitter",
+                "Allow to submit Fellowship Applications without login via fellowship-applications/apply",
+                0
+            ),
 
 
             //////////// Residency roles ////////////
@@ -5463,7 +5467,7 @@ class AdminController extends OrderAbstractController
             "testusereditor" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_EDITOR"),  //TODO: check auth logic: it ask for access request for directory site
             "testuserobserver" => array("ROLE_SCANORDER_SUBMITTER","ROLE_USERDIRECTORY_OBSERVER"),
 
-            "fellapp_submitter" => array("ROLE_USERDIRECTORY_OBSERVER","ROLE_FELLAPP_USER"),
+            "fellapp_submitter" => array("ROLE_FELLAPP_PUBLIC_SUBMITTER","ROLE_FELLAPP_USER"), //"ROLE_USERDIRECTORY_OBSERVER",
         );
 
         $userSecUtil = $this->container->get('user_security_utility');
