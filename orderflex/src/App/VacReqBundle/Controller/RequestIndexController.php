@@ -125,13 +125,14 @@ class RequestIndexController extends OrderAbstractController
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
 
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
         $subjectUser = ( array_key_exists('subjectUser', $params) ? $params['subjectUser'] : null); //logged in user
         $approver = ( array_key_exists('approver', $params) ? $params['approver'] : null);
         //echo "approver=".$approver."<br>";s
 
-        $forceShowAllRows = true;
+        //$forceShowAllRows = true;
         $forceShowAllRows = false;
 
         $routeName = $request->get('_route');
@@ -160,16 +161,23 @@ class RequestIndexController extends OrderAbstractController
 
         //my requests
         if( $subjectUser ) {
-            $dql->andWhere("(request.user=".$subjectUser->getId()." OR request.submitter=".$subjectUser->getId().")");
+            $dql->andWhere(
+                "(".
+                    "request.user=".$subjectUser->getId().
+                    " OR request.submitter=".$subjectUser->getId().
+                    //" OR request.submitter=".$user->getId().
+                ")"
+            );
         }
 
         //incoming requests: show all requests with institutions in vacreq roles institutions
         //filter by institutions for any user by using a general sub role name "ROLE_VACREQ_"
+        //if ROLE_VACREQ_PROXYSUBMITTER => don't show => skip
         if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             if( $approver ) {
-                //echo "Yes approver <br>";
+                //echo "Yes approver:".$approver."<br>";
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+                //$partialRoleName = "ROLE_VACREQ_APPROVER"; //testing: this is correct permission? How affect others?
                 $vacreqRoles = $em->getRepository(User::class)->
                     findUserRolesBySiteAndPartialRoleName($approver, "vacreq", $partialRoleName, null, false);
 
@@ -179,21 +187,23 @@ class RequestIndexController extends OrderAbstractController
                     $addedNodes = array();
                     foreach( $vacreqRoles as $vacreqRole ) {
                         $roleInst = $vacreqRole->getInstitution();
-                        //echo "roleInst=".$roleInst."<br>";
+                        //echo "vacreqRole=".$vacreqRole->getName().", "."roleInst=".$roleInst."roleInstId=".$roleInst->getId()."<br>";
+                        if( str_contains($vacreqRole->getName(), 'ROLE_VACREQ_PROXYSUBMITTER') ) {
+                            continue; //don't show incoming requests to ROLE_VACREQ_PROXYSUBMITTER => skip
+                        }
                         if( !in_array($roleInst->getId(), $addedNodes) ) {
                             $addedNodes[] = $roleInst->getId();
                             //regular institution
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                             $instCriterionArr[] = $em->getRepository(Institution::class)->
                                 selectNodesUnderParentNode($roleInst,"institution",false);
                             //regular tentativeInstitution
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                             $instCriterionArr[] = $em->getRepository(Institution::class)->
                                 selectNodesUnderParentNode($roleInst,"tentativeInstitution",false);
                         }
                     }
                     if( count($instCriterionArr) > 0 ) {
                         $instCriteriaStr = implode(" OR ",$instCriterionArr);
+                        //echo "instCriteriaStr=$instCriteriaStr <br>"; //testing. TODO: filter
                         $dql->andWhere($instCriteriaStr);
                     }
                 }
@@ -201,6 +211,13 @@ class RequestIndexController extends OrderAbstractController
             else {
                 //echo "No approver <br>";
             }
+        }
+
+        //always show it to proxy submitters
+        if( $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') ) {
+            //echo "user=" . $user->getId() . "<br>";
+            $dql->orWhere("request.submitter=" . $user->getId());
+            $forceShowAllRows = true; //proxy submitter can submit for someone else, so the list always will show the "Person Away" column
         }
 
         //process filter
@@ -421,7 +438,7 @@ class RequestIndexController extends OrderAbstractController
             'sitename' => $sitename,
             'filtered' => $filtered,
             'routename' => $routeName,
-            //'forceShowAllRows' => $forceShowAllRows,
+            'forceShowAllRows' => $forceShowAllRows,
             'title' => $indexTitle,
             'pageTitle' => $pageTitle,
             'requestTypeAbbreviation' => $requestTypeAbbreviation,
