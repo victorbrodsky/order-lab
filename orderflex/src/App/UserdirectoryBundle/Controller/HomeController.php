@@ -161,6 +161,9 @@ class HomeController extends OrderAbstractController {
         $width = "300";
         $height = "80";
 
+        $width = "320";
+        $height = "180 ";
+
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
         $platformLogoPath = null;
