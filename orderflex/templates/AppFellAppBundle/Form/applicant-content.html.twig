@@ -94,6 +94,7 @@
 
 
 {% if cycle != "download" %}
+<br>
 <p>
     <button id="collapseAll" type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All Application Sections</button>
     <button id="expandAll" type="button" class="btn btn-default btn-sm btn-pressed-default" onClick="extendAll()" >Expand All Application Sections</button>
@@ -163,8 +164,6 @@
         </div>
         <div class="col-xs-4"></div>
     </div>
-{% else %}
-    <br>
 {% endif %}
 
 {% if collapsein is not defined %}
