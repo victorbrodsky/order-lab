@@ -172,7 +172,7 @@ class HomeController extends OrderAbstractController {
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         }
         echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath."<br>";
-        exit('111');
+        //exit('111');
 
         $aboutusLogoPath = null;
         $aboutusLogos = $tenantManager->getAboutusLogos();
