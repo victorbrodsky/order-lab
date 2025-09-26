@@ -92,7 +92,7 @@ class HomeController extends OrderAbstractController {
             //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         }
-        //echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";
+        echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";
 
 //        return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
 //            array(
