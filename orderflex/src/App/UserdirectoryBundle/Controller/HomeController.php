@@ -53,7 +53,7 @@ class HomeController extends OrderAbstractController {
         //get primaryTenant from tenantmanager's DB
         //$primaryTenant = true;
         $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
-        exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName); //testing
+        //exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName); //testing
         
         if( $tenantRole == $tenantManagerName ) {
             //if( !$primaryTenant ) {
@@ -92,7 +92,7 @@ class HomeController extends OrderAbstractController {
             //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         }
-        echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";
+        //echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";
 
 //        return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
 //            array(
@@ -178,7 +178,7 @@ class HomeController extends OrderAbstractController {
         if( count($aboutusLogos) > 0 ) {
             $aboutusLogo = $aboutusLogos->first();
             //$aboutusLogoPath = $aboutusLogo->getAbsoluteUploadFullPath();
-            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+            $aboutusLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($aboutusLogo);
         }
 
         //$tenants = array();
