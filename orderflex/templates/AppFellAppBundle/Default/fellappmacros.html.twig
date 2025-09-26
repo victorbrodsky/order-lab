@@ -604,11 +604,19 @@
                     <h4 class="modal-title" id="confirmSubmitLabel">Confirm Submission</h4>
                 </div>
                 <div class="modal-body">
+                    {#The email address you have provided <span class="submitterEmailDisplay">[email not set]</span> #}
+                    {#is associated with a previously registered user. #}
+                    {#Please log in using this email address and the associated password to save the draft version #}
+                    {#of your application form so you could edit and submit it later, #}
+                    {#or provide another email address in the main application form to continue.#}
+
+                    The email address you have provided <span class="submitterEmailDisplay">[email not set]</span>
+                    is associated with a previously registered user.
+                    Please confirm this email address is correct.
                     An email with a confirmation link will be sent to the following email address you have provided:
                     <span class="submitterEmailDisplay">[email not set]</span>.
-                    Please confirm this email address is correct and you will be able to review the email message.
                     Once you visit the confirmation link provided via email,
-                    you will select your password to activate your account and gain access to your saved application form draft.
+                    you will gain access to your saved application form draft.
                 </div>
                 <div class="modal-footer">
                     {#<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>#}

@@ -213,7 +213,7 @@
 
 
     <!-- Itinerary -->
-    {% if route != 'fellapp_apply' %}
+    {% if route is not defined or route != 'fellapp_apply' %}
         <!-- PDF Reports -->
         {#and cycle != "new"#}
         {% if cycle != "download" %}

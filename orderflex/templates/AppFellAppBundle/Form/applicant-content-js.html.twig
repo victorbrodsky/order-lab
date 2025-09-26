@@ -62,12 +62,17 @@
 
             if (validateFellapp('draft')) {
                 console.log('Click triggerDraft => show modal for draft');
-                if( checkExistUser() ) {
+                var userExists = userCheckExistUser();
+                if( userExists === true ) {
                     //user exists
+                    console.log('user exists');
                     $('#confirmDraftUserExistModal').modal('show');
-                } else {
+                } else if( userExists === false ) {
                     //user does not exist
+                    console.log('user does not exist');
                     $('#confirmDraftModal').modal('show');
+                } else {
+                    alert("Unknown error");
                 }
 //                $('#fellapp-applicant-form').submit(); // proceed with actual submission
             } else {
@@ -122,9 +127,50 @@
     });
 
 
-    function checkExistUser() {
-        return true;
+    function userCheckExistUser() {
+        var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
+        var url = Routing.generate('employees_check_user_exist_email');
+        var userExists = 'N/A';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: { email: submitterEmail },
+            async: false,
+            success: function(response) {
+                if (response === 'OK') {
+                    console.log('User exists!');
+                    // You can trigger any logic here
+                    userExists = true;
+                }
+                if (response === 'NOTOK') {
+                    console.log('User does not exist.');
+                    userExists = false;
+                }
+            },
+            error: function ( x, t, m ) {
+                console.log('AJAX error:', error);
+                userExists = false;
+            }
+        });
+
+        return userExists;
     }
+//    async function checkExistUser_new() {
+//        var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
+//        var url = Routing.generate('employees_check_user_exist_email');
+//
+//        try {
+//            const response = await $.ajax({
+//                url: url,
+//                type: 'POST',
+//                data: { email: submitterEmail }
+//            });
+//            return response.exists === true;
+//        } catch {
+//            return false;
+//        }
+//    }
+
 
 
     //http://stackoverflow.com/questions/4435906/print-when-textarea-has-overflow

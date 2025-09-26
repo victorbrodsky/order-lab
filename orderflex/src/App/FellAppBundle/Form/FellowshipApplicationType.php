@@ -73,6 +73,10 @@ class FellowshipApplicationType extends AbstractType
             $fellappChoices = array();
         }
 
+        if( $this->params && !array_key_exists('routeName',$this->params) ) {
+            $this->params['routeName'] = null;
+        }
+
         $builder->add('fellowshipSubspecialty', EntityType::class, array(
             //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
             'class' => FellowshipSubspecialty::class,
@@ -98,7 +102,7 @@ class FellowshipApplicationType extends AbstractType
         }
 
         //Don't show timestamp for fellapp apply user
-        if( $this->params['routeName'] != 'fellapp_apply' ) {
+        if( $this->params && $this->params['routeName'] != 'fellapp_apply' ) {
             if ($this->params['cycle'] == "new") {
                 $builder->add('timestamp', DateType::class, array(
                     'widget' => 'single_text',

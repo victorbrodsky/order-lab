@@ -845,97 +845,6 @@ class FellAppController extends OrderAbstractController {
         return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
     }
 
-    //Public open fellowship application
-    #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
-    #[Template('AppFellAppBundle/Form/new.html.twig')]
-    public function applyAction(Request $request, Security $security, TokenStorageInterface $tokenStorage) {
-
-//        if( false == $this->isGranted("create","FellowshipApplication") ){
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-
-        $logger = $this->container->get('logger');
-
-        //$user = $this->getUser();
-        $user = $this->getUser();
-        //echo "user=".$user."<br>";
-//        if( !( $user instanceof User ) ) {
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $user = $userSecUtil->findSystemUser();
-//            //echo "no user object => use system user=[".$user."]<br>";
-//        }
-
-        if( !($user instanceof User) ) {
-            $firewall = 'ldap_fellapp_firewall';
-            //$userSecUtil = $this->container->get('user_security_utility');
-            //$user = $userSecUtil->findSystemUser();
-            //fellapp_public_submitter
-            $fellappUtil = $this->container->get('fellapp_util');
-            $user = $fellappUtil->findFellappDefaultUser();
-            if( $user ) {
-                //$token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                $token = new UsernamePasswordToken($user, $firewall, $user->getRoles());
-                //$this->container->get('security.token_storage')->setToken($token);
-                $tokenStorage->setToken($token);
-                $logger->notice("applyAction: Logged in as ldap_fellapp_firewall=".$user);
-            } else {
-                $logger->notice("applyAction: ldap_fellapp_firewall not found");
-                $this->addFlash(
-                    'warning',
-                    "Fellowship public submitter not found. Please contact the system administrator."
-                );
-                return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
-            }
-        } else {
-            $logger->notice("applyAction: Token user is valid security user=".$user);
-        }
-        //testing logout
-        //$security->logout();
-        //$security->logout(false); //This will trigger onLogout event
-        //$this->tokenStorage->setToken(null);
-        //$userSecUtil = $this->container->get('user_security_utility');
-        //$userSecUtil->userLogout(null);
-
-//        if( false == $this->isGranted("create","FellowshipApplication") ){
-//            exit('no');
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-
-        //$user = new User();
-        $addobjects = true;
-        $applicant = new User($addobjects);
-        $applicant->setPassword("");
-        $applicant->setCreatedby('manual');
-        $applicant->setAuthor($user);
-
-        $fellowshipApplication = new FellowshipApplication($user);
-        $fellowshipApplication->setTimestamp(new \DateTime());
-
-        $applicant->addFellowshipApplication($fellowshipApplication);
-
-        $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); //apply
-
-        if( count($args) == 0 ) {
-            $linkUrl = $this->generateUrl(
-                "fellapp_fellowshiptype_settings",
-                array(),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $warningMsg = "No fellowship types (subspecialties) are found.";
-            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
-
-            $this->addFlash(
-                'warning',
-                $warningMsg
-            );
-            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-            return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
-        }
-
-        return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
-    }
-
     #[Route(path: '/new/', name: 'fellapp_new')]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function newAction(Request $request, Security $security) {
@@ -1938,6 +1847,145 @@ class FellAppController extends OrderAbstractController {
 
     }
 
+    //Public open fellowship application
+    #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
+    #[Template('AppFellAppBundle/Form/new.html.twig')]
+    public function applyAction(Request $request, Security $security, TokenStorageInterface $tokenStorage) {
+
+//        if( false == $this->isGranted("create","FellowshipApplication") ){
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+
+        $logger = $this->container->get('logger');
+
+        //$user = $this->getUser();
+        $user = $this->getUser();
+        //echo "user=".$user."<br>";
+//        if( !( $user instanceof User ) ) {
+//            $userSecUtil = $this->container->get('user_security_utility');
+//            $user = $userSecUtil->findSystemUser();
+//            //echo "no user object => use system user=[".$user."]<br>";
+//        }
+
+        if( !($user instanceof User) ) {
+            $firewall = 'ldap_fellapp_firewall';
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //$user = $userSecUtil->findSystemUser();
+            //fellapp_public_submitter
+            $fellappUtil = $this->container->get('fellapp_util');
+            $user = $fellappUtil->findFellappDefaultUser();
+            if( $user ) {
+                //$token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
+                $token = new UsernamePasswordToken($user, $firewall, $user->getRoles());
+                //$this->container->get('security.token_storage')->setToken($token);
+                $tokenStorage->setToken($token);
+                $logger->notice("applyAction: Logged in as ldap_fellapp_firewall=".$user);
+            } else {
+                $logger->notice("applyAction: ldap_fellapp_firewall not found");
+                $this->addFlash(
+                    'warning',
+                    "Fellowship public submitter not found. Please contact the system administrator."
+                );
+                return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
+            }
+        } else {
+            $logger->notice("applyAction: Token user is valid security user=".$user);
+        }
+        //testing logout
+        //$security->logout();
+        //$security->logout(false); //This will trigger onLogout event
+        //$this->tokenStorage->setToken(null);
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil->userLogout(null);
+
+//        if( false == $this->isGranted("create","FellowshipApplication") ){
+//            exit('no');
+//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//        }
+
+        //$user = new User();
+        $addobjects = true;
+        $applicant = new User($addobjects);
+        $applicant->setPassword("");
+        $applicant->setCreatedby('manual');
+        $applicant->setAuthor($user);
+
+        $fellowshipApplication = new FellowshipApplication($user);
+        $fellowshipApplication->setTimestamp(new \DateTime());
+
+        $applicant->addFellowshipApplication($fellowshipApplication);
+
+        $routeName = $request->get('_route');
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); //apply
+
+        if( count($args) == 0 ) {
+            $linkUrl = $this->generateUrl(
+                "fellapp_fellowshiptype_settings",
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $warningMsg = "No fellowship types (subspecialties) are found.";
+            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
+
+            $this->addFlash(
+                'warning',
+                $warningMsg
+            );
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
+        }
+
+        return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
+    }
+
+    #[Route(path: '/check-user-exist', name: 'employees_check_user_exist_email', methods: ["POST"], options: ['expose' => true])]
+    public function checkUserExistEmailAction(Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$userExists = false;
+        $res = 'NOTOK';
+        $user = null;
+        $email = $request->request->get('email');
+        $emailCanonical = $this->canonicalize($email);
+
+        //check if user exists by Email
+        if( !$user ) {
+            //check by email
+            $user = $em->getRepository(User::class)->findOneByEmailCanonical($emailCanonical);
+        }
+
+        if( !$user ) {
+            $users = $em->getRepository(User::class)->findUserByUserInfoEmail($emailCanonical);
+            if ( count($users) > 0) {
+                $user = $users[0];
+            }
+        }
+
+        if( $user && $user->getSingleEmail() ) {
+            //$userExists = true;
+            $res = 'OK';
+        }
+
+        $response = new Response();
+        //$response->headers->set('Content-Type', 'application/json');
+        $response->setContent($res);
+        return $response;
+        //return new JsonResponse(['exists' => $userExists]);
+    }
+    public function canonicalize($string)
+    {
+        if (null === $string) {
+            return null;
+        }
+
+        $encoding = mb_detect_encoding($string);
+        $result = $encoding
+            ? mb_convert_case($string, MB_CASE_LOWER, $encoding)
+            : mb_convert_case($string, MB_CASE_LOWER);
+
+        return $result;
+    }
 
     #[Route(path: '/applicant/apply', name: 'fellapp_apply_applicant', methods: ['POST'])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
@@ -1950,6 +1998,7 @@ class FellAppController extends OrderAbstractController {
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
         $user = $this->getUser(); //in case of apply, it might be fellapp_public_submitter user
 
         $fellowshipApplication = new FellowshipApplication($user);
@@ -1981,6 +2030,7 @@ class FellAppController extends OrderAbstractController {
             'container' => $this->container,
             'fellappTypes' => $fellTypes,
             'fellappVisas' => $fellappVisas,
+            'routeName' => $routeName
             //'security' => $security
         );
         //$form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
@@ -2111,6 +2161,9 @@ class FellAppController extends OrderAbstractController {
                 //employees_activate_account
                 //$signUp = new Signup();
             }
+            if( $initialStatusName == "draft" ) {
+
+            }
 
             //update report if report does not exists
             //if( count($entity->getReports()) == 0 ) {
@@ -2144,9 +2197,13 @@ class FellAppController extends OrderAbstractController {
             $userSecUtil->userLogout(null);
 
             if( $initialStatusName == "draft" ) {
+                //Send email with hash:
+                //A draft fellowship application has been submitted specifying your email address as belonging to the applicant.
+                //confirmationEmail
                 return $this->redirect($this->generateUrl('fellapp_login'));
             }
             if( $initialStatusName == "active" ) {
+                //confirmationEmail
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
                 return $this->redirect($this->generateUrl('fellapp_login'));
             }
