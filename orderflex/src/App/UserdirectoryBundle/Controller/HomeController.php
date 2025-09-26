@@ -157,10 +157,11 @@ class HomeController extends OrderAbstractController {
 //        );
 //        //Test
 
-
+        //Original
         $width = "300";
         $height = "80";
 
+        //Modified for view.online gif. TODO: add these to the site settings
         $width = "320";
         $height = "180 ";
 
