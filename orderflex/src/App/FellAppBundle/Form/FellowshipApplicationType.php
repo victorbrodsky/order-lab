@@ -67,14 +67,14 @@ class FellowshipApplicationType extends AbstractType
         //$fellappUtil = $this->params['container']->get('fellapp_util');
         //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
 
-        if( array_key_exists('fellappTypes', $this->params) ) {
+        if (array_key_exists('fellappTypes', $this->params)) {
             $fellappChoices = $this->params['fellappTypes'];
         } else {
             $fellappChoices = array();
         }
 
         $builder->add('fellowshipSubspecialty', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
             'class' => FellowshipSubspecialty::class,
             'label' => "Fellowship Application Type:",
             //'required' => true,
@@ -85,10 +85,10 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
         ));
 
-        if( 0 && $this->params['cycle'] == "edit" ) {
+        if (0 && $this->params['cycle'] == "edit") {
             //$this->secAuthChecker->isGranted('ROLE_FELLAPP_ADMIN') ||
             //if( $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            if( $this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if ($this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
                 $builder->add('googleFormId', null, array(
                     'required' => false,
                     'label' => "Google Form Id (Do not modify this value! New application will be generated if googleFormId will be different from the one in the spreadsheet.):",
@@ -97,16 +97,19 @@ class FellowshipApplicationType extends AbstractType
             }
         }
 
-        if ($this->params['cycle'] == "new") {
-            $builder->add('timestamp', DateType::class, array(
-                'widget' => 'single_text',
-                'label' => "Application Receipt Date:",
-                //'format' => 'MM/dd/yyyy, H:mm:ss',
-                'format' => 'MM/dd/yyyy',
-                'html5' => false,
-                'attr' => array('class' => 'datepicker form-control'),
-                'required' => false,
-            ));
+        //Don't show timestamp for fellapp apply user
+        if( $this->params['routeName'] != 'fellapp_apply' ) {
+            if ($this->params['cycle'] == "new") {
+                $builder->add('timestamp', DateType::class, array(
+                    'widget' => 'single_text',
+                    'label' => "Application Receipt Date:",
+                    //'format' => 'MM/dd/yyyy, H:mm:ss',
+                    'format' => 'MM/dd/yyyy',
+                    'html5' => false,
+                    'attr' => array('class' => 'datepicker form-control'),
+                    'required' => false,
+                ));
+            }
         }
 
         $builder->add('startDate', DateType::class, array(

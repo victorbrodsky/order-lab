@@ -87,8 +87,10 @@
 
 
 {#applicant's snapshot#}
-{{ fellappmacros.snapshot(entity,sitename,cycle) }}
-<br>
+{% if cycle != "new" %}
+    {{ fellappmacros.snapshot(entity,sitename,cycle) }}
+    <br>
+{% endif %}
 
 
 {% if cycle != "download" %}
