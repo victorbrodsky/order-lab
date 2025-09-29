@@ -391,20 +391,24 @@ class TenantManager
         $this->servicestext = $servicestext;
     }
 
-    /**
-     * @return mixed
-     */
+
+    public function addHighResLogo($item)
+    {
+        if( $item && !$this->highResLogos->contains($item) ) {
+            $this->highResLogos->add($item);
+            $item->createUseObject($this);
+        }
+
+        return $this;
+    }
+    public function removeHighResLogo($item)
+    {
+        $this->highResLogos->removeElement($item);
+        $item->clearUseObject();
+    }
     public function getHighResLogos()
     {
         return $this->highResLogos;
-    }
-
-    /**
-     * @param mixed $highResLogos
-     */
-    public function setHighResLogos($highResLogos)
-    {
-        $this->highResLogos = $highResLogos;
     }
 
     /**
