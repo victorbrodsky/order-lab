@@ -293,14 +293,14 @@ class HomeController extends OrderAbstractController {
         $aboutusFooter = $tenantManager->getAboutusFooter();
 
         $servicesShow = $tenantManager->getServicesShow();
-        echo "servicesShow=$servicesShow <br>";
-        if( $servicesShow ) {
-            echo "servicesShow=yes <br>";
-        } else {
-            echo "servicesShow=no <br>";
-        }
+        //echo "servicesShow=$servicesShow <br>";
+//        if( $servicesShow ) {
+//            echo "servicesShow=yes <br>";
+//        } else {
+//            echo "servicesShow=no <br>";
+//        }
         $servicestext = $tenantManager->getServicestext();
-        echo "servicestext=$servicestext <br>";
+        //echo "servicestext=$servicestext <br>";
 
         return $this->render('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-home.html.twig',
             array(
