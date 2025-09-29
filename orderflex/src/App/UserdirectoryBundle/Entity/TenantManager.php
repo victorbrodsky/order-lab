@@ -99,11 +99,37 @@ class TenantManager
     private $aboutusFooter;
 
 
+    //“Show ‘Consolidated Services’ section on the homepage: [ ]”
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $servicesShow;
+
+    //"Consolidated Services Homepage Section Content"
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $servicestext;
+
+    //High Resolution Logo (2x)
+    #[ORM\JoinTable(name: 'user_tenantmanager_highreslogo')]
+    #[ORM\JoinColumn(name: 'tenantmanager_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'logo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
+    private $highResLogos;
+    
+    //Logo width
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $width;
+
+    //Logo height
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $height;
+
+
     public function __construct( $author=null ) {
         $this->setAuthor($author);
         $this->setCreatedate(new \DateTime());
         $this->tenants = new ArrayCollection();
         $this->logos = new ArrayCollection();
+        $this->highResLogos = new ArrayCollection();
         $this->aboutusLogos = new ArrayCollection();
     }
 
@@ -332,6 +358,87 @@ class TenantManager
     {
         $this->aboutusFooter = $aboutusFooter;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getServicesShow()
+    {
+        return $this->servicesShow;
+    }
+
+    /**
+     * @param mixed $servicesShow
+     */
+    public function setServicesShow($servicesShow)
+    {
+        $this->servicesShow = $servicesShow;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServicestext()
+    {
+        return $this->servicestext;
+    }
+
+    /**
+     * @param mixed $servicestext
+     */
+    public function setServicestext($servicestext)
+    {
+        $this->servicestext = $servicestext;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHighResLogos()
+    {
+        return $this->highResLogos;
+    }
+
+    /**
+     * @param mixed $highResLogos
+     */
+    public function setHighResLogos($highResLogos)
+    {
+        $this->highResLogos = $highResLogos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param mixed $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param mixed $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+
 
     
 }

@@ -193,6 +193,14 @@ class FellappSiteParameterType extends AbstractType
             )
         ));
 
+        $builder->add('enablePublicFellApp',null,array(
+            'label'=>'Enable access to the fellowship application form page on this site via /fellowship-applications/apply and enable recommendation letter upload via /fellowship-applications/submit-recommendation:',
+            'attr' => array(
+                'class'=>'form-control form-control-modif',
+                'style'=>'margin:0',
+            )
+        ));
+
 
         //TODO: implement date transformer when year is not set
 //        $builder->add('fellappAcademicYearStart',null,array(

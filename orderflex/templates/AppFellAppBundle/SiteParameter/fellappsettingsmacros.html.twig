@@ -103,6 +103,8 @@
 
                 {{ formmacros.field(form.yearsOldAplicationsFellApp) }}
 
+                {{ formmacros.field(form.enablePublicFellApp) }}
+
                 {% set uploadPath = user_security_utility.getUploadPath() %}
                 <div class="well">
                     Resulting Path: {{ uploadPath ~ 'Uploaded\\' ~ entity.spreadsheetsPathFellApp }}

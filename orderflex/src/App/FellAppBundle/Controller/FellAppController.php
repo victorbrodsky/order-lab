@@ -3205,6 +3205,19 @@ class FellAppController extends OrderAbstractController {
 //        }
 
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $enablePublicFellapp = $userSecUtil->getSiteSettingParameter(
+            'enablePublicFellApp',
+            $this->getParameter('fellapp.sitename')
+        );
+        if( !$enablePublicFellapp === true ) {
+            $this->addFlash(
+                'warning',
+                'Submission of the fellowship application form page on this site is disabled'
+            );
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
 
         //$user = $this->getUser();
         $user = $this->getUser();

@@ -174,14 +174,19 @@ class FellappSiteParameter {
      */
     #[ORM\Column(type: 'text', nullable: true)]
     private $reportsUploadPathFellApp;
-    
-    
+
+    // Enable access to the fellowship application form page on this site via /fellowship-applications/apply and enable recommendation letter upload via /fellowship-applications/submit-recommendation
+    //Enable access to the fellowship application form page on this site
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $enablePublicFellApp;
+
     
     public function __construct() {
         $this->setAllowPopulateFellApp(false);
         $this->setSendEmailUploadLetterFellApp(false);
         $this->setDeleteImportedAplicationsFellApp(false);
         $this->setDeleteOldAplicationsFellApp(false);
+        $this->setEnablePublicFellApp(false);
     }
 
 
@@ -584,6 +589,22 @@ class FellappSiteParameter {
     public function setReportsUploadPathFellApp($reportsUploadPathFellApp)
     {
         $this->reportsUploadPathFellApp = $reportsUploadPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnablePublicFellApp()
+    {
+        return $this->enablePublicFellApp;
+    }
+
+    /**
+     * @param mixed $enablePublicFellApp
+     */
+    public function setEnablePublicFellApp($enablePublicFellApp)
+    {
+        $this->enablePublicFellApp = $enablePublicFellApp;
     }
 
 

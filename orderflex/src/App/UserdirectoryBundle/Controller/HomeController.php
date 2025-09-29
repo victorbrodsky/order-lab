@@ -158,22 +158,37 @@ class HomeController extends OrderAbstractController {
 //        //Test
 
         //Original
-        $width = "300";
-        $height = "80";
+        //$width = "300";
+        //$height = "80";
 
         //Modified for view.online gif. TODO: add these to the site settings
-        $width = "320";
-        $height = "180 ";
+        //$width = "320";
+        //$height = "180";
 
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
+        $width = $tenantManager->getWidth(); //"320";
+        if( !$width ) {
+            $width = "320";
+        }
+        $height = $tenantManager->getHeight(); //"180";
+        if( !$height ) {
+            $height = "180";
+        }
+
         $platformLogoPath = null;
-        $platformLogos = $tenantManager->getLogos();
-        //is_array($platformLogos) && 
+        $platformLogos = $tenantManager->getHighResLogos();
         if( count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
-            //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+        } else {
+            $platformLogos = $tenantManager->getLogos();
+            //is_array($platformLogos) &&
+            if (count($platformLogos) > 0) {
+                $platformLogo = $platformLogos->first();
+                //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+            }
         }
         //echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath."<br>";
         //exit('111');

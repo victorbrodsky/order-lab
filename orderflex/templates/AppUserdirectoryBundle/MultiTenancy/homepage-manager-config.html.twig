@@ -64,9 +64,37 @@
             </p>
         {% endif %}
 
+        {#highResLogos#}
+        {% if form.highResLogos is defined %}
+            <input type="hidden" id="formcycle" value="{{ cycle }}" />
+            <div id="form-prototype-data"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+                 data-userid = "{{ app.user.id }}"
+            ></div>
+
+            <p>
+            <div class="well form-element-holder user-highResLogos">
+                <label class="col-xs-12 control-label">Multi-Tenancy Homepage High Resolution Logo (2x) Image(s) - the most recent will be used</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(null,form.highResLogos,cycle,'noprototype',8,'default','Header Image','asForm') }}
+                    </div>
+                </div>
+            </div>
+            </p>
+        {% endif %}
+
+        {{ formmacros.field(form.width) }}
+        {{ formmacros.field(form.height) }}
+
         {{ formmacros.field(form.greeting) }}
         {{ formmacros.field(form.maintext) }}
         {{ formmacros.field(form.footer) }}
+
+        {#Consolidated Services’ section on the homepage:#}
+        {{ formmacros.field(form.servicesShow) }}
+        {{ formmacros.field(form.servicestext) }}
 
         {#disable tenantmanager fields#}
         {#{% if form.tenants is defined %}#}

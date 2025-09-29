@@ -90,6 +90,39 @@ class TenantManagerType extends AbstractType
             ));
 
 
+            $builder->add('servicestext', null, array(
+                'label' => 'Consolidated Services Homepage Section Content:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
+            $builder->add('servicesShow', null, array(
+                'label' => 'Show ‘Consolidated Services’ section on the homepage:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
+            $builder->add('width', null, array(
+                'label' => 'Logo width:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
+            $builder->add('height', null, array(
+                'label' => 'Logo height:',
+                'required' => false,
+                'attr' => array('class' => 'form-control textarea')
+            ));
+            //High Resolution Logo (2x)
+            $builder->add('highResLogos', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'High Resolution Header Image:',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
+
+
             $this->btnName = "Update Homepage";
         }
 
