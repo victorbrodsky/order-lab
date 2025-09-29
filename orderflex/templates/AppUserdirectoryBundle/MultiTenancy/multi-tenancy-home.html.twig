@@ -106,6 +106,13 @@
             {{ mainText|raw }}
         </p>
 
+        {% if servicesShow %}
+            <br>
+            <p>
+                {{ servicestext|raw }}
+            </p>
+        {% endif %}
+
 
         {#{% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}#}
         <div class="footer">

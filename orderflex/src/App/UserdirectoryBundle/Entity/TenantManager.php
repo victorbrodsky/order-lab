@@ -115,11 +115,11 @@ class TenantManager
     #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $highResLogos;
     
-    //Logo width
+    //Logo width (300 or 320)
     #[ORM\Column(type: 'text', nullable: true)]
     private $width;
 
-    //Logo height
+    //Logo height (80 or 180)
     #[ORM\Column(type: 'text', nullable: true)]
     private $height;
 

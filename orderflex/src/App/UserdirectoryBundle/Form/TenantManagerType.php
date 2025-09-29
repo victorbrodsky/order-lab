@@ -101,12 +101,12 @@ class TenantManagerType extends AbstractType
                 'attr' => array('class' => 'form-control textarea')
             ));
             $builder->add('width', null, array(
-                'label' => 'Logo width:',
+                'label' => 'Logo width (default 300):',
                 'required' => false,
                 'attr' => array('class' => 'form-control textarea')
             ));
             $builder->add('height', null, array(
-                'label' => 'Logo height:',
+                'label' => 'Logo height (default 80):',
                 'required' => false,
                 'attr' => array('class' => 'form-control textarea')
             ));

@@ -169,11 +169,11 @@ class HomeController extends OrderAbstractController {
 
         $width = $tenantManager->getWidth(); //"320";
         if( !$width ) {
-            $width = "320";
+            $width = "300";
         }
         $height = $tenantManager->getHeight(); //"180";
         if( !$height ) {
-            $height = "180";
+            $height = "80";
         }
 
         $platformLogoPath = null;
@@ -292,6 +292,9 @@ class HomeController extends OrderAbstractController {
         $aboutusText = $tenantManager->getAboutusText();
         $aboutusFooter = $tenantManager->getAboutusFooter();
 
+        $servicesShow = $tenantManager->getServicesShow();
+        $servicestext = $tenantManager->getServicestext();
+
         return $this->render('AppUserdirectoryBundle/MultiTenancy/multi-tenancy-home.html.twig',
             array(
                 'title' => $title,
@@ -305,6 +308,8 @@ class HomeController extends OrderAbstractController {
                 'aboutusLogoPath' => $aboutusLogoPath,
                 'aboutusText' => $aboutusText,
                 'aboutusFooter' => $aboutusFooter,
+                'servicesShow' => $servicesShow,
+                'servicestext' => $servicestext
             )
         );
     }
