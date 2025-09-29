@@ -1087,6 +1087,7 @@ class MultiTenancyController extends OrderAbstractController
 
             $em->getRepository(Document::class)->processDocuments($tenantManager,"logo");
             $em->getRepository(Document::class)->processDocuments($tenantManager,"aboutusLogo");
+            $em->getRepository(Document::class)->processDocuments($tenantManager,"highResLogo");
 
             $em->flush();
 

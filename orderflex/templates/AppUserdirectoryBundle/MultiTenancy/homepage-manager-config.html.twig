@@ -44,6 +44,7 @@
     {{ form_start(form) }}
         {{ form_errors(form) }}
 
+        {#logos#}
         {% if form.logos is defined %}
             <input type="hidden" id="formcycle" value="{{ cycle }}" />
             <div id="form-prototype-data"
