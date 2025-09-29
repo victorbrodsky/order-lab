@@ -181,6 +181,7 @@ class HomeController extends OrderAbstractController {
         if( count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+            echo "multiTenancyHomePage: getHighResLogos=".$platformLogoPath."<br>";
         } else {
             $platformLogos = $tenantManager->getLogos();
             //is_array($platformLogos) &&
@@ -188,9 +189,10 @@ class HomeController extends OrderAbstractController {
                 $platformLogo = $platformLogos->first();
                 //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
                 $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+                echo "multiTenancyHomePage: getLogos=".$platformLogoPath."<br>";
             }
         }
-        //echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath."<br>";
+        echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath."<br>";
         //exit('111');
 
         $aboutusLogoPath = null;
