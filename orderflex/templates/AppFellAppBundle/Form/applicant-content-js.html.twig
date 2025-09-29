@@ -85,16 +85,34 @@
             $('#btnSubmitHidden').val('fellapp-submit'); // Optional hidden field
             console.log('Click triggerSubmit');
             e.preventDefault(); // prevent default form submission
+
+            var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
+            $('.submitterEmailDisplay').text(submitterEmail || '[no email provided]');
+            console.log('submitterEmail='+submitterEmail);
+
             //console.log('Click triggerSubmit 2');
             if (validateFellapp('active')) {
                 console.log('Click triggerSubmit => show modal for submit');
-                //$('#confirmSubmitModal').fadeIn(); // show confirmation modal
-                $('#confirmSubmitModal').modal('show');
+                console.log('Click triggerDraft => show modal for draft');
+                var userExists = userCheckExistUser();
+                if( userExists === true ) {
+                    //user exists
+                    console.log('submit user exists');
+                    $('#confirmSubmitUserExistModal').modal('show');
+                } else if( userExists === false ) {
+                    //user does not exist
+                    console.log('submit user does not exist');
+                    $('#confirmSubmitModal').modal('show');
+                } else {
+                    alert("Unknown error");
+                }
             } else {
                 console.log('Submit Validation failed.');
             }
         });
 
+        //Modal's buttons
+        //Submit application if user does not exist
         $('#submitSubmitBtn').on('click', function() {
             //console.log('Modal submit');
             //$('#confirmSubmitModal').fadeOut();
@@ -106,7 +124,16 @@
             //$('#confirmSubmitModal').fadeOut(); // just close modal
             $('#confirmSubmitModal').modal('hide');
         });
+        //Submit application if user exists
+        $('#submitSubmitUserExistBtn').on('click', function() {
+            $('#confirmSubmitUserExistModal').modal('hide');
+            $('#fellapp-applicant-form').submit(); // proceed with actual submission
+        });
+        $('#cancelSubmitUserExistBtn').on('click', function() {
+            $('#confirmSubmitUserExistModal').modal('hide');
+        });
 
+        //Submit draft if user does not exist
         $('#submitDraftBtn').on('click', function() {
             $('#confirmDraftModal').modal('hide');
             $('#fellapp-applicant-form').submit(); // proceed with actual submission
@@ -114,7 +141,7 @@
         $('#cancelDraftBtn').on('click', function() {
             $('#confirmDraftModal').modal('hide');
         });
-
+        //Submit draft if user exists
         $('#submitDrafUserExistBtn').on('click', function() {
             $('#confirmDraftUserExistModal').modal('hide');
             $('#fellapp-applicant-form').submit(); // proceed with actual submission
@@ -137,12 +164,12 @@
             data: { email: submitterEmail },
             async: false,
             success: function(response) {
-                if (response === 'OK') {
+                if (response === 'EXIST') {
                     console.log('User exists!');
                     // You can trigger any logic here
                     userExists = true;
                 }
-                if (response === 'NOTOK') {
+                if (response === 'DOESNOTEXIST') {
                     console.log('User does not exist.');
                     userExists = false;
                 }

@@ -568,6 +568,47 @@
         </div>
     </div>
 {% endmacro %}
+{% macro confirmSubmitUserExistModal() %}
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmSubmitUserExistModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="confirmSubmitLabel">Confirm Submission</h4>
+                </div>
+                <div class="modal-body">
+                    {#The email address you have provided <span class="submitterEmailDisplay">[email not set]</span> #}
+                    {#is associated with a previously registered user. #}
+                    {#Please log in using this email address and the associated password to save the draft version #}
+                    {#of your application form so you could edit and submit it later, #}
+                    {#or provide another email address in the main application form to continue.#}
+
+                    {#The email address you have provided <span class="submitterEmailDisplay">[email not set]</span>#}
+                    {#is associated with a previously registered user.#}
+                    {#Please confirm this email address is correct.#}
+                    {#An email with a confirmation link will be sent to the following email address you have provided:#}
+                    {#<span class="submitterEmailDisplay">[email not set]</span>.#}
+                    {#Once you visit the confirmation link provided via email,#}
+                    {#you will gain access to your saved application form draft.#}
+
+                    You are about to submit your application for review.
+                    The email address you have provided
+                    <span class="submitterEmailDisplay">[email not set]</span>
+                    is associated with a previously registered user.
+                    Please confirm this email address is correct.
+                    You will not have access to edit your application after it is submitted.
+                    Are you sure you would like to submit your application?
+                </div>
+                <div class="modal-footer">
+                    {#<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>#}
+                    {#<button type="button" class="btn btn-primary" id="modalConfirmSubmit">Submit</button>#}
+                    <button id="submitSubmitUserExistBtn" class="btn btn-primary">Submit</button>
+                    <button id="cancelSubmitUserExistBtn" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 {% macro draftConfirmationModal() %}
     {#var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();#}
     <!-- Confirmation Modal -->
@@ -587,8 +628,9 @@
                 <div class="modal-footer">
                     {#<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>#}
                     {#<button type="button" class="btn btn-primary" id="modalConfirmSubmit">Submit</button>#}
-                    <button id="submitDraftBtn" class="btn btn-primary">Send the email with the confirmation link to
-                        <span class="submitterEmailDisplay">[email not set]</span></button>
+                    {#<button id="submitDraftBtn" class="btn btn-primary">Send the email with the confirmation link to#}
+                        {#<span class="submitterEmailDisplay">[email not set]</span></button>#}
+                    <button id="submitDraftBtn" class="btn btn-primary">Submit</button>
                     <button id="cancelDraftBtn" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>

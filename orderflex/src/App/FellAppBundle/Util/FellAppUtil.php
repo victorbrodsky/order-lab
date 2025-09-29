@@ -2332,13 +2332,93 @@ class FellAppUtil {
     //recBackupTemplateFileId
 
     //Send a confirmation email after submitting public fellapp application
-    public function confirmationEmail() {
+    public function confirmationEmail( $applicant ) {
         //1) Check if a user is already registered
+        $email = $applicant->getEmail();
 
-        //2) Check if it's a new user
+        if( !$email ) {
+            return null;
+        }
+
+        $user = $this->checkUserExistByEmail($email);
+
+        $sendSignUpEmail = false;
+
+        //2) Check if it's a new user (password is not set)
+        if( $user === true ) {
+            //check if password is set
+            $pass = $user->getPassword();
+            if( !$pass ) {
+                //send sign up email
+                $sendSignUpEmail = true;
+            } else {
+                //just a confirmation email
+            }
+        } else {
+            //Logical error
+        }
+
+        //Send a confirmation email is email is set
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
 
         //3) Send email with a hash to confirm email
         // https://view.online/fellowship-applications/activate-account-to-edit-draft/12345
         // If click on this email, find signUp with this hash. Do the same as in employees_activate_account
+        if( $sendSignUpEmail ) {
+
+        }
+
+    }
+
+    //TODO: replace strings by true, false, null
+    public function checkUserExistByPostRequest( $request, $getUser=false ) {
+        $email = $request->request->get('email');
+        if( !$email ) {
+            $res = null;
+            return $res;
+        }
+        $res = $this->checkUserExistByEmail($email,$getUser);
+        return $res;
+    }
+    public function checkUserExistByEmail( $email, $getUser=false ) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$userExists = false;
+        $res = false;
+        $user = null;
+
+        //$email = $request->request->get('email');
+        if( !$email ) {
+            $res = null;
+            return $res;
+        }
+
+        $emailCanonical = $this->canonicalize($email);
+
+        //check if user exists by Email
+        if( !$user ) {
+            //check by email
+            $user = $em->getRepository(User::class)->findOneByEmailCanonical($emailCanonical);
+        }
+
+        if( !$user ) {
+            $users = $em->getRepository(User::class)->findUserByUserInfoEmail($emailCanonical);
+            if ( count($users) > 0) {
+                $user = $users[0];
+            }
+        }
+
+        if( $user && $user->getSingleEmail() ) {
+            if( $getUser ) {
+                return $user;
+            }
+
+            //$userExists = true;
+            $res = true;
+        }
+
+        return $res;
     }
 } 
