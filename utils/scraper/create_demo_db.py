@@ -22,6 +22,7 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
     #run_by_symfony_command = False
     # Sections
     #if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
+    #print("run_demos: Attempts:", attempts)
     if 'init' in demo_ids and demo_ids['init'] and 'init' in attempts and attempts.get('init', 0) <= max_attempts:
         print("init attempt=",attempts['init'])
         try:
@@ -51,7 +52,7 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
 
     #Stop all following demos if init failed
     #if demo_ids['init'] and attempts['init'] >= max_attempts:
-    if demo_ids['init'] and 'init' in attempts and attempts.get('init', 0) >= max_attempts:
+    if demo_ids.get('init') and 'init' in attempts and attempts.get('init', 0) >= max_attempts:
         print("Init failed. Exit all demos.")
         sys.exit()
 
@@ -78,7 +79,7 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del users
 
     # Stop all following demos if users failed
-    if demo_ids['users'] and attempts.get('users', 0) >= max_attempts:
+    if demo_ids.get('users') and attempts.get('users', 0) >= max_attempts:
         print("Users failed. Exit all demos.")
         sys.exit()
 
@@ -287,7 +288,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     print("mailer_user=", mailer_user, "mailer_password=", mailer_password)
 
     # Add demo IDs to retry in case of failure. True flag means that this demo has to be run
-    if 1:
+    if 0:
         demo_ids = {
             'init': True,
             'users': True,
@@ -306,6 +307,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
 
     # Track the number of attempts
     attempts = {key: 0 for key in demo_ids.keys()}
+    #print("Attempts:", attempts)
     max_attempts = 2  # Set maximum retries per section
 
     print("Start demos")

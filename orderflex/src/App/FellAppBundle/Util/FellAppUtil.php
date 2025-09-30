@@ -2360,7 +2360,7 @@ class FellAppUtil {
 
         //Send a confirmation email is email is set
         $emailUtil = $this->container->get('user_mailer_utility');
-        //$emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
+        $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
 
         //3) Send email with a hash to confirm email
         // https://view.online/fellowship-applications/activate-account-to-edit-draft/12345
