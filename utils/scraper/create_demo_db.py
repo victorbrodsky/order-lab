@@ -290,7 +290,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     print("mailer_user=", mailer_user, "mailer_password=", mailer_password)
 
     # Add demo IDs to retry in case of failure. True flag means that this demo has to be run
-    if 0:
+    if 1:
         demo_ids = {
             'init': True,
             'users': True,
