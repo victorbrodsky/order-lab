@@ -1758,7 +1758,7 @@ class FellAppController extends OrderAbstractController {
 //            elseif ($btnSubmit === 'fellapp-update' ) {
 //                $initialStatusName = null;
                 //exit("Validate and process full application");
-            } else {
+            else {
                 //exit("Unknown button");
                 $initialStatusName = "draft";
             }
@@ -3514,7 +3514,8 @@ class FellAppController extends OrderAbstractController {
             //elseif ($btnSubmit === 'fellapp-update' ) {
             //    $initialStatusName = null;
                 //exit("Validate and process full application");
-            } else {
+            //}
+            else {
                 //exit("Unknown button");
                 $initialStatusName = "draft";
             }
