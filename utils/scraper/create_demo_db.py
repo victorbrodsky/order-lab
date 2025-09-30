@@ -47,8 +47,13 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             attempts['init'] += 1
             return demo_ids
         finally:
-            del automation
-            del init
+            #del automation
+            #del init
+            if 'automation' in locals():
+                del automation
+            if 'init' in locals():
+                del init
+
     else:
         print("init skipped")
 
@@ -77,8 +82,10 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             attempts['users'] += 1
             return demo_ids
         finally:
-            del automation
-            del users
+            if 'automation' in locals():
+                del automation
+            if 'users' in locals():
+                del users
     else:
         print("users skipped")
 
@@ -96,7 +103,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
     else:
         #Error
         print("check_login_page failed")
-        del automation
+        if 'automation' in locals():
+            del automation
         sys.exit()
 
     # automation.login_to_site()
@@ -146,8 +154,10 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             print("vacreq failed:", e)
             attempts['vacreq'] += 1
         finally:
-            del automation
-            del vacreq
+            if 'automation' in locals():
+                del automation
+            if 'vacreq' in locals():
+                del vacreq
     else:
         print("vacreq skipped")
 
@@ -176,8 +186,10 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             print("trp failed:", e)
             attempts['trp'] += 1
         finally:
-            del automation
-            del trp
+            if 'automation' in locals():
+                del automation
+            if 'trp' in locals():
+                del trp
     else:
         print("trp skipped")
 
@@ -198,8 +210,10 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             print("callog failed:", e)
             attempts['callog'] += 1
         finally:
-            del automation
-            del callog
+            if 'automation' in locals():
+                del automation
+            if 'callog' in locals():
+                del callog
     else:
         print("callog skipped")
 
@@ -292,7 +306,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             print("resapp failed:", e)
             attempts['resapp'] += 1
         finally:
-            del automation
+            if 'automation' in locals():
+                del automation
             if 'resapp' in locals():
                 del resapp
     else:
