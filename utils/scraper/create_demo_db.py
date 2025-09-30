@@ -21,9 +21,9 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
     #run_by_symfony_command = True
     #run_by_symfony_command = False
     # Sections
-    #if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
+    if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
     #print("run_demos: Attempts:", attempts)
-    if 'init' in demo_ids and demo_ids['init'] and 'init' in attempts and attempts.get('init', 0) <= max_attempts:
+    #if 'init' in demo_ids and demo_ids['init'] and 'init' in attempts and attempts.get('init', 0) <= max_attempts:
         print("init attempt=",attempts['init'])
         try:
             automation = WebAutomation(run_by_symfony_command)
@@ -49,6 +49,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
         finally:
             del automation
             del init
+    else:
+        print("init skipped")
 
     #Stop all following demos if init failed
     #if demo_ids['init'] and attempts['init'] >= max_attempts:
@@ -77,6 +79,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
         finally:
             del automation
             del users
+    else:
+        print("users skipped")
 
     # Stop all following demos if users failed
     if demo_ids.get('users') and attempts.get('users', 0) >= max_attempts:
@@ -144,6 +148,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
         finally:
             del automation
             del vacreq
+    else:
+        print("vacreq skipped")
 
     if 'trp' in demo_ids and demo_ids['trp'] and attempts.get('trp', 0) <= max_attempts:
         print("trp attempt=", attempts.get('trp', 0))
@@ -172,6 +178,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
         finally:
             del automation
             del trp
+    else:
+        print("trp skipped")
 
     if 'callog' in demo_ids and demo_ids['callog'] and attempts.get('callog', 0) <= max_attempts:
         print("callog attempt=", attempts.get('callog', 0))
@@ -192,6 +200,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
         finally:
             del automation
             del callog
+    else:
+        print("callog skipped")
 
     if 'fellapp' in demo_ids and demo_ids['fellapp'] and attempts.get('fellapp', 0) <= max_attempts:
         print("fellapp attempt=", attempts.get('fellapp', 0))
@@ -221,6 +231,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del automation
             if 'fellapp' in locals():
                 del fellapp
+    else:
+        print("fellapp skipped")
 
     if 'resapp' in demo_ids and demo_ids['resapp'] and attempts.get('resapp', 0) <= max_attempts:
         print("resapp attempt=", attempts.get('resapp', 0))
@@ -249,6 +261,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del automation
             if 'resapp' in locals():
                 del resapp
+    else:
+        print("resapp skipped")
 
     # Disable retries for sections exceeding max attempts
     for key in demo_ids.keys():
@@ -266,7 +280,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     #sys.exit()
 
     run_by_symfony_command = True
-    # run_by_symfony_command = False
+    run_by_symfony_command = False
 
     # if run_by_symfony_command is True:
         # write output to a file
@@ -290,7 +304,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     print("mailer_user=", mailer_user, "mailer_password=", mailer_password)
 
     # Add demo IDs to retry in case of failure. True flag means that this demo has to be run
-    if 1:
+    if 0:
         demo_ids = {
             'init': True,
             'users': True,
@@ -302,8 +316,8 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
         }
     else:
         demo_ids = {
-            #'init': True,
-            #'users': True,
+            'init': True,
+            'users': True,
             'fellapp': True
         }
 

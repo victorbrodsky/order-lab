@@ -2333,6 +2333,8 @@ class FellAppUtil {
 
     //Send a confirmation email after submitting public fellapp application
     public function confirmationEmail( $applicant ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
         //1) Check if a user is already registered
         $email = $applicant->getEmail();
 
@@ -2360,7 +2362,18 @@ class FellAppUtil {
 
         //Send a confirmation email is email is set
         $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
+        //$emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
+        $adminEmails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+        if (!$ccs) {
+            $ccs = $adminEmails;
+        }
+
+        $subject = "New Fellowship Applications has been submitted on public site by " . $applicant . ".";
+        $body = $subject;
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail($email, $subject, $body, $ccs);
 
         //3) Send email with a hash to confirm email
         // https://view.online/fellowship-applications/activate-account-to-edit-draft/12345
