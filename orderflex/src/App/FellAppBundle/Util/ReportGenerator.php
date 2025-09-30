@@ -709,6 +709,7 @@ class ReportGenerator {
         }
 
         $logger->notice("Added all documents to array for processing. filePathsArr count=".count($filePathsArr));
+        $logger->notice("Added all documents to array for processing. filePathsArr:".implode("; ", $filePathsArr));
 
         //Send a single warning email to admin
         if( count($fileErrors) > 0 ) {
@@ -806,7 +807,7 @@ class ReportGenerator {
 
 
         //delete application temp folder
-        //$this->deleteDir($outdir); //testing: comment out deleteDir to recover temp converted to PDF files
+        $this->deleteDir($outdir); //testing: comment out deleteDir to recover temp converted to PDF files
 
         $res = array(
             'filename' => $fileFullReportUniqueName,
