@@ -219,7 +219,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             attempts['fellapp'] += 1
         finally:
             del automation
-            del fellapp
+            if 'fellapp' in locals():
+                del fellapp
 
     if 'resapp' in demo_ids and demo_ids['resapp'] and attempts.get('resapp', 0) <= max_attempts:
         print("resapp attempt=", attempts.get('resapp', 0))
@@ -246,7 +247,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             attempts['resapp'] += 1
         finally:
             del automation
-            del resapp
+            if 'resapp' in locals():
+                del resapp
 
     # Disable retries for sections exceeding max attempts
     for key in demo_ids.keys():
