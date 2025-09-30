@@ -232,12 +232,13 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
         #     if 'fellapp' in locals():
         #         del fellapp
 
+        #split this into multiple try blocks to isolate failures and improve clarity
         try:
             automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
             fellapp = FellApp(automation)
-            #fellapp.configs()
-            #fellapp.set_site_settings()
+            fellapp.configs()
+            fellapp.set_site_settings()
         except Exception as e:
             print("fellapp setup failed:", e)
             attempts['fellapp'] += 1
@@ -337,7 +338,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     print("mailer_user=", mailer_user, "mailer_password=", mailer_password)
 
     # Add demo IDs to retry in case of failure. True flag means that this demo has to be run
-    if 0:
+    if 1:
         demo_ids = {
             'init': True,
             'users': True,
