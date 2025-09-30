@@ -285,7 +285,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     print("mailer_user=", mailer_user, "mailer_password=", mailer_password)
 
     # Add demo IDs to retry in case of failure. True flag means that this demo has to be run
-    if 0:
+    if 1:
         demo_ids = {
             'init': True,
             'users': True,
@@ -310,7 +310,16 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
 
     # Keep running demos until all sections are successful or exceed max attempts
     while any(demo_ids.values()):
-        demo_ids = run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_user, mailer_password, captcha_sitekey, captcha_secretkey)
+        demo_ids = run_demos(
+            demo_ids,
+            attempts,
+            max_attempts,
+            run_by_symfony_command,
+            mailer_user,
+            mailer_password,
+            captcha_sitekey,
+            captcha_secretkey
+        )
 
     #clean cach: 'bash deploy.sh'
     #automation = WebAutomation(run_by_symfony_command)
