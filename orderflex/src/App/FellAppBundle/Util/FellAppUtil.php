@@ -1022,7 +1022,7 @@ class FellAppUtil {
         $count = 0;
 
         foreach( $trainings as $training ) {
-            if( $training->getTrainingType()->getName()."" == $typeName ) {
+            if( $training->getTrainingType() && $training->getTrainingType()->getName()."" == $typeName ) {
                 $count++;
             }
         }
@@ -2342,22 +2342,29 @@ class FellAppUtil {
             return null;
         }
 
-        $user = $this->checkUserExistByEmail($email);
+//        $user = $this->checkUserExistByEmail($email,true);
+//        $sendSignUpEmail = false;
+//        //2) Check if it's a new user (password is not set)
+//        if( $user === true ) {
+//            //check if password is set
+//            $pass = $user->getPassword();
+//            if( !$pass ) {
+//                //send sign up email
+//                $sendSignUpEmail = true;
+//            } else {
+//                //just a confirmation email
+//            }
+//        } else {
+//            //Logical error
+//        }
 
         $sendSignUpEmail = false;
-
-        //2) Check if it's a new user (password is not set)
-        if( $user === true ) {
-            //check if password is set
-            $pass = $user->getPassword();
-            if( !$pass ) {
-                //send sign up email
-                $sendSignUpEmail = true;
-            } else {
-                //just a confirmation email
-            }
+        $pass = $applicant->getPassword();
+        if( !$pass ) {
+            //send sign up email
+            $sendSignUpEmail = true;
         } else {
-            //Logical error
+            //just a confirmation email
         }
 
         //Send a confirmation email is email is set
@@ -2369,17 +2376,28 @@ class FellAppUtil {
             $ccs = $adminEmails;
         }
 
-        $subject = "New Fellowship Applications has been submitted on public site by " . $applicant . ".";
+        $subject = "New Fellowship Applications has been submitted on the public site by " . $applicant . ".";
         $body = $subject;
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail($email, $subject, $body, $ccs);
+
+        $userUtil = $this->container->get('user_utility');
+        $session = $userUtil->getSession(); //$this->container->get('session');
+        $session->getFlashBag()->add(
+            'notice',
+            "Confirmation email has been sent to $email"
+        );
 
         //3) Send email with a hash to confirm email
         // https://view.online/fellowship-applications/activate-account-to-edit-draft/12345
         // If click on this email, find signUp with this hash. Do the same as in employees_activate_account
         if( $sendSignUpEmail ) {
 
+            $session->getFlashBag()->add(
+                'notice',
+                "Sign up email has been sent to $email"
+            );
         }
 
     }
@@ -2388,6 +2406,7 @@ class FellAppUtil {
     public function checkUserExistByPostRequest( $request, $getUser=false ) {
         $email = $request->request->get('email');
         if( !$email ) {
+            echo "checkUserExistByPostRequest: Email not found <br>";
             $res = null;
             return $res;
         }
@@ -2396,7 +2415,7 @@ class FellAppUtil {
     }
     public function checkUserExistByEmail( $email, $getUser=false ) {
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->em;
 
         //$userExists = false;
         $res = false;
@@ -2404,11 +2423,13 @@ class FellAppUtil {
 
         //$email = $request->request->get('email');
         if( !$email ) {
+            echo "checkUserExistByEmail: Email not found <br>";
             $res = null;
             return $res;
         }
 
         $emailCanonical = $this->canonicalize($email);
+        echo "checkUserExistByEmail: emailCanonical=$emailCanonical <br>";
 
         //check if user exists by Email
         if( !$user ) {
@@ -2424,6 +2445,7 @@ class FellAppUtil {
         }
 
         if( $user && $user->getSingleEmail() ) {
+            echo "checkUserExistByEmail: user found=$user <br>";
             if( $getUser ) {
                 return $user;
             }
@@ -2431,7 +2453,21 @@ class FellAppUtil {
             //$userExists = true;
             $res = true;
         }
+        echo "checkUserExistByEmail: user not found <br>";
 
         return $res;
+    }
+    public function canonicalize($string)
+    {
+        if (null === $string) {
+            return null;
+        }
+
+        $encoding = mb_detect_encoding($string);
+        $result = $encoding
+            ? mb_convert_case($string, MB_CASE_LOWER, $encoding)
+            : mb_convert_case($string, MB_CASE_LOWER);
+
+        return $result;
     }
 } 

@@ -1658,7 +1658,7 @@ class FellAppController extends OrderAbstractController {
         //$user = $this->getUser();
         $user = $this->getUser();
 
-        $fellowshipApplication = new FellowshipApplication($user);
+        $fellowshipApplication = new FellowshipApplication($user); //new POST
 
 //        $initialStatusName = 'active';
 //        $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
@@ -3344,19 +3344,19 @@ class FellAppController extends OrderAbstractController {
         return $response;
         //return new JsonResponse(['exists' => $userExists]);
     }
-    public function canonicalize($string)
-    {
-        if (null === $string) {
-            return null;
-        }
-
-        $encoding = mb_detect_encoding($string);
-        $result = $encoding
-            ? mb_convert_case($string, MB_CASE_LOWER, $encoding)
-            : mb_convert_case($string, MB_CASE_LOWER);
-
-        return $result;
-    }
+//    public function canonicalize($string)
+//    {
+//        if (null === $string) {
+//            return null;
+//        }
+//
+//        $encoding = mb_detect_encoding($string);
+//        $result = $encoding
+//            ? mb_convert_case($string, MB_CASE_LOWER, $encoding)
+//            : mb_convert_case($string, MB_CASE_LOWER);
+//
+//        return $result;
+//    }
 
     #[Route(path: '/applicant/apply', name: 'fellapp_apply_applicant', methods: ['POST'])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
@@ -3375,18 +3375,34 @@ class FellAppController extends OrderAbstractController {
 
         $applicantEmailError = false;
 
-        $fellowshipApplication = new FellowshipApplication($user);
+        $fellowshipApplication = new FellowshipApplication($user); //apply POST
 
-        if( !$fellowshipApplication->getUser() ) {
+        //Find/Create applicant
+        
+        if (!$fellowshipApplication->getUser()) {
             //new applicant
             $addobjects = false;
+            
+            //get $applicantEmail from request
+//            dump($request->request->all());
+//            exit();
+//            $btnSubmit = $request->request->get('btnSubmit');
+//            $formData = $request->request->get('oleg_fellappbundle_fellowshipapplication');
+//            dump($formData);
+//            exit();
+//            $applicantEmail = $formData['user']['infos'][0]['email'] ?? null;
+            $data = $request->request->all();
+            $applicantEmail = $data['oleg_fellappbundle_fellowshipapplication']['user']['infos'][0]['email'] ?? null;
 
-            $res = $fellappUtil->checkUserExistByPostRequest($request);
+            //$res = $fellappUtil->checkUserExistByPostRequest($request);
+            $res = $fellappUtil->checkUserExistByEmail($applicantEmail);
+            echo "applyApplicantAction: res=$res <br>";
             $applicant = null;
-            if( $res === true ) {
+            if ($res === true) {
                 //find $applicant by email
-                $applicant = $fellappUtil->checkUserExistByPostRequest($request,true);
-            } else if ( $res === false ) {
+                //$applicant = $fellappUtil->checkUserExistByPostRequest($request,true);
+                $applicant = $fellappUtil->checkUserExistByEmail($applicantEmail, true);
+            } else if ($res === false) {
                 $applicant = new User($addobjects);
                 $applicant->setPassword("");
                 $applicant->setCreatedby('manual');
@@ -3396,13 +3412,14 @@ class FellAppController extends OrderAbstractController {
                 $applicantEmailError = true;
             }
 
-            if( !$applicant ) {
-                throw $this->createNotFoundException('Unable to find or create Fellowship Applicant for '.$fellowshipApplication);
+            if (!$applicant) {
+                exit('Unable to find or create Fellowship Applicant for ' . $fellowshipApplication);
+                throw $this->createNotFoundException('Unable to find or create Fellowship Applicant for ' . $fellowshipApplication);
             }
 
             $applicant->addFellowshipApplication($fellowshipApplication);
         }
-
+        
         //add empty fields if they are not exist
         $fellappUtil->addEmptyFellAppFields($fellowshipApplication);
 
@@ -3426,7 +3443,7 @@ class FellAppController extends OrderAbstractController {
         $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //new
 
         $form->handleRequest($request);
-
+        
         ///////// testing "Save as Draft"
 //        dump($request->request);
 //        $btnSubmit = $request->request->get('btnSubmit');
@@ -3577,8 +3594,7 @@ class FellAppController extends OrderAbstractController {
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
 
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
-
-
+            
             $this->addFlash(
                 'notice',
                 $event
