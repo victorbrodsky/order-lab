@@ -3382,6 +3382,7 @@ class FellAppController extends OrderAbstractController {
             $addobjects = false;
 
             $res = $fellappUtil->checkUserExistByPostRequest($request);
+            $applicant = null;
             if( $res === true ) {
                 //find $applicant by email
                 $applicant = $fellappUtil->checkUserExistByPostRequest($request,true);
@@ -3393,6 +3394,10 @@ class FellAppController extends OrderAbstractController {
             } else {
                 //$form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before uploading'));
                 $applicantEmailError = true;
+            }
+
+            if( !$applicant ) {
+                throw $this->createNotFoundException('Unable to find or create Fellowship Applicant for '.$fellowshipApplication);
             }
 
             $applicant->addFellowshipApplication($fellowshipApplication);
