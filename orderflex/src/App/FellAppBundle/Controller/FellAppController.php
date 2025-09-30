@@ -1313,26 +1313,32 @@ class FellAppController extends OrderAbstractController {
 
         if ($form->isSubmitted() && $form->isValid() ) {
 
-            ////// set status edit application//////
+            ////// set status edit GET POST application//////
             $btnSubmit = $request->request->get('btnSubmit');
-//            //echo "btnSubmit=$btnSubmit <br>";
+            echo "btnSubmit=$btnSubmit <br>";
             if ($btnSubmit === 'fellapp-draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
             } elseif ($btnSubmit === 'fellapp-submit' ) {
                 $initialStatusName = "active";
                 //exit("Validate and process full application");
+            } elseif ($btnSubmit === 'fellapp-update' ) {
+                $initialStatusName = null;
+                //exit("Validate and process full application");
             } else {
                 //exit("Unknown button");
                 $initialStatusName = "draft";
             }
-            $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
-            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
-            if( !$initialStatus ) {
-                //exit("Unable to find FellAppStatus by name=$initialStatusName");
-                throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
+
+            if( $initialStatusName ) {
+                $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
+                //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+                if (!$initialStatus) {
+                    //exit("Unable to find FellAppStatus by name=$initialStatusName");
+                    throw new EntityNotFoundException('Unable to find FellAppStatus by name=' . "$initialStatusName");
+                }
+                $entity->setAppStatus($initialStatus);
             }
-            $entity->setAppStatus($initialStatus);
             //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
             ////// EOF set status //////
             //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
@@ -1741,23 +1747,31 @@ class FellAppController extends OrderAbstractController {
             $btnSubmit = $request->request->get('btnSubmit');
             //echo "btnSubmit=$btnSubmit <br>";
 
+            $initialStatusName = null;
             if ($btnSubmit === 'fellapp-draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
             } elseif ($btnSubmit === 'fellapp-submit' ) {
                 $initialStatusName = "active";
                 //exit("Validate and process full application");
+            }
+//            elseif ($btnSubmit === 'fellapp-update' ) {
+//                $initialStatusName = null;
+                //exit("Validate and process full application");
             } else {
                 //exit("Unknown button");
                 $initialStatusName = "draft";
             }
-            $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
-            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
-            if( !$initialStatus ) {
-                //exit("Unable to find FellAppStatus by name=$initialStatusName");
-                throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
+
+            if( $initialStatusName ) {
+                $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
+                //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+                if (!$initialStatus) {
+                    //exit("Unable to find FellAppStatus by name=$initialStatusName");
+                    throw new EntityNotFoundException('Unable to find FellAppStatus by name=' . "$initialStatusName");
+                }
+                $fellowshipApplication->setAppStatus($initialStatus);
             }
-            $fellowshipApplication->setAppStatus($initialStatus);
             //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
             ////// EOF set status //////
 
@@ -3485,26 +3499,35 @@ class FellAppController extends OrderAbstractController {
 
         if( $form->isValid() ) {
 
-            ////// set status new post application //////
+            ////// set status new apply post application //////
             $btnSubmit = $request->request->get('btnSubmit');
 //            //echo "btnSubmit=$btnSubmit <br>";
+
+            $initialStatusName = null;
             if ($btnSubmit === 'fellapp-draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
             } elseif ($btnSubmit === 'fellapp-submit' ) {
                 $initialStatusName = "active";
                 //exit("Validate and process full application");
+            }
+            //elseif ($btnSubmit === 'fellapp-update' ) {
+            //    $initialStatusName = null;
+                //exit("Validate and process full application");
             } else {
                 //exit("Unknown button");
                 $initialStatusName = "draft";
             }
-            $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
-            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
-            if( !$initialStatus ) {
-                //exit("Unable to find FellAppStatus by name=$initialStatusName");
-                throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
+
+            if( $initialStatusName ) {
+                $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
+                //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+                if (!$initialStatus) {
+                    //exit("Unable to find FellAppStatus by name=$initialStatusName");
+                    throw new EntityNotFoundException('Unable to find FellAppStatus by name=' . "$initialStatusName");
+                }
+                $fellowshipApplication->setAppStatus($initialStatus);
             }
-            $fellowshipApplication->setAppStatus($initialStatus);
             //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
             ////// EOF set status //////
 
@@ -3594,7 +3617,7 @@ class FellAppController extends OrderAbstractController {
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
 
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
-            
+
             $this->addFlash(
                 'notice',
                 $event

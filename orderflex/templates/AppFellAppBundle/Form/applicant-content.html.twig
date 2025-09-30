@@ -256,7 +256,7 @@
         {#<button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>#}
 
         {#for any status show update#}
-        <button class="btn btn-warning" name="btnSubmit" type="submit" value="update">Update</button>
+        <button id="triggerUpdate" class="btn btn-warning" name="btnSubmit" type="submit" value="fellapp-update">Update</button>
 
         {#if active => show draft#}
         {% if entity.appStatus == 'active' %}

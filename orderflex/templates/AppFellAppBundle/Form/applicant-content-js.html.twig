@@ -111,6 +111,15 @@
             }
         });
 
+        //triggerUpdate: no validation because submitted applications can not be edited, draft applications will be validated upon submition
+        $('#triggerUpdate').on('click', function(e) {
+            //console.log('Click triggerUpdate 1');
+            $('#btnSubmitHidden').val('fellapp-update'); // Optional hidden field
+            console.log('Click triggerUpdate');
+            e.preventDefault(); // prevent default form submission
+            $('#fellapp-applicant-form').submit();
+        });
+
         //Modal's buttons
         //Submit application if user does not exist
         $('#submitSubmitBtn').on('click', function() {
