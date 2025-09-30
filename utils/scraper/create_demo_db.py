@@ -285,15 +285,22 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     print("mailer_user=", mailer_user, "mailer_password=", mailer_password)
 
     # Add demo IDs to retry in case of failure. True flag means that this demo has to be run
-    demo_ids = {
-        'init': True,
-        'users': True,
-        'vacreq': True,
-        'trp': True,
-        'callog': True,
-        'fellapp': True,
-        'resapp': True
-    }
+    if 0:
+        demo_ids = {
+            'init': True,
+            'users': True,
+            'vacreq': True,
+            'trp': True,
+            'callog': True,
+            'fellapp': True,
+            'resapp': True
+        }
+    else:
+        demo_ids = {
+            #'init': True,
+            #'users': True,
+            'fellapp': True
+        }
 
     # Track the number of attempts
     attempts = {key: 0 for key in demo_ids.keys()}
