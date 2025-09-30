@@ -265,6 +265,12 @@ class FellApp:
         #driver.execute_script("arguments[0].scrollIntoView();", button)
         #driver.save_screenshot("create_single_fellapp_after_click_btn-warning.png")
 
+        time.sleep(3)
+        #Click 'Submit' button with id="submitSubmitBtn"
+        #<button id="submitSubmitBtn" class="btn btn-primary">Submit</button>
+        button = driver.find_element(By.ID, "submitSubmitBtn")
+        button.click()
+
         #print("Finish new fellapp")
         time.sleep(10)
 

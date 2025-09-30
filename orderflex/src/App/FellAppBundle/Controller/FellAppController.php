@@ -1315,26 +1315,26 @@ class FellAppController extends OrderAbstractController {
 
             ////// set status edit application//////
             $btnSubmit = $request->request->get('btnSubmit');
-            if( $btnSubmit !== 'update' ) {
-                //echo "btnSubmit=$btnSubmit <br>";
-                if ($btnSubmit === 'draft') {
-                    $initialStatusName = "draft";
-                    //exit("Handle draft logic: skip required fields, save partial data");
-                } elseif ($btnSubmit === 'active') {
-                    $initialStatusName = "active";
-                    //exit("Validate and process full application");
-                } else {
-                    //exit("Unknown button");
-                    $initialStatusName = "draft";
-                }
-                $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
-                //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
-                if (!$initialStatus) {
-                    //exit("Unable to find FellAppStatus by name=$initialStatusName");
-                    throw new EntityNotFoundException('Unable to find FellAppStatus by name=' . "$initialStatusName");
-                }
-                $entity->setAppStatus($initialStatus);
+//            //echo "btnSubmit=$btnSubmit <br>";
+            if ($btnSubmit === 'fellapp-draft') {
+                $initialStatusName = "draft";
+                //exit("Handle draft logic: skip required fields, save partial data");
+            } elseif ($btnSubmit === 'fellapp-submit' ) {
+                $initialStatusName = "active";
+                //exit("Validate and process full application");
+            } else {
+                //exit("Unknown button");
+                $initialStatusName = "draft";
             }
+            $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
+            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            if( !$initialStatus ) {
+                //exit("Unable to find FellAppStatus by name=$initialStatusName");
+                throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
+            }
+            $entity->setAppStatus($initialStatus);
+            //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
+            ////// EOF set status //////
             //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
             ////// EOF set status //////
 
@@ -1660,12 +1660,10 @@ class FellAppController extends OrderAbstractController {
 
         $fellowshipApplication = new FellowshipApplication($user);
 
-//        //$activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
-//        //$initialStatusName = "active";
-//        $initialStatusName = "draft";
+//        $initialStatusName = 'active';
 //        $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
 //        if( !$initialStatus ) {
-//            exit("Unable to find FellAppStatus by name=$initialStatusName");
+//            //exit("Unable to find FellAppStatus by name=$initialStatusName");
 //            throw new EntityNotFoundException('Unable to find FellAppStatus by name='."$initialStatusName");
 //        }
 //        $fellowshipApplication->setAppStatus($initialStatus);
@@ -1742,10 +1740,11 @@ class FellAppController extends OrderAbstractController {
             ////// set status new post application //////
             $btnSubmit = $request->request->get('btnSubmit');
             //echo "btnSubmit=$btnSubmit <br>";
-            if ($btnSubmit === 'draft') {
+
+            if ($btnSubmit === 'fellapp-draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
-            } elseif ($btnSubmit === 'active') {
+            } elseif ($btnSubmit === 'fellapp-submit' ) {
                 $initialStatusName = "active";
                 //exit("Validate and process full application");
             } else {
