@@ -18,63 +18,63 @@ class Init:
         self.password_default = "1234567890"
         self.password_new = "1234567890_demo"
 
-    def initialize_orig(self):
-        driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
-        print("run init link")
-        driver.get(url)
-        print("after run init link")
-        time.sleep(3)
-
-        if "500 Internal Server Error" in driver.page_source:
-            print("500 Error detected!")
-            self.run_deploy_command()
-            time.sleep(3)
-
-            #Second attempt to run init
-            url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
-            print("run init link 2")
-            driver.get(url)
-            print("after run init link 2")
-            time.sleep(3)
-
-        #login using default username and password
-        self.automation.login_to_site(None, self.username, self.password_default)
-        time.sleep(3)
-
-        #check if logged in successful "display-username"
-        try:
-            # Attempt to locate the element
-            username_element = driver.find_element(By.ID, "display-username")
-            if username_element:
-                print("Element display-username exists => Login page => Re-login.")
-                self.automation.login_to_site(None, self.username, self.password_new)
-                time.sleep(3)
-                try:
-                    username_element = driver.find_element(By.ID, "display-username")
-                    time.sleep(3)
-                    if username_element:
-                        print("Element display-username exists => Login page => Failed")
-                        return False
-                except NoSuchElementException:
-                    print("Element 'display-username' does not exist => Logged in => Continue initializing.")
-            else:
-                print("Element display-username exists but is not interactable!")
-                return False
-        except NoSuchElementException:
-            print("Element does not exist => Logged in => Continue initializing.")
-
-        #if page with init displayed
-        print("Continue initializing.")
-        time.sleep(3)
-        try:
-            select_element = driver.find_element(By.ID, "oleg_userdirectorybundle_initialconfigurationtype_environment")
-            time.sleep(3)
-            self.config_initializing()
-        except NoSuchElementException:
-            print("Initializing page is not showing. Continue with site settings.")
-
-        return True
+    # def initialize_orig(self):
+    #     driver = self.automation.get_driver()
+    #     url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
+    #     print("run init link")
+    #     driver.get(url)
+    #     print("after run init link")
+    #     time.sleep(3)
+    #
+    #     if "500 Internal Server Error" in driver.page_source:
+    #         print("500 Error detected!")
+    #         self.run_deploy_command()
+    #         time.sleep(3)
+    #
+    #         #Second attempt to run init
+    #         url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
+    #         print("run init link 2")
+    #         driver.get(url)
+    #         print("after run init link 2")
+    #         time.sleep(3)
+    #
+    #     #login using default username and password
+    #     self.automation.login_to_site(None, self.username, self.password_default)
+    #     time.sleep(3)
+    #
+    #     #check if logged in successful "display-username"
+    #     try:
+    #         # Attempt to locate the element
+    #         username_element = driver.find_element(By.ID, "display-username")
+    #         if username_element:
+    #             print("Element display-username exists => Login page => Re-login.")
+    #             self.automation.login_to_site(None, self.username, self.password_new)
+    #             time.sleep(3)
+    #             try:
+    #                 username_element = driver.find_element(By.ID, "display-username")
+    #                 time.sleep(3)
+    #                 if username_element:
+    #                     print("Element display-username exists => Login page => Failed")
+    #                     return False
+    #             except NoSuchElementException:
+    #                 print("Element 'display-username' does not exist => Logged in => Continue initializing.")
+    #         else:
+    #             print("Element display-username exists but is not interactable!")
+    #             return False
+    #     except NoSuchElementException:
+    #         print("Element does not exist => Logged in => Continue initializing.")
+    #
+    #     #if page with init displayed
+    #     print("Continue initializing.")
+    #     time.sleep(3)
+    #     try:
+    #         select_element = driver.find_element(By.ID, "oleg_userdirectorybundle_initialconfigurationtype_environment")
+    #         time.sleep(3)
+    #         self.config_initializing()
+    #     except NoSuchElementException:
+    #         print("Initializing page is not showing. Continue with site settings.")
+    #
+    #     return True
 
     def initialize(self):
         driver = self.automation.get_driver()
