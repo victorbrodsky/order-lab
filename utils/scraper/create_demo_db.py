@@ -324,7 +324,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     # Track the number of attempts
     attempts = {key: 0 for key in demo_ids.keys()}
     #print("Attempts:", attempts)
-    max_attempts = 2  # Set maximum retries per section
+    max_attempts = 1 #2  # Set maximum retries per section
 
     print("Start demos")
 
