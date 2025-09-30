@@ -21,7 +21,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
     #run_by_symfony_command = True
     #run_by_symfony_command = False
     # Sections
-    if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
+    #if 'init' in demo_ids and demo_ids['init'] and attempts['init'] <= max_attempts:
+    if 'init' in demo_ids and demo_ids['init'] and 'init' in attempts and attempts.get('init', 0) <= max_attempts:
         print("init attempt=",attempts['init'])
         try:
             automation = WebAutomation(run_by_symfony_command)
@@ -49,11 +50,12 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del init
 
     #Stop all following demos if init failed
-    if demo_ids['init'] and attempts['init'] >= max_attempts:
+    #if demo_ids['init'] and attempts['init'] >= max_attempts:
+    if demo_ids['init'] and 'init' in attempts and attempts.get('init', 0) >= max_attempts:
         print("Init failed. Exit all demos.")
         sys.exit()
 
-    if 'users' in demo_ids and demo_ids['users'] and attempts['users'] <= max_attempts:
+    if 'users' in demo_ids and demo_ids['users'] and attempts.get('users', 0) <= max_attempts:
         print("users attempt=", attempts['users'])
         try:
             automation = WebAutomation(run_by_symfony_command)
@@ -76,7 +78,7 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del users
 
     # Stop all following demos if users failed
-    if demo_ids['users'] and attempts['users'] >= max_attempts:
+    if demo_ids['users'] and attempts.get('users', 0) >= max_attempts:
         print("Users failed. Exit all demos.")
         sys.exit()
 
@@ -112,8 +114,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
     #     del automation
     #     sys.exit()
 
-    if 'vacreq' in demo_ids and demo_ids['vacreq'] and attempts['vacreq'] <= max_attempts:
-        print("vacreq attempt=", attempts['vacreq'])
+    if 'vacreq' in demo_ids and demo_ids['vacreq'] and attempts.get('vacreq', 0) <= max_attempts:
+        print("vacreq attempt=", attempts.get('vacreq', 0))
         try:
             automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
@@ -142,8 +144,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del automation
             del vacreq
 
-    if 'trp' in demo_ids and demo_ids['trp'] and attempts['trp'] <= max_attempts:
-        print("trp attempt=", attempts['trp'])
+    if 'trp' in demo_ids and demo_ids['trp'] and attempts.get('trp', 0) <= max_attempts:
+        print("trp attempt=", attempts.get('trp', 0))
         try:
             automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
@@ -170,8 +172,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del automation
             del trp
 
-    if 'callog' in demo_ids and demo_ids['callog'] and attempts['callog'] <= max_attempts:
-        print("callog attempt=", attempts['callog'])
+    if 'callog' in demo_ids and demo_ids['callog'] and attempts.get('callog', 0) <= max_attempts:
+        print("callog attempt=", attempts.get('callog', 0))
         try:
             automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
@@ -190,8 +192,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del automation
             del callog
 
-    if 'fellapp' in demo_ids and demo_ids['fellapp'] and attempts['fellapp'] <= max_attempts:
-        print("fellapp attempt=", attempts['fellapp'])
+    if 'fellapp' in demo_ids and demo_ids['fellapp'] and attempts.get('fellapp', 0) <= max_attempts:
+        print("fellapp attempt=", attempts.get('fellapp', 0))
         try:
             automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
@@ -218,8 +220,8 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             del automation
             del fellapp
 
-    if 'resapp' in demo_ids and demo_ids['resapp'] and attempts['resapp'] <= max_attempts:
-        print("resapp attempt=", attempts['resapp'])
+    if 'resapp' in demo_ids and demo_ids['resapp'] and attempts.get('resapp', 0) <= max_attempts:
+        print("resapp attempt=", attempts.get('resapp', 0))
         try:
             automation = WebAutomation(run_by_symfony_command)
             automation.login_to_site()
