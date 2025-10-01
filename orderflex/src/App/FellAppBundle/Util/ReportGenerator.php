@@ -929,6 +929,7 @@ class ReportGenerator {
             );
         } else {
             //OLD WAY
+            $router = $this->container->get('router');
             $pageUrl = $router->generate(
                 'fellapp_download',
                 array(
