@@ -920,12 +920,23 @@ class ReportGenerator {
 //            $replaceContext=true 
 //        );
 
-        $paramArr = array('id'=>$applicationId);
-        $pageUrl = $userTenantUtil->routerGenerateWrapper(
-            'fellapp_download',
-            $paramArr,
-            $replaceContext=true
-        );
+        if(0) {
+            $paramArr = array('id' => $applicationId);
+            $pageUrl = $userTenantUtil->routerGenerateWrapper(
+                'fellapp_download',
+                $paramArr,
+                $replaceContext = true
+            );
+        } else {
+            //OLD WAY
+            $pageUrl = $router->generate(
+                'fellapp_download',
+                array(
+                    'id' => $applicationId
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ); //this does not work from console: 'order' is missing
+        }
 
         $logger->notice("generateApplicationPdf: fellapp_download pageUrl=[".$pageUrl."]");
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
