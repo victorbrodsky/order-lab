@@ -919,26 +919,15 @@ class ReportGenerator {
 //            $applicationId, 
 //            $replaceContext=true 
 //        );
+        
+        $paramArr = array('id' => $applicationId);
+        $pageUrl = $userTenantUtil->routerGenerateWrapper(
+            'fellapp_download',
+            $paramArr,
+            //$replaceContext = true
+            $replaceContext = false
+        );
 
-        if(1) {
-            $paramArr = array('id' => $applicationId);
-            $pageUrl = $userTenantUtil->routerGenerateWrapper(
-                'fellapp_download',
-                $paramArr,
-                //$replaceContext = true
-                $replaceContext = false
-            );
-        } else {
-            //OLD WAY
-            $router = $this->container->get('router');
-            $pageUrl = $router->generate(
-                'fellapp_download',
-                array(
-                    'id' => $applicationId
-                ),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-        }
         //$pageUrl = 'http://view.online/c/test-institution/test-department/fellowship-applications/download/1';
 
         $logger->notice("generateApplicationPdf: fellapp_download pageUrl=[".$pageUrl."]");
