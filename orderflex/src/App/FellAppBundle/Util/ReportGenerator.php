@@ -972,14 +972,14 @@ class ReportGenerator {
 
         $logger->notice("before knp_snappy generate: PHPSESSID=[".$PHPSESSID."]");
 
-        $this->logger->debug('Generating PDF with Snappy', [
+        $logger->debug('Generating PDF with Snappy', [
             'url' => $pageUrl,
             'output' => $applicationOutputFilePath,
             'options' => [
                 'cookie' => ['PHPSESSID' => $PHPSESSID]
             ],
         ]);
-        
+
 
         //$application =
         $this->container->get('knp_snappy.pdf')->generate(
