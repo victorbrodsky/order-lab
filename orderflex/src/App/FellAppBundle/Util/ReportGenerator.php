@@ -920,12 +920,13 @@ class ReportGenerator {
 //            $replaceContext=true 
 //        );
 
-        if(0) {
+        if(1) {
             $paramArr = array('id' => $applicationId);
             $pageUrl = $userTenantUtil->routerGenerateWrapper(
                 'fellapp_download',
                 $paramArr,
-                $replaceContext = true
+                //$replaceContext = true
+                $replaceContext = false
             );
         } else {
             //OLD WAY
