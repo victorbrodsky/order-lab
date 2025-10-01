@@ -938,7 +938,7 @@ class ReportGenerator {
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
         }
-        $pageUrl = 'https://view.online/c/test-institution/test-department/fellowship-applications/download/1';
+        $pageUrl = 'http://view.online/c/test-institution/test-department/fellowship-applications/download/1';
 
         $logger->notice("generateApplicationPdf: fellapp_download pageUrl=[".$pageUrl."]");
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
