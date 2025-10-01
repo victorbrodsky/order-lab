@@ -785,9 +785,9 @@ class FellAppController extends OrderAbstractController {
                     //$this->container->get('security.token_storage')->setToken($token);
                     $tokenStorage->setToken($token);
                 }
-                $logger->notice("Download view: Logged in as systemUser=".$systemUser);
+                $logger->notice("Download view: Logged in as systemUser=".$systemUser.", ID=".$systemUser->getId());
             } else {
-                $logger->notice("Download view: Token user is valid security user=".$user);
+                $logger->notice("Download view: Token user is valid security user=".$user.", ID=".$user->getId());
             }
         }
 
