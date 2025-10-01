@@ -20,7 +20,8 @@ knp_snappy:
             load-media-error-handling: ignore
             no-stop-slow-scripts: true
             disable-smart-shrinking: true
-            custom-header: { Host: 'localhost', X-Forwarded-Proto: 'http' }
+            custom-header: 'Host localhost'
+          
 
             #custom-header: 'Host: localhost'
                 #- 'Host: localhost'
