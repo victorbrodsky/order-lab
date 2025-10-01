@@ -921,6 +921,7 @@ class ReportGenerator {
 //        );
 
         //Make sure $pageUrl is absolute ulr: https://view.online/c/test-institution/test-department/fellowship-applications/download/1
+        //if tenant is homepage then it will work
         $paramArr = array('id' => $applicationId);
         $pageUrl = $userTenantUtil->routerGenerateWrapper(
             'fellapp_download',
