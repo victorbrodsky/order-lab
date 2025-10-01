@@ -807,7 +807,7 @@ class ReportGenerator {
 
 
         //delete application temp folder
-        $this->deleteDir($outdir); //testing: comment out deleteDir to recover temp converted to PDF files
+        // $this->deleteDir($outdir); //testing: comment out deleteDir to recover temp converted to PDF files
 
         $res = array(
             'filename' => $fileFullReportUniqueName,
