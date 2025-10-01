@@ -919,13 +919,14 @@ class ReportGenerator {
 //            $applicationId, 
 //            $replaceContext=true 
 //        );
-        
+
+        //Make sure $pageUrl is absolute ulr: https://view.online/c/test-institution/test-department/fellowship-applications/download/1
         $paramArr = array('id' => $applicationId);
         $pageUrl = $userTenantUtil->routerGenerateWrapper(
             'fellapp_download',
             $paramArr,
-            //$replaceContext = true
-            $replaceContext = false
+            $replaceContext = true
+            //$replaceContext = false
         );
 
         //$pageUrl = 'http://view.online/c/test-institution/test-department/fellowship-applications/download/1';
