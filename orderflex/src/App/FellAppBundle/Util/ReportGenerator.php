@@ -977,15 +977,16 @@ class ReportGenerator {
                 'cookie' => array(
                     'PHPSESSID' => $PHPSESSID
                 ),
-                'custom-header' => array(
-                    'Host' => 'localhost',
-                    'X-Forwarded-Proto' => 'http',
-                ),
+                //'custom-header' => array(
+                    ////'Host' => 'localhost',
+                    //'X-Forwarded-Proto' => 'http',
+                //),
             )
             //array('cookie' => array($session->getName() => $session->getId()))
         );
 
         //command: /usr/local/bin/wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' 'http://localhost/fellowship-applications/download/3' '/srv/order-lab-tenantappdemo/orderflex/public/Uploaded/Reports/temp_3/application_ID3.pdf'
+        ///usr/local/bin/wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --custom-header 'Host' 'localhost' --custom-header 'X-Forwarded-Proto' 'http' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' --disable-smart-shrinking --no-stop-slow-scripts 'http://localhost/fellowship-applications/download/3' '/srv/order-lab-tenantappdemo/orderflex/public/Uploaded/Reports/temp_3/application_ID3.pdf'
 
         //testing
         //$pdfPath = "fellapp_download";
