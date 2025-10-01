@@ -979,7 +979,7 @@ class ReportGenerator {
 //                'cookie' => ['PHPSESSID' => $PHPSESSID]
 //            ],
 //        ]);
-        
+
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath,
@@ -997,6 +997,8 @@ class ReportGenerator {
 
         //command: /usr/local/bin/wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' 'http://localhost/fellowship-applications/download/3' '/srv/order-lab-tenantappdemo/orderflex/public/Uploaded/Reports/temp_3/application_ID3.pdf'
         ///usr/local/bin/wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --custom-header 'Host' 'localhost' --custom-header 'X-Forwarded-Proto' 'http' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' --disable-smart-shrinking --no-stop-slow-scripts 'http://localhost/fellowship-applications/download/3' '/srv/order-lab-tenantappdemo/orderflex/public/Uploaded/Reports/temp_3/application_ID3.pdf'
+
+        $logger->notice("PDF generated=[".$applicationOutputFilePath."]");
 
         //testing
         //$pdfPath = "fellapp_download";
