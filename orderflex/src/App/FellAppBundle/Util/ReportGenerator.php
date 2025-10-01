@@ -980,19 +980,8 @@ class ReportGenerator {
 //            ],
 //        ]);
 
-//        $this->container->get('knp_snappy.pdf')->generate(
-//            $pageUrl,
-//            $applicationOutputFilePath,
-//            array(
-//                'cookie' => array(
-//                    'PHPSESSID' => $PHPSESSID
-//                ),
-//            )
-//        );
-
-        $this->container->get('knp_snappy.pdf')->generateFromHtml(
-            'https://view.online/c/test-institution/test-department/fellowship-applications/download/1',
-            //'/tmp/test.pdf'
+        $this->container->get('knp_snappy.pdf')->generate(
+            $pageUrl,
             $applicationOutputFilePath,
             array(
                 'cookie' => array(
