@@ -18,6 +18,7 @@ knp_snappy:
             javascript-delay: 9000 #9000    #Wait some milliseconds for javascript finish (default 200)
             load-error-handling: ignore
             load-media-error-handling: ignore
+            enable-local-file-access: true
             #no-stop-slow-scripts: true
             #disable-smart-shrinking: true
             #custom-header: 'Host: localhost'
