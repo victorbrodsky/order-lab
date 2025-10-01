@@ -912,7 +912,7 @@ class ReportGenerator {
             $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
             $pageUrl = str_replace("http://localhost/", "http://localhost/" . $tenantUrlBase . "/", $pageUrl);
             //// EOF replace tenant base in $pageUrl //////
-        }
+        } //if 0
 
 //        $pageUrl = $userTenantUtil->routerGenerateWrapper( 
 //            'fellapp_download', 
@@ -980,6 +980,8 @@ class ReportGenerator {
             )
             //array('cookie' => array($session->getName() => $session->getId()))
         );
+
+        //command: /usr/local/bin/wkhtmltopdf --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' 'http://localhost/fellowship-applications/download/3' '/srv/order-lab-tenantappdemo/orderflex/public/Uploaded/Reports/temp_3/application_ID3.pdf'
 
         //testing
         //$pdfPath = "fellapp_download";
