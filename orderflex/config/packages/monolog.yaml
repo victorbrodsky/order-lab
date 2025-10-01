@@ -1,17 +1,17 @@
 monolog:
     channels: ['knp_snappy', 'deprecation']
-        handlers:
-            knp_snappy:
-                type: stream
-                path: '%kernel.logs_dir%/knp_snappy.log'
-                level: debug
-                channels: ['knp_snappy']
+    handlers:
+        knp_snappy:
+            type: stream
+            path: '%kernel.logs_dir%/knp_snappy.log'
+            level: debug
+            channels: ['knp_snappy']
 
-            deprecation:
-                type: stream
-                path: '%kernel.logs_dir%/deprecations.log'
-                level: debug
-                channels: ['deprecation']
+        deprecation:
+            type: stream
+            path: '%kernel.logs_dir%/deprecations.log'
+            level: debug
+            channels: ['deprecation']
 
 
 #    channels:
