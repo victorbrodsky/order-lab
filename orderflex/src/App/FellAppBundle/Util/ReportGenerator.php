@@ -931,6 +931,9 @@ class ReportGenerator {
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
         //exit();
 
+        $pageUrl = str_replace('http://localhost', 'http://127.0.0.1:8000', $pageUrl);
+        $logger->notice("generateApplicationPdf: fellapp_download pageUrl2=[".$pageUrl."]");
+
         //save session        
         //$session = $this->container->get('session');
         //$session->save();

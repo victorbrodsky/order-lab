@@ -1628,7 +1628,7 @@ class UserTenantUtil
     // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
     //$paramArr - array of parameters (i.e. array('id'=>123))
     //Used in generateApplicationPdf
-    public function routerGenerateWrapper($routName, $paramArr, $replaceContext = true)
+    public function routerGenerateWrapper($routName, $paramArr, $replaceContext=true)
     {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
