@@ -992,7 +992,8 @@ class ReportGenerator {
 
         $this->container->get('knp_snappy.pdf')->generateFromHtml(
             'https://view.online/c/test-institution/test-department/fellowship-applications/download/1',
-            '/tmp/test.pdf'
+            //'/tmp/test.pdf'
+            $applicationOutputFilePath
         );
 
         //array('cookie' => array($session->getName() => $session->getId()))
