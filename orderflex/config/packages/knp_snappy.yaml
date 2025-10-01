@@ -21,8 +21,8 @@ knp_snappy:
             no-stop-slow-scripts: true
             disable-smart-shrinking: true
             custom-header:
-                Host: 'localhost'
-                X-Forwarded-Proto: 'http'
+                - 'Host: localhost'
+                - 'X-Forwarded-Proto: http'
 
 
 #    image:
