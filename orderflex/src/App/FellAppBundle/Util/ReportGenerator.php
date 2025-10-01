@@ -931,8 +931,8 @@ class ReportGenerator {
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
         //exit();
 
-        $pageUrl = str_replace('http://localhost', 'http://127.0.0.1', $pageUrl);
-        $logger->notice("generateApplicationPdf: fellapp_download pageUrl2=[".$pageUrl."]");
+        //$pageUrl = str_replace('http://localhost', 'http://127.0.0.1', $pageUrl);
+        //$logger->notice("generateApplicationPdf: fellapp_download pageUrl2=[".$pageUrl."]");
 
         //save session        
         //$session = $this->container->get('session');
@@ -971,6 +971,15 @@ class ReportGenerator {
         }
 
         $logger->notice("before knp_snappy generate: PHPSESSID=[".$PHPSESSID."]");
+
+        $this->logger->debug('Generating PDF with Snappy', [
+            'url' => $pageUrl,
+            'output' => $applicationOutputFilePath,
+            'options' => [
+                'cookie' => ['PHPSESSID' => $PHPSESSID]
+            ],
+        ]);
+        
 
         //$application =
         $this->container->get('knp_snappy.pdf')->generate(
