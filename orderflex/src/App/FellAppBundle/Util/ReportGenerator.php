@@ -977,10 +977,10 @@ class ReportGenerator {
                 'cookie' => array(
                     'PHPSESSID' => $PHPSESSID
                 ),
-                'custom-header' => [
+                'custom-header' => array(
                     'Host' => 'localhost',
                     'X-Forwarded-Proto' => 'http',
-                ],
+                ),
             )
             //array('cookie' => array($session->getName() => $session->getId()))
         );
