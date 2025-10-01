@@ -13,7 +13,8 @@ knp_snappy:
     temporary_folder: "%kernel.cache_dir%/snappy" #'%kernel.project_dir%/var/tmp/' #use different temp folder
     pdf:
         enabled:    true
-        binary:     '%wkhtmltopdfpath%' #/usr/bin/xvfb-run /usr/bin/wkhtmltopdf #'%wkhtmltopdfpath%'   #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        #binary:     '%wkhtmltopdfpath%' #/usr/bin/xvfb-run /usr/bin/wkhtmltopdf #'%wkhtmltopdfpath%'   #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        binary: '/usr/local/bin/wkhtmltopdf-wrapper.sh'
         options:
             javascript-delay: 9000 #9000    #Wait some milliseconds for javascript finish (default 200)
             load-error-handling: ignore
