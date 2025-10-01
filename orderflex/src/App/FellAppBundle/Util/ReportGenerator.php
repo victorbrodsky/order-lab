@@ -936,8 +936,9 @@ class ReportGenerator {
                     'id' => $applicationId
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
-            ); //this does not work from console: 'order' is missing
+            );
         }
+        $pageUrl = 'https://view.online/c/test-institution/test-department/fellowship-applications/download/1';
 
         $logger->notice("generateApplicationPdf: fellapp_download pageUrl=[".$pageUrl."]");
         //echo "generateApplicationPdf: pageurl=". $pageUrl . "<br>";
