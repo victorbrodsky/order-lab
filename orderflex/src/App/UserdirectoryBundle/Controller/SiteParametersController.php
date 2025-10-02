@@ -734,6 +734,7 @@ class SiteParametersController extends OrderAbstractController
         );
     }
 
+    //https://view.online/c/test-institution/test-department/directory/settings/update-parameters
     #[Route(path: '/update-parameters', name: 'employees_update_parameters', methods: ['GET'])]
     public function setTenantUrlAction(Request $request)
     {
@@ -743,7 +744,7 @@ class SiteParametersController extends OrderAbstractController
         }
         $currentUrl = $request->getUri();
         $projectDir = $this->container->get('kernel')->getProjectDir();
-        $yamlPath = $projectDir . '/config/parameters.yaml';
+        $yamlPath = $projectDir . '/config/parameters.yml';
         $res = $this->updateTenantBaseFromUrl($currentUrl, $yamlPath);
 
         if( $res ) {
