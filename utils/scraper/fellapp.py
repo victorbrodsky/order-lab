@@ -48,6 +48,24 @@ class FellApp:
         return users
 
     def configs(self):
+        fellapp_names = {
+            'Clinical Informatics',
+            'Breast Pathology',
+            'Cardiopulmonary Pathology',
+            'Cytopathology',
+            'Dermatopathology',
+            'Genitourinary Pathology',
+            'Gynecologic Pathology',
+            'Hematopathology',
+            'Renal Pathology',
+            'Surgical Pathology',
+            'Molecular Genetic Pathology',
+        }
+
+        for fellapp_name in fellapp_names:
+            self.config_single(fellapp_name)
+
+    def config_single(self, fellapp_name):
         driver = self.automation.get_driver()
         #Add Fellowship Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
         #url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
@@ -61,7 +79,8 @@ class FellApp:
 
         # Locate the <td> with the exact text "Clinical Informatics"
         try:
-            target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
+            #target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
+            target_td = table.find_element(By.XPATH, f'.//td[text()="{fellapp_name}"]')
             if target_td:
                 #print("<td> with text 'Clinical Informatics' already exists.")
                 #print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
@@ -73,7 +92,8 @@ class FellApp:
                 time.sleep(3)
 
                 name = driver.find_element(By.ID, "oleg_userdirectorybundle_genericlist_list_name")
-                name.send_keys("Clinical Informatics")
+                #name.send_keys("Clinical Informatics")
+                name.send_keys(fellapp_name)
 
                 #s2id_oleg_userdirectorybundle_genericlist_institution
                 self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
@@ -102,7 +122,8 @@ class FellApp:
         # )
         try:
             # Try to find the element
-            fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+            #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+            fellowship_type = driver.find_element("xpath", f"//h4/a[contains(text(), '{fellapp_name}')]")
             #print("Element found!")
             # You can perform actions on the element here
             fellowship_type.click()
@@ -136,11 +157,16 @@ class FellApp:
             self.automation.click_button("btn-primary")
             time.sleep(3)
 
+            # self.automation.select_option(
+            #     "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
+            #     ".select2-search .select2-input",
+            #     "Clinical Informatics"
+            #     )
             self.automation.select_option(
                 "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
                 ".select2-search .select2-input",
-                "Clinical Informatics"
-                )
+                fellapp_name
+            )
 
             time.sleep(3)
             self.automation.click_button_by_id("oleg_fellappbundle_fellappfellowshipapplicationtype_save")
