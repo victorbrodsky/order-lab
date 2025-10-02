@@ -1338,6 +1338,7 @@ class CrnUtil
                     $userSecUtil = $this->container->get('user_security_utility');
                     $sitename = $this->container->getParameter('crn.sitename');
                     $defaultInstitution = $userSecUtil->getSiteSettingParameter('institution',$sitename);
+                    $defaultLocationName = NULL;
                     if( $defaultInstitution ) {
                         $defaultLocationName = $defaultInstitution->getName();//." Location";
                     }

@@ -105,7 +105,7 @@ class FellApp:
                 self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
 
         except:
-            print("fellapp configs: Unable to find or create")
+            print(f"fellapp configs: Unable to find or create {fellapp_name}")
 
         time.sleep(3)
 
