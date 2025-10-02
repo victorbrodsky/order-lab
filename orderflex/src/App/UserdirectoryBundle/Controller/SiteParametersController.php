@@ -737,7 +737,7 @@ class SiteParametersController extends OrderAbstractController
     #[Route(path: '/update-parameters', name: 'employees_update_parameters', methods: ['GET'])]
     public function setTenantUrlAction(Request $request)
     {
-        //exit('EXIT: initialConfigurationAction');
+        //exit('EXIT: setTenantUrlAction');
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
