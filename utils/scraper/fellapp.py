@@ -50,16 +50,16 @@ class FellApp:
     def configs(self):
         fellapp_names = {
             'Clinical Informatics',
-            'Breast Pathology',
-            'Cardiopulmonary Pathology',
-            'Cytopathology',
-            'Dermatopathology',
-            'Genitourinary Pathology',
-            'Gynecologic Pathology',
-            'Hematopathology',
-            'Renal Pathology',
-            'Surgical Pathology',
-            'Molecular Genetic Pathology',
+            # 'Breast Pathology',
+            # 'Cardiopulmonary Pathology',
+            # 'Cytopathology',
+            # 'Dermatopathology',
+            # 'Genitourinary Pathology',
+            # 'Gynecologic Pathology',
+            # 'Hematopathology',
+            # 'Renal Pathology',
+            # 'Surgical Pathology',
+            # 'Molecular Genetic Pathology',
         }
 
         for fellapp_name in fellapp_names:
