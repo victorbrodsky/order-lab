@@ -357,10 +357,10 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
         demo_ids = {
             'init': True,
             'users': True,
+            'fellapp': True,
             'vacreq': True,
             'trp': True,
             'callog': True,
-            'fellapp': True,
             'resapp': True
         }
     else:

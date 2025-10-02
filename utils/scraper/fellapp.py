@@ -63,6 +63,7 @@ class FellApp:
         }
 
         for fellapp_name in fellapp_names:
+            time.sleep(3)
             self.config_single(fellapp_name)
 
     def config_single(self, fellapp_name):
