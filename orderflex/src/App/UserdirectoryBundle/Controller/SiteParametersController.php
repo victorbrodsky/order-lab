@@ -734,6 +734,62 @@ class SiteParametersController extends OrderAbstractController
         );
     }
 
+    #[Route(path: '/update-parameters', name: 'employees_update_parameters', methods: ['GET'])]
+    public function setTenantUrlAction(Request $request)
+    {
+        //exit('EXIT: initialConfigurationAction');
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+        $currentUrl = $request->getUri();
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $yamlPath = $projectDir . '/config/parameters.yaml';
+        $res = $this->updateTenantBaseFromUrl($currentUrl, $yamlPath);
+
+        if( $res ) {
+            $this->addFlash(
+                'notice',
+                "Updated $yamlPath"
+            );
+        } else {
+            $this->addFlash(
+                'notice',
+                "Error updating $yamlPath"
+            );
+        }
+
+        return $this->redirect( $this->generateUrl('main_common_home') );
+    }
+    function updateTenantBaseFromUrl(string $url, string $yamlPath): bool
+    {
+        // Step 1: Extract tenant base from URL
+        $parsed = parse_url($url);
+        $path = $parsed['path'] ?? '';
+        $segments = explode('/', trim($path, '/'));
+
+        // Look for 'c' followed by two segments
+        $cIndex = array_search('c', $segments);
+        if ($cIndex === false || !isset($segments[$cIndex + 1], $segments[$cIndex + 2])) {
+            return false; // Invalid structure
+        }
+
+        $tenantBase = 'c/' . $segments[$cIndex + 1] . '/' . $segments[$cIndex + 2];
+
+        // Step 2: Load and update parameters.yaml
+        $yaml = file_get_contents($yamlPath);
+        if ($yaml === false) return false;
+
+        // Replace or insert tenant_base
+        if (preg_match('/tenant_base:\s*[^\n]*/', $yaml)) {
+            $yaml = preg_replace('/tenant_base:\s*[^\n]*/', "tenant_base: $tenantBase", $yaml);
+        } else {
+            $yaml .= "\ntenant_base: $tenantBase\n";
+        }
+
+        // Step 3: Write back to file
+        return file_put_contents($yamlPath, $yaml) !== false;
+    }
+
 
 //    #[Route(path: '/tenancy-management', name: 'employees_tenancy_management', methods: ['GET', 'POST'])]
 //    #[Template('AppSystemBundle/tenancy-management.html.twig')]
