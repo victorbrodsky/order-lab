@@ -468,7 +468,7 @@ class FellowshipApplicationType extends AbstractType
 
         //////////////////////////////////////////////////////////////
 
-        if( $this->params && $this->params['routeName'] == 'fellapp_apply' ) {
+        if( $this->params && $this->params['routeName'] == 'fellapp_apply' || $this->params['routeName'] == 'fellapp_apply_applicant' ) {
 //            echo "show recaptcha <br>";
             $builder->add('recaptcha', HiddenType::class, array(
                 'mapped' => false,
