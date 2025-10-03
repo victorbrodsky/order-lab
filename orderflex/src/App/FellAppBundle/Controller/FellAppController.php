@@ -3394,7 +3394,7 @@ class FellAppController extends OrderAbstractController {
 
             //$res = $fellappUtil->checkUserExistByPostRequest($request);
             $res = $fellappUtil->checkUserExistByEmail($applicantEmail);
-            echo "applyApplicantAction: res=$res <br>";
+            //echo "applyApplicantAction: res=$res <br>";
             $applicant = null;
             if ($res === true) {
                 //find $applicant by email
