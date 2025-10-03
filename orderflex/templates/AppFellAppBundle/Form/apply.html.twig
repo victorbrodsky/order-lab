@@ -38,8 +38,6 @@
         {% endif %}
     {% endif %}
 
-    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-
     {% include 'AppFellAppBundle/Form/applicant-content.html.twig' %}
 
     {#{{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}#}
@@ -58,7 +56,7 @@
 {#{% endblock %}#}
 
 {% block additionaljs %}
-    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+    {#<script src='https://www.google.com/recaptcha/api.js' async defer></script>#}
     {% include 'AppFellAppBundle/Form/applicant-content-js.html.twig' %}
 
     <script language="Javascript">
