@@ -3322,7 +3322,10 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/check-user-exist', name: 'employees_check_user_exist_email', methods: ["POST"], options: ['expose' => true])]
     public function checkUserExistEmailAction(Request $request) {
         $fellappUtil = $this->container->get('fellapp_util');
-        $res = $fellappUtil->checkUserExistByPostRequest($request);
+        //$res = $fellappUtil->checkUserExistByPostRequest($request);
+
+        $email = $request->request->get('email');
+        $res = $fellappUtil->checkUserExistByEmail($email);
 
         if( $res === true ) {
             $res = 'EXIST';
