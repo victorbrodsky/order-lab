@@ -3355,7 +3355,7 @@ class FellAppController extends OrderAbstractController {
 //        return $result;
 //    }
 
-    #[Route(path: '/applicant/apply', name: 'fellapp_apply_applicant', methods: ['POST'])]
+    #[Route(path: '/applicant/apply-post', name: 'fellapp_apply_applicant', methods: ['POST'])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function applyApplicantAction( Request $request, Security $security )
     {
@@ -3455,10 +3455,10 @@ class FellAppController extends OrderAbstractController {
 //        }
         /////////
 
-        if( !$form->isSubmitted() ) {
-            //echo "form is not submitted<br>";
-            $form->submit($request);
-        }
+//        if( !$form->isSubmitted() ) {
+//            //echo "form is not submitted<br>";
+//            $form->submit($request);
+//        }
 
         $applicant = $fellowshipApplication->getUser();
 
