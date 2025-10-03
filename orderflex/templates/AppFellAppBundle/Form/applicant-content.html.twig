@@ -303,7 +303,7 @@
         {#recaptcha is defined<br>#}
     {#{% endif %}#}
     {% if captchaSiteKey is defined and captchaSiteKey and form.recaptcha is defined %}
-        <br>inside captchaSiteKey={{ captchaSiteKey }}
+        {#<br>inside captchaSiteKey={{ captchaSiteKey }}#}
         {#{{ form_errors(form.recaptcha) }}#}
         <div class="col-xs-12 text-center">
             <p>
