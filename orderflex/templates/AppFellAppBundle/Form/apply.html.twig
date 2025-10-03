@@ -1,0 +1,80 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppFellAppBundle/Default/base.html.twig" %}
+
+{#{% block browsercheck %}{% endblock %}#}
+{#{% block header %}{% endblock %}#}
+{#{% block mainjs %}{% endblock %}#}
+{#{% block errorwatchjs %}{% endblock %}#}
+{#{% block maincss %}{% endblock %}#}
+
+{% block title %}
+    Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+{% endblock %}
+
+{% block content %}
+
+    <input type="hidden" id="disableIdleTimeout" value="1" />
+
+    {% if cycle == "download" %}
+        {% set collapsein = "in" %}
+    {% else %}
+        {% if is_granted('ROLE_FELLAPP_ADMIN') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
+            {% set collapsein = "" %}
+        {% endif %}
+    {% endif %}
+
+    {% include 'AppFellAppBundle/Form/applicant-content.html.twig' %}
+
+    {#{{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}#}
+    {#{{ form_errors(form) }}#}
+    {#<button class="btn btn-warning" type="submit">Update</button>#}
+    {#{{ form_end(form) }}#}
+
+    {#{{ form_start(form) }}#}
+    {#{{ form_widget(form) }}#}
+    {#<button class="btn btn-warning" type="submit">Update</button>#}
+    {#{{ form_end(form) }}#}
+
+{% endblock %}
+
+{#{% block mainjs %}#}
+{#{% endblock %}#}
+
+{% block additionaljs %}
+    {% include 'AppFellAppBundle/Form/applicant-content-js.html.twig' %}
+    <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+
+    <script language="Javascript">
+
+        $(document).ready(function() {
+            var hashValue = window.location.hash;
+            //console.log("hashValue="+hashValue);
+            if( hashValue == '#interviews' ) {
+                //console.log("open panel");
+                $('#interviews').collapse('show');
+                expandTextarea($('#interviews'));
+            }
+        });
+
+    </script>
+
+
+
+{% endblock %}
+
+

@@ -150,7 +150,7 @@
     <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
-    <input type="hidden" id="route" value="{{ route }}" />
+    <input type="hidden" id="route_path" value="{{ route_path }}" />
 
     <input type="hidden" name="btnSubmit" id="btnSubmitHidden" value="" />
 
@@ -214,7 +214,7 @@
 
 
     <!-- Itinerary -->
-    {% if route is not defined or route != 'fellapp_apply' %}
+    {% if route_path is not defined or route_path != 'fellapp_apply' %}
         <!-- PDF Reports -->
         {#and cycle != "new"#}
         {% if cycle != "download" %}
@@ -291,6 +291,20 @@
         <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="fellapp-submit">Submit Application</button>
 
     </p>
+{% endif %}
+
+{% if route_path == 'fellapp_apply' %}
+    captchaSiteKey={{ captchaSiteKey }}
+    {% if captchaSiteKey is defined and captchaSiteKey and recaptcha is defined %}
+        {#captchaSiteKey={{ captchaSiteKey }}#}
+        {#{{ form_errors(form.recaptcha) }}#}
+        <div class="col-xs-12 text-center">
+            <p>
+                {{ formmacros.field(form.recaptcha) }}
+            <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+            </p>
+        </div>
+    {% endif %}
 {% endif %}
 
 {#{{ form_end(form) }}#}

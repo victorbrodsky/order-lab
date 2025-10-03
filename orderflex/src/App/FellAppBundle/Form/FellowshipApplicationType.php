@@ -34,6 +34,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -467,6 +468,14 @@ class FellowshipApplicationType extends AbstractType
 
         //////////////////////////////////////////////////////////////
 
+        if( $this->params && $this->params['routeName'] == 'fellapp_apply' ) {
+            $builder->add('recaptcha', HiddenType::class, array(
+                'mapped' => false,
+                'error_bubbling' => false,
+                'label' => false,
+                'attr' => array('class' => 'form-control g-recaptcha1'),
+            ));
+        }
 
     }
 

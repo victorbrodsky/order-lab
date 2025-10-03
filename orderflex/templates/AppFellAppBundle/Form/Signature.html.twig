@@ -16,7 +16,7 @@
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
-<div class="row withpaddingtop" style="width:90%; padding-left:10%;">
+<div class="row withpaddingtop" style="width1:90%; padding-left1:10%;">
 
     <div class="col-xs-12">
 
@@ -33,7 +33,7 @@
     </div>
 
     {% if form.signatureName is defined %}
-    <div class="row withpaddingtop withpaddingleft">
+    <div class="row withpaddingtop withpaddingleft" style="padding-left1: 20px;">
         <div class="col-xs-6">
             {#<label for="signatureName" class="control-label required">Signature</label>#}
             {#<input type="text" class="form-control" id="signatureName" name="signatureName" placeholder="Signature (Please Type Your Full Name)">#}
@@ -45,8 +45,8 @@
             {#<label for="signatureDate" class="control-label required">Date</label>#}
             {#<input type="text" class="datepicker form-control allow-future-date" id="signatureDate" name="signatureDate" placeholder="Date">#}
             {{ formmacros.fieldDateLabel_vertical(form.signatureDate,'allow-future-date') }}
+            {#{{ form_row(form.signatureDate) }}#}
         </div>
-
     </div>
     {% endif %}
 

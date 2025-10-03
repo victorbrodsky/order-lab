@@ -897,13 +897,13 @@ class FellAppController extends OrderAbstractController {
 
 
     public function getShowParameters($routeName, $entity, $user=null, $security=null) {
-             
+
+        $userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
 
 //        echo "user=".$user."<br>";
         if( !$user || !($user instanceof User) ) {
             //echo "no user object <br>";
-            $userSecUtil = $this->container->get('user_security_utility');
             $user = $userSecUtil->findSystemUser();
         }
         
@@ -937,6 +937,8 @@ class FellAppController extends OrderAbstractController {
         
         $fellappUtil->addEmptyFellAppFields($entity); //testing
 
+        $captchaSiteKey = null;
+
         if( $routeName == "fellapp_show" ) {
             $cycle = 'show';
             $disabled = true;
@@ -956,6 +958,10 @@ class FellAppController extends OrderAbstractController {
             $disabled = false;
             $method = "POST";
             $action = $this->generateUrl('fellapp_apply_applicant'); // /apply use the same post submit as /new form
+
+            if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+                $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+            }
         }
 
         if( $routeName == "fellapp_edit" ) {
@@ -1001,7 +1007,7 @@ class FellAppController extends OrderAbstractController {
             'container' => $this->container,
             'fellappTypes' => $fellTypes,
             'fellappVisas' => $fellappVisas,
-            'routeName' => $routeName
+            'routeName' => $routeName,
             //'security' => $security
         );
 
@@ -1036,7 +1042,8 @@ class FellAppController extends OrderAbstractController {
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
             'sitename' => $this->getParameter('fellapp.sitename'),
-            'route' => $routeName,
+            'route_path' => $routeName,
+            'captchaSiteKey' => $captchaSiteKey
         );
     }
 
@@ -3210,7 +3217,7 @@ class FellAppController extends OrderAbstractController {
 
     //Public open fellowship application
     #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
-    #[Template('AppFellAppBundle/Form/new.html.twig')]
+    #[Template('AppFellAppBundle/Form/apply.html.twig')]
     public function applyAction(Request $request, Security $security, TokenStorageInterface $tokenStorage) {
 
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
@@ -3383,6 +3390,7 @@ class FellAppController extends OrderAbstractController {
 
         $fellappUtil = $this->container->get('fellapp_util');
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
         $user = $this->getUser(); //in case of apply, it might be fellapp_public_submitter user
@@ -3499,6 +3507,13 @@ class FellAppController extends OrderAbstractController {
 
         if( $form->isValid() ) {
 
+            if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+                $captchaRes = $request->request->get('g-recaptcha-response');
+                if( !$this->captchaValidate($request,$captchaRes) ) {
+                    $form->get('recaptcha')->addError(new FormError('Captcha is required'));
+                }
+            }
+
             ////// set status new apply post application //////
             $btnSubmit = $request->request->get('btnSubmit');
 //            //echo "btnSubmit=$btnSubmit <br>";
@@ -3533,7 +3548,6 @@ class FellAppController extends OrderAbstractController {
             ////// EOF set status //////
 
             //set user
-            $userSecUtil = $this->container->get('user_security_utility');
             $userkeytype = $userSecUtil->getUsernameType('local-user');
             if( !$userkeytype ) {
                 throw new EntityNotFoundException('Unable to find local user keytype');
