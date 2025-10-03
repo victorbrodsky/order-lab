@@ -995,9 +995,10 @@ class FellAppController extends OrderAbstractController {
         }
 
         if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
-            if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+            if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
                 $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
             }
+        }
 
         $params = array(
             'cycle' => $cycle,
