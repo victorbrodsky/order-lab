@@ -3483,14 +3483,14 @@ class FellAppController extends OrderAbstractController {
 
         //Add institution validation check
 
-        if( $form->isSubmitted() ) {
+        //if( $form->isSubmitted() ) {
             if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
                 $captchaRes = $request->request->get('g-recaptcha-response');
                 if (!$userSecUtil->captchaValidate($request, $captchaRes)) {
                     $form->get('recaptcha')->addError(new FormError('Captcha is required'));
                 }
             }
-        }
+        //}
 
         if( $form->isValid() ) {
 
