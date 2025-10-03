@@ -293,22 +293,22 @@
     </p>
 {% endif %}
 
-route_path={{ route_path }}
+{#route_path={{ route_path }}#}
 {% if route_path == 'fellapp_apply' %}
-    <br>captchaSiteKey={{ captchaSiteKey }}
-    {% if captchaSiteKey is defined %}
-        captchaSiteKey is defined<br>
-    {% endif %}
-    {% if form.recaptcha is defined %}
-        recaptcha is defined<br>
-    {% endif %}
+    {#<br>captchaSiteKey={{ captchaSiteKey }}#}
+    {#{% if captchaSiteKey is defined %}#}
+        {#captchaSiteKey is defined<br>#}
+    {#{% endif %}#}
+    {#{% if form.recaptcha is defined %}#}
+        {#recaptcha is defined<br>#}
+    {#{% endif %}#}
     {% if captchaSiteKey is defined and captchaSiteKey and form.recaptcha is defined %}
         <br>inside captchaSiteKey={{ captchaSiteKey }}
         {#{{ form_errors(form.recaptcha) }}#}
         <div class="col-xs-12 text-center">
             <p>
                 {{ formmacros.field(form.recaptcha) }}
-            <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+                <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
             </p>
         </div>
     {% endif %}
