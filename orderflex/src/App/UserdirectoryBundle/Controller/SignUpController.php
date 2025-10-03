@@ -103,7 +103,7 @@ class SignUpController extends OrderAbstractController
 
             if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
                 $captchaRes = $request->request->get('g-recaptcha-response');
-                if( !$this->captchaValidate($request,$captchaRes) ) {
+                if( !$userSecUtil->captchaValidate($request,$captchaRes) ) {
                     $form->get('recaptcha')->addError(new FormError('Captcha is required'));
                 }
             }
@@ -408,48 +408,48 @@ class SignUpController extends OrderAbstractController
         return $res;
     }
 
-    //get success response from recaptcha and return it to controller
-    //https://www.google.com/recaptcha/admin#site/341068506
-    function captchaValidate($request,$recaptcha) {
-
-        //return false; //Fatal error: Cannot declare class App\UserdirectoryBundle\Util\ReCaptchaResponse, because the name is already in use
-
-        //dump($recaptcha);
-
-        //$dir = $this->getParameter('kernel.root_dir'); //app
-        //echo "dir=".$dir."<br>";
-        //current dir is "C:\bla\bla\ORDER\scanorder\Scanorders2\app"
-        //require_once "../src/App/UserdirectoryBundle/Util/RecaptchaLib.php";
-        //include_once "../src/App/UserdirectoryBundle/Util/RecaptchaLib.php";
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
-
-        $userIp = $request->getClientIp();
-
-        $response = null;
-
-        // check secret key
-        $reCaptcha = new ReCaptcha($captchaSecretKey);
-
-        $response = $reCaptcha->verifyResponse(
-            //$_SERVER["REMOTE_ADDR"],
-            $userIp,
-            $recaptcha
-        );
-
+//    //get success response from recaptcha and return it to controller
+//    //https://www.google.com/recaptcha/admin#site/341068506
+//    function captchaValidate($request,$recaptcha) {
+//
+//        //return false; //Fatal error: Cannot declare class App\UserdirectoryBundle\Util\ReCaptchaResponse, because the name is already in use
+//
+//        //dump($recaptcha);
+//
+//        //$dir = $this->getParameter('kernel.root_dir'); //app
+//        //echo "dir=".$dir."<br>";
+//        //current dir is "C:\bla\bla\ORDER\scanorder\Scanorders2\app"
+//        //require_once "../src/App/UserdirectoryBundle/Util/RecaptchaLib.php";
+//        //include_once "../src/App/UserdirectoryBundle/Util/RecaptchaLib.php";
+//
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
+//
+//        $userIp = $request->getClientIp();
+//
+//        $response = null;
+//
+//        // check secret key
+//        $reCaptcha = new ReCaptcha($captchaSecretKey);
+//
 //        $response = $reCaptcha->verifyResponse(
-//            $request,
-//            $_SERVER["REMOTE_ADDR"],
-//            $recaptcha,
-//            $captchaSecretKey
+//            //$_SERVER["REMOTE_ADDR"],
+//            $userIp,
+//            $recaptcha
 //        );
-
-        if( $response != null && $response->success ) {
-            return true;
-        }
-        return false;
-    }
+//
+////        $response = $reCaptcha->verifyResponse(
+////            $request,
+////            $_SERVER["REMOTE_ADDR"],
+////            $recaptcha,
+////            $captchaSecretKey
+////        );
+//
+//        if( $response != null && $response->success ) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     #[Route(path: '/activate-account/{registrationLinkID}', name: 'employees_activate_account', methods: ['GET', 'POST'])]
     public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
@@ -1037,7 +1037,7 @@ class SignUpController extends OrderAbstractController
 
             if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
                 $captchaRes = $request->request->get('g-recaptcha-response');
-                if( !$this->captchaValidate($request,$captchaRes) ) {
+                if( !$userSecUtil->captchaValidate($request,$captchaRes) ) {
                     $form->get('recaptcha')->addError(new FormError('Captcha is required'));
                 }
             }

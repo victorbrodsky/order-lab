@@ -28,6 +28,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\OrderformBundle\Entity\AccessionType;
+use App\UserdirectoryBundle\Captcha\ReCaptcha;
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 
 
@@ -3890,6 +3891,29 @@ class UserSecurityUtil {
     public function getSessionLocale() {
         $locale = $this->getSessionParam('locale');
         return $locale;
+    }
+
+
+    //get success response from recaptcha and return it to controller
+    //https://www.google.com/recaptcha/admin#site/341068506
+    function captchaValidate($request,$recaptcha) {
+        $captchaSecretKey = $this->getSiteSettingParameter('captchaSecretKey');
+        $userIp = $request->getClientIp();
+        $response = null;
+
+        // check secret key
+        $reCaptcha = new ReCaptcha($captchaSecretKey);
+
+        $response = $reCaptcha->verifyResponse(
+            //$_SERVER["REMOTE_ADDR"],
+            $userIp,
+            $recaptcha
+        );
+
+        if( $response != null && $response->success ) {
+            return true;
+        }
+        return false;
     }
 
 //    //NOT USED

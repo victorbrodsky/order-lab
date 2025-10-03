@@ -3509,7 +3509,7 @@ class FellAppController extends OrderAbstractController {
 
             if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
                 $captchaRes = $request->request->get('g-recaptcha-response');
-                if( !$this->captchaValidate($request,$captchaRes) ) {
+                if( !$userSecUtil->captchaValidate($request,$captchaRes) ) {
                     $form->get('recaptcha')->addError(new FormError('Captcha is required'));
                 }
             }
