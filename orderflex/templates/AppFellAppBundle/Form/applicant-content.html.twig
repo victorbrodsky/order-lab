@@ -297,7 +297,7 @@ route_path={{ route_path }}
 {% if route_path == 'fellapp_apply' %}
     captchaSiteKey={{ captchaSiteKey }}
     {% if captchaSiteKey is defined and captchaSiteKey and recaptcha is defined %}
-        captchaSiteKey={{ captchaSiteKey }}
+        <br>captchaSiteKey={{ captchaSiteKey }}
         {#{{ form_errors(form.recaptcha) }}#}
         <div class="col-xs-12 text-center">
             <p>
