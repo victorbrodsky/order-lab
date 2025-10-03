@@ -67,11 +67,11 @@
                 var userExists = userCheckExistUser(submitterEmail);
                 if( userExists === true ) {
                     //user exists
-                    console.log('user exists');
+                    console.log('draft user exists');
                     $('#confirmDraftUserExistModal').modal('show');
                 } else if( userExists === false ) {
                     //user does not exist
-                    console.log('user does not exist');
+                    console.log('draft user does not exist');
                     $('#confirmDraftModal').modal('show');
                 } else {
                     alert("Unknown error in triggerDraft, email="+submitterEmail);
@@ -95,7 +95,6 @@
             //console.log('Click triggerSubmit 2');
             if (validateFellapp('active')) {
                 console.log('Click triggerSubmit => show modal for submit');
-                console.log('Click triggerDraft => show modal for draft');
                 var userExists = userCheckExistUser(submitterEmail);
                 if( userExists === true ) {
                     //user exists
