@@ -106,18 +106,20 @@
                 {% set permanentLocation = false %}
                 {% set workLocation = false %}
 
-                {% for locationType in location.vars.value.locationTypes %}
-                    {#locationType.name:{{ locationType.name }}<br>#}
-                    {% if locationType.name == 'Present Address' %}
-                        {% set presentLocation = true %}
-                    {% endif %}
-                    {% if locationType.name == 'Permanent Address' %}
-                        {% set permanentLocation = true %}
-                    {% endif %}
-                    {% if locationType.name == 'Work Address' %}
-                        {% set workLocation = true %}
-                    {% endif %}
-                {% endfor %}
+                {% if location.vars.value %}
+                    {% for locationType in location.vars.value.locationTypes %}
+                        {#locationType.name:{{ locationType.name }}<br>#}
+                        {% if locationType.name == 'Present Address' %}
+                            {% set presentLocation = true %}
+                        {% endif %}
+                        {% if locationType.name == 'Permanent Address' %}
+                            {% set permanentLocation = true %}
+                        {% endif %}
+                        {% if locationType.name == 'Work Address' %}
+                            {% set workLocation = true %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
 
                 {% if presentLocation %}
@@ -225,36 +227,40 @@
                         {#<label for="telephoneHome" class="control-label">Home</label>#}
                         {#<input type="text" class="form-control" id="telephoneHome" name="telephoneHome" placeholder="Home">#}
                         {% for location in form.locations %}
-                            {% for locationType in location.vars.value.locationTypes %}
-                                {% if locationType.name == 'Present Address' %}
-                                    {% if cycle != "show" %}
-                                        {{ form_row(location.phone) }}
-                                    {% else %}
-                                        <strong>Home</strong> {{ form_label(location.phone) }}<br>
-                                        <div class="form-control form-control-modif" disabled>
-                                            {{ usermacros.phoneHref(location.phone.vars.value) }}
-                                        </div>
+                            {% if location.vars.value %}
+                                {% for locationType in location.vars.value.locationTypes %}
+                                    {% if locationType.name == 'Present Address' %}
+                                        {% if cycle != "show" %}
+                                            {{ form_row(location.phone) }}
+                                        {% else %}
+                                            <strong>Home</strong> {{ form_label(location.phone) }}<br>
+                                            <div class="form-control form-control-modif" disabled>
+                                                {{ usermacros.phoneHref(location.phone.vars.value) }}
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
-                            {% endfor %}
+                                {% endfor %}
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div class="col-xs-6">
                         {#<label for="telephoneWork" class="control-label">Work</label>#}
                         {#<input type="text" class="form-control" id="telephoneWork" name="telephoneWork" placeholder="Work">#}
                         {% for location in form.locations %}
-                            {% for locationType in location.vars.value.locationTypes %}
-                                {% if locationType.name == 'Work Address' %}
-                                    {% if cycle != "show" %}
-                                        {{ form_row(location.phone,{'label': 'Work:'}) }}
-                                    {% else %}
-                                        <strong>Work</strong> {{ form_label(location.phone) }}<br>
-                                        <div class="form-control form-control-modif" disabled>
-                                            {{ usermacros.phoneHref(location.phone.vars.value) }}
-                                        </div>
+                            {% if location.vars.value %}
+                                {% for locationType in location.vars.value.locationTypes %}
+                                    {% if locationType.name == 'Work Address' %}
+                                        {% if cycle != "show" %}
+                                            {{ form_row(location.phone,{'label': 'Work:'}) }}
+                                        {% else %}
+                                            <strong>Work</strong> {{ form_label(location.phone) }}<br>
+                                            <div class="form-control form-control-modif" disabled>
+                                                {{ usermacros.phoneHref(location.phone.vars.value) }}
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
-                            {% endfor %}
+                                {% endfor %}
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -263,29 +269,33 @@
                         {#<label for="telephoneMobile" class="control-label">Mobile</label>#}
                         {#<input type="text" class="form-control" id="telephoneMobile" name="telephoneMobile" placeholder="Mobile">#}
                         {% for location in form.locations %}
-                            {% for locationType in location.vars.value.locationTypes %}
-                                {% if locationType.name == 'Present Address' %}
-                                    {% if cycle != "show" %}
-                                        {{ form_row(location.mobile) }}
-                                    {% else %}
-                                        {{ form_label(location.mobile) }}<br>
-                                        <div class="form-control form-control-modif" disabled>
-                                            {{ usermacros.phoneHref(location.mobile.vars.value) }}
-                                        </div>
+                            {% if location.vars.value %}
+                                {% for locationType in location.vars.value.locationTypes %}
+                                    {% if locationType.name == 'Present Address' %}
+                                        {% if cycle != "show" %}
+                                            {{ form_row(location.mobile) }}
+                                        {% else %}
+                                            {{ form_label(location.mobile) }}<br>
+                                            <div class="form-control form-control-modif" disabled>
+                                                {{ usermacros.phoneHref(location.mobile.vars.value) }}
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
-                            {% endfor %}
+                                {% endfor %}
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <div class="col-xs-6 withpaddingtop">
                         {#<label for="telephoneFax" class="control-label">Fax</label>#}
                         {#<input type="text" class="form-control" id="telephoneFax" name="telephoneFax" placeholder="Fax">#}
                         {% for location in form.locations %}
-                            {% for locationType in location.vars.value.locationTypes %}
-                                {% if locationType.name == 'Present Address' %}
-                                    {{ form_row(location.fax) }}
-                                {% endif %}
-                            {% endfor %}
+                            {% if location.vars.value %}
+                                {% for locationType in location.vars.value.locationTypes %}
+                                    {% if locationType.name == 'Present Address' %}
+                                        {{ form_row(location.fax) }}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>

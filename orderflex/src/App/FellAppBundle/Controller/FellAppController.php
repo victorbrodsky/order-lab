@@ -3318,7 +3318,7 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
         }
 
-        return $this->render('AppFellAppBundle/Form/new.html.twig', $args);
+        return $this->render('AppFellAppBundle/Form/apply.html.twig', $args);
     }
 
     #[Route(path: '/check-user-exist', name: 'employees_check_user_exist_email', methods: ["POST"], options: ['expose' => true])]
@@ -3357,7 +3357,7 @@ class FellAppController extends OrderAbstractController {
 //        return $result;
 //    }
 
-    #[Route(path: '/applicant/apply-post', name: 'fellapp_apply_post', methods: ['POST'])]
+    #[Route(path: '/apply', name: 'fellapp_apply_post', methods: ['POST'])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function applyApplicantAction( Request $request, Security $security )
     {
@@ -3483,14 +3483,28 @@ class FellAppController extends OrderAbstractController {
 
         //Add institution validation check
 
-        //if( $form->isSubmitted() ) {
+        if( $form->isSubmitted() ) {
+        //$formData = $request->request->get('oleg_fellappbundle_fellowshipapplication');
+        //dump($formData);
+        //$data = $request->request->all();
+        //dump($data);
+        //exit();
+//            foreach ($form as $child) {
+//                dump($child->getName());
+//            }
+//            exit();
+
+//            $applicantEmail = $formData['user']['infos'][0]['email'] ?? null;
             if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
                 $captchaRes = $request->request->get('g-recaptcha-response');
                 if (!$userSecUtil->captchaValidate($request, $captchaRes)) {
+                    echo "Captcha is not valid <br>";
+                    //<input type="hidden" id="oleg_fellappbundle_fellowshipapplication_recaptcha" name="oleg_fellappbundle_fellowshipapplication[recaptcha]" class="form-control g-recaptcha1">
                     $form->get('recaptcha')->addError(new FormError('Captcha is required'));
+                    //$form['oleg_fellappbundle_fellowshipapplication']['recaptcha']->addError(new FormError('Captcha is required'));
                 }
             }
-        //}
+        }
 
         if( $form->isValid() ) {
 
@@ -3636,6 +3650,12 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
+        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
+            if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
+                $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+            }
+        }
+
         //echo 'form invalid <br>';
         //exit('form invalid');
 
@@ -3644,7 +3664,9 @@ class FellAppController extends OrderAbstractController {
             'entity' => $fellowshipApplication,
             'pathbase' => 'fellapp',
             'cycle' => 'new',
-            'sitename' => $this->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename'),
+            'captchaSiteKey' => $captchaSiteKey,
+            'route_path' => $routeName
         );
 
     }

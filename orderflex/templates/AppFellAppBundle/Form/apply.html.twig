@@ -23,10 +23,14 @@
 {#{% block maincss %}{% endblock %}#}
 
 {% block title %}
-    Fellowship Application {{ entity.id }}, created on {{ entity.timestamp|date('m/d/Y H:i') }}
+    Fellowship Application
 {% endblock %}
 
 {% block content %}
+
+    <h4 class="text-info" align="center">
+            Fellowship Application
+    </h4>
 
     <input type="hidden" id="disableIdleTimeout" value="1" />
 

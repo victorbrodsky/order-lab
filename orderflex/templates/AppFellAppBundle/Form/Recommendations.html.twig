@@ -140,6 +140,7 @@
     {#{{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default') }}#}
     {#</p>#}
 
+    {% if route_path != 'fellapp_apply' and route_path != 'fellapp_apply_post' %}
     {% if cycle != "download" %}
 
         <div class="row withpaddingtop">
@@ -166,6 +167,7 @@
             </div>
         </div>
         </p>
+    {% endif %}
     {% endif %}
 
 

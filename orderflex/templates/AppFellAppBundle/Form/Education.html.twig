@@ -46,34 +46,36 @@
         {% set degreeLabel = "Degree:" %}
         {% set showTraining = false %}
 
-        {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Undergraduate' %}
-            {% set trainingLabel = "Undergraduate School:" %}
-            {% set showTraining = true %}
-        {% endif %}
-        {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Graduate' %}
-            {% set trainingLabel = "Graduate School:" %}
-            {% set showTraining = true %}
-        {% endif %}
-        {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Medical' %}
-            {% set trainingLabel = "Medical School:" %}
-            {% set showTraining = true %}
-        {% endif %}
-        {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Residency' %}
-            {% set trainingLabel = "Residency:" %}
-            {% set degreeLabel = null %}
-            {% set showTraining = true %}
-        {% endif %}
-        {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Post-Residency Fellowship' %}
-            {% set trainingLabel = "Post-Residency Fellowship:" %}
-            {% set majorLabel = "Area of training:" %}
-            {% set degreeLabel = null %}
-            {% set showTraining = true %}
-        {% endif %}
-        {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'GME' %}
-            {% set trainingLabel = "Other GME, if applicable:" %}
-            {% set majorLabel = "Area of training:" %}
-            {% set degreeLabel = null %}
-            {% set showTraining = true %}
+        {% if training.vars.value %}
+            {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Undergraduate' %}
+                {% set trainingLabel = "Undergraduate School:" %}
+                {% set showTraining = true %}
+            {% endif %}
+            {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Graduate' %}
+                {% set trainingLabel = "Graduate School:" %}
+                {% set showTraining = true %}
+            {% endif %}
+            {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Medical' %}
+                {% set trainingLabel = "Medical School:" %}
+                {% set showTraining = true %}
+            {% endif %}
+            {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Residency' %}
+                {% set trainingLabel = "Residency:" %}
+                {% set degreeLabel = null %}
+                {% set showTraining = true %}
+            {% endif %}
+            {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Post-Residency Fellowship' %}
+                {% set trainingLabel = "Post-Residency Fellowship:" %}
+                {% set majorLabel = "Area of training:" %}
+                {% set degreeLabel = null %}
+                {% set showTraining = true %}
+            {% endif %}
+            {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'GME' %}
+                {% set trainingLabel = "Other GME, if applicable:" %}
+                {% set majorLabel = "Area of training:" %}
+                {% set degreeLabel = null %}
+                {% set showTraining = true %}
+            {% endif %}
         {% endif %}
 
         {% if showTraining %}
@@ -185,84 +187,84 @@
                 {#training.vars.value.jobTitle.getName()={{ training.vars.value.jobTitle.getName() }}#}
             {#{% endif %}#}
 
-            {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Other' %}
-            <div class="well">
-                <div class="row withpaddingtop">
-                    <div class="col-xs-6">
-                        {#<label for="otherExperience1Start" class="control-label">Start</label>#}
-                        {#<input type="text" class="datepicker form-control allow-future-date" id="otherExperience1Start" name="otherExperience1Start" placeholder="Start">#}
-                        {{ formmacros.fieldDateLabel_vertical(training.startDate,'allow-future-date') }}
+            {% if training.vars.value and training.vars.value.trainingType and training.vars.value.trainingType.name == 'Other' %}
+                <div class="well">
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-6">
+                            {#<label for="otherExperience1Start" class="control-label">Start</label>#}
+                            {#<input type="text" class="datepicker form-control allow-future-date" id="otherExperience1Start" name="otherExperience1Start" placeholder="Start">#}
+                            {{ formmacros.fieldDateLabel_vertical(training.startDate,'allow-future-date') }}
+                        </div>
+                        <div class="col-xs-6">
+                            {#<label for="otherExperience1End" class="control-label">Finish</label>#}
+                            {#<input type="text" class="datepicker form-control allow-future-date" id="otherExperience1End" name="otherExperience1End" placeholder="Finish">#}
+                            {{ formmacros.fieldDateLabel_vertical(training.completionDate,'allow-future-date') }}
+                        </div>
                     </div>
-                    <div class="col-xs-6">
-                        {#<label for="otherExperience1End" class="control-label">Finish</label>#}
-                        {#<input type="text" class="datepicker form-control allow-future-date" id="otherExperience1End" name="otherExperience1End" placeholder="Finish">#}
-                        {{ formmacros.fieldDateLabel_vertical(training.completionDate,'allow-future-date') }}
-                    </div>
-                </div>
 
-                {% if training.majors.vars.value %}
-                <div class="row withpaddingtop">
-                    <div class="col-xs-12">
-                        {#<input type="text" class="form-control" id="otherExperience1Name" name="otherExperience1Name" placeholder="Other Experience">#}
-                        {{ form_row(training.majors,{'label':'Other Experience:'}) }}
+                    {% if training.majors.vars.value %}
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
+                            {#<input type="text" class="form-control" id="otherExperience1Name" name="otherExperience1Name" placeholder="Other Experience">#}
+                            {{ form_row(training.majors,{'label':'Other Experience:'}) }}
+                        </div>
                     </div>
-                </div>
-                {% endif %}
+                    {% endif %}
 
-                {#{% if training.jobTitle.vars.value %}#}
-                <div class="row withpaddingtop">
-                    <div class="col-xs-6">
-                        {#{{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}#}
-                        {% if training.jobTitle is defined %}
-                            {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
-                        {% else %}
-                            {% if training.vars.value.jobTitle %}
-                                {#JobTitleList was already present for the same ID. This exception#}
-                                {#is a safeguard against an internal inconsistency - IDs should uniquely map to#}
-                                {#entity object instances#}
-                                {% set jobTitleStr = training.vars.value.jobTitle.getName() %}
-                                {#{% set jobTitleStr = training.vars.value %}#}
-                                {#{% set jobTitleStr = "" %}#}
+                    {#{% if training.jobTitle.vars.value %}#}
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-6">
+                            {#{{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}#}
+                            {% if training.jobTitle is defined %}
+                                {{ form_row(training.jobTitle,{'label':'Job or Experience Title:'}) }}
                             {% else %}
-                                {% set jobTitleStr = "" %}
+                                {% if training.vars.value.jobTitle %}
+                                    {#JobTitleList was already present for the same ID. This exception#}
+                                    {#is a safeguard against an internal inconsistency - IDs should uniquely map to#}
+                                    {#entity object instances#}
+                                    {% set jobTitleStr = training.vars.value.jobTitle.getName() %}
+                                    {#{% set jobTitleStr = training.vars.value %}#}
+                                    {#{% set jobTitleStr = "" %}#}
+                                {% else %}
+                                    {% set jobTitleStr = "" %}
+                                {% endif %}
+                                <label>Job or Experience Title:</label>
+                                <div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled="disabled">
+                                    {{ jobTitleStr }}
+                                </div>
                             {% endif %}
-                            <label>Job or Experience Title:</label>
-                            <div class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" disabled="disabled">
-                                {{ jobTitleStr }}
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-6">
-                        {% if cycle == "download" and training.description.vars.value %}
-                            <label>Job or Experience Description:</label>
-                            <div contentEditable="true" style="display:inline-block; border: solid 1px lightgray;" disabled="disabled">
-                                {{ training.description.vars.value }}
-                            </div>
-                        {% else %}
-                            {{ form_row(training.description,{'label':'Job or Experience Description:'}) }}
-                        {% endif %}
+                        </div>
+                        <div class="col-xs-6">
+                            {% if cycle == "download" and training.description.vars.value %}
+                                <label>Job or Experience Description:</label>
+                                <div contentEditable="true" style="display:inline-block; border: solid 1px lightgray;" disabled="disabled">
+                                    {{ training.description.vars.value }}
+                                </div>
+                            {% else %}
+                                {{ form_row(training.description,{'label':'Job or Experience Description:'}) }}
+                            {% endif %}
 
+                        </div>
                     </div>
-                </div>
-                <div class="row withpaddingtop">
-                    <div class="col-xs-6">
-                        {{ form_row(training.institution) }}
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-6">
+                            {{ form_row(training.institution) }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_row(training.geoLocation.city) }}
+                        </div>
                     </div>
-                    <div class="col-xs-6">
-                        {{ form_row(training.geoLocation.city) }}
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-6">
+                            {{ form_row(training.geoLocation.state) }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_row(training.geoLocation.country) }}
+                        </div>
                     </div>
-                </div>
-                <div class="row withpaddingtop">
-                    <div class="col-xs-6">
-                        {{ form_row(training.geoLocation.state) }}
-                    </div>
-                    <div class="col-xs-6">
-                        {{ form_row(training.geoLocation.country) }}
-                    </div>
-                </div>
-                {#{% endif %}#}
+                    {#{% endif %}#}
 
-            </div>
+                </div>
             {% endif %}
 
             {% endfor %}

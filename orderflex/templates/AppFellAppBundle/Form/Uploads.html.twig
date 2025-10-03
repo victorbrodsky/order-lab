@@ -116,17 +116,18 @@
             {#</div>#}
         {#</div>#}
 
+        {% if route_path != 'fellapp_apply' and route_path != 'fellapp_apply_post' %}
+            <div class="well form-element-holder user-Otherdocuments">
+                <label class="col-xs-12 control-label">Other Documents (All documents will be added to the Complete Application PDF)</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
 
-        <div class="well form-element-holder user-Otherdocuments">
-            <label class="col-xs-12 control-label">Other Documents (All documents will be added to the Complete Application PDF)</label>
-            <div class="row withpaddingtop">
-                <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Fellowship Application Document') }}
 
-                    {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Fellowship Application Document') }}
-
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
 
     </div> <!-- panel-body -->
