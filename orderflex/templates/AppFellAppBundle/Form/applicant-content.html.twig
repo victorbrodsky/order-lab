@@ -293,8 +293,9 @@
     </p>
 {% endif %}
 
+route_path={{ route_path }}
 {% if route_path == 'fellapp_apply' %}
-    {#captchaSiteKey={{ captchaSiteKey }}#}
+    captchaSiteKey={{ captchaSiteKey }}
     {% if captchaSiteKey is defined and captchaSiteKey and recaptcha is defined %}
         captchaSiteKey={{ captchaSiteKey }}
         {#{{ form_errors(form.recaptcha) }}#}
