@@ -957,11 +957,7 @@ class FellAppController extends OrderAbstractController {
             $cycle = 'new';
             $disabled = false;
             $method = "POST";
-            $action = $this->generateUrl('fellapp_apply_applicant'); // /apply use the same post submit as /new form
-
-            if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
-                $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
-            }
+            $action = $this->generateUrl('fellapp_apply_post'); // /apply use the same post submit as /new form
         }
 
         if( $routeName == "fellapp_edit" ) {
@@ -997,6 +993,11 @@ class FellAppController extends OrderAbstractController {
             $method = "GET";
             $action = ""; //null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
+
+        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
+            if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+                $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+            }
 
         $params = array(
             'cycle' => $cycle,
@@ -3355,7 +3356,7 @@ class FellAppController extends OrderAbstractController {
 //        return $result;
 //    }
 
-    #[Route(path: '/applicant/apply-post', name: 'fellapp_apply_applicant', methods: ['POST'])]
+    #[Route(path: '/applicant/apply-post', name: 'fellapp_apply_post', methods: ['POST'])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function applyApplicantAction( Request $request, Security $security )
     {
