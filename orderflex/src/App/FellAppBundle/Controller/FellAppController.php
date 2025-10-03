@@ -3321,33 +3321,6 @@ class FellAppController extends OrderAbstractController {
 
     #[Route(path: '/check-user-exist', name: 'employees_check_user_exist_email', methods: ["POST"], options: ['expose' => true])]
     public function checkUserExistEmailAction(Request $request) {
-
-//        $em = $this->getDoctrine()->getManager();
-//
-//        //$userExists = false;
-//        $res = 'NOTOK';
-//        $user = null;
-//        $email = $request->request->get('email');
-//        $emailCanonical = $this->canonicalize($email);
-//
-//        //check if user exists by Email
-//        if( !$user ) {
-//            //check by email
-//            $user = $em->getRepository(User::class)->findOneByEmailCanonical($emailCanonical);
-//        }
-//
-//        if( !$user ) {
-//            $users = $em->getRepository(User::class)->findUserByUserInfoEmail($emailCanonical);
-//            if ( count($users) > 0) {
-//                $user = $users[0];
-//            }
-//        }
-//
-//        if( $user && $user->getSingleEmail() ) {
-//            //$userExists = true;
-//            $res = 'OK';
-//        }
-
         $fellappUtil = $this->container->get('fellapp_util');
         $res = $fellappUtil->checkUserExistByPostRequest($request);
 

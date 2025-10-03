@@ -64,7 +64,7 @@
 
             if (validateFellapp('draft')) {
                 console.log('Click triggerDraft => show modal for draft');
-                var userExists = userCheckExistUser();
+                var userExists = userCheckExistUser(submitterEmail);
                 if( userExists === true ) {
                     //user exists
                     console.log('user exists');
@@ -74,7 +74,7 @@
                     console.log('user does not exist');
                     $('#confirmDraftModal').modal('show');
                 } else {
-                    alert("Unknown error");
+                    alert("Unknown error in triggerDraft, email="+submitterEmail);
                 }
 //                $('#fellapp-applicant-form').submit(); // proceed with actual submission
             } else {
@@ -96,7 +96,7 @@
             if (validateFellapp('active')) {
                 console.log('Click triggerSubmit => show modal for submit');
                 console.log('Click triggerDraft => show modal for draft');
-                var userExists = userCheckExistUser();
+                var userExists = userCheckExistUser(submitterEmail);
                 if( userExists === true ) {
                     //user exists
                     console.log('submit user exists');
@@ -106,7 +106,7 @@
                     console.log('submit user does not exist');
                     $('#confirmSubmitModal').modal('show');
                 } else {
-                    alert("Unknown error");
+                    alert("Unknown error triggerSubmit email="+submitterEmail);
                 }
             } else {
                 console.log('Submit Validation failed.');
@@ -165,8 +165,8 @@
     });
 
 
-    function userCheckExistUser() {
-        var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
+    function userCheckExistUser( submitterEmail ) {
+        //var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
         var url = Routing.generate('employees_check_user_exist_email');
         var userExists = 'N/A';
         $.ajax({

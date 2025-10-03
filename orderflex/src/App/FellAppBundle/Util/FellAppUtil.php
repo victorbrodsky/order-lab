@@ -2406,7 +2406,7 @@ class FellAppUtil {
     public function checkUserExistByPostRequest( $request, $getUser=false ) {
         $email = $request->request->get('email');
         if( !$email ) {
-            echo "checkUserExistByPostRequest: Email not found <br>";
+            //echo "checkUserExistByPostRequest: Email not found <br>";
             $res = null;
             return $res;
         }
@@ -2423,13 +2423,13 @@ class FellAppUtil {
 
         //$email = $request->request->get('email');
         if( !$email ) {
-            echo "checkUserExistByEmail: Email not found <br>";
+            //echo "checkUserExistByEmail: Email not found <br>";
             $res = null;
             return $res;
         }
 
         $emailCanonical = $this->canonicalize($email);
-        echo "checkUserExistByEmail: emailCanonical=$emailCanonical <br>";
+        //echo "checkUserExistByEmail: emailCanonical=$emailCanonical <br>";
 
         //check if user exists by Email
         if( !$user ) {
@@ -2445,7 +2445,7 @@ class FellAppUtil {
         }
 
         if( $user && $user->getSingleEmail() ) {
-            echo "checkUserExistByEmail: user found=$user <br>";
+            //echo "checkUserExistByEmail: user found=$user <br>";
             if( $getUser ) {
                 return $user;
             }
@@ -2453,7 +2453,7 @@ class FellAppUtil {
             //$userExists = true;
             $res = true;
         }
-        echo "checkUserExistByEmail: user not found <br>";
+        //echo "checkUserExistByEmail: user not found <br>";
 
         return $res;
     }
