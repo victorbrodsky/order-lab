@@ -2403,16 +2403,16 @@ class FellAppUtil {
     }
 
     //TODO: replace strings by true, false, null
-    public function checkUserExistByPostRequest( $request, $getUser=false ) {
-        $email = $request->request->get('email');
-        if( !$email ) {
-            //echo "checkUserExistByPostRequest: Email not found <br>";
-            $res = null;
-            return $res;
-        }
-        $res = $this->checkUserExistByEmail($email,$getUser);
-        return $res;
-    }
+//    public function checkUserExistByPostRequest( $request, $getUser=false ) {
+//        $email = $request->request->get('email');
+//        if( !$email ) {
+//            //echo "checkUserExistByPostRequest: Email not found <br>";
+//            $res = null;
+//            return $res;
+//        }
+//        $res = $this->checkUserExistByEmail($email,$getUser);
+//        return $res;
+//    }
     public function checkUserExistByEmail( $email, $getUser=false ) {
 
         $em = $this->em;
