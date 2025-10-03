@@ -296,6 +296,12 @@
 route_path={{ route_path }}
 {% if route_path == 'fellapp_apply' %}
     <br>captchaSiteKey={{ captchaSiteKey }}
+    {% if captchaSiteKey is defined %}
+        captchaSiteKey is defined<br>
+    {% endif %}
+    {% if recaptcha is defined %}
+        recaptcha is defined<br>
+    {% endif %}
     {% if captchaSiteKey is defined and captchaSiteKey and recaptcha is defined %}
         <br>inside captchaSiteKey={{ captchaSiteKey }}
         {#{{ form_errors(form.recaptcha) }}#}
