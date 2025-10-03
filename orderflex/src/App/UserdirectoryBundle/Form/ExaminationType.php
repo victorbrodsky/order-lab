@@ -21,6 +21,7 @@ use App\UserdirectoryBundle\Entity\Identifier;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -131,10 +132,26 @@ class ExaminationType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
         $builder->add('ECFMGCertificate', CheckboxType::class, array(
-            'label' => false,
-            'attr' => array('class'=>'form-control fellapp-ecfmgcertificate-field', 'onclick'=>'showHideWell(this)')
+            'label' => 'For graduates of international medical schools, are you ECFMG-certified?',//false,
+            'attr' => array(
+                'class'=>'form-control fellapp-ecfmgcertificate-field checkbox-align',
+                'onclick'=>'showHideWell(this)',
+            )
         ));
-
+//        $builder->add('ECFMGCertificate', ChoiceType::class, [
+//            'label' => false,
+//            'choices' => [
+//                'Yes' => true,
+//                'No' => false,
+//            ],
+//            'expanded' => true, // renders as radio buttons
+//            'multiple' => false, // single choice
+//            'required' => true,
+//            'attr' => [
+//                'class' => 'fellapp-ecfmgcertificate-field radio-spacing',
+//                'onclick' => 'showHideWell(this)',
+//            ]
+//        ]);
 
         $builder->add('COMLEXLevel1DatePassed', null, array(
             'label' => 'Date passed:',

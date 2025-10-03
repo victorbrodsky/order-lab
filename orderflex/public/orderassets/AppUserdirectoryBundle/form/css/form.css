@@ -748,3 +748,24 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     /*background-color: #F5BA52 !important;*/
 /*}*/
 
+/*.radio-spacing input[type="radio"] {*/
+    /*margin-right: 3px;*/
+    /*margin-left: 20px; !* space between buttons *!*/
+/*}*/
+
+/*.checkbox-align {*/
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*gap: 10px; !* space between checkbox and label *!*/
+/*}*/
+.checkbox-align input[type="checkbox"] {
+    margin: 0 !important;
+    /*margin-top: -2px;*/
+    /*vertical-align: middle;*/
+}
+
+
+
+
+
+

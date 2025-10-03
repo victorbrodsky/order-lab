@@ -26,7 +26,11 @@
 <div class="panel-heading">
     <h4 class="panel-title">
         <a data-toggle="collapse" href="#uploads">
-            Uploads (Please upload PDFs to ensure proper integration in the Complete Application PDF)
+            {% if route_path != 'fellapp_apply' and route_path != 'fellapp_apply_post' %}
+                Uploads (Please upload PDFs to ensure proper integration in the Complete Application PDF)
+            {% else %}
+                Attached Documents
+            {% endif %}
         </a>
     </h4>
 </div>

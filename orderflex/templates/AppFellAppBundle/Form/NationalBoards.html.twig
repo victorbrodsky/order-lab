@@ -98,19 +98,20 @@
             <div class="form-element-holder">
                 <div class="well">
 
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <label for="ECFMGCertificate" class="control-label">For graduates of international medical schools, are you ECFMG-certified? </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            {#<input type="radio" name="ECFMGCertificate" onclick="showWell(this)" value="Yes">&nbsp;Yes#}
-                            {#&nbsp;#}
-                            {#<input type="radio" name="ECFMGCertificate" onclick="hideWell(this)" value="No">&nbsp;No#}
-                            {{ form_row(examination.ECFMGCertificate) }}
-                        </div>
-                    </div>
+                    {#<div class="row">#}
+                        {#<div class="col-xs-12">#}
+                            {#<label for="ECFMGCertificate" class="control-label"#}
+                            {#>For graduates of international medical schools, are you ECFMG-certified? </label>#}
+                        {#</div>#}
+                    {#</div>#}
+                    {#<div class="row">#}
+                        {#<div class="col-xs-12">#}
+                            {#{{ form_row(examination.ECFMGCertificate) }}#}
+                        {#</div>#}
+                    {#</div>#}
+
+                    {{ formmacros.checkbox_large(examination.ECFMGCertificate) }}
+                    {#{{ form_widget(examination.ECFMGCertificate) }}#}
 
                     <br>
 
