@@ -3321,6 +3321,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         //oleg_fellappbundle_googleformconfig[applicationFormNote]
+        //TODO: create GoogleFormConfig auto on demo db reset
         $configs = $em->getRepository(GoogleFormConfig::class)->findAll();
         $googleFormConfig = null;
         if( count($configs) > 0 ) {
