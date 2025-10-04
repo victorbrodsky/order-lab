@@ -3322,17 +3322,45 @@ class FellAppController extends OrderAbstractController {
 
         //oleg_fellappbundle_googleformconfig[applicationFormNote]
         $configs = $em->getRepository(GoogleFormConfig::class)->findAll();
+        $googleFormConfig = null;
         if( count($configs) > 0 ) {
             $googleFormConfig = $configs[0];
         } else {
             //$entity = new GoogleFormConfig();
-            throw $this->createNotFoundException('Unable to find Google Fellowship Application Form Configuration');
+            //throw $this->createNotFoundException('Unable to find Google Fellowship Application Form Configuration');
         }
-        //echo "controller applicationFormNote=".$googleFormConfig->getApplicationFormNote()."<br>";
-        $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
-
-        //oleg_fellappbundle_googleformconfig[signatureStatement]
-        $args['signatureStatement'] = $googleFormConfig->getSignatureStatement();
+        if( $googleFormConfig ) {
+            //echo "controller applicationFormNote=".$googleFormConfig->getApplicationFormNote()."<br>";
+            $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
+        } else {
+            $args['applicationFormNote'] = "
+            Please gather all relevant information before filling out this form in order to submit it.
+            <h4>        
+            Application Packet Check-list
+            </h4>                 
+             <ul>
+                <li>Completed Standardized Fellowship Application Form with Signature</li>
+                <li>USMLE Step 1 and/or COMLEX Level 1 Score and Date passed (USMLE/Comlex 2 and 3 if applicable) in PDF format</li>
+                <li>Updated Curriculum Vitae (CV) in PDF format</li>
+                <li>Included cover letter and/or personal statement in PDF format</li>
+                <li>Checked with the fellowship director or coordinator whether there are other items that should be included</li>
+                <li>Included photo in JPEG format</li>
+                <li>Please leave field empty (blank) if a question does not apply to you</li>          
+             </ul>
+            ";
+        }
+        if( $googleFormConfig ) {
+            //oleg_fellappbundle_googleformconfig[signatureStatement]
+            $args['signatureStatement'] = $googleFormConfig->getSignatureStatement();
+        } else {
+            $args['signatureStatement'] = "I hereby certify that all of the information 
+            on this application is accurate, complete, and current to the best 
+            of my knowledge, and that this application is being made for serious 
+            consideration of training in the fellowship indicated. 
+            I understand that accepting more than one fellowship position 
+            constitutes a violation of professional ethics and may result 
+            in the forfeiture of all positions.";
+        }
 
         return $this->render('AppFellAppBundle/Form/apply.html.twig', $args);
         $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
