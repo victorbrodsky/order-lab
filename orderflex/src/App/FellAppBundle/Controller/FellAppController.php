@@ -19,6 +19,7 @@ namespace App\FellAppBundle\Controller;
 
 
 
+use App\FellAppBundle\Entity\GoogleFormConfig;
 use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 
 
@@ -3228,6 +3229,7 @@ class FellAppController extends OrderAbstractController {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
 
         $enablePublicFellapp = $userSecUtil->getSiteSettingParameter(
             'enablePublicFellApp',
@@ -3318,7 +3320,22 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
         }
 
+        //oleg_fellappbundle_googleformconfig[applicationFormNote]
+        $configs = $em->getRepository(GoogleFormConfig::class)->findAll();
+        if( count($configs) > 0 ) {
+            $googleFormConfig = $configs[0];
+        } else {
+            //$entity = new GoogleFormConfig();
+            throw $this->createNotFoundException('Unable to find Google Fellowship Application Form Configuration');
+        }
+        //echo "controller applicationFormNote=".$googleFormConfig->getApplicationFormNote()."<br>";
+        $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
+
+        //oleg_fellappbundle_googleformconfig[signatureStatement]
+        $args['signatureStatement'] = $googleFormConfig->getSignatureStatement();
+
         return $this->render('AppFellAppBundle/Form/apply.html.twig', $args);
+        $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
     }
 
     #[Route(path: '/check-user-exist', name: 'employees_check_user_exist_email', methods: ["POST"], options: ['expose' => true])]

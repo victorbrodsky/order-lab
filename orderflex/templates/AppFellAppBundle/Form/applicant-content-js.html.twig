@@ -24,9 +24,13 @@
 
     $(document).ready(function() {
 
-        showHideWell('.fellapp-ecfmgcertificate-field');
-        showHideWell('.fellapp-reprimand-field');
-        showHideWell('.fellapp-lawsuit-field');
+        //showHideWell('.fellapp-ecfmgcertificate-field');
+        //showHideWell('.fellapp-reprimand-field');
+        //showHideWell('.fellapp-lawsuit-field');
+
+        showHideWellByRadioButtons('.fellapp-ecfmgcertificate-field');
+        showHideWellByRadioButtons('.fellapp-reprimand-field');
+        showHideWellByRadioButtons('.fellapp-lawsuit-field');
 
         $('.textarea').bind('keydown keyup keypress cut copy past blur change', function(){
             copy_to_print_helper(this); // consider debouncing this to avoid slowdowns!
@@ -253,9 +257,42 @@
             showHideWell(this);
         });
     }
+    function showHideWellByRadioButtons_onchange(element) {
+        console.log('showHideWellByRadioButtons');
+        $(element).find('input:radio').on('change', function () {
+            var checkedValue = $(this).val();
+            console.log("checkedValue="+checkedValue);
+            if (checkedValue == "0") {
+                hideWell(element);
+            }
+            if (checkedValue == "1") {
+                showWell(element);
+            }
+        });
+    }
+    function showHideWellByRadioButtons(element) {
+        //console.log('showHideWellByRadioButtons');
+        var checkedValue;
+        $(element).find('input:radio').each(function() {
+            if( $(this).is(':checked') ) {
+                checkedValue = $(this).val();
+                return false; // exit .each() loop early
+            }
+        });
+        //console.log("checkedValue=",checkedValue);
+        // Optional: act on the selected value
+        if (checkedValue === '1') {
+            showWell(element);
+        }
+        if (checkedValue === '0') {
+            hideWell(element);
+        }
+    }
 
 
-    function validateFellapp( clickedButtonValue ) {
+
+
+function validateFellapp( clickedButtonValue ) {
 
         console.log("Clicked button value:", clickedButtonValue);
 

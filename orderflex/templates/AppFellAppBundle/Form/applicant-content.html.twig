@@ -92,6 +92,22 @@
     <br>
 {% endif %}
 
+{% if route_path is defined and route_path == 'fellapp_apply' %}
+    {% if cycle != "download" %}
+        {#twig applicationFormNote={{ applicationFormNote }}#}
+        {% if applicationFormNote is defined %}
+            <div class="row">
+                <div class="col-xs-3"></div>
+                {#<div class="col-xs-10 d-flex justify-content-center align-items-center" style="text-align: center;">#}
+                <div class="col-xs-6" align="left">
+                        {{ applicationFormNote|raw }}
+                </div>
+                <div class="col-xs-3"></div>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
 
 {% if cycle != "download" %}
 <br>

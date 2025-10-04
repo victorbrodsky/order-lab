@@ -25,9 +25,18 @@
         </label>
 
         <p class="text-info">
-            I hereby certify that all of the information on this application is accurate, complete, and current to the best of my knowledge, and that this
-            application is being made for serious consideration of training in the Pathology Fellowship indicated. I understand that accepting more than
-            one fellowship position constitutes a violation of professional ethics and may result in the forfeiture of all positions.
+            {#I hereby certify that all of the information on this application is accurate, complete, and current to the best of my knowledge, and that this#}
+            {#application is being made for serious consideration of training in the Pathology Fellowship indicated. I understand that accepting more than#}
+            {#one fellowship position constitutes a violation of professional ethics and may result in the forfeiture of all positions.#}
+            {% if signatureStatement is defined and signatureStatement %}
+                {{ signatureStatement|raw }}
+            {% else %}
+                I hereby certify that all of the information on this application is accurate, complete,
+                and current to the best of my knowledge, and that this application is being made
+                for serious consideration of training in the fellowship indicated.
+                I understand that accepting more than one fellowship position constitutes
+                a violation of professional ethics and may result in the forfeiture of all positions.
+            {% endif %}
         </p>
 
     </div>

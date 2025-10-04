@@ -32,6 +32,7 @@ use App\UserdirectoryBundle\Form\StateLicenseType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -175,12 +176,26 @@ class FellowshipApplicationType extends AbstractType
         //            'choices' => array('Yes'=>'Yes','No'=>'No'),
         //            'attr' => array('class' => 'combobox'),
         //        ));
-        $builder->add('reprimand', CheckboxType::class, array(
+//        $builder->add('reprimand', CheckboxType::class, array(
+//            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+//            'required' => false,
+//            'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
+//        ));
+//        $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
+        $builder->add('reprimand', ChoiceType::class, [
             'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
-            'required' => false,
-            'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
-        ));
-        $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
+            'choices' => [
+                'Yes' => true,
+                'No' => false,
+            ],
+            'expanded' => true, // renders as radio buttons
+            'multiple' => false, // single choice
+            'required' => true,
+            'attr' => [
+                'class' => 'fellapp-reprimand-field radio-spacing',
+                'onclick' => 'showHideWellByRadioButtons(this)',
+            ]
+        ]);
         $builder->add('reprimandDocuments', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Upload Reprimand Explanation(s):',
@@ -198,12 +213,26 @@ class FellowshipApplicationType extends AbstractType
         //            'choices' => array('Yes'=>'Yes','No'=>'No'),
         //            'attr' => array('class' => 'combobox'),
         //        ));
-        $builder->add('lawsuit', CheckboxType::class, array(
-            'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
-            'required' => false,
-            'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),
-        ));
-        $builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
+//        $builder->add('lawsuit', CheckboxType::class, array(
+//            'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
+//            'required' => false,
+//            'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),
+//        ));
+        //$builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
+        $builder->add('lawsuit', ChoiceType::class, [
+            'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?', //false,
+            'choices' => [
+                'Yes' => true,
+                'No' => false,
+            ],
+            'expanded' => true, // renders as radio buttons
+            'multiple' => false, // single choice
+            'required' => true,
+            'attr' => [
+                'class' => 'fellapp-lawsuit-field radio-spacing',
+                'onclick' => 'showHideWellByRadioButtons(this)',
+            ]
+        ]);
         $builder->add('lawsuitDocuments', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Upload Legal Explanation(s):',

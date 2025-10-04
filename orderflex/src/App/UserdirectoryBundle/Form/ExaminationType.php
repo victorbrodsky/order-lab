@@ -131,27 +131,28 @@ class ExaminationType extends AbstractType
             'html5' => false,
             'attr' => array('class' => 'datepicker form-control'),
         ));
-        $builder->add('ECFMGCertificate', CheckboxType::class, array(
-            'label' => 'For graduates of international medical schools, are you ECFMG-certified?',//false,
-            'attr' => array(
-                'class'=>'form-control fellapp-ecfmgcertificate-field checkbox-align',
-                'onclick'=>'showHideWell(this)',
-            )
-        ));
-//        $builder->add('ECFMGCertificate', ChoiceType::class, [
-//            'label' => false,
-//            'choices' => [
-//                'Yes' => true,
-//                'No' => false,
-//            ],
-//            'expanded' => true, // renders as radio buttons
-//            'multiple' => false, // single choice
-//            'required' => true,
-//            'attr' => [
-//                'class' => 'fellapp-ecfmgcertificate-field radio-spacing',
-//                'onclick' => 'showHideWell(this)',
-//            ]
-//        ]);
+//        $builder->add('ECFMGCertificate', CheckboxType::class, array(
+//            'label' => 'For graduates of international medical schools, are you ECFMG-certified?',//false,
+//            'attr' => array(
+//                'class'=>'form-control fellapp-ecfmgcertificate-field checkbox-align',
+//                'onclick'=>'showHideWell(this)',
+//            )
+//        ));
+        $builder->add('ECFMGCertificate', ChoiceType::class, [
+            'label' => 'For graduates of international medical schools, are you ECFMG-certified?', //false,
+            'choices' => [
+                'Yes' => true,
+                'No' => false,
+            ],
+            'expanded' => true, // renders as radio buttons
+            'multiple' => false, // single choice
+            'required' => true,
+            'attr' => [
+                'class' => 'fellapp-ecfmgcertificate-field radio-spacing',
+                //'onclick' => 'showHideWell(this)',
+                'onclick' => 'showHideWellByRadioButtons(this)',
+            ]
+        ]);
 
         $builder->add('COMLEXLevel1DatePassed', null, array(
             'label' => 'Date passed:',
