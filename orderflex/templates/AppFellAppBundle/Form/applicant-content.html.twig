@@ -96,6 +96,7 @@
     {% if cycle != "download" %}
         {#twig applicationFormNote={{ applicationFormNote }}#}
         {% if applicationFormNote is defined %}
+            <br>
             <div class="row">
                 <div class="col-xs-3"></div>
                 {#<div class="col-xs-10 d-flex justify-content-center align-items-center" style="text-align: center;">#}
@@ -251,6 +252,28 @@
 
 {% endif %}
 
+{#route_path={{ route_path }}#}
+{% if route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post' %}
+    {#<br>captchaSiteKey={{ captchaSiteKey }}#}
+    {#{% if captchaSiteKey is defined %}#}
+    {#captchaSiteKey is defined<br>#}
+    {#{% endif %}#}
+    {#{% if form.recaptcha is defined %}#}
+    {#recaptcha is defined<br>#}
+    {#{% endif %}#}
+    {% if captchaSiteKey is defined and captchaSiteKey and form.recaptcha is defined %}
+        {#<br>inside captchaSiteKey={{ captchaSiteKey }}#}
+        {#{{ form_errors(form.recaptcha) }}#}
+        <div class="col-xs-12 text-center">
+            <p>
+                {#{{ formmacros.field(form.recaptcha) }}#}
+                {{ form_row(form.recaptcha) }}
+            <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+            </p>
+        </div>
+    {% endif %}
+{% endif %}
+
 <!-- Signature -->
 {% include 'AppFellAppBundle/Form/Signature.html.twig' %}
 
@@ -309,27 +332,6 @@
     </p>
 {% endif %}
 
-{#route_path={{ route_path }}#}
-{% if route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post' %}
-    {#<br>captchaSiteKey={{ captchaSiteKey }}#}
-    {#{% if captchaSiteKey is defined %}#}
-        {#captchaSiteKey is defined<br>#}
-    {#{% endif %}#}
-    {#{% if form.recaptcha is defined %}#}
-        {#recaptcha is defined<br>#}
-    {#{% endif %}#}
-    {% if captchaSiteKey is defined and captchaSiteKey and form.recaptcha is defined %}
-        {#<br>inside captchaSiteKey={{ captchaSiteKey }}#}
-        {#{{ form_errors(form.recaptcha) }}#}
-        <div class="col-xs-12 text-center">
-            <p>
-                {#{{ formmacros.field(form.recaptcha) }}#}
-                {{ form_row(form.recaptcha) }}
-                <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
-            </p>
-        </div>
-    {% endif %}
-{% endif %}
 
 {#{{ form_end(form) }}#}
 {{ form_end(form, {'render_rest': false}) }}

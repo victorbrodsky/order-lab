@@ -3337,15 +3337,14 @@ class FellAppController extends OrderAbstractController {
             $args['applicationFormNote'] = "
             Please gather all relevant information before filling out this form in order to submit it.
             <h4>        
-            Application Packet Check-list
+            Application Packet Checklist
             </h4>                 
              <ul>
-                <li>Completed Standardized Fellowship Application Form with Signature</li>
                 <li>USMLE Step 1 and/or COMLEX Level 1 Score and Date passed (USMLE/Comlex 2 and 3 if applicable) in PDF format</li>
                 <li>Updated Curriculum Vitae (CV) in PDF format</li>
-                <li>Included cover letter and/or personal statement in PDF format</li>
-                <li>Checked with the fellowship director or coordinator whether there are other items that should be included</li>
-                <li>Included photo in JPEG format</li>
+                <li>Include cover letter and/or personal statement in PDF format</li>
+                <li>Check with the fellowship director or coordinator whether there are other items that should be included</li>
+                <li>Include photo in JPEG format</li>
                 <li>Please leave field empty (blank) if a question does not apply to you</li>          
              </ul>
             ";

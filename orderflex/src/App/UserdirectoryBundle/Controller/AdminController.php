@@ -3434,12 +3434,22 @@ class AdminController extends OrderAbstractController
             'departments'=>$hssDep
         );
 
+        $washuDep = array(
+            'Department of Pathology and Immunology' => null
+        );
+        $washu = array(
+            'abbreviation'=>'WashU',
+            'departments'=>$washuDep
+        );
+
+
         $institutions = array(
             "Weill Cornell Medical College"=>$wcmc,
             "New York Presbyterian Hospital"=>$nyh,
             "Weill Cornell Medical College Qatar"=>$wcmcq,
             "Memorial Sloan Kettering Cancer Center"=>$msk,
-            "Hospital for Special Surgery"=>$hss
+            "Hospital for Special Surgery"=>$hss,
+            "Washington University School of Medicine in Saint Louis"=>$washu
         );
 
 
