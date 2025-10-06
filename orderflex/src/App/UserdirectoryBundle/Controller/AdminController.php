@@ -11986,7 +11986,8 @@ class AdminController extends OrderAbstractController
         $types = array(
             "Intranet (Solo)",
             "Intranet (Tandem)",
-            "Internet (Solo) ",
+
+            "Internet (Solo)",
             "Internet (Tandem)",
             "Internet (Hub)"
         );
@@ -11994,6 +11995,7 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
+            $name = trim($name);
             $listEntity = $em->getRepository(AuthServerNetworkList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;

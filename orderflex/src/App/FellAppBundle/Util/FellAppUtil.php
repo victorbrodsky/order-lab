@@ -360,20 +360,20 @@ class FellAppUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         if( $userSecUtil->hasGlobalUserRole( "ROLE_FELLAPP_ADMIN", $user ) ) {
+            //echo "get fellowshipSubspecialty by ROLE_FELLAPP_ADMIN <br>";
             return $this->getFellowshipTypesByInstitution(false);
         }
 
+        //echo "get fellowshipSubspecialty by user's roles <br>";
         $filterTypes = array();
         //$filterTypeIds = array();
 
         foreach( $user->getRoles() as $rolename ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
             $roleObject = $em->getRepository(Roles::class)->findOneByName($rolename);
             if( $roleObject ) {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
                     $filterTypes[$fellowshipSubspecialty->getId()] = $fellowshipSubspecialty->getName();
-                    //$filterTypeIds[] = $fellowshipSubspecialty->getId();
                 }
             }
         }
@@ -410,7 +410,6 @@ class FellAppUtil {
         );
 
         //get list of fellowship type with extra "ALL"
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
         $repository = $em->getRepository(FellowshipSubspecialty::class);
         $dql = $repository->createQueryBuilder('list');
         $dql->leftJoin("list.institution","institution");

@@ -1709,7 +1709,7 @@ class FellAppController extends OrderAbstractController {
             'cloneuser' => null,
             'roles' => $user->getRoles(),
             'container' => $this->container,
-            'fellappTypes' => $fellTypes,
+            'fellappTypes' => $fellTypes, //FellowshipSubspecialty::class new
             'fellappVisas' => $fellappVisas,
             //'security' => $security
         );
@@ -3470,7 +3470,14 @@ class FellAppController extends OrderAbstractController {
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
 
-        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        //Get list of FellowshipSubspecialty, filtered by institution.id = id of [Weill Cornell Medical College => Pathology and Laboratory Medicine]
+        //Pathology and Laboratory Medicine instituion can have many fellowship types (FellowshipSubspecialty)
+        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution($asEntities=true);
+
+        //New: if authServerNetwork == 'Internet (Hub)'
+        //Get $fellTypes based on GlobalFellowshipSubspecialty - for now, the same to FellowshipSubspecialty.
+        //Each record in GlobalFellowshipSubspecialty table will have ManyToOne $institution
+        //One institution can have many GlobalFellowshipSubspecialty
 
         $params = array(
             'cycle' => 'new',
@@ -3479,7 +3486,7 @@ class FellAppController extends OrderAbstractController {
             'cloneuser' => null,
             'roles' => $user->getRoles(),
             'container' => $this->container,
-            'fellappTypes' => $fellTypes,
+            'fellappTypes' => $fellTypes, //FellowshipSubspecialty::class apply
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName
             //'security' => $security

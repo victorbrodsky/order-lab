@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 //NOT USED
-class ExtraLoader extends Loader {
+class ExtraLoader_TODEL extends Loader {
 
     private $isLoaded = false;
 

@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Twig\Attribute\Template;
 
 //NOT USED
-class SystemTenancyController extends OrderAbstractController
+class SystemTenancyController_TODEL extends OrderAbstractController
 {
 
     // /system/home/
@@ -282,6 +282,7 @@ class SystemTenancyController extends OrderAbstractController
     }
 
     public function generateAuthServerNetworkList($systemuser) {
+        exit("generateAuthServerNetworkList not allowed");
         $em = $this->getDoctrine()->getManager('systemdb');
 
         $types = array(
