@@ -3334,12 +3334,12 @@ class FellAppController extends OrderAbstractController {
             //echo "controller applicationFormNote=".$googleFormConfig->getApplicationFormNote()."<br>";
             $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
         } else {
-            $args['applicationFormNote'] = "
+            $args['applicationFormNote'] = '
             Please gather all relevant information before filling out this form in order to submit it.
             <h4>        
             Application Packet Checklist
             </h4>                 
-             <ul>
+             <ul style="display:inline-block; text-align:left;">
                 <li>USMLE Step 1 and/or COMLEX Level 1 Score and Date passed (USMLE/Comlex 2 and 3 if applicable) in PDF format</li>
                 <li>Updated Curriculum Vitae (CV) in PDF format</li>
                 <li>Include cover letter and/or personal statement in PDF format</li>
@@ -3347,7 +3347,7 @@ class FellAppController extends OrderAbstractController {
                 <li>Include photo in JPEG format</li>
                 <li>Please leave field empty (blank) if a question does not apply to you</li>          
              </ul>
-            ";
+            ';
         }
         if( $googleFormConfig ) {
             //oleg_fellappbundle_googleformconfig[signatureStatement]

@@ -92,19 +92,12 @@
     <br>
 {% endif %}
 
+{#Application Packet Check-list#}
 {% if route_path is defined and route_path == 'fellapp_apply' %}
     {% if cycle != "download" %}
-        {#twig applicationFormNote={{ applicationFormNote }}#}
         {% if applicationFormNote is defined %}
             <br>
-            <div class="row">
-                <div class="col-xs-3"></div>
-                {#<div class="col-xs-10 d-flex justify-content-center align-items-center" style="text-align: center;">#}
-                <div class="col-xs-6" align="left">
-                        {{ applicationFormNote|raw }}
-                </div>
-                <div class="col-xs-3"></div>
-            </div>
+            {{ applicationFormNote|raw }}
         {% endif %}
     {% endif %}
 {% endif %}
@@ -313,6 +306,7 @@
 {% endif %}
 
 {% if cycle == "new" %}
+    <br>
     <p>
         {#<button class="btn btn-warning" type="submit">Add Applicant</button>#}
         {#<button class="btn btn-warning" name="btnSubmit" type="button" value="submit" form="fellapp-applicant-form" onclick="validateFellapp()">Submit Application</button>#}
@@ -336,10 +330,9 @@
 {#{{ form_end(form) }}#}
 {{ form_end(form, {'render_rest': false}) }}
 
-<br>
-
 {% if cycle == "show" %}
     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+        <br>
         <p>
             <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
         </p>
