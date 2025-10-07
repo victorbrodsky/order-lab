@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
@@ -1016,6 +1017,7 @@ class AdminController extends OrderAbstractController
         //return "Finished generateResidencySpecialties";
 
         $count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties();
+        $count_globalFellowshipSpecialties = $this->generateGlobalFellowshipSpecialties();
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
@@ -1191,6 +1193,7 @@ class AdminController extends OrderAbstractController
             'Training Degrees='.$count_trainingDegrees.', '.
             'Residency Specialties='.$count_residencySpecialties.', '.
             'Fellowship Subspecialties='.$count_fellowshipSubspecialties.', '.
+            'GlobalFellowshipSpecialties='.$count_globalFellowshipSpecialties.', '.
             //'Major Trainings ='.$count_majorTrainings.', '.
             //'Minor Trainings ='.$count_minorTrainings.', '.
             'Honor Trainings='.$count_HonorTrainings.', '.
@@ -3229,9 +3232,7 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $entities = $em->getRepository(Institution::class)->findAll();
-
         if( $entities ) {
             return -1;
         }
@@ -3442,7 +3443,6 @@ class AdminController extends OrderAbstractController
             'departments'=>$washuDep
         );
 
-
         $institutions = array(
             "Weill Cornell Medical College"=>$wcmc,
             "New York Presbyterian Hospital"=>$nyh,
@@ -3469,8 +3469,8 @@ class AdminController extends OrderAbstractController
 
         foreach( $institutions as $institutionname=>$infos ) {
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
             if( $em->getRepository(Institution::class)->findOneByName($institutionname) ) {
+                echo "skip $institutionname <br>";
                 continue;
             }
 
@@ -5895,6 +5895,115 @@ class AdminController extends OrderAbstractController
         }
 
         return $count;
+    }
+
+    //TODO:
+    public function generateGlobalFellowshipSpecialties() {
+        $em = $this->getDoctrine()->getManager();
+        $username = $this->getUser();
+
+        $count = 0;
+
+//        $wcmcDep = array(
+//            'Pathology and Laboratory Medicine' => null
+//        );
+//        $wcmc = array(
+//            'abbreviation'=>'WCM',
+//            'departments'=>$wcmcDep
+//        );
+//
+//        $washuDep = array(
+//            'Department of Pathology and Immunology' => null
+//        );
+//        $washu = array(
+//            'abbreviation'=>'WashU',
+//            'departments'=>$washuDep
+//        );
+//
+//        $institutions = array(
+//            "Weill Cornell Medical College"=>$wcmc,
+//            "Washington University School of Medicine in Saint Louis"=>$washu
+//        );
+
+        ////// 1) get wcm ptahology //////
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        if( !$wcmc ) {
+            exit('generateGlobalFellowshipSpecialties: No Institution: "WCM"');
+        }
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+        );
+        $wcmPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+        ////// EOF 1) get wcm ptahology //////
+
+        ////// 2) get WashU ptahology //////
+        $washU = $em->getRepository(Institution::class)->findOneByAbbreviation("WashU");
+        if( !$washU ) {
+            exit('generateGlobalFellowshipSpecialties: No Institution: "WashU"');
+        }
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+        );
+        $washUPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+            "Department of Pathology and Immunology",
+            $washU,
+            $mapper
+        );
+        ////// EOF 1) get WashU ptahology //////
+
+        $institutionArr = array(
+            $wcmPathology,
+            $washUPathology
+        );
+
+        $fellowshipSpecialties = array(
+            "Clinical Informatics",
+            //"Dermatopathology",
+            //"Genitourinary pathology",
+            //"Hematopathology",
+            //"Breast pathology",
+            //"Cytopathology"
+        );
+
+        foreach( $fellowshipSpecialties as $fellowshipSpecialty ) {
+            foreach( $institutionArr as $institution ) {
+
+                //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
+                $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneBy([
+                    'name' => $fellowshipSpecialty,
+                    'institution' => $institution,
+                ]);
+
+                if ($listEntity) {
+                    continue;
+                }
+
+                exit("Create GlobalFellowshipSpecialty");
+                $listEntity = new GlobalFellowshipSpecialty();
+                $this->setDefaultList($listEntity, $count, $username, $fellowshipSpecialty);
+
+                $listEntity->setInstitution($institution);
+
+                $em->persist($listEntity);
+                $em->flush();
+
+                $count = $count + 10;
+            }
+        }
+
+        return round($count/10);
     }
 
     public function generateHonorTrainings() {

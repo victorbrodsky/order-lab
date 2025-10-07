@@ -3475,7 +3475,7 @@ class FellAppController extends OrderAbstractController {
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution($asEntities=true);
 
         //New: if authServerNetwork == 'Internet (Hub)'
-        //Get $fellTypes based on GlobalFellowshipSubspecialty - for now, the same to FellowshipSubspecialty.
+        //Get $fellTypes based on GlobalFellowshipSpecialty - for now, the same to FellowshipSubspecialty.
         //Each record in GlobalFellowshipSubspecialty table will have ManyToOne $institution
         //One institution can have many GlobalFellowshipSubspecialty
 
