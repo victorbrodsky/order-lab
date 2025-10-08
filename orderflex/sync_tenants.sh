@@ -154,6 +154,18 @@ f_sync() {
             bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
     fi
 
+    if [ -n "$type" ] && [ "$type" == "createdb" ]
+        then
+            echo -e ${COLOR} Create db for "$1" ${NC}
+            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:database:create
+
+            echo -e ${COLOR} php bin/console doctrine:migration:sync-metadata-storage for "$1" ${NC}
+            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
+
+            echo -e ${COLOR} php bin/console doctrine:migrations:version --add --all for "$1" ${NC}
+            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
+    fi
+
     #echo -e ${COLOR} cd to "$1"${NC}
     #cd "$homedir"/order-lab-$1/orderflex
 	#echo -e ${COLOR} git pull for "$1" ${NC}

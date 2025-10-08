@@ -28,6 +28,10 @@ run:
 # php bin/console doctrine:migration:sync-metadata-storage
 # php bin/console doctrine:migrations:version --add --all
 
+Check if php gd installed:
+Check: php -m | grep gd
+Install: sudo dnf install php-gd
+
 run:
 # deploy_prod.sh -withdb
 
