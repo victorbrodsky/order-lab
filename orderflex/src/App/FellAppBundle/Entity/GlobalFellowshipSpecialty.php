@@ -23,9 +23,9 @@ use Doctrine\ORM\Mapping as ORM;
 //use Symfony\Component\Validator\Constraints as Assert;
 
 
-//Similar to FellowshipSubspecialty, but used only on the /apply page
-#[ORM\Table(name: 'fellapp_globalspecialty')]
-#[ORM\Entity]
+////Similar to FellowshipSubspecialty, but used only on the /apply page
+//#[ORM\Table(name: 'fellapp_globalspecialty')]
+//#[ORM\Entity]
 class GlobalFellowshipSpecialty extends ListAbstract
 {
 
@@ -63,8 +63,8 @@ class GlobalFellowshipSpecialty extends ListAbstract
     //    'newkey1234567890',
     //    'anotherKey0987654321',
     //    ]);
-    #[ORM\Column(type: 'json', nullable: true)]
-    private array $apiImportKeys = [];
+//    #[ORM\Column(type: 'json', nullable: true)]
+//    private array $apiImportKeys = [];
 
 
     /**
