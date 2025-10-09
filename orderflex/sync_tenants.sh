@@ -167,6 +167,9 @@ f_sync() {
 
             echo -e ${COLOR} php bin/console doctrine:migrations:version --add --all for "$1" ${NC}
             yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
+
+            echo -e ${COLOR} doctrine:schema:validate for "$1" ${NC}
+            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:schema:validate
     fi
 
     #echo -e ${COLOR} cd to "$1"${NC}
