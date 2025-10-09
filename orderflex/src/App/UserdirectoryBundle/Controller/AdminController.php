@@ -1017,7 +1017,7 @@ class AdminController extends OrderAbstractController
         //return "Finished generateResidencySpecialties";
 
         $count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties();
-        $count_globalFellowshipSpecialties = $this->generateGlobalFellowshipSpecialties();
+        $count_globalFellowshipSpecialties = 0;//$this->generateGlobalFellowshipSpecialties();
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
