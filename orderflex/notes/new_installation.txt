@@ -80,6 +80,11 @@ sudo systemctl status httpdtenantapp1
 sudo systemctl status httpdtenantapp2
 sudo systemctl status httpdtenantappdemo
 
+sudo systemctl restart haproxy
+sudo systemctl restart php-fpm
+sudo systemctl restart httpdhomepagemanager
+
+
 Steps to make sure:
 sudo systemctl stop httpd.service
 

@@ -162,6 +162,9 @@ f_sync() {
             echo -e ${COLOR} php bin/console doctrine:migration:sync-metadata-storage for "$1" ${NC}
             yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
 
+            echo -e ${COLOR} php bin/console doctrine:schema:update --force for "$1" ${NC}
+            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --force
+
             echo -e ${COLOR} php bin/console doctrine:migrations:version --add --all for "$1" ${NC}
             yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
     fi
