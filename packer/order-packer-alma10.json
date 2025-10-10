@@ -1,0 +1,171 @@
+{
+
+  "variables": {
+        "ssh_name": "root"
+  },
+
+  "builders": [{
+	"type": "digitalocean",
+    "api_token": "api_token_bash_value",
+    "region": "nyc3",
+    "size": "2gb",
+    "image": "almalinux-9-x64",
+    "ssh_username": "{{user `ssh_name`}}"
+  }],
+
+  "provisioners": [
+  
+	{
+        "type": "shell",
+		"environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass",
+			"bashprotocol=bash_protocol",
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email",
+			"multitenant=bash_multitenant"
+		],
+        "script": "alma9_install.sh"
+    },
+	
+	{
+        "type": "shell",
+		"expect_disconnect": "true",
+        "inline": [ 
+           "echo @### Disable SELinux again ###",
+		   "sudo setenforce 0",
+		   "echo @### Reboot Server ###",
+		   "sudo shutdown -r now"
+         ]    
+	},
+	
+	{
+        "type": "shell",
+		"expect_disconnect": "true",
+		"pause_before": "60s",
+        "inline": [ 
+		   "echo @### Check SELinux status ###",	
+		   "sestatus",
+           "echo @### PostgreSQL Version after alma9_install ###",		
+		   "psql --version"
+         ]
+	},
+	
+	{
+        "type": "shell",
+        "inline": [ 
+           "echo @### Copy parameters file [parameters_bash_file] to [/srv/order-lab/orderflex/config/parameters_bash_file] ###"
+         ]    
+	},
+	
+	{
+		"type": "file",
+		"source": "parameters_bash_file",
+		"destination": "/srv/order-lab/orderflex/config/parameters_bash_file"
+	},
+	
+	{
+        "type": "shell",
+        "inline": [ 
+           "echo @### Create ssl folder /srv/order-lab/ssl ###",
+		   "sudo mkdir /srv/order-lab/ssl"
+         ]    
+	},
+	  
+	  {
+          "type": "file",
+          "source": "bash_sslcertificate",
+          "destination": "/srv/order-lab/ssl/apache2.crt"
+       },
+	   
+	   {
+          "type": "file",
+          "source": "bash_sslprivatekey",
+          "destination": "/srv/order-lab/ssl/apache2.key"
+       },
+	   
+	   {
+        "type": "shell",
+        "inline": [ 
+           "echo @### PostgreSQL Version before final step ###",		
+		   "psql --version"
+         ]    
+	   },
+	  
+	  {
+        "type": "shell",
+        "inline": [ 		   
+		   "echo @### Composer and deploy using orderflex ###",
+           "cd /srv/order-lab/orderflex",
+		   "COMPOSER_ALLOW_SUPERUSER=1 composer self-update",
+		   "echo @### PostgreSQL Version after composer self-update ###",		
+		   "psql --version",
+		   "echo @### Check SELinux status before composer ###",	
+		   "sestatus",
+		   "echo @### Check OS Info before composer ###",
+		   "sudo hostnamectl",	   
+           "COMPOSER_ALLOW_SUPERUSER=1 composer install",	 
+
+		   "echo @### Run: COMPOSER_ALLOW_SUPERUSER=1 composer require symfony/runtime ###",
+		   
+		   "echo @### Run: composer dump-autoload ###",
+		   "COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload",
+		   
+		   "echo @### Check OS Info after composer ###",
+		   "sudo hostnamectl",
+		   "echo @### PostgreSQL Version after composer install ###",		
+		   "psql --version",
+		   "echo @### Install yarn package.json ###",
+		   "sudo yarn install --frozen-lockfile",
+		   "echo @### Check OS Info after yarn ###",
+		   "sudo hostnamectl",
+		   
+		   "echo @### Install additional.sh. env for python ###",
+		   "bash /srv/order-lab/packer/additional.sh",
+		   
+	       "sudo chmod +x /srv/order-lab/orderflex/deploy_prod.sh",
+		   
+		   "echo @### Check OS Info before deploy_prod.sh -withdb ###",
+		   "sudo hostnamectl",
+	       "bash /srv/order-lab/orderflex/deploy_prod.sh -withdb",
+	       "sudo chown -R apache:apache /srv/order-lab",
+           "sudo chown -R apache:apache /srv/order-lab/.git/",
+		   "echo @### PostgreSQL Version end of installation ###",
+		   "echo @### Check OS Info end of installation ###",
+		   "sudo hostnamectl",		   
+		   "psql --version"	  	 
+         ]    
+      },
+
+	  {
+		"type": "file",
+		"source": "sshkey.pub",
+		"destination": "/root/.ssh/sshkey.pub"
+	   },
+
+	  {
+        "type": "shell",
+        "inline": [
+			"echo @### Run script to install sshkey ###",
+			"bash /srv/order-lab/packer/install_ssh.sh $bashsshfingerprint"
+         ]
+	   },
+	   
+	   {
+		 "type": "shell",
+		 "max_retries": 1,
+		 "environment_vars": [
+			"bashdbuser=bash_dbuser",
+			"bashdbpass=bash_dbpass",
+			"bashprotocol=bash_protocol",
+			"bashdomainname=bash_domainname",
+			"bashsslcertificate=bash_sslcertificate",
+			"bashemail=bash_email",
+			"multitenant=bash_multitenant"
+		 ],
+         "script": "install-multitenancy.sh"
+	   }
+  ]
+
+}

@@ -1,45 +1,29 @@
-New installation procedure (Alma10):
-
-1) Install git
+New installation procedure:
 sudo yum install -y git
-
-2) Install initial instance
 cd /srv
 git clone https://github.com/victorbrodsky/order-lab.git
 cd order-lab/packer/
 
-3) Run main installation script to install apache, php, postgres and other necesery modules.
-bash alma10_install.sh symfony symfony | tee 1_install.log
+Change 'bashpath' parameter in the script (i.e. "/srv")
+# bash alma9_install.sh symfony symfony
 
-4) Create python environment for postgres-manage-python and for scrapper
-bash install-multitenancy.sh -u symfony -t symfony -m haproxy -p /srv -s none -d none -e none -l none | tee 2_multitenancy.log
+# bash /usr/local/bin/order-lab/packer/additional.sh /srv/order-lab-tenantapp1
 
-5) Check and install nodejs if 'yarn --version' failed. This was already installed in alma10_install.sh
+install nodejs
 sudo yum install -y yarn
 #Error: warning: Signature not supported. Hash algorithm SHA1 not available.
 #Solution:
 #update-crypto-policies --set LEGACY
 #sudo yum install -y yarn
 
-6) Initialize homepagemanager and tenant-manager tenants:
-http://ip/directory/admin/first-time-login-generation-init/
-http://ip/tenant-manager/directory/admin/first-time-login-generation-init/
-
-7) Check home page http://ip
-
-###########################################################
-############### Additional verification ###################
-###########################################################
-
 Check apache:
 systemctl status httpd.service
 
-For HaProxy check /etc/httpd/conf.d/ssl.conf does not exists
 Certificate not found:
 /etc/httpd/conf.d
-Remove all ssl.conf for now (rename to ssl.conf_ORIG)
+Remove all ssl .conf for now (rename to ssl.conf_ORIG)
 
-Check DB status:
+run:
 # php bin/console doctrine:migrations:status
 # php bin/console doctrine:migration:sync-metadata-storage
 # php bin/console doctrine:migrations:version --add --all
@@ -48,26 +32,28 @@ Check if php gd installed:
 Check: php -m | grep gd
 Install: sudo dnf install php-gd
 
-Initialize other tenants manually or via tenant-manager page (https://ip/tenant-manager/directory/settings/tenant-manager/configure/):
+run:
+# deploy_prod.sh -withdb
+
 http://157.139.226.212/directory/admin/first-time-login-generation-init/
 http://157.139.226.212/tenant-manager/directory/admin/first-time-login-generation-init/
 http://157.139.226.212/c/demo-institution/directory/admin/demo-department/first-time-login-generation-init/
 http://157.139.226.212/c/wcm/psychiatry/directory/admin/first-time-login-generation-init/
-http://157.139.226.212/c/test-institution/test-department/directory/admin/first-time-login-generation-init/
+c/test-institution/test-department/directory/admin/first-time-login-generation-init/
 
-pgAdmin access:
+
 replace 'md5' with 'trust' in /var/lib/pgsql/16/data/pg_hba.conf
 psql -U postgres
 list dbs: \l
 list users: \du
 ALTER USER postgres PASSWORD 'postgres';
 passwd postgres
-v: sudo systemctl stop firewalld
+pgAdmin access: sudo systemctl stop firewalld
 Check folder size: du -sh Uploaded
 sudo service php-fpm restart
 
-pgAdmin access: Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
-sudo systemctl restart postgresql-17
+HaProxy:
+bash install-multitenancy.sh -u symfony -t symfony -m haproxy -p /srv -s none -d none -e none -l none | tee multitenancy_log.log
 
 Might need:
 restore using data only => valid schema
@@ -77,6 +63,9 @@ php bin/console doctrine:database:create
 SELinux is preventing /usr/sbin/haproxy from name_connect access
 setsebool -P haproxy_connect_any=1
 Or: sudo setenforce 0
+
+Modify pg_hba.conf in /var/lib/pgsql/data to replace "ident" and "peer" to "md5"
+sudo systemctl restart postgresql-17
 
 Firewall to access pgAdmin:
 firewall-cmd --permanent --zone public --add-port 80/tcp
@@ -96,6 +85,7 @@ sudo systemctl status httpdtenantappdemo
 sudo systemctl restart haproxy
 sudo systemctl restart php-fpm
 sudo systemctl restart httpdhomepagemanager
+
 
 Steps to make sure:
 sudo systemctl stop httpd.service

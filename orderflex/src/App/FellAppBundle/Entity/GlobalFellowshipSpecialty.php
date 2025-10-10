@@ -23,9 +23,9 @@ use Doctrine\ORM\Mapping as ORM;
 //use Symfony\Component\Validator\Constraints as Assert;
 
 
-////Similar to FellowshipSubspecialty, but used only on the /apply page
-//#[ORM\Table(name: 'fellapp_globalspecialty')]
-//#[ORM\Entity]
+//Similar to FellowshipSubspecialty, but used only on the /apply page
+#[ORM\Table(name: 'fellapp_globalspecialty')]
+#[ORM\Entity]
 class GlobalFellowshipSpecialty //extends ListAbstract
 {
 
@@ -63,8 +63,8 @@ class GlobalFellowshipSpecialty //extends ListAbstract
     //    'newkey1234567890',
     //    'anotherKey0987654321',
     //    ]);
-//    #[ORM\Column(type: 'json', nullable: true)]
-//    private array $apiImportKeys = [];
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $apiImportKeys = [];
 
 
     /**
@@ -114,5 +114,50 @@ class GlobalFellowshipSpecialty //extends ListAbstract
     {
         $this->seasonYearEnd = $seasonYearEnd;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getApiConnectionKey()
+    {
+        return $this->apiConnectionKey;
+    }
+
+    /**
+     * @param mixed $apiConnectionKey
+     */
+    public function setApiConnectionKey($apiConnectionKey)
+    {
+        $this->apiConnectionKey = $apiConnectionKey;
+    }
+
+
+    //$this->apiImportKeys = ['abc123', 'def456', 'ghi789'];
+    public function getApiImportKeys(): array
+    {
+        return $this->apiImportKeys;
+    }
+    public function setApiImportKeys(array $apiImportKeys): self
+    {
+        $this->apiImportKeys = $apiImportKeys;
+        return $this;
+    }
+    public function addApiImportKey(string $key): self
+    {
+        if (!in_array($key, $this->apiImportKeys, true)) {
+            $this->apiImportKeys[] = $key;
+        }
+        return $this;
+    }
+    //$this->removeApiImportKey('def456');
+    public function removeApiImportKey(string $key): self
+    {
+        $this->apiImportKeys = array_filter(
+            $this->apiImportKeys,
+            fn($existingKey) => $existingKey !== $key
+        );
+        return $this;
+    }
+
 
 }
