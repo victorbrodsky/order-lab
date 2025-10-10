@@ -274,14 +274,14 @@ f_create_single_order_instance () {
 	if [ -d "$bashpath/order-lab-$1" ]; then
         echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] already exist ${NC}
         return 0
-  else
+    else
         echo -e ${COLOR} Target directory ["$bashpath/order-lab-$1"] does not exist ${NC}
-  fi
+    fi
 
-  if [[ "$1" == "homepagemanager" ]]; then
-	  echo -e "${COLOR} Add the host key to avoid disabling host verification entirely ${NC}"
-	  ssh-keyscan github.com >> ~/.ssh/known_hosts
-  fi
+    if [[ "$1" == "homepagemanager" ]]; then
+        echo -e "${COLOR} Add the host key to avoid disabling host verification entirely ${NC}"
+	    ssh-keyscan github.com >> ~/.ssh/known_hosts
+    fi
 
 	echo -e ${COLOR} Create instance: "$1" port "$2" url "$3" ${NC}
 	#cd "$bashpath"/
@@ -301,9 +301,9 @@ f_create_single_order_instance () {
 
 	#run global install on homepagemanager
 	if [[ "$1" == "homepagemanager" ]]; then
-	  f_install_haproxy homepagemanager 8081
-    f_install_global homepagemanager 8081
-  fi
+        f_install_haproxy homepagemanager 8081
+        f_install_global homepagemanager 8081
+    fi
 
 
 	echo -e ${COLOR} List ORDER folder after clone ${NC}
