@@ -26,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
 //Similar to FellowshipSubspecialty, but used only on the /apply page
 #[ORM\Table(name: 'fellapp_globalspecialty')]
 #[ORM\Entity]
-class GlobalFellowshipSpecialty //extends ListAbstract
+class GlobalFellowshipSpecialty extends ListAbstract
 {
 
     #[ORM\OneToMany(targetEntity: 'GlobalFellowshipSpecialty', mappedBy: 'original', cascade: ['persist'])]

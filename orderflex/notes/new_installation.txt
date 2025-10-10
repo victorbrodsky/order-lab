@@ -8,10 +8,10 @@ cd /srv
 git clone https://github.com/victorbrodsky/order-lab.git
 cd order-lab/packer/
 
-3) Run main installation script to install apache, php, postgres and other necesery modules.
+3) Run main installation script to install apache, php, postgres, utilities and other necessary modules. Run time ~10 min
 bash alma10_install.sh symfony symfony | tee 1_install.log
 
-4) Create python environment for postgres-manage-python and for scrapper
+4) Install HaProxy, tenant instances, httpds Run time ~15 min
 bash install-multitenancy.sh -u symfony -t symfony -m haproxy -p /srv -s none -d none -e none -l none | tee 2_multitenancy.log
 
 5) Check and install nodejs if 'yarn --version' failed. This was already installed in alma10_install.sh
@@ -47,6 +47,11 @@ Check DB status:
 Check if php gd installed:
 Check: php -m | grep gd
 Install: sudo dnf install php-gd
+
+Add alias command:
+vim ~/.bashrc
+alias lsl="ls -lrt"
+source ~/.bashrc
 
 Initialize other tenants manually or via tenant-manager page (https://ip/tenant-manager/directory/settings/tenant-manager/configure/):
 http://157.139.226.212/directory/admin/first-time-login-generation-init/
