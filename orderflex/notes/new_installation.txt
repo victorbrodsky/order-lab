@@ -31,8 +31,17 @@ http://ip/tenant-manager/directory/admin/first-time-login-generation-init/
 ############### Additional verification ###################
 ###########################################################
 
+Make sure use http if ssl certificate is not available:
+http://165.227.99.133/directory/login
+
 Check apache:
 systemctl status httpd.service
+
+Check postgres log:
+less /var/lib/pgsql/18/data/log/postgresql-Fri.log
+
+Check haproxy log:
+journalctl -u haproxy
 
 For HaProxy check /etc/httpd/conf.d/ssl.conf does not exists
 Certificate not found:
@@ -43,6 +52,7 @@ Check DB status:
 # php bin/console doctrine:migrations:status
 # php bin/console doctrine:migration:sync-metadata-storage
 # php bin/console doctrine:migrations:version --add --all
+# php bin/console doctrine:schema:validate
 
 Check if php gd installed:
 Check: php -m | grep gd
@@ -56,7 +66,7 @@ source ~/.bashrc
 Initialize other tenants manually or via tenant-manager page (https://ip/tenant-manager/directory/settings/tenant-manager/configure/):
 http://157.139.226.212/directory/admin/first-time-login-generation-init/
 http://157.139.226.212/tenant-manager/directory/admin/first-time-login-generation-init/
-http://157.139.226.212/c/demo-institution/directory/admin/demo-department/first-time-login-generation-init/
+http://157.139.226.212/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
 http://157.139.226.212/c/wcm/psychiatry/directory/admin/first-time-login-generation-init/
 http://157.139.226.212/c/test-institution/test-department/directory/admin/first-time-login-generation-init/
 
@@ -78,6 +88,11 @@ Might need:
 restore using data only => valid schema
 php bin/console doctrine:database:drop --force
 php bin/console doctrine:database:create
+php bin/console doctrine:migration:sync-metadata-storage
+php bin/console doctrine:schema:update --force
+php bin/console doctrine:migrations:version --add --all
+php bin/console doctrine:schema:validate
+php bin/console doctrine:migrations:status
 
 SELinux is preventing /usr/sbin/haproxy from name_connect access
 setsebool -P haproxy_connect_any=1
@@ -92,6 +107,7 @@ Verify:
 sudo systemctl status httpd.service
 sudo systemctl status haproxy
 sudo systemctl status php-fpm
+sudo systemctl status postgresql-18
 sudo systemctl status httpdhomepagemanager
 sudo systemctl status httpdtenantmanager
 sudo systemctl status httpdtenantapp1
