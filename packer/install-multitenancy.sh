@@ -410,18 +410,22 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Run doctrine:database:create for order-lab-"$1" ${NC}
 	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:database:create
 
+	echo -e ${COLOR} Run 1 doctrine:migration:sync-metadata-storage for order-lab-"$1" ${NC}
+	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
+
 	echo -e ${COLOR} Run doctrine:schema:update for order-lab-"$1" ${NC}
 	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --complete --force
 
 	echo -e ${COLOR} Run doctrine:migration:status for order-lab-"$1" ${NC}
 	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:migration:status
 
-	echo -e ${COLOR} Run doctrine:migration:sync-metadata-storage for order-lab-"$1" ${NC}
+	echo -e ${COLOR} Run 2 doctrine:migration:sync-metadata-storage for order-lab-"$1" ${NC}
 	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
 	#sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:migration:version --add --all --no-interaction
 	
 	echo -e ${COLOR} Final run deploy for order-lab-"$1" ${NC}
-	bash "$bashpath"/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
+	#bash "$bashpath"/order-lab-"$1"/orderflex/deploy_prod.sh -withdb
+	bash "$bashpath"/order-lab-"$1"/orderflex/deploy_prod.sh
 }
 f_create_order_instances() {
 	#for str in ${tenantsArray[@]}; do
