@@ -416,6 +416,12 @@ f_create_single_order_instance () {
 	echo -e ${COLOR} Run doctrine:schema:update for order-lab-"$1" ${NC}
 	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --complete --force
 
+	echo -e ${COLOR} php bin/console doctrine:migrations:version --add --all for "$1" ${NC}
+    yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
+
+    echo -e ${COLOR} doctrine:schema:validate for "$1" ${NC}
+    yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:schema:validate
+
 	echo -e ${COLOR} Run doctrine:migration:status for order-lab-"$1" ${NC}
 	sudo php "$bashpath"/order-lab-"$1"/orderflex/bin/console doctrine:migration:status
 
