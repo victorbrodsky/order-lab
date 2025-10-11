@@ -31,6 +31,9 @@ http://ip/tenant-manager/directory/admin/first-time-login-generation-init/
 ############### Additional verification ###################
 ###########################################################
 
+Step 1 and 2 can be run by one script:
+bash inside_installation.sh
+
 Make sure use http if ssl certificate is not available:
 http://165.227.99.133/directory/login
 
