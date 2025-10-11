@@ -667,6 +667,38 @@ f_install_certbot() {
 	echo -e ${COLOR} f_install_certbot: finish ${NC}
 }
 
+f_final() {
+    echo -e ${COLOR} Final run restart httpd for order-lab-"$1" ${NC}
+    sudo systemctl restart httpd"$1"
+
+    echo -e ${COLOR} Final status httpd for order-lab-"$1" ${NC}
+    sudo systemctl status httpd"$1"
+
+    echo -e ${COLOR} Final run deploy for order-lab-"$1" ${NC}
+	bash "$bashpath"/order-lab-"$1"/orderflex/deploy_prod.sh
+}
+f_finals() {
+    echo -e ${COLOR} Final restart haproxy ${NC}
+	sudo systemctl restart haproxy
+
+	echo -e ${COLOR} Make sure php-fpm is started ${NC}
+	sudo systemctl restart php-fpm
+
+    f_final homepagemanager
+	f_final tenantmanager tenant-manager
+	f_final tenantappdemo c/demo-institution/demo-department
+	f_final tenantapptest c/test-institution/test-department
+	f_final tenantapp1 c/wcm/pathology
+	f_final tenantapp2 c/wcm/psychiatry
+
+    echo -e ${COLOR} Check final status ${NC}
+	sudo systemctl status httpd.service
+    sudo systemctl status haproxy
+    sudo systemctl status php-fpm
+    sudo systemctl status postgresql-18
+    sudo systemctl status httpdhomepagemanager
+}
+
 function changedir() {
   cd $1
 }
@@ -698,6 +730,7 @@ if [ -n "$multitenant" ] && [ "$multitenant" == "haproxy" ]
 			f_start_all_httpd
 			f_restart_phpfpm
 			f_install_certbot homepagemanager 8081
+			f_finals
 			#f_sitesettings_changes
 		else
 			echo -e ${COLOR} False ${NC}
