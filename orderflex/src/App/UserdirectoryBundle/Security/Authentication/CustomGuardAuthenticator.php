@@ -421,6 +421,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
         $logger = $this->container->get('logger');
         $logger->notice("getAuthUser: Start");
+        $logger->notice("getAuthUser: credentials['csrf_token']=".$credentials['csrf_token']);
 
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
