@@ -309,33 +309,47 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $logger->notice('authenticate: before new Passport, username='.$credentials['username']);
         //dump($credentials);
 
+//        return new Passport(
+//            //new UserBadge($credentials['username']),
+//            new UserBadge($credentials['username'], function (string $username) use ($credentials) {
+//                // Now you can access the full $credentials array inside
+//                return $this->getAuthUser($credentials);
+//            }),
+//            new CustomCredentials(
+//                // If this function returns anything else than `true`, the credentials are marked as invalid.
+//                function( $credentials ) {
+//                    $user = $this->getAuthUser($credentials);
+//                    if( $user ) {
+//                        //if user exists here then it's already authenticated
+//                        //return true; //this enough
+//
+//                        //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
+//                        //exit($user->getUserIdentifier()."?=".$credentials['username']);
+//                        //return true;
+//                        return $user->getUserIdentifier() === $credentials['username'];
+//                    }
+//                    return false;
+//                },
+//                // The custom credentials
+//                $credentials
+//            )
+//        );
+
         return new Passport(
-            //new UserBadge($credentials['username']),
             new UserBadge($credentials['username'], function (string $username) use ($credentials) {
-                // Now you can access the full $credentials array inside
+                // Load or create the user from LDAP
                 return $this->getAuthUser($credentials);
             }),
             new CustomCredentials(
-                // If this function returns anything else than `true`, the credentials are marked as invalid.
-                function( $credentials ) {
-                    $user = $this->getAuthUser($credentials);
-                    if( $user ) {
-                        //if user exists here then it's already authenticated
-                        //return true; //this enough
-
-                        //As a final check if getUserIdentifier is equal to 'username' (i.e. oli2002_@_ldap-user)
-                        //exit($user->getUserIdentifier()."?=".$credentials['username']);
-                        //return true;
-                        return $user->getUserIdentifier() === $credentials['username'];
-                    }
-                    return false;
+                function ($credentials, $user) {
+                    // $user is already resolved by UserBadge loader
+                    return $user && $user->getUserIdentifier() === $credentials['username'];
                 },
-                // The custom credentials
                 $credentials
             )
         );
 
-    }
+} //authenticate
 
     /**
      * Called on every request. Return whatever credentials you want to
@@ -424,8 +438,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //dump($credentials);
         //exit('getAuthUser');
-        $logger->notice("getAuthUser: credentials['csrf_token']=".$credentials['csrf_token']);
-        echo "credentials['csrf_token']=".$credentials['csrf_token']."<br>";
+        //$logger->notice("getAuthUser: credentials['csrf_token']=".$credentials['csrf_token']);
+        //echo "credentials['csrf_token']=".$credentials['csrf_token']."<br>";
 
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
