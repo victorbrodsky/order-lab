@@ -307,12 +307,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         } //if $route == 'saml_acs_default'
 
         $logger->notice('authenticate: before new Passport, username='.$credentials['username']);
+        //dump($credentials);
 
         return new Passport(
             //new UserBadge($credentials['username']),
-            new UserBadge($credentials['username'], function ($credentials) {
-                // This closure is called to load the user manually
-                // You can use it to fetch or create the user from LDAP
+            new UserBadge($credentials['username'], function (string $username) use ($credentials) {
+                // Now you can access the full $credentials array inside
                 return $this->getAuthUser($credentials);
             }),
             new CustomCredentials(
@@ -421,6 +421,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     {
         $logger = $this->container->get('logger');
         $logger->notice("getAuthUser: Start");
+
+        //dump($credentials);
+        //exit('getAuthUser');
         $logger->notice("getAuthUser: credentials['csrf_token']=".$credentials['csrf_token']);
         echo "credentials['csrf_token']=".$credentials['csrf_token']."<br>";
 
