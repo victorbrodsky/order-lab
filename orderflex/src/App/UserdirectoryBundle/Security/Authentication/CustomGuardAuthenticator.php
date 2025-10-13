@@ -306,7 +306,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             } //if($username)
         } //if $route == 'saml_acs_default'
 
-        //$logger->notice('authenticate: before new Passport, username='.$credentials['username']);
+        $logger->notice('authenticate: before new Passport, username='.$credentials['username']);
 
         return new Passport(
             new UserBadge($credentials['username']),
@@ -415,7 +415,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function getAuthUser($credentials) : mixed
     {
         $logger = $this->container->get('logger');
-        //$logger->notice("getAuthUser: Start");
+        $logger->notice("getAuthUser: Start");
 
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
@@ -437,7 +437,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            $providerKey
 //        );
 
-        //$logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username");
+        $logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username");
 
         $unauthenticatedToken = new CustomUsernamePasswordToken(
             $username,      //username
