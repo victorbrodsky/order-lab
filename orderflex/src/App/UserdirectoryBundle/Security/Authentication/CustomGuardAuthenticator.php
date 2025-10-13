@@ -309,7 +309,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         $logger->notice('authenticate: before new Passport, username='.$credentials['username']);
 
         return new Passport(
-            new UserBadge($credentials['username']),
+            //new UserBadge($credentials['username']),
+            new UserBadge($credentials['username'], function ($credentials) {
+                // This closure is called to load the user manually
+                // You can use it to fetch or create the user from LDAP
+                return $this->getAuthUser($credentials);
+            }),
             new CustomCredentials(
                 // If this function returns anything else than `true`, the credentials are marked as invalid.
                 function( $credentials ) {
