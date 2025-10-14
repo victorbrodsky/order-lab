@@ -1093,7 +1093,7 @@ class AuthUtil {
     // AD/LDAP Server OU: ou=users,ou=guests,dc=zflexsoftware,dc=com
     // Username: guest1 Password: guest1password
     //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
-    public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
+    public function simpleLdap_ORIG($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap. $username, $password");
 
         //exit("simpleLdap");
@@ -1167,6 +1167,37 @@ class AuthUtil {
 
         $this->logger->notice("Simple ldap failed for unknown reason for $username");
         return NULL;
+    }
+
+    public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
+        $host = "ldaps://accounts-ldap.wusm.wustl.edu";
+        $port = 636;
+
+        // Full DN for binding
+        $dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+        //$password = "";
+
+        // Connect to LDAP
+        $ldapConn = ldap_connect($host, $port);
+        if (!$ldapConn) {
+            die("Failed to connect to LDAP server.");
+        }
+
+        // Set LDAP options
+        ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
+
+        // Bind
+        $bind = @ldap_bind($ldapConn, $dn, $password);
+
+        if ($bind) {
+            echo "LDAP bind successful.";
+        } else {
+            echo "LDAP bind failed.\n";
+            echo "Error: " . ldap_error($ldapConn);
+        }
+
+        exit("simpleLdap test");
     }
 
     //It might work
