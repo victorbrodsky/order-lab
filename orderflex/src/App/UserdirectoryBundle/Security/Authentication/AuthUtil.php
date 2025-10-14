@@ -1093,7 +1093,7 @@ class AuthUtil {
     // AD/LDAP Server OU: ou=users,ou=guests,dc=zflexsoftware,dc=com
     // Username: guest1 Password: guest1password
     //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
-    public function simpleLdap_ORIG($username, $password, $userPrefix="uid", $ldapType=1) {
+    public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap. $username, $password");
 
         //exit("simpleLdap");
@@ -1169,7 +1169,7 @@ class AuthUtil {
         return NULL;
     }
 
-    public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
+    public function simpleLdap_test($username, $password, $userPrefix="uid", $ldapType=1) {
 
         echo "username=$username <br>";
         $this->logger->notice("simple Ldap: before searchLdap: username=".$username);
@@ -1539,7 +1539,6 @@ class AuthUtil {
 
         $this->logger->notice("simple Ldap: LDAPHost=[".$ldapHost."], LDAPPort=[$ldapPort], baseDn=[$baseDn]");
         //LDAPHost=[ldap://accounts-ldap.wusm.wustl.edu], LDAPPort=[636], baseDn=[OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu]
-
         //$ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
         //$ldapPort = 636;
         //$baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
