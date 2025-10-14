@@ -1207,12 +1207,14 @@ class AuthUtil {
         $ldapPort = 636;
         $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
 
-        // Defensive check
+        // Service account credentials for search
+        $serviceDn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+        $servicePass = $password;
+
         if (empty($username) || empty($password)) {
             throw new \Exception("Username or password is missing.");
         }
 
-        // Connect
         $ldapConn = ldap_connect($ldapHost, $ldapPort);
         if (!$ldapConn) {
             throw new \Exception("LDAP connection failed.");
@@ -1221,17 +1223,16 @@ class AuthUtil {
         ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
 
-        // Anonymous bind (some AD servers require service account instead)
-        if (!@ldap_bind($ldapConn)) {
-            throw new \Exception("Initial LDAP bind failed: " . ldap_error($ldapConn));
+        // Bind with service account
+        if (!@ldap_bind($ldapConn, $serviceDn, $servicePass)) {
+            throw new \Exception("LDAP service bind failed: " . ldap_error($ldapConn));
         }
 
-        // Build filter and attributes
+        // Search for userPrincipalName
         $filter = "($userPrefix=$username)";
         $attributes = ["userPrincipalName"];
-
-        // Search
         $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
+
         if (!$search) {
             throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
         }
@@ -1243,7 +1244,7 @@ class AuthUtil {
 
         $userPrincipalName = $entries[0]["userprincipalname"][0];
 
-        // Rebind with discovered UPN and user's password
+        // Rebind using discovered UPN and user's password
         if (!@ldap_bind($ldapConn, $userPrincipalName, $password)) {
             throw new \Exception("LDAP bind failed for $userPrincipalName: " . ldap_error($ldapConn));
         }
