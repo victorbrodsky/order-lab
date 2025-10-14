@@ -1175,8 +1175,9 @@ class AuthUtil {
 
         // Full DN for binding
         //$dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
-        $dn = "path-svc-binduser";
-        $dn = $username;
+        //$dn = "path-svc-binduser";
+        //$dn = $username;
+        $dn = $this->getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1);
         //$password = "";
 
         // Connect to LDAP
@@ -1200,6 +1201,45 @@ class AuthUtil {
         }
 
         exit("simpleLdap test");
+    }
+    public function getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1) {
+        $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
+        $ldapPort = 636;
+        $bindDn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu"; // $SERVICE_DN
+        $bindPassword = "JAdj6BG!xf%cVpD"; // $SERVICE_PASS
+        $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+        $samAccountName = "path-svc-binduser"; // or extract from $bindDn if needed
+
+        // Connect
+        $ldapConn = ldap_connect($ldapHost, $ldapPort);
+        ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
+
+        // Bind
+        if (!@ldap_bind($ldapConn, $bindDn, $bindPassword)) {
+            die("LDAP bind failed: " . ldap_error($ldapConn));
+        }
+
+        // Search for userPrincipalName
+        $filter = "(sAMAccountName=$samAccountName)";
+        $attributes = ["userPrincipalName"];
+        $search = ldap_search($ldapConn, $baseDn, $filter, $attributes);
+
+        if (!$search) {
+            die("LDAP search failed: " . ldap_error($ldapConn));
+        }
+
+        $entries = ldap_get_entries($ldapConn, $search);
+        $userPrincipalName = null;
+
+        if ($entries["count"] > 0 && isset($entries[0]["userprincipalname"][0])) {
+            $userPrincipalName = $entries[0]["userprincipalname"][0];
+            echo "User Principal Name: $userPrincipalName\n";
+        } else {
+            echo "userPrincipalName not found.\n";
+        }
+
+        return $userPrincipalName;
     }
 
     //It might work
