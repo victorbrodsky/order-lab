@@ -1520,7 +1520,7 @@ class AuthUtil {
 
         return $searchRes;
     }
-    public function searchLdapV2($username,$ldapType=1,$withWarning=true) {
+    public function searchLdapV2_OLD($username,$ldapType=1,$withWarning=true) {
 
         //echo "username=".$username."<br>";
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1639,70 +1639,59 @@ class AuthUtil {
         //print_r($info);
         dump($info); //testing
         exit('111');
+    }
+    public function searchLdapV2($username, $ldapType=1) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
+        $ldapPort = 636;
+        $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
 
-        $searchRes = array();
+        $postfix = $this->getPostfix($ldapType);
 
-        for ($x=0; $x<$info["count"]; $x++) {
+        // Service account credentials
+        //$serviceDn = "path-";
+        //$servicePass = "";
+        $serviceDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
+        $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
 
-            if( array_key_exists('ou', $info[$x]) ) {
-                $searchRes['ou'] = $info[$x]['ou'][0];
-            }
-            if( array_key_exists('uid', $info[$x]) ) {
-                $searchRes['uid'] = $info[$x]['uid'][0];
-            }
-
-            if( array_key_exists('mail', $info[$x]) ) {
-                $searchRes['mail'] = $info[$x]['mail'][0];
-            }
-            if( array_key_exists('title', $info[$x]) ) {
-                $searchRes['title'] = $info[$x]['title'][0];
-            }
-            if( array_key_exists('givenname', $info[$x]) ) {
-                $searchRes['givenName'] = $info[$x]['givenname'][0];
-            }
-            if( array_key_exists('sn', $info[$x]) ) {
-                $searchRes['lastName'] = $info[$x]['sn'][0];
-            }
-            if( array_key_exists('displayname', $info[$x]) ) {
-                $searchRes['displayName'] = $info[$x]['displayname'][0];
-            }
-            if( array_key_exists('telephonenumber', $info[$x]) ) {
-                $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
-            }
-            if( array_key_exists('mobile', $info[$x]) ) {
-                $searchRes['mobile'] = $info[$x]['mobile'][0];
-            }
-            if( array_key_exists('company', $info[$x]) ) {
-                $searchRes['company'] = $info[$x]['company'][0];    //not used currently
-            }
-
-            if( array_key_exists('givenName',$searchRes) && !$searchRes['givenName'] ) {
-                $searchRes['givenName'] = "";   //$username;
-            }
-
-            if( array_key_exists('lastName',$searchRes) && !$searchRes['lastName'] ) {
-                $searchRes['lastName'] = "";    //$username;
-            }
-
-            //print "\nActive Directory says that:<br />";
-            //print "givenName is: ".$searchRes['givenName']."<br>";
-            //print "familyName is: ".$searchRes['lastName']."<br>";
-            //print_r($info[$x]);
-
-            //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
-
-            //we have only one result
-            break;
+        if (empty($username)) {
+            throw new \Exception("Username is missing.");
         }
 
-//        if( count($searchRes) == 0 ) {
-//            //echo "no search results <br>";
-//        }
-        //print_r($searchRes);
-        //exit('Search OK');
-        ldap_unbind($cnx);
+        // Connect
+        $ldapConn = ldap_connect($ldapHost, $ldapPort);
+        if (!$ldapConn) {
+            throw new \Exception("LDAP connection failed.");
+        }
 
-        return $searchRes;
+        ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
+
+        // Bind with service account
+        if (!@ldap_bind($ldapConn, $serviceDn, $servicePass)) {
+            throw new \Exception("LDAP bind failed: " . ldap_error($ldapConn));
+        }
+
+        // Search for user by sAMAccountName
+        $filter = "(sAMAccountName=$username)";
+        $attributes = []; // empty array = fetch all attributes
+        $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
+
+        if (!$search) {
+            throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
+        }
+
+        $entries = ldap_get_entries($ldapConn, $search);
+        ldap_unbind($ldapConn);
+
+        if ($entries["count"] === 0) {
+            throw new \Exception("User '$username' not found.");
+        }
+
+        dump($entries[0]);
+        exit('searchLdapV2');
+
+        return $entries[0]; // return full attribute set for the user
     }
 
     public function getPostfix($ldapType) {
