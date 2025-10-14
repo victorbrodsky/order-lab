@@ -1170,14 +1170,21 @@ class AuthUtil {
     }
 
     public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
+
+        echo "username=$username <br>";
+        $this->logger->notice("simple Ldap: before searchLdap: username=".$username);
+        $searchRes = $this->searchLdap($username,$ldapType);
+        dump($searchRes);
+        exit('simpleLdap');
+
         $host = "ldaps://accounts-ldap.wusm.wustl.edu";
         $port = 636;
 
         // Full DN for binding
         //$dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
         //$dn = "path-svc-binduser";
-        //$dn = $username;
-        $dn = $this->getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1);
+        $dn = $username;
+        //$dn = $this->getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1);
         //$password = "";
 
         // Connect to LDAP
@@ -1200,12 +1207,13 @@ class AuthUtil {
             echo "Error: " . ldap_error($ldapConn);
         }
 
-        exit("simpleLdap test");
+        //exit("simpleLdap test");
     }
     public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
         $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
         $ldapPort = 636;
         $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+        $baseDn = "";
 
         // Service account credentials for search
         $serviceDn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
@@ -1445,7 +1453,8 @@ class AuthUtil {
 
         //$this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
         //print_r($info);
-        //exit('111');
+        dump($info); //testing
+        exit('111');
 
         $searchRes = array();
 
