@@ -1178,9 +1178,9 @@ class AuthUtil {
 
         if (isset($searchRes['userprincipalname'][0])) {
             $userPrincipalName = $searchRes['userprincipalname'][0];
-            echo "userPrincipalName: $userPrincipalName\n";
+            echo "userPrincipalName=[$userPrincipalName] <br>";
         } else {
-            echo "userPrincipalName not found in LDAP entry.\n";
+            echo "userPrincipalName not found in LDAP entry.<br>";
         }
 
         exit('simpleLdap');
@@ -1217,57 +1217,57 @@ class AuthUtil {
 
         //exit("simpleLdap test");
     }
-    public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
-        $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
-        $ldapPort = 636;
-        $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
-        $baseDn = "";
-
-        // Service account credentials for search
-        $serviceDn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
-        $servicePass = $password;
-
-        if (empty($username) || empty($password)) {
-            throw new \Exception("Username or password is missing.");
-        }
-
-        $ldapConn = ldap_connect($ldapHost, $ldapPort);
-        if (!$ldapConn) {
-            throw new \Exception("LDAP connection failed.");
-        }
-
-        ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
-
-        // Bind with service account
-        if (!@ldap_bind($ldapConn, $serviceDn, $servicePass)) {
-            throw new \Exception("LDAP service bind failed: " . ldap_error($ldapConn));
-        }
-
-        // Search for userPrincipalName
-        $filter = "($userPrefix=$username)";
-        $attributes = ["userPrincipalName"];
-        $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
-
-        if (!$search) {
-            throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
-        }
-
-        $entries = ldap_get_entries($ldapConn, $search);
-        if ($entries["count"] === 0 || !isset($entries[0]["userprincipalname"][0])) {
-            throw new \Exception("userPrincipalName not found for $username");
-        }
-
-        $userPrincipalName = $entries[0]["userprincipalname"][0];
-
-        // Rebind using discovered UPN and user's password
-        if (!@ldap_bind($ldapConn, $userPrincipalName, $password)) {
-            throw new \Exception("LDAP bind failed for $userPrincipalName: " . ldap_error($ldapConn));
-        }
-
-        ldap_unbind($ldapConn);
-        return $userPrincipalName;
-    }
+//    public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
+//        $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
+//        $ldapPort = 636;
+//        $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+//        $baseDn = "";
+//
+//        // Service account credentials for search
+//        $serviceDn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+//        $servicePass = $password;
+//
+//        if (empty($username) || empty($password)) {
+//            throw new \Exception("Username or password is missing.");
+//        }
+//
+//        $ldapConn = ldap_connect($ldapHost, $ldapPort);
+//        if (!$ldapConn) {
+//            throw new \Exception("LDAP connection failed.");
+//        }
+//
+//        ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
+//        ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
+//
+//        // Bind with service account
+//        if (!@ldap_bind($ldapConn, $serviceDn, $servicePass)) {
+//            throw new \Exception("LDAP service bind failed: " . ldap_error($ldapConn));
+//        }
+//
+//        // Search for userPrincipalName
+//        $filter = "($userPrefix=$username)";
+//        $attributes = ["userPrincipalName"];
+//        $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
+//
+//        if (!$search) {
+//            throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
+//        }
+//
+//        $entries = ldap_get_entries($ldapConn, $search);
+//        if ($entries["count"] === 0 || !isset($entries[0]["userprincipalname"][0])) {
+//            throw new \Exception("userPrincipalName not found for $username");
+//        }
+//
+//        $userPrincipalName = $entries[0]["userprincipalname"][0];
+//
+//        // Rebind using discovered UPN and user's password
+//        if (!@ldap_bind($ldapConn, $userPrincipalName, $password)) {
+//            throw new \Exception("LDAP bind failed for $userPrincipalName: " . ldap_error($ldapConn));
+//        }
+//
+//        ldap_unbind($ldapConn);
+//        return $userPrincipalName;
+//    }
 
     //It might work
     //remove: fabiang/sasl symfony/ldap
@@ -1461,8 +1461,8 @@ class AuthUtil {
 
         //$this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
         //print_r($info);
-        dump($info); //testing
-        exit('111');
+        //dump($info); //testing
+        //exit('111');
 
         $searchRes = array();
 
@@ -1528,133 +1528,14 @@ class AuthUtil {
 
         return $searchRes;
     }
-    public function searchLdapV2_OLD($username,$ldapType=1,$withWarning=true) {
-
-        //echo "username=".$username."<br>";
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $postfix = $this->getPostfix($ldapType);
-
-        //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
-        //$dn = "CN=Users";
-        //$ldapDc = $this->container->getParameter('ldapou');
-
-        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
-
-        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
-        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
-
-        if( $LDAPUserAdmin && $LDAPUserPasswordAdmin ) {
-            //ok
-        } else {
-            //no search
-            return NULL;
-            //return array('givenName'=>$username,'lastName'=>$username,'displayName'=>$username);
-        }
-
-        //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
-        //echo "LDAPHost=".$LDAPHost."<br>";
-        $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
-        $cnx = $this->connectToLdap($LDAPHost,$LDAPPort);
-
-        //$filter="(ObjectClass=Person)";
-        //$filter="(CN=".$username.")";
-        //$filter = "(sAMAccountName=".$username.")";
-
-        //$filter = "(|(CN=$username)(sAMAccountName=$username))"; //use cn or sAMAccountName to search by username (cwid)
-        $filter = "(uid=$username)"; // or "(sAMAccountName=$username)"
-
-        //test
-        //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";
-        //$LDAPUserPasswordAdmin = "zflexpass";
-        //$origLdapBindDN = "ou=users,ou=guests,dc=zflexsoftware,dc=com";
-
-        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
-        //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
-        if( !$res ) {
-            $this->logger->error("search Ldap: ldap_bind failed with admin authentication username="."[".$LDAPUserAdmin."]");
-            //."; LDAPUserPasswordAdmin="."[".$LDAPUserPasswordAdmin."]");
-            //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            //testing!!!: allow to login without LDAP admin bind
-            $adminLdapBindRequired = true;
-            //$adminLdapBindRequired = false;
-            if( $adminLdapBindRequired ) {
-                ldap_error($cnx);
-                ldap_unbind($cnx);
-                //exit("error ldap_bind");
-                return NULL;
-            }
-        } else {
-            $this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
-            //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
-            //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
-        }
-
-        $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "mobile", "company"); //sn - lastName
-        //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
-        //$LDAPFieldsToFind = array("cn", "samaccountname");
-
-        //$origLdapBindDN = "dc=a,dc=wcmc-ad,dc=net"; //testing
-        //echo "origLdapBindDN=".$origLdapBindDN."<br>";
-        //echo "filter=".$filter."<br>";
-
-        //$sr = ldap_search($cnx, $origLdapBindDN, $filter, $LDAPFieldsToFind);
-
-        $sr = null;
-        $ldapBindDNArr = explode(";",$origLdapBindDN);
-        //echo "count=".count($ldapBindDNArr)."<br>";
-        foreach( $ldapBindDNArr as $ldapBindDN) {
-            $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
-            $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-//            if( $withWarning ) {
-//                $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-//            } else {
-//                $sr = @ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-//            }
-
-            if( $sr ) {
-                $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-                $info = ldap_get_entries($cnx, $sr);
-
-//                echo "<pre>";
-//                print_r($info);
-//                echo "</pre>";
-
-                if( $info["count"] > 0 ) {
-                    $this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
-                    break;
-                } else {
-                    $this->logger->notice("search Ldap: ldap_search NOTOK = info null");
-                }
-            } else {
-                $this->logger->error("search Ldap: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-            }
-        }
-
-        if( !$sr ) {
-            //echo 'Search failed <br>';
-            //exit('Search failed');
-            $this->logger->error("search Ldap: ldap_search failed with filter=" . $filter);
-            ldap_error($cnx);
-            ldap_unbind($cnx);
-            return NULL;
-        }
-
-        $info = ldap_get_entries($cnx, $sr);
-
-        //$this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
-        //print_r($info);
-        //dump($info); //testing
-        //exit('111');
-    }
     public function searchLdapV2($username, $ldapType=1) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
-        $ldapPort = 636;
-        $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
-
         $postfix = $this->getPostfix($ldapType);
+
+        //$ldapHost = "ldaps://accounts-***.edu";
+        $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
+        $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
+        $baseDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
 
         // Service account credentials
         //$serviceDn = "path-";
@@ -1695,15 +1576,6 @@ class AuthUtil {
         if ($entries["count"] === 0) {
             throw new \Exception("User '$username' not found.");
         }
-
-        //dump($entries[0]);
-        //exit('searchLdapV2');
-//        if (isset($entries[0]['userprincipalname'][0])) {
-//            $userPrincipalName = $entries[0]['userprincipalname'][0];
-//            echo "userPrincipalName: $userPrincipalName\n";
-//        } else {
-//            echo "userPrincipalName not found in LDAP entry.\n";
-//        }
 
         return $entries[0]; // return full attribute set for the user
     }
