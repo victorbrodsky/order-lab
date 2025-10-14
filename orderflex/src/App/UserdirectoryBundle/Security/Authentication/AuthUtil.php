@@ -923,6 +923,8 @@ class AuthUtil {
             return 1;
         }
 
+        return NULL; //testing: remove it in prod
+
         if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
             return 1;
         }
