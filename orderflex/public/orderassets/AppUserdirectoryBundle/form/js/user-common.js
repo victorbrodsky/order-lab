@@ -278,6 +278,11 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
                 name: name,
                 cycle: cycle
             });
+        } else if (urlprefix === "public/generic/") {
+            url = Routing.generate('employees_get_public_generic_select2', {
+                name: name,
+                cycle: cycle
+            });
         } else if( urlprefix === "genericusers/") {
             url = Routing.generate('employees_get_genericusers', {
                 name: name,
@@ -306,14 +311,24 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
-            async: thisAsyncflag
+            async: thisAsyncflag,
+            dataType: 'json'
         }).done(function(data) {
-            // console.log('data=',data);
+            // Ensure data is an object/array
+            try {
+                if (typeof data === 'string') {
+                    data = JSON.parse(data);
+                }
+            } catch (e) {
+                console.error('Failed to parse JSON from '+url, e);
+                data = [];
+            }
             $.each(data, function(key, val) {
-                //console.log("val="+val);
                 globalDataArray.push(val);
-                //console.log(data);
             });
+            populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
+        }).fail(function(jqXHR){
+            console.error('AJAX error fetching '+url+':', jqXHR && jqXHR.status, jqXHR && jqXHR.responseText);
             populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
         });
     } else {

@@ -60,12 +60,21 @@ use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 class UtilController extends OrderAbstractController {
 
 
+    
     /**
+     * http://127.0.0.1/directory/util/common/generic/city
      * util/common/generic
      */
     #[Route(path: '/common/generic/{name}', name: 'employees_get_generic_select2', methods: ['GET'], options: ['expose' => true])]
     public function getGenericAction( Request $request, $name ) {
+        //exit('getGenericAction');
+        return $this->getGenericList($request,$name);
+    }
 
+    //http://127.0.0.1/directory/util/public/common/generic/city?cycle=new - public
+    #[Route(path: '/public/common/generic/{name}', name: 'employees_get_public_generic_select2', methods: ['GET'], options: ['expose' => true])]
+    public function getPublicGenericAction( Request $request, $name ) {
+        //exit('getGenericAction');
         return $this->getGenericList($request,$name);
     }
 

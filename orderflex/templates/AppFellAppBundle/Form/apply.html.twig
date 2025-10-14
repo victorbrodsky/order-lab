@@ -16,9 +16,36 @@
 
 {% extends "AppFellAppBundle/Default/base.html.twig" %}
 
+{# Override base template to use minimal JS for anonymous users #}
+{% block mainjs %}
+    {# Essential JS + AJAX utilities for select2 #}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
+    
+    {# FOSJsRoutingBundle for routing #}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    
+    {# Include common/selectAjax to enable getComboboxGeneric #}
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-validation.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/store-js/dist/store.legacy.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-idleTimeout/jquery-idleTimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
+{% endblock %}
+
 {#{% block browsercheck %}{% endblock %}#}
 {#{% block header %}{% endblock %}#}
-{#{% block mainjs %}{% endblock %}#}
 {#{% block errorwatchjs %}{% endblock %}#}
 {#{% block maincss %}{% endblock %}#}
 
@@ -71,8 +98,97 @@
     {% include 'AppFellAppBundle/Form/applicant-content-js.html.twig' %}
 
     <script language="Javascript">
+        // Define cycle variable for anonymous users
+        var cycle = 'new';
+        
+        // Minimal select2 initialization for anonymous users
+        function initializeSelect2ForAnonymous() {
+            // Initialize basic select2 dropdowns without AJAX calls
+            $('select.combobox').each(function() {
+                if (!$(this).hasClass('ajax-combobox-')) {
+                    $(this).select2({
+                        width: '100%',
+                        dropdownAutoWidth: true,
+                        placeholder: "Select an option",
+                        allowClear: true,
+                        selectOnBlur: false
+                    });
+                }
+            });
+            
+            // For ajax-combobox fields, use preloaded data if available
+            $('.ajax-combobox-fellowshipSubspecialty').each(function() {
+                var options = [];
+                $(this).find('option').each(function() {
+                    if ($(this).val()) {
+                        options.push({
+                            id: $(this).val(),
+                            text: $(this).text()
+                        });
+                    }
+                });
+                
+                $(this).select2({
+                    width: '100%',
+                    dropdownAutoWidth: true,
+                    placeholder: "Select a fellowship subspecialty",
+                    allowClear: true,
+                    data: options
+                });
+            });
+            
+            // Initialize ajax-combobox-city using getComboboxGeneric (AJAX)
+            try {
+                var _cities = [];
+                getComboboxGeneric(null,'city',_cities,false,'public/generic/','employees',true,'Select a city',true);
+                //getComboboxGeneric(newForm,'city',_cities,false);
+            } catch (e) {
+                // fallback: simple select2 without data
+                $('.ajax-combobox-city').select2({
+                    width: '100%',
+                    dropdownAutoWidth: true,
+                    placeholder: 'Select a city',
+                    allowClear: true
+                });
+            }
+        }
+        
+        // Minimal expandTextarea function
+        function expandTextarea(holder) {
+            var targetid = ".textarea";
+            targetid = getElementTargetByHolder(holder,targetid);
+
+            if( $(targetid).length == 0 ) {
+                return;
+            }
+
+            $(targetid).each( function() {
+                var textarea = $(this);
+                if( textarea.attr('data-autosize') == 'true' ) {
+                    textarea.attr('rows', '3');
+                }
+            });
+        }
+        
+        // Minimal getElementTargetByHolder function
+        function getElementTargetByHolder(holder,target) {
+            if( holder && typeof holder !== 'undefined' && holder.length > 0 ) {
+                target = holder.find(target);
+            }
+            return target;
+        }
 
         $(document).ready(function() {
+            // Initialize select2 for anonymous users
+            initializeSelect2ForAnonymous();
+            
+            // Initialize basic form elements
+            $('input[type="text"], input[type="email"], textarea').each(function() {
+                if (!$(this).hasClass('select2-input')) {
+                    $(this).removeAttr('readonly');
+                }
+            });
+            
             var hashValue = window.location.hash;
             //console.log("hashValue="+hashValue);
             if( hashValue == '#interviews' ) {

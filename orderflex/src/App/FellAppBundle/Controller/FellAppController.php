@@ -3222,7 +3222,7 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
     #[Template('AppFellAppBundle/Form/apply.html.twig')]
     public function applyAction(Request $request, Security $security, TokenStorageInterface $tokenStorage) {
-
+        //exit('applyAction');
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
@@ -3252,7 +3252,7 @@ class FellAppController extends OrderAbstractController {
 //            //echo "no user object => use system user=[".$user."]<br>";
 //        }
 
-        if( !($user instanceof User) ) {
+        if( 0 && !($user instanceof User) ) {
             $firewall = 'ldap_fellapp_firewall';
             //$userSecUtil = $this->container->get('user_security_utility');
             //$user = $userSecUtil->findSystemUser();
@@ -3302,6 +3302,8 @@ class FellAppController extends OrderAbstractController {
 
         $routeName = $request->get('_route');
         $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); //apply
+
+        // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
         if( count($args) == 0 ) {
             $linkUrl = $this->generateUrl(
@@ -3424,7 +3426,7 @@ class FellAppController extends OrderAbstractController {
 
         //Find/Create applicant
         
-        if (!$fellowshipApplication->getUser()) {
+        if ( !$fellowshipApplication->getUser()) {
             //new applicant
             $addobjects = false;
             
