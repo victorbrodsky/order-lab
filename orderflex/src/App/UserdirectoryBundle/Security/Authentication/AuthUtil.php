@@ -1175,6 +1175,14 @@ class AuthUtil {
         $this->logger->notice("simple Ldap: before searchLdap: username=".$username);
         $searchRes = $this->searchLdapV2($username,$ldapType);
         dump($searchRes);
+
+        if (isset($searchRes['userprincipalname'][0])) {
+            $userPrincipalName = $searchRes['userprincipalname'][0];
+            echo "userPrincipalName: $userPrincipalName\n";
+        } else {
+            echo "userPrincipalName not found in LDAP entry.\n";
+        }
+
         exit('simpleLdap');
 
         $host = "ldaps://accounts-ldap.wusm.wustl.edu";
@@ -1637,8 +1645,8 @@ class AuthUtil {
 
         //$this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
         //print_r($info);
-        dump($info); //testing
-        exit('111');
+        //dump($info); //testing
+        //exit('111');
     }
     public function searchLdapV2($username, $ldapType=1) {
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1688,8 +1696,14 @@ class AuthUtil {
             throw new \Exception("User '$username' not found.");
         }
 
-        dump($entries[0]);
-        exit('searchLdapV2');
+        //dump($entries[0]);
+        //exit('searchLdapV2');
+//        if (isset($entries[0]['userprincipalname'][0])) {
+//            $userPrincipalName = $entries[0]['userprincipalname'][0];
+//            echo "userPrincipalName: $userPrincipalName\n";
+//        } else {
+//            echo "userPrincipalName not found in LDAP entry.\n";
+//        }
 
         return $entries[0]; // return full attribute set for the user
     }
