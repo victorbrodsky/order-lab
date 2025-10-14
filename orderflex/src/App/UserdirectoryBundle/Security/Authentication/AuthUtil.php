@@ -1093,7 +1093,7 @@ class AuthUtil {
     // AD/LDAP Server OU: ou=users,ou=guests,dc=zflexsoftware,dc=com
     // Username: guest1 Password: guest1password
     //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
-    public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
+    public function simpleLdap_ORIG($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap. $username, $password");
 
         //exit("simpleLdap");
@@ -1169,12 +1169,18 @@ class AuthUtil {
         return NULL;
     }
 
-    public function simpleLdap_test($username, $password, $userPrefix="uid", $ldapType=1) {
+    public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
 
         echo "username=$username <br>";
         $this->logger->notice("simple Ldap: before searchLdap: username=".$username);
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $postfix = $this->getPostfix($ldapType);
+        $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
+        $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
+
         $searchRes = $this->searchLdapV2($username,$ldapType);
-        dump($searchRes);
+        //dump($searchRes);
 
         if (isset($searchRes['userprincipalname'][0])) {
             $userPrincipalName = $searchRes['userprincipalname'][0];
@@ -1183,20 +1189,17 @@ class AuthUtil {
             echo "userPrincipalName not found in LDAP entry.<br>";
         }
 
-        exit('simpleLdap');
-
-        $host = "ldaps://accounts-ldap.wusm.wustl.edu";
-        $port = 636;
+        //exit('simpleLdap');
 
         // Full DN for binding
         //$dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
         //$dn = "path-svc-binduser";
-        $dn = $username;
+        $dn = $userPrincipalName;
         //$dn = $this->getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1);
         //$password = "";
 
         // Connect to LDAP
-        $ldapConn = ldap_connect($host, $port);
+        $ldapConn = ldap_connect($ldapHost, $ldapPort);
         if (!$ldapConn) {
             die("Failed to connect to LDAP server.");
         }
@@ -1209,13 +1212,16 @@ class AuthUtil {
         $bind = @ldap_bind($ldapConn, $dn, $password);
 
         if ($bind) {
-            echo "LDAP bind successful.";
+            echo "LDAP bind successful dn=$dn <br>";
         } else {
-            echo "LDAP bind failed.\n";
-            echo "Error: " . ldap_error($ldapConn);
+            echo "LDAP bind failed.<br>";
+            echo "Error: " . ldap_error($ldapConn) . "<br>";
         }
 
-        //exit("simpleLdap test");
+        exit("simpleLdap test");
+    }
+    public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
+
     }
 //    public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
 //        $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
