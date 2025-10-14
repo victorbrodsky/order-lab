@@ -275,7 +275,7 @@ class AuthUtil {
         $searchRes = null;
 
         //if user exists in ldap, try bind this user and password
-        $ldapRes = $this->ldapBind($usernameClean,$password,$ldapType);
+        $ldapRes = $this->ldapBind($usernameClean,$password,$ldapType); //LdapAuthenticationByUsernamePassword
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
             //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
@@ -466,6 +466,7 @@ class AuthUtil {
         return $user;
     }
 
+    //NOT USED
     //Do not use search before bind. Search might take a long time
     public function LdapAuthenticationWithSearch($token, $ldapType=1) {
 
@@ -925,7 +926,7 @@ class AuthUtil {
         $postfix = $this->getPostfix($ldapType);
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
 
-        //fork wcm and other
+        //fork wcm and others
         if(  !str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
             // Others Ldap:
             // $ldapBindDN = 'oli2002'
@@ -1281,9 +1282,9 @@ class AuthUtil {
         ldap_unbind($ldapConn);
         return NULL;
     }
-    public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
-
-    }
+//    public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
+//
+//    }
 //    public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
 //        $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
 //        $ldapPort = 636;
