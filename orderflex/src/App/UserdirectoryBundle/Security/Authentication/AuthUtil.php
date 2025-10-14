@@ -1174,8 +1174,9 @@ class AuthUtil {
         $port = 636;
 
         // Full DN for binding
-        $dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+        //$dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
         $dn = "path-svc-binduser";
+        $dn = $username;
         //$password = "";
 
         // Connect to LDAP
