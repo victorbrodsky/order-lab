@@ -1118,7 +1118,7 @@ class AuthUtil {
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
             //$ldapBindDN = "cn=$username,ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net"; //testing
-            //$this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
+            $this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
             $res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
             //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
 
