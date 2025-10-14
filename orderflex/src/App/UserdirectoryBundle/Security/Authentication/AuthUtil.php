@@ -1202,55 +1202,48 @@ class AuthUtil {
 
         exit("simpleLdap test");
     }
-    public function getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1) {
+    public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
         $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
         $ldapPort = 636;
         $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
 
-// These should be defined elsewhere or passed in
-        $SERVICE_DN = $username; //getenv("SERVICE_DN");
-        $SERVICE_PASS = $password; //getenv("SERVICE_PASS");
-
-// Extract short username from DN (e.g. 'oli2002' from CN=oli2002,...)
-        preg_match('/CN=([^,]+)/', $SERVICE_DN, $matches);
-        $samAccountName = $matches[1] ?? null;
-
-        if (!$samAccountName) {
-            die("Could not extract sAMAccountName from SERVICE_DN.");
+        // Connect
+        $ldapConn = ldap_connect($ldapHost, $ldapPort);
+        if (!$ldapConn) {
+            throw new \Exception("LDAP connection failed.");
         }
 
-// Connect
-        $ldapConn = ldap_connect($ldapHost, $ldapPort);
         ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
 
-// Bind
-        if (!@ldap_bind($ldapConn, $SERVICE_DN, $SERVICE_PASS)) {
-            die("LDAP bind failed: " . ldap_error($ldapConn));
+        // Bind anonymously or with a known service account if needed
+        if (!@ldap_bind($ldapConn)) {
+            throw new \Exception("Initial LDAP bind failed: " . ldap_error($ldapConn));
         }
 
-// Search for userPrincipalName
-        $filter = "(sAMAccountName=$samAccountName)";
+        // Search for userPrincipalName using uid or sAMAccountName
+        $filter = "($userPrefix=$username)";
         $attributes = ["userPrincipalName"];
         $search = ldap_search($ldapConn, $baseDn, $filter, $attributes);
 
         if (!$search) {
-            die("LDAP search failed: " . ldap_error($ldapConn));
+            throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
         }
 
         $entries = ldap_get_entries($ldapConn, $search);
-        $USER_PRINCIPAL_NAME = null;
+        if ($entries["count"] === 0 || !isset($entries[0]["userprincipalname"][0])) {
+            throw new \Exception("userPrincipalName not found for $username");
+        }
 
-        if ($entries["count"] > 0 && isset($entries[0]["userprincipalname"][0])) {
-            $USER_PRINCIPAL_NAME = $entries[0]["userprincipalname"][0];
-            echo "USER_PRINCIPAL_NAME = $USER_PRINCIPAL_NAME\n";
-        } else {
-            echo "userPrincipalName not found.\n";
+        $userPrincipalName = $entries[0]["userprincipalname"][0];
+
+        // Rebind using discovered UPN and user's password
+        if (!@ldap_bind($ldapConn, $userPrincipalName, $password)) {
+            throw new \Exception("LDAP bind failed for $userPrincipalName: " . ldap_error($ldapConn));
         }
 
         ldap_unbind($ldapConn);
-
-        return $USER_PRINCIPAL_NAME;
+        return $userPrincipalName;
     }
 
     //It might work
