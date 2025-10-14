@@ -937,6 +937,7 @@ class AuthUtil {
         // WCM Ldap:
         // $ldapBindDN = cn='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
         // $ldapBindDN = uid='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
+        // $ldapBindDN = cn='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
         // @ldap_bind($cnx,$ldapBindDN,$password);
         return $this->ldapBindV1($username,$password,$ldapType);
     }
