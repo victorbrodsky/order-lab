@@ -1205,10 +1205,11 @@ class AuthUtil {
     public function getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1) {
         $ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
         $ldapPort = 636;
-        $bindDn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu"; // $SERVICE_DN
-        $bindPassword = "JAdj6BG!xf%cVpD"; // $SERVICE_PASS
         $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
-        $samAccountName = "path-svc-binduser"; // or extract from $bindDn if needed
+
+        // These should be defined elsewhere in your code
+        $SERVICE_DN = $username; //getenv("SERVICE_DN");       // or from config
+        $SERVICE_PASS = $password; //getenv("SERVICE_PASS");   // or from config
 
         // Connect
         $ldapConn = ldap_connect($ldapHost, $ldapPort);
@@ -1216,12 +1217,12 @@ class AuthUtil {
         ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
 
         // Bind
-        if (!@ldap_bind($ldapConn, $bindDn, $bindPassword)) {
+        if (!@ldap_bind($ldapConn, $SERVICE_DN, $SERVICE_PASS)) {
             die("LDAP bind failed: " . ldap_error($ldapConn));
         }
 
-        // Search for userPrincipalName
-        $filter = "(sAMAccountName=$samAccountName)";
+        // Search by sAMAccountName = $SERVICE_DN
+        $filter = "(sAMAccountName=$SERVICE_DN)";
         $attributes = ["userPrincipalName"];
         $search = ldap_search($ldapConn, $baseDn, $filter, $attributes);
 
@@ -1230,16 +1231,18 @@ class AuthUtil {
         }
 
         $entries = ldap_get_entries($ldapConn, $search);
-        $userPrincipalName = null;
+        $USER_PRINCIPAL_NAME = null;
 
         if ($entries["count"] > 0 && isset($entries[0]["userprincipalname"][0])) {
-            $userPrincipalName = $entries[0]["userprincipalname"][0];
-            echo "User Principal Name: $userPrincipalName\n";
+            $USER_PRINCIPAL_NAME = $entries[0]["userprincipalname"][0];
+            echo "USER_PRINCIPAL_NAME = $USER_PRINCIPAL_NAME\n";
         } else {
             echo "userPrincipalName not found.\n";
         }
 
-        return $userPrincipalName;
+        ldap_unbind($ldapConn);
+
+        return $USER_PRINCIPAL_NAME;
     }
 
     //It might work
