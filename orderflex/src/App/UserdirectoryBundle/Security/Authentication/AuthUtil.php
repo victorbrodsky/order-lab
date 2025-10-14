@@ -1207,22 +1207,30 @@ class AuthUtil {
         $ldapPort = 636;
         $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
 
-        // These should be defined elsewhere in your code
-        $SERVICE_DN = $username; //getenv("SERVICE_DN");       // or from config
-        $SERVICE_PASS = $password; //getenv("SERVICE_PASS");   // or from config
+// These should be defined elsewhere or passed in
+        $SERVICE_DN = $username; //getenv("SERVICE_DN");
+        $SERVICE_PASS = $password; //getenv("SERVICE_PASS");
 
-        // Connect
+// Extract short username from DN (e.g. 'oli2002' from CN=oli2002,...)
+        preg_match('/CN=([^,]+)/', $SERVICE_DN, $matches);
+        $samAccountName = $matches[1] ?? null;
+
+        if (!$samAccountName) {
+            die("Could not extract sAMAccountName from SERVICE_DN.");
+        }
+
+// Connect
         $ldapConn = ldap_connect($ldapHost, $ldapPort);
         ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
 
-        // Bind
+// Bind
         if (!@ldap_bind($ldapConn, $SERVICE_DN, $SERVICE_PASS)) {
             die("LDAP bind failed: " . ldap_error($ldapConn));
         }
 
-        // Search by sAMAccountName = $SERVICE_DN
-        $filter = "(sAMAccountName=$SERVICE_DN)";
+// Search for userPrincipalName
+        $filter = "(sAMAccountName=$samAccountName)";
         $attributes = ["userPrincipalName"];
         $search = ldap_search($ldapConn, $baseDn, $filter, $attributes);
 
