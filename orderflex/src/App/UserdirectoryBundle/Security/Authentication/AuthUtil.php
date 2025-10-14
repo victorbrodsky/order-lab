@@ -1103,11 +1103,15 @@ class AuthUtil {
 
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
+        $this->logger->notice("simple Ldap: LDAPHost=".$LDAPHost.", LDAPPort=".$LDAPPort);
+
         $cnx = $this->connectToLdap($LDAPHost,$LDAPPort);
 
         if (!$cnx) {
             throw new \Exception("LDAP connection failed to $LDAPHost:$LDAPPort");
             //return NULL;
+        } else {
+            $this->logger->notice("simple Ldap: Connected to ldap server");
         }
 
         $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
@@ -1118,7 +1122,7 @@ class AuthUtil {
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
             //$ldapBindDN = "cn=$username,ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net"; //testing
-            $this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
+            //$this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
             $res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
             //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
 
@@ -1148,7 +1152,7 @@ class AuthUtil {
 
         if( !$res ) {
             //echo $mech." - could not sasl bind to LDAP by SASL<br>";
-            $this->logger->notice("simple Ldap: ldap_error=".ldap_error($cnx)."; res=".$res."; user=".$username);
+            $this->logger->notice("simple Ldap: ldap_error(cnx)=".ldap_error($cnx)."; res=".$res."; user=".$username);
             //$this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
             ldap_error($cnx);
             ldap_unbind($cnx);
