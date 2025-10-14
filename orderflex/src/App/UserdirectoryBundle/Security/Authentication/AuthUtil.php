@@ -1105,6 +1105,11 @@ class AuthUtil {
         $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
         $cnx = $this->connectToLdap($LDAPHost,$LDAPPort);
 
+        if (!$cnx) {
+            throw new \Exception("LDAP connection failed to $LDAPHost:$LDAPPort");
+            //return NULL;
+        }
+
         $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
 
         $res = null;

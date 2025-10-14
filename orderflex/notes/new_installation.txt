@@ -75,6 +75,10 @@ Check if php gd installed:
 Check: php -m | grep gd
 Install: sudo dnf install php-gd
 
+Check ldap:
+sudo dnf install php-ldap
+
+
 Add alias command:
 vim ~/.bashrc
 alias lsl="ls -lrt"
