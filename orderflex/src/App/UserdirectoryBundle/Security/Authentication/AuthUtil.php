@@ -1538,10 +1538,11 @@ class AuthUtil {
         $baseDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
 
         $this->logger->notice("simple Ldap: LDAPHost=[".$ldapHost."], LDAPPort=[$ldapPort], baseDn=[$baseDn]");
+        //LDAPHost=[ldap://accounts-ldap.wusm.wustl.edu], LDAPPort=[636], baseDn=[OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu]
 
         //$ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
         //$ldapPort = 636;
-        $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+        //$baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
 
         // Service account credentials
         //$serviceDn = "path-";
