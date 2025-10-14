@@ -1175,6 +1175,7 @@ class AuthUtil {
 
         // Full DN for binding
         $dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
+        $dn = "path-svc-binduser";
         //$password = "";
 
         // Connect to LDAP
