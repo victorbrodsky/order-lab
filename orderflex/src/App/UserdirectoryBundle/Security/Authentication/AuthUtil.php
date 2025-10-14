@@ -1207,6 +1207,11 @@ class AuthUtil {
         $ldapPort = 636;
         $baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
 
+        // Defensive check
+        if (empty($username) || empty($password)) {
+            throw new \Exception("Username or password is missing.");
+        }
+
         // Connect
         $ldapConn = ldap_connect($ldapHost, $ldapPort);
         if (!$ldapConn) {
@@ -1216,16 +1221,17 @@ class AuthUtil {
         ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
 
-        // Bind anonymously or with a known service account if needed
+        // Anonymous bind (some AD servers require service account instead)
         if (!@ldap_bind($ldapConn)) {
             throw new \Exception("Initial LDAP bind failed: " . ldap_error($ldapConn));
         }
 
-        // Search for userPrincipalName using uid or sAMAccountName
+        // Build filter and attributes
         $filter = "($userPrefix=$username)";
         $attributes = ["userPrincipalName"];
-        $search = ldap_search($ldapConn, $baseDn, $filter, $attributes);
 
+        // Search
+        $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
         if (!$search) {
             throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
         }
@@ -1237,7 +1243,7 @@ class AuthUtil {
 
         $userPrincipalName = $entries[0]["userprincipalname"][0];
 
-        // Rebind using discovered UPN and user's password
+        // Rebind with discovered UPN and user's password
         if (!@ldap_bind($ldapConn, $userPrincipalName, $password)) {
             throw new \Exception("LDAP bind failed for $userPrincipalName: " . ldap_error($ldapConn));
         }
