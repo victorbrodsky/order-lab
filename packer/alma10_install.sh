@@ -333,7 +333,10 @@ f_install_php83 () {
 
 	#Makse gd is installed
 	sudo dnf -y install php-gd
-		
+
+    #Makse ldap is installed
+	sudo dnf install php-ldap
+
 	#echo @### PHP: Start php-fpm ###
 	#sudo systemctl enable php-fpm
 	#sudo systemctl start php-fpm
