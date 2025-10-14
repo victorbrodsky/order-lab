@@ -151,6 +151,67 @@
                     allowClear: true
                 });
             }
+
+            //getComboboxGeneric(newForm,'traininginstitution',_traininginstitution,false,'');
+            try {
+                var _traininginstitution = [];
+                getComboboxGeneric(null,'traininginstitution',_traininginstitution,false,'public/generic/','employees',true,'Select an institution',true);
+            } catch (e) {
+                // fallback: simple select2 without data
+                $('.ajax-combobox-traininginstitution').select2({
+                    width: '100%',
+                    dropdownAutoWidth: true,
+                    placeholder: 'Select an institution',
+                    allowClear: true
+                });
+            }
+
+            //ajax-combobox-trainingmajors
+            //TODO: test majors
+            try {
+                var _trainingmajors = [];
+                var multipleFlag = true;
+                getComboboxGeneric(null,'trainingmajors',_trainingmajors,multipleFlag,'public/generic/','employees',true,'Select a major',true);
+            } catch (e) {
+                // fallback: simple select2 without data
+                console.log('gajax-combobox-trainingmajors = no data');
+                $('.ajax-combobox-trainingmajors').select2({
+                    width: '100%',
+                    dropdownAutoWidth: true,
+                    placeholder: 'Select a major',
+                    allowClear: true
+                });
+            }
+
+            //ajax-combobox-jobtitle
+            //TODO: fix
+            try {
+                var _jobTitles = [];
+                getComboboxGeneric(null,'jobtitle',_jobTitles,false,'public/generic/','employees',true,'Select a job title',true);
+            } catch (e) {
+                // fallback: simple select2 without data
+                console.log('gajax-combobox-jobtitle = no data');
+                $('.ajax-combobox-jobtitle').select2({
+                    width: '100%',
+                    dropdownAutoWidth: true,
+                    placeholder: 'Select a job title',
+                    allowClear: true
+                });
+            }
+
+            //ajax-combobox-residencyspecialty
+            try {
+                var _residencySpecialtys = [];
+                getComboboxGeneric(null,'residencyspecialty',_residencySpecialtys,false,'public/generic/','employees',true,'Select a residency specialty',true);
+            } catch (e) {
+                // fallback: simple select2 without data
+                $('.ajax-combobox-residencyspecialty').select2({
+                    width: '100%',
+                    dropdownAutoWidth: true,
+                    placeholder: 'Select a residency specialty',
+                    allowClear: true
+                });
+            }
         }
         
         // Minimal expandTextarea function

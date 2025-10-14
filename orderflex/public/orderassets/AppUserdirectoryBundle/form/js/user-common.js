@@ -248,6 +248,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
     }
 
     if( !force && $(targetid).length == 0 ) {
+        console.log('getComboboxGeneric return targetid='+targetid);
         return;
     }
 
@@ -306,6 +307,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
     }
 
     console.log('get Combobox Generic: url='+url);
+    console.log('get Combobox Generic: globalDataArray.length='+globalDataArray.length);
 
     if( globalDataArray.length == 0 ) {
         $.ajax({

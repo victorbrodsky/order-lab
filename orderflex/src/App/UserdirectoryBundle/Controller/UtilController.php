@@ -74,7 +74,21 @@ class UtilController extends OrderAbstractController {
     //http://127.0.0.1/directory/util/public/common/generic/city?cycle=new - public
     #[Route(path: '/public/common/generic/{name}', name: 'employees_get_public_generic_select2', methods: ['GET'], options: ['expose' => true])]
     public function getPublicGenericAction( Request $request, $name ) {
-        //exit('getGenericAction');
+        //exit('getPublicGenericAction');
+        if( $name === 'city' ||
+            $name === 'traininginstitution' ||
+            $name === 'trainingmajors' ||
+            $name === 'jobtitle' ||
+            $name === 'residencyspecialty'
+        ) {
+            //Ok. Allow only these above
+        } else {
+            $output = array();
+            $response = new Response();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->setContent(json_encode($output));
+            return $response;
+        }
         return $this->getGenericList($request,$name);
     }
 
