@@ -914,27 +914,65 @@ class AuthUtil {
 //        return NULL;
 //    }
 
+    //Make sure the Authentication first retrieves the user's userPrincipalName value using the command
+    // at the bottom of this email and then uses the retrieved userPrincipalName
+    // to authenticate the user, not the uid and not the supplied user name via the web page.
+    // If this fixes authentication, add
+    // "Authenticate using: userPrincipalName OR sAMAccountName" field
+    // where the value can be specified on Site Settings page and set it to userPrincipalName
+    public function ldapBind( $username, $password, $ldapType=1 ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $postfix = $this->getPostfix($ldapType);
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
+
+        //fork wcm and other
+        if(  !str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
+            // Others Ldap:
+            // $ldapBindDN = 'oli2002'
+            // @ldap_bind($ldapConn,$ldapBindDN,$password);
+            return $this->ldapBindV2($username,$password,$ldapType);
+        }
+
+        // WCM Ldap:
+        // $ldapBindDN = cn='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
+        // $ldapBindDN = uid='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
+        // @ldap_bind($cnx,$ldapBindDN,$password);
+        return $this->ldapBindV1($username,$password,$ldapType);
+    }
+
+
+
     //return 1 if bind successful
     //return NULL if failed
-    public function ldapBind( $username, $password, $ldapType=1 ) {
+    public function ldapBindV1( $username, $password, $ldapType=1 ) {
         //return 1; //testing!!!: enable testing login
         //step 1
-        if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
+        if( $this->simpleLdapV1($username,$password,"cn",$ldapType) ) {
             return 1;
         }
 
-        return NULL; //testing: remove it in prod
+        //return NULL; //testing: remove it in prod
 
-        if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
+        if( $this->simpleLdapV1($username,$password,"uid",$ldapType) ) {
             return 1;
         }
 
-        //step 2
-        if( substr(php_uname(), 0, 7) == "Windows" ){
-            return $this->ldapBindWindows($username,$password,$ldapType);
-        }
-        else {
-            return $this->ldapBindUnix($username,$password,$ldapType);
+//        //step 2
+//        if( substr(php_uname(), 0, 7) == "Windows" ){
+//            return $this->ldapBindWindows($username,$password,$ldapType);
+//        }
+//        else {
+//            return $this->ldapBindUnix($username,$password,$ldapType);
+//        }
+
+        return NULL;
+    }
+
+    public function ldapBindV2( $username, $password, $ldapType=1 ) {
+        //return 1; //testing!!!: enable testing login
+        //step 1
+        if( $this->simpleLdapV2($username,$password,"cn",$ldapType) ) {
+            return 1;
         }
 
         return NULL;
@@ -1087,13 +1125,22 @@ class AuthUtil {
     // LDAP/AD Authenticator Relative Path (Default: "../src/App/UserdirectoryBundle/Util/" ): null (doesn't matter for simpleLdap)
     // LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ): null (doesn't matter for simpleLdap)
     //
+    // WCM Ldap:
+    // $ldapBindDN = cn='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
+    // $ldapBindDN = uid='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
+    // @ldap_bind($cnx,$ldapBindDN,$password);
+    //
+    // Others Ldap:
+    // $ldapBindDN = 'oli2002'
+    // @ldap_bind($ldapConn,$ldapBindDN,$password);
+    //
     // tested by public ldap server: https://www.zflexldapadministrator.com/index.php/blog/82-free-online-ldap
     // Server: www.zflexldap.com
     // Port: 389
     // AD/LDAP Server OU: ou=users,ou=guests,dc=zflexsoftware,dc=com
     // Username: guest1 Password: guest1password
     //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
-    public function simpleLdap_ORIG($username, $password, $userPrefix="uid", $ldapType=1) {
+    public function simpleLdapV1($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap. $username, $password");
 
         //exit("simpleLdap");
@@ -1169,7 +1216,7 @@ class AuthUtil {
         return NULL;
     }
 
-    public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
+    public function simpleLdapV2($username, $password, $userPrefix="uid", $ldapType=1) {
 
         echo "username=$username <br>";
         $this->logger->notice("simple Ldap: before searchLdap: username=".$username);
@@ -1180,21 +1227,32 @@ class AuthUtil {
         $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
 
         $searchRes = $this->searchLdapV2($username,$ldapType);
-        //dump($searchRes);
+        dump($searchRes);
 
         if (isset($searchRes['userprincipalname'][0])) {
             $userPrincipalName = $searchRes['userprincipalname'][0];
             echo "userPrincipalName=[$userPrincipalName] <br>";
         } else {
+            $userPrincipalName = $username;
             echo "userPrincipalName not found in LDAP entry.<br>";
         }
 
-        //exit('simpleLdap');
+        exit('simpleLdapV2');
 
         // Full DN for binding
         //$dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
         //$dn = "path-svc-binduser";
         $dn = $userPrincipalName;
+        echo "1 simpleLdap: dn=$dn <br>";
+
+        //WCM Ldap
+//        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
+//        $ldapBindDNArr = explode(";",$origLdapBindDN);
+//        $ldapBindDN = $ldapBindDNArr[0];
+//        $dn = $userPrefix."=".$username.",".$ldapBindDN;
+//        //$dn = $userPrefix."=".$username;
+//        echo "2 simpleLdap: dn=$dn <br>";
+
         //$dn = $this->getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1);
         //$password = "";
 
@@ -1213,12 +1271,15 @@ class AuthUtil {
 
         if ($bind) {
             echo "LDAP bind successful dn=$dn <br>";
+            return 1;
         } else {
             echo "LDAP bind failed.<br>";
             echo "Error: " . ldap_error($ldapConn) . "<br>";
         }
 
-        exit("simpleLdap test");
+        //exit("simpleLdap test");
+        ldap_unbind($ldapConn);
+        return NULL;
     }
     public function getPrincipalName($username, $password, $userPrefix = "uid", $ldapType = 1) {
 
@@ -1534,6 +1595,8 @@ class AuthUtil {
 
         return $searchRes;
     }
+
+    //return user's ldap attributes in array
     public function searchLdapV2($username, $ldapType=1) {
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
@@ -1556,13 +1619,17 @@ class AuthUtil {
         $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
 
         if (empty($username)) {
-            throw new \Exception("Username is missing.");
+            //throw new \Exception("Username is missing.");
+            $this->logger->error("searchLdapV2: Username is missing");
+            return NULL;
         }
 
         // Connect
         $ldapConn = ldap_connect($ldapHost, $ldapPort);
         if (!$ldapConn) {
-            throw new \Exception("LDAP connection failed.");
+            //throw new \Exception("LDAP connection failed.");
+            $this->logger->error("searchLdapV2: DAP connection failed. ".ldap_error($ldapConn));
+            return NULL;
         }
 
         ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -1570,7 +1637,9 @@ class AuthUtil {
 
         // Bind with service account
         if (!@ldap_bind($ldapConn, $serviceDn, $servicePass)) {
-            throw new \Exception("LDAP bind failed: " . ldap_error($ldapConn));
+            //throw new \Exception("LDAP bind failed: " . ldap_error($ldapConn));
+            $this->logger->error("searchLdapV2: LDAP bind failed: ".ldap_error($ldapConn));
+            return NULL;
         }
 
         // Search for user by sAMAccountName
@@ -1579,14 +1648,18 @@ class AuthUtil {
         $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
 
         if (!$search) {
-            throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
+            //throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
+            $this->logger->error("searchLdapV2: LDAP search failed: ".ldap_error($ldapConn));
+            return NULL;
         }
 
         $entries = ldap_get_entries($ldapConn, $search);
         ldap_unbind($ldapConn);
 
         if ($entries["count"] === 0) {
-            throw new \Exception("User '$username' not found.");
+            //throw new \Exception("User '$username' not found.");
+            $this->logger->error("searchLdapV2: user not found: username=[$filter]");
+            return NULL;
         }
 
         return $entries[0]; // return full attribute set for the user
