@@ -157,7 +157,7 @@ class LdapAuthUtil {
 
             $this->logger->notice("findUserByUsername: authenticated successfully, existing user found in DB by token->getUsername()=".$username);
 
-            if( $this->canLogin($user) === false ) {
+            if( $authUtil->canLogin($user) === false ) {
                 $this->logger->warning("Ldap Authentication: User cannot login ".$user);
                 return NULL;
             }
