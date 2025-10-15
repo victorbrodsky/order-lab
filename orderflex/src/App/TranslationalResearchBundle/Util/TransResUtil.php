@@ -9874,14 +9874,29 @@ WHERE
             ->where('submitter IS NOT NULL');
 
         $query = $qb->getQuery();
-        $results = $query->getResult();
+        $projects = $query->getResult();
 
-        $submitters = array_map(
-            fn($project) => $project->getSubmitter(), 
-            $results
-        );
+//        $submitters = array_map(
+//            fn($project) => $project->getSubmitter(),
+//            $results
+//        );
 
-        return $submitters;
+        // Extract and deduplicate submitters
+        $uniqueSubmitters = [];
+        foreach ($projects as $project) {
+            $submitter = $project->getSubmitter();
+            if ($submitter) {
+                $uniqueSubmitters[$submitter->getId()] = $submitter;
+            }
+        }
+        $uniqueSubmitters = array_values($uniqueSubmitters);
+        //echo "total 1submitters=".count($uniqueSubmitters)."<br>";
+
+//        $submitters = array_filter(array_map(fn($p) => $p->getSubmitter(), $projects));
+//        $uniqueSubmitters = array_unique($submitters, SORT_REGULAR);
+//        echo "total 2submitters=".count($uniqueSubmitters)."<br>";
+
+        return $uniqueSubmitters;
     }
 
 
