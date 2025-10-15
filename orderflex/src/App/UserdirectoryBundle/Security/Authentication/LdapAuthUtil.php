@@ -108,7 +108,7 @@ class LdapAuthUtil {
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
 
         //fork wcm and others
-        if(  !str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
+        if(  str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
             //WCM Ldap
             $ldapRes = $this->ldapBindV1($username,$password,$ldapType);
         } else {
@@ -419,12 +419,13 @@ class LdapAuthUtil {
     public function simpleLdapV2($username, $password, $userPrefix="uid", $ldapType=1) {
 
         echo "username=$username <br>";
-        $this->logger->notice("simple Ldap: before searchLdap: username=".$username);
+        $this->logger->notice("simple Ldap V2: before searchLdap: username=".$username);
 
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
         $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
+        $this->logger->notice("simple Ldap V2: LDAPHost=".$ldapHost.", LDAPPort=".$ldapPort);
 
 //        $searchRes = $this->searchLdapV2($username,$ldapType);
 //        dump($searchRes);
@@ -468,17 +469,17 @@ class LdapAuthUtil {
 //        foreach( $ldapBindDNArr as $ldapBindDN) {
 //            $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
 //            //$ldapBindDN = "cn=$username,ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net"; //testing
-//            //$this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
+//            //$this->logger->notice("simple Ldap V2: ldapBindDN=".$ldapBindDN);
 //            $res = @ldap_bind($ldapConn,$ldapBindDN,$password); //simpleLdap
 //            //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
 //
 //            //$res = 1; //testing!!! allow authenticate
 //
 //            if( $res ) {
-//                $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
+//                $this->logger->notice("simple Ldap V2: OK ldapBindDN=".$ldapBindDN);
 //                break;
 //            } else {
-//                $this->logger->notice("simple Ldap: NOTOK ldapBindDN=".$ldapBindDN);
+//                $this->logger->notice("simple Ldap V2: NOTOK ldapBindDN=".$ldapBindDN);
 //            }
 //        }
 
