@@ -47,6 +47,9 @@ services:
     authenticator_utility:
         class:     App\UserdirectoryBundle\Security\Authentication\AuthUtil
 
+    ldap_authenticator_utility:
+        class:     App\UserdirectoryBundle\Security\Authentication\LdapAuthUtil
+
     oleg.listener.maintenance:
         class: App\UserdirectoryBundle\Services\MaintenanceListener
         tags:

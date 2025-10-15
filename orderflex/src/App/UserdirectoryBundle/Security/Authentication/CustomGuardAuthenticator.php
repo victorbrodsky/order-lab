@@ -518,6 +518,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //$authUtil = new AuthUtil($this->container,$this->em);
         $authUtil = $this->container->get('authenticator_utility');
+        $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
 
         $user = null;
 
@@ -550,10 +551,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //////////////////////////////////////////////////////////////////////
                 //                       3) ldap authentication                     //
                 //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->LdapAuthentication($token, $ldapType = 1);
+                $user = $ldapAuthUtil->LdapAuthentication($token, $ldapType = 1);
 
                 if( !$user && $userSecUtil->getSiteSettingParameter('ldapAll') ) {
-                    $user = $authUtil->LdapAuthentication($token, $ldapType = 2);
+                    $user = $ldapAuthUtil->LdapAuthentication($token, $ldapType = 2);
                 }
 
                 if( !$user ) {
@@ -568,10 +569,10 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //////////////////////////////////////////////////////////////////////
                 //                       3) ldap authentication                     //
                 //////////////////////////////////////////////////////////////////////
-                $user = $authUtil->LdapAuthentication($token, $ldapType = 2);
+                $user = $ldapAuthUtil->LdapAuthentication($token, $ldapType = 2);
 
                 if( !$user && $userSecUtil->getSiteSettingParameter('ldapAll') ) {
-                    $user = $authUtil->LdapAuthentication($token, $ldapType = 1);
+                    $user = $ldapAuthUtil->LdapAuthentication($token, $ldapType = 1);
                 }
                 ////////////////////EOF ldap authentication ////////////////////
                 break;
