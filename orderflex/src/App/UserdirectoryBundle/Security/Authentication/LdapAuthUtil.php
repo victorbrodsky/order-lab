@@ -98,6 +98,7 @@ class LdapAuthUtil {
         //get clean username
         $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($username);
+        $this->logger->notice("Start Ldap Authentication: username=[$username],usernameClean=[$usernameClean]");
         //$usernamePrefix = $userSecUtil->getUsernamePrefix($username);
         //exit("usernameClean=[$usernameClean], susernamePrefix=[$usernamePrefix]");
 
@@ -110,13 +111,13 @@ class LdapAuthUtil {
         //fork wcm and others
         if(  str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
             //WCM Ldap
-            $this->logger->notice("before ldapBindV1");
+            $this->logger->notice("before ldapBindV1, username=username");
             $ldapRes = $this->ldapBindV1($username,$password,$ldapType);
         } else {
             //Others Ldap
             // $ldapBindDN = 'oli2002'
             // @ldap_bind($ldapConn,$ldapBindDN,$password);
-            $this->logger->notice("before searchLdapV2");
+            $this->logger->notice("before searchLdapV2, username=$username");
 
             $ldapUserData = $this->searchLdapV2($username,$ldapType);
             if (isset($ldapUserData['userprincipalname'][0])) {
