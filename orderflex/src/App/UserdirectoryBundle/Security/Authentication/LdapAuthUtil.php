@@ -188,6 +188,7 @@ class LdapAuthUtil {
         }
 
         dump($user->getDisplayName());
+        dump($user);
         exit("exit createNewLdapUser: user->getDisplayName()=".$user->getDisplayName());
         //////////////////// save user to DB ////////////////////
         $userManager = $this->container->get('user_manager');
