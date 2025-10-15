@@ -707,6 +707,7 @@ class LdapAuthUtil {
     public function searchLdapV2($username, $ldapType=1) {
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
+        $this->logger->notice("searchLdapV2: postfix=[".$postfix."]");
 
         //$ldapHost = "ldaps://accounts-***.edu";
         $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);

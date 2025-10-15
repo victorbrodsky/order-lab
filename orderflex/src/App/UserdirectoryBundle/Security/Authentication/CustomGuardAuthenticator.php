@@ -552,6 +552,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
                 //                       3) ldap authentication                     //
                 //////////////////////////////////////////////////////////////////////
                 $user = $ldapAuthUtil->LdapAuthentication($token, $ldapType = 1);
+                exit("test exit authenticateToken: $usernamePrefix: user=".$user);
 
                 if( !$user && $userSecUtil->getSiteSettingParameter('ldapAll') ) {
                     $user = $ldapAuthUtil->LdapAuthentication($token, $ldapType = 2);
