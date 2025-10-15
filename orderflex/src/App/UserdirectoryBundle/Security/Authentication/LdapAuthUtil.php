@@ -812,6 +812,9 @@ class LdapAuthUtil {
 //        return $entries[0]; // return full attribute set for the user
 
         $info = ldap_get_entries($ldapConn, $search);
+        dump($info);
+        exit('1');
+
         ldap_unbind($ldapConn);
 
         $searchRes = array();
