@@ -88,7 +88,7 @@ class LdapAuthUtil {
     public function LdapAuthentication($token, $ldapType=1) {
 
         $authUtil = $this->container->get('authenticator_utility');
-        $this->logger->notice("Ldap Authentication: ldapType=[$ldapType]");
+        $this->logger->notice("Start Ldap Authentication: ldapType=[$ldapType]");
         //exit("Ldap Authentication: ldapType=[$ldapType]");
 
         $username = $token->getUsername();
@@ -110,21 +110,24 @@ class LdapAuthUtil {
         //fork wcm and others
         if(  str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
             //WCM Ldap
+            $this->logger->notice("before ldapBindV1");
             $ldapRes = $this->ldapBindV1($username,$password,$ldapType);
         } else {
             //Others Ldap
             // $ldapBindDN = 'oli2002'
             // @ldap_bind($ldapConn,$ldapBindDN,$password);
+            $this->logger->notice("before searchLdapV2");
 
             $ldapUserData = $this->searchLdapV2($username,$ldapType);
             if (isset($ldapUserData['userprincipalname'][0])) {
                 $upn = $ldapUserData['userprincipalname'][0];
-                echo "userPrincipalName=[$upn] <br>";
+                //echo "userPrincipalName=[$upn] <br>";
             } else {
                 $upn = $username;
-                echo "userPrincipalName not found in LDAP entry.<br>";
+                //echo "userPrincipalName not found in LDAP entry.<br>";
             }
 
+            $this->logger->notice("before ldapBindV2, upn=$upn");
             $ldapRes = $this->ldapBindV2($upn,$password,$ldapType);
         }
 
