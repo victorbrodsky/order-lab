@@ -270,7 +270,7 @@ class AuthUtil {
 //        }
 
         //get clean username
-        $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
+        //$ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
@@ -409,9 +409,9 @@ class AuthUtil {
     }
 
     //Legacy function
-    public function searchLdap( $usernameClean, $ldapType ) {
+    public function searchLdap( $usernameClean, $ldapType, $withWarning=true ) {
         $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
-        return $ldapAuthUtil->searchLdap($usernameClean,$ldapType);
+        return $ldapAuthUtil->searchLdap($usernameClean,$ldapType,$withWarning);
     }
 
     //Used by ajax authenticate-user/
