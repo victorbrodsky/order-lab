@@ -190,9 +190,15 @@ class LdapAuthUtil {
         //dump($user->getDisplayName());
         //dump($user);
         //exit("exit createNewLdapUser: user->getDisplayName()=".$user->getDisplayName());
+
         //////////////////// save user to DB ////////////////////
         $userManager = $this->container->get('user_manager');
         $userManager->updateUser($user);
+
+        //"App\UserdirectoryBundle\User\Model\UserManager::updateUser():
+        // Argument #1 ($user) must be of type App\UserdirectoryBundle\User\Model\UserInterface,
+        // App\UserdirectoryBundle\Entity\User given,
+        // called in /srv/order-lab-tenantmanager/orderflex/src/App/UserdirectoryBundle/Security/Authentication/LdapAuthUtil.php on line 195"
 
         return $user;
     }
