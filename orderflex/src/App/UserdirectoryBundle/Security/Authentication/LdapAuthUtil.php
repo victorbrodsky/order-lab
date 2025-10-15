@@ -237,31 +237,60 @@ class LdapAuthUtil {
         $user->setKeytype($userkeytype);
         $user->setPrimaryPublicUserId($usernameClean);
 
-        if( $ldapUserData ) {
+//        if( $ldapUserData ) {
+//
+//            //$user->setEmail($ldapUserData['mail']);
+//            if( array_key_exists('mail', $ldapUserData) ) {
+//                $user->setEmail($ldapUserData['mail']);
+//            }
+//
+//            if( array_key_exists('givenName', $ldapUserData) ) {
+//                $user->setFirstName($ldapUserData['givenName']);
+//            }
+//
+//            if( array_key_exists('lastName', $ldapUserData) ) {
+//                $user->setLastName($ldapUserData['lastName']);
+//            }
+//
+//            if( array_key_exists('displayName', $ldapUserData) ) {
+//                $user->setDisplayName($ldapUserData['displayName']);
+//            }
+//
+//            if( array_key_exists('telephoneNumber', $ldapUserData) ) {
+//                $user->setPreferredPhone($ldapUserData['telephoneNumber']);
+//            }
+//
+//            if( array_key_exists('mobile', $ldapUserData) ) {
+//                $user->setPreferredMobilePhone($ldapUserData['mobile']);
+//            }
+//        }
 
-            //$user->setEmail($ldapUserData['mail']);
-            if( array_key_exists('mail', $ldapUserData) ) {
-                $user->setEmail($ldapUserData['mail']);
+        if ($ldapUserData) {
+            // Normalize keys to lowercase for case-insensitive access
+            $normalizedData = array_change_key_case($ldapUserData, CASE_LOWER);
+
+            if (isset($normalizedData['mail'])) {
+                $user->setEmail($normalizedData['mail']);
             }
 
-            if( array_key_exists('givenName', $ldapUserData) ) {
-                $user->setFirstName($ldapUserData['givenName']);
+            if (isset($normalizedData['givenname'])) {
+                $user->setFirstName($normalizedData['givenname']);
             }
 
-            if( array_key_exists('lastName', $ldapUserData) ) {
-                $user->setLastName($ldapUserData['lastName']);
+            if (isset($normalizedData['lastname'])) {
+                $user->setLastName($normalizedData['lastname']);
             }
 
-            if( array_key_exists('displayName', $ldapUserData) ) {
-                $user->setDisplayName($ldapUserData['displayName']);
+            if (isset($normalizedData['displayname'])) {
+                $user->setDisplayName($normalizedData['displayname']);
             }
 
-            if( array_key_exists('telephoneNumber', $ldapUserData) ) {
-                $user->setPreferredPhone($ldapUserData['telephoneNumber']);
+            if (isset($normalizedData['telephonenumber'])) {
+                $user->setPreferredPhone($normalizedData['telephonenumber']);
             }
 
-            if( array_key_exists('mobile', $ldapUserData) ) {
-                $user->setPreferredMobilePhone($ldapUserData['mobile']);
+            if (isset($normalizedData['mobile'])) {
+                $user->setPreferredMobilePhone($normalizedData['mobile']);
             }
         }
 
