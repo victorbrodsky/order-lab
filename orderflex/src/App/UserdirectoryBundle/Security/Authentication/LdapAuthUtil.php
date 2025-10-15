@@ -219,10 +219,10 @@ class LdapAuthUtil {
         //dump($ldapUserData); //testing
 
         if( $ldapUserData == NULL || count($ldapUserData) == 0 ) {
-            $this->logger->error("Ldap Search: can not find user by usernameClean=" . $usernameClean);
+            $this->logger->error("Ldap Search: ldapUserData exists for usernameClean=" . $usernameClean);
             return NULL;
         } else {
-            $this->logger->notice("Ldap Search: user found by  usernameClean=" . $usernameClean);
+            $this->logger->notice("Ldap Search: ldapUserData is empty for  usernameClean=" . $usernameClean);
         }
 
         $this->logger->notice("Ldap Search: create a new user (not in DB) found by token->getUsername()=".$username);
@@ -812,8 +812,8 @@ class LdapAuthUtil {
 //        return $entries[0]; // return full attribute set for the user
 
         $info = ldap_get_entries($ldapConn, $search);
-        dump($info);
-        exit('1');
+        //dump($info);
+        //exit('1');
 
         ldap_unbind($ldapConn);
 
