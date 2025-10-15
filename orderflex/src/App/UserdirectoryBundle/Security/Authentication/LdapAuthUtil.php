@@ -724,6 +724,7 @@ class LdapAuthUtil {
         //$servicePass = "";
         $serviceDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
         $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
+        $this->logger->notice("searchLdapV2: serviceDn=[".$serviceDn."], servicePass=[$servicePass]");
 
         if (empty($username)) {
             //throw new \Exception("Username is missing.");
@@ -745,7 +746,7 @@ class LdapAuthUtil {
         // Bind with service account
         if (!@ldap_bind($ldapConn, $serviceDn, $servicePass)) {
             //throw new \Exception("LDAP bind failed: " . ldap_error($ldapConn));
-            $this->logger->error("searchLdapV2: LDAP bind failed: ".ldap_error($ldapConn));
+            $this->logger->error("searchLdapV2: LDAP bind failed for $serviceDn: ".ldap_error($ldapConn));
             return NULL;
         }
 
