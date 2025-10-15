@@ -270,6 +270,7 @@ class AuthUtil {
 //        }
 
         //get clean username
+        $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
@@ -283,7 +284,7 @@ class AuthUtil {
         if( $withNewUserPrePopulation ) {
 
             //////////////// first search this user if exists in ldap directory ////////////////
-            $searchRes = $this->searchLdap($usernameClean,$ldapType);
+            $searchRes = $ldapAuthUtil->searchLdap($usernameClean,$ldapType);
             //////////////// EOF first search this user if exists in ldap directory ////////////////
 
             if( $searchRes == NULL || count($searchRes) == 0 ) {
