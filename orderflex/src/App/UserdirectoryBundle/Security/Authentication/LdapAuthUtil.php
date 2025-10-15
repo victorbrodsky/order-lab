@@ -111,7 +111,7 @@ class LdapAuthUtil {
         if(  str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
             //WCM Ldap
             $this->logger->notice("before ldapBindV1, username=username");
-            $ldapRes = $this->ldapBindV1($username,$password,$ldapType);
+            $ldapRes = $this->ldapBindV1($usernameClean,$password,$ldapType);
         } else {
             //Others Ldap
             // $ldapBindDN = 'oli2002'

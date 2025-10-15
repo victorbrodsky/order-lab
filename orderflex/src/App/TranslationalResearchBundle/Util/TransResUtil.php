@@ -9863,5 +9863,27 @@ WHERE
         //exit('processExistingProjectGoals');
         return $projectGoalMsg;
     }
-    
+
+    public function getAllUserSubmittedProject()
+    {
+        $repository = $this->em->getRepository(Project::class);
+        $qb = $repository->createQueryBuilder('project');
+
+        $qb->select('project','submitter')
+            ->leftJoin('project.submitter', 'submitter')
+            ->where('submitter IS NOT NULL');
+
+        $query = $qb->getQuery();
+        $results = $query->getResult();
+
+        $submitters = array_map(
+            fn($project) => $project->getSubmitter(), 
+            $results
+        );
+
+        return $submitters;
+    }
+
+
+
 }

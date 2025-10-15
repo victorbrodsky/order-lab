@@ -274,12 +274,21 @@ class DefaultController extends OrderAbstractController
         //exit('$orderinlist='.$orderinlist);
 
 //        $em = $this->getDoctrine()->getManager();
-//        $transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
 //        $user = $this->getUser();
 //        $user = $em->getRepository(User::class)->find(7305);
 //        echo "getProjectsAllowedByUser:". $user->getId() ."<br>";
 //        //exit('111');
 //        $projects = $transresUtil->getProjectsAllowedByUser($user);
+
+        $submitters = $transresUtil->getAllUserSubmittedProject();
+        echo "total submitters=".count($submitters)."<br>";
+        $count = 0;
+        foreach($submitters as $submitter) {
+            $count++;
+            echo $count.': '.$submitter."<br>";
+        }
+        exit('1');
         
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }
