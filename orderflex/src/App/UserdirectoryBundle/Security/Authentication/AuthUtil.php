@@ -284,7 +284,7 @@ class AuthUtil {
         if( $withNewUserPrePopulation ) {
 
             //////////////// first search this user if exists in ldap directory ////////////////
-            $searchRes = $ldapAuthUtil->searchLdap($usernameClean,$ldapType);
+            $searchRes = $this->searchLdap($usernameClean,$ldapType);
             //////////////// EOF first search this user if exists in ldap directory ////////////////
 
             if( $searchRes == NULL || count($searchRes) == 0 ) {
@@ -406,6 +406,12 @@ class AuthUtil {
         $userManager->updateUser($user);
 
         return $user;
+    }
+
+    //Legacy function
+    public function searchLdap( $usernameClean, $ldapType ) {
+        $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
+        return $ldapAuthUtil->searchLdap($usernameClean,$ldapType);
     }
 
     //Used by ajax authenticate-user/
