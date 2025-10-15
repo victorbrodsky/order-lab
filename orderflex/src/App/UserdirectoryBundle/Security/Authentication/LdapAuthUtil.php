@@ -119,8 +119,8 @@ class LdapAuthUtil {
             $this->logger->notice("before searchLdapV2, usernameClean=$usernameClean");
 
             $ldapUserData = $this->searchLdapV2($usernameClean,$ldapType);
-            if (isset($ldapUserData['userprincipalname'][0])) {
-                $upn = $ldapUserData['userprincipalname'][0];
+            if (isset($ldapUserData['userprincipalname'])) {
+                $upn = $ldapUserData['userprincipalname'];
                 //echo "userPrincipalName=[$upn] <br>";
             } else {
                 $upn = $usernameClean;
@@ -265,6 +265,8 @@ class LdapAuthUtil {
 //                $user->setPreferredMobilePhone($ldapUserData['mobile']);
 //            }
 //        }
+
+        //wustl: $upn = $ldapUserData['userprincipalname'][0];
 
         if ($ldapUserData) {
             // Normalize keys to lowercase for case-insensitive access
@@ -536,7 +538,7 @@ class LdapAuthUtil {
         return NULL;
     }
 
-
+    //return $searchRes key->value array (key is case sensitive)
     public function searchLdap($username,$ldapType=1,$withWarning=true) {
 
         //echo "username=".$username."<br>";
@@ -735,7 +737,7 @@ class LdapAuthUtil {
         return $searchRes;
     }
 
-    //return user's ldap attributes in array
+    //return user's ldap attributes in $searchRes key->value array (key is case sensitive)
     public function searchLdapV2($username, $ldapType=1) {
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
@@ -794,16 +796,76 @@ class LdapAuthUtil {
             return NULL;
         }
 
-        $entries = ldap_get_entries($ldapConn, $search);
+//        $entries = ldap_get_entries($ldapConn, $search);
+//        if ($entries["count"] === 0) {
+//            //throw new \Exception("User '$username' not found.");
+//            $this->logger->error("searchLdapV2: user not found: username=[$filter]");
+//            return NULL;
+//        }
+//        return $entries[0]; // return full attribute set for the user
+
+        $info = ldap_get_entries($ldapConn, $search);
         ldap_unbind($ldapConn);
 
-        if ($entries["count"] === 0) {
-            //throw new \Exception("User '$username' not found.");
-            $this->logger->error("searchLdapV2: user not found: username=[$filter]");
-            return NULL;
+        $searchRes = array();
+
+        for ($x=0; $x<$info["count"]; $x++) {
+
+            if( array_key_exists('ou', $info[$x]) ) {
+                $searchRes['ou'] = $info[$x]['ou'][0];
+            }
+            if( array_key_exists('uid', $info[$x]) ) {
+                $searchRes['uid'] = $info[$x]['uid'][0];
+            }
+            if( array_key_exists('userprincipalname', $info[$x]) ) {
+                $searchRes['userprincipalname'] = $info[$x]['userprincipalname'][0];
+            }
+
+            if( array_key_exists('mail', $info[$x]) ) {
+                $searchRes['mail'] = $info[$x]['mail'][0];
+            }
+            if( array_key_exists('title', $info[$x]) ) {
+                $searchRes['title'] = $info[$x]['title'][0];
+            }
+            if( array_key_exists('givenname', $info[$x]) ) {
+                $searchRes['givenName'] = $info[$x]['givenname'][0];
+            }
+            if( array_key_exists('sn', $info[$x]) ) {
+                $searchRes['lastName'] = $info[$x]['sn'][0];
+            }
+            if( array_key_exists('displayname', $info[$x]) ) {
+                $searchRes['displayName'] = $info[$x]['displayname'][0];
+            }
+            if( array_key_exists('telephonenumber', $info[$x]) ) {
+                $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
+            }
+            if( array_key_exists('mobile', $info[$x]) ) {
+                $searchRes['mobile'] = $info[$x]['mobile'][0];
+            }
+            if( array_key_exists('company', $info[$x]) ) {
+                $searchRes['company'] = $info[$x]['company'][0];    //not used currently
+            }
+
+            if( array_key_exists('givenName',$searchRes) && !$searchRes['givenName'] ) {
+                $searchRes['givenName'] = "";   //$username;
+            }
+
+            if( array_key_exists('lastName',$searchRes) && !$searchRes['lastName'] ) {
+                $searchRes['lastName'] = "";    //$username;
+            }
+
+            //print "\nActive Directory says that:<br />";
+            //print "givenName is: ".$searchRes['givenName']."<br>";
+            //print "familyName is: ".$searchRes['lastName']."<br>";
+            //print_r($info[$x]);
+
+            //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
+
+            //we have only one result
+            break;
         }
 
-        return $entries[0]; // return full attribute set for the user
+        return $searchRes;
     }
 
     public function getPostfix($ldapType) {
