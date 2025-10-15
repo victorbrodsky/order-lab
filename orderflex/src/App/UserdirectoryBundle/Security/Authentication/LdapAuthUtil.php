@@ -713,7 +713,7 @@ class LdapAuthUtil {
         $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
         $baseDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
 
-        $this->logger->notice("simple Ldap: LDAPHost=[".$ldapHost."], LDAPPort=[$ldapPort], baseDn=[$baseDn]");
+        $this->logger->notice("searchLdapV2: LDAPHost=[".$ldapHost."], LDAPPort=[$ldapPort], baseDn=[$baseDn]");
         //LDAPHost=[ldap://accounts-ldap.wusm.wustl.edu], LDAPPort=[636], baseDn=[OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu]
         //$ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
         //$ldapPort = 636;
