@@ -99,8 +99,7 @@ class LdapAuthUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($username);
         $this->logger->notice("Start Ldap Authentication: username=[$username],usernameClean=[$usernameClean]");
-        //$usernamePrefix = $userSecUtil->getUsernamePrefix($username);
-        //exit("usernameClean=[$usernameClean], susernamePrefix=[$usernamePrefix]");
+        //username=[brodsky_@_ldap-user],usernameClean=[brodsky]
 
         $ldapUserData = null;
 
@@ -117,14 +116,14 @@ class LdapAuthUtil {
             //Others Ldap
             // $ldapBindDN = 'oli2002'
             // @ldap_bind($ldapConn,$ldapBindDN,$password);
-            $this->logger->notice("before searchLdapV2, username=$username");
+            $this->logger->notice("before searchLdapV2, usernameClean=$usernameClean");
 
-            $ldapUserData = $this->searchLdapV2($username,$ldapType);
+            $ldapUserData = $this->searchLdapV2($usernameClean,$ldapType);
             if (isset($ldapUserData['userprincipalname'][0])) {
                 $upn = $ldapUserData['userprincipalname'][0];
                 //echo "userPrincipalName=[$upn] <br>";
             } else {
-                $upn = $username;
+                $upn = $usernameClean;
                 //echo "userPrincipalName not found in LDAP entry.<br>";
             }
 
