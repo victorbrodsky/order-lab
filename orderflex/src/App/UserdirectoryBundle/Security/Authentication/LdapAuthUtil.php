@@ -187,7 +187,7 @@ class LdapAuthUtil {
             return NULL;
         }
 
-        exit("createNewLdapUser: user=".$user);
+        exit("exit createNewLdapUser: user=".$user->getDisplayName());
         //////////////////// save user to DB ////////////////////
         $userManager = $this->container->get('user_manager');
         $userManager->updateUser($user);
@@ -207,6 +207,8 @@ class LdapAuthUtil {
         if( !$ldapUserData ) {
             $ldapUserData = $this->searchLdap($usernameClean, $ldapType);
         }
+
+        dump($ldapUserData); //testing
 
         if( $ldapUserData == NULL || count($ldapUserData) == 0 ) {
             $this->logger->error("Ldap Search: can not find user by usernameClean=" . $usernameClean);
