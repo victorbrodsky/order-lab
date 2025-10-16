@@ -46,15 +46,15 @@ username = 'vxb3670'
 print(f"USER={USER}, PWD={PWD}, NTLM={NTLM}, username={username}")
 
 server = Server('bjc-nt.bjc.org',use_ssl=True,get_info=ALL,allowed_referral_hosts=[('accounts.ad.wustl.edu',True)])
-with Connection(server,user=username,password=PWD,auto_referrals=True,authentication=NTLM) as conn:
-    conn.search('DC=bjc-nt,DC=bjc,DC=org',f'(cn={USER})',attributes=['*'])
+with Connection(server,user=USER,password=PWD,auto_referrals=True,authentication=NTLM) as conn:
+    conn.search('DC=bjc-nt,DC=bjc,DC=org',f'(cn={username})',attributes=['*'])
     try:
         dn = conn.response[0]['attributes']['distinguishedName']
     except:
         print("conn.response: Username incorrect. Please try again...")
         sys.exit("exits the whole script")
     new_data={
-        'username':USER,
+        'username':username,
         'displayName' : conn.response[0]['attributes']['displayName'],
         'is_auth':True
     }
