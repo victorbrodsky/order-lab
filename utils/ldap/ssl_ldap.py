@@ -51,7 +51,7 @@ with Connection(server,user=username,password=PWD,auto_referrals=True,authentica
     try:
         dn = conn.response[0]['attributes']['distinguishedName']
     except:
-        print("Username incorrect. Please try again...")
+        print("conn.response: Username incorrect. Please try again...")
         sys.exit("exits the whole script")
     new_data={
         'username':USER,
@@ -60,10 +60,10 @@ with Connection(server,user=username,password=PWD,auto_referrals=True,authentica
     }
     try:
         with Connection(server, dn, PWD) as conn2:
-            print(f"Logged in as {new_data['displayName']}. Resource will display if user is authorized...",new_data)
+            print(f"Connection: Logged in as {new_data['displayName']}. Resource will display if user is authorized...",new_data)
             sys.exit("exits the whole script")
     except:
-        print("Password incorrect. Please try again...")
+        print("Connection: Password incorrect. Please try again...")
         sys.exit("exits the whole script")
 
 print("Bind OK. whoami:", conn.extend.standard.who_am_i())
