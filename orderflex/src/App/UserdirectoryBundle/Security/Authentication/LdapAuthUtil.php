@@ -479,27 +479,28 @@ class LdapAuthUtil {
     }
 
     // BJC-NT
-    const BJC_URI        = 'ldaps://bjc-nt.bjc.org:636';
-    const BJC_BASE_DN    = 'DC=bjc-nt,DC=bjc,DC=org';
-    const BJC_BIND_DL    = 'accounts\\Path-SVC-BindUser';  // DOMAIN\user for service bind
     function auth_bjc_nt(string $username, string $password): array {
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = '';
         $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
         $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
 
+        $BJC_URI        = 'ldaps://bjc-nt.bjc.org:636';
+        $BJC_BASE_DN    = 'DC=bjc-nt,DC=bjc,DC=org';
+        $BJC_BIND_DL    = 'accounts\\Path-SVC-BindUser';  // DOMAIN\user for service bind
+
         // Referrals ON to mirror your Python `auto_referrals=True`
         //$link = ldap_connect_secure(BJC_URI, true);
-        $link = ldap_connect(BJC_URI);
-        echo "BJC_URI=".BJC_URI."<br>";
+        $link = ldap_connect($BJC_URI);
+        echo "BJC_URI=".$BJC_URI."<br>";
         ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
 
         try {
-            $bjs_bind_dn = BJC_BIND_DL . "\\" . $LDAPUserAdmin;
-            echo "bjs_bind_dn=$bjs_bind_dn <br>";
+            //$bjs_bind_dn = $BJC_BIND_DL . "\\" . $LDAPUserAdmin;
+            //echo "bjs_bind_dn=$bjs_bind_dn <br>";
             // 1) Service bind using DOMAIN\user (down-level logon name)
-            ldap_bind_or_throw($link, $bjs_bind_dn, $servicePass, 'BJC-NT service');
+            ldap_bind_or_throw($link, $BJC_BIND_DL, $servicePass, 'BJC-NT service');
 
             // 2) Lookup: your Python uses (cn={username}); keep that, but add sAMAccountName as backup
             //    This OR filter improves robustness while matching your behavior.
@@ -508,7 +509,7 @@ class LdapAuthUtil {
                 . ldap_filter_eq('sAMAccountName', $username)
                 . '))';
 
-            $entry  = ldap_search_first($link, BJC_BASE_DN, $filter, ['distinguishedName', 'displayName']);
+            $entry  = ldap_search_first($link, $BJC_BASE_DN, $filter, ['distinguishedName', 'displayName']);
             if ($entry === null) {
                 return ['ok' => false, 'error' => 'Username incorrect. Please try again...'];
             }
@@ -522,7 +523,7 @@ class LdapAuthUtil {
 
             // 3) Bind as the user with their password (simple bind with DN)
             //$userLink = ldap_connect_secure(BJC_URI, true);
-            $userLink = ldap_connect(BJC_URI);
+            $userLink = ldap_connect($BJC_URI);
             ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
             ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
             try {
