@@ -107,12 +107,12 @@ class LdapAuthUtil {
         $postfix = $this->getPostfix($ldapType);
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
 
-        if( 1 ) {
-            //string $username, string $password, string $servicePass
-            $res = $this->auth_bjc_nt($usernameClean,$password);
-            dump($res);
-        }
-        exit('after auth_bjc_nt');
+//        if( 1 ) {
+//            //string $username, string $password, string $servicePass
+//            $res = $this->auth_bjc_nt($usernameClean,$password);
+//            dump($res);
+//        }
+//        exit('after auth_bjc_nt');
 
         //fork wcm and others
         if(  str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
