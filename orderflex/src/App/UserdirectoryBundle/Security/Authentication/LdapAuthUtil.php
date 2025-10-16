@@ -491,6 +491,7 @@ class LdapAuthUtil {
         // Referrals ON to mirror your Python `auto_referrals=True`
         //$link = ldap_connect_secure(BJC_URI, true);
         $link = ldap_connect(BJC_URI);
+        echo "BJC_URI=".BJC_URI."<br>";
         ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
 
