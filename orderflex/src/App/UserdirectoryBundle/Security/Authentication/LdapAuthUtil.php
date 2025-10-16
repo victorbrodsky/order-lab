@@ -499,6 +499,8 @@ class LdapAuthUtil {
         if( !$link ) {
             $this->logger->notice("1 Failed to connect to LDAP server:".$BJC_URI);
             die("Failed to connect to LDAP server:".$BJC_URI);
+        } else {
+            $this->logger->notice("1 Connected to LDAP server:".$BJC_URI);
         }
 
         try {
