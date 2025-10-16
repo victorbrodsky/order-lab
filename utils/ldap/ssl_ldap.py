@@ -39,7 +39,7 @@ conn = Connection(
     authentication=NTLM,
     auto_bind=True,
     auto_referrals=True,
-    allowed_referral_hosts=allowed_referral_hosts,
+    allowed_referral_hosts=[('accounts.ad.wustl.edu',True)], #allowed_referral_hosts,
     raise_exceptions=True,
 )
 
