@@ -137,24 +137,29 @@ class UtilController extends OrderAbstractController {
                         array('type' => $optionArr)
                     );
                     foreach( $entities as $entity ) {
-                        $element = array('id'=>$entity->getId(), 'text'=>$entity."");
-                        $output[] = $element;
+                        $entityStr = $entity."";
+                        if( $entityStr ) {
+                            $element = array('id' => $entity->getId(), 'text' => $entityStr);
+                            $output[] = $element;
+                        }
                     }
                     break;
 
 
                 default:
                     $query =
-                        //$em->createQueryBuilder()->from('App'.$bundleName.':'.$className, 'list')
                         $em->createQueryBuilder()->from($fullClassName, 'list')
                         ->select("list.id as id, list.name as text")
                         ->orderBy("list.orderinlist","ASC");
 
+                    // Add condition for non-empty names
+                    $query->andWhere("list.name IS NOT NULL AND list.name != ''");
+
                     //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
                     if( $newCycle && $filterType ) {
-                        $query->where("list.type = :typedef")->setParameters(array('typedef' => 'default'));
+                        $query->andWhere("list.type = :typedef")->setParameters(array('typedef' => 'default'));
                     } else {
-                        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+                        $query->andWhere("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
                     }
 
                     $output = $query->getQuery()->getResult();

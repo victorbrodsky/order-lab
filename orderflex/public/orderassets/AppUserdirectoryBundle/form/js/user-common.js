@@ -325,8 +325,11 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
                 console.error('Failed to parse JSON from '+url, e);
                 data = [];
             }
+            console.log(name+' data :',data);
             $.each(data, function(key, val) {
-                globalDataArray.push(val);
+                if(val) {
+                    globalDataArray.push(val);
+                }
             });
             populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
         }).fail(function(jqXHR){
@@ -343,7 +346,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
 //target - class or id of the target element
 function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
-    //console.log("populateSelectCombobox");
+    console.log("populateSelectCombobox");
     //console.log("target="+target);
     //printF(target,'populate combobox target: ');
 
@@ -409,6 +412,8 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         comboboxWidth = null;
     }
 
+    console.log("before select2, target="+target);
+
     $(target).select2({
         placeholder: placeholder,
         allowClear: allowClear,
@@ -420,7 +425,15 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         multiple: multiple,
         data: data,
         createSearchChoice: createSearchChoice,
-        matcher: select2Matcher
+        matcher: select2Matcher,
+        formatResult: function(item) {
+            //'<div class="wrap-option">' + item.text + '</div>';
+            //item.text;
+            return item.text.length > maxLength ? item.text.slice(0, maxLength) + '…' : item.text;
+        },
+        formatSelection: function(item) {
+            item.text;
+        }
     });
 
     if( $(target).attr("readonly") ) {

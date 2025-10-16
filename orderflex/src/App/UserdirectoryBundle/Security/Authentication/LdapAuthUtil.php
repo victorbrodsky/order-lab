@@ -107,6 +107,13 @@ class LdapAuthUtil {
         $postfix = $this->getPostfix($ldapType);
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
 
+        if( 1 ) {
+            //string $username, string $password, string $servicePass
+            $res = $this->auth_bjc_nt($usernameClean,$password);
+            dump($res);
+        }
+        exit('after auth_bjc_nt');
+
         //fork wcm and others
         if(  str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
             //WCM Ldap
@@ -118,6 +125,7 @@ class LdapAuthUtil {
             // @ldap_bind($ldapConn,$ldapBindDN,$password);
             $this->logger->notice("before searchLdapV2, usernameClean=$usernameClean");
 
+            //first retrieves the user's userPrincipalName value
             $ldapUserData = $this->searchLdapV2($usernameClean,$ldapType);
             if (isset($ldapUserData['userprincipalname'])) {
                 $upn = $ldapUserData['userprincipalname'];
@@ -307,35 +315,6 @@ class LdapAuthUtil {
         return $user;
     }
 
-    //Make sure the Authentication first retrieves the user's userPrincipalName value using the command
-    // at the bottom of this email and then uses the retrieved userPrincipalName
-    // to authenticate the user, not the uid and not the supplied user name via the web page.
-    // If this fixes authentication, add
-    // "Authenticate using: userPrincipalName OR sAMAccountName" field
-    // where the value can be specified on Site Settings page and set it to userPrincipalName
-//    public function ldapBind( $username, $password, $ldapType=1 ) {
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $postfix = $this->getPostfix($ldapType);
-//        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
-//
-//        //fork wcm and others
-//        if(  !str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
-//            // Others Ldap:
-//            // $ldapBindDN = 'oli2002'
-//            // @ldap_bind($ldapConn,$ldapBindDN,$password);
-//            return $this->ldapBindV2($username,$password,$ldapType);
-//        }
-//
-//        // WCM Ldap:
-//        // $ldapBindDN = cn='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
-//        // $ldapBindDN = uid='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
-//        // $ldapBindDN = cn='oli2002',cn=Users,dc=a,dc=wcmc-ad,dc=net
-//        // @ldap_bind($cnx,$ldapBindDN,$password);
-//        return $this->ldapBindV1($username,$password,$ldapType);
-//    }
-
-
-
     //return 1 if bind successful
     //return NULL if failed
     public function ldapBindV1( $username, $password, $ldapType=1 ) {
@@ -471,35 +450,6 @@ class LdapAuthUtil {
         $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
         $this->logger->notice("simple Ldap V2: LDAPHost=".$ldapHost.", LDAPPort=".$ldapPort);
 
-//        $searchRes = $this->searchLdapV2($username,$ldapType);
-//        dump($searchRes);
-//        if (isset($searchRes['userprincipalname'][0])) {
-//            $userPrincipalName = $searchRes['userprincipalname'][0];
-//            echo "userPrincipalName=[$userPrincipalName] <br>";
-//        } else {
-//            $userPrincipalName = $username;
-//            echo "userPrincipalName not found in LDAP entry.<br>";
-//        }
-
-        //exit('exit simpleLdapV2');
-
-        // Full DN for binding
-        //$dn = "CN=path-svc-binduser,OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
-        //$dn = "path-svc-binduser";
-        //$dn = $userPrincipalName;
-        //echo "1 simpleLdap: dn=$dn <br>";
-
-        //WCM Ldap
-//        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
-//        $ldapBindDNArr = explode(";",$origLdapBindDN);
-//        $ldapBindDN = $ldapBindDNArr[0];
-//        $dn = $userPrefix."=".$username.",".$ldapBindDN;
-//        //$dn = $userPrefix."=".$username;
-//        echo "2 simpleLdap: dn=$dn <br>";
-
-        //$dn = $this->getPrincipalName($username, $password, $userPrefix="uid", $ldapType=1);
-        //$password = "";
-
         // Connect to LDAP
         $ldapConn = ldap_connect($ldapHost, $ldapPort);
         if (!$ldapConn) {
@@ -509,23 +459,6 @@ class LdapAuthUtil {
         // Set LDAP options
         ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
-
-//        foreach( $ldapBindDNArr as $ldapBindDN) {
-//            $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
-//            //$ldapBindDN = "cn=$username,ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net"; //testing
-//            //$this->logger->notice("simple Ldap V2: ldapBindDN=".$ldapBindDN);
-//            $res = @ldap_bind($ldapConn,$ldapBindDN,$password); //simpleLdap
-//            //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
-//
-//            //$res = 1; //testing!!! allow authenticate
-//
-//            if( $res ) {
-//                $this->logger->notice("simple Ldap V2: OK ldapBindDN=".$ldapBindDN);
-//                break;
-//            } else {
-//                $this->logger->notice("simple Ldap V2: NOTOK ldapBindDN=".$ldapBindDN);
-//            }
-//        }
 
         // Bind
         $bind = @ldap_bind($ldapConn, $username, $password);
@@ -544,6 +477,62 @@ class LdapAuthUtil {
         ldap_unbind($ldapConn);
         return NULL;
     }
+
+    // BJC-NT
+    const BJC_URI        = 'ldaps://bjc-nt.bjc.org:636';
+    const BJC_BASE_DN    = 'DC=bjc-nt,DC=bjc,DC=org';
+    const BJC_BIND_DL    = 'accounts\\Path-SVC-BindUser';  // DOMAIN\user for service bind
+    function auth_bjc_nt(string $username, string $password): array {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $postfix = '';
+        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
+        $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
+
+        // Referrals ON to mirror your Python `auto_referrals=True`
+        $link = ldap_connect_secure(BJC_URI, true);
+        try {
+            $bjs_bind_dn = BJC_BIND_DL . "\\" . $LDAPUserAdmin;
+            echo "bjs_bind_dn=$bjs_bind_dn <br>";
+            // 1) Service bind using DOMAIN\user (down-level logon name)
+            ldap_bind_or_throw($link, $bjs_bind_dn, $servicePass, 'BJC-NT service');
+
+            // 2) Lookup: your Python uses (cn={username}); keep that, but add sAMAccountName as backup
+            //    This OR filter improves robustness while matching your behavior.
+            $filter = '(&' . ldap_filter_eq('objectClass', 'user') . '(|'
+                . ldap_filter_eq('cn', $username)
+                . ldap_filter_eq('sAMAccountName', $username)
+                . '))';
+
+            $entry  = ldap_search_first($link, BJC_BASE_DN, $filter, ['distinguishedName', 'displayName']);
+            if ($entry === null) {
+                return ['ok' => false, 'error' => 'Username incorrect. Please try again...'];
+            }
+
+            $dn = $entry['dn'] ?? ($entry['distinguishedname'][0] ?? '');
+            if ($dn === '') {
+                error_log('BJC-NT: user found but missing DN for ' . $username);
+                return ['ok' => false, 'error' => 'Username incorrect. Please try again...'];
+            }
+            $display = $entry['displayname'][0] ?? $username;
+
+            // 3) Bind as the user with their password (simple bind with DN)
+            $userLink = ldap_connect_secure(BJC_URI, true);
+            try {
+                if (@ldap_bind($userLink, $dn, $password) !== true) {
+                    $code = ldap_errno($userLink);
+                    $err  = ldap_error($userLink);
+                    error_log("BJC-NT end-user bind failed ($dn): code=$code err=$err");
+                    return ['ok' => false, 'error' => 'Password incorrect. Please try again...'];
+                }
+                return ['ok' => true, 'displayName' => $display, 'domain' => 'BJC-NT'];
+            } finally {
+                @ldap_unbind($userLink);
+            }
+        } finally {
+            @ldap_unbind($link);
+        }
+    }
+
 
     //return $searchRes key->value array (key is case sensitive)
     public function searchLdap($username,$ldapType=1,$withWarning=true) {
@@ -893,6 +882,7 @@ class LdapAuthUtil {
 
         if( !$cnx ) {
             $this->logger->warning("Ldap: Could not connect to LDAP");
+            ldap_unbind($cnx);
             return NULL;
         }
 
