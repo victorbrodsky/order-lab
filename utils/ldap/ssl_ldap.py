@@ -30,18 +30,35 @@ if not PWD:
     sys.exit("Set LDAP_NTLM_PASS")
 
 tls = Tls(validate=2, ca_certs_file=CAFILE)
-srv = Server(HOST, use_ssl=True, port=PORT, tls=tls)
 
-conn = Connection(
-    srv,
-    user=USER,
-    password=PWD,
-    authentication=NTLM,
-    auto_bind=True,
-    auto_referrals=True,
-    allowed_referral_hosts=[('accounts.ad.wustl.edu',True)], #allowed_referral_hosts,
-    raise_exceptions=True,
-)
+# conn = Connection(
+#     srv,
+#     user=USER,
+#     password=PWD,
+#     authentication=NTLM,
+#     auto_bind=True,
+#     auto_referrals=True,
+#     allowed_referral_hosts=[('accounts.ad.wustl.edu',True)], #allowed_referral_hosts,
+#     raise_exceptions=True,
+# )
+
+server = Server('bjc-nt.bjc.org',use_ssl=True,get_info=ALL,allowed_referral_hosts=[('accounts.ad.wustl.edu',True)])
+            with Connection(server,user='accounts\Path-SVC-BindUser',password=PWD,auto_referrals=True,authentication=NTLM) as conn:
+                conn.search('DC=bjc-nt,DC=bjc,DC=org',f'(cn={USER})',attributes=['*'])
+                try:
+                    dn = conn.response[0]['attributes']['distinguishedName']
+                except:
+                    return("Username incorrect. Please try again...")
+                new_data={
+                    'username':USER,
+                    'displayName' : conn.response[0]['attributes']['displayName'],
+                    'is_auth':True
+                }
+                try:
+                    with Connection(server, dn, PWD) as conn2:
+                        return (f"Logged in as {new_data['displayName']}. Resource will display if user is authorized...",new_data)
+                except:
+                    return ("Password incorrect. Please try again...")
 
 print("Bind OK. whoami:", conn.extend.standard.who_am_i())
 
