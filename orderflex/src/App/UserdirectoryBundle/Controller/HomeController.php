@@ -49,6 +49,7 @@ class HomeController extends OrderAbstractController {
         $tenantBaseUrlArr = array();
         $greetingText = '';
         $tenantManagerName = 'homepagemanager';
+        $primaryTenant = $userTenantUtil->isPrimaryTenant($request);
         
         //get primaryTenant from tenantmanager's DB
         //$primaryTenant = true;
@@ -56,12 +57,11 @@ class HomeController extends OrderAbstractController {
         //exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName); //testing
         
         if( $tenantRole == $tenantManagerName ) {
-            //if( !$primaryTenant ) {
+            if( !$primaryTenant ) {
                 return $this->multiTenancyHomePage($request);
-            //}
+            }
         }
 
-        $primaryTenant = $userTenantUtil->isPrimaryTenant($request);
 //        if( $primaryTenant ) {
 //            echo "primaryTenant! <br>";
 //        } else {
