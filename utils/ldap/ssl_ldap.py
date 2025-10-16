@@ -1,7 +1,7 @@
 #Option A
 
 # ad_test_ldaps_ntlm.py
-from ldap3 import Server, Connection, Tls, NTLM, SUBTREE
+from ldap3 import Server, Connection, Tls, NTLM, SUBTREE, ALL
 import os, sys, ast
 
 HOST    = os.getenv('LDAP_HOST', 'BJCNTDC07.bjc-nt.bjc.org')
