@@ -42,7 +42,7 @@ tls = Tls(validate=2, ca_certs_file=CAFILE)
 #     raise_exceptions=True,
 # )
 
-username = 'accounts\\Path-SVC-BindUser'
+username = 'vxb3670'
 print(f"USER={USER}, PWD={PWD}, NTLM={NTLM}, username={username}")
 
 server = Server('bjc-nt.bjc.org',use_ssl=True,get_info=ALL,allowed_referral_hosts=[('accounts.ad.wustl.edu',True)])
