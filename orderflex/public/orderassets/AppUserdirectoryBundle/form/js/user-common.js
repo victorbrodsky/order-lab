@@ -429,7 +429,9 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         formatResult: function(item) {
             //'<div class="wrap-option">' + item.text + '</div>';
             //item.text;
-            return item.text.length > maxLength ? item.text.slice(0, maxLength) + '…' : item.text;
+            //var maxLength = 60;
+            //return item.text.length > maxLength ? item.text.slice(0, maxLength) + '…' : item.text;
+            return item.text;
         },
         formatSelection: function(item) {
             item.text;

@@ -489,7 +489,11 @@ class LdapAuthUtil {
         $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
 
         // Referrals ON to mirror your Python `auto_referrals=True`
-        $link = ldap_connect_secure(BJC_URI, true);
+        //$link = ldap_connect_secure(BJC_URI, true);
+        $link = ldap_connect(BJC_URI);
+        ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
+
         try {
             $bjs_bind_dn = BJC_BIND_DL . "\\" . $LDAPUserAdmin;
             echo "bjs_bind_dn=$bjs_bind_dn <br>";
@@ -516,7 +520,10 @@ class LdapAuthUtil {
             $display = $entry['displayname'][0] ?? $username;
 
             // 3) Bind as the user with their password (simple bind with DN)
-            $userLink = ldap_connect_secure(BJC_URI, true);
+            //$userLink = ldap_connect_secure(BJC_URI, true);
+            $userLink = ldap_connect(BJC_URI);
+            ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
             try {
                 if (@ldap_bind($userLink, $dn, $password) !== true) {
                     $code = ldap_errno($userLink);
