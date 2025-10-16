@@ -38,29 +38,29 @@ use Symfony\Bridge\Twig\Attribute\Template;
 class HomeController extends OrderAbstractController {
 
     //Defined in routes-default.yaml, route name 'main_common_home'
-    public function mainCommonHomeAction(Request $request) {
-        //exit("mainCommonHomeAction");
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userServiceUtil = $this->container->get('user_service_utility');
+        public function mainCommonHomeAction(Request $request) {
+            //exit("mainCommonHomeAction");
+            $userTenantUtil = $this->container->get('user_tenant_utility');
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userServiceUtil = $this->container->get('user_service_utility');
 
-        //homepagemanager show a different multi-tenant home page
-        //TODO: define and get $tenantManagerName from the tenants list tenant-manager/tenant-manager/configure/
-        $tenantBaseUrlArr = array();
-        $greetingText = '';
-        $tenantManagerName = 'homepagemanager';
-        $primaryTenant = $userTenantUtil->isPrimaryTenant($request);
-        
-        //get primaryTenant from tenantmanager's DB
-        //$primaryTenant = true;
-        $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
-        //exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName); //testing
-        
-        if( $tenantRole == $tenantManagerName ) {
-            if( !$primaryTenant ) {
-                return $this->multiTenancyHomePage($request);
+            //homepagemanager show a different multi-tenant home page
+            //TODO: define and get $tenantManagerName from the tenants list tenant-manager/tenant-manager/configure/
+            $tenantBaseUrlArr = array();
+            $greetingText = '';
+            $tenantManagerName = 'homepagemanager';
+            $primaryTenant = $userTenantUtil->isPrimaryTenant($request);
+
+            //get primaryTenant from tenantmanager's DB
+            //$primaryTenant = true;
+            $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
+            //exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName); //testing
+
+            if( $tenantRole == $tenantManagerName ) {
+                if( !$primaryTenant ) {
+                    return $this->multiTenancyHomePage($request);
+                }
             }
-        }
 
 //        if( $primaryTenant ) {
 //            echo "primaryTenant! <br>";
