@@ -42,8 +42,11 @@ tls = Tls(validate=2, ca_certs_file=CAFILE)
 #     raise_exceptions=True,
 # )
 
+username = 'accounts\\Path-SVC-BindUser'
+print(f"USER={USER}, PWD={PWD}, NTLM={NTLM}, username={username}")
+
 server = Server('bjc-nt.bjc.org',use_ssl=True,get_info=ALL,allowed_referral_hosts=[('accounts.ad.wustl.edu',True)])
-with Connection(server,user='accounts\\Path-SVC-BindUser',password=PWD,auto_referrals=True,authentication=NTLM) as conn:
+with Connection(server,user=username,password=PWD,auto_referrals=True,authentication=NTLM) as conn:
     conn.search('DC=bjc-nt,DC=bjc,DC=org',f'(cn={USER})',attributes=['*'])
     try:
         dn = conn.response[0]['attributes']['distinguishedName']
