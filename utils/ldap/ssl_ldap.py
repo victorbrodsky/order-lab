@@ -10,7 +10,7 @@ CAFILE  = os.getenv('LDAP_CA_FILE', '/tmp/bjc-bundle.pem')
 
 # DOMAIN\user (or UPN works too)
 #USER    = os.getenv('LDAP_NTLM_USER', r'ACCOUNTS\PATH-SVC-BindUser')
-USER = 'accounts\Path-SVC-BindUser'
+USER = 'accounts\\Path-SVC-BindUser'
 PWD     = os.getenv('LDAP_NTLM_PASS')
 BASE_DN = os.getenv('LDAP_BASE_DN', 'DC=bjc-nt,DC=bjc,DC=org')
 
