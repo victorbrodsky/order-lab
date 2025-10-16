@@ -494,7 +494,12 @@ class LdapAuthUtil {
         $link = ldap_connect($BJC_URI);
         echo "BJC_URI=".$BJC_URI."<br>";
         ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
+        //ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
+
+        if( !$link ) {
+            $this->logger->notice("1 Failed to connect to LDAP server:".$BJC_URI);
+            die("Failed to connect to LDAP server:".$BJC_URI);
+        }
 
         try {
             //$bjs_bind_dn = $BJC_BIND_DL . "\\" . $LDAPUserAdmin;
@@ -530,7 +535,13 @@ class LdapAuthUtil {
             //$userLink = ldap_connect_secure(BJC_URI, true);
             $userLink = ldap_connect($BJC_URI);
             ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
-            ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
+            //ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
+
+            if( !$link ) {
+                $this->logger->notice("2 Failed to connect to LDAP server:".$BJC_URI);
+                die("Failed to connect to LDAP server:".$BJC_URI);
+            }
+
             try {
                 if (@ldap_bind($userLink, $dn, $password) !== true) {
                     $code = ldap_errno($userLink);
