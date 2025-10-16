@@ -48,7 +48,8 @@ with Connection(server,user='accounts\Path-SVC-BindUser',password=PWD,auto_refer
     try:
         dn = conn.response[0]['attributes']['distinguishedName']
     except:
-        return("Username incorrect. Please try again...")
+        print("Username incorrect. Please try again...")
+        sys.exit("exits the whole script")
     new_data={
         'username':USER,
         'displayName' : conn.response[0]['attributes']['displayName'],
@@ -56,9 +57,11 @@ with Connection(server,user='accounts\Path-SVC-BindUser',password=PWD,auto_refer
     }
     try:
         with Connection(server, dn, PWD) as conn2:
-            return (f"Logged in as {new_data['displayName']}. Resource will display if user is authorized...",new_data)
+            print(f"Logged in as {new_data['displayName']}. Resource will display if user is authorized...",new_data)
+            sys.exit("exits the whole script")
     except:
-        return ("Password incorrect. Please try again...")
+        print("Password incorrect. Please try again...")
+        sys.exit("exits the whole script")
 
 print("Bind OK. whoami:", conn.extend.standard.who_am_i())
 
