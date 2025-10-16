@@ -10,7 +10,7 @@ CAFILE  = os.getenv('LDAP_CA_FILE', '/tmp/bjc-bundle.pem')
 
 # DOMAIN\user (or UPN works too)
 #USER    = os.getenv('LDAP_NTLM_USER', r'ACCOUNTS\PATH-SVC-BindUser')
-USER = 'accounts\\Path-SVC-BindUser'
+USER = r'accounts\Path-SVC-BindUser'
 PWD     = os.getenv('LDAP_NTLM_PASS')
 BASE_DN = os.getenv('LDAP_BASE_DN', 'DC=bjc-nt,DC=bjc,DC=org')
 
@@ -46,7 +46,7 @@ tls = Tls(validate=2, ca_certs_file=CAFILE)
 username = 'vxb3670'
 print(f"USER={USER}, PWD={PWD}, NTLM={NTLM}, username={username}")
 
-server = Server('bjc-nt.bjc.org',use_ssl=True,get_info=ALL,allowed_referral_hosts=[('accounts.ad.wustl.edu',True)])
+server = Server('bjc-nt.bjc.org',use_ssl=True,get_info=ALL,allowed_referral_hosts=[('accounts.ad.wustl.edu',True)],tls=tls)
 with Connection(server,user=USER,password=PWD,auto_referrals=True,authentication=NTLM) as conn:
     conn.search('DC=bjc-nt,DC=bjc,DC=org',f'(cn={username})',attributes=['*'])
     try:
