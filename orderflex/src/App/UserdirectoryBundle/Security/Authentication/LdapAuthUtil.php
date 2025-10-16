@@ -500,8 +500,13 @@ class LdapAuthUtil {
             //$bjs_bind_dn = $BJC_BIND_DL . "\\" . $LDAPUserAdmin;
             //echo "bjs_bind_dn=$bjs_bind_dn <br>";
             // 1) Service bind using DOMAIN\user (down-level logon name)
-            ldap_bind_or_throw($link, $BJC_BIND_DL, $servicePass, 'BJC-NT service');
-
+            //ldap_bind_or_throw($link, $BJC_BIND_DL, $servicePass, 'BJC-NT service');
+            $bind = ldap_bind($link, $BJC_BIND_DL, $servicePass);
+            if (!$bind) {
+                // Handle bind failure
+                throw new Exception("LDAP bind failed: " . ldap_error($link));
+            }
+            
             // 2) Lookup: your Python uses (cn={username}); keep that, but add sAMAccountName as backup
             //    This OR filter improves robustness while matching your behavior.
             $filter = '(&' . ldap_filter_eq('objectClass', 'user') . '(|'
