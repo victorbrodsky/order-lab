@@ -336,6 +336,8 @@ if( $conn ) {
             $container->setParameter('department_name', $department_name);
             $container->setParameter('showcopyrightonfooter', $showcopyrightonfooter);
 
+            echo "set institution_url=[$institution_url]<br>";
+
             //third party software html to pdf
             //echo "set wkhtmltopdfpath=$wkhtmltopdfpath<br>";
             //$container->setParameter('wkhtmltopdfpath','"'.$wkhtmltopdfpath.'"');

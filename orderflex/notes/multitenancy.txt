@@ -612,3 +612,8 @@ sudo php bin/console doctrine:schema:update --complete --force<br>
 sudo php bin/console doctrine:migration:status<br>
 sudo php bin/console doctrine:migration:sync-metadata-storage <br>
 e) Run 'bash deploy_prod.sh -withdb'<br>
+
+
+php bin/console router:match /your/path/here
+http://view.online/c/wustl/psychiatry
+                  /c/wustl/psychiatry

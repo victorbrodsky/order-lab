@@ -349,7 +349,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             )
         );
 
-} //authenticate
+    } //authenticate
 
     /**
      * Called on every request. Return whatever credentials you want to
@@ -516,6 +516,13 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
             throw new AuthenticationException('Invalid username or password');
         }
 
+        if( $token->getUsername() ) {
+            //ok
+        } else {
+            $logger->error("authenticate Token: no username");
+            throw new AuthenticationException('Username is not provided');
+        }
+
         //$authUtil = new AuthUtil($this->container,$this->em);
         $authUtil = $this->container->get('authenticator_utility');
         $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
@@ -530,8 +537,9 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //Default user type is 'local-user'
         if( !$usernamePrefix ) {
             $usernamePrefix = 'local-user';
-            $logger->notice("authenticate Token: before setUser to [".$token->getUsername()."_@_".$usernamePrefix."]");
-            $token->setUser($token->getUsername()."_@_".$usernamePrefix);
+            $logger->notice("authenticate Token: before setUsername to [".$token->getUsername()."_@_".$usernamePrefix."]");
+            //$token->setUser($token->getUsername()."_@_".$usernamePrefix);
+            $token->setUsername($token->getUsername()."_@_".$usernamePrefix);
         }
 
         if( $token->getUsernametype() === 'saml-sso' ) {
