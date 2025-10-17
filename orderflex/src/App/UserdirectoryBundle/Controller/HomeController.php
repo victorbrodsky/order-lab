@@ -238,6 +238,7 @@ class HomeController extends OrderAbstractController {
                 $tenant->setEnabled($tenantArr['enabled']);
                 $tenant->setShowOnHomepage($tenantArr['showonhomepage']);
                 $tenant->setInstitutionTitle($tenantArr['institutiontitle']);
+                $tenant->setDepartmentTitle($tenantArr['departmenttitle']);
 
                 $showOnHomepage = $tenant->getShowOnHomepage();
                 if( $showOnHomepage !== true ) {
@@ -247,6 +248,10 @@ class HomeController extends OrderAbstractController {
                 $databasename = $tenant->getDatabaseName();
                 $url = $tenant->getUrlslug();
                 $instTitle = $tenant->getInstitutionTitle();
+                $depTitle = $tenant->getDepartmentTitle();
+                if( $instTitle && $depTitle ) {
+                    $instTitle = $instTitle . "-" . $depTitle;
+                }
                 //echo $databasename.": url=".$url."<br>";
                 //echo $databasename.": instTitle=".$instTitle."<br>";
 
