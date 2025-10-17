@@ -3337,7 +3337,9 @@ class FellAppController extends OrderAbstractController {
             $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
         } else {
             $args['applicationFormNote'] = '
-            Please gather all relevant information before filling out this form in order to submit it.
+            <br>
+            <br>
+            Please1 gather all relevant information before filling out this form in order to submit it.
             <h4>        
             Application Packet Checklist
             </h4>                 
@@ -3349,6 +3351,8 @@ class FellAppController extends OrderAbstractController {
                 <li>Include photo in JPEG format</li>
                 <li>Please leave field empty (blank) if a question does not apply to you</li>          
              </ul>
+             <br>
+             <br>
             ';
         }
         if( $googleFormConfig ) {
