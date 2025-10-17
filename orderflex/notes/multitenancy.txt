@@ -613,7 +613,45 @@ sudo php bin/console doctrine:migration:status<br>
 sudo php bin/console doctrine:migration:sync-metadata-storage <br>
 e) Run 'bash deploy_prod.sh -withdb'<br>
 
-
+////////// Change tenant URL /////////////
 php bin/console router:match /your/path/here
 http://view.online/c/wustl/psychiatry
                   /c/wustl/psychiatry
+
+HaProxy:
+acl tenantapp2_url path_beg -i /c/aaa/psychiatry
+    use_backend tenantapp2_backend if tenantapp2_url
+
+backend tenantapp2_backend
+    server tenantapp2_server *:8086 check
+
+httpd:
+IncludeOptional conf.d/*.conf
+Listen 8086
+PidFile /var/run/httpd8086.pid
+<VirtualHost *:8086>
+        ServerName localhost
+    DocumentRoot /srv/order-lab-tenantapp2/orderflex/public/
+    <Directory /srv/order-lab-tenantapp2/orderflex/public/>
+                Options +FollowSymLinks -Includes
+                AllowOverride All
+                Require all granted
+    </Directory>
+
+    Alias /c/aaa/psychiatry /srv/order-lab-tenantapp2/orderflex/public/
+    #Alias /ORDER /usr/local/bin/order-lab-tenantapp2/orderflex/public/
+        #RewriteRule ^/ORDER(.*)$ /order$1 [R=301]
+
+        SetEnv APP_ENV prod
+        SetEnv APP_DEBUG 0
+
+        #ErrorLog ${APACHE_LOG_DIR}/error.log
+        #CustomLog ${APACHE_LOG_DIR}/access.log combined
+        ErrorLog /var/log/error.log
+        CustomLog /var/log/access.log combined
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+ServerName 127.0.0.1
+
+

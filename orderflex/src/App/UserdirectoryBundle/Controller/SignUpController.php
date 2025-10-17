@@ -1047,7 +1047,7 @@ class SignUpController extends OrderAbstractController
             } else {
                 //If the entered email address ends in “@med.cornell.edu” or “@nyp.org”
                 if( strpos((string)$resetPassword->getEmail(), "@med.cornell.edu") !== false || strpos((string)$resetPassword->getEmail(), "@nyp.org") !== false ) {
-                    $cwid = "CWID";
+                    $cwid = "USERNAME";
                     $emailArr = explode("@",$resetPassword->getEmail());
                     if( count($emailArr)>0 ) {
                         $cwid = $emailArr[0];
@@ -1057,7 +1057,7 @@ class SignUpController extends OrderAbstractController
 //                        $enterpriseManagementUrl page or by calling the help desk at ‭1 (212) 746-4878‬.";
                     //SiteSettings: get from site settings "Notice for attempting to reset password for an LDAP-authenticated account."
                     $emailError = $userSecUtil->getSiteSettingParameter('noticeAttemptingPasswordResetLDAP');
-                    $emailError = str_replace("[[CWID]]",$cwid,$emailError);
+                    $emailError = str_replace("[[USERNAME]]",$cwid,$emailError);
                     $form->get('email')->addError(new FormError($emailError));
                 }
 

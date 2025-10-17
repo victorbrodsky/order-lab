@@ -243,7 +243,7 @@ class SystemTenancyController_TODEL extends OrderAbstractController
             "siteSettingsTitle" => "Site Settings",
 
             ////////////////////////// LDAP notice messages /////////////////////////
-            "noticeAttemptingPasswordResetLDAP" => "The password for your [[CWID]] can only be changed or reset by visiting the enterprise password management page or by calling the help desk at ‭1 (212) 746-4878‬.",
+            "noticeAttemptingPasswordResetLDAP" => "The password for your [[USERNAME]] can only be changed or reset by visiting the enterprise password management page or by calling the help desk at ‭1 (212) 746-4878‬.",
             //"noticeUseCwidLogin" => "Please use your CWID to log in",
             //"noticeSignUpNoCwid" => "Sign up for an account if you have no CWID",
             "noticeSignUpNoCwid" => "Sign Up",
