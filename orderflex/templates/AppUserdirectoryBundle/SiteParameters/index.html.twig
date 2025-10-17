@@ -419,7 +419,12 @@
             </tr>
             <tr>
                 <td>Mailer Password</td>
-                <td>{{ entity.mailerPassword }}</td>
+                <td>
+                    {#{{ entity.mailerPassword }}#}
+                    {% if entity.mailerPassword %}
+                        *******
+                    {% endif %}
+                </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerPassword'}) }}">Edit</a></td>
             </tr>
             {#<tr>#}
