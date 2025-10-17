@@ -39,7 +39,7 @@ class HomeController extends OrderAbstractController {
 
     //Defined in routes-default.yaml, route name 'main_common_home'
         public function mainCommonHomeAction(Request $request) {
-            exit("mainCommonHomeAction");
+            //exit("mainCommonHomeAction");
             $userTenantUtil = $this->container->get('user_tenant_utility');
             $userSecUtil = $this->container->get('user_security_utility');
             $userServiceUtil = $this->container->get('user_service_utility');
