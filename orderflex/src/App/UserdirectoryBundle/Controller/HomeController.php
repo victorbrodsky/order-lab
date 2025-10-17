@@ -250,7 +250,7 @@ class HomeController extends OrderAbstractController {
                 $instTitle = $tenant->getInstitutionTitle();
                 $depTitle = $tenant->getDepartmentTitle();
                 if( $instTitle && $depTitle ) {
-                    $instTitle = $instTitle . "-" . $depTitle;
+                    $instTitle = $instTitle . " - " . $depTitle;
                 }
                 //echo $databasename.": url=".$url."<br>";
                 //echo $databasename.": instTitle=".$instTitle."<br>";
