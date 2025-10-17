@@ -90,8 +90,8 @@
 {% block footer %}
     <div class="order-content text-center col-xs-12">
         <div class="footer">
-
-            {% if showcopyrightonfooter %}
+            institution_url={{ institution_url }}<br>
+            {% if 0 and showcopyrightonfooter %}
                 {#<a href="{{ path('main_common_home',{_locale: 'main'}) }}" target="_blank">O R D E R</a>#}
                 {#&copy; {{ "now"|date('Y') }}#}
                 <a href="" target="_blank">O R D E R</a>
@@ -105,7 +105,7 @@
                 <br><br>
             {% endif %}
 
-            {% if department_url and department_name and subinstitution_url and subinstitution_name %}
+            {% if 0 and department_url and department_name and subinstitution_url and subinstitution_name %}
                 <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
                 <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>.
             {% else %}

@@ -3337,9 +3337,8 @@ class FellAppController extends OrderAbstractController {
             $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
         } else {
             $args['applicationFormNote'] = '
+            Please gather all relevant information before filling out this form in order to submit it.
             <br>
-            <br>
-            Please1 gather all relevant information before filling out this form in order to submit it.
             <h4>        
             Application Packet Checklist
             </h4>                 
