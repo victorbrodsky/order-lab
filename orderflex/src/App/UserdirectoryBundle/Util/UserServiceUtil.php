@@ -3463,8 +3463,17 @@ tracepoint:sched:sched_process_exit
 
         // Execute and capture output
         $output = shell_exec($cmd);
-        echo "output=$output <br>";
+        echo "output=[$output] <br>";
         dump($output);
+
+        // Check for error message
+        if (strpos($output, 'Could not find certificate') !== false) {
+            echo "Certificate not found or invalid response.<br>";
+            //return NULL;
+        } else {
+            echo "Certificate info retrieved:<br><pre>$output</pre>";
+        }
+
         exit('111');
 
         // Parse the output
