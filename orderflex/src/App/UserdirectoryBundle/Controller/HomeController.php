@@ -97,7 +97,7 @@ class HomeController extends OrderAbstractController {
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
         } else {
             $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
-            if (count($platformLogos) > 0) {
+            if ($platformLogos && count($platformLogos) > 0) {
                 $platformLogo = $platformLogos->first();
                 $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
             }
