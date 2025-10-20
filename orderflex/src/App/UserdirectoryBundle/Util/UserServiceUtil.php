@@ -3487,7 +3487,7 @@ tracepoint:sched:sched_process_exit
             //$testing = true;
             $testing = false;
             if( !$testing ) {
-                echo "Send warning email: $msg<br>";
+                //echo "Send warning email: $msg<br>";
                 $emailUtil->sendEmail($emails, $subject, $msg);
 
                 //Event Log
