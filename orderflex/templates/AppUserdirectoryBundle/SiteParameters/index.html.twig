@@ -1269,6 +1269,17 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'highResPlatformLogos'}) }}">Edit</a></td>
             </tr>
 
+            <tr>
+                <td>Logo Width:</td>
+                <td>{{ entity.logoWidth }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'logoWidth'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Logo Height:</td>
+                <td>{{ entity.logoHeight }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'logoHeight'}) }}">Edit</a></td>
+            </tr>
+
         </tbody>
     </table>
 

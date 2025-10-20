@@ -334,6 +334,22 @@ class SiteParametersController extends OrderAbstractController
                 }
                 //exit("originalParam=$originalParam; updatedParam=$updatedParam");
             }
+            if( $param == 'highResPlatformLogos' ) {
+                $em->getRepository(Document::class)->processDocuments($entity,"highResPlatformLogo");
+                if( $originalParam && count($originalParam)>0 ) {
+                    $highResPlatformLogo = $originalParam->first();
+                    $originalParam = $userServiceUtil->getDocumentAbsoluteUrl($highResPlatformLogo);
+                } else {
+                    $originalParam = null;
+                }
+                if( $updatedParam && count($updatedParam)>0 ) {
+                    $highResPlatformLogo = $updatedParam->first();
+                    $updatedParam = $userServiceUtil->getDocumentAbsoluteUrl($highResPlatformLogo);
+                } else {
+                    $updatedParam = null;
+                }
+                //exit("originalParam=$originalParam; updatedParam=$updatedParam");
+            }
 
             $em->flush();
 
