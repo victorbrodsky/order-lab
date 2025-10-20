@@ -54,7 +54,8 @@ class CertificateCronCommand extends Command {
             //->setCommand('cron:certificate')
             ->setDescription('Cron job to check SSL certificate expiration date')
             ->addArgument('domains', InputArgument::OPTIONAL,
-                'Single or comma separated server domains, for example, view.online or view.online,view-test.med.cornell.edu,view.med.cornell.edu'
+                'Single or comma separated server domains, for example, 
+                view.online or view.online,view-test.med.cornell.edu,view.med.cornell.edu'
             );
     }
 

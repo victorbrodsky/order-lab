@@ -3463,7 +3463,7 @@ tracepoint:sched:sched_process_exit
             $emailUtil = $this->container->get('user_mailer_utility');
             //$environment = $userSecUtil->getSiteSettingParameter('environment');
             $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
-            $emails = array("oli2002@med.cornell.edu"); //testing
+            //$emails = array("oli2002@med.cornell.edu"); //testing
 
             //siteEmail
             $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com

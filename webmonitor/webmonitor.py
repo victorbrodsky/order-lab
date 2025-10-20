@@ -135,7 +135,7 @@ def get_site_status(url, sendSuccEmail=False):
     if response != None:
         print("response is not NULL")
         try:
-            print("before if")
+            #print("before if")
             if getattr(response, 'status_code') == 200:
                 print("response status_code = 220")
                 #print("response.text=",response.text)
