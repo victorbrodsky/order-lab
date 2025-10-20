@@ -136,14 +136,14 @@ f_sync() {
             bash "$homedir"/order-lab-"$1"/packer/additional.sh "$homedir"/order-lab-"$1"
     fi
 
-    if [ -n "$type" ] && [ "$type" == "dbconfig" ]
-        then
-            echo -e ${COLOR} Install db.config for python postgres-manage-python for order-lab-"$1" ${NC}
-            cp "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/sample.config "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-            sed -i -e "s/dbname/$1/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-            sed -i -e "s/dbusername/symfony/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-            sed -i -e "s/dbuserpassword/symfony/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
-    fi
+#    if [ -n "$type" ] && [ "$type" == "dbconfig" ]
+#        then
+#            echo -e ${COLOR} Install db.config for python postgres-manage-python for order-lab-"$1" ${NC}
+#            cp "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/sample.config "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+#            sed -i -e "s/dbname/$1/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+#            sed -i -e "s/dbusername/symfony/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+#            sed -i -e "s/dbuserpassword/symfony/g" "$homedir"/order-lab-"$1"/utils/db-manage/postgres-manage-python/db.config
+#    fi
 
     if [ -n "$type" ] && [ "$type" == "secret" ]
         then
@@ -154,23 +154,23 @@ f_sync() {
             bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
     fi
 
-    if [ -n "$type" ] && [ "$type" == "createdb" ]
-        then
-            echo -e ${COLOR} Create db for "$1" ${NC}
-            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:database:create
-
-            echo -e ${COLOR} php bin/console doctrine:migration:sync-metadata-storage for "$1" ${NC}
-            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
-
-            echo -e ${COLOR} php bin/console doctrine:schema:update --force for "$1" ${NC}
-            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --force
-
-            echo -e ${COLOR} php bin/console doctrine:migrations:version --add --all for "$1" ${NC}
-            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
-
-            echo -e ${COLOR} doctrine:schema:validate for "$1" ${NC}
-            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:schema:validate
-    fi
+#    if [ -n "$type" ] && [ "$type" == "createdb" ]
+#        then
+#            echo -e ${COLOR} Create db for "$1" ${NC}
+#            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:database:create
+#
+#            echo -e ${COLOR} php bin/console doctrine:migration:sync-metadata-storage for "$1" ${NC}
+#            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migration:sync-metadata-storage
+#
+#            echo -e ${COLOR} php bin/console doctrine:schema:update --force for "$1" ${NC}
+#            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:schema:update --force
+#
+#            echo -e ${COLOR} php bin/console doctrine:migrations:version --add --all for "$1" ${NC}
+#            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
+#
+#            echo -e ${COLOR} doctrine:schema:validate for "$1" ${NC}
+#            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:schema:validate
+#    fi
 
     #echo -e ${COLOR} cd to "$1"${NC}
     #cd "$homedir"/order-lab-$1/orderflex
