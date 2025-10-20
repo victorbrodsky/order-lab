@@ -53,7 +53,9 @@ class CertificateCronCommand extends Command {
             //->setName('console.command')
             //->setCommand('cron:certificate')
             ->setDescription('Cron job to check SSL certificate expiration date')
-            ->addArgument('domain', InputArgument::OPTIONAL, 'Server domain, for example, view.online');
+            ->addArgument('domains', InputArgument::OPTIONAL,
+                'Single or comma separated server domains, for example, view.online or view.online,view-test.med.cornell.edu,view.med.cornell.edu'
+            );
     }
 
     //Can be executed as apache
@@ -62,17 +64,35 @@ class CertificateCronCommand extends Command {
     {
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $domain = $input->getArgument('domain');
+        $domains = $input->getArgument('domains');
 
-        $daysRemaining = 'N/A';
-        $organization = 'N/A';
-        $resArr = $userServiceUtil->checkSslCertificate($domain,$sendEmail=true);
-        if( $resArr ) {
-            $daysRemaining = $resArr['DaysRemaining'];
-            $organization = $resArr['Organization'];
+        if( $domains ) {
+            $domainArr = explode(",", $domains);
+        } else {
+            $domainArr = array(NULL);
         }
 
-        $output->writeln("Certificate issued by" . $organization . " is expiring in " . $daysRemaining . " days");
+        foreach($domainArr as $domain) {
+            $daysRemaining = 'N/A';
+            $organization = 'N/A';
+            $resArr = $userServiceUtil->checkSslCertificate($domain,$sendEmail=true);
+            if( $resArr ) {
+                $daysRemaining = $resArr['DaysRemaining'];
+                $organization = $resArr['Organization'];
+            }
+
+            $output->writeln("$domain certificate issued by" . $organization . " is expiring in " . $daysRemaining . " days");
+        }
+
+//        $daysRemaining = 'N/A';
+//        $organization = 'N/A';
+//        $resArr = $userServiceUtil->checkSslCertificate($domains,$sendEmail=true);
+//        if( $resArr ) {
+//            $daysRemaining = $resArr['DaysRemaining'];
+//            $organization = $resArr['Organization'];
+//        }
+//
+//        $output->writeln("Certificate issued by" . $organization . " is expiring in " . $daysRemaining . " days");
 
 //        $minDaysRemaining = 14;
 //        $minDaysRemaining = 160;

@@ -3445,6 +3445,59 @@ tracepoint:sched:sched_process_exit
         return $res;
     }
 
+    public function checkSslCertificate( $domain=NULL, $sendEmail=true ) {
+        //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
+
+        $resArr = $this->getSslCertificateRemainingDays($domain);
+        $daysRemaining = 'N/A';
+        $organization = 'N/A';
+        if( $resArr ) {
+            $daysRemaining = $resArr['DaysRemaining'];
+            $organization = $resArr['Organization'];
+        }
+
+        //Use two weeks (14 days) in advance notification
+        if( $sendEmail && ($daysRemaining === 'N/A' || $daysRemaining < 14) ) {
+            //send email
+            $userSecUtil = $this->container->get('user_security_utility');
+            $emailUtil = $this->container->get('user_mailer_utility');
+            //$environment = $userSecUtil->getSiteSettingParameter('environment');
+            $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
+            $emails = array("oli2002@med.cornell.edu"); //testing
+
+            //siteEmail
+            $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
+            if( $sender ) {
+                if( $emails ) {
+                    $emails[] = $sender;
+                } else {
+                    $emails = array($sender);
+                }
+            }
+            $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
+            //echo "emails: <br>";
+            //dump($emails);
+            //exit('111');
+
+            $subject = "Warning: SSL certificate expiration for $domain issued by $organization";
+            $msg = "The SSL certificate for server $domain issued by $organization will expire in $daysRemaining days.";
+            //insert steps
+
+            //echo "Send warning email: $msg<br>";
+            //$testing = true;
+            $testing = false;
+            if( !$testing ) {
+                echo "Send warning email: $msg<br>";
+                $emailUtil->sendEmail($emails, $subject, $msg);
+
+                //Event Log
+                $eventType = "SSL Certificate Warning";
+                $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
+            }
+        }
+
+        return $resArr;
+    }
     //Since HAProxy serves the cert directly, you can use openssl from the command line
     public function getSslCertificateRemainingDays( $domain=NULL ) {
         //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
@@ -3520,59 +3573,6 @@ tracepoint:sched:sched_process_exit
         }
 
         return NULL;
-    }
-    public function checkSslCertificate( $domain=NULL, $sendEmail=true ) {
-        //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
-
-        $resArr = $this->getSslCertificateRemainingDays($domain);
-        $daysRemaining = 'N/A';
-        $organization = 'N/A';
-        if( $resArr ) {
-            $daysRemaining = $resArr['DaysRemaining'];
-            $organization = $resArr['Organization'];
-        }
-
-        //Use two weeks (14 days) in advance notification
-        if( $sendEmail && ($daysRemaining === 'N/A' || $daysRemaining < 14) ) {
-            //send email
-            $userSecUtil = $this->container->get('user_security_utility');
-            $emailUtil = $this->container->get('user_mailer_utility');
-            //$environment = $userSecUtil->getSiteSettingParameter('environment');
-            $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
-            $emails = array("oli2002@med.cornell.edu"); //testing
-
-            //siteEmail
-            $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
-            if( $sender ) {
-                if( $emails ) {
-                    $emails[] = $sender;
-                } else {
-                    $emails = array($sender);
-                }
-            }
-            $emails = array_values(array_diff($emails, ["adminemail@example.com"]));
-            //echo "emails: <br>";
-            //dump($emails);
-            //exit('111');
-
-            $subject = "Warning: SSL certificate expiration for $domain issued by $organization";
-            $msg = "The SSL certificate for server $domain issued by $organization will expire in $daysRemaining days.";
-            //insert steps
-
-            //echo "Send warning email: $msg<br>";
-            //$testing = true;
-            $testing = false;
-            if( !$testing ) {
-                echo "Send warning email: $msg<br>";
-                $emailUtil->sendEmail($emails, $subject, $msg);
-
-                //Event Log
-                $eventType = "SSL Certificate Warning";
-                $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
-            }
-        }
-
-        return $resArr;
     }
 
     //Run as root
