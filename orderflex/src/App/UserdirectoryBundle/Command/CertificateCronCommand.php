@@ -53,7 +53,7 @@ class CertificateCronCommand extends Command {
             //->setName('console.command')
             //->setCommand('cron:certificate')
             ->setDescription('Cron job to check SSL certificate expiration date')
-            ->addArgument('domain', InputArgument::REQUIRED, 'Server domain, for example, view.online');
+            ->addArgument('domain', InputArgument::OPTIONAL, 'Server domain, for example, view.online');
     }
 
     //Can be executed as apache

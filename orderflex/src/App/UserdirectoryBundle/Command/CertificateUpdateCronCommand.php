@@ -53,7 +53,7 @@ class CertificateUpdateCronCommand extends Command {
             //->setName('console.command')
             //->setCommand('cron:certificate-update')
             ->setDescription('Cron job to update SSL certificate if expiration date is close')
-            ->addArgument('domain', InputArgument::REQUIRED, 'Server domain, for example, view.online');
+            ->addArgument('domain', InputArgument::OPTIONAL, 'Server domain, for example, view.online');
     }
 
     //Can be executed only as root
