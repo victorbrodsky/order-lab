@@ -3467,7 +3467,7 @@ tracepoint:sched:sched_process_exit
         dump($output);
 
         // Check for error message
-        if (strpos($output, 'Could not find certificate') !== false) {
+        if ($output === null || strpos($output, 'Could not find certificate') !== false) {
             echo "Certificate not found or invalid response.<br>";
             //return NULL;
         } else {
