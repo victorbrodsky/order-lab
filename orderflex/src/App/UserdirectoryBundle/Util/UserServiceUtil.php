@@ -3525,15 +3525,15 @@ tracepoint:sched:sched_process_exit
         //echo | openssl s_client -connect view.online:443 2>/dev/null | openssl x509 -noout -dates
 
         $resArr = $this->getSslCertificateRemainingDays($domain);
-        $daysRemaining = NULL;
-        $organization = NULL;
+        $daysRemaining = 'N/A';
+        $organization = 'N/A';
         if( $resArr ) {
             $daysRemaining = $resArr['DaysRemaining'];
             $organization = $resArr['Organization'];
         }
 
         //Use two weeks (14 days) in advance notification
-        if( $sendEmail && ($daysRemaining === NULL || $daysRemaining < 14) ) {
+        if( $sendEmail && ($daysRemaining === 'N/A' || $daysRemaining < 14) ) {
             //send email
             $userSecUtil = $this->container->get('user_security_utility');
             $emailUtil = $this->container->get('user_mailer_utility');
@@ -3559,7 +3559,7 @@ tracepoint:sched:sched_process_exit
             $msg = "The SSL certificate for server $domain issued by $organization will expire in $daysRemaining days.";
             //insert steps
 
-            echo "Send warning email<br>";
+            echo "Send warning email: $subject<br>";
             $testing = true;
             //$testing = false;
             if( !$testing ) {
