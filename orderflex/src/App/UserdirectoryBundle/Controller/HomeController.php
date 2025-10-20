@@ -85,7 +85,10 @@ class HomeController extends OrderAbstractController {
             $width = "300";
         }
 
-        $height = "80";
+        $height = $userSecUtil->getSiteSettingParameter('logoHeight');
+        if( !$height ) {
+            $height = "80";
+        }
 
         $platformLogoPath = null;
         $platformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
