@@ -3463,6 +3463,7 @@ tracepoint:sched:sched_process_exit
 
         // Execute and capture output
         $output = shell_exec($cmd);
+        echo "output=$output <br>";
         dump($output);
         exit('111');
 
