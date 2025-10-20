@@ -1128,14 +1128,14 @@ class SiteParametersType extends AbstractType
         }
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'logoWidth' ) {
-            $builder->add('transresProjectSelectionNote', null, array(
-                'label' => 'Platform Logo Width:',
+            $builder->add('logoWidth', null, array(
+                'label' => 'Platform Logo Width (default 300):',
                 'attr' => array('class' => 'form-control')
             ));
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'logoHeight' ) {
             $builder->add('logoHeight', null, array(
-                'label' => 'Platform Logo Height:',
+                'label' => 'Platform Logo Height (default 80):',
                 'attr' => array('class' => 'form-control')
             ));
         }
