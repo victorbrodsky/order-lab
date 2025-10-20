@@ -64,8 +64,8 @@ class CertificateCronCommand extends Command {
 
         $domain = $input->getArgument('domain');
 
-        $daysRemaining = NULL;
-        $organization = NULL;
+        $daysRemaining = 'N/A';
+        $organization = 'N/A';
         $resArr = $userServiceUtil->checkSslCertificate($domain,$sendEmail=true);
         if( $resArr ) {
             $daysRemaining = $resArr['DaysRemaining'];
