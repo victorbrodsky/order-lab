@@ -133,11 +133,11 @@ def get_site_status(url, sendSuccEmail=False):
     #print(response.content)
 
     if response != None:
-        #print("response is not NULL")
+        print("response is not NULL")
         try:
-            #print("before if")
+            print("before if")
             if getattr(response, 'status_code') == 200:
-                #print("response status_code = 220")
+                print("response status_code = 220")
                 #print("response.text=",response.text)
                 # additional check if the web page is shown as expected (in case SSL certificate is invalid)
                 # cehck fo 'Welcome to' or 'id="display-username"'
