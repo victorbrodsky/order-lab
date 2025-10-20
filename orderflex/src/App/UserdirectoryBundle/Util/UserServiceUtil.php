@@ -3459,7 +3459,7 @@ tracepoint:sched:sched_process_exit
 
         // Build the shell command
         $cmd = "echo | openssl s_client -connect {$domain}:{$port} 2>/dev/null | openssl x509 -noout -dates -issuer -subject";
-        //echo "cmd=$cmd <br>";
+        echo "cmd=$cmd <br>";
 
         // Execute and capture output
         $output = shell_exec($cmd);
