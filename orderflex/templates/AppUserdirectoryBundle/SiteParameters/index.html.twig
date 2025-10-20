@@ -1242,6 +1242,32 @@
                 </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'platformLogos'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>High Resolution Platform Logo Image</td>
+                <td>
+                    {% if entity.highResPlatformLogos %}
+                        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+                        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+                        <div id="form-prototype-data"
+                             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                             data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+                             data-userid = "{{ app.user.id }}"
+                        ></div>
+
+                        <p>
+                        <div class="well form-element-holder user-highResPlatformLogos">
+                            <label class="col-xs-12 control-label">High Resolution Platform Logo Image(s) - the most recent will be used</label>
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {{ usermacros.documentsContainer(null,entity.highResPlatformLogos,cycle,'noprototype',8,'default','High Resolution Platform Logo',"asEntity") }}
+                                </div>
+                            </div>
+                        </div>
+                        </p>
+                    {% endif %}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'highResPlatformLogos'}) }}">Edit</a></td>
+            </tr>
 
         </tbody>
     </table>

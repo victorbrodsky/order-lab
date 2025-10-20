@@ -1114,6 +1114,32 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'highResPlatformLogos' ) {
+            $builder->add('highResPlatformLogos', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'High Resolution Platform Logo Image:',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'logoWidth' ) {
+            $builder->add('transresProjectSelectionNote', null, array(
+                'label' => 'Platform Logo Width:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'logoHeight' ) {
+            $builder->add('logoHeight', null, array(
+                'label' => 'Platform Logo Height:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresProjectSelectionNote' ) {
             $builder->add('transresProjectSelectionNote', null, array(
                 'label' => 'Translational Research Project Request Specialty Selection Note:',

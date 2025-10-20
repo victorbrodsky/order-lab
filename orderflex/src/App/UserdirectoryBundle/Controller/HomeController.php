@@ -38,29 +38,29 @@ use Symfony\Bridge\Twig\Attribute\Template;
 class HomeController extends OrderAbstractController {
 
     //Defined in routes-default.yaml, route name 'main_common_home'
-        public function mainCommonHomeAction(Request $request) {
-            //exit("mainCommonHomeAction");
-            $userTenantUtil = $this->container->get('user_tenant_utility');
-            $userSecUtil = $this->container->get('user_security_utility');
-            $userServiceUtil = $this->container->get('user_service_utility');
+    public function mainCommonHomeAction(Request $request) {
+        //exit("mainCommonHomeAction");
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
-            //homepagemanager show a different multi-tenant home page
-            //TODO: define and get $tenantManagerName from the tenants list tenant-manager/tenant-manager/configure/
-            $tenantBaseUrlArr = array();
-            $greetingText = '';
-            $tenantManagerName = 'homepagemanager';
-            $primaryTenant = $userTenantUtil->isPrimaryTenant($request);
+        //homepagemanager show a different multi-tenant home page
+        //TODO: define and get $tenantManagerName from the tenants list tenant-manager/tenant-manager/configure/
+        $tenantBaseUrlArr = array();
+        $greetingText = '';
+        $tenantManagerName = 'homepagemanager';
+        $primaryTenant = $userTenantUtil->isPrimaryTenant($request);
 
-            //get primaryTenant from tenantmanager's DB
-            //$primaryTenant = true;
-            $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
-            //exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName); //testing
+        //get primaryTenant from tenantmanager's DB
+        //$primaryTenant = true;
+        $tenantRole = $userTenantUtil->getTenantRole(); //defined in parameters.yaml
+        //exit('$tenantRole='.$tenantRole.'; $tenantManagerName='.$tenantManagerName); //testing
 
-            if( $tenantRole == $tenantManagerName ) {
-                if( !$primaryTenant ) {
-                    return $this->multiTenancyHomePage($request);
-                }
+        if( $tenantRole == $tenantManagerName ) {
+            if( !$primaryTenant ) {
+                return $this->multiTenancyHomePage($request);
             }
+        }
 
 //        if( $primaryTenant ) {
 //            echo "primaryTenant! <br>";
@@ -80,17 +80,24 @@ class HomeController extends OrderAbstractController {
             }
         }
 
-        $width = "300";
+        $width = $userSecUtil->getSiteSettingParameter('logoWidth');
+        if( !$width ) {
+            $width = "300";
+        }
+
         $height = "80";
 
         $platformLogoPath = null;
-        $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
-        //echo "mainCommonHomeAction: platformLogos=".count($platformLogos)."<br>";
-        //($platformLogos instanceof ArrayCollection || is_array($platformLogos)) &&
+        $platformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
         if( $platformLogos && count($platformLogos) > 0 ) {
             $platformLogo = $platformLogos->first();
-            //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+        } else {
+            $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
+            if (count($platformLogos) > 0) {
+                $platformLogo = $platformLogos->first();
+                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+            }
         }
         //echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";
 

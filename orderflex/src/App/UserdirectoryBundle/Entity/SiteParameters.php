@@ -905,6 +905,22 @@ class SiteParameters {
     #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $platformLogos;
 
+    //High Resolution Platform Logo (2x)
+    #[ORM\JoinTable(name: 'user_siteparameter_highresplatformlogo')]
+    #[ORM\JoinColumn(name: 'siteparameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'logo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
+    private $highResPlatformLogos;
+
+    //Logo width (300 or 320)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $logoWidth;
+
+    //Logo height (80 or 180)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $logoHeight;
+
     /**
      * connection channel used in symfony's routing: http or https or null
      */
@@ -1077,6 +1093,7 @@ class SiteParameters {
     {
         $this->organizationalGroupDefaults = new ArrayCollection();
         $this->platformLogos = new ArrayCollection();
+        $this->highResPlatformLogos = new ArrayCollection();
         //$this->hostedUserGroups = new ArrayCollection();
         $this->setMaintenance(false);
         $this->setShowCopyrightOnFooter(true);
@@ -1125,6 +1142,73 @@ class SiteParameters {
     public function getPlatformLogos()
     {
         return $this->platformLogos;
+    }
+
+    public function addHighResPlatformLogo($item)
+    {
+        if( $item && !$this->highResPlatformLogos->contains($item) ) {
+            $this->highResPlatformLogos->add($item);
+            $item->createUseObject($this);
+        }
+
+        return $this;
+    }
+    public function removeHighResPlatformLogo($item)
+    {
+        $this->highResPlatformLogos->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getHighResPlatformLogos()
+    {
+        return $this->highResPlatformLogos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogoWidth()
+    {
+        return $this->logoWidth;
+    }
+
+    /**
+     * @param mixed $logoWidth
+     */
+    public function setLogoWidth($logoWidth)
+    {
+        $this->logoWidth = $logoWidth;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogoHeight()
+    {
+        return $this->logoHeight;
+    }
+
+    /**
+     * @param mixed $logoHeight
+     */
+    public function setLogoHeight($logoHeight)
+    {
+        $this->logoHeight = $logoHeight;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param mixed $height
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
     }
 
     /**
