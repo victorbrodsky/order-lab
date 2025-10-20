@@ -3463,8 +3463,8 @@ tracepoint:sched:sched_process_exit
 
         // Execute and capture output
         $output = shell_exec($cmd);
-        //dump($output);
-        //exit('111');
+        dump($output);
+        exit('111');
 
         // Parse the output
         $validFrom = $validTo = $organization = null;
