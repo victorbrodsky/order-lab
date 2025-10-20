@@ -270,24 +270,27 @@ def sendEmail(url, status):
     url = url.split("://")[1]
     #print(f"url={url}")
 
+    timestamp = datetime.now().strftime("%H:%M:%S %d-%m-%Y")
+
     if status == "up":
         # site is up
-        emailSubject = f"Site {url} is accessible! (sent by webmonitor.py from {ENV_NAME})"
-        emailBody = "Site '" + url + "' is UP!"
+        emailSubject = f"[{timestamp}] Site {url} is accessible! (sent by webmonitor.py from {ENV_NAME})"
+        emailBody = f"[{timestamp}] Site '{url}' is UP!"
         send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
         return True
 
     # site is down
-    emailSubject = f"Site {url} appears inaccessible!"
+    emailSubject = f"[{timestamp}] Site {url} appears inaccessible!"
 
     #url = urlsplit(url).path
-    emailBody = f"Site {url} does not appear to be accessible. Please verify the site is operational! \n\n Sent by the independent script webmonitor.py from {ENV_NAME}"
+    emailBody = f"[{timestamp}] Site {url} does not appear to be accessible. Please verify the site is operational! \n\n Sent by the independent script webmonitor.py from {ENV_NAME}"
     send_email_alert(SENDER, RECEIVERS, emailSubject, emailBody)
     return False
 
 def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     if MAILER_HOST == "":
-        print("Error: unable to send email: MAILER_HOST is not provided")
+        timestamp = datetime.now().strftime("%H:%M:%S %d-%m-%Y")
+        print(f"[{timestamp}] Error: unable to send email: MAILER_HOST is not provided")
         return False
         
     if MAILER_HOST == "smtp.gmail.com":
@@ -297,8 +300,9 @@ def send_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
 
 def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     #print("send_local_email_alert:",fromEmail,toEmailList,emailSubject)
+    timestamp = datetime.now().strftime("%H:%M:%S %d-%m-%Y")
     if MAILER_HOST == "":
-        print("Error: unable to send local email: MAILER_HOST is not provided")
+        print(f"[{timestamp}] Error: unable to send local email: MAILER_HOST is not provided")
         return False
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
     msg = MIMEText(emailBody)
@@ -315,25 +319,26 @@ def send_local_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
             #urllib.request.pathname2url(stringToURLEncode)
             smtpObj.login(MAILER_USERNAME, urllib.request.pathname2url(MAILER_PASSWORD))
         smtpObj.sendmail(fromEmail, toEmailList, msg.as_string())
-        print("Successfully sent local email: ",emailSubject)
+        print(f"[{timestamp}] Successfully sent local email: ",emailSubject)
     except SMTPException:
-        print("Error: unable to send email: ",emailSubject)
+        print(f"[{timestamp}] Error: unable to send email: ",emailSubject)
         #pass
 
 #https://mailtrap.io/blog/python-send-email-gmail/
 def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     #print("send_gmail_email_alert:",fromEmail,toEmailList,emailSubject)
-    print(f"MAILER_HOST={MAILER_HOST}, MAILER_USERNAME={MAILER_USERNAME}, MAILER_PASSWORD={MAILER_PASSWORD}")
+    timestamp = datetime.now().strftime("%H:%M:%S %d-%m-%Y")
+    print(f"[{timestamp}] MAILER_HOST={MAILER_HOST}, MAILER_USERNAME={MAILER_USERNAME}, MAILER_PASSWORD={MAILER_PASSWORD}")
     if MAILER_HOST == "":
-        print("Error: unable to send gmail email: MAILER_HOST is not provided")
+        print(f"[{timestamp}] Error: unable to send gmail email: MAILER_HOST is not provided")
         return False
 
     if MAILER_USERNAME == "":
-        print("Error: unable to send gmail email: MAILER_USERNAME is not provided")
+        print(f"[{timestamp}] Error: unable to send gmail email: MAILER_USERNAME is not provided")
         return False
 
     if MAILER_PASSWORD == "":
-        print("Error: unable to send gmail email: MAILER_PASSWORD is not provided")
+        print(f"[{timestamp}] Error: unable to send gmail email: MAILER_PASSWORD is not provided")
         return False
     
     emailBody = emailBody + "\n\n" + datetime.now().strftime('%Y-%B-%d %H:%M:%S')
@@ -345,12 +350,12 @@ def send_gmail_email_alert(fromEmail, toEmailList, emailSubject, emailBody):
     try:
         smtpObj = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     except SMTPException:
-        print("Error: unable to send gmail email: ",emailSubject) 
+        print(f"[{timestamp}] Error: unable to send gmail email: ",emailSubject)
     else:
         with smtpObj:
             smtpObj.login(MAILER_USERNAME, MAILER_PASSWORD)
             smtpObj.sendmail(fromEmail, toEmailList, msg.as_string())
-            print("Successfully sent gmail email: ",emailSubject)
+            print(f"[{timestamp}] Successfully sent gmail email: ",emailSubject)
 
 def restartServer(url):
     if ON_DOWN_COMMANDS != "":
@@ -525,7 +530,7 @@ def main(argv):
         global ENV_NAME
         ENV_NAME = env
 
-    #print('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
+    print('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
     #logging.info('urls=' + urls + ', mailerhost=' + mailerhost + ', maileruser=' + maileruser + ', mailerpassword=' + mailerpassword)
 
     if urls == '':
