@@ -617,6 +617,7 @@ e) Run 'bash deploy_prod.sh -withdb'<br>
 php bin/console router:match /your/path/here
 http://view.online/c/wustl/psychiatry
                   /c/wustl/psychiatry
+                  /c/aaa/psychiatry
 
 HaProxy:
 acl tenantapp2_url path_beg -i /c/aaa/psychiatry
@@ -654,4 +655,21 @@ PidFile /var/run/httpd8086.pid
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 ServerName 127.0.0.1
 
+//Add http-request set-path %[path,regsub(^/c/aaa/psychiatry,)] if tenantapp2_url:
+frontend http-in
+    bind *:80
+    acl tenantapp2_url path_beg -i /c/aaa/psychiatry
+    http-request set-path %[path,regsub(^/c/aaa/psychiatry,)] if tenantapp2_url
+    use_backend tenantapp2_backend if tenantapp2_url
+
+backend tenantapp2_backend
+    server tenantapp2_server 127.0.0.1:8086 check
+
+=> 503 Service Unavailable
+
+sudo tail -f /var/log/haproxy.log
+
+=> [root@packer-1745532836 orderflex]# sudo tail -f /var/log/haproxy.log
+   tail: cannot open '/var/log/haproxy.log' for reading: No such file or directory
+   tail: no files remaining
 

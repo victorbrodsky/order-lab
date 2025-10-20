@@ -1,67 +1,40 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright (c) 2017 Cornell University
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-
-/**
- * Created by PhpStorm.
- * User: DevServer
- * Date: 3/4/15
- * Time: 1:37 PM
+ * Licensed under the Apache License, Version 2.0 (the "License");
  */
 
 namespace App\UserdirectoryBundle\Security\Authentication;
 
-
-
-use App\OrderformBundle\Security\Util\PacsvendorUtil;
-//use App\Saml\Util\SamlConfigProvider;
-use App\UserdirectoryBundle\Entity\IdentifierTypeList; //process.py script: replaced namespace by ::class: added use line for classname=IdentifierTypeList
-
-
-use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
-
+use App\UserdirectoryBundle\Entity\IdentifierTypeList;
+use App\UserdirectoryBundle\Entity\UsernameType;
 use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use OneLogin\Saml2\Auth;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-//use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Validator\Constraints\DateTime;
-
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-//use Symfony\Component\Security\Core\Util\StringUtils;
-
-class LdapAuthUtil {
-
-    private $container;        //container
-    private $em;        //entity manager
+class LdapAuthUtil
+{
+    private ContainerInterface $container;
+    private EntityManagerInterface $em;
     private $logger;
-    private $requestStack;
-    private $passwordHasher;
+    private RequestStack $requestStack;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $em,
         RequestStack $requestStack,
         UserPasswordHasherInterface $passwordHasher
-    )
-    {
+    ) {
         $this->container = $container;
         $this->em = $em;
         $this->requestStack = $requestStack;
@@ -88,8 +61,7 @@ class LdapAuthUtil {
     public function LdapAuthentication($token, $ldapType=1) {
 
         $authUtil = $this->container->get('authenticator_utility');
-        $this->logger->notice("Start Ldap Authentication: ldapType=[$ldapType]");
-        //exit("Ldap Authentication: ldapType=[$ldapType]");
+        $this->logger->notice("Start Ldap Authentication: ldapType={$ldapType}");
 
         $username = $token->getUsername();
         $password = $token->getCredentials();
@@ -101,122 +73,76 @@ class LdapAuthUtil {
         $this->logger->notice("Start Ldap Authentication: username=[$username],usernameClean=[$usernameClean]");
         //username=[brodsky_@_ldap-user],usernameClean=[brodsky]
 
-        $ldapUserData = null;
-
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
 
-//        if( 1 ) {
-//            //string $username, string $password, string $servicePass
-//            $res = $this->auth_bjc_nt($usernameClean,$password);
-//            dump($res);
-//        }
-//        exit('after auth_bjc_nt');
+        $ldapUserData = null;
+        $ldapRes = null;
 
-        //fork wcm and others
-        if(  str_contains($ldapBindDN, 'dc=wcmc-ad') ) {
-            //WCM Ldap
-            $this->logger->notice("before ldapBindV1, username=username");
-            $ldapRes = $this->ldapBindV1($usernameClean,$password,$ldapType);
-        } else {
-            //Others Ldap
-            // $ldapBindDN = 'oli2002'
-            // @ldap_bind($ldapConn,$ldapBindDN,$password);
-            $this->logger->notice("before searchLdapV2, usernameClean=$usernameClean");
-
-            //first retrieves the user's userPrincipalName value
-            $ldapUserData = $this->searchLdapV2($usernameClean,$ldapType);
-            if (isset($ldapUserData['userprincipalname'])) {
-                $upn = $ldapUserData['userprincipalname'];
-                //echo "userPrincipalName=[$upn] <br>";
+        try {
+            if (str_contains((string)$ldapBindDN, 'dc=wcmc-ad')) {
+                // WCMC-specific flow
+                $this->logger->notice("Using ldapBindV1 for host with wcmc-ad in OU");
+                $ldapRes = $this->ldapBindV1($usernameClean, $password, $ldapType);
             } else {
-                $upn = $usernameClean;
-                //echo "userPrincipalName not found in LDAP entry.<br>";
+                // Generic flow: first search, then bind by userPrincipalName if available
+                $this->logger->notice("Searching LDAP for usernameClean={$usernameClean}");
+                $ldapUserData = $this->searchLdapV2($usernameClean, $ldapType);
+                $upn = $this->extractAttributeValue($ldapUserData, 'userPrincipalName') ?? $usernameClean;
+                $this->logger->notice("Binding with UPN/username={$upn}");
+                $ldapRes = $this->ldapBindV2($upn, $password, $ldapType);
             }
-
-            $this->logger->notice("before ldapBindV2, upn=$upn");
-            $ldapRes = $this->ldapBindV2($upn,$password,$ldapType);
+        } catch (\Throwable $e) {
+            $this->logger->error('LDAP auth flow exception: ' . $e->getMessage());
+            $ldapRes = null;
         }
 
-        //if user exists in ldap, try bind this user and password
-        //$ldapRes = $this->ldapBind($usernameClean,$password,$ldapType); //LdapAuthenticationByUsernamePassword
-
-        if( $ldapRes == NULL ) {
-            //exit('ldap failed');
-            //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
-            $this->logger->error("Ldap Authentication: can not ldap bind user by usernameClean=[".$usernameClean."];");
-
+        if ($ldapRes === null) {
+            $this->logger->error("Ldap Authentication: can not ldap bind user by usernameClean=[{$usernameClean}]");
             $user = $authUtil->findUserByUsername($username);
-
             $authUtil->validateFailedAttempts($user);
-
-            return NULL;
+            return null;
         }
-        //exit('ldap success');
 
         //check if user already exists in DB
         $user = $authUtil->findUserByUsername($username);
-        //echo "Ldap user =".$user."<br>";
-
-        if( $user ) {
-            //echo "DB user found=".$user->getUsername()."<br>";
-            //exit();
-
-            $this->logger->notice("findUserByUsername: authenticated successfully, existing user found in DB by token->getUsername()=".$username);
-
-            if( $authUtil->canLogin($user) === false ) {
-                $this->logger->warning("Ldap Authentication: User cannot login ".$user);
-                return NULL;
+        if ($user) {
+            $this->logger->notice("Authenticated successfully, existing user found in DB by username={$username}");
+            if ($authUtil->canLogin($user) === false) {
+                return null;
             }
-
-            //exit('ldap user return');
             return $user;
-        } else {
-            $this->logger->warning("findUserByUsername: Can not find existing user in DB by token->getUsername()=".$username);
         }
 
-        //echo "1<br>";
-
-        //////////////////// Construct a new user ////////////////////
-        if( !$user ) {
-            return $this->createNewLdapUser($username,$ldapType,$ldapUserData);
-        }
-
-        return NULL;
+        // Create new user if not exists
+        return $this->createNewLdapUser($username, $ldapType, $ldapUserData);
     }
 
-    //$username - primaryPublicUserId and userkeytype (i.e. cwid1_@_ldap-user)
-    public function createNewLdapUser( $username, $ldapType=1, $ldapUserData=NULL ) {
-        // Construct a new LDAP user
-        $user = $this->getUserInLdap($username,$ldapType,$ldapUserData);
-
-        if( !$user ) {
-            return NULL;
+    /**
+     * Create & persist a new LDAP-based user.
+     */
+    public function createNewLdapUser($username, $ldapType = 1, $ldapUserData = null)
+    {
+        $user = $this->getUserInLdap($username, $ldapType, $ldapUserData);
+        if (!$user) {
+            $this->logger->error("createNewLdapUser: LDAP user not found/construct failed for {$username}");
+            return null;
         }
 
-        //dump($user->getDisplayName());
-        //dump($user);
-        //exit("exit createNewLdapUser: user->getDisplayName()=".$user->getDisplayName());
-
-        //////////////////// save user to DB ////////////////////
         $userManager = $this->container->get('user_manager');
+        // user_manager->updateUser expects the framework user model; ensure compatible
         $userManager->updateUser($user);
-
-        //"App\UserdirectoryBundle\User\Model\UserManager::updateUser():
-        // Argument #1 ($user) must be of type App\UserdirectoryBundle\User\Model\UserInterface,
-        // App\UserdirectoryBundle\Entity\User given,
-        // called in /srv/order-lab-tenantmanager/orderflex/src/App/UserdirectoryBundle/Security/Authentication/LdapAuthUtil.php on line 195"
 
         return $user;
     }
 
-    //Guard auth requires if user exists
-    //$username - primaryPublicUserId and userkeytype (i.e. cwid1_@_ldap-user)
-    public function getUserInLdap( $username, $ldapType=1, $ldapUserData=NULL ) {
-        // Construct a new LDAP user
+    /**
+     * Build a User object from LDAP attributes.
+     */
+    public function getUserInLdap($username, $ldapType = 1, $ldapUserData = null)
+    {
         $userSecUtil = $this->container->get('user_security_utility');
-
         $usernameClean = $userSecUtil->createCleanUsername($username);
         $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
 
@@ -233,83 +159,37 @@ class LdapAuthUtil {
             $this->logger->notice("Ldap Search: ldapUserData is empty for  usernameClean=" . $usernameClean);
         }
 
-        $this->logger->notice("Ldap Search: create a new user (not in DB) found by token->getUsername()=".$username);
+        $this->logger->notice("Ldap Search: create a new user (not in DB) found by username={$username}");
         $user = $userSecUtil->constractNewUser($username);
-        //echo "user=".$user->getUsername()."<br>";
-
         $user->setCreatedby('ldap');
 
         //modify user: set keytype and primary public user id
         $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
-
-        if( !$userkeytype ) {
-            //$userUtil = new UserUtil();
-            //$userUtil = $this->get('user_utility');
-            //$count_usernameTypeList = $userUtil->generateUsernameTypes();
-            $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
-            //echo "userkeytype=".$userkeytype."<br>";
+        if ($userkeytype) {
+            $user->setKeytype($userkeytype);
         }
-
-        $user->setKeytype($userkeytype);
         $user->setPrimaryPublicUserId($usernameClean);
 
-//        if( $ldapUserData ) {
-//
-//            //$user->setEmail($ldapUserData['mail']);
-//            if( array_key_exists('mail', $ldapUserData) ) {
-//                $user->setEmail($ldapUserData['mail']);
-//            }
-//
-//            if( array_key_exists('givenName', $ldapUserData) ) {
-//                $user->setFirstName($ldapUserData['givenName']);
-//            }
-//
-//            if( array_key_exists('lastName', $ldapUserData) ) {
-//                $user->setLastName($ldapUserData['lastName']);
-//            }
-//
-//            if( array_key_exists('displayName', $ldapUserData) ) {
-//                $user->setDisplayName($ldapUserData['displayName']);
-//            }
-//
-//            if( array_key_exists('telephoneNumber', $ldapUserData) ) {
-//                $user->setPreferredPhone($ldapUserData['telephoneNumber']);
-//            }
-//
-//            if( array_key_exists('mobile', $ldapUserData) ) {
-//                $user->setPreferredMobilePhone($ldapUserData['mobile']);
-//            }
-//        }
+        // Normalize to lowercase keys for case-insensitive access
+        $normalized = array_change_key_case($ldapUserData, CASE_LOWER);
 
-        //wustl: $upn = $ldapUserData['userprincipalname'][0];
-
-        if ($ldapUserData) {
-            // Normalize keys to lowercase for case-insensitive access
-            $normalizedData = array_change_key_case($ldapUserData, CASE_LOWER);
-
-            if (isset($normalizedData['mail'])) {
-                $user->setEmail($normalizedData['mail']);
-            }
-
-            if (isset($normalizedData['givenname'])) {
-                $user->setFirstName($normalizedData['givenname']);
-            }
-
-            if (isset($normalizedData['lastname'])) {
-                $user->setLastName($normalizedData['lastname']);
-            }
-
-            if (isset($normalizedData['displayname'])) {
-                $user->setDisplayName($normalizedData['displayname']);
-            }
-
-            if (isset($normalizedData['telephonenumber'])) {
-                $user->setPreferredPhone($normalizedData['telephonenumber']);
-            }
-
-            if (isset($normalizedData['mobile'])) {
-                $user->setPreferredMobilePhone($normalizedData['mobile']);
-            }
+        if (!empty($normalized['mail'])) {
+            $user->setEmail($normalized['mail']);
+        }
+        if (!empty($normalized['givenname'])) {
+            $user->setFirstName($normalized['givenname']);
+        }
+        if (!empty($normalized['sn'])) {
+            $user->setLastName($normalized['sn']);
+        }
+        if (!empty($normalized['displayname'])) {
+            $user->setDisplayName($normalized['displayname']);
+        }
+        if (!empty($normalized['telephonenumber'])) {
+            $user->setPreferredPhone($normalized['telephonenumber']);
+        }
+        if (!empty($normalized['mobile'])) {
+            $user->setPreferredMobilePhone($normalized['mobile']);
         }
 
         return $user;
@@ -323,22 +203,10 @@ class LdapAuthUtil {
         if( $this->simpleLdapV1($username,$password,"cn",$ldapType) ) {
             return 1;
         }
-
-        //return NULL; //testing: remove it in prod
-
-        if( $this->simpleLdapV1($username,$password,"uid",$ldapType) ) {
+        if ($this->simpleLdapV1($username, $password, 'uid', $ldapType)) {
             return 1;
         }
-
-//        //step 2
-//        if( substr(php_uname(), 0, 7) == "Windows" ){
-//            return $this->ldapBindWindows($username,$password,$ldapType);
-//        }
-//        else {
-//            return $this->ldapBindUnix($username,$password,$ldapType);
-//        }
-
-        return NULL;
+        return null;
     }
 
     public function ldapBindV2( $username, $password, $ldapType=1 ) {
@@ -387,837 +255,199 @@ class LdapAuthUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
 
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
-        $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
-        $this->logger->notice("simple Ldap: LDAPHost=".$LDAPHost.", LDAPPort=".$LDAPPort);
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress' . $postfix);
+        $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort' . $postfix);
+        $this->logger->notice("simpleLdapV1: LDAPHost={$LDAPHost}, LDAPPort={$LDAPPort}");
 
-        $cnx = $this->connectToLdap($LDAPHost,$LDAPPort);
-
-        if (!$cnx) {
-            throw new \Exception("LDAP connection failed to $LDAPHost:$LDAPPort");
-            //return NULL;
-        } else {
-            $this->logger->notice("simple Ldap: Connected to ldap server");
+        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu' . $postfix);
+        if (empty($origLdapBindDN)) {
+            return null;
         }
 
-        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
+        $cnx = $this->connectToLdap($LDAPHost, (int)$LDAPPort);
+        if (!$cnx) {
+            return null;
+        }
 
-        $res = null;
-        $ldapBindDNArr = explode(";",$origLdapBindDN);
-        //echo "count=".count($ldapBindDNArr)."<br>";
-        foreach( $ldapBindDNArr as $ldapBindDN) {
-            $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
-            //$ldapBindDN = "cn=$username,ou=NYP Users,ou=External,dc=a,dc=wcmc-ad,dc=net"; //testing
-            //$this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
-            $res = @ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
-            //$res = ldap_bind($cnx,$ldapBindDN,$password); //simpleLdap
+        $ldapBindDNArr = explode(';', $origLdapBindDN);
+        foreach ($ldapBindDNArr as $ldapBindDN) {
+            $ldapBindDN = trim($ldapBindDN);
+            if ($ldapBindDN === '') {
+                continue;
+            }
 
-            //$res = 1; //testing!!! allow authenticate
+            // Construct bind DN possibilities
+            $possibleDns = [
+                "{$userPrefix}={$username},{$ldapBindDN}",
+                "cn={$username},{$ldapBindDN}",
+                "{$username}" // sometimes simple uid only is used
+            ];
 
-            if( $res ) {
-                $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
-                break;
-            } else {
-                $this->logger->notice("simple Ldap: NOTOK ldapBindDN=".$ldapBindDN);
+            foreach ($possibleDns as $dn) {
+                if ($dn === '') {
+                    continue;
+                }
+                $this->logger->notice("simpleLdapV1: attempting bind DN={$dn}");
+                if ($this->bindWithCredentials($cnx, $dn, $password)) {
+                    ldap_unbind($cnx);
+                    return 1;
+                }
             }
         }
 
-        if( !$res ) {
-            //echo $mech." - could not sasl bind to LDAP by SASL<br>";
-            $this->logger->notice("simple Ldap: ldap_error(cnx)=".ldap_error($cnx)."; res=".$res."; user=".$username);
-            //$this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
-            ldap_error($cnx);
-            ldap_unbind($cnx);
-            return NULL;
-        } else {
-            $this->logger->notice("simple Ldap: Successfully authenticated by simple ldap ldap_bind for $username");
-            ldap_unbind($cnx);
-            return 1;
-        }
-
-        $this->logger->notice("Simple ldap failed for unknown reason for $username");
-        return NULL;
+        ldap_unbind($cnx);
+        $this->logger->notice("Simple ldap failed for username={$username}");
+        return null;
     }
 
-    public function simpleLdapV2($username, $password, $userPrefix="uid", $ldapType=1) {
-
-        echo "username=$username <br>";
-        $this->logger->notice("simple Ldap V2: before searchLdap: username=".$username);
-
+    /**
+     * Version 2: simple bind by username (UPN) on provided host:port
+     */
+    public function simpleLdapV2($username, $password, $userPrefix = "uid", $ldapType = 1)
+    {
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
-        $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
-        $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
-        $this->logger->notice("simple Ldap V2: LDAPHost=".$ldapHost.", LDAPPort=".$ldapPort);
+        $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress' . $postfix);
+        $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort' . $postfix);
+        $this->logger->notice("simpleLdapV2: LDAPHost={$ldapHost}, LDAPPort={$ldapPort}");
 
-        // Connect to LDAP
-        $ldapConn = ldap_connect($ldapHost, $ldapPort);
+        $ldapConn = $this->connectToLdap($ldapHost, (int)$ldapPort);
         if (!$ldapConn) {
-            die("Failed to connect to LDAP server.");
-        }
-
-        // Set LDAP options
-        ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
-
-        // Bind
-        $bind = @ldap_bind($ldapConn, $username, $password);
-
-        if ($bind) {
-            $this->logger->notice("simple Ldap V2: OK username=".$username);
-            //echo "LDAP bind successful dn=$dn <br>";
-            return 1;
-        } else {
-            $this->logger->notice("simple Ldap V2: NOTOK username=".$username." Error=".ldap_error($ldapConn));
-            //echo "LDAP bind failed.<br>";
-            //echo "Error: " . ldap_error($ldapConn) . "<br>";
-        }
-
-        //exit("simpleLdap test");
-        ldap_unbind($ldapConn);
-        return NULL;
-    }
-
-    // BJC-NT
-    function auth_bjc_nt(string $username, string $password): array {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $postfix = '';
-        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
-        $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
-
-        $BJC_URI        = 'ldaps://bjc-nt.bjc.org:636';
-        $BJC_BASE_DN    = 'DC=bjc-nt,DC=bjc,DC=org';
-        $BJC_BIND_DL    = 'accounts\\Path-SVC-BindUser';  // DOMAIN\user for service bind
-
-        // Referrals ON to mirror your Python `auto_referrals=True`
-        //$link = ldap_connect_secure(BJC_URI, true);
-        $link = ldap_connect($BJC_URI);
-        echo "BJC_URI=".$BJC_URI."<br>";
-        ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
-        //ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
-
-        if( !$link ) {
-            $this->logger->notice("1 Failed to connect to LDAP server:".$BJC_URI);
-            die("Failed to connect to LDAP server:".$BJC_URI);
-        } else {
-            $this->logger->notice("1 Connected to LDAP server:".$BJC_URI);
+            return null;
         }
 
         try {
-            //$bjs_bind_dn = $BJC_BIND_DL . "\\" . $LDAPUserAdmin;
-            //echo "bjs_bind_dn=$bjs_bind_dn <br>";
-            // 1) Service bind using DOMAIN\user (down-level logon name)
-            //ldap_bind_or_throw($link, $BJC_BIND_DL, $servicePass, 'BJC-NT service');
-            $bind = ldap_bind($link, $BJC_BIND_DL, $servicePass);
-            if (!$bind) {
-                // Handle bind failure
-                throw new \Exception("LDAP bind failed: " . ldap_error($link));
-            }
+            ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
 
-            // 2) Lookup: your Python uses (cn={username}); keep that, but add sAMAccountName as backup
-            //    This OR filter improves robustness while matching your behavior.
-            $filter = '(&' . ldap_filter_eq('objectClass', 'user') . '(|'
-                . ldap_filter_eq('cn', $username)
-                . ldap_filter_eq('sAMAccountName', $username)
-                . '))';
-
-            $entry  = ldap_search_first($link, $BJC_BASE_DN, $filter, ['distinguishedName', 'displayName']);
-            if ($entry === null) {
-                return ['ok' => false, 'error' => 'Username incorrect. Please try again...'];
-            }
-
-            $dn = $entry['dn'] ?? ($entry['distinguishedname'][0] ?? '');
-            if ($dn === '') {
-                error_log('BJC-NT: user found but missing DN for ' . $username);
-                return ['ok' => false, 'error' => 'Username incorrect. Please try again...'];
-            }
-            $display = $entry['displayname'][0] ?? $username;
-
-            // 3) Bind as the user with their password (simple bind with DN)
-            //$userLink = ldap_connect_secure(BJC_URI, true);
-            $userLink = ldap_connect($BJC_URI);
-            ldap_set_option($link, LDAP_OPT_PROTOCOL_VERSION, 3);
-            //ldap_set_option($link, LDAP_OPT_REFERRALS, 0);
-
-            if( !$link ) {
-                $this->logger->notice("2 Failed to connect to LDAP server:".$BJC_URI);
-                die("Failed to connect to LDAP server:".$BJC_URI);
-            }
-
-            try {
-                if (@ldap_bind($userLink, $dn, $password) !== true) {
-                    $code = ldap_errno($userLink);
-                    $err  = ldap_error($userLink);
-                    error_log("BJC-NT end-user bind failed ($dn): code=$code err=$err");
-                    return ['ok' => false, 'error' => 'Password incorrect. Please try again...'];
-                }
-                return ['ok' => true, 'displayName' => $display, 'domain' => 'BJC-NT'];
-            } finally {
-                @ldap_unbind($userLink);
+            if (@ldap_bind($ldapConn, $username, $password)) {
+                return 1;
             }
         } finally {
-            @ldap_unbind($link);
+            ldap_unbind($ldapConn);
         }
+
+        return null;
     }
 
-
-    //return $searchRes key->value array (key is case sensitive)
-    public function searchLdap($username,$ldapType=1,$withWarning=true) {
-
-        //echo "username=".$username."<br>";
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $postfix = $this->getPostfix($ldapType);
-
-        //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
-        //$dn = "CN=Users";
-        //$ldapDc = $this->container->getParameter('ldapou');
-
-        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
-
-//        $dcArr = explode(".",$ldapDc);
-//        foreach( $dcArr as $dc ) {
-//            $dn = $dn . ",DC=".$dc;
-//        }
-
-        //$dn = $ldapDc;
-        //for wcmc must be: cn=Users,dc=a,dc=wcmc-ad,dc=net
-        //echo "dn=[".$dn."]<br>";
-
-        //$dn = "cn=read-only-admin,dc=example,dc=com";
-        //$dn = "uid=tesla,dc=example,dc=com";
-        //echo "dn=".$dn."<br>";
-
-        //$LDAPUserAdmin = $this->container->getParameter('ldapusername');
-        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
-        //$LDAPUserPasswordAdmin = $this->container->getParameter('ldappassword');
-        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
-
-        if( $LDAPUserAdmin && $LDAPUserPasswordAdmin ) {
-            //ok
-        } else {
-            //no search
-            return NULL;
-            //return array('givenName'=>$username,'lastName'=>$username,'displayName'=>$username);
+    /**
+     * Helper: connect to LDAP server with sane defaults.
+     */
+    public function connectToLdap($LDAPHost, $LDAPPort = 389)
+    {
+        if (empty($LDAPHost)) {
+            $this->logger->warning('connectToLdap: empty LDAPHost');
+            return null;
         }
 
-        //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
-        //echo "LDAPHost=".$LDAPHost."<br>";
-        $cnx = $this->connectToLdap($LDAPHost);
-
-        //$filter="(ObjectClass=Person)";
-        //$filter="(CN=".$username.")";
-        //$filter = "(sAMAccountName=".$username.")";
-
-        $filter = "(|(CN=$username)(sAMAccountName=$username))"; //use cn or sAMAccountName to search by username (cwid)
-
-        //test
-        //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";
-        //$LDAPUserPasswordAdmin = "zflexpass";
-        //$origLdapBindDN = "ou=users,ou=guests,dc=zflexsoftware,dc=com";
-
-        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
-        //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
-        if( !$res ) {
-            $this->logger->error("search Ldap: ldap_bind failed with admin authentication username="."[".$LDAPUserAdmin."]");
-                //."; LDAPUserPasswordAdmin="."[".$LDAPUserPasswordAdmin."]");
-            //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            //testing!!!: allow to login without LDAP admin bind
-            $adminLdapBindRequired = true;
-            //$adminLdapBindRequired = false;
-            if( $adminLdapBindRequired ) {
-                ldap_error($cnx);
-                ldap_unbind($cnx);
-                //exit("error ldap_bind");
-                return NULL;
-            }
-        } else {
-            $this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
-            //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
-            //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
+        $cnx = @ldap_connect($LDAPHost, $LDAPPort);
+        if (!$cnx) {
+            $this->logger->error("Ldap: Failed to connect to {$LDAPHost}:{$LDAPPort}");
+            return null;
         }
 
-        $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "mobile", "company"); //sn - lastName
-        //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
-        //$LDAPFieldsToFind = array("cn", "samaccountname");
-
-        //$origLdapBindDN = "dc=a,dc=wcmc-ad,dc=net"; //testing
-        //echo "origLdapBindDN=".$origLdapBindDN."<br>";
-        //echo "filter=".$filter."<br>";
-
-        //$sr = ldap_search($cnx, $origLdapBindDN, $filter, $LDAPFieldsToFind);
-
-        $sr = null;
-        $ldapBindDNArr = explode(";",$origLdapBindDN);
-        //echo "count=".count($ldapBindDNArr)."<br>";
-        foreach( $ldapBindDNArr as $ldapBindDN) {
-            $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
-            //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-            if( $withWarning ) {
-                $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-            } else {
-                $sr = @ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-            }
-
-            if( $sr ) {
-                $this->logger->notice("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-                $info = ldap_get_entries($cnx, $sr);
-
-//                echo "<pre>";
-//                print_r($info);
-//                echo "</pre>";
-
-                if( $info["count"] > 0 ) {
-                    $this->logger->notice("search Ldap: info: displayName=".$info[0]['displayname'][0]);
-                    break;
-                } else {
-                    $this->logger->notice("search Ldap: ldap_search NOTOK = info null");
-                }
-            } else {
-                $this->logger->error("search Ldap: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-            }
-        }
-
-        if( !$sr ) {
-            //echo 'Search failed <br>';
-            //exit('Search failed');
-            $this->logger->error("search Ldap: ldap_search failed with filter=" . $filter);
-            ldap_error($cnx);
-            ldap_unbind($cnx);
-            return NULL;
-        }
-
-        $info = ldap_get_entries($cnx, $sr);
-
-        //$this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
-        //print_r($info);
-        //dump($info); //testing
-        //exit('111');
-
-        $searchRes = array();
-
-        for ($x=0; $x<$info["count"]; $x++) {
-
-            if( array_key_exists('ou', $info[$x]) ) {
-                $searchRes['ou'] = $info[$x]['ou'][0];
-            }
-            if( array_key_exists('uid', $info[$x]) ) {
-                $searchRes['uid'] = $info[$x]['uid'][0];
-            }
-
-            if( array_key_exists('mail', $info[$x]) ) {
-                $searchRes['mail'] = $info[$x]['mail'][0];
-            }
-            if( array_key_exists('title', $info[$x]) ) {
-                $searchRes['title'] = $info[$x]['title'][0];
-            }
-            if( array_key_exists('givenname', $info[$x]) ) {
-                $searchRes['givenName'] = $info[$x]['givenname'][0];
-            }
-            if( array_key_exists('sn', $info[$x]) ) {
-                $searchRes['lastName'] = $info[$x]['sn'][0];
-            }
-            if( array_key_exists('displayname', $info[$x]) ) {
-                $searchRes['displayName'] = $info[$x]['displayname'][0];
-            }
-            if( array_key_exists('telephonenumber', $info[$x]) ) {
-                $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
-            }
-            if( array_key_exists('mobile', $info[$x]) ) {
-                $searchRes['mobile'] = $info[$x]['mobile'][0];
-            }
-            if( array_key_exists('company', $info[$x]) ) {
-                $searchRes['company'] = $info[$x]['company'][0];    //not used currently
-            }
-
-            if( array_key_exists('givenName',$searchRes) && !$searchRes['givenName'] ) {
-                $searchRes['givenName'] = "";   //$username;
-            }
-
-            if( array_key_exists('lastName',$searchRes) && !$searchRes['lastName'] ) {
-                $searchRes['lastName'] = "";    //$username;
-            }
-
-            //print "\nActive Directory says that:<br />";
-            //print "givenName is: ".$searchRes['givenName']."<br>";
-            //print "familyName is: ".$searchRes['lastName']."<br>";
-            //print_r($info[$x]);
-
-            //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
-
-            //we have only one result
-            break;
-        }
-
-//        if( count($searchRes) == 0 ) {
-//            //echo "no search results <br>";
-//        }
-        //print_r($searchRes);
-        //exit('Search OK');
-        ldap_unbind($cnx);
-
-        return $searchRes;
-    }
-
-    //return user's ldap attributes in $searchRes key->value array (key is case sensitive)
-    public function searchLdapV2($username, $ldapType=1) {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $postfix = $this->getPostfix($ldapType);
-        $this->logger->notice("searchLdapV2: postfix=[".$postfix."]");
-
-        //$ldapHost = "ldaps://accounts-***.edu";
-        $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
-        $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
-        $baseDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix);
-
-        $this->logger->notice("searchLdapV2: LDAPHost=[".$ldapHost."], LDAPPort=[$ldapPort], baseDn=[$baseDn]");
-        //LDAPHost=[ldap://accounts-ldap.wusm.wustl.edu], LDAPPort=[636], baseDn=[OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu]
-        //$ldapHost = "ldaps://accounts-ldap.wusm.wustl.edu";
-        //$ldapPort = 636;
-        //$baseDn = "OU=Current,OU=People,DC=accounts,DC=ad,DC=wustl,DC=edu";
-
-        // Service account credentials
-        //$serviceDn = "path-";
-        //$servicePass = "";
-        $serviceDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
-        $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
-        $this->logger->notice("searchLdapV2: serviceDn=[".$serviceDn."], servicePass=[$servicePass]");
-
-        if (empty($username)) {
-            //throw new \Exception("Username is missing.");
-            $this->logger->error("searchLdapV2: Username is missing");
-            return NULL;
-        }
-
-        // Connect
-        $ldapConn = ldap_connect($ldapHost, $ldapPort);
-        if (!$ldapConn) {
-            //throw new \Exception("LDAP connection failed.");
-            $this->logger->error("searchLdapV2: DAP connection failed. ".ldap_error($ldapConn));
-            return NULL;
-        }
-
-        ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
-
-        // Bind with service account
-        if (!@ldap_bind($ldapConn, $serviceDn, $servicePass)) {
-            //throw new \Exception("LDAP bind failed: " . ldap_error($ldapConn));
-            $this->logger->error("searchLdapV2: LDAP bind failed for $serviceDn: ".ldap_error($ldapConn));
-            return NULL;
-        }
-
-        // Search for user by sAMAccountName
-        $filter = "(sAMAccountName=$username)";
-        $attributes = []; // empty array = fetch all attributes
-        $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
-
-        if (!$search) {
-            //throw new \Exception("LDAP search failed: " . ldap_error($ldapConn));
-            $this->logger->error("searchLdapV2: LDAP search failed: ".ldap_error($ldapConn));
-            return NULL;
-        }
-
-//        $entries = ldap_get_entries($ldapConn, $search);
-//        if ($entries["count"] === 0) {
-//            //throw new \Exception("User '$username' not found.");
-//            $this->logger->error("searchLdapV2: user not found: username=[$filter]");
-//            return NULL;
-//        }
-//        return $entries[0]; // return full attribute set for the user
-
-        $info = ldap_get_entries($ldapConn, $search);
-        //dump($info);
-        //exit('1');
-
-        ldap_unbind($ldapConn);
-
-        $searchRes = array();
-
-        for ($x=0; $x<$info["count"]; $x++) {
-
-            if( array_key_exists('ou', $info[$x]) ) {
-                $searchRes['ou'] = $info[$x]['ou'][0];
-            }
-            if( array_key_exists('uid', $info[$x]) ) {
-                $searchRes['uid'] = $info[$x]['uid'][0];
-            }
-            if( array_key_exists('userprincipalname', $info[$x]) ) {
-                $searchRes['userprincipalname'] = $info[$x]['userprincipalname'][0];
-            }
-
-            if( array_key_exists('mail', $info[$x]) ) {
-                $searchRes['mail'] = $info[$x]['mail'][0];
-            }
-            if( array_key_exists('title', $info[$x]) ) {
-                $searchRes['title'] = $info[$x]['title'][0];
-            }
-            if( array_key_exists('givenname', $info[$x]) ) {
-                $searchRes['givenName'] = $info[$x]['givenname'][0];
-            }
-            if( array_key_exists('sn', $info[$x]) ) {
-                $searchRes['lastName'] = $info[$x]['sn'][0];
-            }
-            if( array_key_exists('displayname', $info[$x]) ) {
-                $searchRes['displayName'] = $info[$x]['displayname'][0];
-            }
-            if( array_key_exists('telephonenumber', $info[$x]) ) {
-                $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
-            }
-            if( array_key_exists('mobile', $info[$x]) ) {
-                $searchRes['mobile'] = $info[$x]['mobile'][0];
-            }
-            if( array_key_exists('company', $info[$x]) ) {
-                $searchRes['company'] = $info[$x]['company'][0];    //not used currently
-            }
-
-            if( array_key_exists('givenName',$searchRes) && !$searchRes['givenName'] ) {
-                $searchRes['givenName'] = "";   //$username;
-            }
-
-            if( array_key_exists('lastName',$searchRes) && !$searchRes['lastName'] ) {
-                $searchRes['lastName'] = "";    //$username;
-            }
-
-            //print "\nActive Directory says that:<br />";
-            //print "givenName is: ".$searchRes['givenName']."<br>";
-            //print "familyName is: ".$searchRes['lastName']."<br>";
-            //print_r($info[$x]);
-
-            //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
-
-            //we have only one result
-            break;
-        }
-
-        return $searchRes;
-    }
-
-    public function getPostfix($ldapType) {
-        if( $ldapType == 2 || $ldapType == '2' ) {
-            return "2";
-        }
-        return "";
-    }
-
-    //return ldap connection
-    public function connectToLdap( $LDAPHost, $LDAPPort=389 ) {
-
-        //$cnx = @ldap_connect($LDAPHost,$LDAPPort);
-        $cnx = ldap_connect($LDAPHost,$LDAPPort);
-
-        if( !$cnx ) {
-            $this->logger->warning("Ldap: Could not connect to LDAP");
-            ldap_unbind($cnx);
-            return NULL;
-        }
-
-        if( !ldap_set_option($cnx, LDAP_OPT_NETWORK_TIMEOUT, 10) ) {
-            $this->logger->warning("Ldap: Could not set timeout 10 second");
-            ldap_unbind($cnx);
-            return NULL;
-        }
-
-        if( !ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3) ) {
-            $this->logger->warning("Ldap: Could not set version 3");
-            ldap_unbind($cnx);
-            return NULL;
-        }
-
-//        if( !ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0) ) {
-//            $this->logger->warning("Ldap: Could not disable referrals");
-//            ldap_unbind($cnx);
-//            return NULL;
-//        }
-
-        if( !ldap_set_option($cnx, LDAP_OPT_SIZELIMIT, 1) ) {
-            $this->logger->warning("Ldap: Could not set limit to 1");
-            ldap_unbind($cnx);
-            return NULL;
-        }
+        ldap_set_option($cnx, LDAP_OPT_NETWORK_TIMEOUT, 10);
+        ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($cnx, LDAP_OPT_SIZELIMIT, 1);
 
         return $cnx;
     }
 
-
-
-
-    /////////////////// AJAX LDAP SEARCH ///////////////
-    //serach by cwid, email, last name
-    public function searchMultipleUserLdap($searchvalue, $inputType) {
-
-        $userDataArr = null;
-        $primaryPublicUserId = null;
-
-        if( $inputType == "primaryPublicUserId" ) {
-            $primaryPublicUserId = $searchvalue;
+    /**
+     * Bind helper that returns boolean.
+     */
+    private function bindWithCredentials($cnx, $dn, $password): bool
+    {
+        try {
+            $res = @ldap_bind($cnx, $dn, $password);
+            return $res === true;
+        } catch (\Throwable $e) {
+            $this->logger->error('LDAP bind error: ' . $e->getMessage());
+            return false;
         }
-
-        if( $inputType == "email" ) {
-            $emailParts = explode("@",$searchvalue);
-            if( count($emailParts) == 2 ) {
-                $firstEmailPart = $emailParts[0];
-                $secondEmailPart = $emailParts[1];
-                $publicUserId = $firstEmailPart;
-            }
-            $primaryPublicUserId = $firstEmailPart;
-        }
-
-        ///////////////// Search Ldap ///////////////////
-        $resArr = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",1);
-        echo "resArr:<pre>";
-        print_r($resArr);
-        echo "</pre><br>";
-        exit('exit');
-
-        $userCwidDataArr1 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",1);
-        $userCwidDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"primaryPublicUserId",2);
-        echo "userCwidDataArr1:<pre>";
-        print_r($userCwidDataArr1);
-        echo "</pre><br>";
-
-        $userLastnameDataArr1 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",1);
-        $userLastnameDataArr2 = $this->searchMultipleUserBranchLdap($searchvalue,"lastName",2);
-        echo "userLastnameDataArr1:<pre>";
-        print_r($userLastnameDataArr1);
-        echo "</pre><br>";
-        ///////////////// EOF Search Ldap ///////////////////
-        exit('exit');
-
-        return $userDataArr;
     }
-    public function searchMultipleUserBranchLdap( $searchvalue, $seacrhType, $ldapType ) {
 
-        //Server: ldap.forumsys.com
-        //Port: 389
-        //Bind DN: cn=read-only-admin,dc=example,dc=com
-        //Bind Password: password
-        //All user passwords are password.
-        //ou=mathematicians,dc=example,dc=com
-        //riemann
-        //gauss
-        //euler
-        //euclid
-
-
+    /**
+     * Search LDAP and return a simple associative array of attributes (case-insensitive keys).
+     */
+    public function searchLdapV2($username, $ldapType = 1)
+    {
         $userSecUtil = $this->container->get('user_security_utility');
-
         $postfix = $this->getPostfix($ldapType);
 
-        $origLdapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+        $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress' . $postfix);
+        $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort' . $postfix);
+        $baseDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu' . $postfix);
 
-        //$LDAPUserAdmin = $this->container->getParameter('ldapusername');
-        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
-        //$LDAPUserPasswordAdmin = $this->container->getParameter('ldappassword');
-        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
+        $serviceDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName' . $postfix);
+        $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword' . $postfix);
 
-        if( $LDAPUserAdmin && $LDAPUserPasswordAdmin ) {
-            //ok
-        } else {
-            //no search
-            return NULL;
-            //return array('givenName'=>$username,'lastName'=>$username,'displayName'=>$username);
+        if (empty($username) || empty($serviceDn) || empty($servicePass)) {
+            $this->logger->warning('searchLdapV2: missing username or service account');
+            return null;
         }
 
-        //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
-        //echo "LDAPHost=".$LDAPHost."<br>";
-        $cnx = $this->connectToLdap($LDAPHost);
-
-        if( $seacrhType == "primaryPublicUserId" ) {
-            $filter = "(cn=" . $searchvalue . ")";
-        }
-        elseif( $seacrhType == "lastName" ) {
-            $filter = "(sn=*" . $searchvalue . "*)";
+        $ldapConn = $this->connectToLdap($ldapHost, (int)$ldapPort);
+        if (!$ldapConn) {
+            return null;
         }
 
-        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchMultipleUserBranchLdap
-        //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
-        if( !$res ) {
-            $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
-            echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            ldap_error($cnx);
-            ldap_unbind($cnx);
-            //exit("error ldap_bind");
-            return NULL;
-        } else {
-            //$this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
-            echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
-            //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
-        }
+        try {
+            ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
 
-        echo "origLdapBindDN=[".$origLdapBindDN."]<br>";
+            if (!@ldap_bind($ldapConn, $serviceDn, $servicePass)) {
+                $this->logger->error("searchLdapV2: service bind failed for {$serviceDn}");
+                return null;
+            }
 
-        $LDAPFieldsToFind = array("cn", "mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "mobile", "company"); //sn - lastName
-        //$LDAPFieldsToFind = array("cn", "sn", "displayName"); //sn - lastName
+            $filter = "(sAMAccountName={$username})";
+            $attributes = []; // fetch all
+            $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
+            if (!$search) {
+                $this->logger->error("searchLdapV2: ldap_search failed with filter={$filter}, baseDn={$baseDn}");
+                return null;
+            }
 
-        $displayNameArr = array();
-        $infoArr = array();
-        $sr = null;
-        $ldapBindDNArr = explode(";",$origLdapBindDN);
-        //echo "count=".count($ldapBindDNArr)."<br>";
-        foreach( $ldapBindDNArr as $ldapBindDN) {
-            //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
-            echo "filter=".$filter."; ldapBindDN=[".$ldapBindDN."]<br>";
-            $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-            //$filter = "(uid=*)";
-            //$sr = ldap_search($cnx, $ldapBindDN, $filter);
+            $info = ldap_get_entries($ldapConn, $search);
+            if (empty($info) || !isset($info['count']) || $info['count'] === 0) {
+                $this->logger->notice("searchLdapV2: user not found by filter={$filter}");
+                return null;
+            }
 
-//            if(0) {
-//                $entry = ldap_first_entry($cnx, $sr);
-//                do {
-//                    $dn = ldap_get_dn($cnx, $entry);
-//                    echo "DN=[" . $dn . "]<br>";
-//                } while ($entry = ldap_next_entry($cnx, $entry));
-//            }
-
-            if(1) {
-                $info = ldap_get_entries($cnx, $sr);
-                echo "info count=" . $info["count"] . "<br>";
-                //$info = $this->getLdapEntries($cnx, $sr);
-                echo "<br><br>############info:<pre>";
-                print_r($info);
-                echo "</pre>#############<br><br>";
-
-                foreach($info as $infoThis) {
-                    echo "sn=".$infoThis['sn'][0];
-                }
-
-                $infoArr[] = $info;
-
-//                foreach($info as $infoThis) {
-//                    $displayname = $infoThis["displayname"];
-//                    echo "displayname=" . $displayname . "<br>";
-//                    $displayNameArr[] = $displayname;
-//                }
-
-                for ($x = 0; $x < $info["count"]; $x++) {
-                    //echo "<br><br>############info:<pre>";
-                    //print_r($info[$x]);
-                    //echo "</pre>#############<br><br>";
-                    //$cn = $info[$x]['cn'][0];
-                    //echo "cn=".$cn."<br>";
-                    //$sn = $info[$x]['sn'][0];
-                    //echo "sn=".$sn."<br>";
-                    echo "############info[x]:<pre>";
-                    print_r($info[$x]);
-                    echo "</pre>#############<br>";
-                    $displayname = $info[$x]["displayname"][0];
-                    $displayNameArr[] = $displayname;
-
-                    //foreach($info[$x]["displayname"] as $displayname) {
-                    //    $displayNameArr[] = $displayname;
-                    //    echo "displayname=" . $displayname . "<br>";
-                    //}
-
-                    //echo "*******:<pre>";
-                    //print_r($info[$x]["displayname"]);
-                    //echo "</pre>#############<br>";
+            // Normalize the first entry into a simple associative array (lowercase keys).
+            $entry = $info[0];
+            $result = [];
+            foreach ($entry as $k => $v) {
+                if (!is_int($k) && is_array($v) && isset($v[0])) {
+                    $result[strtolower($k)] = $v[0];
                 }
             }
 
-        }//foreach $ldapBindDN
-
-        //$info = ldap_get_entries($cnx, $sr);
-
-        echo "<br><br>############displayNameArr:<pre>";
-        print_r($displayNameArr);
-        echo "</pre>#############<br><br>";
-        exit('infoArr count='.count($displayNameArr));
-
-        $searchResArr = array();
-
-        foreach($infoArr as $info) {
-            $searchRes = array();
-
-            for ($x = 0; $x < $info["count"]; $x++) {
-
-                if (array_key_exists('ou', $info[$x])) {
-                    $searchRes['ou'] = $info[$x]['ou'][0];
-                }
-                if (array_key_exists('uid', $info[$x])) {
-                    $searchRes['uid'] = $info[$x]['uid'][0];
-                }
-
-                if (array_key_exists('cn', $info[$x])) {
-                    $searchRes['cn'] = $info[$x]['cn'][0];
-                }
-                if (array_key_exists('mail', $info[$x])) {
-                    $searchRes['mail'] = $info[$x]['mail'][0];
-                }
-                if (array_key_exists('title', $info[$x])) {
-                    $searchRes['title'] = $info[$x]['title'][0];
-                }
-                if (array_key_exists('givenname', $info[$x])) {
-                    $searchRes['givenName'] = $info[$x]['givenname'][0];
-                }
-                if (array_key_exists('sn', $info[$x])) {
-                    $searchRes['lastName'] = $info[$x]['sn'][0];
-                }
-                if (array_key_exists('displayname', $info[$x])) {
-                    $searchRes['displayName'] = $info[$x]['displayname'][0];
-                }
-                if (array_key_exists('telephonenumber', $info[$x])) {
-                    $searchRes['telephoneNumber'] = $info[$x]['telephonenumber'][0];
-                }
-                if( array_key_exists('mobile', $info[$x]) ) {
-                    $searchRes['mobile'] = $info[$x]['mobile'][0];
-                }
-                if (array_key_exists('company', $info[$x])) {
-                    $searchRes['company'] = $info[$x]['company'][0];    //not used currently
-                }
-
-                if (array_key_exists('givenName', $searchRes) && !$searchRes['givenName']) {
-                    $searchRes['givenName'] = "";   //$username;
-                }
-
-                if (array_key_exists('lastName', $searchRes) && !$searchRes['lastName']) {
-                    $searchRes['lastName'] = "";    //$username;
-                }
-
-                //print "\nActive Directory says that:<br />";
-                //print "givenName is: ".$searchRes['givenName']."<br>";
-                //print "familyName is: ".$searchRes['lastName']."<br>";
-                //print_r($info[$x]);
-
-                //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
-
-                //we have only one result
-                //break;
-            }
-
-            $searchResArr[] = $searchRes;
+            return $result;
+        } finally {
+            ldap_unbind($ldapConn);
         }
-
-//        if( count($searchRes) == 0 ) {
-//            //echo "no search results <br>";
-//        }
-        //print_r($searchRes);
-        //exit('Search OK');
-
-        ldap_unbind($cnx);
-
-        return $searchResArr;
-
     }
-    public function getLdapEntries($conn,$srchRslt) {
-        // will use ldap_get_values_len() instead and build the array
-        // note: it's similar with the array returned by
-        // ldap_get_entries() except it has no "count" elements
-        $i=0;
-        $entry = ldap_first_entry($conn, $srchRslt);
-        do {
-            $attributes = ldap_get_attributes($conn, $entry);
-            for($j=0; $j<$attributes['count']; $j++) {
-                $values = ldap_get_values_len($conn, $entry,$attributes[$j]);
-                $srchRslt[$i][$attributes[$j]] = $values;
-            }
-            $i++;
+
+    /**
+     * Extract first attribute value from LDAP normalized result (array with lowercase keys).
+     */
+    private function extractAttributeValue(?array $ldapData, string $attribute): ?string
+    {
+        if (empty($ldapData)) {
+            return null;
         }
-        while ($entry = ldap_next_entry($conn, $entry));
-        //we're done
-        return ($srchRslt);
+        $key = strtolower($attribute);
+        return $ldapData[$key] ?? null;
     }
-    /////////////////// EOF AJAX LDAP SEARCH ///////////////
-} 
+
+    public function getPostfix($ldapType)
+    {
+        return ($ldapType == 2 || $ldapType === '2') ? '2' : '';
+    }
+
+    /* Note: many auxiliary AJAX search methods were removed or simplified.
+       If you need them re-added, we should implement them using the same helpers above
+       and avoid echoes/exits. */
+}
