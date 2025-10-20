@@ -3484,8 +3484,10 @@ tracepoint:sched:sched_process_exit
         $issuerOrg = trim($matches[1] ?? 'N/A');
 
         // Optional: Convert to timestamp or calculate days remaining
-        $validToTimestamp = strtotime($validTo);
-        $daysRemaining = floor(($validToTimestamp - time()) / 86400);
+        if( $validTo ) {
+            $validToTimestamp = strtotime($validTo);
+            $daysRemaining = floor(($validToTimestamp - time()) / 86400);
+        }
 
         // Output or use variables
 //        echo "Organization (Certificate issuer): [{$issuerOrg}]\n<br>";
