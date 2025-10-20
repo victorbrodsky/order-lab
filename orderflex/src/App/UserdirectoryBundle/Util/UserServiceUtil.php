@@ -3546,11 +3546,15 @@ tracepoint:sched:sched_process_exit
             $msg = "The SSL certificate for server $domain issued by $organization will expire in $daysRemaining days.";
             //insert steps
 
-            $emailUtil->sendEmail($emails,$subject,$msg);
+            $testing = true;
+            //$testing = false;
+            if( !$testing ) {
+                $emailUtil->sendEmail($emails, $subject, $msg);
 
-            //Event Log
-            $eventType = "SSL Certificate Warning";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
+                //Event Log
+                $eventType = "SSL Certificate Warning";
+                $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $msg, null, null, null, $eventType);
+            }
         }
 
         return $resArr;
@@ -3641,47 +3645,6 @@ tracepoint:sched:sched_process_exit
 
         return $info;
     }
-
-//    //when HAProxy is terminating SSL with bind :443 ssl crt ...,
-//    // the PHP script I shared earlier won't retrieve the certificate from HAProxy itself.
-//    // That script connects to the domain and inspects the certificate
-//    // presented during the SSL handshake, which in this case is HAProxy’s certificate, not the backend’s.
-//    public function checkSslCertificate0( $domain ) {
-//        echo "domain=$domain <br>";
-//        if( !$domain ) {
-//            $domain = 'view.online';
-//            echo "use the default domain=$domain <br>";
-//        }
-//
-//        $url = "https://".$domain; // Replace with your target URL
-//        echo "url=$url <br>";
-//
-//
-//        $host = parse_url($url, PHP_URL_HOST);
-//        echo "host=$host <br>";
-//
-//        // Create SSL context to capture the peer certificate
-//        $context = stream_context_create(["ssl" => ["capture_peer_cert" => true]]);
-//        $sslUrl = "ssl://$host:443";
-//        echo "sslUrl=$sslUrl <br>";
-//        $client = stream_socket_client($sslUrl, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
-//
-//        if ($client) {
-//            $params = stream_context_get_params($client);
-//            $cert = $params["options"]["ssl"]["peer_certificate"];
-//            $certInfo = openssl_x509_parse($cert);
-//
-//            $validFrom = date(DATE_RFC2822, $certInfo['validFrom_time_t']);
-//            $validTo = date(DATE_RFC2822, $certInfo['validTo_time_t']);
-//
-//            echo "Certificate for $host\n<br>";
-//            echo "Valid From: $validFrom\n<br>";
-//            echo "Valid To: $validTo\n<br>";
-//        } else {
-//            echo "Failed to connect to $host: $errstr ($errno)\n";
-//        }
-//    }
-
 
     public function createUserADStatusCron( $frequency = '6h' ) {
 
