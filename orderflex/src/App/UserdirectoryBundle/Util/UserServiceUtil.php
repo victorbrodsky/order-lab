@@ -3464,7 +3464,7 @@ tracepoint:sched:sched_process_exit
         // Execute and capture output
         $output = shell_exec($cmd);
         //echo "output=[$output] <br>";
-        dump($output);
+        //dump($output);
 
         // Check for error message
         if ($output === null || strpos($output, 'Could not find certificate') !== false) {
@@ -3539,7 +3539,7 @@ tracepoint:sched:sched_process_exit
             $emailUtil = $this->container->get('user_mailer_utility');
             //$environment = $userSecUtil->getSiteSettingParameter('environment');
             $emails = $userSecUtil->getUserEmailsByRole(null,"Platform Administrator");
-            //$emails = array("oli2002@med.cornell.edu"); //testing
+            $emails = array("oli2002@med.cornell.edu"); //testing
 
             //siteEmail
             $sender = $userSecUtil->getSiteSettingParameter('siteEmail'); //might be adminemail@example.com
@@ -3559,9 +3559,9 @@ tracepoint:sched:sched_process_exit
             $msg = "The SSL certificate for server $domain issued by $organization will expire in $daysRemaining days.";
             //insert steps
 
-            echo "Send warning email: $msg<br>";
-            $testing = true;
-            //$testing = false;
+            //echo "Send warning email: $msg<br>";
+            //$testing = true;
+            $testing = false;
             if( !$testing ) {
                 $emailUtil->sendEmail($emails, $subject, $msg);
 
