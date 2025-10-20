@@ -3559,6 +3559,7 @@ tracepoint:sched:sched_process_exit
             $msg = "The SSL certificate for server $domain issued by $organization will expire in $daysRemaining days.";
             //insert steps
 
+            echo "Send warning email<br>";
             $testing = true;
             //$testing = false;
             if( !$testing ) {
