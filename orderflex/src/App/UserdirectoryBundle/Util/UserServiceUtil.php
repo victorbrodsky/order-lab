@@ -3459,22 +3459,23 @@ tracepoint:sched:sched_process_exit
 
         // Build the shell command
         $cmd = "echo | openssl s_client -connect {$domain}:{$port} 2>/dev/null | openssl x509 -noout -dates -issuer -subject";
-        echo "cmd=$cmd <br>";
+        //echo "cmd=$cmd <br>";
 
         // Execute and capture output
         $output = shell_exec($cmd);
-        echo "output=[$output] <br>";
+        //echo "output=[$output] <br>";
         dump($output);
 
         // Check for error message
         if ($output === null || strpos($output, 'Could not find certificate') !== false) {
-            echo "Certificate not found or invalid response.<br>";
-            //return NULL;
+            //echo "Certificate not found or invalid response.<br>";
+            return NULL;
         } else {
-            echo "Certificate info retrieved:<br><pre>$output</pre>";
+            //OK
+            //echo "Certificate info retrieved:<br><pre>$output</pre>";
         }
 
-        exit('111');
+        //exit('111');
 
         // Parse the output
         $validFrom = $validTo = $organization = null;
