@@ -6350,7 +6350,7 @@ tracepoint:sched:sched_process_exit
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //https://view.online/c/wcm/pathology/
         //exit('$baseUrl='.$baseUrl);
-        echo '$baseUrl='.$baseUrl."<br>";
+        //echo '$baseUrl='.$baseUrl."<br>";
 
         $uniquename = $document->getUniquename();
         if( !$uniquename ) {
@@ -6364,7 +6364,7 @@ tracepoint:sched:sched_process_exit
         $baseUrl = rtrim($baseUrl,'/'); //trim '/' at the end
 
         $url = $baseUrl . '/' . $document->getUploadDirectory() . '/' . $uniquename;
-        echo '$url='.$url."<br>";
+        //echo '$url='.$url."<br>";
 
         if( $onlyResize == false ) {
             if ($size) {
@@ -6381,7 +6381,7 @@ tracepoint:sched:sched_process_exit
             }
         }
 
-        exit('$url='.$url);
+        //exit('$url='.$url);
         return $url;
     }
 
