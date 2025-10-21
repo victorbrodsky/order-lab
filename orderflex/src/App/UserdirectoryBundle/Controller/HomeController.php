@@ -217,7 +217,7 @@ class HomeController extends OrderAbstractController {
 //                //echo "multiTenancyHomePage: getLogos=".$platformLogoPath."<br>";
 //            }
 //        }
-        $tenant_base = $this->getParameter('tenant_base');
+        $tenant_base = $this->getParameter('tenant_role');
         $scheme = $userUtil->getRealScheme($request);
         $highResPlatformLogoPath = NULL;
         $platformLogoPath = NULL;
