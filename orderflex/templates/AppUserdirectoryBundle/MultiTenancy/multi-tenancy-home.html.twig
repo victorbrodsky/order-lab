@@ -84,7 +84,7 @@
                         {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
                     {% endif %}
                     {% if srcsetParts|length > 0 %}
-                        srcset="{{ srcsetParts|join(', ') }}"
+                        {#srcset="{{ srcsetParts|join(', ') }}"#}
                     {% endif %}
                     alt="Logohomepagemanager" height="{{ height }}" width="{{ width }}"
                 >
