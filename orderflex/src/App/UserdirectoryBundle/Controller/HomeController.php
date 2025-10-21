@@ -116,12 +116,12 @@ class HomeController extends OrderAbstractController {
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
         }
         if ($highResPlatformLogoPath && $scheme) {
-            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
-            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
+            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
+            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
         }
         if ($platformLogoPath && $scheme) {
-            $platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
-            //$platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
+            //$platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
+            $platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
         }
 //        $defaultLogoPath = $highResPlatformLogoPath ?? $platformLogoPath;
 
@@ -241,12 +241,12 @@ class HomeController extends OrderAbstractController {
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
         }
         if ($highResPlatformLogoPath && $scheme) {
-            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
-            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
+            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
+            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
         }
         if ($platformLogoPath && $scheme) {
-            $platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
-            //$platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
+            //$platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
+            $platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
         }
         echo $tenant_base.": multiTenancyHomePage: platformLogoPath=".$platformLogoPath.", highResPlatformLogoPath=$highResPlatformLogoPath<br>";
         //exit('111');
