@@ -74,6 +74,11 @@
                     {#>#}
                 {#{% else %}#}
                 {#twig2 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}#}
+
+                {#<img src="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif"#}
+                     {#srcset="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif 1x, https://view.online/Uploaded/directory/documents/68f7cf81b5e93.gif 2x"#}
+                     {#alt="Logohomepagemanager" height="180" width="320">#}
+
                 <img
                     src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
                     {% set srcsetParts = [] %}
@@ -86,7 +91,7 @@
                     {% if srcsetParts|length > 0 %}
                         srcset="{{ srcsetParts|join(', ') }}"
                     {% endif %}
-                    alt="Logohomepagemanager" height="{{ height }}" width="{{ width }}"
+                    alt="Logohomepagemanager"
                 >
                 {#{% endif %}#}
             </p>
