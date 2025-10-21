@@ -43,6 +43,7 @@ class HomeController extends OrderAbstractController {
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
+        $userUtil = $this->container->get('user_utility');
 
         //homepagemanager show a different multi-tenant home page
         //TODO: define and get $tenantManagerName from the tenants list tenant-manager/tenant-manager/configure/
@@ -102,6 +103,8 @@ class HomeController extends OrderAbstractController {
 //                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
 //            }
 //        }
+        //$tenant_base = $this->getParameter('tenant_role');
+        $scheme = $userUtil->getRealScheme($request);
         $highResPlatformLogoPath = NULL;
         $platformLogoPath = NULL;
         $highResPlatformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
@@ -111,6 +114,14 @@ class HomeController extends OrderAbstractController {
         $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
         if( $platformLogos && count($platformLogos) > 0 ) {
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
+        }
+        if ($highResPlatformLogoPath && $scheme) {
+            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
+            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
+        }
+        if ($platformLogoPath && $scheme) {
+            $platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
+            //$platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
         }
 //        $defaultLogoPath = $highResPlatformLogoPath ?? $platformLogoPath;
 
