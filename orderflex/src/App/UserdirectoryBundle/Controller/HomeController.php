@@ -156,6 +156,7 @@ class HomeController extends OrderAbstractController {
         //exit("multiTenancyHomePage");
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
+        $userUtil = $this->container->get('user_utility');
 
         //TODO: set title according to the url base: 'View.Online'
         $baseUrl = $request->getHttpHost();
@@ -216,7 +217,7 @@ class HomeController extends OrderAbstractController {
 //                //echo "multiTenancyHomePage: getLogos=".$platformLogoPath."<br>";
 //            }
 //        }
-        //$scheme = $userUtil->getRealScheme($request);
+        $scheme = $userUtil->getRealScheme($request);
         $highResPlatformLogoPath = NULL;
         $platformLogoPath = NULL;
         $highResPlatformLogos = $tenantManager->getHighResLogos();
@@ -227,11 +228,11 @@ class HomeController extends OrderAbstractController {
         if( $platformLogos && count($platformLogos) > 0 ) {
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
         }
-        if ($highResPlatformLogoPath) {
-            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
+        if ($highResPlatformLogoPath && $scheme) {
+            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
         }
-        if ($platformLogoPath) {
-            $platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
+        if ($platformLogos && $scheme) {
+            $platformLogos = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogos);
         }
         echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath.", highResPlatformLogoPath=$highResPlatformLogoPath<br>";
         //exit('111');
