@@ -54,13 +54,17 @@
         {#{% set platformLogo = user_security_utility.getPlatformLogo() %}#}
         {#platformLogo={{ platformLogo }}#}
         {% if platformLogo is defined and platformLogo or highResPlatformLogoPath is defined and highResPlatformLogoPath %}
+            twig1 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
             {#height="80" width="300"#}
             <br><br>
             <p>
-                {% if 0 %}
-                    <img src="{{ asset(platformLogo) }}" alt="{{ title }}" height="{{ height }}" width="{{ width }}">
+                {% if 1 %}
+                    {#<img src="{{ asset(platformLogo) }}" alt="{{ title }}" height="{{ height }}" width="{{ width }}">#}
+                    <img src="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif"
+                         srcset="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif 1x, https://view.online/Uploaded/directory/documents/68f7cf81b5e93.gif 2x"
+                         alt="Logo home page manager" height="180" width="320">
                 {% else %}
-                twig platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
+                twig2 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
                 <img
                     src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
                     {% set srcsetParts = [] %}
