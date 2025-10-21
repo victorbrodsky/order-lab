@@ -231,8 +231,8 @@ class HomeController extends OrderAbstractController {
         if ($highResPlatformLogoPath && $scheme) {
             $highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
         }
-        if ($platformLogos && $scheme) {
-            $platformLogos = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogos);
+        if ($platformLogoPath && $scheme) {
+            $platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
         }
         echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath.", highResPlatformLogoPath=$highResPlatformLogoPath<br>";
         //exit('111');

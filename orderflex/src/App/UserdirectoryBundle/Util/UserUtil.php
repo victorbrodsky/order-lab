@@ -102,8 +102,8 @@ class UserUtil {
         if( !$scheme ) {
             $scheme = 'http';
         }
-        echo "scheme=$scheme <br>";
-        exit('111');
+        //echo "scheme=$scheme <br>";
+        //exit('111');
 
         ////// testing //////
         //$scheme = 'https';
