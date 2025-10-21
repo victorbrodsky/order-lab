@@ -217,6 +217,7 @@ class HomeController extends OrderAbstractController {
 //                //echo "multiTenancyHomePage: getLogos=".$platformLogoPath."<br>";
 //            }
 //        }
+        $tenant_base = $this->container->getParameter('tenant_base');
         $scheme = $userUtil->getRealScheme($request);
         $highResPlatformLogoPath = NULL;
         $platformLogoPath = NULL;
@@ -234,7 +235,7 @@ class HomeController extends OrderAbstractController {
         if ($platformLogoPath && $scheme) {
             $platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
         }
-        echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath.", highResPlatformLogoPath=$highResPlatformLogoPath<br>";
+        echo $tenant_base.": multiTenancyHomePage: platformLogoPath=".$platformLogoPath.", highResPlatformLogoPath=$highResPlatformLogoPath<br>";
         //exit('111');
 
         $aboutusLogoPath = null;
