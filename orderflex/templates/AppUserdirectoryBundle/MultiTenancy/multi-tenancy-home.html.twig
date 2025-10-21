@@ -58,19 +58,20 @@
             <br><br>
             <p>
                 {#<img src="{{ asset(platformLogo) }}" alt="{{ title }}" height="{{ height }}" width="{{ width }}">#}
+                platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
                 <img
-                        src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
-                        {% set srcsetParts = [] %}
-                        {% if platformLogo %}
-                            {% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}
-                        {% endif %}
-                        {% if highResPlatformLogoPath %}
-                            {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
-                        {% endif %}
-                        {% if srcsetParts|length > 0 %}
-                            srcset="{{ srcsetParts|join(', ') }}"
-                        {% endif %}
-                        alt="Logo home page manager" height="{{ height }}" width="{{ width }}"
+                    src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
+                    {% set srcsetParts = [] %}
+                    {% if platformLogo %}
+                        {% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}
+                    {% endif %}
+                    {% if highResPlatformLogoPath %}
+                        {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
+                    {% endif %}
+                    {% if srcsetParts|length > 0 %}
+                        srcset="{{ srcsetParts|join(', ') }}"
+                    {% endif %}
+                    alt="Logo home page manager" height="{{ height }}" width="{{ width }}"
                 >
             </p>
         {% else %}
