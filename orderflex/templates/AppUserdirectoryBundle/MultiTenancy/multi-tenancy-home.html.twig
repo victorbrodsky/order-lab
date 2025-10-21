@@ -79,20 +79,26 @@
                      {#srcset="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif 1x, https://view.online/Uploaded/directory/documents/68f7cf81b5e93.gif 2x"#}
                      {#alt="Logohomepagemanager" height="180" width="320">#}
 
-                <img
-                    src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
-                    {% set srcsetParts = [] %}
-                    {% if platformLogo %}
-                        {% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}
-                    {% endif %}
-                    {% if highResPlatformLogoPath %}
-                        {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
-                    {% endif %}
-                    {% if srcsetParts|length > 0 %}
-                        srcset="{{ srcsetParts|join(', ') }}"
-                    {% endif %}
-                    alt="Logohomepagemanager"
-                >
+                <picture>
+                    <source media="(min-width: 768px)" srcset="{{ asset(platformLogo) }}">
+                    <img src="{{ asset(highResPlatformLogoPath) }}" alt="Logohomepagemanager" height="{{ height }}" width="{{ width }}">
+                </picture>
+
+
+                {#<img#}
+                    {#src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"#}
+                    {#{% set srcsetParts = [] %}#}
+                    {#{% if platformLogo %}#}
+                        {#{% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}#}
+                    {#{% endif %}#}
+                    {#{% if highResPlatformLogoPath %}#}
+                        {#{% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}#}
+                    {#{% endif %}#}
+                    {#{% if srcsetParts|length > 0 %}#}
+                        {#srcset="{{ srcsetParts|join(', ') }}"#}
+                    {#{% endif %}#}
+                    {#alt="Logohomepagemanager" height="{{ height }}" width="{{ width }}"#}
+                {#>#}
                 {#{% endif %}#}
             </p>
         {% else %}
