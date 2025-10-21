@@ -226,7 +226,7 @@ class HomeController extends OrderAbstractController {
         if( $platformLogos && count($platformLogos) > 0 ) {
             $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
         }
-        //echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath."<br>";
+        echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath.", highResPlatformLogoPath=$highResPlatformLogoPath<br>";
         //exit('111');
 
         $aboutusLogoPath = null;
