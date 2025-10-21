@@ -93,9 +93,6 @@ class UserUtil {
         //echo 'settings urlConnectionChannel $scheme='.$scheme.'<br>';
         if( !$scheme ) {
             if( !$request ) {
-//                if( $this->requestStack && $this->requestStack->getCurrentRequest() ) {
-//                    $request = $this->requestStack->getCurrentRequest();
-//                }
                 $request = $this->getRequest();
             }
             if( $request && $request->getScheme() ) {
@@ -105,6 +102,8 @@ class UserUtil {
         if( !$scheme ) {
             $scheme = 'http';
         }
+        echo "scheme=$scheme <br>";
+        exit('111');
 
         ////// testing //////
         //$scheme = 'https';
