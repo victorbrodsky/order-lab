@@ -53,11 +53,25 @@
         {#Note: multitenancy Logo on the main home page '/' is managed by homepagemanager https://view.online/directory/settings/homepage-manager/configure/#}
         {#{% set platformLogo = user_security_utility.getPlatformLogo() %}#}
         {#platformLogo={{ platformLogo }}#}
-        {% if platformLogo is defined and platformLogo %}
+        {% if platformLogo is defined and platformLogo or highResPlatformLogoPath is defined and highResPlatformLogoPath %}
             {#height="80" width="300"#}
             <br><br>
             <p>
-                <img src="{{ asset(platformLogo) }}" alt="{{ title }}" height="{{ height }}" width="{{ width }}">
+                {#<img src="{{ asset(platformLogo) }}" alt="{{ title }}" height="{{ height }}" width="{{ width }}">#}
+                <img
+                        src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
+                        {% set srcsetParts = [] %}
+                        {% if platformLogo %}
+                            {% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}
+                        {% endif %}
+                        {% if highResPlatformLogoPath %}
+                            {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
+                        {% endif %}
+                        {% if srcsetParts|length > 0 %}
+                            srcset="{{ srcsetParts|join(', ') }}"
+                        {% endif %}
+                        alt="Logo" height="{{ height }}" width="{{ width }}"
+                >
             </p>
         {% else %}
             {#<h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R Multi-Tenancy Home page</h2>#}

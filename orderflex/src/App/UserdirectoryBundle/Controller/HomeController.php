@@ -90,18 +90,30 @@ class HomeController extends OrderAbstractController {
             $height = "80";
         }
 
-        $platformLogoPath = null;
-        $platformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
-        if( $platformLogos && count($platformLogos) > 0 ) {
-            $platformLogo = $platformLogos->first();
-            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
-        } else {
-            $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
-            if ($platformLogos && count($platformLogos) > 0) {
-                $platformLogo = $platformLogos->first();
-                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
-            }
+//        $platformLogoPath = null;
+//        $platformLogos = $highResPlatformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
+//        if( $platformLogos && count($platformLogos) > 0 ) {
+//            $platformLogo = $platformLogos->first();
+//            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+//        } else {
+//            $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
+//            if ($platformLogos && count($platformLogos) > 0) {
+//                $platformLogo = $platformLogos->first();
+//                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+//            }
+//        }
+        $highResPlatformLogoPath = NULL;
+        $platformLogoPath = NULL;
+        $highResPlatformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
+        if( $highResPlatformLogos && count($highResPlatformLogos) > 0 ) {
+            $highResPlatformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($highResPlatformLogos->first());
         }
+        $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
+        if( $platformLogos && count($platformLogos) > 0 ) {
+            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
+        }
+//        $defaultLogoPath = $highResPlatformLogoPath ?? $platformLogoPath;
+
         //echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";
 
 //        return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
@@ -117,7 +129,9 @@ class HomeController extends OrderAbstractController {
         //Move AppUserdirectoryBundle/Resources/views to templates AppUserdirectoryBundle
         return $this->render('AppUserdirectoryBundle/Default/main-common-home.html.twig',
             array(
+//                'defaultLogoPath' => $defaultLogoPath,
                 'platformLogo' => $platformLogoPath,
+                'highResPlatformLogoPath' => $highResPlatformLogoPath,
                 'width' => $width,
                 'height' => $height,
                 'tenantBaseUrlArr' => $tenantBaseUrlArr,
@@ -186,21 +200,31 @@ class HomeController extends OrderAbstractController {
             $height = "80";
         }
 
-        $platformLogoPath = null;
-        $platformLogos = $tenantManager->getHighResLogos();
-        if( count($platformLogos) > 0 ) {
-            $platformLogo = $platformLogos->first();
-            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
-            //echo "multiTenancyHomePage: getHighResLogos=".$platformLogoPath."<br>";
-        } else {
-            $platformLogos = $tenantManager->getLogos();
-            //is_array($platformLogos) &&
-            if (count($platformLogos) > 0) {
-                $platformLogo = $platformLogos->first();
-                //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
-                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
-                //echo "multiTenancyHomePage: getLogos=".$platformLogoPath."<br>";
-            }
+//        $platformLogoPath = null;
+//        $platformLogos = $tenantManager->getHighResLogos();
+//        if( count($platformLogos) > 0 ) {
+//            $platformLogo = $platformLogos->first();
+//            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+//            //echo "multiTenancyHomePage: getHighResLogos=".$platformLogoPath."<br>";
+//        } else {
+//            $platformLogos = $tenantManager->getLogos();
+//            //is_array($platformLogos) &&
+//            if (count($platformLogos) > 0) {
+//                $platformLogo = $platformLogos->first();
+//                //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+//                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+//                //echo "multiTenancyHomePage: getLogos=".$platformLogoPath."<br>";
+//            }
+//        }
+        $highResPlatformLogoPath = NULL;
+        $platformLogoPath = NULL;
+        $highResPlatformLogos = $tenantManager->getHighResLogos();
+        if( $highResPlatformLogos && count($highResPlatformLogos) > 0 ) {
+            $highResPlatformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($highResPlatformLogos->first());
+        }
+        $platformLogos = $tenantManager->getLogos();
+        if( $platformLogos && count($platformLogos) > 0 ) {
+            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
         }
         //echo "multiTenancyHomePage: platformLogoPath=".$platformLogoPath."<br>";
         //exit('111');
@@ -324,6 +348,7 @@ class HomeController extends OrderAbstractController {
                 'title' => $title,
                 'tenantBaseUrlArr' => $tenantBaseUrlArr,
                 'platformLogo' => $platformLogoPath,
+                'highResPlatformLogoPath' => $highResPlatformLogoPath,
                 'greetingText' => $greetingText,
                 'mainText' => $mainText,
                 'footer' => $footer,
