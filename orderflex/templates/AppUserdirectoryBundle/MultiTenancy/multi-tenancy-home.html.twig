@@ -54,7 +54,7 @@
         {#{% set platformLogo = user_security_utility.getPlatformLogo() %}#}
         {#platformLogo={{ platformLogo }}#}
         {% if platformLogo is defined and platformLogo or highResPlatformLogoPath is defined and highResPlatformLogoPath %}
-            twig1 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
+            {#twig1 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}#}
             {#height="80" width="300"#}
             <br><br>
             <p>
@@ -63,16 +63,16 @@
                     {#srcset="View.Online-Reverse-Logo-320x180-10FPS.gif 1x, View.Online-Reverse-Logo-640x360-10FPS.gif 2x"#}
                     {#alt="View.Online Logo"#}
                 {#>#}
-                {% if 0 %}
+                {#{% if 0 %}#}
                     {#image original:<br>#}
                     {#<img src="{{ asset(platformLogo) }}" alt="{{ title }}" height="{{ height }}" width="{{ width }}">#}
-                    <img src="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif" alt="{{ title }}" height="{{ height }}" width="{{ width }}">
-                    <br>image set:<br>
-                    <img src="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif"
-                         srcset="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif 1x, https://view.online/Uploaded/directory/documents/68f7cf81b5e93.gif 2x"
-                         alt="Logohomepagemanager" height="180" width="320"
-                    >
-                {% else %}
+                    {#<img src="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif" alt="{{ title }}" height="{{ height }}" width="{{ width }}">#}
+                    {#<br>image set:<br>#}
+                    {#<img src="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif"#}
+                         {#srcset="https://view.online/Uploaded/directory/documents/68f7cf8301022.gif 1x, https://view.online/Uploaded/directory/documents/68f7cf81b5e93.gif 2x"#}
+                         {#alt="Logohomepagemanager" height="180" width="320"#}
+                    {#>#}
+                {#{% else %}#}
                 {#twig2 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}#}
                 <img
                     src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
@@ -88,7 +88,7 @@
                     {% endif %}
                     alt="Logohomepagemanager" height="{{ height }}" width="{{ width }}"
                 >
-                {% endif %}
+                {#{% endif %}#}
             </p>
         {% else %}
             {#<h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R Multi-Tenancy Home page</h2>#}
