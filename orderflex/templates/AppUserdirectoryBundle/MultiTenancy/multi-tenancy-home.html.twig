@@ -58,9 +58,9 @@
             <br><br>
             <p>
                 {% if 0 %}
-                <img src="{{ asset(platformLogo) }}" alt="{{ title }}" height="{{ height }}" width="{{ width }}">
+                    <img src="{{ asset(platformLogo) }}" alt="{{ title }}" height="{{ height }}" width="{{ width }}">
                 {% else %}
-                platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
+                twig platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
                 <img
                     src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
                     {% set srcsetParts = [] %}
