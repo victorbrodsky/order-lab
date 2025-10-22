@@ -51,7 +51,7 @@ class FellowshipApplication extends BaseUserAttributes {
     private $fellowshipSubspecialty;
 
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\GlobalFellowshipSpecialty', cascade: ['persist'])]
-    private $globalFellowshipSubspecialty;
+    private $globalFellowshipSpecialty;
 
     /**
      * This should be the link to WCMC's "Department of Pathology and Laboratory Medicine"
@@ -490,18 +490,20 @@ class FellowshipApplication extends BaseUserAttributes {
     /**
      * @return mixed
      */
-    public function getGlobalFellowshipSubspecialty()
+    public function getGlobalFellowshipSpecialty()
     {
-        return $this->globalFellowshipSubspecialty;
+        return $this->globalFellowshipSpecialty;
     }
 
     /**
-     * @param mixed $globalFellowshipSubspecialty
+     * @param mixed $globalFellowshipSpecialty
      */
-    public function setGlobalFellowshipSubspecialty($globalFellowshipSubspecialty)
+    public function setGlobalFellowshipSpecialty($globalFellowshipSpecialty)
     {
-        $this->globalFellowshipSubspecialty = $globalFellowshipSubspecialty;
+        $this->globalFellowshipSpecialty = $globalFellowshipSpecialty;
     }
+
+
 
     /**
      * @param mixed $institution

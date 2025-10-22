@@ -927,10 +927,16 @@ class FellAppController extends OrderAbstractController {
         //add empty fields if they are not exist
         $fellappUtil = $this->container->get('fellapp_util');
 
-        
-        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        if( count($fellTypes) == 0 ) {
-            return array();
+        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
+            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($asEntities=true);
+            if( count($globalFellTypes) == 0 ) {
+                return array();
+            }
+        } else {
+            $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+            if( count($fellTypes) == 0 ) {
+                return array();
+            }
         }
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
@@ -1010,6 +1016,7 @@ class FellAppController extends OrderAbstractController {
             'roles' => $user->getRoles(),
             'container' => $this->container,
             'fellappTypes' => $fellTypes,
+            'globalFellappTypes' => $globalFellTypes,
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName,
             //'security' => $security
@@ -3571,6 +3578,8 @@ class FellAppController extends OrderAbstractController {
         //Pathology and Laboratory Medicine instituion can have many fellowship types (FellowshipSubspecialty)
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution($asEntities=true);
 
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($asEntities=true);
+
         //New: if authServerNetwork == 'Internet (Hub)'
         //Get $fellTypes based on GlobalFellowshipSpecialty - for now, the same to FellowshipSubspecialty.
         //Each record in GlobalFellowshipSubspecialty table will have ManyToOne $institution
@@ -3584,6 +3593,7 @@ class FellAppController extends OrderAbstractController {
             'roles' => $user->getRoles(),
             'container' => $this->container,
             'fellappTypes' => $fellTypes, //FellowshipSubspecialty::class apply
+            'globalFellappTypes' => $globalFellTypes,
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName
             //'security' => $security

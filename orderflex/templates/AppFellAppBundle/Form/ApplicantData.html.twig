@@ -39,7 +39,12 @@
                 <div class="row">
                     <div class="col-xs-6">
                         <br>
-                        {{ form_row(form.fellowshipSubspecialty) }}
+                        {% if form.fellowshipSubspecialty is defined and form.fellowshipSubspecialty %}
+                            {{ form_row(form.fellowshipSubspecialty) }}
+                        {% endif %}
+                        {% if form.globalFellowshipSpecialty is defined and form.globalFellowshipSpecialty %}
+                            {{ form_row(form.globalFellowshipSpecialty) }}
+                        {% endif %}
                     </div>
                     <div class="col-xs-3">
                         {{ formmacros.fieldDateLabel_vertical(form.startDate,'allow-future-date') }}

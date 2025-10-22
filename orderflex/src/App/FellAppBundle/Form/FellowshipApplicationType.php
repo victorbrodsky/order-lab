@@ -19,6 +19,7 @@ namespace App\FellAppBundle\Form;
 
 
 
+use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
 
 use App\UserdirectoryBundle\Entity\User;
@@ -75,21 +76,41 @@ class FellowshipApplicationType extends AbstractType
             $fellappChoices = array();
         }
 
+        if (array_key_exists('globalFellappTypes', $this->params)) {
+            $globalFellappTypes = $this->params['globalFellappTypes'];
+        } else {
+            $globalFellappTypes = array();
+        }
+
         if( $this->params && !array_key_exists('routeName',$this->params) ) {
             $this->params['routeName'] = null;
         }
 
-        $builder->add('fellowshipSubspecialty', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
-            'class' => FellowshipSubspecialty::class,
-            'label' => "Fellowship Application Type:",
-            //'required' => true,
-            'required' => false,
-            'choices' => $fellappChoices,   //$this->params['fellappTypes'], //$fellTypes,
-            'invalid_message' => 'fellowshipSubspecialty invalid value',
-            //'choices_as_values' => true,
-            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
-        ));
+        if( $fellappChoices && count($fellappChoices) > 0 ) {
+            $builder->add('fellowshipSubspecialty', EntityType::class, array(
+                //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+                'class' => FellowshipSubspecialty::class,
+                'label' => "Fellowship Application Type:",
+                //'required' => true,
+                'required' => false,
+                'choices' => $fellappChoices,   //$this->params['fellappTypes'], //$fellTypes,
+                'invalid_message' => 'fellowshipSubspecialty invalid value',
+                //'choices_as_values' => true,
+                'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
+            ));
+        }
+
+        if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
+            $builder->add('globalFellowshipSpecialty', EntityType::class, array(
+                'class' => GlobalFellowshipSpecialty::class,
+                'label' => "Global Fellowship Application Type:",
+                'required' => false,
+                'choices' => $globalFellappTypes,
+                'invalid_message' => 'globalFellowshipSpecialty invalid value',
+                //'choices_as_values' => true,
+                'attr' => array('class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty'),
+            ));
+        }
 
         if (0 && $this->params['cycle'] == "edit") {
             //$this->secAuthChecker->isGranted('ROLE_FELLAPP_ADMIN') ||
