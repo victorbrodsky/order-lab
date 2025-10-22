@@ -37,7 +37,7 @@ class FellowshipSubspecialty extends ListAbstract
 
 
 
-    //ResidencySpecialty - parent
+    //ResidencySpecialty - parent (parent is just a name for this regular field, it's not tree structure)
     #[ORM\ManyToOne(targetEntity: 'ResidencySpecialty', inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true)]
     protected $parent;

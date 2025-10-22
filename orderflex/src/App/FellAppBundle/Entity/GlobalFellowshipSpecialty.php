@@ -36,7 +36,13 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    //One institution can have many fellowship specialty
+
+//    //ResidencySpecialty - parent
+//    #[ORM\ManyToOne(targetEntity: 'ResidencySpecialty', inversedBy: 'children')]
+//    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true)]
+//    protected $parent;
+
+    //One institution can have many fellowship specialty. Institution is like a parent
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\Institution')]
     #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: true)]
     private $institution;

@@ -20,6 +20,7 @@ namespace App\FellAppBundle\Controller;
 
 
 use App\FellAppBundle\Entity\GoogleFormConfig;
+use App\FellAppBundle\Form\ApplyFellowshipApplicationType;
 use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 
 
@@ -1050,6 +1051,96 @@ class FellAppController extends OrderAbstractController {
         );
     }
 
+    //NOT USED
+    public function getApplyShowParameters($routeName, $entity, $user=null, $security=null) {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$user = $this->getUser();
+
+//        echo "user=".$user."<br>";
+        if( !$user || !($user instanceof User) ) {
+            //echo "no user object <br>";
+            $user = $userSecUtil->findSystemUser();
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //add empty fields if they are not exist
+        $fellappUtil = $this->container->get('fellapp_util');
+
+
+        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        if( count($fellTypes) == 0 ) {
+            return array();
+        }
+
+        $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
+        //var_dump($fellappVisas);
+        //exit('111');
+
+        $fellappUtil->addEmptyFellAppFields($entity); //testing
+
+        $captchaSiteKey = null;
+
+        if( $routeName == "fellapp_apply" ) {
+            $cycle = 'new';
+            $disabled = false;
+            $method = "POST";
+            $action = $this->generateUrl('fellapp_apply_post'); // /apply use the same post submit as /new form
+        }
+
+        if( $routeName == "fellapp_download" ) {
+            $cycle = 'download';
+            $disabled = true;
+            $method = "GET";
+            $action = ""; //null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
+        }
+
+        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
+            if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
+                $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+            }
+        }
+
+        $params = array(
+            'cycle' => $cycle,
+            'em' => $em,
+            'user' => $entity->getUser(),
+            'cloneuser' => null,
+            'roles' => $user->getRoles(),
+            'container' => $this->container,
+            'fellappTypes' => $fellTypes,
+            'fellappVisas' => $fellappVisas,
+            'routeName' => $routeName,
+            //'security' => $security
+        );
+
+        $form = $this->createForm(
+            ApplyFellowshipApplicationType::class, //method: get Show Parameters
+            $entity,
+            array(
+                'disabled' => $disabled,
+                'method' => $method,
+                'action' => $action,
+                'form_custom_value' => $params
+            )
+        );
+
+        //clear em, because createUserEditEvent will flush em
+        $em = $this->getDoctrine()->getManager();
+        $em->clear();
+
+        return array(
+            'form_pure' => $form,
+            'form' => $form->createView(),
+            'entity' => $entity,
+            'pathbase' => 'fellapp',
+            'cycle' => $cycle,
+            'sitename' => $this->getParameter('fellapp.sitename'),
+            'route_path' => $routeName,
+            'captchaSiteKey' => $captchaSiteKey
+        );
+    }
 
 //    /**
     //     * -NOT-USED
@@ -3290,6 +3381,7 @@ class FellAppController extends OrderAbstractController {
 
         //$user = new User();
         $addobjects = true;
+        //TODO: the anonymous user will be this applicant
         $applicant = new User($addobjects);
         $applicant->setPassword("");
         $applicant->setCreatedby('manual');
@@ -3301,7 +3393,7 @@ class FellAppController extends OrderAbstractController {
         $applicant->addFellowshipApplication($fellowshipApplication);
 
         $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); //apply
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); //apply GET
 
         // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
@@ -3368,7 +3460,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         return $this->render('AppFellAppBundle/Form/apply.html.twig', $args);
-        $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
+        //$args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
     }
 
     #[Route(path: '/check-user-exist', name: 'employees_check_user_exist_email', methods: ["POST"], options: ['expose' => true])]
@@ -3496,8 +3588,10 @@ class FellAppController extends OrderAbstractController {
             'routeName' => $routeName
             //'security' => $security
         );
+
         //$form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
-        $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //new
+        $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //apply POST
+        //$form = $this->createForm( ApplyFellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //apply POST
 
         $form->handleRequest($request);
         
