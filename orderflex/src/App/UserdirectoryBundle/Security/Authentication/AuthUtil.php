@@ -408,7 +408,7 @@ class AuthUtil {
         return $user;
     }
 
-    //Legacy function
+    //Legacy function.
     public function searchLdap( $usernameClean, $ldapType=1, $withWarning=true ) {
         $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
         return $ldapAuthUtil->searchLdap($usernameClean,$ldapType,$withWarning);
