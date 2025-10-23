@@ -20,22 +20,22 @@ final class Version20251020202322 extends PostgresMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        //$this->addSql('CREATE SEQUENCE fellapp_globalspecialty_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-//        $this->addSql('CREATE TABLE fellapp_globalspecialty (id INT NOT NULL, original_id INT DEFAULT NULL, institution_id INT DEFAULT NULL, creator_id INT DEFAULT NULL, updatedby_id INT DEFAULT NULL, seasonYearStart DATE DEFAULT NULL, seasonYearEnd DATE DEFAULT NULL, apiConnectionKey VARCHAR(255) DEFAULT NULL, apiImportKeys JSON DEFAULT NULL, name VARCHAR(255) NOT NULL, abbreviation VARCHAR(255) DEFAULT NULL, shortname VARCHAR(255) DEFAULT NULL, description TEXT DEFAULT NULL, type VARCHAR(255) NOT NULL, createdate TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updatedon TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, orderinlist INT NOT NULL, updateAuthorRoles TEXT DEFAULT NULL, fulltitle VARCHAR(255) DEFAULT NULL, linkToListId VARCHAR(255) DEFAULT NULL, entityId VARCHAR(255) DEFAULT NULL, entityNamespace VARCHAR(255) DEFAULT NULL, entityName VARCHAR(255) DEFAULT NULL, version INT DEFAULT NULL, textAttribute TEXT DEFAULT NULL, urlSlug VARCHAR(255) DEFAULT NULL, objectType_id INT DEFAULT NULL, PRIMARY KEY(id))');
-//        $this->addSql('CREATE INDEX IDX_A01FF404108B7592 ON fellapp_globalspecialty (original_id)');
-//        $this->addSql('CREATE INDEX IDX_A01FF40410405986 ON fellapp_globalspecialty (institution_id)');
-//        $this->addSql('CREATE INDEX IDX_A01FF40461220EA6 ON fellapp_globalspecialty (creator_id)');
-//        $this->addSql('CREATE INDEX IDX_A01FF404A43E35E8 ON fellapp_globalspecialty (updatedby_id)');
-//        $this->addSql('CREATE INDEX IDX_A01FF404BD42F28C ON fellapp_globalspecialty (objectType_id)');
-//        $this->addSql('COMMENT ON COLUMN fellapp_globalspecialty.updateAuthorRoles IS \'(DC2Type:array)\'');
+        $this->addSql('CREATE SEQUENCE fellapp_globalspecialty_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE fellapp_globalspecialty (id INT NOT NULL, original_id INT DEFAULT NULL, institution_id INT DEFAULT NULL, creator_id INT DEFAULT NULL, updatedby_id INT DEFAULT NULL, seasonYearStart DATE DEFAULT NULL, seasonYearEnd DATE DEFAULT NULL, apiConnectionKey VARCHAR(255) DEFAULT NULL, apiImportKeys JSON DEFAULT NULL, name VARCHAR(255) NOT NULL, abbreviation VARCHAR(255) DEFAULT NULL, shortname VARCHAR(255) DEFAULT NULL, description TEXT DEFAULT NULL, type VARCHAR(255) NOT NULL, createdate TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updatedon TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, orderinlist INT NOT NULL, updateAuthorRoles TEXT DEFAULT NULL, fulltitle VARCHAR(255) DEFAULT NULL, linkToListId VARCHAR(255) DEFAULT NULL, entityId VARCHAR(255) DEFAULT NULL, entityNamespace VARCHAR(255) DEFAULT NULL, entityName VARCHAR(255) DEFAULT NULL, version INT DEFAULT NULL, textAttribute TEXT DEFAULT NULL, urlSlug VARCHAR(255) DEFAULT NULL, objectType_id INT DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_A01FF404108B7592 ON fellapp_globalspecialty (original_id)');
+        $this->addSql('CREATE INDEX IDX_A01FF40410405986 ON fellapp_globalspecialty (institution_id)');
+        $this->addSql('CREATE INDEX IDX_A01FF40461220EA6 ON fellapp_globalspecialty (creator_id)');
+        $this->addSql('CREATE INDEX IDX_A01FF404A43E35E8 ON fellapp_globalspecialty (updatedby_id)');
+        $this->addSql('CREATE INDEX IDX_A01FF404BD42F28C ON fellapp_globalspecialty (objectType_id)');
+        $this->addSql('COMMENT ON COLUMN fellapp_globalspecialty.updateAuthorRoles IS \'(DC2Type:array)\'');
         $this->addSql('CREATE TABLE user_siteparameter_highresplatformlogo (siteparameter_id INT NOT NULL, logo_id INT NOT NULL, PRIMARY KEY(siteparameter_id, logo_id))');
         $this->addSql('CREATE INDEX IDX_5BE66180C9C55698 ON user_siteparameter_highresplatformlogo (siteparameter_id)');
         $this->addSql('CREATE INDEX IDX_5BE66180F98F144A ON user_siteparameter_highresplatformlogo (logo_id)');
-//        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF404108B7592 FOREIGN KEY (original_id) REFERENCES fellapp_globalspecialty (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-//        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF40410405986 FOREIGN KEY (institution_id) REFERENCES user_institution (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-//        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF40461220EA6 FOREIGN KEY (creator_id) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-//        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF404A43E35E8 FOREIGN KEY (updatedby_id) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-//        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF404BD42F28C FOREIGN KEY (objectType_id) REFERENCES user_objectTypeList (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF404108B7592 FOREIGN KEY (original_id) REFERENCES fellapp_globalspecialty (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF40410405986 FOREIGN KEY (institution_id) REFERENCES user_institution (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF40461220EA6 FOREIGN KEY (creator_id) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF404A43E35E8 FOREIGN KEY (updatedby_id) REFERENCES user_fosuser (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE fellapp_globalspecialty ADD CONSTRAINT FK_A01FF404BD42F28C FOREIGN KEY (objectType_id) REFERENCES user_objectTypeList (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE user_siteparameter_highresplatformlogo ADD CONSTRAINT FK_5BE66180C9C55698 FOREIGN KEY (siteparameter_id) REFERENCES user_siteparameters (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE user_siteparameter_highresplatformlogo ADD CONSTRAINT FK_5BE66180F98F144A FOREIGN KEY (logo_id) REFERENCES user_document (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE fellapp_fellapp_coverletter DROP CONSTRAINT fellapp_fellapp_coverletter_pkey');
