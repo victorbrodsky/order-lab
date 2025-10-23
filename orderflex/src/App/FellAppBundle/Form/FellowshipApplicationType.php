@@ -120,7 +120,7 @@ class FellowshipApplicationType extends AbstractType
                 'label' => "Global Fellowship Application Type:",
                 'choice_label' => "getNameInstitution",
                 'required' => false,
-                //'choices' => $globalFellappTypes,
+                'choices' => $this->params['institutions'],
                 'invalid_message' => 'globalFellowshipSpecialty invalid value',
                 //'choices_as_values' => true,
                 'attr' => array('class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty'),

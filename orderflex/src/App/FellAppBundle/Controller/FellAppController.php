@@ -1011,6 +1011,8 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
+        $institutions = $fellappUtil->getFellowshipInstitutions();
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -1020,6 +1022,7 @@ class FellAppController extends OrderAbstractController {
             'container' => $this->container,
             'fellappTypes' => $fellTypes,
             'globalFellappTypes' => $globalFellTypes,
+            //'institutions' => $institutions,
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName,
             //'security' => $security
@@ -3597,6 +3600,7 @@ class FellAppController extends OrderAbstractController {
             'container' => $this->container,
             'fellappTypes' => $fellTypes, //FellowshipSubspecialty::class apply
             'globalFellappTypes' => $globalFellTypes,
+            //'institutions' => $institutions,
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName
             //'security' => $security

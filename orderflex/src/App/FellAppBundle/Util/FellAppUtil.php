@@ -495,6 +495,21 @@ class FellAppUtil {
         return $filterType;
     }
 
+    public function getFellowshipInstitutions() {
+        $repository = $this->em->getRepository(Institution::class);
+        $dql = $repository->createQueryBuilder('list');
+        $query = $dql->getQuery();
+
+        $dql->where("list.abbreviation = :wcm OR list.abbreviation = :washu");
+        $query->setParameters( array(
+            'wcm' => 'WCM',
+            'washu' => 'WashU',
+        ));
+
+        $institutions = $query->getResult();
+        return $institutions;
+    }
+
     //get all fellowship visa status
     public function getFellowshipVisaStatuses( $asEntities=false, $idName = true ) {
         $em = $this->em;
