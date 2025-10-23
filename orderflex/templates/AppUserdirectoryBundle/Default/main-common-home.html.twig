@@ -89,6 +89,7 @@
                     {#{% endif %}#}
                     {#alt="Tenant logo" height="{{ height }}" width="{{ width }}"#}
                 {#>#}
+                twig1 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
                 {% set logoPath = highResPlatformLogoPath is defined and highResPlatformLogoPath ? highResPlatformLogoPath : platformLogo %}
                 <img src="{{ asset(logoPath) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">
             </p>
