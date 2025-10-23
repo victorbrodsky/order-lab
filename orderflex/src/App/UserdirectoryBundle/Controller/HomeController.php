@@ -105,7 +105,7 @@ class HomeController extends OrderAbstractController {
         }
         //$tenant_base = $this->getParameter('tenant_role');
 //        $scheme = $userUtil->getRealScheme($request);
-//        $highResPlatformLogoPath = NULL;
+        $highResPlatformLogoPath = NULL;
 //        $platformLogoPath = NULL;
 //        $highResPlatformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
 //        if( $highResPlatformLogos && count($highResPlatformLogos) > 0 ) {
@@ -230,7 +230,7 @@ class HomeController extends OrderAbstractController {
         }
 //        $tenant_base = $this->getParameter('tenant_role');
 //        $scheme = $userUtil->getRealScheme($request);
-//        $highResPlatformLogoPath = NULL;
+        $highResPlatformLogoPath = NULL;
 //        $platformLogoPath = NULL;
 //        $highResPlatformLogos = $tenantManager->getHighResLogos();
 //        if( $highResPlatformLogos && count($highResPlatformLogos) > 0 ) {
