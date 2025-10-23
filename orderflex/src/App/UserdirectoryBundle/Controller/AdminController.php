@@ -3234,10 +3234,10 @@ class AdminController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-//        $entities = $em->getRepository(Institution::class)->findAll();
-//        if( $entities ) {
-//            return -1;
-//        }
+        $entities = $em->getRepository(Institution::class)->findAll();
+        if( $entities ) {
+            return -1;
+        }
 
         $wcmcDep = array(
             'Anesthesiology',
@@ -3446,11 +3446,11 @@ class AdminController extends OrderAbstractController
         );
 
         $institutions = array(
-//            "Weill Cornell Medical College"=>$wcmc,
-//            "New York Presbyterian Hospital"=>$nyh,
-//            "Weill Cornell Medical College Qatar"=>$wcmcq,
-//            "Memorial Sloan Kettering Cancer Center"=>$msk,
-//            "Hospital for Special Surgery"=>$hss,
+            "Weill Cornell Medical College"=>$wcmc,
+            "New York Presbyterian Hospital"=>$nyh,
+            "Weill Cornell Medical College Qatar"=>$wcmcq,
+            "Memorial Sloan Kettering Cancer Center"=>$msk,
+            "Hospital for Special Surgery"=>$hss,
             "Washington University School of Medicine in Saint Louis"=>$washu
         );
 
