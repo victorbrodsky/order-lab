@@ -114,16 +114,16 @@ class FellowshipApplicationType extends AbstractType
             ));
         }
 
-        if( 0 && $this->params && $this->params['routeName'] == 'fellapp_apply' || $this->params['routeName'] == 'fellapp_apply_post' ) {
+        if( $this->params && $this->params['routeName'] == 'fellapp_apply' || $this->params['routeName'] == 'fellapp_apply_post' ) {
             $builder->add('institution', EntityType::class, array(
                 'class' => Institution::class,
-                'label' => "Global Fellowship Application Type:",
-                'choice_label' => "getNameInstitution",
+                'label' => null, //"Institution:",
+                'choice_label' => "getTreeAbbreviation",
                 'required' => false,
                 'choices' => $this->params['institutions'],
-                'invalid_message' => 'globalFellowshipSpecialty invalid value',
+                'invalid_message' => 'institution invalid value',
                 //'choices_as_values' => true,
-                'attr' => array('class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty'),
+                'attr' => array('class' => 'combobox combobox-width fellapp-institution'),
             ));
         }
 
