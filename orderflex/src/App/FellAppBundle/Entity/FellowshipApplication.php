@@ -47,10 +47,11 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\Column(type: 'date', nullable: true)]
     private $endDate;
 
+    //add fellowship specialty: add-fellowship-application-type -> $subspecialtyType->setInstitution($pathology);
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty', cascade: ['persist'])]
     private $fellowshipSubspecialty;
 
-    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\GlobalFellowshipSpecialty', cascade: ['persist'])]
+    #[ORM\ManyToOne(targetEntity: GlobalFellowshipSpecialty::class, cascade: ['persist'])]
     private $globalFellowshipSpecialty;
 
     /**

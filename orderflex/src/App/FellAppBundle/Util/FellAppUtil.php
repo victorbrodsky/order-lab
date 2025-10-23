@@ -26,6 +26,7 @@ namespace App\FellAppBundle\Util;
 
 
 
+use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\FellAppBundle\Entity\VisaStatus; //process.py script: replaced namespace by ::class: added use line for classname=VisaStatus
 
 
@@ -417,6 +418,65 @@ class FellAppUtil {
         $dql->orderBy("list.orderinlist","ASC");
 
         $query = $dql->getQuery();
+
+        $fellTypes = $query->getResult();
+        //echo "fellTypes count=".count($fellTypes)."<br>";
+
+        if( $asEntities ) {
+            return $fellTypes;
+        }
+
+        //add statuses
+        $filterType = array();
+        foreach( $fellTypes as $type ) {
+            //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
+            $filterType[$type->getId()] = $type->getName();
+        }
+
+        return $filterType;
+    }
+    //get all global fellowship application types
+    public function getGlobalFellowshipTypesByInstitution( $institution=null, $asEntities=false ) {
+        $em = $this->em;
+
+//        $mapper = array(
+//            'prefix' => 'App',
+//            'bundleName' => 'UserdirectoryBundle',
+//            'className' => 'Institution',
+//            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+//            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+//        );
+//
+//        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+//        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+//        //exit("wcm=".$wcmc);
+//        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+//        $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+//            "Pathology and Laboratory Medicine",
+//            $wcmc,
+//            $mapper
+//        );
+
+        //get list of fellowship type with extra "ALL"
+        $repository = $em->getRepository(GlobalFellowshipSpecialty::class);
+        $dql = $repository->createQueryBuilder('list');
+        $dql->leftJoin("list.institution","institution");
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $parameters = null;
+        if( $institution ) {
+            //$dql->where("institution.id = ".$pathology->getId());
+            $dql->where("institution.id = :institution");
+            $parameters = array(
+                'institution' => $institution->getId(),
+            );
+        }
+
+        $query = $dql->getQuery();
+
+        if( $parameters && count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
 
         $fellTypes = $query->getResult();
         //echo "fellTypes count=".count($fellTypes)."<br>";

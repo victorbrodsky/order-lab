@@ -928,7 +928,7 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
 
         if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
-            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($asEntities=true);
+            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asEntities=true);
             if( count($globalFellTypes) == 0 ) {
                 return array();
             }

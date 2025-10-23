@@ -1017,7 +1017,7 @@ class AdminController extends OrderAbstractController
         //return "Finished generateResidencySpecialties";
 
         $count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties();
-        $count_globalFellowshipSpecialties = 0;//$this->generateGlobalFellowshipSpecialties();
+        $count_globalFellowshipSpecialties = $this->generateGlobalFellowshipSpecialties();
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
@@ -5904,27 +5904,6 @@ class AdminController extends OrderAbstractController
 
         $count = 0;
 
-//        $wcmcDep = array(
-//            'Pathology and Laboratory Medicine' => null
-//        );
-//        $wcmc = array(
-//            'abbreviation'=>'WCM',
-//            'departments'=>$wcmcDep
-//        );
-//
-//        $washuDep = array(
-//            'Department of Pathology and Immunology' => null
-//        );
-//        $washu = array(
-//            'abbreviation'=>'WashU',
-//            'departments'=>$washuDep
-//        );
-//
-//        $institutions = array(
-//            "Weill Cornell Medical College"=>$wcmc,
-//            "Washington University School of Medicine in Saint Louis"=>$washu
-//        );
-
         ////// 1) get wcm ptahology //////
         $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         if( !$wcmc ) {
@@ -5942,9 +5921,53 @@ class AdminController extends OrderAbstractController
             $wcmc,
             $mapper
         );
+        if( !$wcmPathology ) {
+            exit('generateGlobalFellowshipSpecialties: No Institution: "Pathology and Laboratory Medicine"');
+        }
         ////// EOF 1) get wcm ptahology //////
 
-        ////// 2) get WashU ptahology //////
+        $fellowshipSpecialties = array(
+            "Clinical Informatics",
+            "Dermatopathology",
+            "Genitourinary pathology",
+            "Hematopathology",
+            "Breast pathology",
+            "Cytopathology"
+        );
+
+        foreach( $fellowshipSpecialties as $fellowshipSpecialty ) {
+            //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
+            $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneBy([
+                'name' => $fellowshipSpecialty,
+                'institution' => $wcmPathology,
+            ]);
+
+            if ($listEntity) {
+                continue;
+            }
+
+            exit("Create GlobalFellowshipSpecialty");
+            $listEntity = new GlobalFellowshipSpecialty();
+            $this->setDefaultList($listEntity, $count, $username, $fellowshipSpecialty);
+
+            $listEntity->setInstitution($wcmPathology);
+
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    public function generateGlobalFellowshipSpecialtiesWahsu() {
+        $em = $this->getDoctrine()->getManager();
+        $username = $this->getUser();
+
+        $count = 0;
+        ////// 2) get WashU pathology //////
         $washU = $em->getRepository(Institution::class)->findOneByAbbreviation("WashU");
         if( !$washU ) {
             exit('generateGlobalFellowshipSpecialties: No Institution: "WashU"');
@@ -5962,28 +5985,31 @@ class AdminController extends OrderAbstractController
             $mapper
         );
         ////// EOF 1) get WashU ptahology //////
-
-        $institutionArr = array(
-            $wcmPathology,
-            $washUPathology
-        );
-
-        $fellowshipSpecialties = array(
+        $washuFellowshipSpecialties = [
+            "Blood Banking and Transfusion Medicine",
+            "Clinical Chemistry",
             "Clinical Informatics",
-            //"Dermatopathology",
-            //"Genitourinary pathology",
-            //"Hematopathology",
-            //"Breast pathology",
-            //"Cytopathology"
-        );
+            "Cytopathology",
+            "Dermatopathology",
+            "Genitourinary and Renal Pathology",
+            "Gynecologic and Breast Pathology",
+            "Head and Neck Pathology",
+            "Hematopathology",
+            "Histocompatibility and Immunogenetics",
+            "Laboratory Genetics and Genomics",
+            "Liver and GI Pathology",
+            "Medical and Public Health Microbiology",
+            "Molecular Genetic Pathology",
+            "Neuropathology",
+            "Pediatric Pathology",
+            "Surgical Pathology"
+        ];
 
-        foreach( $fellowshipSpecialties as $fellowshipSpecialty ) {
-            foreach( $institutionArr as $institution ) {
-
+        foreach( $washuFellowshipSpecialties as $washuFellowshipSpecialty ) {
                 //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
                 $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneBy([
-                    'name' => $fellowshipSpecialty,
-                    'institution' => $institution,
+                    'name' => $washuFellowshipSpecialty,
+                    'institution' => $washUPathology,
                 ]);
 
                 if ($listEntity) {
@@ -5994,13 +6020,12 @@ class AdminController extends OrderAbstractController
                 $listEntity = new GlobalFellowshipSpecialty();
                 $this->setDefaultList($listEntity, $count, $username, $fellowshipSpecialty);
 
-                $listEntity->setInstitution($institution);
+                $listEntity->setInstitution($washUPathology);
 
                 $em->persist($listEntity);
                 $em->flush();
 
                 $count = $count + 10;
-            }
         }
 
         return round($count/10);
