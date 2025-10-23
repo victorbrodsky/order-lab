@@ -3496,7 +3496,6 @@ class AdminController extends OrderAbstractController
                         $departmentname = $infos['departments'][$departmentname];
                     }
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                     if( $em->getRepository(Institution::class)->findOneByName($departmentname) ) {
                         continue;
                     }
@@ -3523,7 +3522,6 @@ class AdminController extends OrderAbstractController
                                 $divisionname = $divisions[$divisionname];
                             }
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                             if( $em->getRepository(Institution::class)->findOneByName($divisionname) ) {
                                 continue;
                             }
@@ -3542,7 +3540,6 @@ class AdminController extends OrderAbstractController
                                         $servicename = $services[$servicename];
                                     }
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                                     if( $em->getRepository(Institution::class)->findOneByName($servicename) ) {
                                         continue;
                                     }
