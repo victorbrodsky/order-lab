@@ -3470,10 +3470,10 @@ class AdminController extends OrderAbstractController
         $treeCount = 10;
 
         foreach( $institutions as $institutionname=>$infos ) {
-
-            if( $institutionname == 'Washington University School of Medicine in Saint Louis' ) {
-                exit("foreach ".$institutionname);
-            }
+            exit("foreach ".$institutionname);
+//            if( $institutionname == 'Washington University School of Medicine in Saint Louis' ) {
+//                exit("foreach ".$institutionname);
+//            }
 
             if( $em->getRepository(Institution::class)->findOneByName($institutionname) ) {
                 echo "skip $institutionname <br>";
