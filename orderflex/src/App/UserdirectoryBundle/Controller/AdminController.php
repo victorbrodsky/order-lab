@@ -3474,8 +3474,9 @@ class AdminController extends OrderAbstractController
             if( $em->getRepository(Institution::class)->findOneByName($institutionname) ) {
                 echo "skip $institutionname <br>";
                 if( $institutionname == 'Washington University School of Medicine in Saint Louis' ) {
-                    exit($institutionname);
+                    exit("skip ".$institutionname);
                 }
+                exit("skip ".$institutionname);
                 continue;
             }
 
