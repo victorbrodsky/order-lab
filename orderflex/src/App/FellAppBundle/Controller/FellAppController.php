@@ -1022,7 +1022,7 @@ class FellAppController extends OrderAbstractController {
             'container' => $this->container,
             'fellappTypes' => $fellTypes,
             'globalFellappTypes' => $globalFellTypes,
-            //'institutions' => $institutions,
+            'institutions' => $institutions,
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName,
             //'security' => $security
