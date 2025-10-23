@@ -8284,6 +8284,8 @@ class AdminController extends OrderAbstractController
             "interfacetransfers" => array('InterfaceTransferList','interfacetransfers-list','Interface Transfer List'),
 
             "samlconfig" => array('SamlConfig','samlconfig-list','Saml Configuration List'),
+
+            "globalfellowshipfpecialty" => array('GlobalFellowshipSpecialty','globalfellowshipfpecialty-list','Global Fellowship Specialty'),
         );
 
         if( $withcustom ) {

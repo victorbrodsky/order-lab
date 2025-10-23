@@ -257,6 +257,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         $strArr = array();
         foreach( $breadCrumbs as $breadCrumb ) {
             $strArr[] = $breadCrumb->getAbbreviation()."";
+            echo "added ".$breadCrumb->getAbbreviation().""."<br>";
         }
         return implode($separator,$strArr);
     }
