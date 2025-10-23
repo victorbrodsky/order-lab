@@ -5990,6 +5990,10 @@ class AdminController extends OrderAbstractController
             $washU,
             $mapper
         );
+        if( !$washUPathology ) {
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "Department of Pathology and Immunology"');
+        }
+
         ////// EOF 1) get WashU ptahology //////
         $washuFellowshipSpecialties = [
             "Blood Banking and Transfusion Medicine",
