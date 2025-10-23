@@ -257,6 +257,139 @@
                 $('#interviews').collapse('show');
                 expandTextarea($('#interviews'));
             }
+
+            (function(){
+                var $inst = $('select.fellapp-institution');
+                var $global = $('select.fellapp-globalFellowshipSpecialty');
+                if ($inst.length === 0 || $global.length === 0) {
+                    console.log('FellApp selects not found:', 'inst len=', $inst.length, 'global len=', $global.length);
+                    return;
+                }
+
+                // Select2 is initialized globally by initializeSelect2ForAnonymous(); no explicit init here
+
+                if (!$global.is('select')) {
+                    console.log('Global element is not a <select>:', $global.prop('tagName'));
+                }
+
+                if (!$global.data('all-options')) {
+                    var instMapAttr = $global.attr('data-inst-map');
+                    var instMap = {};
+                    if (instMapAttr) {
+                        try { instMap = JSON.parse(instMapAttr); } catch(e) { instMap = {}; }
+                    }
+                    console.log('data-inst-map present:', !!instMapAttr, 'size:', Object.keys(instMap).length);
+                    var allOpts = [];
+                    $global.find('option').each(function(){
+                        var $opt = $(this);
+                        var val = $opt.attr('value');
+                        if (!val) { return; }
+                        var instVal = $opt.data('inst');
+                        if (!instVal && instMap && instMap[val] !== undefined) {
+                            instVal = instMap[val];
+                        }
+                        allOpts.push({
+                            id: val,
+                            text: $opt.text(),
+                            inst: instVal ? String(instVal) : ''
+                        });
+                    });
+                    console.log('Cached specialties:', allOpts.length);
+                    $global.data('all-options', allOpts);
+                }
+
+                function recacheOptions(){
+                    var instMapAttr = $global.attr('data-inst-map');
+                    var instMap = {};
+                    if (instMapAttr) {
+                        try { instMap = JSON.parse(instMapAttr); } catch(e) { instMap = {}; }
+                    }
+                    var opts = [];
+                    $global.find('option').each(function(){
+                        var $opt = $(this);
+                        var val = $opt.attr('value');
+                        if (!val) { return; }
+                        var instVal = $opt.data('inst');
+                        if (!instVal && instMap && instMap[val] !== undefined) {
+                            instVal = instMap[val];
+                        }
+                        opts.push({ id: val, text: $opt.text(), inst: instVal ? String(instVal) : '' });
+                    });
+                    $global.data('all-options', opts);
+                    return opts;
+                }
+
+                function filterGlobalByInstitution(instId){
+                    var allOpts = $global.data('all-options') || [];
+                    if (!allOpts.length) {
+                        allOpts = recacheOptions();
+                        console.log('Re-cached specialties on filter:', allOpts.length);
+                    }
+                    var selected = $global.val();
+                    var allowed = [];
+                    if (instId) {
+                        var instStr = String(instId);
+                        allowed = allOpts.filter(function(o){ return o.inst === instStr; });
+                    } else {
+                        allowed = allOpts;
+                    }
+
+                    console.log('Filtering specialties. instId=', instId, 'allowed=', allowed.length);
+
+                    // Fallback 1: try matching by institution abbreviation in option text "Name (ABBR)"
+                    if (instId && allowed.length === 0) {
+                        var abbr = $inst.find('option:selected').text();
+                        if (abbr) {
+                            var pattern = '(' + abbr + ')';
+                            var byAbbr = allOpts.filter(function(o){ return o.text.indexOf(pattern) !== -1; });
+                            console.log('Fallback by abbreviation matched:', byAbbr.length, 'using abbr=', abbr);
+                            if (byAbbr.length > 0) {
+                                allowed = byAbbr;
+                            }
+                        }
+                    }
+
+                    // Fallback 2: if still none, show all so user isn't blocked
+                    if (instId && allowed.length === 0) {
+                        console.warn('No specialties match this institution. Falling back to show all.');
+                        allowed = allOpts;
+                    }
+
+                    $global.empty();
+                    $global.append($('<option>'));
+                    allowed.forEach(function(o){
+                        var opt = new Option(o.text, o.id, false, false);
+                        $(opt).attr('data-inst', o.inst);
+                        $global.append(opt);
+                    });
+
+                    var stillValid = allowed.some(function(o){ return String(o.id) === String(selected); });
+                    if (!stillValid) {
+                        selected = null;
+                    }
+
+                    // Restore selection and notify select2 (compatible with v3/v4)
+                    $global.val(selected);
+                    $global.trigger('change');
+                    $global.trigger('change.select2');
+                }
+
+                $inst.on('change', function(){
+                    var instId = $(this).val();
+                    console.log('Institution changed:', instId);
+                    filterGlobalByInstitution(instId);
+                });
+
+                $global.on('change', function(){
+                    var val = $(this).val();
+                    var text = $(this).find('option:selected').text();
+                    console.log('Global Fellowship Specialty changed:', val, text);
+                });
+
+                var initInst = $inst.val();
+                console.log('Initial institution:', initInst);
+                filterGlobalByInstitution(initInst);
+            })();
         });
 
     </script>
