@@ -58,7 +58,7 @@
             {#height="80" width="300"#}
             <br><br>
             <p>
-                <img src="{{ asset(platformLogo) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">
+                {#<img src="{{ asset(platformLogo) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">#}
                 {#<img#}
                     {#src="View.Online-Reverse-Logo-320x180-10FPS.gif"#}
                     {#srcset="View.Online-Reverse-Logo-320x180-10FPS.gif 1x, View.Online-Reverse-Logo-640x360-10FPS.gif 2x"#}
@@ -86,20 +86,20 @@
                 {#</picture>#}
 
 
-                {#<img#}
-                    {#src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"#}
-                    {#{% set srcsetParts = [] %}#}
-                    {#{% if platformLogo %}#}
-                        {#{% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}#}
-                    {#{% endif %}#}
-                    {#{% if highResPlatformLogoPath %}#}
-                        {#{% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}#}
-                    {#{% endif %}#}
-                    {#{% if srcsetParts|length > 0 %}#}
-                        {#srcset="{{ srcsetParts|join(', ') }}"#}
-                    {#{% endif %}#}
-                    {#alt="Logohomepagemanager" height="{{ height }}" width="{{ width }}"#}
-                {#>#}
+                <img
+                    src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
+                    {% set srcsetParts = [] %}
+                    {% if platformLogo %}
+                        {% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}
+                    {% endif %}
+                    {% if highResPlatformLogoPath %}
+                        {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
+                    {% endif %}
+                    {% if srcsetParts|length > 0 %}
+                        srcset="{{ srcsetParts|join(', ') }}"
+                    {% endif %}
+                    alt="Logohomepagemanager" height="{{ height }}" width="{{ width }}"
+                >
                 {#{% endif %}#}
 
                 {#twig2 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}#}

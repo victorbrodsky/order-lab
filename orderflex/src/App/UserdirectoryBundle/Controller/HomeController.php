@@ -212,49 +212,49 @@ class HomeController extends OrderAbstractController {
             $height = "80";
         }
 
-        $scheme = $userUtil->getRealScheme($request);
-        $highResPlatformLogoPath = NULL;
-        $platformLogoPath = null;
-        $platformLogos = $tenantManager->getHighResLogos();
-        if( count($platformLogos) > 0 ) {
-            $platformLogo = $platformLogos->first();
-            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
-            //echo "multiTenancyHomePage: getHighResLogos=".$platformLogoPath."<br>";
-        } else {
-            $platformLogos = $tenantManager->getLogos();
-            //is_array($platformLogos) &&
-            if (count($platformLogos) > 0) {
-                $platformLogo = $platformLogos->first();
-                //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
-                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
-                //echo "multiTenancyHomePage: getLogos=".$platformLogoPath."<br>";
-            }
-        }
-        if ($platformLogoPath && $scheme) {
-            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
-            $platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
-        }
-
-//        $tenant_base = $this->getParameter('tenant_role');
 //        $scheme = $userUtil->getRealScheme($request);
 //        $highResPlatformLogoPath = NULL;
-//        $platformLogoPath = NULL;
-//        $highResPlatformLogos = $tenantManager->getHighResLogos();
-//        if( $highResPlatformLogos && count($highResPlatformLogos) > 0 ) {
-//            $highResPlatformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($highResPlatformLogos->first());
-//        }
-//        $platformLogos = $tenantManager->getLogos();
-//        if( $platformLogos && count($platformLogos) > 0 ) {
-//            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
-//        }
-//        if ($highResPlatformLogoPath && $scheme) {
-//            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
-//            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
+//        $platformLogoPath = null;
+//        $platformLogos = $tenantManager->getHighResLogos();
+//        if( count($platformLogos) > 0 ) {
+//            $platformLogo = $platformLogos->first();
+//            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+//            //echo "multiTenancyHomePage: getHighResLogos=".$platformLogoPath."<br>";
+//        } else {
+//            $platformLogos = $tenantManager->getLogos();
+//            //is_array($platformLogos) &&
+//            if (count($platformLogos) > 0) {
+//                $platformLogo = $platformLogos->first();
+//                //$platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+//                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogo);
+//                //echo "multiTenancyHomePage: getLogos=".$platformLogoPath."<br>";
+//            }
 //        }
 //        if ($platformLogoPath && $scheme) {
-//            //$platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
+//            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
 //            $platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
 //        }
+
+        //$tenant_base = $this->getParameter('tenant_role');
+        $scheme = $userUtil->getRealScheme($request);
+        $highResPlatformLogoPath = NULL;
+        $platformLogoPath = NULL;
+        $highResPlatformLogos = $tenantManager->getHighResLogos();
+        if( $highResPlatformLogos && count($highResPlatformLogos) > 0 ) {
+            $highResPlatformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($highResPlatformLogos->first());
+        }
+        $platformLogos = $tenantManager->getLogos();
+        if( $platformLogos && count($platformLogos) > 0 ) {
+            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
+        }
+        if ($highResPlatformLogoPath && $scheme) {
+            //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
+            $highResPlatformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $highResPlatformLogoPath);
+        }
+        if ($platformLogoPath && $scheme) {
+            //$platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
+            $platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
+        }
         //echo $tenant_base.": multiTenancyHomePage: platformLogoPath=".$platformLogoPath.", highResPlatformLogoPath=$highResPlatformLogoPath<br>";
         //exit('111');
 
