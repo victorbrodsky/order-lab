@@ -74,7 +74,7 @@
             {#height="80" width="300"#}
             <br><br>
             <p>
-                {#<img src="{{ asset(platformLogo) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">#}
+                <img src="{{ asset(platformLogo) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">
                 {#<img#}
                     {#src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"#}
                     {#{% set srcsetParts = [] %}#}
@@ -89,9 +89,9 @@
                     {#{% endif %}#}
                     {#alt="Tenant logo" height="{{ height }}" width="{{ width }}"#}
                 {#>#}
-                twig1 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}
-                {% set logoPath = highResPlatformLogoPath is defined and highResPlatformLogoPath ? highResPlatformLogoPath : platformLogo %}
-                <img src="{{ asset(logoPath) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">
+                {#twig1 platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}#}
+                {#{% set logoPath = highResPlatformLogoPath is defined and highResPlatformLogoPath ? highResPlatformLogoPath : platformLogo %}#}
+                {#<img src="{{ asset(logoPath) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">#}
             </p>
         {% else %}
             <h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R</h2>
