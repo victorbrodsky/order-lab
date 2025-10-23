@@ -1018,6 +1018,7 @@ class AdminController extends OrderAbstractController
 
         $count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties();
         $count_globalFellowshipSpecialties = $this->generateGlobalFellowshipSpecialties();
+        $count_globalFellowshipSpecialtiesWahsu = $this->generateGlobalFellowshipSpecialtiesWahsu();
 
         $count_sourceOrganizations = $this->generatesourceOrganizations();
         $count_generateImportances = $this->generateImportances();
@@ -1194,6 +1195,7 @@ class AdminController extends OrderAbstractController
             'Residency Specialties='.$count_residencySpecialties.', '.
             'Fellowship Subspecialties='.$count_fellowshipSubspecialties.', '.
             'GlobalFellowshipSpecialties='.$count_globalFellowshipSpecialties.', '.
+            'GlobalFellowshipSpecialtiesWahsu='.$count_globalFellowshipSpecialtiesWahsu.', '.
             //'Major Trainings ='.$count_majorTrainings.', '.
             //'Minor Trainings ='.$count_minorTrainings.', '.
             'Honor Trainings='.$count_HonorTrainings.', '.
@@ -5946,7 +5948,7 @@ class AdminController extends OrderAbstractController
                 continue;
             }
 
-            exit("Create GlobalFellowshipSpecialty");
+            //exit("Create GlobalFellowshipSpecialty");
             $listEntity = new GlobalFellowshipSpecialty();
             $this->setDefaultList($listEntity, $count, $username, $fellowshipSpecialty);
 
@@ -6016,9 +6018,9 @@ class AdminController extends OrderAbstractController
                     continue;
                 }
 
-                exit("Create GlobalFellowshipSpecialty");
+                //exit("Create GlobalFellowshipSpecialty");
                 $listEntity = new GlobalFellowshipSpecialty();
-                $this->setDefaultList($listEntity, $count, $username, $fellowshipSpecialty);
+                $this->setDefaultList($listEntity, $count, $username, $washuFellowshipSpecialty);
 
                 $listEntity->setInstitution($washUPathology);
 

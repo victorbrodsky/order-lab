@@ -22,6 +22,7 @@ namespace App\FellAppBundle\Form;
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
 
+use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\BoardCertificationType;
 use App\UserdirectoryBundle\Form\CitizenshipType;
@@ -104,8 +105,22 @@ class FellowshipApplicationType extends AbstractType
             $builder->add('globalFellowshipSpecialty', EntityType::class, array(
                 'class' => GlobalFellowshipSpecialty::class,
                 'label' => "Global Fellowship Application Type:",
+                'choice_label' => "getNameInstitution",
                 'required' => false,
                 'choices' => $globalFellappTypes,
+                'invalid_message' => 'globalFellowshipSpecialty invalid value',
+                //'choices_as_values' => true,
+                'attr' => array('class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty'),
+            ));
+        }
+
+        if( 0 && $this->params && $this->params['routeName'] == 'fellapp_apply' || $this->params['routeName'] == 'fellapp_apply_post' ) {
+            $builder->add('institution', EntityType::class, array(
+                'class' => Institution::class,
+                'label' => "Global Fellowship Application Type:",
+                'choice_label' => "getNameInstitution",
+                'required' => false,
+                //'choices' => $globalFellappTypes,
                 'invalid_message' => 'globalFellowshipSpecialty invalid value',
                 //'choices_as_values' => true,
                 'attr' => array('class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty'),

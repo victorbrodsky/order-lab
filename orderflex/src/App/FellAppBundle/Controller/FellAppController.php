@@ -927,6 +927,9 @@ class FellAppController extends OrderAbstractController {
         //add empty fields if they are not exist
         $fellappUtil = $this->container->get('fellapp_util');
 
+        $fellTypes = array();
+        $globalFellTypes = array();
+
         if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
             $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asEntities=true);
             if( count($globalFellTypes) == 0 ) {
