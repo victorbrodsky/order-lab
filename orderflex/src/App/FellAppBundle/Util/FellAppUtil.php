@@ -501,6 +501,7 @@ class FellAppUtil {
         $query = $dql->getQuery();
 
         $dql->where("list.abbreviation = :wcm OR list.abbreviation = :washu");
+
         $query->setParameters( array(
             'wcm' => 'WCM',
             'washu' => 'WashU',
