@@ -438,30 +438,12 @@ class FellAppUtil {
     //get all global fellowship application types
     public function getGlobalFellowshipTypesByInstitution( $institution=null, $asEntities=false ) {
         $em = $this->em;
-
-//        $mapper = array(
-//            'prefix' => 'App',
-//            'bundleName' => 'UserdirectoryBundle',
-//            'className' => 'Institution',
-//            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
-//            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
-//        );
-//
-//        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-//        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
-//        //exit("wcm=".$wcmc);
-//        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-//        $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
-//            "Pathology and Laboratory Medicine",
-//            $wcmc,
-//            $mapper
-//        );
-
         //get list of fellowship type with extra "ALL"
         $repository = $em->getRepository(GlobalFellowshipSpecialty::class);
         $dql = $repository->createQueryBuilder('list');
         $dql->leftJoin("list.institution","institution");
-        $dql->orderBy("list.orderinlist","ASC");
+        //$dql->orderBy("list.orderinlist","ASC");
+        $dql->orderBy("list.name","ASC");
 
         $parameters = null;
         if( $institution ) {
@@ -492,7 +474,11 @@ class FellAppUtil {
         $filterType = array();
         foreach( $fellTypes as $type ) {
             //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
-            $filterType[$type->getId()] = $type->getName();
+            //$filterType[$type->getId()] = $type->getName();
+            $filterType[] = array(
+                'id' => $type->getId(),
+                'text' => $type->getNameInstitution().""
+            );
         }
 
         return $filterType;

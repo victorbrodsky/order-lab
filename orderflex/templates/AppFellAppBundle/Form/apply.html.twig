@@ -174,7 +174,7 @@
                 getComboboxGeneric(null,'trainingmajors',_trainingmajors,multipleFlag,'public/generic/','employees',true,'Select a major',true);
             } catch (e) {
                 // fallback: simple select2 without data
-                console.log('gajax-combobox-trainingmajors = no data');
+                //console.log('gajax-combobox-trainingmajors = no data');
                 $('.ajax-combobox-trainingmajors').select2({
                     width: '100%',
                     dropdownAutoWidth: true,
@@ -190,7 +190,7 @@
                 getComboboxGeneric(null,'jobtitle',_jobTitles,false,'public/generic/','employees',true,'Select a job title',true);
             } catch (e) {
                 // fallback: simple select2 without data
-                console.log('gajax-combobox-jobtitle = no data');
+                //console.log('gajax-combobox-jobtitle = no data');
                 $('.ajax-combobox-jobtitle').select2({
                     width: '100%',
                     dropdownAutoWidth: true,
@@ -273,11 +273,11 @@
                 filterGlobalByInstitution(instId);
             });
 
-            $global.on('change', function(){
-                var val = $(this).val();
-                var text = $(this).find('option:selected').text();
-                console.log('Global Fellowship Specialty changed:', val, text);
-            });
+//            $global.on('change', function(){
+//                var val = $(this).val();
+//                var text = $(this).find('option:selected').text();
+//                console.log('Global Fellowship Specialty changed:', val, text);
+//            });
 
             var initInst = $inst.val();
             console.log('Initial institution:', initInst);
@@ -287,18 +287,64 @@
         function filterGlobalByInstitution(instId) {
             console.log('filterGlobalByInstitution:', 'instId=', instId);
 
-            const url = Routing.generate('fellapp-global-fellowship-types') + '/' + instId;
+            if( !instId ) {
+                console.log('filterGlobalByInstitution: instId is null');
+                return;
+            }
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Fetched data:', data);
+            var url = Routing.generate('fellapp-global-fellowship-types')
+            if( instId ) {
+                url = url + '/' + instId;
+            }
 
-                })
-                .catch(error => {
-                        console.error('Error fetching fellowship types:', error);
-                });
+            //const select = $('.fellapp-globalFellowshipSpecialty');
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: 'json'
+            }).then(function (data) {
+                console.log('Fetched data:', data);
+
+                var comboboxEl = $('select.fellapp-globalFellowshipSpecialty');
+                comboboxEl.empty();//.trigger("change");
+
+                //first empty element
+                var newOption = new Option('', '', false, false);
+                comboboxEl.append(newOption);//.trigger('change');
+
+                if( data.length > 0 ) {
+                    data.forEach(function (item) {
+                        var thisEncounterId = item['id'];
+                        var thisEncounterText = item['text'];
+                        //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
+                        //text += thisEncounterText;
+                        if (thisEncounterText) {
+                            var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+                            comboboxEl.append(newOption);//.trigger('change');
+                        }
+                    });
+
+                    comboboxEl.trigger('change');
+                }
+            });
         }
+
+//    fetch(url)
+//        .then(response => response.json())
+//        .then(data => {
+//            console.log('Fetched data:', data);
+//            //const typeSelect = document.querySelector('#oleg_fellappbundle_fellowshipapplication_globalFellowshipSpecialty'); // e.g. '#fellowshipSpecialty'
+//            //typeSelect.innerHTML = ''; // removes all existing <option> elements
+//            $('.fellapp-globalFellowshipSpecialty').select2('data',data);
+//            // Refresh Select2
+//            $('.fellapp-globalFellowshipSpecialty').trigger('change');
+//
+//        })
+//        .catch(error => {
+//                console.error('Error fetching fellowship types:', error);
+//        });
+//}
 
 
 

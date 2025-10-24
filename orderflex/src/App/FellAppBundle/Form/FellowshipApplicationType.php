@@ -153,7 +153,7 @@ class FellowshipApplicationType extends AbstractType
         if( $this->params && $this->params['routeName'] == 'fellapp_apply' || $this->params['routeName'] == 'fellapp_apply_post' ) {
             $builder->add('institution', EntityType::class, array(
                 'class' => Institution::class,
-                'label' => null, //"Institution:",
+                'label' => false, //"Institution:",
                 'choice_label' => "getTreeAbbreviation",
                 'required' => false,
                 'choices' => $this->params['institutions'],

@@ -3508,7 +3508,8 @@ class FellAppController extends OrderAbstractController {
     }
 
     #[Route(path: '/get-global-fellowship-types/{institution}', name: 'fellapp-global-fellowship-types', options: ['expose' => true])]
-    public function getCities(Institution $institution=null): JsonResponse {
+    public function getGlobalFellowshipTypes(Institution $institution=null)
+    {
 //        $cities = $country->getCities()->map(fn($city) => [
 //            'id' => $city->getId(),
 //            'name' => $city->getName(),
@@ -3516,7 +3517,11 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
         $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution);
 
-        return new JsonResponse($globalFellTypes);
+        //return new JsonResponse($globalFellTypes);
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($globalFellTypes));
+        return $response;
     }
 
 

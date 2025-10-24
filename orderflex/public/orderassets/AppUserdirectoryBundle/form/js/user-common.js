@@ -331,6 +331,9 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
                     globalDataArray.push(val);
                 }
             });
+            console.log('globalDataArray=',globalDataArray);
+            console.log('targetid=',targetid);
+            console.log('multipleFlag=',multipleFlag);
             populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
         }).fail(function(jqXHR){
             console.error('AJAX error fetching '+url+':', jqXHR && jqXHR.status, jqXHR && jqXHR.responseText);
@@ -346,7 +349,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
 //target - class or id of the target element
 function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
 
-    console.log("populateSelectCombobox");
+    //console.log("populateSelectCombobox");
     //console.log("target="+target);
     //printF(target,'populate combobox target: ');
 
@@ -412,7 +415,7 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
         comboboxWidth = null;
     }
 
-    console.log("before select2, target="+target);
+    //console.log("before select2, target="+target);
 
     $(target).select2({
         placeholder: placeholder,

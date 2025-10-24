@@ -164,11 +164,15 @@ class GlobalFellowshipSpecialty extends ListAbstract
         return $this->apiImportKeys;
     }
 
+    //Clinical Informatics (WCM => Pathology)" becomes
+    //"WCM Department of Pathology and Laboratory Medicine - Clinical Informatics
     public function getNameInstitution() {
 //        $institution = $this->getInstitution()->getNodeNameWithParent();
-        $institution = $this->getInstitution()->getTreeAbbreviation();
+        //$institution = $this->getInstitution()->getTreeAbbreviation();
+        $institution = $this->getInstitution()->getTreeRootAbbreviationChildName(' ');
         $name = $this->getName();
-        return $name . " (" . $institution . ")";
+        //return $name . " (" . $institution . ")";
+        return $institution . " - " . $name;
     }
 
     public function __toString() {
