@@ -899,7 +899,7 @@ class FellAppController extends OrderAbstractController {
     }
 
 
-    public function getShowParameters($routeName, $entity, $user=null, $security=null) {
+    public function getShowParameters($routeName, $entity, $user=null, $security=null, $institutionId=null) {
 
         $userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
@@ -1012,7 +1012,7 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
-        $institutions = $fellappUtil->getFellowshipInstitutions();
+        $institutions = $fellappUtil->getFellowshipInstitutions($institutionId);
         //dump($institutions);
         //exit('111');
         //echo '$institutions='.count($institutions).'<br>';
@@ -3331,6 +3331,7 @@ class FellAppController extends OrderAbstractController {
     /////////////////////////////////////////////////////////
 
     //Public open fellowship application
+    //http://127.0.0.1/fellowship-applications/apply?program[]=2179
     #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
     #[Template('AppFellAppBundle/Form/apply.html.twig')]
     public function applyAction(Request $request, Security $security, TokenStorageInterface $tokenStorage) {
@@ -3354,6 +3355,19 @@ class FellAppController extends OrderAbstractController {
             );
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
+
+        // Parse ?program[]=1&program[]=2
+        $programIds = $request->query->all('program'); // returns array of IDs
+
+        // Defensive: ensure it's an array of integers
+        $institutionId = null;
+        $institutionIds = array_filter(array_map('intval', $programIds));
+        if( count($institutionIds) > 0 ) {
+            $institutionId = $institutionIds[0];
+        }
+        //dump($institutionIds);
+        //exit('111');
+
 
         //$user = $this->getUser();
         $user = $this->getUser();
@@ -3414,7 +3428,7 @@ class FellAppController extends OrderAbstractController {
         $applicant->addFellowshipApplication($fellowshipApplication);
 
         $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); //apply GET
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security,$institutionId); //apply GET
 
         // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
