@@ -267,7 +267,8 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         $breadCrumbs = $this->getEntityBreadcrumbs();
         $strArr = array();
         foreach( $breadCrumbs as $breadCrumb ) {
-            $strArr[] = $breadCrumb->getAbbreviation()."";
+            //$strArr[] = $breadCrumb->getAbbreviation()."";
+            $strArr[] = $breadCrumb->getName()."";
             //echo "added ".$breadCrumb->getId().", ".$breadCrumb->getAbbreviation().""."<br>";
         }
         //$strArr = array_reverse($strArr);
