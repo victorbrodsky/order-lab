@@ -263,7 +263,7 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
     //WCM Department of Pathology and Laboratory Medicine
-    public function getTreeRootAbbreviationChildName($separator=" => ") {
+    public function getTreeRootAbbreviationChildName($separator=" ") {
         $breadCrumbs = $this->getEntityBreadcrumbs();
         $strArr = array();
         foreach( $breadCrumbs as $breadCrumb ) {

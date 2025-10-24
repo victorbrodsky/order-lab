@@ -154,7 +154,7 @@ class FellowshipApplicationType extends AbstractType
             $builder->add('institution', EntityType::class, array(
                 'class' => Institution::class,
                 'label' => false, //"Institution:",
-                'choice_label' => "getTreeAbbreviation",
+                'choice_label' => "getTreeRootAbbreviationChildName",
                 'required' => false,
                 'choices' => $this->params['institutions'],
                 'invalid_message' => 'institution invalid value',
