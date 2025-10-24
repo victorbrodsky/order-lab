@@ -147,6 +147,7 @@ security:
 
        - { path: ^.*/fellowship-applications/apply, role: PUBLIC_ACCESS }
        - { path: ^.*/fellowship-applications/check-user-exist, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/get-global-fellowship-types, role: PUBLIC_ACCESS }
 
        - { path: ^.*/fellowship-applications/download/, roles: PUBLIC_ACCESS, ips: [127.0.0.1, ::1] }
        - { path: ^.*/fellowship-applications/download/, roles: ROLE_FELLAPP_USER }

@@ -2994,7 +2994,7 @@ class ListController extends OrderAbstractController
             $pieces = explode("_", $route);
             $route = $pieces[0];
         }
-        //echo "route search=".$route."<br>";
+        echo "route search=".$route."<br>";
 
         switch( $route ) {
 
@@ -3247,6 +3247,11 @@ class ListController extends OrderAbstractController
             case "fellappstatuses":
                 $className = "FellAppStatus";
                 $displayName = "Fellowship Application Statuses";
+                $bundleName = "FellAppBundle";
+                break;
+            case "globalfellowshipfpecialty":
+                $className = "GlobalFellowshipSpecialty";
+                $displayName = "Global Fellowship Specialty";
                 $bundleName = "FellAppBundle";
                 break;
             case "fellappranks":
@@ -3675,12 +3680,6 @@ class ListController extends OrderAbstractController
                 $className = "SamlConfig";
                 $displayName = "Saml Configuration List";
                 $bundleName = "Saml";
-                break;
-
-            case "globalfellowshipfpecialty":
-                $className = "GlobalFellowshipSpecialty";
-                $displayName = "Global Fellowship Specialty";
-                $bundleName = "FellAppBundle";
                 break;
 
 

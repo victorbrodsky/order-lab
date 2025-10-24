@@ -69,9 +69,16 @@ class GlobalFellowshipSpecialty extends ListAbstract
     //    'newkey1234567890',
     //    'anotherKey0987654321',
     //    ]);
-    #[ORM\Column(type: 'json', nullable: true)]
-    private array $apiImportKeys = [];
+    //#[ORM\Column(type: 'json', nullable: true)]
+    //private array $apiImportKeys = [];
+    #[ORM\Column(name: 'apiImportKeys', type: 'array')]
+    private $apiImportKeys;
 
+
+    public function __construct()
+    {
+        $this->apiImportKeys = array();
+    }
 
     /**
      * @param mixed $institution
@@ -143,27 +150,40 @@ class GlobalFellowshipSpecialty extends ListAbstract
     {
         return $this->apiImportKeys;
     }
+    public function hasApiImportKey($apiImportKey): bool
+    {
+        return in_array(strtoupper($apiImportKey), $this->getApiImportKeys(), true);
+    }
     public function setApiImportKeys(array $apiImportKeys): self
     {
         $this->apiImportKeys = $apiImportKeys;
         return $this;
     }
-    public function addApiImportKey(string $key): self
+    public function removeApiImportKey(string $item): bool
     {
-        if (!in_array($key, $this->apiImportKeys, true)) {
-            $this->apiImportKeys[] = $key;
+        if (false !== $key = array_search(strtoupper($item), $this->apiImportKeys, true)) {
+            unset($this->apiImportKeys[$key]);
+            $this->roles = array_values($this->apiImportKeys);
+            return true;
+        }
+        return false;
+    }
+    public function addApiImportKey(string $item): self
+    {
+        if (!in_array($item, $this->apiImportKeys, true)) {
+            $this->apiImportKeys[] = $item;
         }
         return $this;
     }
-    //$this->removeApiImportKey('def456');
-    public function removeApiImportKey(string $key): self
-    {
-        $this->apiImportKeys = array_filter(
-            $this->apiImportKeys,
-            fn($existingKey) => $existingKey !== $key
-        );
-        return $this;
-    }
+//    //$this->removeApiImportKey('def456');
+//    public function removeApiImportKey(string $key): self
+//    {
+//        $this->apiImportKeys = array_filter(
+//            $this->apiImportKeys,
+//            fn($existingKey) => $existingKey !== $key
+//        );
+//        return $this;
+//    }
 
     public function getNameInstitution() {
 //        $institution = $this->getInstitution()->getNodeNameWithParent();

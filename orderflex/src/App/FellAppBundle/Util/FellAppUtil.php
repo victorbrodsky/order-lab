@@ -465,6 +465,7 @@ class FellAppUtil {
 
         $parameters = null;
         if( $institution ) {
+            echo "institution=$institution, ID=".$institution->getId()."<br>";
             //$dql->where("institution.id = ".$pathology->getId());
             $dql->where("institution.id = :institution");
             $parameters = array(
@@ -479,7 +480,9 @@ class FellAppUtil {
         }
 
         $fellTypes = $query->getResult();
-        //echo "fellTypes count=".count($fellTypes)."<br>";
+        echo "fellTypes count=".count($fellTypes)."<br>";
+
+        exit('111');
 
         if( $asEntities ) {
             return $fellTypes;

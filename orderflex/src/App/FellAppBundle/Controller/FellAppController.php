@@ -24,6 +24,7 @@ use App\FellAppBundle\Form\ApplyFellowshipApplicationType;
 use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 
 
+use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
 
 
@@ -58,7 +59,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
@@ -3476,7 +3477,7 @@ class FellAppController extends OrderAbstractController {
         //$args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
     }
 
-    #[Route(path: '/check-user-exist', name: 'employees_check_user_exist_email', methods: ["POST"], options: ['expose' => true])]
+    #[Route(path: '/check-user-exist', name: 'fellapp_check_user_exist_email', methods: ["POST"], options: ['expose' => true])]
     public function checkUserExistEmailAction(Request $request) {
         $fellappUtil = $this->container->get('fellapp_util');
         //$res = $fellappUtil->checkUserExistByPostRequest($request);
@@ -3498,6 +3499,20 @@ class FellAppController extends OrderAbstractController {
         return $response;
         //return new JsonResponse(['exists' => $userExists]);
     }
+
+    #[Route(path: '/get-global-fellowship-types/{institution}', name: 'fellapp-global-fellowship-types', options: ['expose' => true])]
+    public function getCities(Institution $institution): JsonResponse {
+//        $cities = $country->getCities()->map(fn($city) => [
+//            'id' => $city->getId(),
+//            'name' => $city->getName(),
+//        ])->toArray();
+        $fellappUtil = $this->container->get('fellapp_util');
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution);
+
+        return new JsonResponse($globalFellTypes);
+    }
+
+
 //    public function canonicalize($string)
 //    {
 //        if (null === $string) {
@@ -3584,7 +3599,7 @@ class FellAppController extends OrderAbstractController {
         //Pathology and Laboratory Medicine instituion can have many fellowship types (FellowshipSubspecialty)
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution($asEntities=true);
 
-        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($asEntities=true);
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asEntities=true);
 
         //New: if authServerNetwork == 'Internet (Hub)'
         //Get $fellTypes based on GlobalFellowshipSpecialty - for now, the same to FellowshipSubspecialty.
