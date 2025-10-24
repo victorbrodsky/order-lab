@@ -2994,7 +2994,7 @@ class ListController extends OrderAbstractController
             $pieces = explode("_", $route);
             $route = $pieces[0];
         }
-        echo "route search=".$route."<br>";
+        //echo "route search=".$route."<br>";
 
         switch( $route ) {
 

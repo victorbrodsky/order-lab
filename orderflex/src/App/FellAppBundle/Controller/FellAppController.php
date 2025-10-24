@@ -1013,6 +1013,13 @@ class FellAppController extends OrderAbstractController {
         }
 
         $institutions = $fellappUtil->getFellowshipInstitutions();
+        //dump($institutions);
+        //exit('111');
+        //echo '$institutions='.count($institutions).'<br>';
+        //foreach ($institutions as $institution) {
+        //    echo '$institutions='.$institution->getTreeAbbreviation().'<br>';
+        //}
+        //exit('111');
 
         $params = array(
             'cycle' => $cycle,
@@ -3501,7 +3508,7 @@ class FellAppController extends OrderAbstractController {
     }
 
     #[Route(path: '/get-global-fellowship-types/{institution}', name: 'fellapp-global-fellowship-types', options: ['expose' => true])]
-    public function getCities(Institution $institution): JsonResponse {
+    public function getCities(Institution $institution=null): JsonResponse {
 //        $cities = $country->getCities()->map(fn($city) => [
 //            'id' => $city->getId(),
 //            'name' => $city->getName(),

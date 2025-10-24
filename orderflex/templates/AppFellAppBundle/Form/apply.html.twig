@@ -284,26 +284,46 @@
             filterGlobalByInstitution(initInst);
         });
 
-        function filterGlobalByInstitution(instId){
+        function filterGlobalByInstitution(instId) {
             console.log('filterGlobalByInstitution:', 'instId=', instId);
 
-            const countryId = this.value;
-            //var url = `/get-cities/${countryId}`;
-            var url = Routing.generate('fellapp-global-fellowship-types');
-            url = url+'/'+instId;
+            const url = Routing.generate('fellapp-global-fellowship-types') + '/' + instId;
+
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    const typeSelect = document.querySelector('#s2id_oleg_fellappbundle_fellowshipapplication_globalFellowshipSpecialty');
-                    citySelect.innerHTML = '<option value="">Select a city</option>';
-                    data.forEach(fellappType => {
-                        const option = document.createElement('option');
-                        option.value = fellappType.id;
-                        option.text = fellappType.name;
-                        typeSelect.appendChild(option);
-                    });
+                    console.log('Fetched data:', data);
+
+                })
+                .catch(error => {
+                        console.error('Error fetching fellowship types:', error);
                 });
         }
+
+
+
+        //        function filterGlobalByInstitution(instId){
+//            console.log('filterGlobalByInstitution:', 'instId=', instId);
+//
+//            //var url = `/get-cities/${countryId}`;
+//            var url = Routing.generate('fellapp-global-fellowship-types');
+//            url = url+'/'+instId;
+//            fetch(url)
+//                .then(response => response.json())
+//                .then(data => {
+//                    const typeSelect = document.querySelector('#oleg_fellappbundle_fellowshipapplication_globalFellowshipSpecialty');
+//
+//                    // Clear existing options
+//                    typeSelect.innerHTML = '<option value="">Select a fellowship specialty</option>';
+//
+//                    data.forEach(fellappType => {
+//                        const option = document.createElement('option');
+//                        option.value = fellappType.id;
+//                        option.text = fellappType.name;
+//                        typeSelect.appendChild(option);
+//                    });
+//                });
+//        }
 
 //        $(document).ready(function() {
 //            // Initialize select2 for anonymous users

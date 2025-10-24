@@ -71,13 +71,16 @@ class GlobalFellowshipSpecialty extends ListAbstract
     //    ]);
     //#[ORM\Column(type: 'json', nullable: true)]
     //private array $apiImportKeys = [];
-    #[ORM\Column(name: 'apiImportKeys', type: 'array')]
-    private $apiImportKeys;
+    //#[ORM\Column(name: 'apiImportKeys', type: 'array')]
+    //private $apiImportKeys;
 
+    #[ORM\OneToMany(targetEntity: 'FellAppImportKey', mappedBy: 'globalspecialty', cascade: ['persist'])]
+    private $apiImportKeys;
+    
 
     public function __construct()
     {
-        $this->apiImportKeys = array();
+        $this->apiImportKeys = new ArrayCollection();
     }
 
     /**
@@ -144,46 +147,22 @@ class GlobalFellowshipSpecialty extends ListAbstract
         $this->apiConnectionKey = $apiConnectionKey;
     }
 
-
-    //$this->apiImportKeys = ['abc123', 'def456', 'ghi789'];
-    public function getApiImportKeys(): array
+    public function addApiImportKey($item)
+    {
+        if( $item && !$this->apiImportKeys->contains($item) ) {
+            $this->apiImportKeys->add($item);
+            $item->setGlobalspecialty($this);
+        }
+        return $this;
+    }
+    public function removeApiImportKey($item)
+    {
+        $this->apiImportKeys->removeElement($item);
+    }
+    public function getApiImportKeys()
     {
         return $this->apiImportKeys;
     }
-    public function hasApiImportKey($apiImportKey): bool
-    {
-        return in_array(strtoupper($apiImportKey), $this->getApiImportKeys(), true);
-    }
-    public function setApiImportKeys(array $apiImportKeys): self
-    {
-        $this->apiImportKeys = $apiImportKeys;
-        return $this;
-    }
-    public function removeApiImportKey(string $item): bool
-    {
-        if (false !== $key = array_search(strtoupper($item), $this->apiImportKeys, true)) {
-            unset($this->apiImportKeys[$key]);
-            $this->roles = array_values($this->apiImportKeys);
-            return true;
-        }
-        return false;
-    }
-    public function addApiImportKey(string $item): self
-    {
-        if (!in_array($item, $this->apiImportKeys, true)) {
-            $this->apiImportKeys[] = $item;
-        }
-        return $this;
-    }
-//    //$this->removeApiImportKey('def456');
-//    public function removeApiImportKey(string $key): self
-//    {
-//        $this->apiImportKeys = array_filter(
-//            $this->apiImportKeys,
-//            fn($existingKey) => $existingKey !== $key
-//        );
-//        return $this;
-//    }
 
     public function getNameInstitution() {
 //        $institution = $this->getInstitution()->getNodeNameWithParent();

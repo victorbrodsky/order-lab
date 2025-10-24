@@ -465,11 +465,11 @@ class FellAppUtil {
 
         $parameters = null;
         if( $institution ) {
-            echo "institution=$institution, ID=".$institution->getId()."<br>";
+            //echo "institution=$institution, ID=".$institution->getId()."<br>";
             //$dql->where("institution.id = ".$pathology->getId());
             $dql->where("institution.id = :institution");
             $parameters = array(
-                'institution' => $institution->getId(),
+                'institution' => $institution,
             );
         }
 
@@ -480,9 +480,9 @@ class FellAppUtil {
         }
 
         $fellTypes = $query->getResult();
-        echo "fellTypes count=".count($fellTypes)."<br>";
+        //echo "fellTypes count=".count($fellTypes)."<br>";
 
-        exit('111');
+        //exit('111');
 
         if( $asEntities ) {
             return $fellTypes;
@@ -498,24 +498,49 @@ class FellAppUtil {
         return $filterType;
     }
 
+    //Get all global fellowship types (getGlobalFellowshipTypesByInstitution) =>
+    //get all associated institution
     public function getFellowshipInstitutions() {
+        $repository = $this->em->getRepository(GlobalFellowshipSpecialty::class);
+        $dql = $repository->createQueryBuilder('list')
+            ->select('institution.id') // fetch only institution
+            ->leftJoin('list.institution', 'institution')
+            //->orderBy('list.orderinlist', 'ASC')
+            //->distinct()
+            ->groupBy('institution')
+        ;
+        //$dql->select('DISTINCT list, institution');
+
+        $results = $dql->getQuery()->getResult();
+        $ids = array_map(fn($row) => $row['id'], $results);
+
         $repository = $this->em->getRepository(Institution::class);
-        $dql = $repository->createQueryBuilder('list');
+        $institutions = $repository->findBy(['id' => $ids]);
 
-        $dql->where("list.abbreviation = :wcm OR list.abbreviation = :washu");
+        //dump($institutions);
+        //echo '$results='.count($institutions).'<br>';
+        //exit('111');
 
-        $query = $dql->getQuery();
-
-        $query->setParameters(
-            array(
-                'wcm' => 'WCM',
-                'washu' => 'WashU',
-            )
-        );
-
-        $institutions = $query->getResult();
         return $institutions;
     }
+//    public function getFellowshipInstitutions_ORIG() {
+//        $repository = $this->em->getRepository(Institution::class);
+//        $dql = $repository->createQueryBuilder('list');
+//
+//        $dql->where("list.abbreviation = :wcm OR list.abbreviation = :washu");
+//
+//        $query = $dql->getQuery();
+//
+//        $query->setParameters(
+//            array(
+//                'wcm' => 'WCM',
+//                'washu' => 'WashU',
+//            )
+//        );
+//
+//        $institutions = $query->getResult();
+//        return $institutions;
+//    }
 
     //get all fellowship visa status
     public function getFellowshipVisaStatuses( $asEntities=false, $idName = true ) {
