@@ -306,6 +306,17 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         console.log('Invalid sitename='+url);
     }
 
+    //Exception case for fellowship /apply public page
+    if( urlprefix === "public/generic/" && sitename == "fellowship-applications" ) {
+        url = Routing.generate('employees_get_public_generic_select2', {
+            name: name,
+            cycle: cycle
+        });
+        if( sitename == "fellowship-applications" ) {
+            url = url + sitenameStr;
+        }
+    }
+
     console.log('get Combobox Generic: url='+url);
     console.log('get Combobox Generic: globalDataArray.length='+globalDataArray.length);
 

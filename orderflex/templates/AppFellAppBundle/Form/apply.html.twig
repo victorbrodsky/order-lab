@@ -173,10 +173,15 @@
                 });
             }
 
+            //getCommonBaseUrl: urlBase=http://127.0.0.1/directory/util/common/traininginstitution?cycle=new&sitename=fellowship-applications
             //getComboboxGeneric(newForm,'traininginstitution',_traininginstitution,false,'');
+            //OK: http://127.0.0.1/directory/util/common/traininginstitution?cycle=new&sitename=fellowship-applications
+            //NOTOK: http://127.0.0.1/directory/util/public/common/generic/traininginstitution?cycle=new&sitename=fellowship-applications
             try {
                 var _traininginstitution = [];
-                getComboboxGeneric(null,'traininginstitution',_traininginstitution,false,'public/generic/','employees',true,'Select an institution',true);
+//                getComboboxGeneric(null,'traininginstitution',_traininginstitution,false,'public/generic/','employees',true,'Select an institution',true);
+                getComboboxGeneric(null,'traininginstitution',_traininginstitution,false,'public/generic/','fellowship-applications',true,'Select an institution',true);
+//                getComboboxGeneric(null,'traininginstitution',_traininginstitution,false,'');
             } catch (e) {
                 // fallback: simple select2 without data
                 $('.ajax-combobox-traininginstitution').select2({
@@ -233,6 +238,7 @@
                     allowClear: true
                 });
             }
+
         }
         
         // Minimal expandTextarea function
