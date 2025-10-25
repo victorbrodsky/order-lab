@@ -103,40 +103,6 @@ class FellowshipApplicationType extends AbstractType
         }
 
         if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
-//            $instMap = array();
-//            $instAbbrMap = array();
-//            foreach ($globalFellappTypes as $g) {
-//                $iid = ($g && $g->getInstitution()) ? $g->getInstitution()->getId() : '';
-//                $instMap[$g->getId()] = (string)$iid;
-//                $abbr = ($g && $g->getInstitution()) ? $g->getInstitution()->getTreeAbbreviation() : '';
-//                $instAbbrMap[$g->getId()] = (string)$abbr;
-//            }
-//            $builder->add('globalFellowshipSpecialty', EntityType::class, array(
-//                'class' => GlobalFellowshipSpecialty::class,
-//                'label' => "Fellowship Specialty:",
-//                'choice_label' => "getNameInstitution",
-//                'required' => false,
-//                'multiple' => false,
-//                'expanded' => false,
-//                'choices' => $globalFellappTypes,
-//                'invalid_message' => 'globalFellowshipSpecialty invalid value',
-//                //'choices_as_values' => true,
-//                'choice_attr' => function ($choice, $key, $value) {
-//                    // Symfony compatibility: $choice can be the entity or ChoiceView->data depending on version
-//                    $entity = $choice;
-//                    if (is_object($choice) && isset($choice->data)) {
-//                        $entity = $choice->data;
-//                    }
-//                    $inst = is_object($entity) && method_exists($entity, 'getInstitution') ? $entity->getInstitution() : null;
-//                    $id = $inst ? $inst->getId() : '';
-//                    return ['data-inst' => (string)$id];
-//                },
-//                'attr' => array(
-//                    'class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty',
-//                    'data-inst-map' => json_encode($instMap),
-//                    'data-inst-abbr-map' => json_encode($instAbbrMap)
-//                ),
-//            ));
             $builder->add('globalFellowshipSpecialty', EntityType::class, array(
                 'class' => GlobalFellowshipSpecialty::class,
                 'label' => "Fellowship Specialty:",
@@ -161,77 +127,6 @@ class FellowshipApplicationType extends AbstractType
                 //'choices_as_values' => true,
                 'attr' => array('class' => 'combobox combobox-width fellapp-institution'),
             ));
-//            if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
-//                $formModifier = function (FormInterface $form, $institutionId) use ($globalFellappTypes) {
-//                    $filtered = $globalFellappTypes;
-//                    if ($institutionId) {
-//                        $filtered = array_filter($globalFellappTypes, function ($spec) use ($institutionId) {
-//                            $inst = $spec->getInstitution();
-//                            return $inst && (string)$inst->getId() === (string)$institutionId;
-//                        });
-//                    } else {
-//                        $filtered = $globalFellappTypes;
-//                    }
-//                    $instMap = array();
-//                    $instAbbrMap = array();
-//                    foreach ($globalFellappTypes as $g) {
-//                        $iid = ($g && $g->getInstitution()) ? $g->getInstitution()->getId() : '';
-//                        $instMap[$g->getId()] = (string)$iid;
-//                        $abbr = ($g && $g->getInstitution()) ? $g->getInstitution()->getTreeAbbreviation() : '';
-//                        $instAbbrMap[$g->getId()] = (string)$abbr;
-//                    }
-//                    $form->add('globalFellowshipSpecialty', EntityType::class, array(
-//                        'class' => GlobalFellowshipSpecialty::class,
-//                        'label' => "Global Fellowship Application Type:",
-//                        'choice_label' => "getNameInstitution",
-//                        'required' => false,
-//                        'multiple' => false,
-//                        'expanded' => false,
-//                        'choices' => $filtered,
-//                        'invalid_message' => 'globalFellowshipSpecialty invalid value',
-//                        'choice_attr' => function ($choice, $key, $value) {
-//                            $entity = $choice;
-//                            if (is_object($choice) && isset($choice->data)) {
-//                                $entity = $choice->data;
-//                            }
-//                            $inst = is_object($entity) && method_exists($entity, 'getInstitution') ? $entity->getInstitution() : null;
-//                            $id = $inst ? $inst->getId() : '';
-//                            return ['data-inst' => (string)$id];
-//                        },
-//                        'attr' => array(
-//                            'class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty',
-//                            'data-inst-map' => json_encode($instMap),
-//                            'data-inst-abbr-map' => json_encode($instAbbrMap)
-//                        ),
-//                    ));
-//                };
-//
-//                // Set initial choices based on existing data
-//                $builder->addEventListener(
-//                    FormEvents::PRE_SET_DATA,
-//                    function (FormEvent $event) use ($formModifier) {
-//                        $data = $event->getData();
-//                        $institutionId = null;
-//                        if ($data && method_exists($data, 'getInstitution') && $data->getInstitution()) {
-//                            $institutionId = $data->getInstitution()->getId();
-//                        }
-//                        $formModifier($event->getForm(), $institutionId);
-//                    }
-//                );
-//
-//                // Rebuild choices on submit when institution is changed in the form
-//                $builder->addEventListener(
-//                    FormEvents::PRE_SUBMIT,
-//                    function (FormEvent $event) use ($formModifier) {
-//                        $data = $event->getData();
-//                        $institutionId = null;
-//                        if (is_array($data) && array_key_exists('institution', $data)) {
-//                            $institutionId = $data['institution'];
-//                        }
-//                        $formModifier($event->getForm(), $institutionId);
-//                    }
-//                );
-//            }
         }
 
         if (0 && $this->params['cycle'] == "edit") {

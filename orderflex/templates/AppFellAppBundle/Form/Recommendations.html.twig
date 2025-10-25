@@ -141,33 +141,33 @@
     {#</p>#}
 
     {% if route_path != 'fellapp_apply' and route_path != 'fellapp_apply_post' %}
-    {% if cycle != "download" %}
+        {% if cycle != "download" %}
 
-        <div class="row withpaddingtop">
-            <div class="col-xs-6">
-                {#{{ form_row(reference.recLetterReceived) }}#}
-                {{ formmacros.checkbox(reference.recLetterReceived) }}
-            </div>
-            <div class="col-xs-6">
-                {{ formmacros.simplefield( "Number of sent invitation email(s):", reference.vars.value.invitationSentEmailCounter, "", "disabled" ) }}
-            </div>
-        </div>
-
-        <p>
-        <div class="well form-element-holder user-Reference">
-            <label class="col-xs-12 control-label">Reference Letters (All documents will be added to the Complete Application PDF)</label>
             <div class="row withpaddingtop">
-                <div class="col-xs-12">
-
-                    {% if reference is defined %}
-                        {{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default','Fellowship Recommendation') }}
-                    {% endif %}
-
+                <div class="col-xs-6">
+                    {#{{ form_row(reference.recLetterReceived) }}#}
+                    {{ formmacros.checkbox(reference.recLetterReceived) }}
+                </div>
+                <div class="col-xs-6">
+                    {{ formmacros.simplefield( "Number of sent invitation email(s):", reference.vars.value.invitationSentEmailCounter, "", "disabled" ) }}
                 </div>
             </div>
-        </div>
-        </p>
-    {% endif %}
+
+            <p>
+            <div class="well form-element-holder user-Reference">
+                <label class="col-xs-12 control-label">Reference Letters (All documents will be added to the Complete Application PDF)</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+
+                        {% if reference is defined %}
+                            {{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default','Fellowship Recommendation') }}
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            </p>
+        {% endif %}
     {% endif %}
 
 

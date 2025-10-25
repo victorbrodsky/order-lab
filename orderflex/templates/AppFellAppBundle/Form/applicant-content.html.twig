@@ -68,6 +68,11 @@
     {% endif %}
 {% endif %}
 
+{#{% set testing = true %}#}
+{% set testing = false %}
+
+{% if not testing %}
+
 {% if cycle != "new" %}
     <h4 class="text-info" align="center">
         <div class="{{ trclassname }}">
@@ -138,19 +143,18 @@
 
 {{ form_errors(form) }}
 
-{#{% set testing = true %}#}
-{% set testing = false %}
+{% endif %}
 
 {% if not testing %}
-
 <div id="form-prototype-data"
      data-prototype-fellapp-interviews = "{{ fellappmacros.interviewForm(form.interviews,cycle,'fellapp-interviews','prototype', sitename,1)|e }}"
      data-userurllink = "{{ usermacros.userUrlLink()|e }}"
      data-uploadurl = "{{ oneup_uploader_endpoint('fellapp_gallery') }}"
      data-userid = "{{ entity.user.id }}"
 ></div>
-
 {% endif %}
+
+{% if not testing %}
 
     {#<input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />#}
     {#<input type="hidden" id="tenantprefix" value="{{ app.request.locale }}" />#}
@@ -182,20 +186,20 @@
 
 <div class="fellapp-application-holder">
 
-{% include 'AppFellAppBundle/Form/AdminData.html.twig' %}
+    {% include 'AppFellAppBundle/Form/AdminData.html.twig' %}
 
-<!-- Fellowship Type, Training period, Applicant Name -->
-{#{% include 'AppFellAppBundle/Form/FellowshipType.html.twig' %}#}
+    <!-- Fellowship Type, Training period, Applicant Name -->
+    {#{% include 'AppFellAppBundle/Form/FellowshipType.html.twig' %}#}
 
-<!-- Personal Data -->
-{#{% include 'AppFellAppBundle/Form/PersonalData.html.twig' %}#}
+    <!-- Personal Data -->
+    {#{% include 'AppFellAppBundle/Form/PersonalData.html.twig' %}#}
 
-{% include 'AppFellAppBundle/Form/Institution.html.twig' %}
+    {% if form.institution is defined %}
+        {% include 'AppFellAppBundle/Form/Institution.html.twig' %}
+    {% endif %}
 
-<!-- Fellowship Application Admin Data -->
-{% include 'AppFellAppBundle/Form/ApplicantData.html.twig' %}
-
-{% if not testing %}
+    <!-- Fellowship Application Admin Data -->
+    {% include 'AppFellAppBundle/Form/ApplicantData.html.twig' %}
 
     <!-- Education -->
     {% include 'AppFellAppBundle/Form/Education.html.twig' %}
@@ -244,61 +248,37 @@
         {% endif %}
     {% endif %}
 
-{% endif %}
 
-{#route_path={{ route_path }}#}
-{% if route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post' %}
-    {#<br>captchaSiteKey={{ captchaSiteKey }}#}
-    {#{% if captchaSiteKey is defined %}#}
-    {#captchaSiteKey is defined<br>#}
-    {#{% endif %}#}
-    {#{% if form.recaptcha is defined %}#}
-    {#recaptcha is defined<br>#}
-    {#{% endif %}#}
-    {% if captchaSiteKey is defined and captchaSiteKey and form.recaptcha is defined %}
-        {#<br>inside captchaSiteKey={{ captchaSiteKey }}#}
-        {#{{ form_errors(form.recaptcha) }}#}
-        <div class="col-xs-12 text-center">
-            <p>
-                {#{{ formmacros.field(form.recaptcha) }}#}
-                {{ form_row(form.recaptcha) }}
-            <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
-            </p>
-        </div>
+    {#route_path={{ route_path }}#}
+    {% if route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post' %}
+        {% if captchaSiteKey is defined and captchaSiteKey and form.recaptcha is defined %}
+            <div class="col-xs-12 text-center">
+                <p>
+                    {{ form_row(form.recaptcha) }}
+                    <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+                </p>
+            </div>
+        {% endif %}
     {% endif %}
-{% endif %}
 
-<!-- Signature -->
-{% include 'AppFellAppBundle/Form/Signature.html.twig' %}
+    <!-- Signature -->
+    {% include 'AppFellAppBundle/Form/Signature.html.twig' %}
 
 
-</div>
+</div> {#fellapp-application-holder#}
 
-{#{% do form.setRendered %}#}
-{#{{ form_widget(form._token) }}#}
-
-{#{{ form_row(form.submit) }}#}
-{#{{ form_widget(form.update) }}#}
 
 <div id="error-box" class="alert alert-danger" style="display: none"></div>
 
 {% if cycle == "edit" %}
     <p>
-        {#<button class="btn btn-warning" type="submit">Update</button>#}
-        {#<a class="btn_margin_top btn btn-primary btn-warning" href="{{ path(fellapp_sitename~'_update',{'id':entity.id}) }}">Update</a>#}
-        {#<button class="btn btn-warning" name="btnSubmit" type="submit" form="fellapp-applicant-form" onclick="updateFellapp({{ entity.id }})">Update</button>#}
-
         {#for any status show update#}
         <button id="triggerUpdate" class="btn btn-warning" name="btnSubmit" type="submit" value="fellapp-update">Update</button>
 
-        {#if active => show draft#}
         {% if entity.appStatus == 'active' %}
-            {#<button class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>#}
             <button id="triggerDraft" class="btn btn-info" name="btnSubmit" value="fellapp-draft">Save as Draft</button>
         {% endif %}
-        {#if draft => show active#}
         {% if entity.appStatus == 'draft' %}
-            {#<button class="btn btn-info" name="btnSubmit" type="submit" value="active" form="fellapp-applicant-form">Submit Application</button>#}
             <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="fellapp-submit">Submit Application</button>
         {% endif %}
 
@@ -306,21 +286,11 @@
     </p>
 {% endif %}
 
+{% endif %} {#if not testing#}
+
 {% if cycle == "new" %}
     <br>
     <p>
-        {#<button class="btn btn-warning" type="submit">Add Applicant</button>#}
-        {#<button class="btn btn-warning" name="btnSubmit" type="button" value="submit" form="fellapp-applicant-form" onclick="validateFellapp()">Submit Application</button>#}
-        {#<button class="btn btn-warning" name="btnSubmit" type="submit" value="submit" form="fellapp-applicant-form">Submit Application</button>#}
-    {#</p>#}
-    {#<p>#}
-        {#<button class="btn btn-warning" type="submit">Add Applicant</button>#}
-        {#<button class="btn btn-warning" name="btnSubmit" type="button" value="draft" form="fellapp-applicant-form" onclick="validateFellapp()">Save as Draft</button>#}
-        {#<button class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>#}
-
-        {#<button id="triggerDraft" class="btn btn-info" name="btnSubmit" type="submit" value="draft" form="fellapp-applicant-form">Save as Draft</button>#}
-        {#<button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" type="submit" value="active" form="fellapp-applicant-form">Submit Application</button>#}
-
         <button id="triggerDraft" class="btn btn-info" name="btnSubmit" value="fellapp-draft">Save as Draft</button>
         <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="fellapp-submit">Submit Application</button>
 
