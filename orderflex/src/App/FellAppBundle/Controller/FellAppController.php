@@ -3587,9 +3587,10 @@ class FellAppController extends OrderAbstractController {
 //        }
 
         $applicant = $fellowshipApplication->getUser();
-
-        if( !$fellowshipApplication->getFellowshipSubspecialty() ) {
-            $form['fellowshipSubspecialty']->addError(new FormError('Please select in the Fellowship Type before uploading'));
+        //$fellowshipSubspecialty = $fellowshipApplication->getFellowshipSubspecialty();
+        $globalFellowshipSpecialty = $fellowshipApplication->getGlobalFellowshipSpecialty();
+        if( !$globalFellowshipSpecialty ) {
+            $form['globalFellowshipSpecialty']->addError(new FormError('Please select the fellowship specialty before uploading.'));
         }
         if( !$applicant->getEmail() ) {
             $form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before uploading'));

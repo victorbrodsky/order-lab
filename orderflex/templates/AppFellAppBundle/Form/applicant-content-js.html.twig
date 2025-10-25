@@ -303,9 +303,9 @@
         //required: fellowshipSubspecialty
         var fellowshipSubspecialty = $('.fellapp-fellowshipSubspecialty').first().select2('val');
         var globalFellowshipSpecialty = $('.fellapp-globalFellowshipSpecialty').first().select2('val');
-        //console.log('fellowshipSubspecialty=('+fellowshipSubspecialty+')');
+        console.log('fellowshipSubspecialty=('+fellowshipSubspecialty+')'+', globalFellowshipSpecialty=('+globalFellowshipSpecialty+')');
         if (!error && (!fellowshipSubspecialty || !globalFellowshipSpecialty)) {
-            error = "Please select the Fellowship Specialty before submitting";
+            error = "Please select the fellowship specialty before submitting";
         }
 
         //required: user-firstName
