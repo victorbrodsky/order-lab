@@ -292,7 +292,7 @@
 
 
 
-function validateFellapp( clickedButtonValue ) {
+    function validateFellapp( clickedButtonValue ) {
 
         console.log("Clicked button value:", clickedButtonValue);
 
@@ -302,9 +302,10 @@ function validateFellapp( clickedButtonValue ) {
 
         //required: fellowshipSubspecialty
         var fellowshipSubspecialty = $('.fellapp-fellowshipSubspecialty').first().select2('val');
+        var globalFellowshipSpecialty = $('.fellapp-globalFellowshipSpecialty').first().select2('val');
         //console.log('fellowshipSubspecialty=('+fellowshipSubspecialty+')');
-        if (!error && !fellowshipSubspecialty) {
-            error = "Please select the Fellowship Type before submitting";
+        if (!error && (!fellowshipSubspecialty || !globalFellowshipSpecialty)) {
+            error = "Please select the Fellowship Specialty before submitting";
         }
 
         //required: user-firstName
