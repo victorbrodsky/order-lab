@@ -1021,12 +1021,14 @@ class FellAppController extends OrderAbstractController {
         //}
         //exit('111');
 
+        $roles = $user ? $user->getRoles() : [];
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
             'user' => $entity->getUser(),
             'cloneuser' => null,
-            'roles' => $user->getRoles(),
+            'roles' => $roles, //$user->getRoles(),
             'container' => $this->container,
             'fellappTypes' => $fellTypes,
             'globalFellappTypes' => $globalFellTypes,
@@ -1047,97 +1049,6 @@ class FellAppController extends OrderAbstractController {
 //        );
         $form = $this->createForm(
             FellowshipApplicationType::class, //method: get Show Parameters
-            $entity,
-            array(
-                'disabled' => $disabled,
-                'method' => $method,
-                'action' => $action,
-                'form_custom_value' => $params
-            )
-        );
-
-        //clear em, because createUserEditEvent will flush em
-        $em = $this->getDoctrine()->getManager();
-        $em->clear();
-
-        return array(
-            'form_pure' => $form,
-            'form' => $form->createView(),
-            'entity' => $entity,
-            'pathbase' => 'fellapp',
-            'cycle' => $cycle,
-            'sitename' => $this->getParameter('fellapp.sitename'),
-            'route_path' => $routeName,
-            'captchaSiteKey' => $captchaSiteKey
-        );
-    }
-
-    //NOT USED
-    public function getApplyShowParameters($routeName, $entity, $user=null, $security=null) {
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        //$user = $this->getUser();
-
-//        echo "user=".$user."<br>";
-        if( !$user || !($user instanceof User) ) {
-            //echo "no user object <br>";
-            $user = $userSecUtil->findSystemUser();
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        //add empty fields if they are not exist
-        $fellappUtil = $this->container->get('fellapp_util');
-
-
-        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        if( count($fellTypes) == 0 ) {
-            return array();
-        }
-
-        $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
-        //var_dump($fellappVisas);
-        //exit('111');
-
-        $fellappUtil->addEmptyFellAppFields($entity); //testing
-
-        $captchaSiteKey = null;
-
-        if( $routeName == "fellapp_apply" ) {
-            $cycle = 'new';
-            $disabled = false;
-            $method = "POST";
-            $action = $this->generateUrl('fellapp_apply_post'); // /apply use the same post submit as /new form
-        }
-
-        if( $routeName == "fellapp_download" ) {
-            $cycle = 'download';
-            $disabled = true;
-            $method = "GET";
-            $action = ""; //null; //$this->generateUrl('fellapp_update', array('id' => $entity->getId()));
-        }
-
-        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
-            if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
-                $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
-            }
-        }
-
-        $params = array(
-            'cycle' => $cycle,
-            'em' => $em,
-            'user' => $entity->getUser(),
-            'cloneuser' => null,
-            'roles' => $user->getRoles(),
-            'container' => $this->container,
-            'fellappTypes' => $fellTypes,
-            'fellappVisas' => $fellappVisas,
-            'routeName' => $routeName,
-            //'security' => $security
-        );
-
-        $form = $this->createForm(
-            ApplyFellowshipApplicationType::class, //method: get Show Parameters
             $entity,
             array(
                 'disabled' => $disabled,
@@ -3632,16 +3543,20 @@ class FellAppController extends OrderAbstractController {
         //Each record in GlobalFellowshipSubspecialty table will have ManyToOne $institution
         //One institution can have many GlobalFellowshipSubspecialty
 
+        $institutions = $fellappUtil->getFellowshipInstitutions();
+
+        $roles = $user ? $user->getRoles() : [];
+
         $params = array(
             'cycle' => 'new',
             'em' => $this->getDoctrine()->getManager(),
             'user' => $fellowshipApplication->getUser(),
             'cloneuser' => null,
-            'roles' => $user->getRoles(),
+            'roles' =>  $roles, //$user->getRoles(),
             'container' => $this->container,
             'fellappTypes' => $fellTypes, //FellowshipSubspecialty::class apply
             'globalFellappTypes' => $globalFellTypes,
-            //'institutions' => $institutions,
+            'institutions' => $institutions,
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName
             //'security' => $security
