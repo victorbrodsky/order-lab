@@ -138,8 +138,21 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
         $userServiceUtil = $this->container->get('user_service_utility');
 
-        $fellowshipTypes = $fellappUtil->getFellowshipTypesByUser($user);
-        //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
+
+        $fellowshipTypes = array();
+        $globalFellTypes = array();
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        //echo '$serverRole='.$serverRole.'<br>';
+        if( $serverRole."" != 'Internet (Hub)' ) {
+            $fellowshipTypes = $fellappUtil->getFellowshipTypesByUser($user);
+            //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
+        } else {
+            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution(null, 'id-text'); //return as array
+            //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
+        }
+        //echo "fellowshipTypes 2 count=".count($fellowshipTypes)."<br>";
+        //echo "globalFellTypes 2 count=".count($globalFellTypes)."<br>";
+        //exit('111');
 
         $searchFlag = false;
 
@@ -168,7 +181,7 @@ class FellAppController extends OrderAbstractController {
         }
         //echo "defaultStartDates=$defaultStartDates <br>"; //testing
 
-        if( count($fellowshipTypes) == 0 ) {
+        if( count($fellowshipTypes) == 0 && count($globalFellTypes) == 0 ) {
 //            $linkUrl = $this->generateUrl(
 //                "fellowshipsubspecialtys-list",
 //                array(),
@@ -222,9 +235,24 @@ class FellAppController extends OrderAbstractController {
         //$defaultStartDates = "2019 2020 2021";
         //$defaultStartDates = $currentYear;
 
+
+        //echo '1$globalFellTypes='.count($globalFellTypes).'<br>';
+//        foreach($globalFellTypes as $globalFellType) {
+//            echo '$globalFellType='.$globalFellType."<br>";
+//        }
+
+        $fellTypes = $userServiceUtil->flipArrayLabelValue($fellowshipTypes); //flipped
+        $globalFellTypes = $userServiceUtil->flipArrayLabelValue($globalFellTypes); //flipped
+
+        //echo '2 $globalFellTypes='.count($globalFellTypes).'<br>';
+//        foreach($globalFellTypes as $globalFellType) {
+//            echo '$globalFellType='.$globalFellType."<br>";
+//        }
+
         //create fellapp filter
         $params = array(
-            'fellTypes' => $userServiceUtil->flipArrayLabelValue($fellowshipTypes), //flipped
+            'fellTypes' => $fellTypes,
+            'globalFellTypes' => $globalFellTypes,
             'defaultStartDates' => $defaultStartDates
         );
         $filterform = $this->createForm(FellAppFilterType::class, null,array(
@@ -236,6 +264,7 @@ class FellAppController extends OrderAbstractController {
         $filterform->handleRequest($request);
 
         $filter = $filterform['filter']->getData(); //fellowship specialty
+        $globalfilter = $filterform['globalfilter']->getData(); //fellowship specialty
         $search = $filterform['search']->getData();
         $startDates = $filterform['startDates']->getData(); //startDates: currentYear is year only i.e. 2021
         $hidden = $filterform['hidden']->getData();
@@ -247,6 +276,7 @@ class FellAppController extends OrderAbstractController {
         $declined = $filterform['declined']->getData();
         //$onhold = $filterform['onhold']->getData();
         $priority = $filterform['priority']->getData();
+        $draft = $filterform['draft']->getData();
 
         $accepted = $filterform['accepted']->getData();
         $acceptedandnotified = $filterform['acceptedandnotified']->getData();
@@ -361,6 +391,8 @@ class FellAppController extends OrderAbstractController {
             $searchFlag = true;
         }
 
+        //echo "filter=".$filter."<br>";
+        //exit('111');
         $fellSubspecId = null;
         if( $filter ) { //&& $filter != "ALL"
             $dql->andWhere("fellowshipSubspecialty.id = ".$filter);
@@ -368,20 +400,28 @@ class FellAppController extends OrderAbstractController {
             $fellSubspecId = $filter;
         }
 
-        //if( $filter == "ALL" ) {
-        if( !$filter ) {
-            $felltypeArr = array();
-            foreach( $fellowshipTypes as $fellowshipTypeID => $fellowshipTypeName ) {
-                //if( $fellowshipTypeID != "ALL" ) {
-                    //echo "fellowshipType=".$fellowshipTypeID."<br>";
-                    //$dql->orWhere("fellowshipSubspecialty.id = ".$fellowshipTypeID);
-                $felltypeArr[] = "fellowshipSubspecialty.id = ".$fellowshipTypeID;
-                //}
-            }
-            $dql->andWhere( implode(" OR ", $felltypeArr) );
+        //$globalfilter
+        $globalfilterId = null;
+        if( $globalfilter ) { //&& $filter != "ALL"
+            $dql->andWhere("fellowshipSubspecialty.id = ".$globalfilter);
             $searchFlag = true;
-            //$fellSubspecId = $filter;
+            $globalfilterId = $fellSubspecId = $globalfilter;
         }
+
+        //if( $filter == "ALL" ) {
+//        if( !$filter ) {
+//            $felltypeArr = array();
+//            foreach( $fellowshipTypes as $fellowshipTypeID => $fellowshipTypeName ) {
+//                //if( $fellowshipTypeID != "ALL" ) {
+//                    //echo "fellowshipType=".$fellowshipTypeID."<br>";
+//                    //$dql->orWhere("fellowshipSubspecialty.id = ".$fellowshipTypeID);
+//                $felltypeArr[] = "fellowshipSubspecialty.id = ".$fellowshipTypeID;
+//                //}
+//            }
+//            $dql->andWhere( implode(" OR ", $felltypeArr) );
+//            $searchFlag = true;
+//            //$fellSubspecId = $filter;
+//        }
 
         $orWhere = array();
         //$orWhere[] = "appStatus.id IS NULL"; //ignore status if no status is selected
@@ -419,6 +459,11 @@ class FellAppController extends OrderAbstractController {
             $searchFlag = true;
         } else {
             //$searchFlag = true;
+        }
+
+        if( $draft ) {
+            $orWhere[] = "appStatus.name = 'draft'";
+            $searchFlag = true;
         }
 
         if( $reject ) {
@@ -932,7 +977,7 @@ class FellAppController extends OrderAbstractController {
         $globalFellTypes = array();
 
         if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
-            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asEntities=true);
+            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
             if( count($globalFellTypes) == 0 ) {
                 return array();
             }
@@ -3440,7 +3485,7 @@ class FellAppController extends OrderAbstractController {
 //            'name' => $city->getName(),
 //        ])->toArray();
         $fellappUtil = $this->container->get('fellapp_util');
-        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution);
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution); //resturn as select2 array
 
         //return new JsonResponse($globalFellTypes);
         $response = new Response();
@@ -3536,7 +3581,7 @@ class FellAppController extends OrderAbstractController {
         //Pathology and Laboratory Medicine instituion can have many fellowship types (FellowshipSubspecialty)
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution($asEntities=true);
 
-        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asEntities=true);
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false);
 
         //New: if authServerNetwork == 'Internet (Hub)'
         //Get $fellTypes based on GlobalFellowshipSpecialty - for now, the same to FellowshipSubspecialty.

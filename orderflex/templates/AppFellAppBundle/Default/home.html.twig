@@ -159,7 +159,11 @@
                     {#{{ formmacros.fieldDateLabel_vertical(fellappfilter.endDate,'allow-future-date') }}#}
                 {#</div>#}
                 <div class="col-xs-4">
-                    {{ form_row(fellappfilter.filter,{'attr': {'placeholder': 'Fellowship Type'}}) }}
+                    {% if fellappfilter.filter|length > 0 %}
+                        {{ form_row(fellappfilter.filter,{'attr': {'placeholder': 'Fellowship Type'}}) }}
+                    {% else %}
+                        {{ form_row(fellappfilter.globalfilter,{'attr': {'placeholder': 'Global Fellowship Type'}}) }}
+                    {% endif %}
                 </div>
                 <div class="col-xs-4">
                     {{ form_row(fellappfilter.search, {'attr': {'placeholder': 'Search by Name'}}) }}

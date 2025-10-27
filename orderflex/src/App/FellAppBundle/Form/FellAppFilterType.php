@@ -81,6 +81,7 @@ class FellAppFilterType extends AbstractType
 //                },
 //        ));
 
+        //fellowshipSubspecialty
         $builder->add('filter', ChoiceType::class, array( //flipped
             'label' => false,
             'required'=> false,
@@ -88,6 +89,16 @@ class FellAppFilterType extends AbstractType
             'choices' => $this->params['fellTypes'], //flipped
             //'choices_as_values' => true,
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty-filter'),
+        ));
+
+        //globalFellowshipSpecialty
+        $builder->add('globalfilter', ChoiceType::class, array( //flipped
+            'label' => false,
+            'required'=> false,
+            //'multiple' => false,
+            'choices' => $this->params['globalFellTypes'], //flipped
+            //'choices_as_values' => true,
+            'attr' => array('class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty-filter'),
         ));
         
         $builder->add('search', TextType::class, array(

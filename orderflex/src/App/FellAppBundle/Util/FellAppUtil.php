@@ -435,8 +435,9 @@ class FellAppUtil {
 
         return $filterType;
     }
-    //get all global fellowship application types
-    public function getGlobalFellowshipTypesByInstitution( $institution=null, $asEntities=false ) {
+    //get all global fellowship application types.
+    // Original - $asEntities=false (default as array) -> default as select2, if entity set $asArray=false
+    public function getGlobalFellowshipTypesByInstitution( $institution=null, $asArray='select2' ) {
         $em = $this->em;
         //get list of fellowship type with extra "ALL"
         $repository = $em->getRepository(GlobalFellowshipSpecialty::class);
@@ -462,26 +463,37 @@ class FellAppUtil {
         }
 
         $fellTypes = $query->getResult();
-        //echo "fellTypes count=".count($fellTypes)."<br>";
+        //echo "getGlobalFellowshipTypesByInstitution: fellTypes count=".count($fellTypes)."<br>";
 
         //exit('111');
 
-        if( $asEntities ) {
+        if( !$asArray ) {
+            //echo "getGlobalFellowshipTypesByInstitution: as entity fellTypes count=".count($fellTypes)."<br>";
             return $fellTypes;
         }
 
         //add statuses
-        $filterType = array();
+        //echo "getGlobalFellowshipTypesByInstitution: before foreach fellTypes count=".count($fellTypes)."<br>";
+        $resultfilterTypes = array();
         foreach( $fellTypes as $type ) {
             //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
             //$filterType[$type->getId()] = $type->getName();
-            $filterType[] = array(
-                'id' => $type->getId(),
-                'text' => $type->getNameInstitution().""
-            );
+            if( $asArray && $asArray === 'select2' ) {
+                $resultfilterTypes[] = array(
+                    'id' => $type->getId(),
+                    'text' => $type->getNameInstitution() . ""
+                );
+                //echo "111111 <br>";
+            } elseif ( $asArray && $asArray === 'id-text' ) {
+                $resultfilterTypes[$type->getId()] = $type->getNameInstitution()."";
+                //echo "222222: id=".$type->getId().", name".$type->getNameInstitution()." => ".count($resultfilterTypes)." <br>";
+            } else {
+                //exit('logical error: result is not array');
+            }
         }
-
-        return $filterType;
+        //echo "getGlobalFellowshipTypesByInstitution: return fellTypes count=".count($resultfilterTypes)."<br>";
+        //exit('222');
+        return $resultfilterTypes;
     }
 
     //Get all global fellowship types (getGlobalFellowshipTypesByInstitution) =>
