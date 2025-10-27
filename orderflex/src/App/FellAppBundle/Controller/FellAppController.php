@@ -754,6 +754,7 @@ class FellAppController extends OrderAbstractController {
             'fellappids' => implode("-",$idsArr),
             'route_path' => $route,
             'fellowshipTypes' => $fellowshipTypes,
+            'serverRole' => $serverRole,
             'static' => false, //static=true => dynamically load the email's warning, subject and body
             'spinnerColor' => "#428bca"
         );

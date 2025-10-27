@@ -415,7 +415,12 @@
                     <th>Notification Emailed?</th>
                 {% endif %}
 
-                <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
+                {% if serverRole != 'Internet (Hub)' %}
+                    <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
+                {% else %}
+                    <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'globalFellowshipSpecialty.name') }}</th>
+                {% endif %}
+
                 <th>{{ knp_pagination_sortable(entities, 'Status', 'appStatus.action') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'fellapp.startDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>
@@ -641,8 +646,14 @@
                     {% endif %}
 
                     <td>
-                        {% if entity.fellowshipSubspecialty %}
-                            {{  entity.fellowshipSubspecialty.name }}
+                        {% if serverRole != 'Internet (Hub)' %}
+                            {% if entity.fellowshipSubspecialty %}
+                                {{  entity.fellowshipSubspecialty.name }}
+                            {% endif %}
+                        {% else %}
+                            {% if entity.globalFellowshipSpecialty %}
+                                {{  entity.globalFellowshipSpecialty.name }}
+                            {% endif %}
                         {% endif %}
                     </td>
 
