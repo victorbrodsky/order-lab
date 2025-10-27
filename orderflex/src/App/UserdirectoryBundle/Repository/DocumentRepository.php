@@ -48,11 +48,12 @@ class DocumentRepository extends EntityRepository {
         $addMethodName = "add".$docfieldname;
         $removeMethodName = "remove".$docfieldname;
         $getMethod = "get".$docfieldname."s";
-        //echo "getMethod=".$getMethod."<br>";
-        //echo "removeMethodName=".$removeMethodName."<br>";
+        echo "processDocuments: getMethod=".$getMethod."<br>";
+        echo "processDocuments: removeMethodName=".$removeMethodName."<br>";
+        echo "processDocuments: documentHolder->getMethod=".count($documentHolder->$getMethod())."<br>";
 
         if( count($documentHolder->$getMethod()) == 0 ) {
-            //echo "return: no documents<br>";
+            echo "processDocuments: return: no documents<br>";
 
             //prvenet create an empty DocumentContainer and AttachmentContainer: remove DocumentContainer from AttachmentContainer
             //$attachmentContainer = null;
@@ -82,11 +83,12 @@ class DocumentRepository extends EntityRepository {
 
         foreach( $documentHolder->$getMethod() as $doc ) {
 
-//            echo "document id:<br>";
-//            print_r($doc->getId());
+            //echo "document id:<br>";
+            //print_r($doc->getId());
+            echo "processDocuments: document=$doc<br>";
 
             $documentId = $doc->getId();
-            //echo "doc id=".$documentId."<br>";
+            echo "processDocuments: doc id=".$documentId."<br>";
 //            echo "<br>";
 
             $documentHolder->$removeMethodName($doc);
@@ -94,7 +96,6 @@ class DocumentRepository extends EntityRepository {
             //check if id is numeric to prevent the case when $doc->getId() = "undefined"
             if( $documentId && is_numeric($documentId) ) {
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
                 $docDb = $this->_em->getRepository(Document::class)->find($documentId);
                 //$docDb = $doc;
 

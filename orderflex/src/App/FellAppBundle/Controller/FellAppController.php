@@ -1363,6 +1363,9 @@ class FellAppController extends OrderAbstractController {
         $user = $this->getUser();
         $routeName = $request->get('_route');
 
+        $applicant = $entity->getUser();
+        echo "Applicant=".$applicant.", applicantID=".$applicant->getId().", user=".$user."<br>";
+
         //user who has the same fell type can view or edit
         $fellappUtil = $this->container->get('fellapp_util');
         if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
@@ -1444,7 +1447,7 @@ class FellAppController extends OrderAbstractController {
 
             $this->calculateScore($entity);
 
-            $this->processDocuments($entity);
+            $this->processDocuments($entity); //edit
 
             $this->assignFellAppAccessRoles($entity);
 
@@ -1556,7 +1559,8 @@ class FellAppController extends OrderAbstractController {
             'entity' => $entity,
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
-            'sitename' => $this->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename'),
+            'route_path' => $routeName
         );
     }
     private function createFellAppEditForm( FellowshipApplication $entity, $cycle, $security )
@@ -1893,7 +1897,7 @@ class FellAppController extends OrderAbstractController {
 
             $this->calculateScore($fellowshipApplication);
 
-            $this->processDocuments($fellowshipApplication);
+            $this->processDocuments($fellowshipApplication); //new POST
 
             $this->assignFellAppAccessRoles($fellowshipApplication);
 
@@ -1941,6 +1945,7 @@ class FellAppController extends OrderAbstractController {
             'entity' => $fellowshipApplication,
             'pathbase' => 'fellapp',
             'cycle' => 'new',
+            'route_path' => $request->get('_route'),
             'sitename' => $this->getParameter('fellapp.sitename')
         );
 
@@ -2005,8 +2010,9 @@ class FellAppController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         //Avatar
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
         $em->getRepository(Document::class)->processDocuments( $application, 'avatar' );
+        echo "count avatar=".count($application->getAvatars())."<br>";
+        //exit('processDocuments');
 
         //CurriculumVitae
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
@@ -2428,7 +2434,8 @@ class FellAppController extends OrderAbstractController {
             'entity' => $interview,
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
-            'sitename' => $this->getParameter('fellapp.sitename')
+            'sitename' => $this->getParameter('fellapp.sitename'),
+            'route_path' => $routeName
         );
 
     }
@@ -3757,7 +3764,7 @@ class FellAppController extends OrderAbstractController {
 
             $this->calculateScore($fellowshipApplication);
 
-            $this->processDocuments($fellowshipApplication);
+            $this->processDocuments($fellowshipApplication); //apply POST
 
             $this->assignFellAppAccessRoles($fellowshipApplication);
 

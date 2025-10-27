@@ -54,6 +54,7 @@ class UploadListener {
     public function onUpload(PostPersistEvent $event)
     {
         $request = $event->getRequest();
+        $logger = $this->container->get('logger');
         $userid = $request->get('userid');
         $originalfilename = $request->get('filename');
         $documentType = $request->get('documenttype');
@@ -90,7 +91,8 @@ class UploadListener {
         if( $authUserId ) {
             $authUser = $this->em->getRepository(User::class)->find($authUserId);
         }
-        echo "user=".$user.", authUser=".$authUser."<br>";
+        //echo "user=".$user.", authUser=".$authUser."<br>";
+        $logger->notice("onUpload: user=".$user.", authUser=".$authUser);
         //exit('onUpload');
 
         $object = new Document($user);
