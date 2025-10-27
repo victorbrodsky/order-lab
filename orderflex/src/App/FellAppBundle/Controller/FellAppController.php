@@ -1058,7 +1058,13 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
-        $institutions = $fellappUtil->getFellowshipInstitutions($institutionId);
+        $institutions = $fellappUtil->getFellowshipInstitutions();
+
+        $programInstitution = null;
+        if( $institutionId && count($institutions) > 0 ) {
+            //$programInstitution = $institutions[0];
+            $programInstitution = $em->getRepository(Institution::class)->find($institutionId);
+        }
         //dump($institutions);
         //exit('111');
         //echo '$institutions='.count($institutions).'<br>';
@@ -1081,6 +1087,7 @@ class FellAppController extends OrderAbstractController {
             'institutions' => $institutions,
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName,
+            'programInstitution' => $programInstitution
             //'security' => $security
         );
 
@@ -3289,6 +3296,7 @@ class FellAppController extends OrderAbstractController {
 
     //Public open fellowship application
     //http://127.0.0.1/fellowship-applications/apply?program[]=2179
+    //https://view.online/fellowship-applications/apply?program[]=155
     #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
     #[Template('AppFellAppBundle/Form/apply.html.twig')]
     public function applyAction(Request $request, Security $security, TokenStorageInterface $tokenStorage) {
@@ -3315,6 +3323,9 @@ class FellAppController extends OrderAbstractController {
 
         // Parse ?program[]=1&program[]=2
         $programIds = $request->query->all('program'); // returns array of IDs
+        //echo '$programIds:<br>';
+        //dump($programIds);
+        //exit();
 
         // Defensive: ensure it's an array of integers
         $institutionId = null;
@@ -3322,7 +3333,7 @@ class FellAppController extends OrderAbstractController {
         if( count($institutionIds) > 0 ) {
             $institutionId = $institutionIds[0];
         }
-        //dump($institutionIds);
+        //dump($institutionId);
         //exit('111');
 
 

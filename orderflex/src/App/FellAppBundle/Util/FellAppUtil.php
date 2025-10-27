@@ -498,7 +498,7 @@ class FellAppUtil {
 
     //Get all global fellowship types (getGlobalFellowshipTypesByInstitution) =>
     //get all associated institution
-    public function getFellowshipInstitutions() {
+    public function getFellowshipInstitutions( $institutionId=null ) {
         $repository = $this->em->getRepository(GlobalFellowshipSpecialty::class);
         $dql = $repository->createQueryBuilder('list')
             ->select('institution.id') // fetch only institution
@@ -507,9 +507,22 @@ class FellAppUtil {
             //->distinct()
             ->groupBy('institution')
         ;
+
+        $parameters = [];
+        if( $institutionId ) {
+            $dql->where('institution.id = :institutionId');
+            $parameters[] = array('institutionId' => $institutionId);
+        }
+
         //$dql->select('DISTINCT list, institution');
 
-        $results = $dql->getQuery()->getResult();
+        $query = $dql->getQuery();
+
+        if( count($parameters) > 0 ) {
+            $query->setParameters($parameters);
+        }
+
+        $results = $query->getResult();
         $ids = array_map(fn($row) => $row['id'], $results);
 
         $repository = $this->em->getRepository(Institution::class);

@@ -124,6 +124,7 @@ class FellowshipApplicationType extends AbstractType
                 'required' => false,
                 'choices' => $this->params['institutions'],
                 'invalid_message' => 'institution invalid value',
+                'data' => $this->params['programInstitution'],
                 //'choices_as_values' => true,
                 'attr' => array('class' => 'combobox combobox-width fellapp-institution'),
             ));
