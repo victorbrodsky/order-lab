@@ -268,6 +268,8 @@
 
         $(document).ready(function() {
 
+            setCicleShow();
+
             initTooltips();
 
             initConvertEnterToTab();
@@ -275,6 +277,10 @@
             initDatepicker();
 
             expandTextarea();
+
+            initFileUpload();
+
+            windowCloseAlert();
 
             // Initialize select2 for anonymous users
             initializeSelect2ForAnonymous();
@@ -299,23 +305,23 @@
             var $inst = $('select.fellapp-institution');
             var $global = $('select.fellapp-globalFellowshipSpecialty');
             if ($inst.length === 0 || $global.length === 0) {
-                console.log('FellApp selects not found:', 'inst len=', $inst.length, 'global len=', $global.length);
+                //console.log('FellApp selects not found:', 'inst len=', $inst.length, 'global len=', $global.length);
                 return;
             }
 
             $inst.on('change', function(){
                 var instId = $(this).val();
-                console.log('Institution changed:', instId);
+                //console.log('Institution changed:', instId);
                 filterGlobalByInstitution(instId);
             });
 
             var initInst = $inst.val();
-            console.log('Initial institution:', initInst);
+            //console.log('Initial institution:', initInst);
             filterGlobalByInstitution(initInst);
         });
 
         function filterGlobalByInstitution(instId) {
-            console.log('filterGlobalByInstitution:', 'instId=', instId);
+            //console.log('filterGlobalByInstitution:', 'instId=', instId);
 
             if( !instId ) {
                 console.log('filterGlobalByInstitution: instId is null');
@@ -334,7 +340,7 @@
                 url: url,
                 dataType: 'json'
             }).then(function (data) {
-                console.log('Fetched data:', data);
+                //console.log('Fetched data:', data);
 
                 var comboboxEl = $('select.fellapp-globalFellowshipSpecialty');
                 comboboxEl.empty();//.trigger("change");

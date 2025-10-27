@@ -88,6 +88,10 @@ class FellowshipApplicationType extends AbstractType
             $this->params['routeName'] = null;
         }
 
+        if( $this->params && !array_key_exists('programInstitution',$this->params) ) {
+            $this->params['programInstitution'] = null;
+        }
+
         if( $fellappChoices && count($fellappChoices) > 0 ) {
             $builder->add('fellowshipSubspecialty', EntityType::class, array(
                 //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]

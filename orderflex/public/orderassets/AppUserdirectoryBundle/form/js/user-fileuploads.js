@@ -77,7 +77,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     //var userid = dataElement.dataset.userid;
     var userid = dataElement.getAttribute('data-userid');
-    //console.log('userid='+userid);
+    console.log('userid='+userid);
 
     //show upload success confirmation alert
     // var dropzoneConfirmationDisable = dataElement.getAttribute('data-dropzoneconfirmation-disable');
@@ -1184,7 +1184,7 @@ function createDropzoneHolder_Other(existingDropzoneHolder) {
 function disableEnable_Dropzone_NEW( dropzoneElement, disabled, tooltipName, forcedisable ) {
 
     var dropzoneDom = dropzoneElement.get(0);
-    //console.log('disable/enable dropzone className='+dropzoneDom.className);
+    console.log('disable/enable dropzone className='+dropzoneDom.className);
     var myDropzone = dropzoneDom.dropzone;
 
     //if( !myDropzone.listeners[1] ) {

@@ -203,7 +203,7 @@
 
     {#{% set container = documentsContainerData.container %}#}
     {#{% set documents = documentsContainerData.documents %}#}
-    {#{% set cycle = documentsContainerData.cycle %}#}
+    {#{% set https://a0.muscache.com/im/pictures/hosting/Hosting-1480093830336286339/original/7a464b19-f07b-4ac9-bf44-c0d0eae8c221.jpeg?im_w=480cycle = documentsContainerData.cycle %}#}
     {#{% set prototype = documentsContainerData.prototype %}#}
     {#{% set maxFiles = documentsContainerData.maxFiles %}#}
     {#{% set maxFilesize = documentsContainerData.maxFilesize %}#}
@@ -289,6 +289,8 @@
         {% if dz_maxFiles == 1 %}
             {% set dropzoneFilesTxt = 'file' %}
         {% endif %}
+
+        {#cycle={{ cycle }}, dropzoneActiveClass={{ dropzoneActiveClass }}, addRemoveLink={{ addRemoveLink }}<br>#}
 
         <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">
 

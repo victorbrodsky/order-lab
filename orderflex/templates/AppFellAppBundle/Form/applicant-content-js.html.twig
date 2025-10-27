@@ -389,7 +389,7 @@
 
     //disable upload itinerary if interview date is not set
     function setUploadItineraryAndListener() {
-        
+        console.log('setUploadItineraryAndListener, cycle='+cycle);
         if( cycle == 'show' ) {
             return;
         }
@@ -398,6 +398,7 @@
         var dropzone = itineraryPanel.find('.file-upload-dropzone');
 
         if( !dropzone || dropzone.length == 0 ) {
+            console.log('setUploadItineraryAndListener, dropzone.length='+dropzone.length);
             return;
         }
         
@@ -417,7 +418,7 @@
     }
     
     function setItineraryUploadFile( dropzone, dateValue ) {
-        //console.log('set itinerary: dateValue='+dateValue);      
+        console.log('set itinerary: dateValue='+dateValue);
         
          var dropzoneDom = dropzone.get(0);
         //console.log('disable/enable dropzone className='+dropzoneDom.className);

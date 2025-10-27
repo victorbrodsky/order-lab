@@ -53,7 +53,6 @@ class UploadListener {
 
     public function onUpload(PostPersistEvent $event)
     {
-
         $request = $event->getRequest();
         $userid = $request->get('userid');
         $originalfilename = $request->get('filename');
@@ -86,8 +85,13 @@ class UploadListener {
             //for new object (i.e. application) userid might not be set. Therefore, use the logged in user.
             $user = $this->security->getUser();
         }
-
-        $authUser = $this->em->getRepository(User::class)->find($authUserId);
+        //exit('onUpload: user='.$user.", authUserId=".$authUserId);
+        $authUser = null;
+        if( $authUserId ) {
+            $authUser = $this->em->getRepository(User::class)->find($authUserId);
+        }
+        echo "user=".$user.", authUser=".$authUser."<br>";
+        //exit('onUpload');
 
         $object = new Document($user);
         $object->setCleanOriginalname($originalfilename);

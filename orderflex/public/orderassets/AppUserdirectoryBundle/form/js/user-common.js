@@ -248,7 +248,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
     }
 
     if( !force && $(targetid).length == 0 ) {
-        console.log('getComboboxGeneric return targetid='+targetid);
+        //console.log('getComboboxGeneric return targetid='+targetid);
         return;
     }
 
@@ -317,8 +317,8 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         }
     }
 
-    console.log('get Combobox Generic: url='+url);
-    console.log('get Combobox Generic: globalDataArray.length='+globalDataArray.length);
+    //console.log('get Combobox Generic: url='+url);
+    //console.log('get Combobox Generic: globalDataArray.length='+globalDataArray.length);
 
     if( globalDataArray.length == 0 ) {
         $.ajax({
@@ -336,15 +336,15 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
                 console.error('Failed to parse JSON from '+url, e);
                 data = [];
             }
-            console.log(name+' data :',data);
+            //console.log(name+' data :',data);
             $.each(data, function(key, val) {
                 if(val) {
                     globalDataArray.push(val);
                 }
             });
-            console.log('globalDataArray=',globalDataArray);
-            console.log('targetid=',targetid);
-            console.log('multipleFlag=',multipleFlag);
+            //console.log('globalDataArray=',globalDataArray);
+            //console.log('targetid=',targetid);
+            //console.log('multipleFlag=',multipleFlag);
             populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
         }).fail(function(jqXHR){
             console.error('AJAX error fetching '+url+':', jqXHR && jqXHR.status, jqXHR && jqXHR.responseText);
