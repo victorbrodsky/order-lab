@@ -457,7 +457,7 @@ f_create_tenant_htppd() {
 	#    echo -e ${COLOR} Create httpd: "$str" ${NC}
 	#	f_create_single_tenant_htppd $str
 	#done
-	f_create_single_tenant_htppd homepagemanager 8081
+	f_create_single_tenant_htppd homepagemanager 8081 homepage-manager
 	f_create_single_tenant_htppd tenantmanager 8082 tenant-manager
 	f_create_single_tenant_htppd tenantappdemo 8083 c/demo-institution/demo-department
 	f_create_single_tenant_htppd tenantapptest 8084 c/test-institution/test-department
