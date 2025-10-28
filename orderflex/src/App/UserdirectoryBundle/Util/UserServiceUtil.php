@@ -1579,14 +1579,17 @@ Pathology and Laboratory Medicine",
         $filename = $path.DIRECTORY_SEPARATOR.$branch;
         //echo $filename."<br>";
 
-        if( file_exists($filename) ) {
-            //OK
-        } else {
-            return false;
+        if (!is_readable($filename)) {
+            return false; // File doesn't exist or isn't readable
         }
 
         //$filename = sprintf('.git/refs/heads/%s',$branch);
-        $hash = file_get_contents($filename);
+        //$hash = file_get_contents($filename);
+        $hash = @file_get_contents($filename);
+        if ($hash === false) {
+            return false; // Failed to read file
+        }
+
         $hash = trim((string)$hash);
 
         $timestamp = filemtime($filename);

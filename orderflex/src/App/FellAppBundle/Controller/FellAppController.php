@@ -1364,7 +1364,7 @@ class FellAppController extends OrderAbstractController {
         $routeName = $request->get('_route');
 
         $applicant = $entity->getUser();
-        echo "Applicant=".$applicant.", applicantID=".$applicant->getId().", user=".$user."<br>";
+        //echo "Applicant=".$applicant.", applicantID=".$applicant->getId().", user=".$user."<br>";
 
         //user who has the same fell type can view or edit
         $fellappUtil = $this->container->get('fellapp_util');

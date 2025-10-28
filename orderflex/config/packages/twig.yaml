@@ -6,6 +6,8 @@ twig:
 #    form:
 #        resources: ['form_div_layout.html.twig']
         #resources: ['bootstrap_3_horizontal_layout.html.twig']
+    #default_path: '%kernel.project_dir%/templates'
+    default_path: '%kernel.project_dir%/src/templates'
     form_themes:
         - 'form_div_layout.html.twig'
         #- 'form/form_errors.html.twig'
