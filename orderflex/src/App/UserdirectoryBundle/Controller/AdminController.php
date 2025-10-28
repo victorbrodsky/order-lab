@@ -3438,7 +3438,7 @@ class AdminController extends OrderAbstractController
         );
 
         $washuDep = array(
-            'Department of Pathology and Immunology' => null
+            'Pathology and Immunology' => null
         );
         $washu = array(
             'abbreviation'=>'WashU',
@@ -5983,12 +5983,12 @@ class AdminController extends OrderAbstractController
             'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
         $washUPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
-            "Department of Pathology and Immunology",
+            "Pathology and Immunology",
             $washU,
             $mapper
         );
         if( !$washUPathology ) {
-            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "Department of Pathology and Immunology"');
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "Pathology and Immunology"');
         }
 
         ////// EOF 1) get WashU ptahology //////

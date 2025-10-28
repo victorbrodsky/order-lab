@@ -279,7 +279,14 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         $strArr = array();
         foreach( $breadCrumbs as $breadCrumb ) {
             //$strArr[] = $breadCrumb->getAbbreviation()."";
-            $strArr[] = $breadCrumb->getName()."";
+            $name = $breadCrumb->getName();
+            $groupTypeName = $breadCrumb->getOrganizationalGroupType();
+            if( $groupTypeName == 'Department' ) {
+                if( $name && strpos($name, 'Department') === false ) {
+                    $name = $groupTypeName . " of " . $name;
+                }
+            }
+            $strArr[] = $name."";
             //echo "added ".$breadCrumb->getId().", ".$breadCrumb->getAbbreviation().""."<br>";
         }
         //$strArr = array_reverse($strArr);

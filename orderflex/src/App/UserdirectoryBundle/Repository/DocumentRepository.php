@@ -48,12 +48,12 @@ class DocumentRepository extends EntityRepository {
         $addMethodName = "add".$docfieldname;
         $removeMethodName = "remove".$docfieldname;
         $getMethod = "get".$docfieldname."s";
-        echo "processDocuments: getMethod=".$getMethod."<br>";
-        echo "processDocuments: removeMethodName=".$removeMethodName."<br>";
-        echo "processDocuments: documentHolder->getMethod=".count($documentHolder->$getMethod())."<br>";
+        //echo "processDocuments: getMethod=".$getMethod."<br>";
+        //echo "processDocuments: removeMethodName=".$removeMethodName."<br>";
+        //echo "processDocuments: documentHolder->getMethod=".count($documentHolder->$getMethod())."<br>";
 
         if( count($documentHolder->$getMethod()) == 0 ) {
-            echo "processDocuments: return: no documents<br>";
+            //echo "processDocuments: return: no documents<br>";
 
             //prvenet create an empty DocumentContainer and AttachmentContainer: remove DocumentContainer from AttachmentContainer
             //$attachmentContainer = null;
@@ -85,10 +85,10 @@ class DocumentRepository extends EntityRepository {
 
             //echo "document id:<br>";
             //print_r($doc->getId());
-            echo "processDocuments: document=$doc<br>";
+            //echo "processDocuments: document=$doc<br>";
 
             $documentId = $doc->getId();
-            echo "processDocuments: doc id=".$documentId."<br>";
+            //echo "processDocuments: doc id=".$documentId."<br>";
 //            echo "<br>";
 
             $documentHolder->$removeMethodName($doc);

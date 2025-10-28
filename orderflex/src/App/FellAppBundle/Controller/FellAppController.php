@@ -774,7 +774,7 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/show/{id}', name: 'fellapp_show')]
     #[Route(path: '/download/{id}', name: 'fellapp_download')]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
-    public function showAction(Request $request, Security $security, TokenStorageInterface $tokenStorage, $id) {
+    public function showAction(Request $request, TokenStorageInterface $tokenStorage, $id) {
 
         //echo "clientip=".$request->getClientIp()."<br>";
         //$ip = $this->container->get('request')->getClientIp();
@@ -850,6 +850,11 @@ class FellAppController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
+        $globalFellowshipType = $entity->getGlobalFellowshipSpecialty();
+        $fellowshipSubspecialty = $entity->getFellowshipSubspecialty();
+        echo "globalFellowshipType=".$globalFellowshipType."<br>";
+        echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
+
         //testing
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$fellappRecLetterUtil->generateFellappRecLetterId($entity);
@@ -881,7 +886,7 @@ class FellAppController extends OrderAbstractController {
 //            }
 //        }
 
-        $args = $this->getShowParameters($routeName,$entity,$security); //edit
+        $args = $this->getShowParameters($routeName,$entity); //edit
 
         if( $routeName == 'fellapp_download' ) {
             return $this->render('AppFellAppBundle/Form/download.html.twig', $args);
@@ -896,7 +901,7 @@ class FellAppController extends OrderAbstractController {
 
     #[Route(path: '/new/', name: 'fellapp_new')]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
-    public function newAction(Request $request, Security $security) {
+    public function newAction( Request $request ) {
 
         //coordinator and director can create
 //        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -922,7 +927,7 @@ class FellAppController extends OrderAbstractController {
         $applicant->addFellowshipApplication($fellowshipApplication);
 
         $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security); // new
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user); // new
 
         if( count($args) == 0 ) {
             $linkUrl = $this->generateUrl(
@@ -945,7 +950,7 @@ class FellAppController extends OrderAbstractController {
     }
 
 
-    public function getShowParameters($routeName, $entity, $user=null, $security=null, $institutionId=null) {
+    public function getShowParameters($routeName, $entity, $user=null, $institutionId=null) {
 
         $userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
@@ -977,16 +982,24 @@ class FellAppController extends OrderAbstractController {
         $fellTypes = array();
         $globalFellTypes = array();
 
-        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
-            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
-            if( count($globalFellTypes) == 0 ) {
-                return array();
-            }
+//        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
+//            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
+//            if( count($globalFellTypes) == 0 ) {
+//                return array();
+//            }
+//        } else {
+//            $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+//            if( count($fellTypes) == 0 ) {
+//                return array();
+//            }
+//        }
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $serverRole."" != 'Internet (Hub)' ) {
+            $fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
+            //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
         } else {
-            $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-            if( count($fellTypes) == 0 ) {
-                return array();
-            }
+            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
+            //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
         }
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
@@ -1127,219 +1140,7 @@ class FellAppController extends OrderAbstractController {
         );
     }
 
-//    /**
-    //     * -NOT-USED
-    //     * @Route("/update-NOT-USED/{id}", name="fellapp_update-NOT-USED", methods={"PUT"})
-    //     * @Template("AppFellAppBundle/Form/new.html.twig")
-    //     */
-    //    public function updateNotUsedAction(Request $request, $id) {
-    //
-    ////        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') ){
-    ////            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-    ////        }
-    ////        if( false == $this->isGranted("update","FellowshipApplication") ){
-    ////            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-    ////        }
-    //
-    //        //echo "update <br>";
-    //        //exit('update');
-    //
-    //        //ini_set('memory_limit', '3072M'); //3072M
-    //
-    //        $userSecUtil = $this->container->get('user_security_utility');
-    //        //$user = $this->getUser();
-    //        $user = $this->getUser();
-    //
-    //        $entity = $this->getDoctrine()->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
-    //
-    //        if( !$entity ) {
-    //            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
-    //        }
-    //
-    //        //user who has the same fell type can view or edit
-    //        $fellappUtil = $this->container->get('fellapp_util');
-    //        if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
-    //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-    //        }
-    //
-    //        if( false == $this->isGranted("update",$entity) ){
-    //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-    //        }
-    //
-    //        // Create an ArrayCollection of the current interviews
-    //        $originalInterviews = new ArrayCollection();
-    //        foreach( $entity->getInterviews() as $interview) {
-    //            $originalInterviews->add($interview);
-    //        }
-    //
-    //        $originalReports = new ArrayCollection();
-    //        foreach( $entity->getReports() as $report ) {
-    //            $originalReports->add($report);
-    //        }
-    //
-    //        $cycle = 'edit';
-    //        //$user = $this->getUser();
-    //        $user = $this->getUser();
-    //
-    //        $params = array(
-    //            'cycle' => $cycle,
-    //            'em' => $this->getDoctrine()->getManager(),
-    //            'user' => $entity->getUser(),
-    //            'cloneuser' => null,
-    //            'roles' => $user->getRoles(),
-    //            'container' => $this->container,
-    //            'cycle_type' => "update",
-    //            'security' => $this->security
-    //        );
-    //        $form = $this->createForm( FellowshipApplicationType::class, $entity, array('form_custom_value' => $params) ); //update
-    //        //$routeName = $request->get('_route');
-    //        //$args = $this->getShowParameters($routeName,null,$entity);
-    //        //$form = $args['form_pure'];
-    //
-    //        $form->handleRequest($request);
-    //
-    //        if( !$form->isSubmitted() ) {
-    //            echo "form is not submitted<br>";
-    //            $form->submit($request);
-    //        }
-    //
-    //
-    ////        if ($form->isDisabled()) {
-    ////            echo "form is disabled<br>";
-    ////            exit();
-    ////        }
-    ////        if (count($form->getErrors(true)) > 0) {
-    ////            echo "form has errors<br>";
-    ////        }
-    ////        echo "errors:<br>";
-    ////        $string = (string) $form->getErrors(true);
-    ////        echo "string errors=".$string."<br>";
-    ////        echo "getErrors count=".count($form->getErrors())."<br>";
-    //        //echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
-    ////        print_r($form->getErrors());
-    ////        echo "<br>string errors:<br>";
-    ////        print_r($form->getErrorsAsString());
-    ////        echo "<br>";
-    ////        exit();
-    //
-    //        if(0) {
-    //            $errorHelper = new ErrorHelper();
-    //            $errors = $errorHelper->getErrorMessages($form);
-    //            echo "<br>form errors:<br>";
-    //            print_r($errors);
-    //
-    //            //echo "<br><br>getErrors:<br>";
-    //            //var_dump($form->getErrors());die;
-    //        }
-    //
-    //
-    //
-    //        $force = false;
-    //        //$force = true;
-    //        if( $form->isValid() || $force ) {
-    //
-    //            //exit('form valid');
-    //
-    //            /////////////// Process Removed Collections ///////////////
-    //            $removedCollections = array();
-    //
-    //            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
-    //            if( $removedInfo ) {
-    //                $removedCollections[] = $removedInfo;
-    //            }
-    //            /////////////// EOF Process Removed Collections ///////////////
-    //
-    //            $this->calculateScore($entity);
-    //
-    //            $this->processDocuments($entity);
-    //
-    //            $this->assignFellAppAccessRoles($entity);
-    //
-    //            //set update author application
-    //            $em = $this->getDoctrine()->getManager();
-    //            $userUtil = $this->container->get('user_utility');
-    //            //$userUtil = new UserUtil();
-    //            //$secTokenStorage = $this->container->get('security.token_storage');
-    //            $userUtil->setUpdateInfo($entity);
-    //
-    //
-    //            /////////////// Add event log on edit (edit or add collection) ///////////////
-    //            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
-    //            $changedInfoArr = $this->setEventLogChanges($entity);
-    //
-    //            //report (Complete Application PDF) diff
-    //            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
-    //            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
-    //            //exit('report');
-    //
-    //            //set Edit event log for removed collection and changed fields or added collection
-    //            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
-    //                $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
-    //                $event = $event . implode("<br>", $changedInfoArr);
-    //                $event = $event . "<br>" . implode("<br>", $removedCollections);
-    //                $event = $event . $reportsDiffInfoStr;
-    //                //echo "Diff event=".$event."<br>";
-    //                //$userSecUtil = $this->container->get('user_security_utility');
-    //                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
-    //            }
-    //
-    //            $em = $this->getDoctrine()->getManager();
-    //            $em->persist($entity);
-    //            $em->flush();
-    //
-    //            //don't regenerate report if it was added.
-    //            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
-    //            //echo "report count=".count($entity->getReports())."<br>";
-    //            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
-    //            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
-    //                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-    //                $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
-    //                $this->addFlash(
-    //                    'notice',
-    //                    'A new Complete Fellowship Application PDF will be generated.'
-    //                );
-    //                //echo "Regenerate!!!! <br>";
-    //            } else {
-    //                //echo "NO Regenerate!!!! <br>";
-    //            }
-    //            //exit('report regen');
-    //
-    //            //set logger for update
-    //            //$logger = $this->container->get('logger');
-    //            //$logger->notice("update: timezone=".date_default_timezone_get());
-    //            //$userSecUtil = $this->container->get('user_security_utility');
-    //            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
-    //            $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
-    //            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
-    //            //exit('event='.$event);
-    //
-    //            return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
-    //        } else {
-    //            echo "getErrors count=".count($form->getErrors(true))."<br>";
-    //            $string = (string) $form->getErrors(true);
-    //            //echo "Error:<br>$string<br><br><pre>";
-    //            //print_r($form->getErrors());
-    //            //echo "</pre>";
-    //
-    //            $msg = 'Fellowship Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
-    //            //$userSecUtil = $this->container->get('user_security_utility');
-    //            //$userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (ID# ".$entity->getId().")", $msg);
-    //            exit($msg."<br>Notification email has been sent to the system administrator.");
-    //            //throw new \Exception($msg);
-    //        }
-    //
-    //        //echo 'form invalid <br>';
-    //        //exit('form invalid');
-    //
-    //        return array(
-    //            'form' => $form->createView(),
-    //            'entity' => $entity,
-    //            'pathbase' => 'fellapp',
-    //            'cycle' => $cycle,
-    //            'sitename' => $this->getParameter('fellapp.sitename')
-    //        );
-    //    }
-    //EOF -NOT-USED
+
     /**
      * Separate edit/update controller action to insure csrf token is valid
      * Displays a form to edit an existing fellapp entity.
@@ -1347,7 +1148,7 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/edit/{id}', name: 'fellapp_edit', methods: ['GET', 'POST'])]
     #[Route(path: '/edit-with-default-interviewers/{id}', name: 'fellapp_edit_default_interviewers', methods: ['GET', 'POST'])]
     #[Template('AppFellAppBundle/Form/edit.html.twig')]
-    public function editAction(Request $request, Security $security, FellowshipApplication $entity)
+    public function editAction(Request $request, FellowshipApplication $entity)
     {
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application');
@@ -1397,14 +1198,14 @@ class FellAppController extends OrderAbstractController {
 
         $cycle = "edit";
 
-        $form = $this->createFellAppEditForm($entity,$cycle,$security);
+        $form = $this->createFellAppEditForm($entity,$cycle);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() ) {
 
             ////// set status edit GET POST application//////
             $btnSubmit = $request->request->get('btnSubmit');
-            echo "btnSubmit=$btnSubmit <br>";
+            //echo "btnSubmit=$btnSubmit <br>";
             if ($btnSubmit === 'fellapp-draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
@@ -1563,15 +1364,29 @@ class FellAppController extends OrderAbstractController {
             'route_path' => $routeName
         );
     }
-    private function createFellAppEditForm( FellowshipApplication $entity, $cycle, $security )
+    private function createFellAppEditForm( FellowshipApplication $entity, $cycle )
     {
         //$user = $this->getUser();
         $user = $this->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
-        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        if( count($fellTypes) == 0 ) {
-            return array();
+//        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+//        if( count($fellTypes) == 0 ) {
+//            return array();
+//        }
+
+        $fellTypes = array();
+        $globalFellTypes = array();
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $serverRole."" != 'Internet (Hub)' ) {
+            //$fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
+            $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+            echo "createFellAppEditForm: fellowshipTypes count=".count($fellTypes)."<br>";
+        } else {
+            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
+            echo "createFellAppEditForm: globalFellTypes count=".count($globalFellTypes)."<br>";
         }
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
@@ -1585,6 +1400,7 @@ class FellAppController extends OrderAbstractController {
             'container' => $this->container,
             'cycle_type' => "update",
             'fellappTypes' => $fellTypes,
+            'globalFellappTypes' => $globalFellTypes,
             'fellappVisas' => $fellappVisas,
             //'security' => $security
         );
@@ -1742,7 +1558,7 @@ class FellAppController extends OrderAbstractController {
 
     #[Route(path: '/applicant/new', name: 'fellapp_create_applicant', methods: ['POST'])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
-    public function createApplicantAction( Request $request, Security $security )
+    public function createApplicantAction( Request $request )
     {
         //exit("createApplicantAction");
         if( false == $this->isGranted("create","FellowshipApplication") ){
@@ -3306,7 +3122,7 @@ class FellAppController extends OrderAbstractController {
     //https://view.online/fellowship-applications/apply?program[]=155
     #[Route(path: '/apply', name: 'fellapp_apply', methods: ["GET"])]
     #[Template('AppFellAppBundle/Form/apply.html.twig')]
-    public function applyAction(Request $request, Security $security, TokenStorageInterface $tokenStorage) {
+    public function applyAction(Request $request, TokenStorageInterface $tokenStorage) {
         //exit('applyAction');
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
@@ -3403,7 +3219,7 @@ class FellAppController extends OrderAbstractController {
         $applicant->addFellowshipApplication($fellowshipApplication);
 
         $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$security,$institutionId); //apply GET
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$institutionId); //apply GET
 
         // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
@@ -3530,7 +3346,7 @@ class FellAppController extends OrderAbstractController {
 
     #[Route(path: '/apply', name: 'fellapp_apply_post', methods: ['POST'])]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
-    public function applyApplicantAction( Request $request, Security $security )
+    public function applyApplicantAction( Request $request )
     {
         //exit("applyApplicantAction");
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
