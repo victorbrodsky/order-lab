@@ -267,7 +267,20 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         $breadCrumbs = $this->getEntityBreadcrumbs();
         $strArr = array();
         foreach( $breadCrumbs as $breadCrumb ) {
-            $strArr[] = $breadCrumb->getAbbreviation()."";
+            $groupTypeName = $breadCrumb->getOrganizationalGroupType();
+            if( $groupTypeName == 'Institution' ) {
+                //Use abbreviation
+                $name = $breadCrumb->getAbbreviation()."";
+            } elseif( $groupTypeName == 'Department' ) {
+                $name = $breadCrumb->getName()."";
+                if( $name && strpos($name, 'Department') === false ) {
+                    $name = $groupTypeName . " of " . $name;
+                }
+            } else {
+                //Department: WCM Department of Pathology and Laboratory Medicine
+                $name = $breadCrumb->getName()."";
+            }
+            $strArr[] = $name;
             //$strArr[] = $breadCrumb->getName()."";
             //echo "added ".$breadCrumb->getId().", ".$breadCrumb->getAbbreviation().""."<br>";
         }
