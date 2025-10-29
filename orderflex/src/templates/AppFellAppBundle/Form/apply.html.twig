@@ -161,9 +161,22 @@
             // Initialize ajax-combobox-city using getComboboxGeneric (AJAX)
             try {
                 var _cities = [];
-                getComboboxGeneric(null,'city',_cities,false,'public/generic/','employees',true,'Select a city',true);
+                //holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder,thisAsyncflag
+                getComboboxGeneric(
+                        null,                   //holder
+                        'city',                 //name
+                        _cities,                //globalDataArray
+                        false,                  //multipleFlag
+                        'public/generic/',      //urlprefix
+                        'employees',            //sitename
+                        true,                   //force
+                        'Select a city',        //placeholder
+                        true                    //thisAsyncflag
+                );
+                console.log('cities=',_cities);
                 //getComboboxGeneric(newForm,'city',_cities,false);
             } catch (e) {
+                //console.log('cities catch');
                 // fallback: simple select2 without data
                 $('.ajax-combobox-city').select2({
                     width: '100%',
