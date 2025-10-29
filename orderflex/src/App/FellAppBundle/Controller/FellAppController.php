@@ -995,8 +995,9 @@ class FellAppController extends OrderAbstractController {
 //        }
         $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
         if( $serverRole."" != 'Internet (Hub)' ) {
-            $fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
-            //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
+            //$fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
+            $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+            echo "fellowshipTypes count=".count($fellTypes)."<br>";
         } else {
             $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
             //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
