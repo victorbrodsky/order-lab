@@ -107,6 +107,8 @@ class FellowshipApplicationType extends AbstractType
         }
 
         if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
+            dump($globalFellappTypes);
+            exit('111');
             $builder->add('globalFellowshipSpecialty', EntityType::class, array(
                 'class' => GlobalFellowshipSpecialty::class,
                 'label' => "Fellowship Specialty:",
