@@ -336,7 +336,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
                 console.error('Failed to parse JSON from '+url, e);
                 data = [];
             }
-            console.log(name+' data :',data);
+            //console.log(name+' data :',data);
             $.each(data, function(key, val) {
                 if(val) {
                     globalDataArray.push(val);
