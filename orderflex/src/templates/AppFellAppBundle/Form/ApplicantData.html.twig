@@ -42,7 +42,7 @@
                         {% if form.fellowshipSubspecialty is defined and form.fellowshipSubspecialty %}
                             {{ form_row(form.fellowshipSubspecialty) }}
                         {% endif %}
-                        {% if form.globalFellowshipSpecialty is defined and form.globalFellowshipSpecialty %}
+                        {% if form.globalFellowshipSpecialty is defined and form.globalFellowshipSpecialty and form.globalFellowshipSpecialty|length > 0 %}
                             {{ form_row(form.globalFellowshipSpecialty) }}
                         {% endif %}
                     </div>
