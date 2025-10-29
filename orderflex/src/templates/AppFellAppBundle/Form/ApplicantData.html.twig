@@ -34,7 +34,7 @@
         <div class="panel-body">
 
             <div class="well">
-                <label class="col-xs-12 control-label">Applicant:</label>
+                {#<label class="col-xs-12 control-label">Applicant:</label>#}
                 {#{{ form_row(form.fellowshipSubspecialty) }}#}
                 <div class="row">
                     <div class="col-xs-6">
@@ -42,7 +42,10 @@
                         {% if form.fellowshipSubspecialty is defined and form.fellowshipSubspecialty %}
                             {{ form_row(form.fellowshipSubspecialty) }}
                         {% endif %}
-                        {% if form.globalFellowshipSpecialty is defined and form.globalFellowshipSpecialty and form.globalFellowshipSpecialty|length > 0 %}
+                        {#1 form.globalFellowshipSpecialty|length={{ form.globalFellowshipSpecialty|length }}#}
+                        {#{% if form.globalFellowshipSpecialty is defined and form.globalFellowshipSpecialty and form.globalFellowshipSpecialty|length > 0 %}#}
+                        {% if form.globalFellowshipSpecialty is defined %}
+                            {#2 form.globalFellowshipSpecialty|length={{ form.globalFellowshipSpecialty|length }}#}
                             {{ form_row(form.globalFellowshipSpecialty) }}
                         {% endif %}
                     </div>

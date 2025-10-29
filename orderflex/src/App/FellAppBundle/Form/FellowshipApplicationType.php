@@ -78,6 +78,7 @@ class FellowshipApplicationType extends AbstractType
             $fellappChoices = array();
         }
 
+        //echo "this->params['globalFellappTypes'] count=".count($this->params['globalFellappTypes'])."<br>";
         if (array_key_exists('globalFellappTypes', $this->params)) {
             $globalFellappTypes = $this->params['globalFellappTypes'];
         } else {
@@ -110,10 +111,13 @@ class FellowshipApplicationType extends AbstractType
 //        dump($fellappChoices);
 //        exit('111');
         if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
+            //dump($globalFellappTypes);
+            //exit('111');
+            //echo "before add globalFellappTypes count=".count($globalFellappTypes)."<br>";
             $builder->add('globalFellowshipSpecialty', EntityType::class, array(
                 'class' => GlobalFellowshipSpecialty::class,
                 'label' => "Fellowship Specialty:",
-                'choice_label' => "getNameInstitution",
+                //'choice_label' => "getNameInstitution",
                 'required' => false,
                 'choices' => $globalFellappTypes,
                 'invalid_message' => 'globalFellowshipSpecialty invalid value',

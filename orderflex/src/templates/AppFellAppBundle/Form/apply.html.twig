@@ -280,6 +280,7 @@
         }
 
         $(document).ready(function() {
+            console.log("document ready");
 
             setCicleShow();
 
@@ -318,7 +319,7 @@
             var $inst = $('select.fellapp-institution');
             var $global = $('select.fellapp-globalFellowshipSpecialty');
             if ($inst.length === 0 || $global.length === 0) {
-                //console.log('FellApp selects not found:', 'inst len=', $inst.length, 'global len=', $global.length);
+                console.log('FellApp selects not found:', 'inst len=', $inst.length, 'global len=', $global.length);
                 return;
             }
 

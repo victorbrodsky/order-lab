@@ -1089,6 +1089,8 @@ class FellAppController extends OrderAbstractController {
 
         $roles = $user ? $user->getRoles() : [];
 
+        //echo "2 globalFellTypes count=".count($globalFellTypes)."<br>";
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
