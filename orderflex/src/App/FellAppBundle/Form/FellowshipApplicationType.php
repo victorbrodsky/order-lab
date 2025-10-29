@@ -109,7 +109,7 @@ class FellowshipApplicationType extends AbstractType
 //        dump($globalFellappTypes);
 //        dump($fellappChoices);
 //        exit('111');
-        if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
+        if( 0 && $globalFellappTypes && count($globalFellappTypes) > 0 ) {
             $builder->add('globalFellowshipSpecialty', EntityType::class, array(
                 'class' => GlobalFellowshipSpecialty::class,
                 'label' => "Fellowship Specialty:",
@@ -123,7 +123,7 @@ class FellowshipApplicationType extends AbstractType
             ));
         }
 
-        if( $this->params && $this->params['routeName'] == 'fellapp_apply' || $this->params['routeName'] == 'fellapp_apply_post' ) {
+        if( 0 && $this->params && $this->params['routeName'] == 'fellapp_apply' || $this->params['routeName'] == 'fellapp_apply_post' ) {
             $builder->add('institution', EntityType::class, array(
                 'class' => Institution::class,
                 'label' => false, //"Institution:",

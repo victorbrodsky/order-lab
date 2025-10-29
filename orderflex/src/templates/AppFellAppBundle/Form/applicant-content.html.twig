@@ -195,7 +195,7 @@
     {#{% include 'AppFellAppBundle/Form/PersonalData.html.twig' %}#}
 
     {% if form.institution is defined %}
-        form.institution={{ form.institution|length }}<br>
+        {#form.institution={{ form.institution|length }}<br>#}
         {% include 'AppFellAppBundle/Form/Institution.html.twig' %}
     {% endif %}
 
