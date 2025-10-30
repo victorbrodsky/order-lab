@@ -358,12 +358,14 @@ class FellApp:
         time.sleep(1)
 
         #fellowship_specialty
-        self.automation.select_option(
-            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_majors", "CSS_SELECTOR",
-            "#select2-drop .select2-input",
-            fellapp["fellowship_specialty"][0]
-        )
-        time.sleep(1)
+        # self.automation.select_option(
+        #     "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_majors", "CSS_SELECTOR",
+        #     "#select2-drop .select2-input",
+        #     fellapp["fellowship_specialty"][0]
+        # )
+        # time.sleep(1)
+        signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_trainings_4_majors")
+        signature.send_keys(fellapp["fellowship_specialty"][0])
 
         self.automation.select_option(
             "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_institution", "CSS_SELECTOR",
