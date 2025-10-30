@@ -337,21 +337,21 @@ class FellApp:
         time.sleep(1)
 
         self.automation.select_option(
-            "oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_city", "CSS_SELECTOR",
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_city", "CSS_SELECTOR",
             "#select2-drop .select2-input",
             fellapp["residency_specialty"][2]
         )
         time.sleep(1)
 
         self.automation.select_option(
-            "oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_state", "CSS_SELECTOR",
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_state", "CSS_SELECTOR",
             "#select2-drop .select2-input",
             fellapp["residency_specialty"][3]
         )
         time.sleep(1)
 
         self.automation.select_option(
-            "oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_country", "CSS_SELECTOR",
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_country", "CSS_SELECTOR",
             "#select2-drop .select2-input",
             fellapp["residency_specialty"][4]
         )
@@ -359,7 +359,7 @@ class FellApp:
 
         #fellowship_specialty
         self.automation.select_option(
-            "oleg_fellappbundle_fellowshipapplication_trainings_4_majors", "CSS_SELECTOR",
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_majors", "CSS_SELECTOR",
             "#select2-drop .select2-input",
             fellapp["fellowship_specialty"][0]
         )
@@ -373,21 +373,21 @@ class FellApp:
         time.sleep(1)
 
         self.automation.select_option(
-            "oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_city", "CSS_SELECTOR",
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_city", "CSS_SELECTOR",
             "#select2-drop .select2-input",
             fellapp["fellowship_specialty"][2]
         )
         time.sleep(1)
 
         self.automation.select_option(
-            "oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_state", "CSS_SELECTOR",
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_state", "CSS_SELECTOR",
             "#select2-drop .select2-input",
             fellapp["fellowship_specialty"][3]
         )
         time.sleep(1)
 
         self.automation.select_option(
-            "oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_country", "CSS_SELECTOR",
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_country", "CSS_SELECTOR",
             "#select2-drop .select2-input",
             fellapp["fellowship_specialty"][4]
         )
