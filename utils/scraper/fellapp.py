@@ -251,6 +251,7 @@ class FellApp:
     def create_single_fellapp(self, fellapp):
         driver = self.automation.get_driver()
         url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/new/"
+        #url = "http://127.0.0.1/fellowship-applications/new/"
         driver.get(url)
         time.sleep(1)
 
@@ -427,6 +428,11 @@ def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
     password_text = "1234567890_demo"
+
+    # url = "http://127.0.0.1/directory/"
+    # username_text = "oli2002l"
+    # password_text = "pass"
+
     automation = WebAutomation()
     automation.login_to_site(url, username_text, password_text)
 
