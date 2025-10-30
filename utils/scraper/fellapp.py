@@ -368,20 +368,21 @@ class FellApp:
         #signature.send_keys(fellapp["fellowship_specialty"][0])
 
         ############ Post-Residency Fellowship Area of training ##############
-        wait = WebDriverWait(driver, 10)
+        if 0:
+            wait = WebDriverWait(driver, 10)
 
-        # Step 1: Focus the Select2 input
-        select2_input = wait.until(EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, "#s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_majors .select2-input")))
-        select2_input.click()
+            # Step 1: Focus the Select2 input
+            select2_input = wait.until(EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, "#s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_majors .select2-input")))
+            select2_input.click()
 
-        # Step 2: Type 'AP' into the input
-        select2_input.send_keys(fellapp["fellowship_specialty"][0])
+            # Step 2: Type 'AP' into the input
+            select2_input.send_keys(fellapp["fellowship_specialty"][0])
 
-        # Step 3: Wait for the AJAX dropdown to populate and select the first matching result
-        dropdown_option = wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-results li.select2-result-selectable")))
-        dropdown_option.click()
+            # Step 3: Wait for the AJAX dropdown to populate and select the first matching result
+            dropdown_option = wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-results li.select2-result-selectable")))
+            dropdown_option.click()
         ############ EOF ##############
 
         self.automation.select_option(
