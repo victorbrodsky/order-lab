@@ -28,21 +28,49 @@ class FellApp:
             'firstName': 'Joe',
             'lastName': 'Simpson',
             'displayName': 'Joe Simpson',
-            'email': 'cinava@yahoo.com'
+            'email': 'cinava@yahoo.com',
+            'usmlestep1': 'Pass',
+            'usmlestep2': 253,
+            'usmlestep3': 242,
+            'medschool': 'Johns Hopkins University School of Medicine',
+            #AP/CP Pathology — Massachusetts General Hospital / Harvard Medical School
+            #AP/CP, school, year (current + 1), city, state, country
+            'residency_specialty': ['AP/CP', 'Massachusetts General Hospital / Harvard Medical School', 'Boston', 'Massachusetts', 'United States'],
+            #Surgical Pathology Fellowship — Memorial Sloan Kettering Cancer Center
+            #specialty, school, year (current + 2), city, state, country
+            'fellowship_specialty': ['Surgical Pathology Fellowship', 'Memorial Sloan Kettering Cancer Center', 'New-York', 'New-York', 'United States'],
+            'interview_date': '09/12/2026',
+            'interview_score': '4.3'
         })
         users.append({
             'type': '1',  # 'Clinical Informatics'
             'firstName': 'Soleil',
             'lastName': 'Teresia',
             'displayName': 'Soleil Teresia',
-            'email': 'cinava@yahoo.com'
+            'email': 'cinava@yahoo.com',
+            'usmlestep1': 'Pass',
+            'usmlestep2': 247,
+            'usmlestep3': 238,
+            'medschool': 'Washington University School of Medicine in St. Louis',
+            'residency_specialty': ['AP', 'University of California', 'San Francisco', 'California', 'United States'],
+            'fellowship_specialty': ['Breast Pathology Fellowship', 'Mayo Clinic', 'Rochester', 'New-York', 'United States'],
+            'interview_date': '14/12/2026',
+            'interview_score': '3.9'
         })
         users.append({
             'type': '1',  # 'Clinical Informatics'
             'firstName': 'Haides',
             'lastName': 'Neon',
             'displayName': 'Haides Neon',
-            'email': 'cinava@yahoo.com'
+            'email': 'cinava@yahoo.com',
+            'usmlestep1': 'Pass',
+            'usmlestep2': 258,
+            'usmlestep3': 244,
+            'medschool': 'University of Pennsylvania Perelman School of Medicine',
+            'residency_specialty': ['CP', 'Stanford University Medical Center', 'Stanford', 'California', 'United States'],
+            'fellowship_specialty': ['Hematopathology Fellowship', 'MD Anderson Cancer Center', 'Houston', 'Texas', 'United States'],
+            'interview_date': '17/12/2026',
+            'interview_score': '4.2'
         })
 
         return users
@@ -218,7 +246,7 @@ class FellApp:
     def create_fellapps(self):
         for fellapp in self.get_fell_apps():
             self.create_single_fellapp(fellapp)
-            #break
+            break
 
     def create_single_fellapp(self, fellapp):
         driver = self.automation.get_driver()
@@ -259,6 +287,99 @@ class FellApp:
         signature_date.clear()
         signature_date.send_keys(today)
         time.sleep(5)
+
+        #USMLE Step 1
+        signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_examinations_0_USMLEStep1Score")
+        signature.send_keys(fellapp["usmlestep1"])
+        time.sleep(1)
+
+        signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_examinations_0_USMLEStep2CKScore")
+        signature.send_keys(fellapp["usmlestep2"])
+
+        signature = driver.find_element(By.ID,
+                                        "oleg_fellappbundle_fellowshipapplication_examinations_0_USMLEStep3Score")
+        signature.send_keys(fellapp["usmlestep3"])
+
+        #med school
+        self.automation.select_option(
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_0_institution", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["medschool"]
+        )
+        time.sleep(1)
+
+        #residency_specialty s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_residencySpecialty
+        self.automation.select_option(
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_residencySpecialty", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["residency_specialty"][0]
+        )
+        time.sleep(1)
+
+        #s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_institution
+        self.automation.select_option(
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_institution", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["residency_specialty"][1]
+        )
+        time.sleep(1)
+
+        self.automation.select_option(
+            "oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_city", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["residency_specialty"][2]
+        )
+        time.sleep(1)
+
+        self.automation.select_option(
+            "oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_state", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["residency_specialty"][3]
+        )
+        time.sleep(1)
+
+        self.automation.select_option(
+            "oleg_fellappbundle_fellowshipapplication_trainings_3_geoLocation_country", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["residency_specialty"][4]
+        )
+        time.sleep(1)
+
+        #fellowship_specialty
+        self.automation.select_option(
+            "oleg_fellappbundle_fellowshipapplication_trainings_4_majors", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["fellowship_specialty"][0]
+        )
+        time.sleep(1)
+
+        self.automation.select_option(
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_institution", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["fellowship_specialty"][1]
+        )
+        time.sleep(1)
+
+        self.automation.select_option(
+            "oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_city", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["fellowship_specialty"][2]
+        )
+        time.sleep(1)
+
+        self.automation.select_option(
+            "oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_state", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["fellowship_specialty"][3]
+        )
+        time.sleep(1)
+
+        self.automation.select_option(
+            "oleg_fellappbundle_fellowshipapplication_trainings_4_geoLocation_country", "CSS_SELECTOR",
+            "#select2-drop .select2-input",
+            fellapp["fellowship_specialty"][4]
+        )
+        time.sleep(1)
 
         #click somewhere to close datepicker dialog box
         # body = driver.find_element(By.TAG_NAME, "body")
@@ -310,8 +431,8 @@ def main():
     automation.login_to_site(url, username_text, password_text)
 
     fellapp = FellApp(automation)
-    fellapp.configs()
-    fellapp.set_site_settings()
+    #fellapp.configs()
+    #fellapp.set_site_settings()
     fellapp.create_fellapps()
 
     print("FellApp done!")
