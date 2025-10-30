@@ -289,6 +289,11 @@ class FellApp:
         signature_date.send_keys(today)
         time.sleep(5)
 
+        #Open National Board section
+        applicant_data_element = driver.find_element(By.CSS_SELECTOR, "h4.panel-title > a[href='#nationalBoards']")
+        applicant_data_element.click()
+        time.sleep(3)
+
         #USMLE Step 1
         signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_examinations_0_USMLEStep1Score")
         signature.send_keys(fellapp["usmlestep1"])
@@ -300,6 +305,12 @@ class FellApp:
         signature = driver.find_element(By.ID,
                                         "oleg_fellappbundle_fellowshipapplication_examinations_0_USMLEStep3Score")
         signature.send_keys(fellapp["usmlestep3"])
+
+        # Open Education
+        applicant_data_element = driver.find_element(By.CSS_SELECTOR,
+                                                     "h4.panel-title > a[href='#education']")
+        applicant_data_element.click()
+        time.sleep(3)
 
         #med school
         self.automation.select_option(
