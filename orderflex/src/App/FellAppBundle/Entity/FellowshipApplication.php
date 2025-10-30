@@ -485,7 +485,13 @@ class FellowshipApplication extends BaseUserAttributes {
      */
     public function getFellowshipSubspecialty()
     {
-        return $this->fellowshipSubspecialty;
+        //return $this->fellowshipSubspecialty;
+
+        $fellappType = $this->fellowshipSubspecialty;
+        if( !$fellappType ) {
+            $fellappType = $this->getGlobalFellowshipSpecialty();
+        }
+        return $fellappType;
     }
 
     /**

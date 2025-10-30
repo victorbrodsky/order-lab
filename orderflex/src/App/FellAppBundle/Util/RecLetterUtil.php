@@ -254,6 +254,8 @@ class RecLetterUtil {
         if( $fellappType ) {
             $fellappTypeStr = $fellappType->getName();
         } else {
+            //trye to get global felltype
+            //$fellappType = $fellapp->getGlobalFellowshipSpecialty();
             $fellappTypeStr = null;
         }
 

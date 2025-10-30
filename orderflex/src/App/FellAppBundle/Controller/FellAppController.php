@@ -850,10 +850,10 @@ class FellAppController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        $globalFellowshipType = $entity->getGlobalFellowshipSpecialty();
-        $fellowshipSubspecialty = $entity->getFellowshipSubspecialty();
-        echo "globalFellowshipType=".$globalFellowshipType."<br>";
-        echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
+        //$globalFellowshipType = $entity->getGlobalFellowshipSpecialty();
+        //$fellowshipSubspecialty = $entity->getFellowshipSubspecialty();
+        //echo "globalFellowshipType=".$globalFellowshipType."<br>";
+        //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
 
         //testing
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
