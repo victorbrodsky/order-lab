@@ -422,7 +422,6 @@
                     <th>Notification Emailed?</th>
                 {% endif %}
 
-                {#serverRole={{ serverRole }}<br>#}
                 {% if serverRole != 'Internet (Hub)' %}
                     <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
                 {% else %}
