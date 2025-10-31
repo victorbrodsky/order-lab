@@ -159,11 +159,18 @@
                     {#{{ formmacros.fieldDateLabel_vertical(fellappfilter.endDate,'allow-future-date') }}#}
                 {#</div>#}
                 <div class="col-xs-4">
-                    {% if fellappfilter.filter|length > 0 %}
+                    {#{% if fellappfilter.filter|length > 0 %}#}
+                        {#{{ form_row(fellappfilter.filter,{'attr': {'placeholder': 'Fellowship Type'}}) }}#}
+                    {#{% else %}#}
+                        {#{{ form_row(fellappfilter.globalfilter,{'attr': {'placeholder': 'Global Fellowship Type'}}) }}#}
+                    {#{% endif %}#}
+
+                    {% if serverRole != 'Internet (Hub)' %}
                         {{ form_row(fellappfilter.filter,{'attr': {'placeholder': 'Fellowship Type'}}) }}
                     {% else %}
                         {{ form_row(fellappfilter.globalfilter,{'attr': {'placeholder': 'Global Fellowship Type'}}) }}
                     {% endif %}
+
                 </div>
                 <div class="col-xs-4">
                     {{ form_row(fellappfilter.search, {'attr': {'placeholder': 'Search by Name'}}) }}
@@ -415,6 +422,7 @@
                     <th>Notification Emailed?</th>
                 {% endif %}
 
+                {#serverRole={{ serverRole }}<br>#}
                 {% if serverRole != 'Internet (Hub)' %}
                     <th>{{ knp_pagination_sortable(entities, 'Fellowship Type', 'fellowshipSubspecialty.name') }}</th>
                 {% else %}
