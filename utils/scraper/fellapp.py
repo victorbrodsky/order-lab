@@ -246,7 +246,7 @@ class FellApp:
     def create_fellapps(self):
         for fellapp in self.get_fell_apps():
             self.create_single_fellapp(fellapp)
-            break
+            #break #enable for test run only one
 
     def create_single_fellapp(self, fellapp):
         driver = self.automation.get_driver()
@@ -368,21 +368,21 @@ class FellApp:
         #signature.send_keys(fellapp["fellowship_specialty"][0])
 
         ############ Post-Residency Fellowship Area of training ##############
-        if 0:
-            wait = WebDriverWait(driver, 10)
+        if 1:
+            # wait = WebDriverWait(driver, 10)
+            fellowship_major = fellapp["fellowship_specialty"][0]
 
-            # Step 1: Focus the Select2 input
-            select2_input = wait.until(EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, "#s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_majors .select2-input")))
-            select2_input.click()
-
-            # Step 2: Type 'AP' into the input
-            select2_input.send_keys(fellapp["fellowship_specialty"][0])
-
-            # Step 3: Wait for the AJAX dropdown to populate and select the first matching result
-            dropdown_option = wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-results li.select2-result-selectable")))
-            dropdown_option.click()
+            fellapp_major = driver.find_element(By.ID, "s2id_oleg_fellappbundle_fellowshipapplication_trainings_4_majors")
+            time.sleep(1)
+            fellapp_major.click()
+            time.sleep(1)
+            # child_input_div = fellapp_major.find_element(By.ID, "s2id_autogen3")
+            fellapp_major_input_div = fellapp_major.find_element(By.CLASS_NAME, "select2-input")
+            time.sleep(1)
+            fellapp_major_input_div.send_keys(fellowship_major)
+            time.sleep(1)
+            fellapp_major_input_div.send_keys(Keys.ENTER)
+            time.sleep(1)
         ############ EOF ##############
 
         self.automation.select_option(
@@ -412,6 +412,20 @@ class FellApp:
             fellapp["fellowship_specialty"][4]
         )
         time.sleep(1)
+
+        # Open Itinerary
+        applicant_data_element = driver.find_element(By.CSS_SELECTOR, "h4.panel-title > a[href='#Itinerary']")
+        applicant_data_element.click()
+        time.sleep(3)
+        #oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
+        interview_date_obj = datetime.datetime.strptime(fellapp["interview_date"], "%d/%m/%Y").date()
+        # Format it back to 'd/m/Y' (this step is optional if you just need the date object)
+        formatted_interview_date = interview_date_obj.strftime("%d/%m/%Y")
+
+        signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviewDate")
+        signature_date.clear()
+        signature_date.send_keys(formatted_interview_date)
+        time.sleep(5)
 
         #click somewhere to close datepicker dialog box
         # body = driver.find_element(By.TAG_NAME, "body")
