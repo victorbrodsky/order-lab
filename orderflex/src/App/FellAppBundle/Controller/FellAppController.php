@@ -3359,6 +3359,25 @@ class FellAppController extends OrderAbstractController {
         return $response;
     }
 
+    #[Route(path: '/get-institution-by-global/{global}', name: 'fellapp-institution-by-global', options: ['expose' => true])]
+    public function getInstitutionFellowshipTypes(GlobalFellowshipSpecialty $global=null)
+    {
+        //$fellappUtil = $this->container->get('fellapp_util');
+        //$institutionId = $fellappUtil->getInstitutionByGlobalFelltype($global); //resturn as select2 array
+
+        $institutionId = null;
+        $institution = $global->getInstitution();
+        if( $institution ) {
+            $institutionId = $institution->getId();
+        }
+
+        //return new JsonResponse($globalFellTypes);
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($institutionId));
+        return $response;
+    }
+
 
 //    public function canonicalize($string)
 //    {

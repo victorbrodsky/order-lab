@@ -534,6 +534,11 @@ class FellAppUtil {
 
         return $institutions;
     }
+
+//    public function getInstitutionByGlobalFelltype( $globalFellType ) {
+//
+//    }
+
 //    public function getFellowshipInstitutions_ORIG() {
 //        $repository = $this->em->getRepository(Institution::class);
 //        $dql = $repository->createQueryBuilder('list');
