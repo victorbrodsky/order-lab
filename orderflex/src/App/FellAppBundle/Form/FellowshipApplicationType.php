@@ -93,6 +93,10 @@ class FellowshipApplicationType extends AbstractType
             $this->params['programInstitution'] = null;
         }
 
+        if( $this->params && !array_key_exists('programSpecialty',$this->params) ) {
+            $this->params['programSpecialty'] = null;
+        }
+
         if( $fellappChoices && count($fellappChoices) > 0 ) {
             $builder->add('fellowshipSubspecialty', EntityType::class, array(
                 //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
@@ -113,7 +117,7 @@ class FellowshipApplicationType extends AbstractType
         if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
             //dump($globalFellappTypes);
             //exit('111');
-            //echo "before add globalFellappTypes count=".count($globalFellappTypes)."<br>";
+            //echo "before add globalFellappTypes this->params['programSpecialty']=".$this->params['programSpecialty']->getId()."<br>";
             $builder->add('globalFellowshipSpecialty', EntityType::class, array(
                 'class' => GlobalFellowshipSpecialty::class,
                 'label' => "Fellowship Specialty:",
@@ -121,6 +125,7 @@ class FellowshipApplicationType extends AbstractType
                 'required' => false,
                 'choices' => $globalFellappTypes,
                 'invalid_message' => 'globalFellowshipSpecialty invalid value',
+                'data' => $this->params['programSpecialty'],
                 'attr' => array(
                     'class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty',
                 ),

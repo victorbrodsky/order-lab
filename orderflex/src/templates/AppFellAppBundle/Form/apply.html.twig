@@ -316,22 +316,31 @@
 
 
             //Added
-            var $inst = $('select.fellapp-institution');
-            var $global = $('select.fellapp-globalFellowshipSpecialty');
-            if ($inst.length === 0 || $global.length === 0) {
-                console.log('FellApp selects not found:', 'inst len=', $inst.length, 'global len=', $global.length);
+            var inst = $('select.fellapp-institution');
+            var global = $('select.fellapp-globalFellowshipSpecialty');
+            if (inst.length === 0 || global.length === 0) {
+                console.log('FellApp selects not found:', 'inst len=', inst.length, 'global len=', $global.length);
                 return;
             }
 
-            $inst.on('change', function(){
+            inst.on('change', function(){
                 var instId = $(this).val();
                 console.log('Institution changed:', instId);
                 filterGlobalByInstitution(instId);
             });
 
-            var initInst = $inst.val();
+            //console.log('global=',global);
+            global.on('change', function(){
+                var globalId = $(this).val();
+                console.log('globalId changed:', globalId);
+            });
+
+            var initInst = inst.val();
+            var initGlobal = global.val();
             //console.log('Initial institution:', initInst);
-            filterGlobalByInstitution(initInst);
+            if( !initGlobal ) {
+                filterGlobalByInstitution(initInst);
+            }
         });
 
         function filterGlobalByInstitution(instId) {

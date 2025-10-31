@@ -329,7 +329,7 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
     #sys.exit()
 
     run_by_symfony_command = True
-    run_by_symfony_command = False #use for testing with web browser
+    #run_by_symfony_command = False #use for testing with web browser
 
     # if run_by_symfony_command is True:
         # write output to a file

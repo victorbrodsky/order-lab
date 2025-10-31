@@ -19,6 +19,7 @@ namespace App\FellAppBundle\Controller;
 
 
 
+use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\FellAppBundle\Entity\GoogleFormConfig;
 use App\FellAppBundle\Form\ApplyFellowshipApplicationType;
 use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
@@ -950,7 +951,7 @@ class FellAppController extends OrderAbstractController {
     }
 
 
-    public function getShowParameters($routeName, $entity, $user=null, $institutionId=null) {
+    public function getShowParameters($routeName, $entity, $user=null, $institutionId=null, $specialtyId=null) {
 
         $userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->getUser();
@@ -1079,6 +1080,14 @@ class FellAppController extends OrderAbstractController {
             //$programInstitution = $institutions[0];
             $programInstitution = $em->getRepository(Institution::class)->find($institutionId);
         }
+
+
+        $programSpecialty = null;
+        if( $specialtyId ) {
+            //$programInstitution = $institutions[0];
+            $programSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
+        }
+
         //dump($institutions);
         //exit('111');
         //echo '$institutions='.count($institutions).'<br>';
@@ -1103,7 +1112,8 @@ class FellAppController extends OrderAbstractController {
             'institutions' => $institutions,
             'fellappVisas' => $fellappVisas,
             'routeName' => $routeName,
-            'programInstitution' => $programInstitution
+            'programInstitution' => $programInstitution,
+            'programSpecialty' => $programSpecialty
             //'security' => $security
         );
 
@@ -3147,11 +3157,18 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        // Parse ?program[]=1&program[]=2
+        // Parse ?program[]=1&program[]=2 2179-washu
+        //dev: http://127.0.0.1/fellowship-applications/apply?program[]=2179
         $programIds = $request->query->all('program'); // returns array of IDs
         //echo '$programIds:<br>';
         //dump($programIds);
         //exit();
+
+        //Blood Banking and Transfusion Medicine -> ID 7, WCM Cytopathology -> ID 6
+        //specialty[]=7 view.online
+        //specialty[]=10 dev Cytopathology
+        //dev: http://127.0.0.1/fellowship-applications/apply?specialty[]=10
+        $specialtyIds = $request->query->all('specialty');
 
         // Defensive: ensure it's an array of integers
         $institutionId = null;
@@ -3161,6 +3178,16 @@ class FellAppController extends OrderAbstractController {
         }
         //dump($institutionId);
         //exit('111');
+
+        $specialtyId = null;
+        $fellappSpecialtyIds = array_filter(array_map('intval', $specialtyIds));
+        if( count($fellappSpecialtyIds) > 0 ) {
+            $specialtyId = $fellappSpecialtyIds[0];
+        }
+        if( $specialtyId ) {
+            $institutionId = null;
+        }
+        //echo '$institutionId='.$institutionId.', $specialtyId='.$specialtyId.'<br>';
 
 
         //$user = $this->getUser();
@@ -3222,7 +3249,7 @@ class FellAppController extends OrderAbstractController {
         $applicant->addFellowshipApplication($fellowshipApplication);
 
         $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$institutionId); //apply GET
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$institutionId,$specialtyId); //apply GET
 
         // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
