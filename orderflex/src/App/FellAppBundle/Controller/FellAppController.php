@@ -3366,9 +3366,12 @@ class FellAppController extends OrderAbstractController {
         //$institutionId = $fellappUtil->getInstitutionByGlobalFelltype($global); //resturn as select2 array
 
         $institutionId = null;
-        $institution = $global->getInstitution();
-        if( $institution ) {
-            $institutionId = $institution->getId();
+
+        if( $global ) {
+            $institution = $global->getInstitution();
+            if ($institution) {
+                $institutionId = $institution->getId();
+            }
         }
 
         //return new JsonResponse($globalFellTypes);

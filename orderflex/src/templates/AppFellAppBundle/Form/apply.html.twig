@@ -323,17 +323,27 @@
                 //return;
             }
 
+            //prevent recursive updates
+            let syncingInst = false;
+            let syncingGlobal = false;
+
             inst.on('change', function(){
+                if (syncingInst) return;
+                syncingGlobal = true;
                 var instId = $(this).val();
                 console.log('Institution changed:', instId);
-                filterGlobalByInstitution(instId);
+                filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
+                isSyncing = false;
             });
 
             //console.log('global=',global);
             global.on('change', function(){
+                if (syncingGlobal) return;
+                syncingInst = true;
                 var globalId = $(this).val();
                 console.log('globalId changed:', globalId);
-                filterInstitutionByGlobal(globalId);
+                filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
+                isSyncing = false;
             });
 
             var initInst = inst.val();
@@ -344,7 +354,7 @@
             }
         });
 
-        function filterGlobalByInstitution(instId) {
+        function filterGlobalByInstitution(instId, doneCallback) {
             console.log('filterGlobalByInstitution:', 'instId=', instId);
 
             if( !instId ) {
@@ -362,9 +372,10 @@
             $.ajax({
                 type: 'GET',
                 url: url,
+                //async: false,
                 dataType: 'json'
             }).then(function (data) {
-                //console.log('Fetched data:', data);
+                console.log('Fetched data:', data);
 
                 var comboboxEl = $('select.fellapp-globalFellowshipSpecialty');
                 comboboxEl.empty();//.trigger("change");
@@ -373,6 +384,7 @@
                 var newOption = new Option('', '', false, false);
                 comboboxEl.append(newOption);//.trigger('change');
 
+                console.log('Fetched data.length=', data.length);
                 if( data.length > 0 ) {
                     data.forEach(function (item) {
                         var thisEncounterId = item['id'];
@@ -384,36 +396,37 @@
                             comboboxEl.append(newOption);//.trigger('change');
                         }
                     });
-
-                    comboboxEl.trigger('change');
+                    //comboboxEl.trigger('change');
                 }
+                if (doneCallback) doneCallback();
             });
         }
 
-        function filterInstitutionByGlobal(globalId) {
+        function filterInstitutionByGlobal(globalId, doneCallback) {
             console.log('filterInstitutionByGlobal:', 'globalId=', globalId);
 
             if( !globalId ) {
-                console.log('filterGlobalByInstitution: globalId is null');
+                console.log('filterInstitutionByGlobal: globalId is null');
                 //return;
             }
 
-            var url = Routing.generate('fellapp-institution-by-global')
-            if( instId ) {
-                url = url + '/' + instId;
-            }
-
-            //const select = $('.fellapp-globalFellowshipSpecialty');
+            const url = globalId
+                    ? Routing.generate('fellapp-institution-by-global') + '/' + globalId
+                    : Routing.generate('fellapp-institution-by-global');
 
             $.ajax({
                 type: 'GET',
                 url: url,
+                //async: false,
                 dataType: 'json'
             }).then(function (data) {
                 console.log('filterInstitutionByGlobal: Fetched data:', data);
 
-                var comboboxEl = $('select.fellapp-institution');
-                comboboxEl.select2('val',data);
+                if( data ) {
+                    var comboboxEl = $('select.fellapp-institution');
+                    comboboxEl.select2('val', data);
+                }
+                if (doneCallback) doneCallback();
             });
         }
 
