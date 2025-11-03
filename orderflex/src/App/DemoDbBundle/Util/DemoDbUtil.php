@@ -581,7 +581,7 @@ class DemoDbUtil {
 
         if( !$password ) {
             //$password = 'demo';
-            $password = '1234567890_demo';
+            $password = '1234567890';
         }
 
         $form['_display-username'] = 'administrator';

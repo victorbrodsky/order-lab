@@ -185,7 +185,7 @@ class CallLog:
         time.sleep(1)
 
         #Sign
-        password_text = "1234567890_demo"
+        password_text = "1234567890"
         signature = driver.find_element(By.ID, "calllog-user-password")
         signature.send_keys(password_text)
         time.sleep(1)
@@ -202,7 +202,7 @@ class CallLog:
 def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
     username_text = "administrator"
-    password_text = "1234567890_demo"
+    password_text = "1234567890"
     automation = WebAutomation()
     automation.login_to_site(url, username_text, password_text)
 

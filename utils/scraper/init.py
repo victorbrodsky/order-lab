@@ -16,7 +16,7 @@ class Init:
         self.automation = automation
         self.username = "administrator"
         self.password_default = "1234567890"
-        self.password_new = "1234567890_demo"
+        self.password_new = "1234567890"
 
     # def initialize_orig(self):
     #     driver = self.automation.get_driver()
@@ -135,11 +135,11 @@ class Init:
             # oleg_userdirectorybundle_initialconfigurationtype_mailerUser
             password_text = driver.find_element(By.ID,
                                                      "oleg_userdirectorybundle_initialconfigurationtype_password_first")
-            password_text.send_keys("1234567890_demo")
+            password_text.send_keys("1234567890")
             time.sleep(3)
             password_text = driver.find_element(By.ID,
                                                      "oleg_userdirectorybundle_initialconfigurationtype_password_second")
-            password_text.send_keys("1234567890_demo")
+            password_text.send_keys("1234567890")
             time.sleep(3)
 
             siteEmail = 'oli2002@med.cornell.edu'

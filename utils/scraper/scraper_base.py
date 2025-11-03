@@ -51,7 +51,7 @@ def main():
     
     url = "https://view.online/c/demo-institution/demo-department/time-away-request/login"
     username_text = "administrator"
-    password_text = "1234567890_demo"
+    password_text = "1234567890"
     
     try:
         login_to_site(driver, url, username_text, password_text)

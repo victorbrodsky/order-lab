@@ -199,7 +199,7 @@ def main():
     
     # url = "https://view.online/c/demo-institution/demo-department/directory/login"
     # username_text = "administrator"
-    # password_text = "1234567890_demo"
+    # password_text = "1234567890"
     #
     # automation = WebAutomation()
     # automation.login_to_site(url, username_text, password_text)

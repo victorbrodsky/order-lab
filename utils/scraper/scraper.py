@@ -33,7 +33,7 @@ driver.get(url)
 username = driver.find_element(By.ID, "display-username")
 password = driver.find_element(By.ID, "password")
 username.send_keys("administrator")
-password.send_keys("1234567890_demo")
+password.send_keys("1234567890")
 
 # Locate the Select2 combobox and click to activate it
 combobox = driver.find_element(By.ID, "s2id_usernametypeid_show")
