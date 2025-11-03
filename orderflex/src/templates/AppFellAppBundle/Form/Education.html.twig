@@ -36,10 +36,11 @@
 
     {#form.user.id:{{ form.user.vars.value.id }}<br>#}
     {#form.user.trainings|length:{{ form.user.trainings|length }}<br>#}
+    {#form.trainings={{ form.trainings|length }}<br>#}
 
     {% for training in form.trainings %}
 
-            {#training.vars.value.trainingType.name:{{ training.vars.value.trainingType.name }}<br>#}
+        {#training.vars.value.trainingType.name:{{ training.vars.value.trainingType.name }}<br>#}
 
         {% set trainingLabel = "Training:" %}
         {% set majorLabel = "Major:" %}
@@ -58,6 +59,7 @@
             {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Medical' %}
                 {% set trainingLabel = "Medical School:" %}
                 {% set showTraining = true %}
+                {#showTraining={{ showTraining }}<br>#}
             {% endif %}
             {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Residency' %}
                 {% set trainingLabel = "Residency:" %}

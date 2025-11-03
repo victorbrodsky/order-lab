@@ -951,7 +951,7 @@ class FellAppUtil {
 
 
     public function addEmptyFellAppFields($fellowshipApplication) {
-
+        //exit('addEmptyFellAppFields');
         $em = $this->em;
         //$userSecUtil = $this->container->get('user_security_utility');
         //$systemUser = $userSecUtil->findSystemUser();
@@ -1115,7 +1115,7 @@ class FellAppUtil {
     }
 
     public function addEmptyTrainings($fellowshipApplication) {
-
+        //exit('addEmptyTrainings');
         //set TrainingType
         $this->addTrainingByType($fellowshipApplication,"Undergraduate",1);
         $this->addTrainingByType($fellowshipApplication,"Graduate",2);
@@ -1143,13 +1143,16 @@ class FellAppUtil {
 
         $count = 0;
 
+        //echo $typeName.": trainings=".count($trainings)."<br>";
         foreach( $trainings as $training ) {
             if( $training->getTrainingType() && $training->getTrainingType()->getName()."" == $typeName ) {
                 $count++;
+                //echo $typeName.": count=".$count."<br>";
             }
         }
 
         //add up to maxNumber
+        //echo $typeName.": init maxNumber=".$maxNumber.", count=".$count."<br>";
         for( $count; $count < $maxNumber; $count++ ) {
             //echo "maxNumber=".$maxNumber.", count=".$count."<br>";
             $this->addSingleTraining($fellowshipApplication,$typeName,$orderinlist);

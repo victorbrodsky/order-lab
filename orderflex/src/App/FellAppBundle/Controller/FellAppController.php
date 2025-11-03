@@ -1008,7 +1008,7 @@ class FellAppController extends OrderAbstractController {
         //var_dump($fellappVisas);
         //exit('111');
         
-        $fellappUtil->addEmptyFellAppFields($entity); //testing
+        $fellappUtil->addEmptyFellAppFields($entity); //getShowParameters
 
         $captchaSiteKey = null;
 
@@ -1388,6 +1388,8 @@ class FellAppController extends OrderAbstractController {
 //            return array();
 //        }
 
+        $fellappUtil->addEmptyFellAppFields($entity); //createFellAppEditForm
+
         $fellTypes = array();
         $globalFellTypes = array();
 
@@ -1396,10 +1398,10 @@ class FellAppController extends OrderAbstractController {
         if( $serverRole."" != 'Internet (Hub)' ) {
             //$fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
             $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-            echo "createFellAppEditForm: fellowshipTypes count=".count($fellTypes)."<br>";
+            //echo "createFellAppEditForm: fellowshipTypes count=".count($fellTypes)."<br>";
         } else {
             $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
-            echo "createFellAppEditForm: globalFellTypes count=".count($globalFellTypes)."<br>";
+            //echo "createFellAppEditForm: globalFellTypes count=".count($globalFellTypes)."<br>";
         }
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
@@ -1605,7 +1607,7 @@ class FellAppController extends OrderAbstractController {
 
         //add empty fields if they are not exist
         $fellappUtil = $this->container->get('fellapp_util');
-        $fellappUtil->addEmptyFellAppFields($fellowshipApplication);
+        $fellappUtil->addEmptyFellAppFields($fellowshipApplication); //new
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
 
@@ -3460,7 +3462,7 @@ class FellAppController extends OrderAbstractController {
         }
         
         //add empty fields if they are not exist
-        $fellappUtil->addEmptyFellAppFields($fellowshipApplication);
+        $fellappUtil->addEmptyFellAppFields($fellowshipApplication); //apply
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
 
