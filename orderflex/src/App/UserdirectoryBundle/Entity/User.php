@@ -1419,12 +1419,12 @@ class User extends UserBase
      * @param mixed $firstName
      */
     public function setFirstName($firstName): void
-{
-    $infos = $this->getInfos();
-    if ($infos && count($infos) > 0) {
-        $infos->first()->setFirstName($firstName);
+    {
+        $infos = $this->getInfos();
+        if ($infos && count($infos) > 0) {
+            $infos->first()->setFirstName($firstName);
+        }
     }
-}
 
     /**
      * @return mixed
@@ -1467,12 +1467,12 @@ class User extends UserBase
      * @param mixed $lastName
      */
     public function setLastName($lastName): void
-{
-    $infos = $this->getInfos();
-    if ($infos && count($infos) > 0) {
-        $infos->first()->setLastName($lastName);
+    {
+        $infos = $this->getInfos();
+        if ($infos && count($infos) > 0) {
+            $infos->first()->setLastName($lastName);
+        }
     }
-}
 
     /**
      * @return mixed

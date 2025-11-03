@@ -9420,6 +9420,10 @@ class AdminController extends OrderAbstractController
             //$administrator->setLocked(true);
             //$administrator->setExpired(false);
 
+            $administrator->setFirstName('Admin');
+            $administrator->setLastName('Admin');
+            $administrator->setDisplayName('Admin Admin');
+
             //$encodedPassword = $encoder->encodePassword($administrator, "1234567890");
             $authUtil = $this->container->get('authenticator_utility');
             $encodedPassword = $authUtil->getEncodedPassword($administrator, "1234567890");
