@@ -105,17 +105,18 @@ class Users:
             }
         ]
 
-        for first, last, email in raw_data:
-            users.append({
-                'userid': (first + last).lower(),
-                'firstName': first,
-                'lastName': last,
-                'displayName': f"{first} {last}",
-                'email': email,
-                'password': 'pass',
-                'roles': ['ROLE_USERDIRECTORY_OBSERVER'],
-                'rolesStr': 'EmployeeDirectory Observer'
-            })
+        if 0:
+            for first, last, email in raw_data:
+                users.append({
+                    'userid': (first + last).lower(),
+                    'firstName': first,
+                    'lastName': last,
+                    'displayName': f"{first} {last}",
+                    'email': email,
+                    'password': 'pass',
+                    'roles': ['ROLE_USERDIRECTORY_OBSERVER'],
+                    'rolesStr': 'EmployeeDirectory Observer'
+                })
 
         return users
 

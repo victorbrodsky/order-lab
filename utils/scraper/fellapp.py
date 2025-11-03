@@ -624,8 +624,8 @@ def main():
     automation.login_to_site(url, username_text, password_text)
 
     fellapp = FellApp(automation)
-    #fellapp.configs()
-    #fellapp.set_site_settings()
+    fellapp.configs()
+    fellapp.set_site_settings()
     fellapp.create_fellapps()
     fellapp.accept(1)
 
