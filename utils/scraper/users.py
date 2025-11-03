@@ -105,7 +105,7 @@ class Users:
             }
         ]
 
-        if 0:
+        if 1:
             for first, last, email in raw_data:
                 users.append({
                     'userid': (first + last).lower(),
