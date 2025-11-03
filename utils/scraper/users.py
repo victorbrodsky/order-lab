@@ -22,12 +22,53 @@ class Users:
         #pass
     
     def get_users(self):
-        """
-        Retrieves users with their details.
-        
-        Returns:
-            list: A list of user dictionaries containing user details.
-        """
+
+        #Retrieves users with their details.
+
+        raw_data = [
+            ["Emily", "Parker", "Emily.Parker@example.com"],
+            ["Sarah", "Mitchell", "Sarah.Mitchell@example.com"],
+            ["Jessica", "Reed", "Jessica.Reed@example.com"],
+            ["Megan", "Collins", "Megan.Collins@example.com"],
+            ["Rachel", "Hayes", "Rachel.Hayes@example.com"],
+            ["Amanda", "Foster", "Amanda.Foster@example.com"],
+            ["Lauren", "Bennett", "Lauren.Bennett@example.com"],
+            ["Natalie", "Brooks", "Natalie.Brooks@example.com"],
+            ["Danielle", "Cooper", "Danielle.Cooper@example.com"],
+            ["Olivia", "Grant", "Olivia.Grant@example.com"],
+            ["Hannah", "Peterson", "Hannah.Peterson@example.com"],
+            ["Nicole", "Morgan", "Nicole.Morgan@example.com"],
+            ["Stephanie", "Russell", "Stephanie.Russell@example.com"],
+            ["Madison", "Turner", "Madison.Turner@example.com"],
+            ["Allison", "Webb", "Allison.Webb@example.com"],
+            ["Victoria", "Simmons", "Victoria.Simmons@example.com"],
+            ["Chloe", "Jennings", "Chloe.Jennings@example.com"],
+            ["Brooke", "Sullivan", "Brooke.Sullivan@example.com"],
+            ["Michael", "Adams", "Michael.Adams@example.com"],
+            ["Christopher", "James", "Christopher.James@example.com"],
+            ["Matthew", "Harris", "Matthew.Harris@example.com"],
+            ["Joshua", "Ward", "Joshua.Ward@example.com"],
+            ["Andrew", "Price", "Andrew.Price@example.com"],
+            ["Ryan", "Phillips", "Ryan.Phillips@example.com"],
+            ["Jacob", "Howard", "Jacob.Howard@example.com"],
+            ["Justin", "Long", "Justin.Long@example.com"],
+            ["Daniel", "Carter", "Daniel.Carter@example.com"],
+            ["Nathan", "Scott", "Nathan.Scott@example.com"],
+            ["Alexander", "Reed", "Alexander.Reed@example.com"],
+            ["Benjamin", "Stone", "Benjamin.Stone@example.com"],
+            ["Samuel", "Morris", "Samuel.Morris@example.com"],
+            ["Jason", "Bell", "Jason.Bell@example.com"],
+            ["Eric", "Coleman", "Eric.Coleman@example.com"],
+            ["Kevin", "Rogers", "Kevin.Rogers@example.com"],
+            ["Tyler", "Murphy", "Tyler.Murphy@example.com"],
+            ["Brandon", "Hughes", "Brandon.Hughes@example.com"],
+            ["Taylor", "Morgan", "Taylor.Morgan@example.com"],
+            ["Jordan", "Lee", "Jordan.Lee@example.com"],
+            ["Casey", "Allen", "Casey.Allen@example.com"]
+        ]
+
+        #Returns:
+        #    list: A list of user dictionaries containing user details.
         users = [
             {
                 'userid': 'johndoe',
@@ -63,6 +104,19 @@ class Users:
                 #'userId': 16
             }
         ]
+
+        for first, last, email in raw_data:
+            users.append({
+                'userid': (first + last).lower(),
+                'firstName': first,
+                'lastName': last,
+                'displayName': f"{first} {last}",
+                'email': email,
+                'password': 'pass',
+                'roles': ['ROLE_USERDIRECTORY_OBSERVER'],
+                'rolesStr': 'EmployeeDirectory Observer'
+            })
+
         return users
 
     def get_existing_users(self):
@@ -71,7 +125,7 @@ class Users:
         driver.get('https://view.online/c/demo-institution/demo-department/directory/users')
         time.sleep(1)
         for user in self.get_users():
-            time.sleep(1)
+            time.sleep(2)
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), '"+user['displayName']+"')]")
             #user_link = WebDriverWait(driver, 10).until(
@@ -79,7 +133,7 @@ class Users:
             #)
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(normalize-space(text()), 'John Doe')]")
             #user_link = driver.find_element(By.XPATH, "//a/strong[contains(text(), 'John Doe')]")
-            user_link = WebDriverWait(driver, 10).until(
+            user_link = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.XPATH, "//a[strong[contains(text(), '"+user['displayName']+"')]]"))
             )
             # attributes = driver.execute_script(

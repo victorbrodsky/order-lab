@@ -92,6 +92,7 @@ class FellApp:
         for fellapp_name in fellapp_names:
             time.sleep(3)
             self.config_single(fellapp_name)
+            self.config_single_more(fellapp_name)
 
     def config_single(self, fellapp_name):
         driver = self.automation.get_driver()
@@ -200,6 +201,66 @@ class FellApp:
             self.automation.click_button_by_id("oleg_fellappbundle_fellappfellowshipapplicationtype_save")
 
         time.sleep(3)
+
+    def config_single_more(self,fellapp_name):
+        driver = self.automation.get_driver()
+        fellowship_type_url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings"
+        driver.get(fellowship_type_url)
+        time.sleep(3)
+
+        try:
+            # Try to find the element
+            #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+            fellowship_type = driver.find_element("xpath", f"//h4/a[contains(text(), '{fellapp_name}')]")
+            #print("Element found!")
+            # You can perform actions on the element here
+            fellowship_type.click()
+            time.sleep(3)
+
+            users = self.users.get_users()
+
+            # add coordinator
+            coordinator = users[2]
+            print(f"configs: coordinator: {coordinator['displayName']}")
+
+            # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
+            self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
+                                          ".select2-choices .select2-input",
+                                          coordinator["displayName"]
+                                          )
+            time.sleep(3)
+            driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+            time.sleep(3)
+
+            director = users[3]
+            # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
+            self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_directors", "CSS_SELECTOR",
+                                          ".select2-choices .select2-input",
+                                          director["displayName"]
+                                          )
+            time.sleep(3)
+            driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+            time.sleep(3)
+
+
+            # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
+            self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers", "CSS_SELECTOR",
+                                          ".select2-choices .select2-input",
+                                          "administrator"
+                                          )
+            time.sleep(3)
+            driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+            time.sleep(3)
+
+            # click Update button btn btn-warning
+            self.automation.click_button("btn-warning")
+            button = driver.find_element(By.CLASS_NAME, "btn-warning")
+            driver.execute_script("arguments[0].scrollIntoView();", button)
+            driver.save_screenshot("configs_after_click_btn-warning.png")
+        except NoSuchElementException:
+            # create new fellowship type "Clinical Informatics"
+            print("config_single_more: error in creating coordinator, director, interviewer")
+
 
     def set_site_settings(self):
         # Set fellowship start/end dates
