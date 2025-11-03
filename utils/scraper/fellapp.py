@@ -246,7 +246,7 @@ class FellApp:
     def create_fellapps(self):
         for fellapp in self.get_fell_apps():
             self.create_single_fellapp(fellapp)
-            #break #enable for test run only one
+            break #enable for test run only one
 
     def create_single_fellapp(self, fellapp):
         driver = self.automation.get_driver()
@@ -314,7 +314,7 @@ class FellApp:
 
         #med school
         self.automation.select_option(
-            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_0_institution", "CSS_SELECTOR",
+            "s2id_oleg_fellappbundle_fellowshipapplication_trainings_2_institution", "CSS_SELECTOR",
             "#select2-drop .select2-input",
             fellapp["medschool"]
         )
@@ -422,9 +422,45 @@ class FellApp:
         # Format it back to 'd/m/Y' (this step is optional if you just need the date object)
         formatted_interview_date = interview_date_obj.strftime("%d/%m/%Y")
 
-        signature_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviewDate")
-        signature_date.clear()
-        signature_date.send_keys(formatted_interview_date)
+        #Add interviewer administrator
+        applicant_data_element = driver.find_element(By.CSS_SELECTOR, "h4.panel-title > a[href='#interviews']")
+        applicant_data_element.click()
+        time.sleep(3)
+
+        try:
+            # Wait until the button is present and clickable
+            add_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Interviewer')]"))
+            )
+            add_button.click()
+            time.sleep(2)
+            print("Clicked 'Add Interviewer' button.")
+
+            #s2id_oleg_fellappbundle_fellowshipapplication_interviews_1_interviewer add administrator
+            self.automation.select_option(
+                "s2id_oleg_fellappbundle_fellowshipapplication_interviews_1_interviewer", "CSS_SELECTOR",
+                "#select2-drop .select2-input",
+                'administrator'
+            )
+
+            #oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank
+            signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank")
+            signature.send_keys(fellapp["interview_score"])
+
+            #interview_date
+            # oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
+
+            interview_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_1_interviewDate")
+            interview_date.clear()
+            interview_date.send_keys(formatted_interview_date)
+            time.sleep(3)
+
+        except Exception as e:
+            print("Failed to click the button:", e)
+
+        interview_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviewDate")
+        interview_date.clear()
+        interview_date.send_keys(formatted_interview_date)
         time.sleep(5)
 
         #click somewhere to close datepicker dialog box

@@ -89,7 +89,7 @@ class WebAutomation:
             username_text = "administrator"
 
         if password_text is None:
-            password_text = "1234567890_demo"
+            password_text = "1234567890"
 
         if url is not None:
             print("use login url ",url)
