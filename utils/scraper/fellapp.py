@@ -239,6 +239,46 @@ class FellApp:
         select.select_by_value("31")
         time.sleep(3)
 
+        #oleg_fellappbundle_fellappsiteparameter_acceptedEmailSubject
+        field = driver.find_element(By.ID, "oleg_fellappbundle_fellappsiteparameter_acceptedEmailSubject")
+        time.sleep(1)
+        field.send_keys('Congratulations on your acceptance to the [[FELLOWSHIP TYPE]] [[START YEAR]] fellowship at Weill Cornell Medicine')
+        time.sleep(1)
+
+        #oleg_fellappbundle_fellappsiteparameter_acceptedEmailBody
+        field = driver.find_element(By.ID, "oleg_fellappbundle_fellappsiteparameter_acceptedEmailBody")
+        time.sleep(1)
+        field.send_keys(
+            "Dear [[APPLICANT NAME]],\n"
+            "We are looking forward to having you join us as a [[FELLOWSHIP TYPE]] fellow in [[START YEAR]]!\n"
+            "Sincerely,\n"
+            "[[DIRECTOR]]"
+        )
+        time.sleep(1)
+
+        #oleg_fellappbundle_fellappsiteparameter_rejectedEmailSubject
+        field = driver.find_element(By.ID, "oleg_fellappbundle_fellappsiteparameter_rejectedEmailSubject")
+        time.sleep(1)
+        field.send_keys(
+            "Thank you for applying to the [[FELLOWSHIP TYPE]] [[START YEAR]] fellowship at Weill Cornell Medicine"
+        )
+        time.sleep(1)
+
+        #oleg_fellappbundle_fellappsiteparameter_rejectedEmailBody
+        field = driver.find_element(By.ID, "oleg_fellappbundle_fellappsiteparameter_rejectedEmailBody")
+        time.sleep(1)
+        field.send_keys(
+            "Dear [[APPLICANT NAME]],\n\n"
+            "Thank you for your interest in the [[FELLOWSHIP TYPE]] Fellowship ([[START YEAR]]) in our Department.\n\n"
+            "We deeply regret to inform you that we will not be able to offer you the Fellowship. "
+            "We had several excellent applicants, including yourself, for the solitary position, and we made this difficult decision "
+            "after a comprehensive review of all applications and interviews of some candidates.\n\n"
+            "We wish you every success in your career.\n\n"
+            "Sincerely,\n"
+            "[[DIRECTOR]]"
+        )
+        time.sleep(1)
+
         self.automation.click_button_by_id("oleg_fellappbundle_fellappsiteparameter_save")
         time.sleep(3)
         print("fellappAcademicYear Start/End dates populated")
