@@ -271,7 +271,7 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
 
                 fellapp.accept(1)
                 time.sleep(3)
-                
+
                 automation.quit_driver()
                 demo_ids['fellapp'] = False
                 print("fellapp done!")
