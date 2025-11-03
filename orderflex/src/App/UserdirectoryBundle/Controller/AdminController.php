@@ -5900,6 +5900,61 @@ class AdminController extends OrderAbstractController
         return $count;
     }
 
+    public function generateAllFellowshipSubspecialties() {
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $fellowshipSubspecialtyArr = [
+            "Blood Banking and Transfusion Medicine",
+            "Clinical Chemistry",
+            "Clinical Informatics",
+            "Cytopathology",
+            "Gastrointestinal Pathology",
+            "Dermatopathology",
+            //"Genitourinary and Renal Pathology",
+            "Genitourinary Pathology",
+            "Renal Pathology",
+            //"Gynecologic and Breast Pathology",
+            "Breast Pathology",
+            "Gynecologic Pathology",
+            "Head and Neck Pathology",
+            "Hematopathology",
+            "Histocompatibility and Immunogenetics",
+            "Laboratory Genetics and Genomics",
+            "Liver and GI Pathology",
+            "Medical and Public Health Microbiology",
+            "Molecular Genetic Pathology",
+            "Neuropathology",
+            "Pediatric Pathology",
+            "Surgical Pathology"
+        ];
+
+        $count = 0;
+        foreach($fellowshipSubspecialtyArr as $fellowshipSubspecialty) {
+            //$fellowshipSubspecialtyEntity = $em->getRepository(FellowshipSubspecialty::class)->findOneByName($fellowshipSubspecialty."");
+            //case-insensitive
+            $fellowshipSubspecialtyEntity = $em->getRepository(FellowshipSubspecialty::class)
+                ->createQueryBuilder('f')
+                ->where('LOWER(f.name) = LOWER(:name)')
+                ->setParameter('name', $fellowshipSubspecialty)
+                ->getQuery()
+                ->getOneOrNullResult();
+
+            if( $fellowshipSubspecialtyEntity ) {
+                continue; //skip
+            }
+
+            $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
+            $this->setDefaultList($fellowshipSubspecialtyEntity,$count,$username,$fellowshipSubspecialty);
+            $fellowshipSubspecialtyEntity->setBoardCertificateAvailable(true);
+            $em->persist($fellowshipSubspecialtyEntity);
+            $em->flush();
+            $count = $count + 10;
+
+        }
+        return round($count/10);
+    }
+
     //TODO:
     public function generateGlobalFellowshipSpecialties() {
         $em = $this->getDoctrine()->getManager();
@@ -5930,20 +5985,51 @@ class AdminController extends OrderAbstractController
         ////// EOF 1) get wcm ptahology //////
 
         $fellowshipSpecialties = array(
+//            "Clinical Informatics",
+//            "Dermatopathology",
+//            "Genitourinary pathology",
+//            "Hematopathology",
+//            "Breast pathology",
+//            "Cytopathology"
+            "Blood Banking and Transfusion Medicine",
+            "Clinical Chemistry",
             "Clinical Informatics",
+            "Cytopathology",
             "Dermatopathology",
-            "Genitourinary pathology",
+            //"Genitourinary and Renal Pathology",
+            "Genitourinary Pathology",
+            "Renal Pathology",
+            //"Gynecologic and Breast Pathology",
+            "Breast Pathology",
+            "Gynecologic Pathology",
+            "Head and Neck Pathology",
             "Hematopathology",
-            "Breast pathology",
-            "Cytopathology"
+            "Histocompatibility and Immunogenetics",
+            "Laboratory Genetics and Genomics",
+            "Liver and GI Pathology",
+            "Medical and Public Health Microbiology",
+            "Molecular Genetic Pathology",
+            "Neuropathology",
+            "Pediatric Pathology",
+            "Surgical Pathology"
         );
 
         foreach( $fellowshipSpecialties as $fellowshipSpecialty ) {
             //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
-            $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneBy([
-                'name' => $fellowshipSpecialty,
-                'institution' => $wcmPathology,
-            ]);
+//            $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneBy([
+//                'name' => $fellowshipSpecialty,
+//                'institution' => $wcmPathology,
+//            ]);
+
+            //case-insensitive
+            $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)
+                ->createQueryBuilder('g')
+                ->where('LOWER(g.name) = LOWER(:name)')
+                ->andWhere('g.institution = :institution')
+                ->setParameter('name', $fellowshipSpecialty)
+                ->setParameter('institution', $wcmPathology)
+                ->getQuery()
+                ->getOneOrNullResult();
 
             if ($listEntity) {
                 continue;
