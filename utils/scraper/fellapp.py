@@ -286,7 +286,7 @@ class FellApp:
     def create_fellapps(self):
         for fellapp in self.get_fell_apps():
             self.create_single_fellapp(fellapp)
-            break #enable for test run only one
+            #break #enable for test run only one
 
     def create_single_fellapp(self, fellapp):
         driver = self.automation.get_driver()
@@ -544,6 +544,11 @@ class FellApp:
         #print("Finish new fellapp")
         time.sleep(10)
 
+def accept(self, fellapp_id):
+    driver = self.automation.get_driver()
+    accept_url = f"https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings/change-status/{fellapp_id}/accepted"
+    driver.get(accept_url)
+    time.sleep(1)
 
 def main():
     url = "https://view.online/c/demo-institution/demo-department/directory/login"
@@ -561,6 +566,7 @@ def main():
     #fellapp.configs()
     #fellapp.set_site_settings()
     fellapp.create_fellapps()
+    fellapp.accept(1)
 
     print("FellApp done!")
 
