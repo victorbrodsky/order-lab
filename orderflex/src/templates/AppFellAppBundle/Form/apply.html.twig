@@ -348,9 +348,12 @@
 
             var initInst = inst.val();
             var initGlobal = global.val();
-            //console.log('Initial institution:', initInst);
+            console.log('Initial institution:', initInst);
+            console.log('Initial fellapp type:', initGlobal);
             if( !initGlobal ) {
                 filterGlobalByInstitution(initInst);
+            } else {
+                filterInstitutionByGlobal(initGlobal, ()=>{syncingInst=false;});
             }
         });
 
