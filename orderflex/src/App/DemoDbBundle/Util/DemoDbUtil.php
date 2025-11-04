@@ -134,11 +134,11 @@ class DemoDbUtil {
 
         //Reset DB - run only if $environment is demo and $projectRoot contains 'demo'
 
-        if( $environment !== 'demo' ) {
-            echo "process DemoDb: Reset DB skipped - not in demo environment. environment=$environment.\n";
-            return "process DemoDb: Reset DB skipped - not in demo environment. environment=$environment\n";
-            //exit("process DemoDb: Reset DB skipped - not in demo environment.\n");
-        }
+//        if( $environment !== 'demo' ) {
+//            echo "process DemoDb: Reset DB skipped - not in demo environment. environment=$environment.\n";
+//            return "process DemoDb: Reset DB skipped - not in demo environment. environment=$environment\n";
+//            //exit("process DemoDb: Reset DB skipped - not in demo environment.\n");
+//        }
 
         if( str_contains($projectRoot, '/order-lab-tenantappdemo/') === false ) {
             echo "process DemoDb: Reset DB skipped - not in demo tenant. projectRoot=$projectRoot\n";
@@ -159,8 +159,11 @@ class DemoDbUtil {
             try {
                 echo "process DemoDb try: getSiteSettingParameter -> test if DB exists" . "<br>";
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if ($environment != 'demo' || str_contains($projectRoot,'order-lab-tenantappdemo') === false ) {
-                    exit("process DemoDb: Demo DB cannot be run in live environment");
+                if( $environment != 'demo' ) {
+                    exit("process DemoDb: Demo DB cannot be run in live environment. environment=$environment");
+                }
+                if( str_contains($projectRoot,'order-lab-tenantappdemo') === false ) {
+                    exit("process DemoDb: Demo DB must run only in demo tenant. projectRoot=$projectRoot");
                 }
             } catch (\Exception $e) {
                 // Handle the exception

@@ -20,12 +20,27 @@ fi
 
 echo additional.sh: bashpath=$bashpath
 
+# Check if 'python' command exists
+if ! command -v python &> /dev/null; then
+    PYTHON3_PATH=$(command -v python3)
+
+    if [ -n "$PYTHON3_PATH" ]; then
+        echo "Creating symlink: /usr/bin/python → $PYTHON3_PATH"
+        sudo ln -s "$PYTHON3_PATH" /usr/bin/python
+    else
+        echo "Error: python3 is not installed."
+        exit 1
+    fi
+else
+    echo "'python' command already exists. No action needed."
+fi
+
 #Create python environment for postgres-manage-python
 #cd /srv/order-lab-tenantapp1/utils/db-manage/postgres-manage-python/
 #folder: /srv/order-lab/packer/
 echo -e ${COLOR} Installing env python for postgres-manage-python to "$bashpath" ${NC}
 cd "$bashpath"/utils/db-manage/postgres-manage-python/
-python3 -m venv venv
+python -m venv venv
 source venv/bin/activate
 #sudo pip3 install -r requirements.txt
 
