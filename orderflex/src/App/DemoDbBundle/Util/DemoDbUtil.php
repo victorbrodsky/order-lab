@@ -135,14 +135,14 @@ class DemoDbUtil {
         //Reset DB - run only if $environment is demo and $projectRoot contains 'demo'
 
         if( $environment !== 'demo' ) {
-            echo "process DemoDb: Reset DB skipped - not in demo environment.\n";
-            return "process DemoDb: Reset DB skipped - not in demo environment.\n";
+            echo "process DemoDb: Reset DB skipped - not in demo environment. environment=$environment.\n";
+            return "process DemoDb: Reset DB skipped - not in demo environment. environment=$environment\n";
             //exit("process DemoDb: Reset DB skipped - not in demo environment.\n");
         }
 
         if( str_contains($projectRoot, '/order-lab-tenantappdemo/') === false ) {
-            echo "process DemoDb: Reset DB skipped - not in demo tenant.\n";
-            return "process DemoDb: Reset DB skipped - not in demo tenant.\n";
+            echo "process DemoDb: Reset DB skipped - not in demo tenant. projectRoot=$projectRoot\n";
+            return "process DemoDb: Reset DB skipped - not in demo tenant. projectRoot=$projectRoot\n";
             //exit("process DemoDb: Reset DB skipped - not in demo environment.\n");
         }
 
