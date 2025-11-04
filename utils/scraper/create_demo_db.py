@@ -17,7 +17,7 @@ import subprocess
 
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time
-def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
+def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_user, mailer_password, captcha_sitekey, captcha_secretkey, baseurl):
     #run_by_symfony_command = True
     #run_by_symfony_command = False
     # Sections
@@ -26,7 +26,7 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
     #if 'init' in demo_ids and demo_ids['init'] and 'init' in attempts and attempts.get('init', 0) <= max_attempts:
         print("init attempt=",attempts['init'])
         try:
-            automation = WebAutomation(run_by_symfony_command)
+            automation = WebAutomation(baseurl,run_by_symfony_command)
             automation.login_to_site()
             init = Init(automation)
             init.initialize()
@@ -325,26 +325,15 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
     return demo_ids
 
 #TODO: add recaptcha site key and secret key
-def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
+def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey, baseurl):
     print("script directory:", os.getcwd())  # This will show the directory where your script is running
 
     #subprocess.run(["/usr/bin/bash", "/srv/order-lab-tenantappdemo/orderflex/deploy.sh"], check=True)
     #print("main: after deploy.sh")
     #sys.exit()
 
-    run_by_symfony_command = True
+    run_by_symfony_command = True #run by a cronjob
     #run_by_symfony_command = False #use for testing with web browser
-
-    # if run_by_symfony_command is True:
-        # write output to a file
-        #It's better to use: /usr/bin/php /srv/order-lab-tenantappdemo/orderflex/bin/console cron:demo-db-reset --env=prod >> /srv/order-lab-tenantappdemo/orderflex/scraper.log 2>&1
-        # #Option 1
-        # if 0:
-        #     log_file_path = "/srv/order-lab-tenantappdemo/orderflex/scraper.log"
-        #     if not os.path.exists(log_file_path):
-        #         log_file_path = os.getcwd() + "/scraper.log"
-        #     log_file = open(log_file_path, "w")
-        #     sys.stdout = log_file
 
     print("script directory:",os.getcwd())  # This will show the directory where your script is running
 
@@ -391,7 +380,8 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey):
             mailer_user,
             mailer_password,
             captcha_sitekey,
-            captcha_secretkey
+            captcha_secretkey,
+            baseurl
         )
 
     #clean cach: 'bash deploy.sh'
@@ -425,67 +415,15 @@ if __name__ == "__main__":
     captcha_sitekey = get_arg_value(args, "--captchasitekey")
     captcha_secretkey = get_arg_value(args, "--captchasecretkey")
 
+    baseurl = get_arg_value(args, "--baseurl")
+
     #if mailer_user and mailer_password:
     #    main(mailer_user, mailer_password)
 
     if mailer_user and mailer_password and captcha_sitekey and captcha_secretkey:
-       main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey)
+       main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey, baseurl)
 
     else:
         print("Error: Missing values for --maileruser or --mailerpassword")
         print("Proceed without mailer")
         main('maileruser', 'mailerpassword', 'captchasitekey', 'captchasecretkey')
-
-
-# if 0 and __name__ == "__main__":
-#     args = sys.argv
-#     print("args=",args)
-#
-#     if "--maileruser" in args and "--mailerpassword" in args:
-#         mailer_index = args.index("--maileruser") + 1
-#         password_index = args.index("--mailerpassword") + 1
-#
-#         if mailer_index < len(args) and password_index < len(args):
-#             mailer_user = args[mailer_index]
-#             mailer_password = args[password_index]
-#             main(mailer_user, mailer_password)
-#         else:
-#             print("Error: Missing values for --maileruser or --mailerpassword")
-#             print("Proceed without mailer")
-#             main('maileruser', 'mailerpassword')
-#     else:
-#         print("Error: --maileruser or --mailerpassword not found in arguments")
-#         print("Proceed without mailer")
-#         main('maileruser','mailerpassword')
-
-if 0 and __name__ == "__main__":
-    args = sys.argv
-    print("args=", args)
-
-    processes = []
-
-    if "--maileruser" in args and "--mailerpassword" in args:
-        mailer_index = args.index("--maileruser") + 1
-        password_index = args.index("--mailerpassword") + 1
-
-        if mailer_index < len(args) and password_index < len(args):
-            mailer_user = args[mailer_index]
-            mailer_password = args[password_index]
-
-            # Creating a process to run main function
-            p = multiprocessing.Process(target=main, args=(mailer_user, mailer_password))
-            processes.append(p)
-            p.start()
-        else:
-            print("Error: Missing values for --maileruser or --mailerpassword")
-    else:
-        print("Error: --maileruser or --mailerpassword not found in arguments")
-
-    print("Proceed without mailer")
-    p2 = multiprocessing.Process(target=main, args=('maileruser', 'mailerpassword'))
-    processes.append(p2)
-    p2.start()
-
-    # Waiting for all processes to complete
-    for p in processes:
-        p.join()

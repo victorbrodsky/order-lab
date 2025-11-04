@@ -28,6 +28,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Console\Input\InputArgument;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DemoDbCommand extends Command {
@@ -47,7 +48,10 @@ class DemoDbCommand extends Command {
     {
         $this
             ->setName('cron:demo-db-reset')
-            ->setDescription('Reset Demo DB');
+            ->setDescription('Reset Demo DB')
+            ->addArgument('baseurl', InputArgument::OPTIONAL,
+                'Base url of instance where to generate the Demo DB (i.e. https://view.online/c/demo-institution/demo-department/)')
+        ;
     }
 
     //Cron job to back up DB and Uploaded files.
@@ -62,6 +66,9 @@ class DemoDbCommand extends Command {
 
         $userSecUtil = $this->container->get('user_security_utility');
         //$environment = $userSecUtil->getSiteSettingParameter('environment');
+
+        $baseurl = $input->getArgument('baseurl');
+
         $environment = NULL;
 
         try {
@@ -73,18 +80,25 @@ class DemoDbCommand extends Command {
             //exit;
         }
 
-        $projectRoot = NULL; //use current project dir of the tenant where command is running
+        //$projectRoot = NULL; //use current project dir of the tenant where command is running
         $projectRoot = "/srv/order-lab-tenantappdemo/orderflex"; //use project dir of the demo tenant
         
-        if( $environment != 'demo' && $projectRoot === NULL ) {
+        if( $environment != 'demo' ) {
             $resStr = "Demo DB can be run only in demo environment. environment=$environment, projectRoot=$projectRoot". "\n";
             $logger->notice("cron demo-db-reset: ".$resStr);
             $output->writeln($resStr);
             return Command::FAILURE;
         }
 
+        if( str_contains($projectRoot, '/order-lab-tenantappdemo/') === false ) {
+            $resStr = "Demo DB can be run only in demo tenant. projectRoot=$projectRoot". "\n";
+            $logger->notice("cron demo-db-reset: ".$resStr);
+            $output->writeln($resStr);
+            return Command::FAILURE;
+        }
+
         $demoDbUtil = $this->container->get('demodb_utility');
-        $resDemoDbStr = $demoDbUtil->processDemoDb($projectRoot,$backupPath=NULL);
+        $resDemoDbStr = $demoDbUtil->processDemoDb($projectRoot,$backupPath=NULL,$baseurl=NULL);
         
 //        $client = $demoDbUtil->loginAction();
 //        $client->takeScreenshot('test_login.png');

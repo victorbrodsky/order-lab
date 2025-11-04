@@ -19,9 +19,10 @@ import time
 
 
 class WebAutomation:
-    def __init__(self, run_by_symfony_command=False):
+    def __init__(self, baseurl, run_by_symfony_command=False):
         """Initialize the class and set up the WebDriver."""
         self.driver = None
+        self.baseurl = baseurl
         self.run_by_symfony_command = run_by_symfony_command
         self.initialize_driver()
 
@@ -30,7 +31,7 @@ class WebAutomation:
         #     self.log_file = open("scraper.log", "w")
         #     sys.stdout = self.log_file
 
-        print("__init__: self.run_by_symfony_command=",self.run_by_symfony_command)
+        print(f"__init__: self. self.baseurl={self.baseurl}, run_by_symfony_command={self.run_by_symfony_command}")
 
     def get_driver(self):
         return self.driver
@@ -83,7 +84,8 @@ class WebAutomation:
     def login_to_site(self, url=None, username_text=None, password_text=None):
         """Logs in to the site."""
         if url is None:
-            url = "https://view.online/c/demo-institution/demo-department/directory/login"
+            #url = "https://view.online/c/demo-institution/demo-department/directory/login"
+            url = self.baseurl.rstrip('/') + '/' + "directory/login".lstrip('/')
 
         if username_text is None:
             username_text = "administrator"
@@ -114,11 +116,13 @@ class WebAutomation:
 
     def check_login_page(self):
         #Check if system is login able
-        url = "https://view.online/c/demo-institution/demo-department/directory/logout"
+        #url = "https://view.online/c/demo-institution/demo-department/directory/logout"
+        url = self.baseurl.rstrip('/') + '/' + "directory/logout".lstrip('/')
         self.driver.get(url)
         time.sleep(3)
 
-        url = "https://view.online/c/demo-institution/demo-department/directory/login"
+        #url = "https://view.online/c/demo-institution/demo-department/directory/login"
+        url = self.baseurl.rstrip('/') + '/' + "directory/login".lstrip('/')
         self.driver.get(url)
         time.sleep(3)
 

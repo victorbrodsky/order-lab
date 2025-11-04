@@ -55,10 +55,10 @@ class DemoDbUtil {
     }
 
 
-    public function processDemoDb( $projectRoot, $backupPath=NULL )
+    public function processDemoDb( $projectRoot, $backupPath=NULL, $baseurl=NULL )
     {
         $logger = $this->container->get('logger');
-        $logger->notice("processDemoDb started");
+        $logger->notice("process DemoDb started");
 
 //        if( false === $this->security->isGranted('ROLE_PLATFORM_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -80,36 +80,32 @@ class DemoDbUtil {
         //instanceId
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $environment = NULL;
 
         try {
-            echo "processDemoDb execute: try: getSiteSettingParameter" . "\n";
+            echo "process DemoDb execute: try: getSiteSettingParameter" . "\n";
             $environment = $userSecUtil->getSiteSettingParameter('environment');
         } catch (\Exception $e) {
             // Handle the exception
-            echo "processDemoDb execute: Error: " . $e->getMessage() . "\n";
-            //exit;
+            echo "process DemoDb execute: DB might not exist. Error: " . $e->getMessage() . "\n";
+            //return "process DemoDb execute: Error: can not get environemnt: " . $e->getMessage() . "\n";
         }
 
-        echo "processDemoDb: environment=$environment, projectRoot=$projectRoot" . "\n";
-        if( $environment == 'live' ) {
-            $resStr = "processDemoDb: Demo DB cannot be run in live environment". "\n";
-            return $resStr;
-        }
-        if( $environment == 'live' && $projectRoot === NULL ) {
-            $resStr = "processDemoDb: Demo DB cannot be run in live environment ot project root is not specified". "\n";
-            return $resStr;
-        }
-        if( $environment != 'demo' && $projectRoot === NULL ) {
-            $resStr = "processDemoDb: Demo DB can be run only in demo environment or only if projectRoot specified. Current environment=$environment, projectRoot=$projectRoot". "\n";
-            return $resStr;
-        }
-
-        //check only if DB exists
-
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $userSecUtil = $this->container->get('user_security_utility');
+//        echo "process DemoDb: environment=$environment, projectRoot=$projectRoot" . "\n";
+//        if( $environment == 'live' ) {
+//            $resStr = "process DemoDb: Demo DB cannot be run in live environment". "\n";
+//            return $resStr;
+//        }
+//        if( $environment == 'live' && $projectRoot === NULL ) {
+//            $resStr = "process DemoDb: Demo DB cannot be run in live environment and the project root is not specified". "\n";
+//            return $resStr;
+//        }
+//        if( $environment != 'demo' && $projectRoot === NULL ) {
+//            $resStr = "process DemoDb: Demo DB can be run only in demo environment or only if projectRoot specified. Current environment=$environment, projectRoot=$projectRoot". "\n";
+//            return $resStr;
+//        }
 
 //        $environment = $userSecUtil->getSiteSettingParameter('environment');
 //        if( $environment == 'live' ) {
@@ -128,24 +124,43 @@ class DemoDbUtil {
         if( !$projectRoot ) {
             $projectRoot = $this->container->get('kernel')->getProjectDir(); // /usr/local/bin/order-lab-thistenant/orderflex
         }
+
+        if( !$baseurl ) {
+            $baseurl = 'https://view.online/c/demo-institution/demo-department/';
+        }
+
         //TODO: try to run from tenantmanager
         //$projectRoot = "/usr/local/bin/order-lab-tenantappdemo/orderflex";
+
+        //Reset DB - run only if $environment is demo and $projectRoot contains 'demo'
+
+        if( $environment !== 'demo' ) {
+            echo "process DemoDb: Reset DB skipped - not in demo environment.\n";
+            return "process DemoDb: Reset DB skipped - not in demo environment.\n";
+            //exit("process DemoDb: Reset DB skipped - not in demo environment.\n");
+        }
+
+        if( str_contains($projectRoot, '/order-lab-tenantappdemo/') === false ) {
+            echo "process DemoDb: Reset DB skipped - not in demo tenant.\n";
+            return "process DemoDb: Reset DB skipped - not in demo tenant.\n";
+            //exit("process DemoDb: Reset DB skipped - not in demo environment.\n");
+        }
 
         //$resetDb = false;
         $resetDb = true;
 
-        echo "processDemoDb: start with resetDb=$resetDb \n<br>";
-        $logger->notice("processDemoDb: start with resetDb=$resetDb");
+        echo "process DemoDb: start with resetDb=$resetDb \n<br>";
+        $logger->notice("process DemoDb: start with resetDb=$resetDb");
 
         /////////////// Drop and create new Database ////////////////
         if ($resetDb) {
             $phpPath = $userServiceUtil->getPhpPath();
 
             try {
-                echo "processDemoDb try: getSiteSettingParameter" . "<br>";
+                echo "process DemoDb try: getSiteSettingParameter -> test if DB exists" . "<br>";
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if ($environment != 'demo' && str_contains($projectRoot,'demo') === false ) {
-                    exit("processDemoDb: Demo DB cannot be run in live environment");
+                if ($environment != 'demo' || str_contains($projectRoot,'order-lab-tenantappdemo') === false ) {
+                    exit("process DemoDb: Demo DB cannot be run in live environment");
                 }
             } catch (\Exception $e) {
                 // Handle the exception
@@ -154,31 +169,31 @@ class DemoDbUtil {
                 $create = $phpPath . ' ' . $projectRoot . '/bin/console doctrine:database:create';
                 $logger->notice("create command=[" . $create . "]");
                 $resCreate = $userServiceUtil->runProcess($create);
-                echo "processDemoDb: create resCreate=" . $resCreate . "<br>";
+                echo "process DemoDb: create resCreate=" . $resCreate . "<br>";
             }
 
-            echo "\n" . "processDemoDb: start." . "\n<br>";
-            $logger->notice("processDemoDb: start.");
+            echo "\n" . "process DemoDb: start." . "\n<br>";
+            $logger->notice("process DemoDb: start.");
             $res = '';
 
             if (!$backupPath) {
                 // /usr/local/bin/order-lab-thistenant/orderflex/var/backups/
                 $backupPath = $projectRoot . "/var/backups/";
             }
-            echo "processDemoDb: backupPath=$backupPath \n<br>";
+            echo "process DemoDb: backupPath=$backupPath \n<br>";
 
             //check if $backupPath exists if not create
             if (!file_exists($backupPath)) {
                 // Attempt to create the folder with appropriate permissions
                 if (!mkdir($backupPath, 0755, true)) {
-                    die("processDemoDb: Failed to create directory: $backupPath");
+                    die("process DemoDb: Failed to create directory: $backupPath");
                 }
             }
 
             //exit('111 <br>');
 
             //1) backup DB (might not be need it)
-            echo "processDemoDb: dbManagePython \n<br>";
+            echo "process DemoDb: dbManagePython \n<br>";
             $resBackupArr = $userServiceUtil->dbManagePython($backupPath, 'backup');
             $res = $res . implode(',', $resBackupArr);
 
@@ -233,7 +248,6 @@ class DemoDbUtil {
             $res = $res . "; " . $resMigrateCommand;
 
             //Create python environment if utils/scraper/.venv does not exists
-            $folderPath = "/srv/order-lab-tenantappdemo/utils/scraper/venv/bin";
             //$bashPath = $projectRoot.'/../packer/additional.sh '. $projectRoot . '/..';
             $bashPath = $projectRoot . '/..';
             //$bashPath = "srv/order-lab-tenantappdemo";
@@ -337,8 +351,8 @@ class DemoDbUtil {
             //" --user $dbUsername".
             //" --password $dbPassword"
         ;
-        echo "processDemoDb: run process with python command=[".$pythonInitCommand."] <br>";
-        $logger->notice("processDemoDb: run process with python command=[".$pythonInitCommand."]");
+        echo "process DemoDb: run process with python command=[".$pythonInitCommand."] <br>";
+        $logger->notice("process DemoDb: run process with python command=[".$pythonInitCommand."]");
         $res = null;
         //$res = $userServiceUtil->runProcess($pythonInitCommand);
 
@@ -349,10 +363,11 @@ class DemoDbUtil {
             "--maileruser", $maileruser,
             "--mailerpassword", $mailerpassword,
             "--captchasitekey", $captchaSiteKey,
-            "--captchasecretkey", $captchaSecretKey
+            "--captchasecretkey", $captchaSecretKey,
+            "--baseurl", $baseurl //'https://view.online/c/demo-institution/demo-department/'
         ];
 
-        echo "\nprocessDemoDb: run process with python command pythonInitCommandArr=[".join(' ',$pythonInitCommandArr)."] \n<br>";
+        echo "\nprocess DemoDb: run process with python command pythonInitCommandArr=[".join(' ',$pythonInitCommandArr)."] \n<br>";
         $res = $userServiceUtil->runSymfonyProcessRealTime($pythonInitCommandArr);
 
         //Error: selenium.common.exceptions.SessionNotCreatedException: Message: session not created: probably user data dir
@@ -430,7 +445,16 @@ class DemoDbUtil {
     }
 
 
+
+
+
+
+
+
+
+    //ALL BELLOW NOT USED
     public function postRestoreDb() {
+        exit('postRestoreDb: not used');
         //Set new DB (use restoreDBWrapper)
         //environment
         //connectionChannel (set http for HaProxy)
@@ -484,11 +508,11 @@ class DemoDbUtil {
     }
 
 
+    //NOT USED
     //RuntimeException: The port 9515 is already in use
     //https://jelledev.com/how-to-run-multiple-symfony-panther-clients-in-parallel/
-
     public function getClient() {
-
+        exit('getClient: not used');
         //$availablePort = $this->getAvailablePort();
         //$availablePort = null;
         //echo "availablePort = $availablePort <br>";
@@ -512,6 +536,7 @@ class DemoDbUtil {
 
     public function getAvailablePort(): int
     {
+        exit('getAvailablePort: not used');
         $port = '8080';
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             //$localSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
@@ -529,6 +554,7 @@ class DemoDbUtil {
 
 
     public function loginAction( $password=null ) {
+        exit('loginAction: not used');
         $client = $this->getClient();
 
         $client->close();
@@ -593,6 +619,7 @@ class DemoDbUtil {
     }
 
     public function getUsers() {
+        exit('getUsers: not used');
         $users = array();
         $users[] = array(
             'userid' => 'johndoe',
@@ -629,7 +656,7 @@ class DemoDbUtil {
     }
 
     public function createUsers($client) {
-
+        exit('createUsers: not used');
         //array('ROLE_USERDIRECTORY_OBSERVER','ROLE_FELLAPP_OBSERVER')
         //$client = $this->createUser($client,'johndoe','John','Doe','John Doe','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
         //$client = $this->createUser($client,'aeinstein','Albert','Einstein','Albert Einstein','pass','cinava@yahoo.com',array('ROLE_USERDIRECTORY_OBSERVER'));
@@ -655,7 +682,7 @@ class DemoDbUtil {
         return $userArr;
     }
     public function createUser($client,$userid,$firstName,$lastName,$displayName,$pass,$email,$roles) {
-
+        exit('createUser: not used');
         $url = $this->baseUrl.'/directory/user/new';
         $crawler = $client->request('GET', $url);
         $form = $crawler->selectButton('Add Employee')->form();
