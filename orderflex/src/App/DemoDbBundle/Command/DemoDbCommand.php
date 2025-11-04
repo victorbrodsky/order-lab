@@ -83,7 +83,7 @@ class DemoDbCommand extends Command {
         //$projectRoot = NULL; //use current project dir of the tenant where command is running
         $projectRoot = "/srv/order-lab-tenantappdemo/orderflex"; //use project dir of the demo tenant
         
-        if( $environment != 'demo' ) {
+        if( $environment && $environment != 'demo' ) {
             $resStr = "Demo DB can be run only in demo environment. environment=$environment, projectRoot=$projectRoot". "\n";
             $logger->notice("cron demo-db-reset: ".$resStr);
             $output->writeln($resStr);
