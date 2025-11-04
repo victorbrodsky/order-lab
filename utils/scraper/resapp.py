@@ -55,7 +55,7 @@ class ResApp:
     def configs(self):
         driver = self.automation.get_driver()
         #Add Residency Track: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
-        resapp_type_url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/edit-by-listname/ResidencyTrackList"
+        resapp_type_url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/edit-by-listname/ResidencyTrackList".lstrip('/')
         driver.get(resapp_type_url)
         time.sleep(1)
 
@@ -98,7 +98,7 @@ class ResApp:
         time.sleep(3)
 
         #Create residency type
-        residency_type_url = "https://view.online/c/demo-institution/demo-department/residency-applications/residency-types-settings"
+        residency_type_url = self.automation.baseurl.rstrip('/') + '/' + "residency-applications/residency-types-settings".lstrip('/')
         driver.get(residency_type_url)
         time.sleep(3)
 
@@ -141,7 +141,7 @@ class ResApp:
 
     def create_single_resapp(self, resapp):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/residency-applications/new/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "residency-applications/new/".lstrip('/')
         driver.get(url)
         time.sleep(1)
 
@@ -280,10 +280,11 @@ class ResApp:
 
 
 def main():
-    url = "https://view.online/c/demo-institution/demo-department/directory/login"
+    url = None
     username_text = "administrator"
     password_text = "1234567890"
-    automation = WebAutomation()
+    baseurl = "https://view.online/c/demo-institution/demo-department"
+    automation = WebAutomation(baseurl, False)
     automation.login_to_site(url, username_text, password_text)
 
     resapp = ResApp(automation)

@@ -23,7 +23,7 @@ class VacReq:
     def create_group(self):
         #automation = WebAutomation()
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/time-away-request/add-group"
+        url = self.automation.baseurl.rstrip('/') + '/' + "time-away-request/add-group".lstrip('/')
         driver.get(url)
         time.sleep(3)
         driver.save_screenshot("vacreq_create_group.png")
@@ -60,7 +60,7 @@ class VacReq:
 
     def add_user_to_group(self):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/time-away-request/groups/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "time-away-request/groups/".lstrip('/')
         driver.get(url)
         time.sleep(1)
         driver.save_screenshot("vacreq_add_user_to_group.png")
@@ -168,7 +168,7 @@ class VacReq:
 
     def add_submitter_to_group(self):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/time-away-request/groups/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "time-away-request/groups/".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
@@ -267,7 +267,7 @@ class VacReq:
 
         try:
             # Create a new vacation request
-            url = "https://view.online/c/demo-institution/demo-department/time-away-request/"
+            url = self.automation.baseurl.rstrip('/') + '/' + "time-away-request/".lstrip('/')
             driver.get(url)
             # select_option(driver, "s2id_oleg_vacreqbundle_request_institution", "select2-input", "Pathology and Laboratory Medicine ID#29 (for review by administrator)")
 
@@ -382,10 +382,11 @@ class VacReq:
 def main():
 
     if 0:
-        url = "https://view.online/c/demo-institution/demo-department/directory/login"
+        baseurl = "https://view.online/c/demo-institution/demo-department"
+        url = baseurl.rstrip('/') + '/' + "directory/login".lstrip('/')
         username_text = "administrator"
         password_text = "1234567890"
-        automation = WebAutomation() #run_by_symfony_command=True
+        automation = WebAutomation(baseurl, True) #run_by_symfony_command=True
         #automation = WebAutomation(run_by_symfony_command=True)  # run_by_symfony_command=True
         automation.login_to_site(url, username_text, password_text)
 
@@ -398,7 +399,8 @@ def main():
 
     if 1:
         run_by_symfony_command = False
-        automation = WebAutomation(run_by_symfony_command)
+        baseurl = "https://view.online/c/demo-institution/demo-department"
+        automation = WebAutomation(baseurl, run_by_symfony_command)
         automation.login_to_site()
         vacreq = VacReq(automation)
         vacreq.create_group()
@@ -406,7 +408,7 @@ def main():
         del automation
         time.sleep(3)
 
-        automation = WebAutomation(run_by_symfony_command)
+        automation = WebAutomation(baseurl, run_by_symfony_command)
         automation.login_to_site()
         vacreq = VacReq(automation)
         time.sleep(1)

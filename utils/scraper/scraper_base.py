@@ -49,7 +49,9 @@ def main():
     # Set implicit wait
     driver.implicitly_wait(10)  # seconds
     
-    url = "https://view.online/c/demo-institution/demo-department/time-away-request/login"
+    baseurl = "https://view.online/c/demo-institution/demo-department"
+    url = baseurl.rstrip('/') + '/' + "time-away-request/login".lstrip('/')
+    
     username_text = "administrator"
     password_text = "1234567890"
     
@@ -64,8 +66,9 @@ def main():
         #time.sleep(1)  # Observe the result before quitting
         
         #Create a new vacation request
-        url = "https://view.online/c/demo-institution/demo-department/time-away-request/"
+        url = baseurl.rstrip('/') + '/' + "time-away-request/".lstrip('/')
         driver.get(url)
+        
         #select_option(driver, "s2id_oleg_vacreqbundle_request_institution", "select2-input", "Pathology and Laboratory Medicine ID#29 (for review by administrator)")
         
 #         dropdown = driver.find_element(By.ID, "s2id_oleg_vacreqbundle_request_institution")

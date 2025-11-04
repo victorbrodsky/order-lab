@@ -18,67 +18,9 @@ class Init:
         self.password_default = "1234567890"
         self.password_new = "1234567890"
 
-    # def initialize_orig(self):
-    #     driver = self.automation.get_driver()
-    #     url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
-    #     print("run init link")
-    #     driver.get(url)
-    #     print("after run init link")
-    #     time.sleep(3)
-    #
-    #     if "500 Internal Server Error" in driver.page_source:
-    #         print("500 Error detected!")
-    #         self.run_deploy_command()
-    #         time.sleep(3)
-    #
-    #         #Second attempt to run init
-    #         url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
-    #         print("run init link 2")
-    #         driver.get(url)
-    #         print("after run init link 2")
-    #         time.sleep(3)
-    #
-    #     #login using default username and password
-    #     self.automation.login_to_site(None, self.username, self.password_default)
-    #     time.sleep(3)
-    #
-    #     #check if logged in successful "display-username"
-    #     try:
-    #         # Attempt to locate the element
-    #         username_element = driver.find_element(By.ID, "display-username")
-    #         if username_element:
-    #             print("Element display-username exists => Login page => Re-login.")
-    #             self.automation.login_to_site(None, self.username, self.password_new)
-    #             time.sleep(3)
-    #             try:
-    #                 username_element = driver.find_element(By.ID, "display-username")
-    #                 time.sleep(3)
-    #                 if username_element:
-    #                     print("Element display-username exists => Login page => Failed")
-    #                     return False
-    #             except NoSuchElementException:
-    #                 print("Element 'display-username' does not exist => Logged in => Continue initializing.")
-    #         else:
-    #             print("Element display-username exists but is not interactable!")
-    #             return False
-    #     except NoSuchElementException:
-    #         print("Element does not exist => Logged in => Continue initializing.")
-    #
-    #     #if page with init displayed
-    #     print("Continue initializing.")
-    #     time.sleep(3)
-    #     try:
-    #         select_element = driver.find_element(By.ID, "oleg_userdirectorybundle_initialconfigurationtype_environment")
-    #         time.sleep(3)
-    #         self.config_initializing()
-    #     except NoSuchElementException:
-    #         print("Initializing page is not showing. Continue with site settings.")
-    #
-    #     return True
-
     def initialize(self):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/first-time-login-generation-init/".lstrip('/')
         print("run init link")
         driver.get(url)
         print("after run init link")
@@ -90,7 +32,7 @@ class Init:
             time.sleep(60)
 
             #Second attempt to run init
-            url = "https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/"
+            url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/first-time-login-generation-init/".lstrip('/')
             print("run init link 2")
             driver.get(url)
             print("after run init link 2")
@@ -174,50 +116,50 @@ class Init:
         driver = self.automation.get_driver()
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/populate-country-city-list-with-default-values"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/populate-country-city-list-with-default-values".lstrip('/')
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/populate-all-lists-with-default-values"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/populate-all-lists-with-default-values".lstrip('/')
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)
 
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/scan/admin/populate-all-lists-with-default-values"
+        url = self.automation.baseurl.rstrip('/') + '/' + "scan/admin/populate-all-lists-with-default-values".lstrip('/')
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql"
+        url = self.automation.baseurl.rstrip('/') + '/' + "translational-research/generate-antibody-list/ihc_antibody_postgresql.sql".lstrip('/')
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/generate-form-node-tree/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/generate-form-node-tree/".lstrip('/')
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/generate-dermatopathology-form-node-tree/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/generate-dermatopathology-form-node-tree/".lstrip('/')
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/create-default-fellowship-type"
+        url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/create-default-fellowship-type".lstrip('/')
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)
 
         #self.open_misc_panel()
-        url = "https://view.online/c/demo-institution/demo-department/time-away-request/generate-default-group"
+        url = self.automation.baseurl.rstrip('/') + '/' + "time-away-request/generate-default-group".lstrip('/')
         #driver.get(url)
         #time.sleep(10)
         self.populate_url(url)
@@ -245,7 +187,7 @@ class Init:
     def init_mailer(self, mailer_user, mailer_password):
         driver = self.automation.get_driver()
         #/c/demo-institution/demo-department/directory/settings/1/edit?param=mailerUser
-        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=mailerUser"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/1/edit?param=mailerUser".lstrip('/')
         driver.get(url)
         time.sleep(3)
         # set google mailer
@@ -261,7 +203,7 @@ class Init:
         time.sleep(3)
 
         # Mailer password: "dfmg hhjs rwjk ywlm"
-        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=mailerPassword"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/1/edit?param=mailerPassword".lstrip('/')
         driver.get(url)
         time.sleep(3)
         password = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_mailerPassword")
@@ -276,7 +218,7 @@ class Init:
     def init_captcha(self,captcha_sitekey, captcha_secretkey):
         driver = self.automation.get_driver()
         # /c/demo-institution/demo-department/directory/settings/1/edit?param=mailerUser
-        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=captchaSiteKey"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/1/edit?param=captchaSiteKey".lstrip('/')
         driver.get(url)
         time.sleep(3)
         # set google mailer
@@ -289,7 +231,7 @@ class Init:
         self.automation.click_button_by_id("oleg_userdirectorybundle_siteparameters_submit")
         time.sleep(3)
 
-        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=captchaSecretKey"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/1/edit?param=captchaSecretKey".lstrip('/')
         driver.get(url)
         time.sleep(3)
         # set google mailer
@@ -303,7 +245,7 @@ class Init:
         time.sleep(3)
 
         #check box
-        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=captchaEnabled"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/1/edit?param=captchaEnabled".lstrip('/')
         driver.get(url)
         time.sleep(3)
         checkbox = driver.find_element(By.ID, 'oleg_userdirectorybundle_siteparameters_captchaEnabled')
@@ -316,7 +258,7 @@ class Init:
         driver = self.automation.get_driver()
 
         # Global academic start date
-        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=academicYearStart"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/1/edit?param=academicYearStart".lstrip('/')
         driver.get(url)
         time.sleep(3)
         driver.save_screenshot("academicYearStart1.png")
@@ -348,7 +290,7 @@ class Init:
         print("academicYearStart populated")
 
         # Global academic end date
-        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=academicYearEnd"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/1/edit?param=academicYearEnd".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
@@ -379,7 +321,7 @@ class Init:
 
         #For the demo site only, in Site Settings, change “Please use your CWID to log in.”
         # to “Institutional account integration is disabled on the Demo site.”
-        url = "https://view.online/c/demo-institution/demo-department/directory/settings/1/edit?param=loginInstruction"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/1/edit?param=loginInstruction".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
@@ -396,43 +338,43 @@ class Init:
 
     def remove_crons(self):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:importfellapp"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/remove-cron-job/cron:importfellapp".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:verifyimport"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/remove-cron-job/cron:verifyimport".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:invoice-reminder-emails"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/remove-cron-job/cron:invoice-reminder-emails".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:expiration-reminder-emails"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/remove-cron-job/cron:expiration-reminder-emails".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:project-sync"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/remove-cron-job/cron:project-sync".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/cron:status"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/remove-cron-job/cron:status".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/remove-cron-job/webmonitor.py"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/remove-cron-job/cron:webmonitor.py".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
     def run_deploy(self):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/directory/admin/update-system-cache-assets/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/update-system-cache-assets/".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
@@ -462,7 +404,7 @@ class Init:
             except TimeoutException:
                 print(f"Attempt {attempt + 1} failed. Retrying in {retry_delay} seconds...")
                 time.sleep(retry_delay)
-                url = "https://view.online/c/demo-institution/demo-department/directory/settings/"
+                url = self.automation.baseurl.rstrip('/') + '/' + "directory/settings/".lstrip('/')
                 driver.get(url)
                 time.sleep(3)
 
@@ -470,7 +412,8 @@ class Init:
 def main(mailer_user,mailer_password,captcha_sitekey,captcha_secretkey):
     #run_by_symfony_command = True
     run_by_symfony_command = False
-    automation = WebAutomation(run_by_symfony_command)
+    baseurl = "https://view.online/c/demo-institution/demo-department"
+    automation = WebAutomation(baseurl, run_by_symfony_command)
     automation.login_to_site()
     # Initialize using https://view.online/c/demo-institution/demo-department/directory/admin/first-time-login-generation-init/
     if mailer_user is None:

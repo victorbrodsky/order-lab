@@ -98,8 +98,9 @@ class FellApp:
         driver = self.automation.get_driver()
         #Add Fellowship Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
         #url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
-        fellapp_type_url = "https://view.online/c/demo-institution/demo-department/directory/admin/list/edit-by-listname/FellowshipSubspecialty"
+        fellapp_type_url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/edit-by-listname/FellowshipSubspecialty".lstrip('/')
         driver.get(fellapp_type_url)
+
         time.sleep(1)
 
         # Wait for the table to load
@@ -139,8 +140,9 @@ class FellApp:
         time.sleep(3)
 
         #Create fellowship type
-        fellowship_type_url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings"
+        fellowship_type_url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/fellowship-types-settings".lstrip('/')
         driver.get(fellowship_type_url)
+
         time.sleep(3)
 
         #<a href="/c/demo-institution/demo-department/fellowship-applications/fellowship-type/edit/1">Clinical Informatics</a>
@@ -204,8 +206,9 @@ class FellApp:
 
     def config_single_more(self,fellapp_name):
         driver = self.automation.get_driver()
-        fellowship_type_url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings"
+        fellowship_type_url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/fellowship-types-settings".lstrip('/')
         driver.get(fellowship_type_url)
+
         time.sleep(3)
 
         try:
@@ -266,8 +269,9 @@ class FellApp:
         # Set fellowship start/end dates
         # https://view.online/c/demo-institution/demo-department/fellowship-applications/settings/specific-site-parameters/edit-page/
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/settings/specific-site-parameters/edit-page/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/settings/specific-site-parameters/edit-page/".lstrip('/')
         driver.get(url)
+
         time.sleep(3)
 
         start_date_month = driver.find_element(By.ID, "oleg_fellappbundle_fellappsiteparameter_fellappAcademicYearStart_month")
@@ -351,9 +355,10 @@ class FellApp:
 
     def create_single_fellapp(self, fellapp):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/fellowship-applications/new/"
+        url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/new/".lstrip('/')
         #url = "http://127.0.0.1/fellowship-applications/new/"
         driver.get(url)
+
         time.sleep(1)
 
         #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
@@ -605,14 +610,15 @@ class FellApp:
         #print("Finish new fellapp")
         time.sleep(10)
 
-def accept(self, fellapp_id):
-    driver = self.automation.get_driver()
-    accept_url = f"https://view.online/c/demo-institution/demo-department/fellowship-applications/change-status/{fellapp_id}/accepted"
-    driver.get(accept_url)
-    time.sleep(1)
+    def accept(self, fellapp_id):
+        driver = self.automation.get_driver()
+        accept_url = self.automation.baseurl.rstrip('/') + '/' + f"fellowship-applications/change-status/{fellapp_id}/accepted".lstrip('/')
+        driver.get(accept_url)
+        time.sleep(1)
+
 
 def main():
-    url = "https://view.online/c/demo-institution/demo-department/directory/login"
+    url = None
     username_text = "administrator"
     password_text = "1234567890"
 
@@ -620,7 +626,8 @@ def main():
     # username_text = "oli2002l"
     # password_text = "pass"
 
-    automation = WebAutomation()
+    baseurl = "https://view.online/c/demo-institution/demo-department"
+    automation = WebAutomation(baseurl, False)
     automation.login_to_site(url, username_text, password_text)
 
     fellapp = FellApp(automation)

@@ -123,7 +123,7 @@ class Users:
     def get_existing_users(self):
         automation = self.automation
         driver = automation.get_driver()
-        driver.get('https://view.online/c/demo-institution/demo-department/directory/users')
+        driver.get(self.automation.baseurl.rstrip('/') + '/' + 'directory/users'.lstrip('/'))
         time.sleep(1)
         for user in self.get_users():
             time.sleep(2)
@@ -157,7 +157,7 @@ class Users:
         automation = self.automation
         # automation.set_driver(driver)
         driver = automation.get_driver()
-        driver.get('https://view.online/c/demo-institution/demo-department/directory/users')
+        driver.get(self.automation.baseurl.rstrip('/') + '/' + 'directory/users'.lstrip('/'))
         john_doe_row = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
         # Optionally, print or interact with the row
         #print(john_doe_row.text)
@@ -168,7 +168,7 @@ class Users:
         return id_from_link
 
     def create_user(self):
-        url = "https://view.online/c/demo-institution/demo-department/directory/user/new"
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/user/new".lstrip('/')
         #automation = WebAutomation()
         automation = self.automation
         #automation.set_driver(driver)
@@ -268,7 +268,8 @@ def main():
     #
     # automation.quit_driver()
     run_by_symfony_command = False
-    automation = WebAutomation(run_by_symfony_command)
+    baseurl = "https://view.online/c/demo-institution/demo-department"
+    automation = WebAutomation(baseurl, run_by_symfony_command)
     automation.login_to_site()
     users = Users(automation)
     users.create_user()

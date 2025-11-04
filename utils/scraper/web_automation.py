@@ -86,6 +86,11 @@ class WebAutomation:
         if url is None:
             #url = "https://view.online/c/demo-institution/demo-department/directory/login"
             url = self.baseurl.rstrip('/') + '/' + "directory/login".lstrip('/')
+        print("login_to_site: url=",url)
+
+        if url is not None:
+            print("use login url ",url)
+            self.driver.get(url)
 
         if username_text is None:
             username_text = "administrator"
@@ -184,11 +189,11 @@ class WebAutomation:
 
 # Usage Example:
 if __name__ == "__main__":
-    automation = WebAutomation()
+    baseurl = "http://localhost/".rstrip('/')
+    automation = WebAutomation(baseurl, False)
     driver = automation.initialize_driver()
     # You can now call methods like:
     # automation.login_to_site("https://example.com", "your_username", "your_password")
     # automation.select_option("element_id", "select_classname", "option_text")
     # automation.click_button("button_class_name")
     automation.quit_driver()
-

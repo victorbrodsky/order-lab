@@ -23,7 +23,8 @@ driver = webdriver.Chrome()
 driver.page_source.encode('utf-8')
 
 # visit your target site
-url = "https://view.online/c/demo-institution/demo-department/time-away-request/login";
+baseurl = "https://view.online/c/demo-institution/demo-department"
+url = baseurl.rstrip('/') + '/' + "time-away-request/login".lstrip('/')
 #driver.get("https://www.scrapingcourse.com/ecommerce/")
 driver.get(url)
 

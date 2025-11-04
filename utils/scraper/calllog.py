@@ -71,7 +71,7 @@ class CallLog:
 
     def create_single_calllog(self, calllog):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/call-log-book/entry/new"
+        url = self.automation.baseurl.rstrip('/') + '/' + "call-log-book/entry/new".lstrip('/')
         driver.get(url)
         time.sleep(1)
 
@@ -200,10 +200,11 @@ class CallLog:
 
 
 def main():
-    url = "https://view.online/c/demo-institution/demo-department/directory/login"
+    url = None
     username_text = "administrator"
     password_text = "1234567890"
-    automation = WebAutomation()
+    baseurl = "https://view.online/c/demo-institution/demo-department"
+    automation = WebAutomation(baseurl, False)
     automation.login_to_site(url, username_text, password_text)
 
     callog = CallLog(automation)

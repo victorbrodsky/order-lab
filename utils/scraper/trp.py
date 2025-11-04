@@ -87,7 +87,7 @@ class Trp:
 
     def create_single_project(self, project, counter):
         driver = self.automation.get_driver()
-        url = "https://view.online/c/demo-institution/demo-department/translational-research/project/new/ap-cp?requester-group=Internal"
+        url = self.automation.baseurl.rstrip('/') + '/' + "translational-research/project/new/ap-cp?requester-group=Internal".lstrip('/')
         driver.get(url)
         time.sleep(1)
 
@@ -213,7 +213,7 @@ class Trp:
         project_id = current_url.split('/')[-1]
         #print(f"Extracted Project ID: {project_id}")
         #driver.get('https://view.online/c/demo-institution/demo-department/translational-research/projects/')
-        driver.get(f'https://view.online/c/demo-institution/demo-department/translational-research/approve-project/{project_id}')
+        driver.get(self.automation.baseurl.rstrip('/') + '/' + f"translational-research/approve-project/{project_id}".lstrip('/'))
         print(f"Approved Project ID: {project_id}")
         self.project_ids.append(project_id)
         time.sleep(3)
@@ -243,15 +243,14 @@ class Trp:
     def create_single_work_requests(self, project_id, work_requests):
         print(f"create_single_work_requests: project_id={project_id}")
         driver = self.automation.get_driver()
-        url = f"https://view.online/c/demo-institution/demo-department/translational-research/project/{project_id}/work-request/new/"
+        url = self.automation.baseurl.rstrip('/') + '/' + f"translational-research/project/{project_id}/work-request/new/".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
         users = self.users.get_users()
         time.sleep(3)
 
-        #$client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId.
-        #"_requested').val('".$trpRequestArr['quantity'].
+        #$client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_requested').val('".$trpRequestArr['quantity'].
         #"')");
         #s2id_oleg_translationalresearchbundle_request_products_0_category
         #.select2-search .select2-input
@@ -326,7 +325,7 @@ class Trp:
             return None
 
         driver = self.automation.get_driver()
-        url = f"https://view.online/c/demo-institution/demo-department/translational-research/invoice/new/{work_request_id}"
+        url = self.automation.baseurl.rstrip('/') + '/' + f"translational-research/invoice/new/{work_request_id}".lstrip('/')
         driver.get(url)
         time.sleep(3)
 
@@ -354,7 +353,8 @@ def main():
     run_by_symfony_command = False
 
     print("Create projects")
-    automation = WebAutomation(run_by_symfony_command)
+    baseurl = "https://view.online/c/demo-institution/demo-department"
+    automation = WebAutomation(baseurl, run_by_symfony_command)
     automation.login_to_site()
     trp = Trp(automation)
     trp.create_projects()
@@ -363,7 +363,7 @@ def main():
     del automation
 
     print("Create work requests")
-    automation = WebAutomation(run_by_symfony_command)
+    automation = WebAutomation(baseurl, run_by_symfony_command)
     automation.login_to_site()
     trp.set_automation(automation)
     trp.create_work_requests()
