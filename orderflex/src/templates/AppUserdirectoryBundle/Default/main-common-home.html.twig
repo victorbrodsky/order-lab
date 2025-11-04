@@ -84,7 +84,9 @@
                     {% if highResPlatformLogoPath %}
                         {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
                     {% endif %}
+                    srcsetParts|length={{ srcsetParts|length }}<br>
                     {% if srcsetParts|length > 0 %}
+                        srcsetParts={{ srcsetParts }}<br>
                         srcset="{{ srcsetParts|join(', ') }}"
                     {% endif %}
                     alt="Tenant logo" height="{{ height }}" width="{{ width }}"
