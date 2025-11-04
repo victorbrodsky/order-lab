@@ -1752,6 +1752,34 @@ class FellAppUtil {
         return $count;
     }
 
+    public function getFellowshipTypes() {
+        $fellowshipSubspecialtyArr = [
+            "Blood Banking and Transfusion Medicine",
+            "Clinical Chemistry",
+            "Clinical Informatics",
+            "Cytopathology",
+            "Gastrointestinal Pathology",
+            "Dermatopathology",
+            //"Genitourinary and Renal Pathology",
+            "Genitourinary Pathology",
+            "Renal Pathology",
+            //"Gynecologic and Breast Pathology",
+            "Breast Pathology",
+            "Gynecologic Pathology",
+            "Head and Neck Pathology",
+            "Hematopathology",
+            "Histocompatibility and Immunogenetics",
+            "Laboratory Genetics and Genomics",
+            "Liver and GI Pathology",
+            "Medical and Public Health Microbiology",
+            "Molecular Genetic Pathology",
+            "Neuropathology",
+            "Pediatric Pathology",
+            "Surgical Pathology"
+        ];
+        return $fellowshipSubspecialtyArr;
+    }
+
     //TODO: add this function to user's profile create/update. Maybe, find a more efficient way to sync (if user's role with fellapp changed).
     //When the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
     //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles:

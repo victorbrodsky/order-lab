@@ -5906,30 +5906,32 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $fellowshipSubspecialtyArr = [
-            "Blood Banking and Transfusion Medicine",
-            "Clinical Chemistry",
-            "Clinical Informatics",
-            "Cytopathology",
-            "Gastrointestinal Pathology",
-            "Dermatopathology",
-            //"Genitourinary and Renal Pathology",
-            "Genitourinary Pathology",
-            "Renal Pathology",
-            //"Gynecologic and Breast Pathology",
-            "Breast Pathology",
-            "Gynecologic Pathology",
-            "Head and Neck Pathology",
-            "Hematopathology",
-            "Histocompatibility and Immunogenetics",
-            "Laboratory Genetics and Genomics",
-            "Liver and GI Pathology",
-            "Medical and Public Health Microbiology",
-            "Molecular Genetic Pathology",
-            "Neuropathology",
-            "Pediatric Pathology",
-            "Surgical Pathology"
-        ];
+//        $fellowshipSubspecialtyArr = [
+//            "Blood Banking and Transfusion Medicine",
+//            "Clinical Chemistry",
+//            "Clinical Informatics",
+//            "Cytopathology",
+//            "Gastrointestinal Pathology",
+//            "Dermatopathology",
+//            //"Genitourinary and Renal Pathology",
+//            "Genitourinary Pathology",
+//            "Renal Pathology",
+//            //"Gynecologic and Breast Pathology",
+//            "Breast Pathology",
+//            "Gynecologic Pathology",
+//            "Head and Neck Pathology",
+//            "Hematopathology",
+//            "Histocompatibility and Immunogenetics",
+//            "Laboratory Genetics and Genomics",
+//            "Liver and GI Pathology",
+//            "Medical and Public Health Microbiology",
+//            "Molecular Genetic Pathology",
+//            "Neuropathology",
+//            "Pediatric Pathology",
+//            "Surgical Pathology"
+//        ];
+        $fellappUtil = $this->container->get('fellapp_util');
+        $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypes();
 
         $count = 0;
         foreach($fellowshipSubspecialtyArr as $fellowshipSubspecialty) {
@@ -5986,35 +5988,37 @@ class AdminController extends OrderAbstractController
         }
         ////// EOF 1) get wcm ptahology //////
 
-        $fellowshipSpecialties = array(
+//        $fellowshipSpecialties = array(
+////            "Clinical Informatics",
+////            "Dermatopathology",
+////            "Genitourinary pathology",
+////            "Hematopathology",
+////            "Breast pathology",
+////            "Cytopathology"
+//            "Blood Banking and Transfusion Medicine",
+//            "Clinical Chemistry",
 //            "Clinical Informatics",
+//            "Cytopathology",
 //            "Dermatopathology",
-//            "Genitourinary pathology",
+//            //"Genitourinary and Renal Pathology",
+//            "Genitourinary Pathology",
+//            "Renal Pathology",
+//            //"Gynecologic and Breast Pathology",
+//            "Breast Pathology",
+//            "Gynecologic Pathology",
+//            "Head and Neck Pathology",
 //            "Hematopathology",
-//            "Breast pathology",
-//            "Cytopathology"
-            "Blood Banking and Transfusion Medicine",
-            "Clinical Chemistry",
-            "Clinical Informatics",
-            "Cytopathology",
-            "Dermatopathology",
-            //"Genitourinary and Renal Pathology",
-            "Genitourinary Pathology",
-            "Renal Pathology",
-            //"Gynecologic and Breast Pathology",
-            "Breast Pathology",
-            "Gynecologic Pathology",
-            "Head and Neck Pathology",
-            "Hematopathology",
-            "Histocompatibility and Immunogenetics",
-            "Laboratory Genetics and Genomics",
-            "Liver and GI Pathology",
-            "Medical and Public Health Microbiology",
-            "Molecular Genetic Pathology",
-            "Neuropathology",
-            "Pediatric Pathology",
-            "Surgical Pathology"
-        );
+//            "Histocompatibility and Immunogenetics",
+//            "Laboratory Genetics and Genomics",
+//            "Liver and GI Pathology",
+//            "Medical and Public Health Microbiology",
+//            "Molecular Genetic Pathology",
+//            "Neuropathology",
+//            "Pediatric Pathology",
+//            "Surgical Pathology"
+//        );
+        $fellappUtil = $this->container->get('fellapp_util');
+        $fellowshipSpecialties = $fellappUtil->getFellowshipTypes();
 
         foreach( $fellowshipSpecialties as $fellowshipSpecialty ) {
             //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
@@ -6080,25 +6084,27 @@ class AdminController extends OrderAbstractController
         }
 
         ////// EOF 1) get WashU ptahology //////
-        $washuFellowshipSpecialties = [
-            "Blood Banking and Transfusion Medicine",
-            "Clinical Chemistry",
-            "Clinical Informatics",
-            "Cytopathology",
-            "Dermatopathology",
-            "Genitourinary and Renal Pathology",
-            "Gynecologic and Breast Pathology",
-            "Head and Neck Pathology",
-            "Hematopathology",
-            "Histocompatibility and Immunogenetics",
-            "Laboratory Genetics and Genomics",
-            "Liver and GI Pathology",
-            "Medical and Public Health Microbiology",
-            "Molecular Genetic Pathology",
-            "Neuropathology",
-            "Pediatric Pathology",
-            "Surgical Pathology"
-        ];
+//        $washuFellowshipSpecialties = [
+//            "Blood Banking and Transfusion Medicine",
+//            "Clinical Chemistry",
+//            "Clinical Informatics",
+//            "Cytopathology",
+//            "Dermatopathology",
+//            "Genitourinary and Renal Pathology",
+//            "Gynecologic and Breast Pathology",
+//            "Head and Neck Pathology",
+//            "Hematopathology",
+//            "Histocompatibility and Immunogenetics",
+//            "Laboratory Genetics and Genomics",
+//            "Liver and GI Pathology",
+//            "Medical and Public Health Microbiology",
+//            "Molecular Genetic Pathology",
+//            "Neuropathology",
+//            "Pediatric Pathology",
+//            "Surgical Pathology"
+//        ];
+        $fellappUtil = $this->container->get('fellapp_util');
+        $washuFellowshipSpecialties = $fellappUtil->getFellowshipTypes();
 
         foreach( $washuFellowshipSpecialties as $washuFellowshipSpecialty ) {
                 //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
