@@ -247,9 +247,6 @@ class Trp:
         driver.get(url)
         time.sleep(3)
 
-        users = self.users.get_users()
-        time.sleep(3)
-
         #$client->executeScript("$('#oleg_translationalresearchbundle_request_products_".$productId."_requested').val('".$trpRequestArr['quantity'].
         #"')");
         #s2id_oleg_translationalresearchbundle_request_products_0_category

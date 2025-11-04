@@ -55,7 +55,7 @@ class DemoDbCommand extends Command {
     }
 
     //Cron job to back up DB and Uploaded files.
-    //php bin/console cron:demo-db-reset --env=prod
+    //php bin/console cron:demo-db-reset --env=prod https://view.online/c/demo-institution/demo-department/
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         //$logger = $this->container->get('logger');

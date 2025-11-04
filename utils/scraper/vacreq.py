@@ -110,7 +110,7 @@ class VacReq:
         try:
             if 0:
                 use_method = 2
-                for user in self.users.get_users():
+                for user in self.users.get_users()[:3]:
                     print(f"Adding submitter: {user['displayName']}")
 
                     #Method 1
@@ -185,7 +185,7 @@ class VacReq:
                 driver.save_screenshot("add-submitter-group.png")
 
                 use_method = 2
-                for user in self.users.get_users():
+                for user in self.users.get_users()[:3]:
                     print(f"Adding submitter: {user['displayName']}")
 
                     #Method 1
@@ -254,7 +254,7 @@ class VacReq:
         # Set implicit wait
         driver.implicitly_wait(10)  # seconds
 
-        for user in self.users.get_users():
+        for user in self.users.get_users()[:3]:
             self.create_single_vacreq(user);
             #break
 

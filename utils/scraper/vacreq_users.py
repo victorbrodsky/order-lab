@@ -1,3 +1,4 @@
+#NOT USED
 class UserManager:
     """A class to manage user-related data."""
 

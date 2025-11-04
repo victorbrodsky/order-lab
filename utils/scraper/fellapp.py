@@ -22,8 +22,8 @@ class FellApp:
         self.existing_users = self.users.get_existing_users()
 
     def get_fell_apps(self):
-        users = []
-        users.append({
+        fellapps = []
+        fellapps.append({
             'type': '1',  # 'Clinical Informatics'
             'firstName': 'Joe',
             'lastName': 'Simpson',
@@ -42,7 +42,7 @@ class FellApp:
             'interview_date': '09/12/2026',
             'interview_score': '4.3'
         })
-        users.append({
+        fellapps.append({
             'type': '1',  # 'Clinical Informatics'
             'firstName': 'Soleil',
             'lastName': 'Teresia',
@@ -57,7 +57,7 @@ class FellApp:
             'interview_date': '14/12/2026',
             'interview_score': '3.9'
         })
-        users.append({
+        fellapps.append({
             'type': '1',  # 'Clinical Informatics'
             'firstName': 'Haides',
             'lastName': 'Neon',
@@ -73,7 +73,7 @@ class FellApp:
             'interview_score': '4.2'
         })
 
-        return users
+        return fellapps
 
     def configs(self):
         fellapp_names = {
