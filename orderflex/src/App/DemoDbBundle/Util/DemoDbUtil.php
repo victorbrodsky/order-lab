@@ -159,8 +159,8 @@ class DemoDbUtil {
             try {
                 echo "process DemoDb try: getSiteSettingParameter -> test if DB exists" . "<br>";
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if( $environment != 'demo' ) {
-                    exit("process DemoDb: Demo DB cannot be run in live environment. environment=$environment");
+                if( $environment && $environment != 'demo' ) {
+                    exit("process DemoDb: Demo DB can be run only in demo environment. environment=$environment");
                 }
                 if( str_contains($projectRoot,'order-lab-tenantappdemo') === false ) {
                     exit("process DemoDb: Demo DB must run only in demo tenant. projectRoot=$projectRoot");
