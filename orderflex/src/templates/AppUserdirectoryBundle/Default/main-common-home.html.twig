@@ -75,7 +75,7 @@
             <br><br>
             <p>
                 {#<img src="{{ asset(platformLogo) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">#}
-                platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}<br>
+                {#platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}<br>#}
                 <img
                     src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
                     {% set srcsetParts = [] %}
