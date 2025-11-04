@@ -1017,6 +1017,7 @@ class AdminController extends OrderAbstractController
         //return "Finished generateResidencySpecialties";
 
         $count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties();
+        $count_allFellowshipSubspecialties = $this->generateAllFellowshipSubspecialties();
         $count_globalFellowshipSpecialties = $this->generateGlobalFellowshipSpecialties();
         $count_globalFellowshipSpecialtiesWahsu = $this->generateGlobalFellowshipSpecialtiesWahsu();
 
@@ -1194,6 +1195,7 @@ class AdminController extends OrderAbstractController
             'Training Degrees='.$count_trainingDegrees.', '.
             'Residency Specialties='.$count_residencySpecialties.', '.
             'Fellowship Subspecialties='.$count_fellowshipSubspecialties.', '.
+            'All Fellowship Subspecialties='.$count_allFellowshipSubspecialties.', '.
             'GlobalFellowshipSpecialties='.$count_globalFellowshipSpecialties.', '.
             'GlobalFellowshipSpecialtiesWahsu='.$count_globalFellowshipSpecialtiesWahsu.', '.
             //'Major Trainings ='.$count_majorTrainings.', '.
