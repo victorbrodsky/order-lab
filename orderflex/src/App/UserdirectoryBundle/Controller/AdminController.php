@@ -5935,14 +5935,14 @@ class AdminController extends OrderAbstractController
         foreach($fellowshipSubspecialtyArr as $fellowshipSubspecialty) {
             //$fellowshipSubspecialtyEntity = $em->getRepository(FellowshipSubspecialty::class)->findOneByName($fellowshipSubspecialty."");
             //case-insensitive
-            $fellowshipSubspecialtyEntity = $em->getRepository(FellowshipSubspecialty::class)
+            $fellowshipSubspecialtyEntities = $em->getRepository(FellowshipSubspecialty::class)
                 ->createQueryBuilder('f')
                 ->where('LOWER(f.name) = LOWER(:name)')
                 ->setParameter('name', $fellowshipSubspecialty)
                 ->getQuery()
-                ->getOneOrNullResult();
+                ->getResult();
 
-            if( $fellowshipSubspecialtyEntity ) {
+            if( $fellowshipSubspecialtyEntities && count($fellowshipSubspecialtyEntities) > 0 ) {
                 continue; //skip
             }
 
@@ -6024,16 +6024,16 @@ class AdminController extends OrderAbstractController
 //            ]);
 
             //case-insensitive
-            $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)
+            $listEntities = $em->getRepository(GlobalFellowshipSpecialty::class)
                 ->createQueryBuilder('g')
                 ->where('LOWER(g.name) = LOWER(:name)')
                 ->andWhere('g.institution = :institution')
                 ->setParameter('name', $fellowshipSpecialty)
                 ->setParameter('institution', $wcmPathology)
                 ->getQuery()
-                ->getOneOrNullResult();
+                ->getResult();
 
-            if ($listEntity) {
+            if( $listEntities && count($listEntities) > 0 ) {
                 continue;
             }
 
