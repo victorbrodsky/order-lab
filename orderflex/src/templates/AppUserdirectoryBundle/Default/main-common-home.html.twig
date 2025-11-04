@@ -75,6 +75,7 @@
             <br><br>
             <p>
                 {#<img src="{{ asset(platformLogo) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">#}
+                platformLogo={{ platformLogo }}, highResPlatformLogoPath={{ highResPlatformLogoPath }}<br>
                 <img
                     src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
                     {% set srcsetParts = [] %}
@@ -84,9 +85,7 @@
                     {% if highResPlatformLogoPath %}
                         {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
                     {% endif %}
-                    srcsetParts|length={{ srcsetParts|length }}<br>
                     {% if srcsetParts|length > 0 %}
-                        srcsetParts={{ srcsetParts }}<br>
                         srcset="{{ srcsetParts|join(', ') }}"
                     {% endif %}
                     alt="Tenant logo" height="{{ height }}" width="{{ width }}"
