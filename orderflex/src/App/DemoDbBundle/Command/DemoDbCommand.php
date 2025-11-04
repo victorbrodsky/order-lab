@@ -98,7 +98,7 @@ class DemoDbCommand extends Command {
         }
 
         $demoDbUtil = $this->container->get('demodb_utility');
-        $resDemoDbStr = $demoDbUtil->processDemoDb($projectRoot,$backupPath=NULL,$baseurl=NULL);
+        $resDemoDbStr = $demoDbUtil->processDemoDb($projectRoot,$backupPath=NULL,$baseurl);
         
 //        $client = $demoDbUtil->loginAction();
 //        $client->takeScreenshot('test_login.png');
@@ -115,17 +115,17 @@ class DemoDbCommand extends Command {
             $toEmailsArr = array('oli2002@med.cornell.edu');
             $verifyRes = $demoDbUtil->verifyDemoDb();
             if ($verifyRes) {
-                $verifyMsg = 'Not all demos were generated: ' . $verifyRes;
+                $verifyMsg = "Not all demos were generated for baseurl=$baseurl: " . $verifyRes;
                 $logger->error($verifyMsg);
                 $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg, $toEmailsArr);
             } else {
-                $msg = "cron demo-db-reset Verify DB: ".$resStr;
-                $userSecUtil->sendEmailToSystemEmail("DB Demos Completed Successfully", $msg, $toEmailsArr);
+                $msg = "cron demo-db-reset Verify DB baseurl=$baseurl: ".$resStr;
+                $userSecUtil->sendEmailToSystemEmail("DB Demos Completed Successfully for baseurl=$baseurl", $msg, $toEmailsArr);
             }
         }
 
         $resVerifyStr = $output->writeln($resStr);
-        $logger->notice("cron demo-db-reset Verify DB: ".$resVerifyStr);
+        $logger->notice("cron demo-db-reset Verify DB for baseurl=$baseurl: ".$resVerifyStr);
 
         return Command::SUCCESS;
     }
