@@ -607,7 +607,7 @@ class FellApp:
 
 def accept(self, fellapp_id):
     driver = self.automation.get_driver()
-    accept_url = f"https://view.online/c/demo-institution/demo-department/fellowship-applications/fellowship-types-settings/change-status/{fellapp_id}/accepted"
+    accept_url = f"https://view.online/c/demo-institution/demo-department/fellowship-applications/change-status/{fellapp_id}/accepted"
     driver.get(accept_url)
     time.sleep(1)
 
