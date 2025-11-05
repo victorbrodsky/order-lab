@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
@@ -263,7 +265,9 @@ class Init:
         time.sleep(3)
         driver.save_screenshot("academicYearStart1.png")
 
-        start_date_month = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_month")
+        start_date_month = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_month"))
+        )
         time.sleep(1)
 
         driver.execute_script("arguments[0].scrollIntoView(true);", start_date_month)
@@ -273,13 +277,17 @@ class Init:
         select = Select(start_date_month)
         select.select_by_value("7")  # Since July has a value of "7"
 
-        start_date_day = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_day")
+        start_date_day = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_day"))
+        )
         time.sleep(1)
         select = Select(start_date_day)
         select.select_by_value("1")
         time.sleep(3)
 
-        start_date_year = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_year")
+        start_date_year = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "oleg_userdirectorybundle_siteparameters_academicYearStart_year"))
+        )
         time.sleep(1)
         select = Select(start_date_year)
         select.select_by_value("2025")
@@ -294,18 +302,24 @@ class Init:
         driver.get(url)
         time.sleep(3)
 
-        end_date_month = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_month")
+        end_date_month = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_month"))
+        )
         time.sleep(1)
         select = Select(end_date_month)
         select.select_by_value("6")  # Since June has a value of "6"
 
-        end_date_day = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_day")
+        end_date_day = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_day"))
+        )
         time.sleep(1)
         select = Select(end_date_day)
         select.select_by_value("30")
         time.sleep(3)
 
-        end_date_year = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_year")
+        end_date_year = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "oleg_userdirectorybundle_siteparameters_academicYearEnd_year"))
+        )
         time.sleep(1)
         select = Select(end_date_year)
         select.select_by_value("2025")
@@ -325,7 +339,9 @@ class Init:
         driver.get(url)
         time.sleep(3)
 
-        login_instruction = driver.find_element(By.ID, "oleg_userdirectorybundle_siteparameters_loginInstruction")
+        login_instruction = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "oleg_userdirectorybundle_siteparameters_loginInstruction"))
+        )
         login_instruction.clear()
         time.sleep(1)
         login_instruction_text = "Institutional account integration is disabled on the Demo site."
