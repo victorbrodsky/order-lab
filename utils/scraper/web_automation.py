@@ -69,7 +69,7 @@ class WebAutomation:
         return self.driver
 
     def login_to_site(self, url=None, username_text=None, password_text=None):
-        wait = WebDriverWait(self.driver, 10)
+        wait = WebDriverWait(self.driver, 20)
 
         """Logs in to the site."""
         if url is None:
@@ -96,9 +96,10 @@ class WebAutomation:
         # Send credentials
         username.send_keys(username_text)
         password.send_keys(password_text)
+        time.sleep(3)
 
         # Wait for Select2 input to be visible and interactable
-        select2_input = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "s2id_usernametypeid_show")))
+        select2_input = wait.until(EC.visibility_of_element_located((By.ID, "s2id_usernametypeid_show")))
 
         # Select the desired option
         self.select_option("s2id_usernametypeid_show", "CLASS_NAME", "select2-input", "Local User")
