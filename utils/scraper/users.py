@@ -134,7 +134,7 @@ class Users:
             #)
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(normalize-space(text()), 'John Doe')]")
             #user_link = driver.find_element(By.XPATH, "//a/strong[contains(text(), 'John Doe')]")
-            print("get_existing_users: searching for displayName", user['displayName'])
+            #print("get_existing_users: searching for displayName", user['displayName'])
             user_link = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.XPATH, "//a[strong[contains(text(), '"+user['displayName']+"')]]"))
             )
