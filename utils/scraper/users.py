@@ -126,7 +126,7 @@ class Users:
         driver.get(self.automation.baseurl.rstrip('/') + '/' + 'directory/users'.lstrip('/'))
         time.sleep(1)
         for user in self.get_users():
-            time.sleep(2)
+            #time.sleep(1)
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), '"+user['displayName']+"')]")
             #user_link = WebDriverWait(driver, 10).until(

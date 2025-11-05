@@ -2619,6 +2619,23 @@
 
 {% endmacro %}
 
+{% macro showImagesBySrcset(platformLogo, highResPlatformLogoPath, altText) %}
+    <img
+            src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
+            {% set srcsetParts = [] %}
+            {% if platformLogo %}
+                {% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}
+            {% endif %}
+            {% if highResPlatformLogoPath %}
+                {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
+            {% endif %}
+            {% if srcsetParts|length > 0 %}
+                srcset="{{ srcsetParts|join(', ') }}"
+            {% endif %}
+            alt="{{ altText }}" height="{{ height }}" width="{{ width }}"
+    >
+{% endmacro %}
+
 {#Cannot extend from a block.#}
 {#{% macro extendBase( sitename ) %}#}
     {#default is user base#}

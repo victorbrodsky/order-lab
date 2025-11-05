@@ -77,22 +77,36 @@ class FellApp:
 
     def configs(self):
         fellapp_names = {
-            'Clinical Informatics',
-             #'Breast Pathology',
-             #'Cytopathology',
-            # 'Dermatopathology',
-            # 'Genitourinary Pathology',
-            # 'Gynecologic Pathology',
-            # 'Hematopathology',
-            # 'Renal Pathology',
-            # 'Surgical Pathology',
-            # 'Molecular Genetic Pathology',
+            "Blood Banking and Transfusion Medicine",
+            "Clinical Chemistry",
+            "Clinical Informatics",
+            "Cytopathology",
+            "Gastrointestinal Pathology",
+            "Dermatopathology",
+            #"Genitourinary and Renal Pathology",
+            "Genitourinary Pathology",
+            "Renal Pathology",
+            #"Gynecologic and Breast Pathology",
+            "Breast Pathology",
+            "Gynecologic Pathology",
+            "Head and Neck Pathology",
+            "Hematopathology",
+            "Histocompatibility and Immunogenetics",
+            "Laboratory Genetics and Genomics",
+            "Liver and GI Pathology",
+            "Medical and Public Health Microbiology",
+            "Molecular Genetic Pathology",
+            "Neuropathology",
+            "Pediatric Pathology",
+            "Surgical Pathology"
         }
+
+        users = self.users.get_users()
 
         for fellapp_name in fellapp_names:
             time.sleep(3)
             self.config_single(fellapp_name)
-            self.config_single_more(fellapp_name)
+            self.config_single_more(fellapp_name, users)
 
     def config_single(self, fellapp_name):
         driver = self.automation.get_driver()
@@ -160,28 +174,29 @@ class FellApp:
             fellowship_type.click()
             time.sleep(3)
 
-            users = self.users.get_users()
-
-            # add coordinator
-            coordinator = users[2]
-            print(f"configs: coordinator: {coordinator['displayName']}")
-
-            # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
-            self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
-                                          ".select2-choices .select2-input",
-                                          coordinator["displayName"]
-                                          )
-
-            time.sleep(3)
-
-            driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-            time.sleep(3)
-
-            # click Update button btn btn-warning
-            self.automation.click_button("btn-warning")
-            button = driver.find_element(By.CLASS_NAME, "btn-warning")
-            driver.execute_script("arguments[0].scrollIntoView();", button)
-            driver.save_screenshot("configs_after_click_btn-warning.png")
+            # #Add coordinator
+            # users = self.users.get_users()
+            #
+            # # add coordinator
+            # coordinator = users[2]
+            # print(f"configs: coordinator: {coordinator['displayName']}")
+            #
+            # # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
+            # self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
+            #                               ".select2-choices .select2-input",
+            #                               coordinator["displayName"]
+            #                               )
+            #
+            # time.sleep(3)
+            #
+            # driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+            # time.sleep(3)
+            #
+            # # click Update button btn btn-warning
+            # self.automation.click_button("btn-warning")
+            # button = driver.find_element(By.CLASS_NAME, "btn-warning")
+            # driver.execute_script("arguments[0].scrollIntoView();", button)
+            # driver.save_screenshot("configs_after_click_btn-warning.png")
         except NoSuchElementException:
             # create new fellowship type "Clinical Informatics"
             #print("create new fellowship type Clinical Informatics")
@@ -204,7 +219,7 @@ class FellApp:
 
         time.sleep(3)
 
-    def config_single_more(self,fellapp_name):
+    def config_single_more(self, fellapp_name, users):
         driver = self.automation.get_driver()
         fellowship_type_url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/fellowship-types-settings".lstrip('/')
         driver.get(fellowship_type_url)
@@ -220,40 +235,61 @@ class FellApp:
             fellowship_type.click()
             time.sleep(3)
 
-            users = self.users.get_users()
+            #users = self.users.get_users()
 
-            # add coordinator
-            coordinator = users[2]
-            print(f"configs: coordinator: {coordinator['displayName']}")
+            # add coordinator with explicit waits
+            try:
+                coordinator = users[2]
+                print(f"configs: coordinator: {coordinator['displayName']}")
+                combobox = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators"))
+                )
+                combobox.click()
+                search_box = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
+                )
+                search_box.send_keys(coordinator["displayName"])
+                search_box.send_keys(Keys.ENTER)
+                time.sleep(1)
+                driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+                time.sleep(1)
+            except Exception as e:
+                print(f"config_single_more: unable to set coordinator: {e}")
 
-            # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
-            self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
-                                          ".select2-choices .select2-input",
-                                          coordinator["displayName"]
-                                          )
-            time.sleep(3)
-            driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-            time.sleep(3)
+            # add director with explicit waits
+            try:
+                director = users[3]
+                combobox = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_directors"))
+                )
+                combobox.click()
+                search_box = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
+                )
+                search_box.send_keys(director["displayName"])
+                search_box.send_keys(Keys.ENTER)
+                time.sleep(1)
+                driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+                time.sleep(1)
+            except Exception as e:
+                print(f"config_single_more: unable to set director: {e}")
 
-            director = users[3]
-            # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
-            self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_directors", "CSS_SELECTOR",
-                                          ".select2-choices .select2-input",
-                                          director["displayName"]
-                                          )
-            time.sleep(3)
-            driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-            time.sleep(3)
-
-
-            # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
-            self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers", "CSS_SELECTOR",
-                                          ".select2-choices .select2-input",
-                                          "administrator"
-                                          )
-            time.sleep(3)
-            driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-            time.sleep(3)
+            # add interviewer with explicit waits
+            try:
+                combobox = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
+                )
+                combobox.click()
+                search_box = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
+                )
+                search_box.send_keys("administrator")
+                search_box.send_keys(Keys.ENTER)
+                time.sleep(1)
+                driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+                time.sleep(1)
+            except Exception as e:
+                print(f"config_single_more: unable to set interviewer: {e}")
 
             # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
@@ -632,9 +668,9 @@ def main():
 
     fellapp = FellApp(automation)
     fellapp.configs()
-    fellapp.set_site_settings()
-    fellapp.create_fellapps()
-    fellapp.accept(1)
+    #fellapp.set_site_settings()
+    #fellapp.create_fellapps()
+    #fellapp.accept(1)
 
     print("FellApp done!")
 

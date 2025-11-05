@@ -60,20 +60,22 @@
             <p>
                 {#<img src="{{ asset(platformLogo) }}" alt="O R D E R" height="{{ height }}" width="{{ width }}">#}
 
-                <img
-                    src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
-                    {% set srcsetParts = [] %}
-                    {% if platformLogo %}
-                        {% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}
-                    {% endif %}
-                    {% if highResPlatformLogoPath %}
-                        {% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}
-                    {% endif %}
-                    {% if srcsetParts|length > 0 %}
-                        srcset="{{ srcsetParts|join(', ') }}"
-                    {% endif %}
-                    alt="Logo homepage manager" height="{{ height }}" width="{{ width }}"
-                >
+                {#<img#}
+                    {#src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"#}
+                    {#{% set srcsetParts = [] %}#}
+                    {#{% if platformLogo %}#}
+                        {#{% set srcsetParts = srcsetParts|merge([asset(platformLogo) ~ ' 1x']) %}#}
+                    {#{% endif %}#}
+                    {#{% if highResPlatformLogoPath %}#}
+                        {#{% set srcsetParts = srcsetParts|merge([asset(highResPlatformLogoPath) ~ ' 2x']) %}#}
+                    {#{% endif %}#}
+                    {#{% if srcsetParts|length > 0 %}#}
+                        {#srcset="{{ srcsetParts|join(', ') }}"#}
+                    {#{% endif %}#}
+                    {#alt="Logo homepage manager" height="{{ height }}" width="{{ width }}"#}
+                {#>#}
+
+                {{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,"Logo homepage manager") }}
             </p>
         {% else %}
             {#<h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R Multi-Tenancy Home page</h2>#}
