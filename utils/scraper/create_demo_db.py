@@ -38,8 +38,6 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             init.run_deploy()
             time.sleep(3)
             automation.quit_driver()
-            #del automation
-            #del init
             demo_ids['init'] = False
             print("init done!")
         except Exception as e:

@@ -98,7 +98,7 @@ class WebAutomation:
         password.send_keys(password_text)
 
         # Wait for Select2 input to be visible and interactable
-        select2_input = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "select2-input")))
+        select2_input = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "s2id_usernametypeid_show")))
 
         # Select the desired option
         self.select_option("s2id_usernametypeid_show", "CLASS_NAME", "select2-input", "Local User")
