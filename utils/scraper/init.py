@@ -436,6 +436,10 @@ def main(mailer_user,mailer_password,captcha_sitekey,captcha_secretkey):
         mailer_user = "maileruser"
     if mailer_password is None:
         mailer_password = "mailerpassword"
+    if captcha_sitekey is None:
+        captcha_sitekey = "captcha_sitekey"
+    if captcha_secretkey is None:
+        captcha_secretkey = "captcha_secretkey"
     print("mailer_user:",mailer_user,", mailer_password:",mailer_password)
     init = Init(automation)
     init.initialize()
