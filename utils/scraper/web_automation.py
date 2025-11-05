@@ -69,15 +69,13 @@ class WebAutomation:
         return self.driver
 
     def login_to_site(self, url=None, username_text=None, password_text=None):
+        wait = WebDriverWait(self.driver, 10)
+
         """Logs in to the site."""
         if url is None:
             #url = "https://view.online/c/demo-institution/demo-department/directory/login"
             url = self.baseurl.rstrip('/') + '/' + "directory/login".lstrip('/')
         print("login_to_site: url=",url)
-
-        if url is not None:
-            print("use login url ",url)
-            self.driver.get(url)
 
         if username_text is None:
             username_text = "administrator"
@@ -90,17 +88,20 @@ class WebAutomation:
             self.driver.get(url)
 
         time.sleep(1)
-        #self.driver.save_screenshot("login_to_site.png")
-        username = self.driver.find_element(By.ID, "display-username")
-        password = self.driver.find_element(By.ID, "password")
-        time.sleep(1)
 
+        # Wait for username and password fields to be present
+        username = wait.until(EC.presence_of_element_located((By.ID, "display-username")))
+        password = wait.until(EC.presence_of_element_located((By.ID, "password")))
+
+        # Send credentials
         username.send_keys(username_text)
         password.send_keys(password_text)
-        time.sleep(1)
 
+        # Wait for Select2 input to be visible and interactable
+        select2_input = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, "select2-input")))
+
+        # Select the desired option
         self.select_option("s2id_usernametypeid_show", "CLASS_NAME", "select2-input", "Local User")
-        time.sleep(1)
 
         self.click_button("btn-primary")
         time.sleep(1)
