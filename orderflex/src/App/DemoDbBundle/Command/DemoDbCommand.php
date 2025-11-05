@@ -108,16 +108,16 @@ class DemoDbCommand extends Command {
 //        $users = $demoDbUtil->getUsers(); //testing
 //        $vacreqIds = $demoDbUtil->newVacReqs($client, $users);
 
-        $resStr = $resStr . "; " . $resDemoDbStr . "; " . "Demo DB completed";
+        $resStr = $resStr . "; " . 'resDemoDbStr=' . $resDemoDbStr . "; " . "Demo DB completed successfully";
         $logger->notice("cron demo-db-reset finished: ".$resStr);
 
         //Verify DB
         if(1) {
             $userSecUtil = $this->container->get('user_security_utility');
             $toEmailsArr = array('oli2002@med.cornell.edu');
-            $verifyRes = $demoDbUtil->verifyDemoDb();
-            if ($verifyRes) {
-                $verifyMsg = "Not all demos were generated for baseurl=$baseurl: " . $verifyRes;
+            $verifyErrorRes = $demoDbUtil->verifyDemoDb();
+            if ($verifyErrorRes) {
+                $verifyMsg = "Not all demos were generated for baseurl=$baseurl: " . $verifyErrorRes;
                 $logger->error($verifyMsg);
                 $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg, $toEmailsArr);
             } else {

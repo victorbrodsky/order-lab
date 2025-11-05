@@ -384,7 +384,7 @@ class DemoDbUtil {
         //options.add_argument("--disable-dev-shm-usage") #working in command.
         ///////////// EOF 7) initiate DB by running utils/scraper/create_demo_db.py ////////////////
 
-        return $res;
+        return "Process output (if any)=".$res;
     }
 
     //Add a verification function to the demo data generation script
