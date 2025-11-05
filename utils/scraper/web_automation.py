@@ -60,7 +60,7 @@ class WebAutomation:
         # options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
 
         service = Service(
-            executable_path="/usr/bin/chromedriver",
+            #executable_path="/usr/bin/chromedriver",
             log_path="chromedriver.log",  # Save log to file
             verbose=True
         )
