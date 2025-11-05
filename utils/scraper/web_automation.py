@@ -61,7 +61,7 @@ class WebAutomation:
 
         service = Service(
             #executable_path="/usr/bin/chromedriver",
-            log_path="chromedriver.log",  # Save log to file
+            log_path="/srv/order-lab-tenantappdemo/orderflex/chromedriver.log",  # Save log to file
             verbose=True
         )
 
