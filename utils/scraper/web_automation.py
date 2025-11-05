@@ -25,23 +25,10 @@ class WebAutomation:
         self.baseurl = baseurl
         self.run_by_symfony_command = run_by_symfony_command
         self.initialize_driver()
-
-        # if self.run_by_symfony_command is True:
-        #     #write output to a file
-        #     self.log_file = open("scraper.log", "w")
-        #     sys.stdout = self.log_file
-
         print(f"__init__: self. self.baseurl={self.baseurl}, run_by_symfony_command={self.run_by_symfony_command}")
 
     def get_driver(self):
         return self.driver
-
-        # if self.run_by_symfony_command is True:
-        #     logging.basicConfig(
-        #         filename="app.log",
-        #         level=logging.INFO,
-        #         format="%(asctime)s - %(levelname)s - %(message)s",
-        #     )
 
     #Error: selenium.common.exceptions.SessionNotCreatedException:
     # Message: session not created: probably user data directory is already in use, please specify a unique value for
@@ -57,7 +44,7 @@ class WebAutomation:
 
         if self.run_by_symfony_command is True:
             print("Initialize driver with --headless")
-            options.add_argument("--headless")  # working in command. Run a browser without a graphical user interface
+            options.add_argument("--headless")  # working in command. Run a virtual browser without a graphical user interface
         else:
             print("initialize_driver: run by console or pycharm")
             options.add_experimental_option("detach", True)  # keep browser open

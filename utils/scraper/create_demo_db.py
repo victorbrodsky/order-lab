@@ -423,10 +423,10 @@ if __name__ == "__main__":
     #if mailer_user and mailer_password:
     #    main(mailer_user, mailer_password)
 
-    if mailer_user and mailer_password and captcha_sitekey and captcha_secretkey:
+    if mailer_user and mailer_password and captcha_sitekey and captcha_secretkey and baseurl:
+       print("Proceed with all parameters:",mailer_user,mailer_password,captcha_sitekey,baseurl)
        main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey, baseurl)
-
     else:
         print("Error: Missing values for --maileruser or --mailerpassword")
         print("Proceed without mailer")
-        main('maileruser', 'mailerpassword', 'captchasitekey', 'captchasecretkey')
+        main('maileruser', 'mailerpassword', 'captchasitekey', 'captchasecretkey', 'https://view.online/c/demo-institution/demo-department')
