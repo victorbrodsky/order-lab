@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -44,7 +45,8 @@ class WebAutomation:
 
         if self.run_by_symfony_command is True:
             print("initialize_driver with --headless")
-            options.add_argument("--headless")  # working in command. Run a virtual browser without a graphical user interface
+            #options.add_argument("--headless")  # working in command. Run a virtual browser without a graphical user interface
+            options.add_argument("--headless=new")  #testing: Use headless mode if on a server
         else:
             print("initialize_driver: run by console or pycharm")
             options.add_experimental_option("detach", True)  # keep browser open
@@ -57,7 +59,14 @@ class WebAutomation:
         # options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")  # Replace this with a valid, unique path
         # options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
 
-        self.driver = webdriver.Chrome(options=options)
+        service = Service(
+            executable_path="/usr/bin/chromedriver",
+            log_path="chromedriver.log",  # Save log to file
+            verbose=True
+        )
+
+        #self.driver = webdriver.Chrome(options=options)
+        self.driver = webdriver.Chrome(service=service, options=options) #testing
 
         #Testing
         #self.driver.get("https://www.google.com")

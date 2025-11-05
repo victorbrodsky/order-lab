@@ -632,7 +632,12 @@
 
                     {% if route_path == "fellapp_send_rejection_emails" %}
                         <td class="rowlink-skip">
-                            <input type="checkbox" class="notificationemail" name="notificationemail" value="{{ entity.id }}">
+                            <input type="checkbox"
+                                   class="notificationemail"
+                                   name="notificationemail"
+                                   value="{{ entity.id }}"
+                                   data-applicant-name="{{ entity.getApplicantFullName() }}"
+                            >
                         </td>
                         <td>
                             {#data-toggle="tooltip" title="rejection emails - red, acceptance emails - green"#}

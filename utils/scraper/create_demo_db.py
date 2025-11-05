@@ -14,6 +14,10 @@ import multiprocessing
 import subprocess
 
 
+#Chromedrive
+#sudo dnf install unzip wget
+#sudo dnf update
+#sudo dnf install libXScrnSaver libXcomposite libXcursor libXdamage libXrandr libXtst libnss3 libxss libasound2
 
 #run demo db generation only if value is True
 #if run successfully then set value flag to False so it does not run again second time

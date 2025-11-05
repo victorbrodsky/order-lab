@@ -6,14 +6,14 @@
 function fellappSendRejectionEmails() {
     console.log("fellappSendRejectionEmails");
 
-    var year = $('#filter_startDates').val();
-    var confirmText = "Would you like to send the following rejection notification e-mail to the following other "+year+" applicants?";
-    if( confirm(confirmText) ) {
-        //txt = "You pressed OK!";
-    } else {
-        //txt = "You pressed Cancel!";
-        return false;
-    }
+    // var year = $('#filter_startDates').val();
+    // var confirmText = "Would you like to send the following rejection notification email to the selected applicants for the "+year+" intake?";
+    // if( confirm(confirmText) ) {
+    //     //txt = "You pressed OK!";
+    // } else {
+    //     //txt = "You pressed Cancel!";
+    //     return false;
+    // }
 
     var btnEl = $("#send-rejection-emails").get(0);
     var lbtn = Ladda.create( btnEl );
@@ -24,17 +24,40 @@ function fellappSendRejectionEmails() {
     //var checkboxes = document.querySelector('.notificationemail').checked;
     //var ids = "";
     var ids = [];
+    var names = [];
     for (var i=0, n=checkboxes.length;i<n;i++)
     {
         if (checkboxes[i].checked)
         {
             //ids += ","+checkboxes[i].value;
             ids.push(checkboxes[i].value);
+            names.push(checkboxes[i].dataset.applicantName); //get data-applicant-name
         }
     }
     //console.log("ids:");
     //console.log(ids);
     //alert(ids);
+    //console.log('ids=',ids);
+    //console.log('names=',names);
+
+    if( ids.length == 0 ) {
+        alert("No applicants are selected");
+        lbtn.stop();
+        return false;
+    }
+
+    var nameString = names.join(", ");
+
+    var year = $('#filter_startDates').val();
+    var confirmText = "Would you like to send the following rejection notification email to the selected applicants for the "
+        +year+" intake for the applicants: "+nameString+"?";
+    if( confirm(confirmText) ) {
+        //txt = "You pressed OK!";
+    } else {
+        //txt = "You pressed Cancel!";
+        lbtn.stop();
+        return false;
+    }
 
     //if (ids) ids = ids.substring(1);
 
