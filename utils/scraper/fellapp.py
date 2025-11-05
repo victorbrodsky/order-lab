@@ -254,7 +254,7 @@ class FellApp:
                 driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
                 time.sleep(1)
             except Exception as e:
-                print(f"config_single_more: unable to set coordinator: {e}")
+                print(f"config_single_more: unable to set coordinator for {fellapp_name}: {e}")
 
             # add director with explicit waits
             try:
@@ -272,7 +272,7 @@ class FellApp:
                 driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
                 time.sleep(1)
             except Exception as e:
-                print(f"config_single_more: unable to set director: {e}")
+                print(f"config_single_more: unable to set director for {fellapp_name}: {e}")
 
             # add interviewer with explicit waits
             try:
@@ -289,7 +289,7 @@ class FellApp:
                 driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
                 time.sleep(1)
             except Exception as e:
-                print(f"config_single_more: unable to set interviewer: {e}")
+                print(f"config_single_more: unable to set interviewer for {fellapp_name}: {e}")
 
             # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
@@ -298,7 +298,7 @@ class FellApp:
             driver.save_screenshot("configs_after_click_btn-warning.png")
         except NoSuchElementException:
             # create new fellowship type "Clinical Informatics"
-            print("config_single_more: error in creating coordinator, director, interviewer")
+            print(f"config_single_more: error in creating coordinator, director, interviewer for {fellapp_name}")
 
 
     def set_site_settings(self):
