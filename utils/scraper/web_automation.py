@@ -45,8 +45,8 @@ class WebAutomation:
 
         if self.run_by_symfony_command is True:
             print("initialize_driver with --headless")
-            #options.add_argument("--headless")  # working in command. Run a virtual browser without a graphical user interface
-            options.add_argument("--headless=new")  #testing: Use headless mode if on a server
+            options.add_argument("--headless")  # working in command. Run a virtual browser without a graphical user interface
+            #options.add_argument("--headless=new")  #testing: Use headless mode if on a server
         else:
             print("initialize_driver: run by console or pycharm")
             options.add_experimental_option("detach", True)  # keep browser open
@@ -64,12 +64,12 @@ class WebAutomation:
         #     log_path="/var/log/selenium/chromedriver.log",  # Save log to file
         #     verbose=True
         # )
-        service = Service()
-        service.enable_verbose_logging = True
-        service.log_path = '/var/log/selenium/chromedriver.log'
+        #service = Service()
+        #service.enable_verbose_logging = True
+        #service.log_path = '/var/log/selenium/chromedriver.log'
 
-        #self.driver = webdriver.Chrome(options=options)
-        self.driver = webdriver.Chrome(service=service, options=options) #testing
+        self.driver = webdriver.Chrome(options=options)
+        #self.driver = webdriver.Chrome(service=service, options=options) #testing
 
         #Testing
         #self.driver.get("https://www.google.com")
