@@ -129,7 +129,7 @@ class Init:
         #time.sleep(10)
         self.populate_url(url)
 
-
+        #do it again, it might give error gateway on the first run
         #self.open_misc_panel()
         url = self.automation.baseurl.rstrip('/') + '/' + "scan/admin/populate-all-lists-with-default-values".lstrip('/')
         #driver.get(url)
