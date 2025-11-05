@@ -43,7 +43,7 @@ class WebAutomation:
         #run_by_symfony_command = True
 
         if self.run_by_symfony_command is True:
-            print("Initialize driver with --headless")
+            print("initialize_driver with --headless")
             options.add_argument("--headless")  # working in command. Run a virtual browser without a graphical user interface
         else:
             print("initialize_driver: run by console or pycharm")
