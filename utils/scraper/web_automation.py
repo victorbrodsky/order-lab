@@ -59,11 +59,14 @@ class WebAutomation:
         # options.add_argument("--user-data-dir=/usr/local/bin/order-lab-tenantappdemo/orderflex/var/log/")  # Replace this with a valid, unique path
         # options.add_argument("--user-data-dir=/tmp/chrome-user-data")  # Use a unique directory
 
-        service = Service(
-            executable_path="/usr/bin/chromedriver",
-            log_path="/var/log/selenium/chromedriver.log",  # Save log to file
-            verbose=True
-        )
+        # service = Service(
+        #     #executable_path="/usr/bin/chromedriver",
+        #     log_path="/var/log/selenium/chromedriver.log",  # Save log to file
+        #     verbose=True
+        # )
+        service = Service()
+        service.enable_verbose_logging = True
+        service.log_path = '/var/log/selenium/chromedriver.log'
 
         #self.driver = webdriver.Chrome(options=options)
         self.driver = webdriver.Chrome(service=service, options=options) #testing
