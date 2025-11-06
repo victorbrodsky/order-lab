@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 #import logging
@@ -82,6 +83,10 @@ class WebAutomation:
         return self.driver
 
     def login_to_site(self, url=None, username_text=None, password_text=None):
+
+        if self.check_if_loggedin():
+            return True
+
         wait = WebDriverWait(self.driver, 20)
 
         """Logs in to the site."""
@@ -120,6 +125,26 @@ class WebAutomation:
         self.click_button("btn-primary")
         time.sleep(1)
         self.driver.save_screenshot("after_login_to_site.png")
+
+    def check_if_loggedin(self):
+        try:
+            url = self.baseurl.rstrip('/') + '/directory'
+            self.driver.get(url)
+
+            try:
+                # Wait up to 10 seconds for the login form to appear
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located((By.ID, "login-form"))
+                )
+                print("Login form is present. User is NOT logged in.")
+                return False
+            except TimeoutException:
+                print("Login form not found. User is likely logged in.")
+                return True
+
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            return False
 
     def check_login_page(self):
         #Check if system is login able
