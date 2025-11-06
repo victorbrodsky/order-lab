@@ -113,7 +113,8 @@ class GoogleFormConfigController extends OrderAbstractController
         }
 
         $fellappUtil = $this->container->get('fellapp_util');
-        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        $fellTypes = $fellappUtil->getValidFellowshipTypes(true);
         $fellVisaStatus = $fellappUtil->getFellowshipVisaStatuses(true);
 
         //link to http://127.0.0.1/order/fellowship-applications/fellowship-types-settings

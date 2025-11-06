@@ -997,7 +997,8 @@ class FellAppController extends OrderAbstractController {
         $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
         if( $serverRole."" != 'Internet (Hub)' ) {
             //$fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
-            $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true); //array of entities
+            //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true); //array of entities
+            $fellTypes = $fellappUtil->getValidFellowshipTypes(true); //array of entities
             //echo "fellowshipTypes count=".count($fellTypes)."<br>";
         } else {
             $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
@@ -1397,7 +1398,8 @@ class FellAppController extends OrderAbstractController {
         $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
         if( $serverRole."" != 'Internet (Hub)' ) {
             //$fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
-            $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+            //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+            $fellTypes = $fellappUtil->getValidFellowshipTypes(true);
             //echo "createFellAppEditForm: fellowshipTypes count=".count($fellTypes)."<br>";
         } else {
             $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
@@ -1611,7 +1613,8 @@ class FellAppController extends OrderAbstractController {
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
 
-        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        $fellTypes = $fellappUtil->getValidFellowshipTypes(true);
 
         $params = array(
             'cycle' => 'new',
@@ -3468,7 +3471,8 @@ class FellAppController extends OrderAbstractController {
 
         //Get list of FellowshipSubspecialty, filtered by institution.id = id of [Weill Cornell Medical College => Pathology and Laboratory Medicine]
         //Pathology and Laboratory Medicine instituion can have many fellowship types (FellowshipSubspecialty)
-        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution($asEntities=true);
+        //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution($asEntities=true);
+        $fellTypes = $fellappUtil->getValidFellowshipTypes($asEntities=true);
 
         $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false);
 

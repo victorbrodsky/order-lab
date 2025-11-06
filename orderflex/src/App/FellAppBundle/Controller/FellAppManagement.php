@@ -676,7 +676,7 @@ class FellAppManagement extends OrderAbstractController {
 
 
         //get all fellowship types using institution
-        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true); //NOT USED
 
         //exit('1');
         return array(

@@ -32,3 +32,5 @@ site settings -> /create-default-fellowship-type -> createDefaultFellowshipTypes
 Check where setFellowshipSubspecialty is used
 use createOrEnableFellAppRole in generateAllFellowshipSubspecialties?
 
+Changes - don't use institution (or institution is optional) in fellowship subspecialty:
+replace getFellowshipTypesByInstitution by getValidFellowshipTypes

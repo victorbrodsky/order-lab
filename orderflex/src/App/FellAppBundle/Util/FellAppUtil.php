@@ -362,7 +362,8 @@ class FellAppUtil {
 
         if( $userSecUtil->hasGlobalUserRole( "ROLE_FELLAPP_ADMIN", $user ) ) {
             //echo "get fellowshipSubspecialty by ROLE_FELLAPP_ADMIN <br>";
-            return $this->getFellowshipTypesByInstitution(false);
+            //return $this->getFellowshipTypesByInstitution(false);
+            return $this->getValidFellowshipTypes(false);
         }
 
         //echo "get fellowshipSubspecialty by user's roles <br>";
