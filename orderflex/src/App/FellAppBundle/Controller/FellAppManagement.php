@@ -999,6 +999,7 @@ class FellAppManagement extends OrderAbstractController {
 
         $testing = false;
         $count = 0;
+        $msg = '';
 
         $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr();
 
@@ -1033,7 +1034,6 @@ class FellAppManagement extends OrderAbstractController {
             $subspecialtyType = null;
             
             //Check if role exists
-            
 
             if( count($subspecialtyTypies) > 1 ) {
                 foreach($subspecialtyTypies as $subspecialtyType) {
@@ -1110,6 +1110,10 @@ class FellAppManagement extends OrderAbstractController {
             $count = $count + $resArr['count'];
 
         } //foreach
+
+        if( !$msg ) {
+            $msg = 'No fellowship types and roles has been created.';
+        }
 
         return $msg;
     }
