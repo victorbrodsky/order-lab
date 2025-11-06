@@ -887,7 +887,6 @@ class ApproverController extends OrderAbstractController
 
             //create approver role
             $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
             $approverRole = $em->getRepository(Roles::class)->findOneByName($roleName);
             if( !$approverRole ) {
                 $approverRole = new Roles();

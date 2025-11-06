@@ -901,33 +901,6 @@ class AdminController extends OrderAbstractController
         //$max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes; it will set back to original value after execution of this script
 
-
-        //testing
-        //$userServiceUtil = $this->container->get('user_service_utility');
-        //$userServiceUtil->createCronsLinux();
-        //exit('eof createCronsLinux');
-        //$count_generateChartsList = $this->generateChartsList();
-        //$count_generateChartTopicList = $this->generateChartTopicList(); //hierarchy
-        //exit('eof generate Charts test');
-
-        //$default_time_zone = $this->getParameter('default_time_zone');
-
-        //$count_EventTypeListSync = $this->syncEventTypeListDb(); //must be the first to update already existing objects. Can run on empty DB
-
-        //testing
-        //$count_setObjectTypeForAllLists = $this->setObjectTypeForAllLists();
-        //$this->generateLabResultNames();
-        //$this->generateLocationsFromExcel();
-//        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
-//        exit('$adminRes='.$adminRes);
-//        $logger->notice("Finished generate AdministratorAction");
-//        return "Finished generateAdministratorAction";
-
-        //testing
-        //$count_generateHostedUserGroupList = $this->generateHostedUserGroupList();
-
-        //$count_countryList = $this->generateCountryList();
-
         $count_sitenameList = $this->generateSitenameList($user);
 
         $count_institutiontypes = $this->generateInstitutionTypes();                                //must be first
@@ -2375,13 +2348,13 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
 
         $count = 10;
-        foreach( $types as $role => $aliasDescription ) {
+        foreach( $types as $roleName => $aliasDescription ) {
 
             $alias = $aliasDescription[0];
             $description = $aliasDescription[1];
             $level = $aliasDescription[2];
 
-            $entity = $em->getRepository(Roles::class)->findOneByName(trim((string)$role));
+            $entity = $em->getRepository(Roles::class)->findOneByName(trim((string)$roleName));
 
             if( $entity ) {
                 if( !$entity->getLevel() ) {
@@ -2390,28 +2363,15 @@ class AdminController extends OrderAbstractController
                     $em->flush();
                 }
 
-                //testing
-                //$this->setInstitutionResidency($entity, $role);
-
                 //update residency track if not set
-                $resResidencyTrack = $this->resetResidencyTrack($entity,$role);
+                $resResidencyTrack = $this->resetResidencyTrack($entity,$roleName);
                 if( $resResidencyTrack ) {
                     $em->flush();
                     $this->addFlash(
                         'notice',
-                        "Set residency track for $role"
+                        "Set residency track for $roleName"
                     );
                 }
-
-                //testing
-//                if( isset($aliasDescription[3]) && $aliasDescription[3] == 'dashboard' ) {
-//                    $this->addSites($entity,'_DASHBOARD_','dashboards');
-//                    $em->flush();
-//                    $this->addFlash(
-//                        'notice',
-//                        "Set dashboards site for $role"
-//                    );
-//                }
 
                 continue; //temporary disable to override alias, description, level
             }
@@ -2421,7 +2381,7 @@ class AdminController extends OrderAbstractController
                 $this->setDefaultList($entity,$count,$username,null);
             }
 
-            $entity->setName( $role );
+            $entity->setName( $roleName );
             $entity->setAlias( trim((string)$alias) );
             $entity->setDescription( trim((string)$description) );
             $entity->setLevel($level);
@@ -2432,7 +2392,7 @@ class AdminController extends OrderAbstractController
                 //i.e. $aliasDescription[3] === 'translational-research'
                 //$input = array("a", "b", "c", "d", "e");
                 //$output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
-                $roleParts = explode('_', $role); //ROLE TRANSRES IRB ...
+                $roleParts = explode('_', $roleName); //ROLE TRANSRES IRB ...
                 $rolePartSecondArr = array_slice($roleParts, 1, 1);
                 $rolePartSecond = "_".$rolePartSecondArr[0]."_"; //_TRANSRES_
                 //exit("rolePartSecond=".$rolePartSecond);
@@ -2442,9 +2402,8 @@ class AdminController extends OrderAbstractController
             $attrName = "Call Pager";
 
             //set attributes for ROLE_SCANORDER_ONCALL_TRAINEE
-            if( $role == "ROLE_SCANORDER_ONCALL_TRAINEE" ) {
+            if( $roleName == "ROLE_SCANORDER_ONCALL_TRAINEE" ) {
                 $attrValue = "(111) 111-1111";
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:RoleAttributeList'] by [RoleAttributeList::class]
                 $attrs = $em->getRepository(RoleAttributeList::class)->findBy(array("name"=>$attrName,"value"=>$attrValue));
                 if( count($attrs) == 0 ) {
                     $attr = new RoleAttributeList();
@@ -2454,9 +2413,8 @@ class AdminController extends OrderAbstractController
                 }
             }
             //set attributes for ROLE_SCANORDER_ONCALL_ATTENDING
-            if( $role == "ROLE_SCANORDER_ONCALL_ATTENDING" ) {
+            if( $roleName == "ROLE_SCANORDER_ONCALL_ATTENDING" ) {
                 $attrValue = "(222) 222-2222";
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:RoleAttributeList'] by [RoleAttributeList::class]
                 $attrs = $em->getRepository(RoleAttributeList::class)->findBy(array("name"=>$attrName,"value"=>$attrValue));
                 if( count($attrs) == 0 ) {
                     $attr = new RoleAttributeList();
@@ -2466,7 +2424,7 @@ class AdminController extends OrderAbstractController
                 }
             }
 
-            if( $role == "ROLE_PLATFORM_ADMIN" || $role == "ROLE_PLATFORM_DEPUTY_ADMIN" ) {
+            if( $roleName == "ROLE_PLATFORM_ADMIN" || $roleName == "ROLE_PLATFORM_DEPUTY_ADMIN" ) {
                 $nameAbbreviationSites = $this->getSiteList();
                 foreach( $nameAbbreviationSites as $name=>$abbreviation ) {
                     $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($abbreviation);
@@ -2477,10 +2435,10 @@ class AdminController extends OrderAbstractController
             }
 
             //set institution and Fellowship Subspecialty types to role
-            $this->setInstitutionFellowship($entity,$role);
+            $this->setInstitutionFellowship($entity,$roleName);
 
             //set institution and Residency Specialty types to role
-            $this->setInstitutionResidency($entity,$role);
+            $this->setInstitutionResidency($entity,$roleName);
 
             $em->persist($entity);
             $em->flush();
@@ -2496,13 +2454,15 @@ class AdminController extends OrderAbstractController
 
     //entity - role object
     //role - role string
-    public function setInstitutionFellowship($entity,$role) {
+    public function setInstitutionFellowship($entity,$roleName) {
 
-        if( strpos((string)$role,'_WCM_') === false ) {
+        //_WCM_ indicates that this role is the fellowship role (COORDINATOR, DIRECTOR, INTERVIEWER)
+        //TODO: '_WCM_' can be removed from the role name
+        if( strpos((string)$roleName,'_WCM_') === false ) {
             return;
         }
 
-        if( strpos((string)$role,'_FELLAPP_') === false ) {
+        if( strpos((string)$roleName,'_FELLAPP_') === false ) {
             return;
         }
 
@@ -2515,54 +2475,46 @@ class AdminController extends OrderAbstractController
 //            }
 //        }
         
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         $entity->setInstitution($wcmc);
 
-        if( strpos((string)$role,'BREASTPATHOLOGY') !== false ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        if( strpos((string)$roleName,'BREASTPATHOLOGY') !== false ) {
             $BREASTPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Breast Pathology");
             $entity->setFellowshipSubspecialty($BREASTPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos((string)$role,'CYTOPATHOLOGY') !== false ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        if( strpos((string)$roleName,'CYTOPATHOLOGY') !== false ) {
             $CYTOPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Cytopathology");
             $entity->setFellowshipSubspecialty($CYTOPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos((string)$role,'GYNECOLOGICPATHOLOGY') !== false ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        if( strpos((string)$roleName,'GYNECOLOGICPATHOLOGY') !== false ) {
             $GYNECOLOGICPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Gynecologic Pathology");
             $entity->setFellowshipSubspecialty($GYNECOLOGICPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos((string)$role,'GASTROINTESTINALPATHOLOGY') !== false ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        if( strpos((string)$roleName,'GASTROINTESTINALPATHOLOGY') !== false ) {
             $GASTROINTESTINALPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Gastrointestinal Pathology");
             $entity->setFellowshipSubspecialty($GASTROINTESTINALPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos((string)$role,'GENITOURINARYPATHOLOGY') !== false ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        if( strpos((string)$roleName,'GENITOURINARYPATHOLOGY') !== false ) {
             $GENITOURINARYPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Genitourinary Pathology");
             $entity->setFellowshipSubspecialty($GENITOURINARYPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos((string)$role,'HEMATOPATHOLOGY') !== false ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        if( strpos((string)$roleName,'HEMATOPATHOLOGY') !== false ) {
             $HEMATOPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Hematopathology");
             $entity->setFellowshipSubspecialty($HEMATOPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
         }
 
-        if( strpos((string)$role,'MOLECULARGENETICPATHOLOGY') !== false ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+        if( strpos((string)$roleName,'MOLECULARGENETICPATHOLOGY') !== false ) {
             $MOLECULARGENETICPATHOLOGY = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Molecular Genetic Pathology");
             $entity->setFellowshipSubspecialty($MOLECULARGENETICPATHOLOGY);
             $this->addSingleSiteToEntity($entity,"fellapp");
@@ -5906,32 +5858,8 @@ class AdminController extends OrderAbstractController
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
-//        $fellowshipSubspecialtyArr = [
-//            "Blood Banking and Transfusion Medicine",
-//            "Clinical Chemistry",
-//            "Clinical Informatics",
-//            "Cytopathology",
-//            "Gastrointestinal Pathology",
-//            "Dermatopathology",
-//            //"Genitourinary and Renal Pathology",
-//            "Genitourinary Pathology",
-//            "Renal Pathology",
-//            //"Gynecologic and Breast Pathology",
-//            "Breast Pathology",
-//            "Gynecologic Pathology",
-//            "Head and Neck Pathology",
-//            "Hematopathology",
-//            "Histocompatibility and Immunogenetics",
-//            "Laboratory Genetics and Genomics",
-//            "Liver and GI Pathology",
-//            "Medical and Public Health Microbiology",
-//            "Molecular Genetic Pathology",
-//            "Neuropathology",
-//            "Pediatric Pathology",
-//            "Surgical Pathology"
-//        ];
         $fellappUtil = $this->container->get('fellapp_util');
-        $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypes();
+        $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr(); //generateAllFellowshipSubspecialties
 
         $count = 0;
         foreach($fellowshipSubspecialtyArr as $fellowshipSubspecialty) {
@@ -5959,14 +5887,13 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
-    //TODO:
     public function generateGlobalFellowshipSpecialties() {
         $em = $this->getDoctrine()->getManager();
         $username = $this->getUser();
 
         $count = 0;
 
-        ////// 1) get wcm ptahology //////
+        ////// 1) get wcm pathology //////
         $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         if( !$wcmc ) {
             exit('generateGlobalFellowshipSpecialties: No Institution: "WCM"');
@@ -5986,39 +5913,10 @@ class AdminController extends OrderAbstractController
         if( !$wcmPathology ) {
             exit('generateGlobalFellowshipSpecialties: No Institution: "Pathology and Laboratory Medicine"');
         }
-        ////// EOF 1) get wcm ptahology //////
+        ////// EOF 1) get wcm pathology //////
 
-//        $fellowshipSpecialties = array(
-////            "Clinical Informatics",
-////            "Dermatopathology",
-////            "Genitourinary pathology",
-////            "Hematopathology",
-////            "Breast pathology",
-////            "Cytopathology"
-//            "Blood Banking and Transfusion Medicine",
-//            "Clinical Chemistry",
-//            "Clinical Informatics",
-//            "Cytopathology",
-//            "Dermatopathology",
-//            //"Genitourinary and Renal Pathology",
-//            "Genitourinary Pathology",
-//            "Renal Pathology",
-//            //"Gynecologic and Breast Pathology",
-//            "Breast Pathology",
-//            "Gynecologic Pathology",
-//            "Head and Neck Pathology",
-//            "Hematopathology",
-//            "Histocompatibility and Immunogenetics",
-//            "Laboratory Genetics and Genomics",
-//            "Liver and GI Pathology",
-//            "Medical and Public Health Microbiology",
-//            "Molecular Genetic Pathology",
-//            "Neuropathology",
-//            "Pediatric Pathology",
-//            "Surgical Pathology"
-//        );
         $fellappUtil = $this->container->get('fellapp_util');
-        $fellowshipSpecialties = $fellappUtil->getFellowshipTypes();
+        $fellowshipSpecialties = $fellappUtil->getFellowshipTypesStrArr(); //generateGlobalFellowshipSpecialties
 
         foreach( $fellowshipSpecialties as $fellowshipSpecialty ) {
             //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
@@ -6082,51 +5980,42 @@ class AdminController extends OrderAbstractController
         if( !$washUPathology ) {
             exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "Pathology and Immunology"');
         }
+        ////// EOF 1) get WashU pathology //////
 
-        ////// EOF 1) get WashU ptahology //////
-//        $washuFellowshipSpecialties = [
-//            "Blood Banking and Transfusion Medicine",
-//            "Clinical Chemistry",
-//            "Clinical Informatics",
-//            "Cytopathology",
-//            "Dermatopathology",
-//            "Genitourinary and Renal Pathology",
-//            "Gynecologic and Breast Pathology",
-//            "Head and Neck Pathology",
-//            "Hematopathology",
-//            "Histocompatibility and Immunogenetics",
-//            "Laboratory Genetics and Genomics",
-//            "Liver and GI Pathology",
-//            "Medical and Public Health Microbiology",
-//            "Molecular Genetic Pathology",
-//            "Neuropathology",
-//            "Pediatric Pathology",
-//            "Surgical Pathology"
-//        ];
         $fellappUtil = $this->container->get('fellapp_util');
-        $washuFellowshipSpecialties = $fellappUtil->getFellowshipTypes();
+        $washuFellowshipSpecialties = $fellappUtil->getFellowshipTypesStrArr(); //generateGlobalFellowshipSpecialtiesWahsu
 
         foreach( $washuFellowshipSpecialties as $washuFellowshipSpecialty ) {
                 //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
-                $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneBy([
-                    'name' => $washuFellowshipSpecialty,
-                    'institution' => $washUPathology,
-                ]);
+//                $listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneBy([
+//                    'name' => $washuFellowshipSpecialty,
+//                    'institution' => $washUPathology,
+//                ]);
 
-                if ($listEntity) {
-                    continue;
-                }
+            //case-insensitive
+            $listEntities = $em->getRepository(GlobalFellowshipSpecialty::class)
+                ->createQueryBuilder('g')
+                ->where('LOWER(g.name) = LOWER(:name)')
+                ->andWhere('g.institution = :institution')
+                ->setParameter('name', $washuFellowshipSpecialty)
+                ->setParameter('institution', $washUPathology)
+                ->getQuery()
+                ->getResult();
 
-                //exit("Create GlobalFellowshipSpecialty");
-                $listEntity = new GlobalFellowshipSpecialty();
-                $this->setDefaultList($listEntity, $count, $username, $washuFellowshipSpecialty);
+            if( $listEntities && count($listEntities) > 0 ) {
+                continue;
+            }
 
-                $listEntity->setInstitution($washUPathology);
+            //exit("Create GlobalFellowshipSpecialty");
+            $listEntity = new GlobalFellowshipSpecialty();
+            $this->setDefaultList($listEntity, $count, $username, $washuFellowshipSpecialty);
 
-                $em->persist($listEntity);
-                $em->flush();
+            $listEntity->setInstitution($washUPathology);
 
-                $count = $count + 10;
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
         }
 
         return round($count/10);
@@ -8866,12 +8755,15 @@ class AdminController extends OrderAbstractController
         return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
+    ////////////////////////// Auxiliary - to sync DB ///////////////////////////////
     /**
+     * Auxiliary - to sync DB
      * http://hosthame/order/directory/admin/sync-db/
      */
     #[Route(path: '/sync-db/', name: 'user_sync_db', methods: ['GET'])]
     public function syncEventTypeListDbAction()
     {
+        exit('not permitted. only for exceptions to sync roles and events in DB');
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -8935,7 +8827,6 @@ class AdminController extends OrderAbstractController
         }
         return 0;
     }
-
     //add sitename to the existing roles using role name
     public function syncRolesDb() {
 
@@ -9200,6 +9091,7 @@ class AdminController extends OrderAbstractController
         //exit('1');
         return $count;
     }
+    ////////////////////////// EOF Auxiliary - to sync DB ///////////////////////////////
 
 
     ////////////////// Employee Tree Util //////////////////////

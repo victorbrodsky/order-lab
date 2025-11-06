@@ -1752,7 +1752,7 @@ class FellAppUtil {
         return $count;
     }
 
-    public function getFellowshipTypes() {
+    public function getFellowshipTypesStrArr() {
         $fellowshipSubspecialtyArr = [
             "Blood Banking and Transfusion Medicine",
             "Clinical Chemistry",

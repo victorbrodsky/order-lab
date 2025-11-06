@@ -1004,7 +1004,7 @@ class FellAppManagement extends OrderAbstractController {
 //            "Pediatric Pathology",
 //            "Surgical Pathology"
 //        ];
-        $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypes();
+        $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr();
 
         //////// 2) link default subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
         $mapper = array(

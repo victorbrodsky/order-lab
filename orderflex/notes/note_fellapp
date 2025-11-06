@@ -1,0 +1,23 @@
+AdminController->generateAll
+
+1) $count_roles = $this->generateRoles($request);
+
+2)
+$count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties(); -> generate only "Clinical Informatics" -> working ok
+$count_allFellowshipSubspecialties = $this->generateAllFellowshipSubspecialties();
+$count_globalFellowshipSpecialties = $this->generateGlobalFellowshipSpecialties();
+$count_globalFellowshipSpecialtiesWahsu = $this->generateGlobalFellowshipSpecialtiesWahsu();
+
+
+How to create new fellapp specialty:
+1) Find or Create FellowshipSubspecialty with name (i.e. Cytopathology)
+2) Add to this FellowshipSubspecialty institution 'WCM->Pathology'
+3) Go to https://view.online/c/test-institution/test-department/fellowship-applications/fellowship-types-settings
+4) Now Cytopathology is showing as a new fellowship specialty -> click Cytopathology
+5) Add coordinators, directors, interviewers
+6) Click Update
+7) Error because ROLE_FELLAPP_COORDINATOR_WCM_CYTOPATHOLOGY does not have Fellowship Subspecialty
+
+Solution:
+1) Generate roles without specific fellapp role (i.e. ROLE_FELLAPP_DIRECTOR_WCM_CYTOPATHOLOGY)
+2)
