@@ -435,6 +435,39 @@ class FellAppUtil {
 
         return $filterType;
     }
+    //get all fellowship application types (default, user-added)
+    public function getValidFellowshipTypes( $asEntities=false ) {
+        $em = $this->em;
+
+        //get list of fellowship type with extra "ALL"
+        $repository = $em->getRepository(FellowshipSubspecialty::class);
+        $dql = $repository->createQueryBuilder('list');
+        $dql->where("list.type = :typedef OR list.type = :typeadd");
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $dql->getQuery();
+
+        $query->setParameters( array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added',
+        ));
+
+        $fellTypes = $query->getResult();
+        //echo "getValidFellowshipTypes: fellTypes count=".count($fellTypes)."<br>";
+
+        if( $asEntities ) {
+            return $fellTypes;
+        }
+
+        //add statuses
+        $filterType = array();
+        foreach( $fellTypes as $type ) {
+            //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
+            $filterType[$type->getId()] = $type->getName();
+        }
+
+        return $filterType;
+    }
     //get all global fellowship application types.
     // Original - $asEntities=false (default as array) -> default as select2, if entity set $asArray=false
     public function getGlobalFellowshipTypesByInstitution( $institution=null, $asArray='select2' ) {
@@ -1672,6 +1705,31 @@ class FellAppUtil {
         return $fellapps;
     }
 
+    //create a new role (if not existed)
+    public function createOrEnableFellAppRoleGroup( $subspecialtyType, $institution=null, $testing=false ) {
+        $msg = "";
+        $count = 0;
+
+        $countInt = $this->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$institution,$testing);
+        if( $countInt > 0 ) {
+            $msg = $msg . " INTERVIEWER role has been created/enabled.";
+            $count = $count + $countInt;
+        }
+
+        $countInt = $this->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$institution,$testing);
+        if( $countInt > 0 ) {
+            $msg = $msg . " COORDINATOR role has been created/enabled.";
+            $count = $count + $countInt;
+        }
+
+        $countInt = $this->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$institution,$testing);
+        if( $countInt > 0 ) {
+            $msg = $msg . " DIRECTOR role has been created/enabled for $subspecialtyType";
+            $count = $count + $countInt;
+        }
+
+        return ['msg' => $msg, 'count' => $count];
+    }
 
     //$roleType: string (INTERVIEWER, COORDINATOR, DIRECTOR)
     //name: ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
@@ -1681,7 +1739,7 @@ class FellAppUtil {
     //Institution: WCMC
     //FellowshipSubspecialty: Breast Pathology
     //Permissions: Create a New Fellowship Application, Modify a Fellowship Application, Submit an interview evaluation
-    public function createOrEnableFellAppRole( $subspecialtyType, $roleType, $institution, $testing=false ) {
+    public function createOrEnableFellAppRole( $subspecialtyType, $roleType, $institution=null, $testing=false ) {
         $em = $this->em;
         $user = $this->security->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1692,15 +1750,20 @@ class FellAppUtil {
 
         //1) name: ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
         //get ROLE NAME: Pathology Informatics => PATHOLOGYINFORMATCS
-        $roleNameBase = str_replace(" ","",$subspecialtyType->getName());
-        $roleNameBase = strtoupper($roleNameBase);
+        $roleNameBase = str_replace(" ","",$subspecialtyType->getName()); //BREAST PATHOLOGY -> BREASTPATHOLOGY
+        $roleNameBase = strtoupper($roleNameBase); //Uppercase BREASTPATHOLOGY
         //echo "roleNameBase=$roleNameBase<br>";
 
         //create Director role
-        $roleName = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase;
+        $roleName = "ROLE_FELLAPP_".$roleType."_".$roleNameBase;
         //echo "roleName=$roleName<br>";
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
+
+        if( !$role ) {
+            $roleNameLegacy = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase; //check legacy role name
+            //echo "roleName=$roleName<br>";
+            $role = $em->getRepository(Roles::class)->findOneByName($roleNameLegacy);
+        }
 
         if( !$role ) {
             $roleTypeStr = ucfirst(strtolower($roleType));
@@ -1708,10 +1771,13 @@ class FellAppUtil {
 
             $role = new Roles();
             $role = $userSecUtil->setDefaultList($role, null, $user, $roleName);
-            $role->setAlias('Fellowship Program '.$roleTypeStr.' WCM ' . $subspecialtyType->getName());
+            //$role->setAlias('Fellowship Program '.$roleTypeStr.' WCM ' . $subspecialtyType->getName());
+            $role->setAlias('Fellowship Program ' . $roleTypeStr . ' ' . $subspecialtyType->getName());
             $role->setDescription('Access to specific Fellowship Application type as '.$roleTypeStr);
             $role->addSite($site);
-            $role->setInstitution($institution);
+            if( $institution ) {
+                $role->setInstitution($institution);
+            }
             $role->setFellowshipSubspecialty($subspecialtyType);
 
             if( $roleType == "INTERVIEWER" ) {
@@ -1861,16 +1927,16 @@ class FellAppUtil {
     //compare original and final users => get removed users => for each removed user, remove the role
     public function processRemovedUsersByFellowshipSetting( $fellowshipSubspecialty, $newUsers, $origUsers, $roleName ) {
         if( count($newUsers) > 0 && count($origUsers) > 0 ) {
-            //$this->printUsers($origUsers,"orig");
-            //$this->printUsers($newUsers,"new");
+            $this->printUsers($origUsers,"orig");
+            $this->printUsers($newUsers,"new");
 
             //get diff
             $diffUsers = $this->array_diff_assoc_true($newUsers->toArray(), $origUsers->toArray());
             //$diffUsers = array_diff($newUsers->toArray(),$origUsers->toArray());
             //$diffUsers = array_diff($origUsers->toArray(),$newUsers->toArray());
 
-            //echo $roleName.": diffUsers count=".count($diffUsers)."<br>";
-            //$this->printUsers($diffUsers,"diff");
+            echo $roleName.": diffUsers count=".count($diffUsers)."<br>";
+            $this->printUsers($diffUsers,"diff");
 
             $this->removeRoleFromUsers($diffUsers,$fellowshipSubspecialty,$roleName);
         }
@@ -1886,6 +1952,7 @@ class FellAppUtil {
             $user->removeRole($role);
             $this->em->flush($user);
         }
+        //exit('1111');
     }
     public function array_diff_assoc_true($array1, $array2)
     {

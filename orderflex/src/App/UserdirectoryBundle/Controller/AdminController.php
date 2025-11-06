@@ -989,7 +989,7 @@ class AdminController extends OrderAbstractController
         $logger->notice("Finished generateResidencySpecialties");
         //return "Finished generateResidencySpecialties";
 
-        $count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties();
+        //$count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties(); //Create default Fellowship Subspecialty 'Clinical Informatics'
         $count_allFellowshipSubspecialties = $this->generateAllFellowshipSubspecialties();
         $count_globalFellowshipSpecialties = $this->generateGlobalFellowshipSpecialties();
         $count_globalFellowshipSpecialtiesWahsu = $this->generateGlobalFellowshipSpecialtiesWahsu();
@@ -1167,7 +1167,7 @@ class AdminController extends OrderAbstractController
             'Completion Reasons='.$count_completionReasons.', '.
             'Training Degrees='.$count_trainingDegrees.', '.
             'Residency Specialties='.$count_residencySpecialties.', '.
-            'Fellowship Subspecialties='.$count_fellowshipSubspecialties.', '.
+            //'Fellowship Subspecialties='.$count_fellowshipSubspecialties.', '.
             'All Fellowship Subspecialties='.$count_allFellowshipSubspecialties.', '.
             'GlobalFellowshipSpecialties='.$count_globalFellowshipSpecialties.', '.
             'GlobalFellowshipSpecialtiesWahsu='.$count_globalFellowshipSpecialtiesWahsu.', '.
@@ -1553,123 +1553,123 @@ class AdminController extends OrderAbstractController
 //                "Access to Fellowship Application type as Director (edit application,upload new documents)",
 //                50
 //            ),
-            "ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY" => array(
-                "Fellowship Program Director WCM Breast Pathology",
-                "Access to specific Fellowship Application type as Director",
-                50
-            ),
-            "ROLE_FELLAPP_DIRECTOR_WCM_CYTOPATHOLOGY" => array(
-                "Fellowship Program Director WCM Cytopathology",
-                "Access to specific Fellowship Application type as Director",
-                50
-            ),
-            "ROLE_FELLAPP_DIRECTOR_WCM_GYNECOLOGICPATHOLOGY" => array(
-                "Fellowship Program Director WCM Gynecologic Pathology",
-                "Access to specific Fellowship Application type as Director",
-                50
-            ),
-            "ROLE_FELLAPP_DIRECTOR_WCM_GASTROINTESTINALPATHOLOGY" => array(
-                "Fellowship Program Director WCM Gastrointestinal Pathology",
-                "Access to specific Fellowship Application type as Director",
-                50
-            ),
-            "ROLE_FELLAPP_DIRECTOR_WCM_GENITOURINARYPATHOLOGY" => array(
-                "Fellowship Program Director WCM Genitourinary Pathology",
-                "Access to specific Fellowship Application type as Director",
-                50
-            ),
-            "ROLE_FELLAPP_DIRECTOR_WCM_HEMATOPATHOLOGY" => array(
-                "Fellowship Program Director WCM Hematopathology",
-                "Access to specific Fellowship Application type as Director",
-                50
-            ),
-            "ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY" => array(
-                "Fellowship Program Director WCM Molecular Genetic Pathology",
-                "Access to specific Fellowship Application type as Director",
-                50
-            ),
+//            "ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY" => array(
+//                "Fellowship Program Director WCM Breast Pathology",
+//                "Access to specific Fellowship Application type as Director",
+//                50
+//            ),
+//            "ROLE_FELLAPP_DIRECTOR_WCM_CYTOPATHOLOGY" => array(
+//                "Fellowship Program Director WCM Cytopathology",
+//                "Access to specific Fellowship Application type as Director",
+//                50
+//            ),
+//            "ROLE_FELLAPP_DIRECTOR_WCM_GYNECOLOGICPATHOLOGY" => array(
+//                "Fellowship Program Director WCM Gynecologic Pathology",
+//                "Access to specific Fellowship Application type as Director",
+//                50
+//            ),
+//            "ROLE_FELLAPP_DIRECTOR_WCM_GASTROINTESTINALPATHOLOGY" => array(
+//                "Fellowship Program Director WCM Gastrointestinal Pathology",
+//                "Access to specific Fellowship Application type as Director",
+//                50
+//            ),
+//            "ROLE_FELLAPP_DIRECTOR_WCM_GENITOURINARYPATHOLOGY" => array(
+//                "Fellowship Program Director WCM Genitourinary Pathology",
+//                "Access to specific Fellowship Application type as Director",
+//                50
+//            ),
+//            "ROLE_FELLAPP_DIRECTOR_WCM_HEMATOPATHOLOGY" => array(
+//                "Fellowship Program Director WCM Hematopathology",
+//                "Access to specific Fellowship Application type as Director",
+//                50
+//            ),
+//            "ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY" => array(
+//                "Fellowship Program Director WCM Molecular Genetic Pathology",
+//                "Access to specific Fellowship Application type as Director",
+//                50
+//            ),
             //Program-Coordinator (7 types)
 //            "ROLE_FELLAPP_COORDINATOR" => array(
 //                "Fellowship Program General Coordinator Role",
 //                "Access to Fellowship Application type as Coordinator (edit application,upload new documents)",
 //                40
 //            ),
-            "ROLE_FELLAPP_COORDINATOR_WCM_BREASTPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCM Breast Pathology",
-                "Access to specific Fellowship Application type as Coordinator",
-                40
-            ),
-            "ROLE_FELLAPP_COORDINATOR_WCM_CYTOPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCM Cytopathology",
-                "Access to specific Fellowship Application type as Coordinator",
-                40
-            ),
-            "ROLE_FELLAPP_COORDINATOR_WCM_GYNECOLOGICPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCM Gynecologic Pathology",
-                "Access to specific Fellowship Application type as Coordinator",
-                40
-            ),
-            "ROLE_FELLAPP_COORDINATOR_WCM_GASTROINTESTINALPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCM Gastrointestinal Pathology",
-                "Access to specific Fellowship Application type as Coordinator",
-                40
-            ),
-            "ROLE_FELLAPP_COORDINATOR_WCM_GENITOURINARYPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCM Genitourinary Pathology",
-                "Access to specific Fellowship Application type as Coordinator",
-                40
-            ),
-            "ROLE_FELLAPP_COORDINATOR_WCM_HEMATOPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCM Hematopathology",
-                "Access to specific Fellowship Application type as Coordinator",
-                40
-            ),
-            "ROLE_FELLAPP_COORDINATOR_WCM_MOLECULARGENETICPATHOLOGY" => array(
-                "Fellowship Program Coordinator WCM Molecular Genetic Pathology",
-                "Access to specific Fellowship Application type as Coordinator",
-                40
-            ),
+//            "ROLE_FELLAPP_COORDINATOR_WCM_BREASTPATHOLOGY" => array(
+//                "Fellowship Program Coordinator WCM Breast Pathology",
+//                "Access to specific Fellowship Application type as Coordinator",
+//                40
+//            ),
+//            "ROLE_FELLAPP_COORDINATOR_WCM_CYTOPATHOLOGY" => array(
+//                "Fellowship Program Coordinator WCM Cytopathology",
+//                "Access to specific Fellowship Application type as Coordinator",
+//                40
+//            ),
+//            "ROLE_FELLAPP_COORDINATOR_WCM_GYNECOLOGICPATHOLOGY" => array(
+//                "Fellowship Program Coordinator WCM Gynecologic Pathology",
+//                "Access to specific Fellowship Application type as Coordinator",
+//                40
+//            ),
+//            "ROLE_FELLAPP_COORDINATOR_WCM_GASTROINTESTINALPATHOLOGY" => array(
+//                "Fellowship Program Coordinator WCM Gastrointestinal Pathology",
+//                "Access to specific Fellowship Application type as Coordinator",
+//                40
+//            ),
+//            "ROLE_FELLAPP_COORDINATOR_WCM_GENITOURINARYPATHOLOGY" => array(
+//                "Fellowship Program Coordinator WCM Genitourinary Pathology",
+//                "Access to specific Fellowship Application type as Coordinator",
+//                40
+//            ),
+//            "ROLE_FELLAPP_COORDINATOR_WCM_HEMATOPATHOLOGY" => array(
+//                "Fellowship Program Coordinator WCM Hematopathology",
+//                "Access to specific Fellowship Application type as Coordinator",
+//                40
+//            ),
+//            "ROLE_FELLAPP_COORDINATOR_WCM_MOLECULARGENETICPATHOLOGY" => array(
+//                "Fellowship Program Coordinator WCM Molecular Genetic Pathology",
+//                "Access to specific Fellowship Application type as Coordinator",
+//                40
+//            ),
             //Fellowship Interviewer
 //            "ROLE_FELLAPP_INTERVIEWER" => array(
 //                "Fellowship Program General Interviewer Role",
 //                "Access to Fellowship Application type as Interviewer (able to view, create and update the interview form)",
 //                30
 //            ),
-            "ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCM Breast Pathology",
-                "Access to specific Fellowship Application type as Interviewer",
-                30
-            ),
-            "ROLE_FELLAPP_INTERVIEWER_WCM_CYTOPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCM Cytopathology",
-                "Access to specific Fellowship Application type as Interviewer",
-                30
-            ),
-            "ROLE_FELLAPP_INTERVIEWER_WCM_GYNECOLOGICPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCM Gynecologic Pathology",
-                "Access to specific Fellowship Application type as Interviewer",
-                30
-            ),
-            "ROLE_FELLAPP_INTERVIEWER_WCM_GASTROINTESTINALPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCM Gastrointestinal Pathology",
-                "Access to specific Fellowship Application type as Interviewer",
-                30
-            ),
-            "ROLE_FELLAPP_INTERVIEWER_WCM_GENITOURINARYPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCM Genitourinary Pathology",
-                "Access to specific Fellowship Application type as Interviewer",
-                30
-            ),
-            "ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCM Hematopathology",
-                "Access to specific Fellowship Application type as Interviewer",
-                30
-            ),
-            "ROLE_FELLAPP_INTERVIEWER_WCM_MOLECULARGENETICPATHOLOGY" => array(
-                "Fellowship Program Interviewer WCM Molecular Genetic Pathology",
-                "Access to specific Fellowship Application type as Interviewer",
-                30
-            ),
+//            "ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY" => array(
+//                "Fellowship Program Interviewer WCM Breast Pathology",
+//                "Access to specific Fellowship Application type as Interviewer",
+//                30
+//            ),
+//            "ROLE_FELLAPP_INTERVIEWER_WCM_CYTOPATHOLOGY" => array(
+//                "Fellowship Program Interviewer WCM Cytopathology",
+//                "Access to specific Fellowship Application type as Interviewer",
+//                30
+//            ),
+//            "ROLE_FELLAPP_INTERVIEWER_WCM_GYNECOLOGICPATHOLOGY" => array(
+//                "Fellowship Program Interviewer WCM Gynecologic Pathology",
+//                "Access to specific Fellowship Application type as Interviewer",
+//                30
+//            ),
+//            "ROLE_FELLAPP_INTERVIEWER_WCM_GASTROINTESTINALPATHOLOGY" => array(
+//                "Fellowship Program Interviewer WCM Gastrointestinal Pathology",
+//                "Access to specific Fellowship Application type as Interviewer",
+//                30
+//            ),
+//            "ROLE_FELLAPP_INTERVIEWER_WCM_GENITOURINARYPATHOLOGY" => array(
+//                "Fellowship Program Interviewer WCM Genitourinary Pathology",
+//                "Access to specific Fellowship Application type as Interviewer",
+//                30
+//            ),
+//            "ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY" => array(
+//                "Fellowship Program Interviewer WCM Hematopathology",
+//                "Access to specific Fellowship Application type as Interviewer",
+//                30
+//            ),
+//            "ROLE_FELLAPP_INTERVIEWER_WCM_MOLECULARGENETICPATHOLOGY" => array(
+//                "Fellowship Program Interviewer WCM Molecular Genetic Pathology",
+//                "Access to specific Fellowship Application type as Interviewer",
+//                30
+//            ),
 
             //Fellowship Observer
             "ROLE_FELLAPP_OBSERVER" => array(
@@ -2435,7 +2435,7 @@ class AdminController extends OrderAbstractController
             }
 
             //set institution and Fellowship Subspecialty types to role
-            $this->setInstitutionFellowship($entity,$roleName);
+            //$this->setInstitutionFellowship($entity,$roleName); //Not used anymore since specific fellapp roles are removed
 
             //set institution and Residency Specialty types to role
             $this->setInstitutionResidency($entity,$roleName);
@@ -2452,13 +2452,15 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+    //NOT USED anymore since specific fellapp roles are removed
+    //Create and set up roles when FellowshipSubspecialty is generated
     //entity - role object
     //role - role string
     public function setInstitutionFellowship($entity,$roleName) {
 
         //_WCM_ indicates that this role is the fellowship role (COORDINATOR, DIRECTOR, INTERVIEWER)
         //TODO: '_WCM_' can be removed from the role name
-        if( strpos((string)$roleName,'_WCM_') === false ) {
+        if( strpos((string)$roleName,'_WCM_') === false ) { //NOT USED
             return;
         }
 
@@ -2526,7 +2528,7 @@ class AdminController extends OrderAbstractController
     //role - role string
     public function setInstitutionResidency($entity,$role) {
 
-        if( strpos((string)$role,'_WCM_') === false ) {
+        if( strpos((string)$role,'_WCM_') === false ) { //for _RESAPP_
             return;
         }
 
@@ -2598,7 +2600,7 @@ class AdminController extends OrderAbstractController
             return NULL;
         }
         
-        if( strpos((string)$role,'_WCM_') === false ) {
+        if( strpos((string)$role,'_WCM_') === false ) { //for _RESAPP_
             return NULL;
         }
 
@@ -5741,7 +5743,6 @@ class AdminController extends OrderAbstractController
                 $residencySpecialty = trim((string)$residencySpecialty);
                 //echo "residencySpecialty=".$residencySpecialty."<br>";
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResidencySpecialty'] by [ResidencySpecialty::class]
                 $residencySpecialtyEntity = $em->getRepository(ResidencySpecialty::class)->findOneByName($residencySpecialty."");
 
                 //if( $em->getRepository('AppUserdirectoryBundle:ResidencySpecialty')->findOneByName($residencySpecialty."") ) {
@@ -5804,6 +5805,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+    //NOT USED. instead create all fellowship subspecialties 
     //Create default Fellowship Subspecialty 'Clinical Informatics'
     public function generateDefaultFellowshipSubspecialties() {
 
@@ -5835,7 +5837,6 @@ class AdminController extends OrderAbstractController
         $fellowshipSubspecialty = "Clinical Informatics";
         $order = 0;
         $newFellowshipSubspecialtyEntity = false;
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
         $fellowshipSubspecialtyEntity = $em->getRepository(FellowshipSubspecialty::class)->findOneByName($fellowshipSubspecialty."");
         if( !$fellowshipSubspecialtyEntity ) {
             $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
@@ -5862,13 +5863,13 @@ class AdminController extends OrderAbstractController
         $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr(); //generateAllFellowshipSubspecialties
 
         $count = 0;
-        foreach($fellowshipSubspecialtyArr as $fellowshipSubspecialty) {
+        foreach($fellowshipSubspecialtyArr as $fellowshipSubspecialtyName) {
             //$fellowshipSubspecialtyEntity = $em->getRepository(FellowshipSubspecialty::class)->findOneByName($fellowshipSubspecialty."");
             //case-insensitive
             $fellowshipSubspecialtyEntities = $em->getRepository(FellowshipSubspecialty::class)
                 ->createQueryBuilder('f')
                 ->where('LOWER(f.name) = LOWER(:name)')
-                ->setParameter('name', $fellowshipSubspecialty)
+                ->setParameter('name', $fellowshipSubspecialtyName)
                 ->getQuery()
                 ->getResult();
 
@@ -5877,7 +5878,7 @@ class AdminController extends OrderAbstractController
             }
 
             $fellowshipSubspecialtyEntity = new FellowshipSubspecialty();
-            $this->setDefaultList($fellowshipSubspecialtyEntity,$count,$username,$fellowshipSubspecialty);
+            $this->setDefaultList($fellowshipSubspecialtyEntity,$count,$username,$fellowshipSubspecialtyName);
             $fellowshipSubspecialtyEntity->setBoardCertificateAvailable(true);
             $em->persist($fellowshipSubspecialtyEntity);
             $em->flush();

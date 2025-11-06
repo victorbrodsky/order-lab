@@ -69,7 +69,10 @@ class FellAppManagement extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
 
         //get all fellowship types using institution: FellowshipSubspecialty objects that have $coordinators, $directors, $interviewers
-        $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        //Show only fellapp specialties linked to the WCM->Pathology institution
+        //TODO: add fellapp institution to the site settings and use it for fellapp specialties generation OR don't use institution at all
+        //$fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        $fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true);
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
         //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
@@ -148,47 +151,48 @@ class FellAppManagement extends OrderAbstractController {
             }
 
             //exit('subspecialtyType='.$subspecialtyType);
+
+            $institution = null; //Or get it from site settings as future optional feature
             $count = 0;
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //////// 1) link subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
-            $mapper = array(
-                'prefix' => 'App',
-                'bundleName' => 'UserdirectoryBundle',
-                'className' => 'Institution',
-                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
-                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
-            );
+//            $mapper = array(
+//                'prefix' => 'App',
+//                'bundleName' => 'UserdirectoryBundle',
+//                'className' => 'Institution',
+//                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+//                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+//            );
+//
+//            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+//            $institution = $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+//                "Pathology and Laboratory Medicine",
+//                $wcmc,
+//                $mapper
+//            );
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-            $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
-                "Pathology and Laboratory Medicine",
-                $wcmc,
-                $mapper
-            );
-
-            if( $pathology ) {
+            if( $institution ) {
                 if( $subspecialtyType->getInstitution() ) {
                     $msg = "Subspecialty ".$subspecialtyType->getName()." already has an associated institution ".$subspecialtyType->getInstitution().
-                        ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
+                        ". No action performed: institution has not been changed.";
 
                     //Flash
                     $request->getSession()->getFlashBag()->add(
                         'warning',
                         $msg
                     );
-
-                    return $this->redirectToRoute('fellapp_fellowshiptype_settings');
+                    //return $this->redirectToRoute('fellapp_fellowshiptype_settings');
                 } else {
-                    $subspecialtyType->setInstitution($pathology);
-                    if (!$testing) {
-                        $em->persist($subspecialtyType);
-                        $em->flush($subspecialtyType);
-                        $msg = "Subspecialty linked with an associated institution ".$subspecialtyType->getInstitution().".";
+                    if( $institution ) {
+                        $subspecialtyType->setInstitution($institution);
+                        if (!$testing) {
+                            $em->persist($subspecialtyType);
+                            $em->flush($subspecialtyType);
+                            $msg = "Subspecialty linked with an associated institution " . $subspecialtyType->getInstitution() . ".";
+                        }
+                        $count++;
                     }
-                    $count++;
                 }
             }
             //////// EOF 1) link subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
@@ -204,23 +208,27 @@ class FellAppManagement extends OrderAbstractController {
             //FellowshipSubspecialty: Breast Pathology
             //Permissions: Create a New Fellowship Application, Modify a Fellowship Application, Submit an interview evaluation
 
-            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$pathology,$testing);
-            if( $countInt > 0 ) {
-                $msg = $msg . " INTERVIEWER role has been created/enabled.";
-                $count = $count + $countInt;
-            }
+//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$institution,$testing);
+//            if( $countInt > 0 ) {
+//                $msg = $msg . " INTERVIEWER role has been created/enabled.";
+//                $count = $count + $countInt;
+//            }
+//
+//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$institution,$testing);
+//            if( $countInt > 0 ) {
+//                $msg = $msg . " COORDINATOR role has been created/enabled.";
+//                $count = $count + $countInt;
+//            }
+//
+//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$institution,$testing);
+//            if( $countInt > 0 ) {
+//                $msg = $msg . " DIRECTOR role has been created/enabled.";
+//                $count = $count + $countInt;
+//            }
 
-            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$pathology,$testing);
-            if( $countInt > 0 ) {
-                $msg = $msg . " COORDINATOR role has been created/enabled.";
-                $count = $count + $countInt;
-            }
-
-            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$pathology,$testing);
-            if( $countInt > 0 ) {
-                $msg = $msg . " DIRECTOR role has been created/enabled.";
-                $count = $count + $countInt;
-            }
+            $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType,$institution);
+            $msg = $msg . $resArr['msg'];
+            $count = $count + $resArr['count'];
 
             //////// EOF 2) create a new role (if not existed) ////////
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,7 +239,14 @@ class FellAppManagement extends OrderAbstractController {
                 //Event Log
                 $event = "New Fellowship Application Type " . $subspecialtyType->getName() . " has been created by " . $user . ". " . $msg;
                 $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Created');
+                $userSecUtil->createUserEditEvent(
+                    $this->getParameter('fellapp.sitename'),
+                    $event,
+                    $user,
+                    $subspecialtyType,
+                    $request,
+                    'Fellowship Application Type Created'
+                );
 
                 //Flash
                 $request->getSession()->getFlashBag()->add(
@@ -347,6 +362,7 @@ class FellAppManagement extends OrderAbstractController {
         );
     }
 
+    //Add or remove coordinator, director, interviewer
     #[Route(path: '/fellowship-type/edit/{id}', name: 'fellapp_fellowshiptype_setting_edit', methods: ['GET', 'POST'])]
     #[Template('AppFellAppBundle/Management/new.html.twig')]
     public function editAction(Request $request, $id) {
@@ -390,6 +406,9 @@ class FellAppManagement extends OrderAbstractController {
 
         if( $form->isSubmitted() && $form->isValid() ) {
             //exit('form valid');
+
+            //0) Create role if it does not exist
+
 
             //1) Remove role if a user is removed from default list (Remove,Add Order is important!)
             //compare original and final users => get removed users => for each removed user, remove the role
@@ -507,11 +526,11 @@ class FellAppManagement extends OrderAbstractController {
 
 
 
-
+    //NOT USED
     #[Route(path: '/populate-default', name: 'fellapp_populate_default', methods: ['GET'])]
     #[Template('AppFellAppBundle/Management/management.html.twig')]
     public function populateDefaultAction(Request $request) {
-
+        exit('populateDefaultAction not permitted');
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -665,14 +684,14 @@ class FellAppManagement extends OrderAbstractController {
         );
 
     }
-
+    //NOT USED
     //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
     public function addUsersToFellowshipSubspecialty( $fellowshipSubspecialty, $users, $roleName, $bossType ) {
 
         $em = $this->getDoctrine()->getManager();
 
         //$roleStr = ROLE_FELLAPP_INTERVIEWER_WCM_BREASTPATHOLOGY
-        $roleStr = "ROLE_FELLAPP_".$bossType."_WCM_".$roleName;
+        $roleStr = "ROLE_FELLAPP_".$bossType."_WCM_".$roleName; //NOT USED
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
         $role = $em->getRepository(Roles::class)->findOneByName($roleStr);
@@ -765,8 +784,8 @@ class FellAppManagement extends OrderAbstractController {
                 $name = $role->getName();
                 $alias = $role->getAlias();
                 echo "role=" . $name . "; alias=" . $alias . "<br>";
-                $name = str_replace("_WCMC_", "_WCM_", $name);
-                $alias = str_replace("WCMC", "WCM", $alias);
+                $name = str_replace("_WCMC_", "_WCM_", $name); //NOT USED
+                $alias = str_replace("WCMC", "WCM", $alias); //NOT USED
                 $role->setName($name);
                 $role->setAlias($alias);
                 $em->flush($role);
@@ -786,7 +805,7 @@ class FellAppManagement extends OrderAbstractController {
             $dql->where("user.roles LIKE :name");
 
             $parameters = array(
-                "name" => '%' . 'WCMC' . '%'
+                "name" => '%' . 'WCMC' . '%' //NOT USED
             );
 
             $query = $dql->getQuery();
@@ -799,9 +818,9 @@ class FellAppManagement extends OrderAbstractController {
             foreach ($users as $user) {
 
                 foreach ($user->getRoles() as $role) {
-                    if (strpos((string)$role, '_WCMC_') !== false) {
+                    if (strpos((string)$role, '_WCMC_') !== false) { //NOT USED
                         echo $user.": role=" . $role . "<br>";
-                        $roleNew = str_replace("_WCMC_", "_WCM_", $role);
+                        $roleNew = str_replace("_WCMC_", "_WCM_", $role); //NOT USED
                         echo $user.": roleNew=" . $roleNew . "<br>";
                         $user->removeRole($role);
                         $user->addRole($roleNew);
@@ -825,7 +844,7 @@ class FellAppManagement extends OrderAbstractController {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
 
-        $msg = $this->createDefaultFellowshipTypes($request); //WCM
+        $msg = $this->createDefaultFellowshipTypes($request); //WCM $institution is optional
 
         //$msg = $this->createDefaultFellowshipTypes($request); //others
 
@@ -969,7 +988,8 @@ class FellAppManagement extends OrderAbstractController {
 //        return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
-    public function createDefaultFellowshipTypes( Request $request ) {
+    //$institution is optional
+    public function createDefaultFellowshipTypes( Request $request, $institution=null ) {
         if (false == $this->isGranted('ROLE_FELLAPP_ADMIN')) {
             return $this->redirect($this->generateUrl('fellapp-nopermission'));
         }
@@ -980,30 +1000,131 @@ class FellAppManagement extends OrderAbstractController {
         $testing = false;
         $count = 0;
 
-//        $fellowshipSubspecialtyArr = [
-//            "Blood Banking and Transfusion Medicine",
-//            "Clinical Chemistry",
-//            "Clinical Informatics",
-//            "Cytopathology",
-//            "Gastrointestinal Pathology",
-//            "Dermatopathology",
-//            //"Genitourinary and Renal Pathology",
-//            "Genitourinary Pathology",
-//            "Renal Pathology",
-//            //"Gynecologic and Breast Pathology",
-//            "Breast Pathology",
-//            "Gynecologic Pathology",
-//            "Head and Neck Pathology",
-//            "Hematopathology",
-//            "Histocompatibility and Immunogenetics",
-//            "Laboratory Genetics and Genomics",
-//            "Liver and GI Pathology",
-//            "Medical and Public Health Microbiology",
-//            "Molecular Genetic Pathology",
-//            "Neuropathology",
-//            "Pediatric Pathology",
-//            "Surgical Pathology"
-//        ];
+        $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr();
+
+//        if( 0 && !$institution ) {
+//            //////// 2) link default subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
+//            $mapper = array(
+//                'prefix' => 'App',
+//                'bundleName' => 'UserdirectoryBundle',
+//                'className' => 'Institution',
+//                'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+//                'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+//            );
+//
+//            $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+//            $institution = $pathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+//                "Pathology and Laboratory Medicine",
+//                $wcmc,
+//                $mapper
+//            );
+//        }
+
+        foreach($fellowshipSubspecialtyArr as $fellowshipSubspecialtyName) {
+            //$subspecialtyType = $em->getRepository(FellowshipSubspecialty::class)->findOneByName($fellowshipSubspecialtyName);
+            $qb = $em->createQueryBuilder();
+            $qb->select('f')
+                ->from(FellowshipSubspecialty::class, 'f')
+                ->where('LOWER(f.name) = LOWER(:name)')
+                ->setParameter('name', $fellowshipSubspecialtyName);
+            $subspecialtyTypies = $qb->getQuery()->getResult();
+            echo 'createDefaultFellowshipTypes: $subspecialtyTypies='.count($subspecialtyTypies)."<br>";
+
+            $subspecialtyType = null;
+            
+            //Check if role exists
+            
+
+            if( count($subspecialtyTypies) > 1 ) {
+                foreach($subspecialtyTypies as $subspecialtyType) {
+                    echo 'createDefaultFellowshipTypes: $subspecialtyType='.$subspecialtyType.", ID=".$subspecialtyType->getId()."<br>";
+                    echo 'createDefaultFellowshipTypes: Multiple $subspecialtyType found, count='.count($subspecialtyTypies)." => choose enabled"."<br>";
+                    //choose that not disabled
+                    $type = $subspecialtyType->getType();
+                    if( $type == 'default' || $type == 'user-added' ) {
+                        $subspecialtyType = $subspecialtyTypies[0];
+                        break;
+                    }
+                }
+                //exit('createDefaultFellowshipTypes: Multiple $subspecialtyType found, count='.count($subspecialtyTypies));
+            }
+
+            if( count($subspecialtyTypies) === 1 ) {
+                $subspecialtyType = $subspecialtyTypies[0];
+            }
+
+            if( !$subspecialtyType ) {
+                $request->getSession()->getFlashBag()->add(
+                    'warning',
+                    "Fellowship Subspecialty '$fellowshipSubspecialtyName' does not exist."
+                );
+                //exit("Fellowship Subspecialty '$fellowshipSubspecialtyName' does not exist.");
+                return $this->redirect($this->generateUrl('employees_siteparameters'));
+            }
+
+            //Add institution
+            if( $subspecialtyType->getInstitution() ) {
+                $msg = "Subspecialty ".$subspecialtyType->getName()." already has an associated institution ".$subspecialtyType->getInstitution().
+                    ". No action performed: institution has not been changed";
+
+                //Flash
+                $request->getSession()->getFlashBag()->add(
+                    'warning',
+                    $msg
+                );
+                //return $this->redirectToRoute('fellapp_fellowshiptype_settings');
+            } else {
+                if( $institution ) {
+                    $subspecialtyType->setInstitution($institution);
+                    if (!$testing) {
+                        $em->persist($subspecialtyType);
+                        //$em->flush($subspecialtyType);
+                        $em->flush();
+                        $msg = "Fellowship Subspecialty linked with an associated institution " . $subspecialtyType->getInstitution() . ".";
+                    }
+                    $count++;
+                }
+            }
+
+            //////// 2) create a new role (if not existed) ////////
+//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$institution,$testing);
+//            if( $countInt > 0 ) {
+//                $msg = $msg . " INTERVIEWER role has been created/enabled.";
+//                $count = $count + $countInt;
+//            }
+//
+//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$institution,$testing);
+//            if( $countInt > 0 ) {
+//                $msg = $msg . " COORDINATOR role has been created/enabled.";
+//                $count = $count + $countInt;
+//            }
+//
+//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$institution,$testing);
+//            if( $countInt > 0 ) {
+//                $msg = $msg . " DIRECTOR role has been created/enabled.";
+//                $count = $count + $countInt;
+//            }
+
+            $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType);
+            $msg = $msg . $resArr['msg'];
+            $count = $count + $resArr['count'];
+
+        } //foreach
+
+        return $msg;
+    }
+
+    public function createDefaultFellowshipTypes_ORIG( Request $request ) {
+        if (false == $this->isGranted('ROLE_FELLAPP_ADMIN')) {
+            return $this->redirect($this->generateUrl('fellapp-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $testing = false;
+        $count = 0;
+
         $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr();
 
         //////// 2) link default subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
@@ -1040,7 +1161,6 @@ class FellAppManagement extends OrderAbstractController {
                 );
                 return $this->redirect($this->generateUrl('employees_siteparameters'));
             }
-
 
             //Add institution
             if( $subspecialtyType->getInstitution() ) {

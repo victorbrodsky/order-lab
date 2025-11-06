@@ -3,7 +3,7 @@ AdminController->generateAll
 1) $count_roles = $this->generateRoles($request);
 
 2)
-$count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties(); -> generate only "Clinical Informatics" -> working ok
+//NOT USED $count_fellowshipSubspecialties = $this->generateDefaultFellowshipSubspecialties(); -> generate only "Clinical Informatics" -> working ok
 $count_allFellowshipSubspecialties = $this->generateAllFellowshipSubspecialties();
 $count_globalFellowshipSpecialties = $this->generateGlobalFellowshipSpecialties();
 $count_globalFellowshipSpecialtiesWahsu = $this->generateGlobalFellowshipSpecialtiesWahsu();
@@ -20,4 +20,15 @@ How to create new fellapp specialty:
 
 Solution:
 1) Generate roles without specific fellapp role (i.e. ROLE_FELLAPP_DIRECTOR_WCM_CYTOPATHOLOGY)
-2)
+
+site settings -> /create-default-fellowship-type -> createDefaultFellowshipTypes
+1) Create FellowshipSubspecialty
+2) link subspecialty with institution
+3) create a new role (if not existed)
+4) add administrators
+5) ? ERROR in $this->assignFellAppAccessRoles($subspecialtyType,$subspecialtyType->getDirectors(),"DIRECTOR");
+
+/add-fellowship-application-type
+Check where setFellowshipSubspecialty is used
+use createOrEnableFellAppRole in generateAllFellowshipSubspecialties?
+
