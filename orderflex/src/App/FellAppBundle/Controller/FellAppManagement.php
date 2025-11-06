@@ -472,7 +472,6 @@ class FellAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         $interviewerRoleFellType = null;
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
         $interviewerFellTypeRoles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
             //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
@@ -482,7 +481,7 @@ class FellAppManagement extends OrderAbstractController {
             }
         }
         if( !$interviewerRoleFellType ) {
-            throw new EntityNotFoundException('Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
+            throw new EntityNotFoundException('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.$fellowshipSubspecialty.']');
         }
 
         foreach( $users as $user ) {

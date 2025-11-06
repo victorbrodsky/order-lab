@@ -1802,7 +1802,7 @@ class FellAppController extends OrderAbstractController {
         if( !$interviewerRoleFellType ) {
             //throw new EntityNotFoundException('Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
             $logger = $this->container->get('logger');
-            $logger->warning('Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
+            $logger->warning('FellAppController: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty='.$fellowshipSubspecialty);
             return false;
         }
 

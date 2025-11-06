@@ -18,6 +18,7 @@ import time
 #Enable Swap: sudo swapon /swapfile
 #Make Swap Permanent. Add this line to /etc/fstab: /swapfile none swap sw 0 0
 
+#Error: Message: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause.
 
 class WebAutomation:
     def __init__(self, baseurl, run_by_symfony_command=False):
