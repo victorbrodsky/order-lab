@@ -468,21 +468,21 @@ class FellAppManagement extends OrderAbstractController {
     //assign ROLE_FELLAPP_INTERVIEWER corresponding to application
     public function assignFellAppAccessRoles($fellowshipSubspecialty,$users,$roleSubstr) {
 
-        echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".$fellowshipSubspecialty->getId().")=$fellowshipSubspecialty; roleSubstr=$roleSubstr <br>";
+        //echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".$fellowshipSubspecialty->getId().")=$fellowshipSubspecialty; roleSubstr=$roleSubstr <br>";
         $em = $this->getDoctrine()->getManager();
 
         $interviewerRoleFellType = null;
         $interviewerFellTypeRoles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
-        echo "interviewerFellTypeRoles=".count($interviewerFellTypeRoles)."<br>";
+        //echo "interviewerFellTypeRoles=".count($interviewerFellTypeRoles)."<br>";
         foreach( $interviewerFellTypeRoles as $role ) {
-            echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
+            //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos((string)$role,$roleSubstr) !== false ) {
                 $interviewerRoleFellType = $role;
                 break;
             }
         }
         if( !$interviewerRoleFellType ) {
-            exit('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.$fellowshipSubspecialty.']'); //testing
+            //exit('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.$fellowshipSubspecialty.']'); //testing
             throw new EntityNotFoundException('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.$fellowshipSubspecialty.']');
         }
 
