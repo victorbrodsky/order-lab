@@ -323,8 +323,9 @@ class FellApp:
             try:
                 interviewer = "administrator"
                 print(f"config_single_more: {fellapp_name} interviewer: {interviewer}")
-                user_id = 2 #id of administrator #self.existing_users['administrator']
-                # print(f"pi User ID: {user_id}")
+                user_id = self.existing_users[interviewer]
+                #user_id = 2 #id of administrator #self.existing_users['administrator']
+                print(f"interviewer ({interviewer}) user ID: {user_id}")
                 time.sleep(1)
                 script = f"""
                     $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');

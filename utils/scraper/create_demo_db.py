@@ -129,6 +129,48 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
     #     del automation
     #     sys.exit()
 
+    if 'fellapp' in demo_ids and demo_ids['fellapp'] and attempts.get('fellapp', 0) <= max_attempts:
+        print("fellapp attempt=", attempts.get('fellapp', 0))
+        #split this into multiple try blocks to isolate failures and improve clarity
+        try:
+            automation = WebAutomation(baseurl, run_by_symfony_command)
+            automation.login_to_site()
+            fellapp = FellApp(automation)
+            fellapp.configs()
+            fellapp.set_site_settings()
+        except Exception as e:
+            print("fellapp setup failed:", e)
+            attempts['fellapp'] += 1
+            automation = None
+            fellapp = None
+        else:
+            try:
+                del automation
+                del fellapp
+
+                automation = WebAutomation(baseurl, run_by_symfony_command)
+                automation.login_to_site()
+                fellapp = FellApp(automation)
+                fellapp.create_fellapps()
+                time.sleep(3)
+
+                fellapp.accept(1)
+                time.sleep(3)
+
+                automation.quit_driver()
+                demo_ids['fellapp'] = False
+                print("fellapp done!")
+            except Exception as e:
+                print("fellapp creation failed:", e)
+                attempts['fellapp'] += 1
+        finally:
+            if 'automation' in locals():
+                del automation
+            if 'fellapp' in locals():
+                del fellapp
+    else:
+        print("fellapp skipped")
+
     if 'vacreq' in demo_ids and demo_ids['vacreq'] and attempts.get('vacreq', 0) <= max_attempts:
         print("vacreq attempt=", attempts.get('vacreq', 0))
         try:
@@ -218,48 +260,6 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
                 del callog
     else:
         print("callog skipped")
-
-    if 'fellapp' in demo_ids and demo_ids['fellapp'] and attempts.get('fellapp', 0) <= max_attempts:
-        print("fellapp attempt=", attempts.get('fellapp', 0))
-        #split this into multiple try blocks to isolate failures and improve clarity
-        try:
-            automation = WebAutomation(baseurl, run_by_symfony_command)
-            automation.login_to_site()
-            fellapp = FellApp(automation)
-            fellapp.configs()
-            fellapp.set_site_settings()
-        except Exception as e:
-            print("fellapp setup failed:", e)
-            attempts['fellapp'] += 1
-            automation = None
-            fellapp = None
-        else:
-            try:
-                del automation
-                del fellapp
-
-                automation = WebAutomation(baseurl, run_by_symfony_command)
-                automation.login_to_site()
-                fellapp = FellApp(automation)
-                fellapp.create_fellapps()
-                time.sleep(3)
-
-                fellapp.accept(1)
-                time.sleep(3)
-
-                automation.quit_driver()
-                demo_ids['fellapp'] = False
-                print("fellapp done!")
-            except Exception as e:
-                print("fellapp creation failed:", e)
-                attempts['fellapp'] += 1
-        finally:
-            if 'automation' in locals():
-                del automation
-            if 'fellapp' in locals():
-                del fellapp
-    else:
-        print("fellapp skipped")
 
     if 'resapp' in demo_ids and demo_ids['resapp'] and attempts.get('resapp', 0) <= max_attempts:
         print("resapp attempt=", attempts.get('resapp', 0))
