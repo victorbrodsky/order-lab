@@ -87,7 +87,7 @@ class WebAutomation:
         if self.check_if_loggedin():
             return True
 
-        wait = WebDriverWait(self.driver, 20)
+        wait = WebDriverWait(self.driver, 10)
 
         """Logs in to the site."""
         if url is None:

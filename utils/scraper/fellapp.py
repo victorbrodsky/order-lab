@@ -107,6 +107,7 @@ class FellApp:
             time.sleep(3)
             self.config_single(fellapp_name)
             self.config_single_more(fellapp_name, users)
+            break #testing
 
     def config_single(self, fellapp_name):
         driver = self.automation.get_driver()
@@ -235,12 +236,10 @@ class FellApp:
             fellowship_type.click()
             time.sleep(3)
 
-            #users = self.users.get_users()
-
             # add coordinator with explicit waits
             try:
                 coordinator = users[2]
-                print(f"configs: coordinator: {coordinator['displayName']}")
+                print(f"config_single_more: {fellapp_name} coordinator: {coordinator['displayName']}")
                 combobox = WebDriverWait(driver, 10).until(
                     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators"))
                 )
@@ -253,12 +252,14 @@ class FellApp:
                 time.sleep(1)
                 driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
                 time.sleep(1)
+                print(f"config_single_more: {fellapp_name} coordinator added: {coordinator['displayName']}")
             except Exception as e:
-                print(f"config_single_more: unable to set coordinator for {fellapp_name}: {e}")
+                print(f"config_single_more: unable to set coordinator {coordinator['displayName']} for {fellapp_name}: {e}")
 
             # add director with explicit waits
             try:
                 director = users[3]
+                print(f"config_single_more: {fellapp_name} director: {director['displayName']}")
                 combobox = WebDriverWait(driver, 10).until(
                     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_directors"))
                 )
@@ -271,11 +272,13 @@ class FellApp:
                 time.sleep(1)
                 driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
                 time.sleep(1)
+                print(f"config_single_more: {fellapp_name} director added: {director['displayName']}")
             except Exception as e:
-                print(f"config_single_more: unable to set director for {fellapp_name}: {e}")
+                print(f"config_single_more: unable to set director {director['displayName']} for {fellapp_name}: {e}")
 
             # add interviewer with explicit waits
             try:
+                print(f"config_single_more: {fellapp_name} interviewer: administrator")
                 combobox = WebDriverWait(driver, 10).until(
                     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
                 )
@@ -288,14 +291,16 @@ class FellApp:
                 time.sleep(1)
                 driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
                 time.sleep(1)
+                print(f"config_single_more: {fellapp_name} director added: administrator")
             except Exception as e:
-                print(f"config_single_more: unable to set interviewer for {fellapp_name}: {e}")
+                print(f"config_single_more: unable to set interviewer administrator for {fellapp_name}: {e}")
 
             # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
             button = driver.find_element(By.CLASS_NAME, "btn-warning")
             driver.execute_script("arguments[0].scrollIntoView();", button)
             driver.save_screenshot("configs_after_click_btn-warning.png")
+            print(f"config_single_more: click Update button for {fellapp_name}: {e}")
         except NoSuchElementException:
             # create new fellowship type "Clinical Informatics"
             print(f"config_single_more: error in creating coordinator, director, interviewer for {fellapp_name}")
