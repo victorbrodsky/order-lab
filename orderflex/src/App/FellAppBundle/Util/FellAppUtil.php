@@ -809,11 +809,38 @@ class FellAppUtil {
 
         return $users;
     }
-    //Get role by fellowship specialty name ($fellowshipSubspecialty->getName()) and partial role name (_DIRECTOR_)
+    //Get role (ROLE_FELLAPP_DIRECTOR_WCM_PAINMEDICINE) by
+    // fellowship specialty name ($fellowshipSubspecialty->getName()) and partial role name (_DIRECTOR_)
     //$roleName is a partial role name: _DIRECTOR_
     public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
         //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
-        $roles = $this->em->getRepository(Roles::class);
+
+        $fellowshipSubspecialtyName = $fellowshipSubspecialty->getName(); //Pain Medicine
+        $fellowshipSubspecialtyName = strtoupper(str_replace(' ', '', $fellowshipSubspecialtyName)); //PAINMEDICINE
+
+        $partialRoleName = 'ROLE_FELLAPP'.$roleName; //ROLE_FELLAPP_DIRECTOR_
+
+        $repository = $this->em->getRepository(Roles::class);
+        $dql = $repository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
+
+        $parameters = array(
+            "name1" => '%' . $partialRoleName . '%',
+            "name2" => '%' . $fellowshipSubspecialtyName . '%'
+        );
+
+        $query = $dql->getQuery();
+        $query->setParameters($parameters);
+
+        $roles = $query->getResult();
+
+        //echo "roles=" . count($roles) . "<br>";
+
+        if( count($roles) > 0 ) {
+            $role = $roles[0];
+            return $role;
+        }
 
         foreach( $roles as $role ) {
             if( strpos((string)$role,$roleName) !== false ) {
@@ -1945,33 +1972,34 @@ class FellAppUtil {
     //compare original and final users => get removed users => for each removed user, remove the role
     //$roleName is a partial role name: _DIRECTOR_
     public function processRemovedUsersByFellowshipSetting( $fellowshipSubspecialty, $newUsers, $origUsers, $roleName ) {
-        if( count($newUsers) > 0 && count($origUsers) > 0 ) {
-            $this->printUsers($origUsers,"orig");
-            $this->printUsers($newUsers,"new");
+        //if( count($newUsers) > 0 && count($origUsers) > 0 ) {
+        //if( count($newUsers) != count($origUsers) ) {
+            //$this->printUsers($origUsers,"$roleName: orig");
+            //$this->printUsers($newUsers,"$roleName: new");
 
             //get diff
             $diffUsers = $this->array_diff_assoc_true($newUsers->toArray(), $origUsers->toArray());
             //$diffUsers = array_diff($newUsers->toArray(),$origUsers->toArray());
             //$diffUsers = array_diff($origUsers->toArray(),$newUsers->toArray());
 
-            echo '$roleName='.$roleName.": diffUsers count=".count($diffUsers)."<br>";
-            $this->printUsers($diffUsers,"diff");
+            //echo '$roleName='.$roleName.": diffUsers count=".count($diffUsers)."<br>";
+            //$this->printUsers($diffUsers,"$roleName: diff");
 
             $this->removeRoleFromUsers($diffUsers,$fellowshipSubspecialty,$roleName);
-        }
+        //}
     }
     public function removeRoleFromUsers( $users, $fellowshipSubspecialty, $roleName ) {
         $role = $this->getRoleByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleName );
         if( !$role ) {
             return null;
         }
-        echo $roleName.": role=".$role."<br>";
+        //echo $roleName.": role=".$role.", role id=".$role->getId()."<br>";
         foreach( $users as $user ) {
-            echo $roleName.": removeRole from user=".$user."<br>";
+            //echo $roleName.": removeRole from user=".$user."<br>";
             $user->removeRole($role);
             $this->em->flush($user);
         }
-        exit('1111'); //testing
+        //exit('1111'); //testing
     }
     public function array_diff_assoc_true($array1, $array2)
     {

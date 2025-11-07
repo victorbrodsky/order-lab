@@ -424,6 +424,7 @@ class FellAppManagement extends OrderAbstractController {
 
             $em->persist($felltype);
             $em->flush();
+            //exit('editAction test');
 
 
             return $this->redirect($this->generateUrl('fellapp_fellowshiptype_setting_show',array('id' => $felltype->getId())));
