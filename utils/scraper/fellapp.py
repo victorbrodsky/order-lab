@@ -76,7 +76,7 @@ class FellApp:
         return fellapps
 
     def configs(self):
-        fellapp_names = {
+        fellapp_names = [
             "Blood Banking and Transfusion Medicine",
             "Clinical Chemistry",
             "Clinical Informatics",
@@ -99,13 +99,13 @@ class FellApp:
             "Neuropathology",
             "Pediatric Pathology",
             "Surgical Pathology"
-        }
+        ]
 
         users = self.users.get_users()
 
         for fellapp_name in fellapp_names:
             time.sleep(3)
-            self.config_single(fellapp_name)
+            #self.config_single(fellapp_name)
             self.config_single_more(fellapp_name, users)
             break #testing
 
@@ -140,11 +140,12 @@ class FellApp:
                 #name.send_keys("Clinical Informatics")
                 name.send_keys(fellapp_name)
 
-                #s2id_oleg_userdirectorybundle_genericlist_institution
-                self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
-                                              ".select2-search .select2-input",
-                                              "Pathology and Laboratory Medicine"
-                                              )
+                #In new version, institution is not required for FellowshipSubspecialty
+                # #s2id_oleg_userdirectorybundle_genericlist_institution
+                # self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
+                #                               ".select2-search .select2-input",
+                #                               "Pathology and Laboratory Medicine"
+                #                               )
                 time.sleep(3)
 
                 self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
@@ -224,8 +225,9 @@ class FellApp:
         driver = self.automation.get_driver()
         fellowship_type_url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/fellowship-types-settings".lstrip('/')
         driver.get(fellowship_type_url)
-
         time.sleep(3)
+
+        wait = WebDriverWait(driver, 10)
 
         try:
             # Try to find the element
@@ -239,61 +241,173 @@ class FellApp:
             # add coordinator with explicit waits
             try:
                 coordinator = users[2]
-                print(f"config_single_more: {fellapp_name} coordinator: {coordinator['displayName']}")
-                combobox = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators"))
-                )
-                combobox.click()
-                search_box = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
-                )
-                search_box.send_keys(coordinator["displayName"])
-                search_box.send_keys(Keys.ENTER)
+                # user_id = self.users.get_existing_user('John Doe')
+                user_id = self.existing_users[coordinator['displayName']]
+                # print(f"pi User ID: {user_id}")
                 time.sleep(1)
-                driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-                time.sleep(1)
+
+                script = f"""
+                            $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators").select2('val','{user_id}');
+                        """
+                driver.execute_script(script)
+
+                time.sleep(3)
+
+                # print(f"config_single_more: {fellapp_name} coordinator: {coordinator['displayName']}")
+                # combobox = wait.until(
+                #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators"))
+                # )
+                #
+                # # Check if already selected
+                # selected_labels = combobox.find_elements(By.CSS_SELECTOR, ".select2-search-choice div")
+                # already_selected = any(coordinator["displayName"] in label.text for label in selected_labels)
+                #
+                # if not already_selected:
+                #     combobox.click()
+                #     search_box = wait.until(
+                #         EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
+                #     )
+                #     search_box.send_keys(coordinator["displayName"])
+                #     search_box.send_keys(Keys.ENTER)
+                #     time.sleep(1)
+                #
+                # # Always clean up the mask and dropdown
+                # wait.until(EC.invisibility_of_element_located((By.ID, "select2-drop-mask")))
+                # driver.find_element(By.TAG_NAME, "body").click()
+                # time.sleep(1)
                 print(f"config_single_more: {fellapp_name} coordinator added: {coordinator['displayName']}")
             except Exception as e:
                 print(f"config_single_more: unable to set coordinator {coordinator['displayName']} for {fellapp_name}: {e}")
+
+            #print("testing exit")
+            #exit()
 
             # add director with explicit waits
             try:
                 director = users[3]
                 print(f"config_single_more: {fellapp_name} director: {director['displayName']}")
-                combobox = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_directors"))
-                )
-                combobox.click()
-                search_box = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
-                )
-                search_box.send_keys(director["displayName"])
-                search_box.send_keys(Keys.ENTER)
+                user_id = self.existing_users[director['displayName']]
+                # print(f"pi User ID: {user_id}")
                 time.sleep(1)
-                driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-                time.sleep(1)
+                script = f"""
+                    $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_directors").select2('val','{user_id}');
+                """
+                driver.execute_script(script)
+                time.sleep(3)
+
+                # combobox = wait.until(
+                #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_directors"))
+                # )
+                #
+                # # Check if already selected
+                # selected_labels = combobox.find_elements(By.CSS_SELECTOR, ".select2-search-choice div")
+                # already_selected = any(director["displayName"] in label.text for label in selected_labels)
+                #
+                # if not already_selected:
+                #     combobox.click()
+                #     search_box = wait.until(
+                #         EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
+                #     )
+                #     search_box.send_keys(director["displayName"])
+                #     search_box.send_keys(Keys.ENTER)
+                #     time.sleep(1)
+                #     driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+                #     time.sleep(1)
+                # driver.find_element(By.TAG_NAME, "body").click()
+                # time.sleep(1)
                 print(f"config_single_more: {fellapp_name} director added: {director['displayName']}")
             except Exception as e:
                 print(f"config_single_more: unable to set director {director['displayName']} for {fellapp_name}: {e}")
 
             # add interviewer with explicit waits
             try:
-                print(f"config_single_more: {fellapp_name} interviewer: administrator")
-                combobox = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
-                )
-                combobox.click()
-                search_box = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
-                )
-                search_box.send_keys("administrator")
-                search_box.send_keys(Keys.ENTER)
+                interviewer = "administrator"
+                print(f"config_single_more: {fellapp_name} interviewer: {interviewer}")
+                user_id = 2 #id of administrator #self.existing_users['administrator']
+                # print(f"pi User ID: {user_id}")
                 time.sleep(1)
-                driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-                time.sleep(1)
-                print(f"config_single_more: {fellapp_name} director added: administrator")
+                script = f"""
+                    $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
+                """
+                driver.execute_script(script)
+                time.sleep(3)
+
+                # combobox = wait.until(
+                #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
+                # )
+                #
+                # # Check if already selected
+                # selected_labels = combobox.find_elements(By.CSS_SELECTOR, ".select2-search-choice div")
+                # already_selected = any(interviewer in label.text for label in selected_labels)
+                #
+                # if not already_selected:
+                #     combobox.click()
+                #     search_box = wait.until(
+                #         EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
+                #     )
+                #     search_box.send_keys(interviewer)
+                #     search_box.send_keys(Keys.ENTER)
+                #     time.sleep(1)
+                #     driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+                #     time.sleep(1)
+                # driver.find_element(By.TAG_NAME, "body").click()
+                # time.sleep(1)
+                print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
             except Exception as e:
-                print(f"config_single_more: unable to set interviewer administrator for {fellapp_name}: {e}")
+                print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
+            # try:
+            #     # print(f"config_single_more: {fellapp_name} interviewer: administrator")
+            #     # combobox = wait.until(
+            #     #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
+            #     # )
+            #     # combobox.click()
+            #     # search_box = wait.until(
+            #     #     EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
+            #     # )
+            #     # search_box.send_keys("administrator")
+            #     # search_box.send_keys(Keys.ENTER)
+            #     # time.sleep(1)
+            #     # driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+            #
+            #     # Step 1: Locate the specific Select2 container
+            #     container = wait.until(EC.presence_of_element_located(
+            #         (By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers")
+            #     ))
+            #
+            #     # Step 2: Find the input inside that container
+            #     input_box = container.find_element(By.CSS_SELECTOR, "input.select2-input")
+            #     print(f"config_single_more: finded input.select2-input")
+            #     time.sleep(3)
+            #
+            #     # Step 3: Interact with the input
+            #     input_box.click()
+            #     input_box.clear()
+            #     time.sleep(3)
+            #     print(f"config_single_more: clicked input field")
+            #
+            #     input_box.send_keys("administrator")
+            #     time.sleep(3)
+            #     print(f"config_single_more: typed administrator")
+            #
+            #     # Step 4: Wait for dropdown and select the correct option
+            #     option = wait.until(EC.element_to_be_clickable((
+            #         By.XPATH,
+            #         "//div[contains(@class, 'select2-result-label') and contains(text(), 'administrator')]"
+            #     )))
+            #     option.click()
+            #     time.sleep(3)
+            #     print(f"config_single_more: after click")
+            #
+            #     driver.find_element(By.TAG_NAME, "body").click()
+            #     time.sleep(3)
+            #
+            #     #Step 5: Wait for the Select2 mask to disappear
+            #     wait.until(EC.invisibility_of_element_located((By.ID, "select2-drop-mask")))
+            #
+            #     time.sleep(1)
+            #     print(f"config_single_more: {fellapp_name} director added: administrator")
+            # except Exception as e:
+            #     print(f"config_single_more: unable to set interviewer administrator for {fellapp_name}: {e}")
 
             # click Update button btn btn-warning
             self.automation.click_button("btn-warning")
@@ -301,6 +415,10 @@ class FellApp:
             driver.execute_script("arguments[0].scrollIntoView();", button)
             driver.save_screenshot("configs_after_click_btn-warning.png")
             print(f"config_single_more: click Update button for {fellapp_name}: {e}")
+
+            #testing
+            return
+
         except NoSuchElementException:
             # create new fellowship type "Clinical Informatics"
             print(f"config_single_more: error in creating coordinator, director, interviewer for {fellapp_name}")
