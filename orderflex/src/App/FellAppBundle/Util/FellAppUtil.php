@@ -809,7 +809,22 @@ class FellAppUtil {
 
         return $users;
     }
+    //Get role by fellowship specialty name ($fellowshipSubspecialty->getName()) and partial role name (_DIRECTOR_)
+    //$roleName is a partial role name: _DIRECTOR_
     public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
+        //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        $roles = $this->em->getRepository(Roles::class);
+
+        foreach( $roles as $role ) {
+            if( strpos((string)$role,$roleName) !== false ) {
+                return $role;
+                break;
+            }
+        }
+
+        return null;
+    }
+    public function getRoleByFellowshipSubspecialtyAndRolename_ORIG( $fellowshipSubspecialty, $roleName ) {
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
         $roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $roles as $role ) {
@@ -821,6 +836,8 @@ class FellAppUtil {
 
         return null;
     }
+
+
 
     //Generic fell app user to submit the form without login.
     // This user will be logged in programmatically on the /apply/ page,
@@ -1926,6 +1943,7 @@ class FellAppUtil {
     }
 
     //compare original and final users => get removed users => for each removed user, remove the role
+    //$roleName is a partial role name: _DIRECTOR_
     public function processRemovedUsersByFellowshipSetting( $fellowshipSubspecialty, $newUsers, $origUsers, $roleName ) {
         if( count($newUsers) > 0 && count($origUsers) > 0 ) {
             $this->printUsers($origUsers,"orig");
@@ -1936,7 +1954,7 @@ class FellAppUtil {
             //$diffUsers = array_diff($newUsers->toArray(),$origUsers->toArray());
             //$diffUsers = array_diff($origUsers->toArray(),$newUsers->toArray());
 
-            echo $roleName.": diffUsers count=".count($diffUsers)."<br>";
+            echo '$roleName='.$roleName.": diffUsers count=".count($diffUsers)."<br>";
             $this->printUsers($diffUsers,"diff");
 
             $this->removeRoleFromUsers($diffUsers,$fellowshipSubspecialty,$roleName);
@@ -1947,13 +1965,13 @@ class FellAppUtil {
         if( !$role ) {
             return null;
         }
-        //echo $roleName.": role=".$role."<br>";
+        echo $roleName.": role=".$role."<br>";
         foreach( $users as $user ) {
-            //echo $roleName.": removeRole from user=".$user."<br>";
+            echo $roleName.": removeRole from user=".$user."<br>";
             $user->removeRole($role);
             $this->em->flush($user);
         }
-        //exit('1111');
+        exit('1111'); //testing
     }
     public function array_diff_assoc_true($array1, $array2)
     {

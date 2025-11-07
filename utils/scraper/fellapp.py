@@ -243,15 +243,12 @@ class FellApp:
                 coordinator = users[2]
                 # user_id = self.users.get_existing_user('John Doe')
                 user_id = self.existing_users[coordinator['displayName']]
-                # print(f"pi User ID: {user_id}")
-                time.sleep(1)
-
+                print(f"coordinator {coordinator['displayName']} User ID: {user_id}")
                 script = f"""
                             $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators").select2('val','{user_id}');
                         """
                 driver.execute_script(script)
-
-                time.sleep(3)
+                time.sleep(1)
 
                 # print(f"config_single_more: {fellapp_name} coordinator: {coordinator['displayName']}")
                 # combobox = wait.until(
@@ -287,13 +284,12 @@ class FellApp:
                 director = users[3]
                 print(f"config_single_more: {fellapp_name} director: {director['displayName']}")
                 user_id = self.existing_users[director['displayName']]
-                # print(f"pi User ID: {user_id}")
-                time.sleep(1)
+                print(f"director {director['displayName']} User ID: {user_id}")
                 script = f"""
                     $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_directors").select2('val','{user_id}');
                 """
                 driver.execute_script(script)
-                time.sleep(3)
+                time.sleep(1)
 
                 # combobox = wait.until(
                 #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_directors"))
@@ -326,12 +322,11 @@ class FellApp:
                 user_id = self.existing_users[interviewer]
                 #user_id = 2 #id of administrator #self.existing_users['administrator']
                 print(f"interviewer ({interviewer}) user ID: {user_id}")
-                time.sleep(1)
                 script = f"""
                     $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
                 """
                 driver.execute_script(script)
-                time.sleep(3)
+                time.sleep(1)
 
                 # combobox = wait.until(
                 #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
@@ -420,9 +415,9 @@ class FellApp:
             #testing
             return
 
-        except NoSuchElementException:
+        except NoSuchElementException as e:
             # create new fellowship type "Clinical Informatics"
-            print(f"config_single_more: error in creating coordinator, director, interviewer for {fellapp_name}")
+            print(f"config_single_more: error in creating coordinator, director, interviewer for {fellapp_name}. NoSuchElementException: {e}")
 
 
     def set_site_settings(self):
