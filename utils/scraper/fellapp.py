@@ -107,7 +107,7 @@ class FellApp:
             time.sleep(3)
             #self.config_single(fellapp_name)
             self.config_single_more(fellapp_name, users)
-            break #testing
+            #break #testing
 
     def config_single(self, fellapp_name):
         driver = self.automation.get_driver()
