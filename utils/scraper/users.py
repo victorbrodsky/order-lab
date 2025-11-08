@@ -21,11 +21,12 @@ class Users:
         self.existing_users = {}
         #pass
     
-    def get_users(self):
+    def get_users(self,with_admin=False):
 
         #Retrieves users with their details.
 
         raw_data = [
+            #["Admin", "Admin", ""],
             ["Emily", "Parker", "Emily.Parker@example.com"],
             ["Sarah", "Mitchell", "Sarah.Mitchell@example.com"],
             ["Jessica", "Reed", "Jessica.Reed@example.com"],
@@ -66,6 +67,9 @@ class Users:
             # ["Jordan", "Lee", "Jordan.Lee@example.com"],
             # ["Casey", "Allen", "Casey.Allen@example.com"]
         ]
+
+        if with_admin:
+            raw_data.append(["Admin", "Admin", ""])
 
         #Returns:
         #    list: A list of user dictionaries containing user details.
@@ -120,12 +124,12 @@ class Users:
 
         return users
 
-    def get_existing_users(self):
+    def get_existing_users(self,with_admin=False):
         automation = self.automation
         driver = automation.get_driver()
         driver.get(self.automation.baseurl.rstrip('/') + '/' + 'directory/users'.lstrip('/'))
         time.sleep(1)
-        for user in self.get_users():
+        for user in self.get_users(with_admin):
             #time.sleep(1)
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), 'John Doe')]")
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(text(), '"+user['displayName']+"')]")

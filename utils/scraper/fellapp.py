@@ -19,7 +19,7 @@ class FellApp:
     def __init__(self, automation):
         self.automation = automation
         self.users = Users(automation)
-        self.existing_users = self.users.get_existing_users()
+        self.existing_users = self.users.get_existing_users(with_admin=True)
 
     def get_fell_apps(self):
         fellapps = []
@@ -321,8 +321,9 @@ class FellApp:
 
             # add interviewer with explicit waits
             try:
-                interviewer = "administrator"
+                interviewer = "Admin Admin"
                 print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
+                print("self.existing_users:",self.existing_users)
                 user_id = self.existing_users[interviewer]
                 #user_id = 2 #id of administrator #self.existing_users['administrator']
                 print(f"interviewer ({interviewer}) user ID: {user_id}")
@@ -411,12 +412,14 @@ class FellApp:
             # except Exception as e:
             #     print(f"config_single_more: unable to set interviewer administrator for {fellapp_name}: {e}")
 
-            # click Update button btn btn-warning
-            time.sleep(3)
-            self.automation.click_button("btn-warning")
             button = driver.find_element(By.CLASS_NAME, "btn-warning")
             driver.execute_script("arguments[0].scrollIntoView();", button)
             driver.save_screenshot("configs_after_click_btn-warning.png")
+
+            # click Update button btn btn-warning
+            time.sleep(3)
+            self.automation.click_button("btn-warning")
+
             print(f"config_single_more: click Update button for {fellapp_name}: {e}")
 
             #testing
