@@ -249,8 +249,8 @@ class FellApp:
                         """
                 driver.execute_script(script)
                 time.sleep(1)
-                driver.find_element(By.TAG_NAME, "body").click()
-                time.sleep(1)
+                #driver.find_element(By.TAG_NAME, "body").click()
+                #time.sleep(1)
 
                 # print(f"config_single_more: {fellapp_name} coordinator: {coordinator['displayName']}")
                 # combobox = wait.until(
@@ -292,8 +292,8 @@ class FellApp:
                 """
                 driver.execute_script(script)
                 time.sleep(1)
-                driver.find_element(By.TAG_NAME, "body").click()
-                time.sleep(1)
+                #driver.find_element(By.TAG_NAME, "body").click()
+                #time.sleep(1)
 
                 # combobox = wait.until(
                 #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_directors"))
@@ -332,8 +332,8 @@ class FellApp:
                 """
                 driver.execute_script(script)
                 time.sleep(1)
-                driver.find_element(By.TAG_NAME, "body").click()
-                time.sleep(1)
+                #driver.find_element(By.TAG_NAME, "body").click()
+                #time.sleep(1)
 
                 # combobox = wait.until(
                 #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
@@ -419,8 +419,7 @@ class FellApp:
             # click Update button btn btn-warning
             time.sleep(3)
             self.automation.click_button("btn-warning")
-
-            print(f"config_single_more: click Update button for {fellapp_name}: {e}")
+            print(f"config_single_more: after click Update button for {fellapp_name}")
 
             #testing
             #return
