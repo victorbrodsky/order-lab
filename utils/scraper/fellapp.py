@@ -517,8 +517,9 @@ class FellApp:
         url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/new/".lstrip('/')
         #url = "http://127.0.0.1/fellowship-applications/new/"
         driver.get(url)
-
         time.sleep(1)
+
+        print(f"Start submitting fellapp for {fellapp["displayName"]}")
 
         #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
         #print("create new fellowship application")
@@ -764,10 +765,12 @@ class FellApp:
         #Click 'Submit' button with id="submitSubmitBtn"
         #<button id="submitSubmitBtn" class="btn btn-primary">Submit</button>
         button = driver.find_element(By.ID, "submitSubmitBtn")
+        time.sleep(1)
         button.click()
+        print(f"Button to submit fellapp for {fellapp["displayName"]} (submitSubmitBtn) clicked")
 
         #print("Finish new fellapp")
-        time.sleep(10)
+        time.sleep(5)
 
     def accept(self, fellapp_id):
         driver = self.automation.get_driver()
@@ -797,7 +800,7 @@ def main():
     fellapp.configs(max_count=1, batch_size=3)
 
     # Set site settings after all configurations are done
-    if 0:
+    if 1:
         fellapp.set_site_settings()
 
     # Clean up
@@ -806,7 +809,7 @@ def main():
     del automation
 
     # Now process the fellowship applications
-    if 0:
+    if 1:
         automation = WebAutomation(baseurl, run_by_symfony_command)
         automation.login_to_site()
         fellapp = FellApp(automation)
