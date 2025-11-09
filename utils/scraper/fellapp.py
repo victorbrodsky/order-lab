@@ -75,7 +75,7 @@ class FellApp:
 
         return fellapps
 
-    def configs(self, max_count=0):
+    def configs(self, max_count=0, batch_size=3):
         fellapp_names = [
             "Blood Banking and Transfusion Medicine",
             "Clinical Chemistry",
@@ -101,17 +101,59 @@ class FellApp:
             "Surgical Pathology"
         ]
 
+        # Get users first to avoid multiple calls
         users = self.users.get_users()
-
+        
+        # Store original automation instance
+        original_automation = self.automation
+        original_driver = original_automation.get_driver()
+        
         count = 0
-        for fellapp_name in fellapp_names:
-            time.sleep(3)
-            #self.config_single(fellapp_name)
-            self.config_single_more(fellapp_name, users)
-            count += 1  # increment count
-            #break #testing
-            if max_count > 0 and count >= max_count:
-                break
+        processed_count = 0
+        
+        try:
+            # Process in batches
+            for i in range(0, len(fellapp_names), batch_size):
+                batch = fellapp_names[i:i + batch_size]
+                print(f"\n--- Processing batch {i//batch_size + 1} of {(len(fellapp_names) + batch_size - 1) // batch_size} ---")
+                
+                # Create a new WebDriver instance for each batch
+                batch_automation = WebAutomation(
+                    baseurl=original_automation.baseurl,
+                    run_by_symfony_command=original_automation.run_by_symfony_command
+                )
+                batch_automation.login_to_site()
+                self.automation = batch_automation
+                
+                try:
+                    for fellapp_name in batch:
+                        try:
+                            time.sleep(3)
+                            print(f"Processing {fellapp_name}...")
+                            self.config_single_more(fellapp_name, users)
+                            count += 1
+                            processed_count += 1
+                            print(f"✓ Completed {fellapp_name} ({processed_count}/{len(fellapp_names)})")
+                            
+                            if max_count > 0 and count >= max_count:
+                                return
+                                
+                        except Exception as e:
+                            print(f"Error processing {fellapp_name}: {str(e)}")
+                            continue
+                            
+                finally:
+                    # Clean up batch resources
+                    try:
+                        batch_automation.quit_driver()
+                    except:
+                        pass
+                    del batch_automation
+                    self.automation = None
+                    
+        finally:
+            # Restore original automation instance
+            self.automation = original_automation
 
     def config_single(self, fellapp_name):
         driver = self.automation.get_driver()
@@ -797,19 +839,46 @@ def main():
     # username_text = "oli2002l"
     # password_text = "pass"
 
+    run_by_symfony_command = False
     baseurl = "https://view.online/c/demo-institution/demo-department"
-    automation = WebAutomation(baseurl, False)
-    automation.login_to_site(url, username_text, password_text)
 
+    # First, process the fellowship configurations in small batches
+    automation = WebAutomation(baseurl, run_by_symfony_command)
+    automation.login_to_site()
     fellapp = FellApp(automation)
-    fellapp.configs(max_count=3)
-    #fellapp.set_site_settings()
-    #fellapp.create_fellapps()
-    #fellapp.accept(1)
+
+    # Process in batches of 3
+    fellapp.configs(batch_size=3)
+
+    # Set site settings after all configurations are done
+    fellapp.set_site_settings()
+
+    # Clean up
+    automation.quit_driver()
+    del fellapp
+    del automation
+
+    # Now process the fellowship applications
+    automation = WebAutomation(baseurl, run_by_symfony_command)
+    automation.login_to_site()
+    fellapp = FellApp(automation)
+
+    # Create fellowship applications
+    fellapp.create_fellapps()
+    time.sleep(3)
+
+    # Accept applications
+    fellapp.accept(1)
+    time.sleep(3)
 
     print("FellApp done!")
 
-    automation.quit_driver()
+    #automation.quit_driver()
+    if 'fellapp' in locals():
+        del fellapp
+    if 'automation' in locals():
+        automation.quit_driver()
+        del automation
 
 if __name__ == "__main__":
     main()

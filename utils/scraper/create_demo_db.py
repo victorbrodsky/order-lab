@@ -131,43 +131,55 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
 
     if 'fellapp' in demo_ids and demo_ids['fellapp'] and attempts.get('fellapp', 0) <= max_attempts:
         print("fellapp attempt=", attempts.get('fellapp', 0))
-        #split this into multiple try blocks to isolate failures and improve clarity
+        
+        # Process fellowship configurations in batches
         try:
+            # First, process the fellowship configurations in small batches
             automation = WebAutomation(baseurl, run_by_symfony_command)
             automation.login_to_site()
             fellapp = FellApp(automation)
-            fellapp.configs()
+            
+            # Process in batches of 3
+            fellapp.configs(batch_size=3)
+            
+            # Set site settings after all configurations are done
             fellapp.set_site_settings()
+            
+            # Clean up
+            automation.quit_driver()
+            del fellapp
+            del automation
+            
+            # Now process the fellowship applications
+            automation = WebAutomation(baseurl, run_by_symfony_command)
+            automation.login_to_site()
+            fellapp = FellApp(automation)
+            
+            # Create fellowship applications
+            fellapp.create_fellapps()
+            time.sleep(3)
+            
+            # Accept applications
+            fellapp.accept(1)
+            time.sleep(3)
+            
+            # Mark as complete
+            demo_ids['fellapp'] = False
+            print("fellapp done!")
+            
         except Exception as e:
-            print("fellapp setup failed:", e)
+            print("fellapp processing failed:", e)
             attempts['fellapp'] += 1
-            automation = None
-            fellapp = None
-        else:
-            try:
-                del automation
-                del fellapp
-
-                automation = WebAutomation(baseurl, run_by_symfony_command)
-                automation.login_to_site()
-                fellapp = FellApp(automation)
-                fellapp.create_fellapps()
-                time.sleep(3)
-
-                fellapp.accept(1)
-                time.sleep(3)
-
-                automation.quit_driver()
-                demo_ids['fellapp'] = False
-                print("fellapp done!")
-            except Exception as e:
-                print("fellapp creation failed:", e)
-                attempts['fellapp'] += 1
+            if attempts['fellapp'] > max_attempts:
+                print("Max attempts reached for fellapp. Moving to next step.")
+            
         finally:
-            if 'automation' in locals():
-                del automation
+            # Ensure all resources are properly cleaned up
             if 'fellapp' in locals():
                 del fellapp
+            if 'automation' in locals():
+                automation.quit_driver()
+                del automation
     else:
         print("fellapp skipped")
 
