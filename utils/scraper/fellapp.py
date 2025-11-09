@@ -412,9 +412,13 @@ class FellApp:
             # except Exception as e:
             #     print(f"config_single_more: unable to set interviewer administrator for {fellapp_name}: {e}")
 
-            button = driver.find_element(By.CLASS_NAME, "btn-warning")
-            driver.execute_script("arguments[0].scrollIntoView();", button)
-            driver.save_screenshot("configs_after_click_btn-warning.png")
+            try:
+                button = driver.find_element(By.CLASS_NAME, "btn-warning")
+                driver.execute_script("arguments[0].scrollIntoView();", button)
+                driver.save_screenshot("configs_after_click_btn-warning.png")
+            except NoSuchElementException as e:
+                print(
+                    f"config_single_more: error in clicking button for {fellapp_name}. NoSuchElementException: {e}")
 
             # click Update button btn btn-warning
             time.sleep(3)
