@@ -377,7 +377,8 @@ class FellApp:
                     $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
                 """
                 driver.execute_script(script)
-                time.sleep(1)
+                print(f"After set interviewer ({interviewer}) with user ID {user_id}")
+                time.sleep(3)
                 #driver.find_element(By.TAG_NAME, "body").click()
                 #time.sleep(1)
 
@@ -404,6 +405,7 @@ class FellApp:
                 print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
             except Exception as e:
                 print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
+                time.sleep(3)
             # try:
             #     # print(f"config_single_more: {fellapp_name} interviewer: administrator")
             #     # combobox = wait.until(
