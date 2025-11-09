@@ -12,6 +12,8 @@ import datetime
 #from dateutil.relativedelta import relativedelta
 #from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import JavascriptException
+
 
 
 
@@ -139,7 +141,7 @@ class FellApp:
                                 return
                                 
                         except Exception as e:
-                            print(f"Error processing {fellapp_name}: {str(e)}")
+                            print(f"Error processing config_single_more for {fellapp_name}: {str(e)}")
                             continue
                             
                 finally:
@@ -154,118 +156,6 @@ class FellApp:
         finally:
             # Restore original automation instance
             self.automation = original_automation
-
-    def config_single(self, fellapp_name):
-        driver = self.automation.get_driver()
-        #Add Fellowship Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
-        #url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
-        fellapp_type_url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/edit-by-listname/FellowshipSubspecialty".lstrip('/')
-        driver.get(fellapp_type_url)
-
-        time.sleep(1)
-
-        # Wait for the table to load
-        wait = WebDriverWait(driver, 10)  # Adjust timeout as needed
-        table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'records_list')))
-
-        # Locate the <td> with the exact text "Clinical Informatics"
-        try:
-            #target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
-            target_td = table.find_element(By.XPATH, f'.//td[text()="{fellapp_name}"]')
-            if target_td:
-                #print("<td> with text 'Clinical Informatics' already exists.")
-                #print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
-                pass
-            else:
-                #create
-                create_link = table.find_element(By.XPATH, './/a[text()="Create a new entry"]')
-                create_link.click()
-                time.sleep(3)
-
-                name = driver.find_element(By.ID, "oleg_userdirectorybundle_genericlist_list_name")
-                #name.send_keys("Clinical Informatics")
-                name.send_keys(fellapp_name)
-
-                #In new version, institution is not required for FellowshipSubspecialty
-                # #s2id_oleg_userdirectorybundle_genericlist_institution
-                # self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
-                #                               ".select2-search .select2-input",
-                #                               "Pathology and Laboratory Medicine"
-                #                               )
-                time.sleep(3)
-
-                self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
-
-        except:
-            print(f"fellapp configs: Unable to find or create {fellapp_name}")
-
-        time.sleep(3)
-
-        #Create fellowship type
-        fellowship_type_url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/fellowship-types-settings".lstrip('/')
-        driver.get(fellowship_type_url)
-
-        time.sleep(3)
-
-        #<a href="/c/demo-institution/demo-department/fellowship-applications/fellowship-type/edit/1">Clinical Informatics</a>
-        #fellowship_type = table.find_element(By.XPATH, './/a[text()="Clinical Informatics"]')
-        #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
-        # fellowship_type = WebDriverWait(driver, 10).until(
-        #     EC.presence_of_element_located((By.XPATH, "//h4/a[contains(text(), 'Clinical Informatics')]"))
-        # )
-        try:
-            # Try to find the element
-            #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
-            fellowship_type = driver.find_element("xpath", f"//h4/a[contains(text(), '{fellapp_name}')]")
-            #print("Element found!")
-            # You can perform actions on the element here
-            fellowship_type.click()
-            time.sleep(3)
-
-            # #Add coordinator
-            # users = self.users.get_users()
-            #
-            # # add coordinator
-            # coordinator = users[2]
-            # print(f"configs: coordinator: {coordinator['displayName']}")
-            #
-            # # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
-            # self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
-            #                               ".select2-choices .select2-input",
-            #                               coordinator["displayName"]
-            #                               )
-            #
-            # time.sleep(3)
-            #
-            # driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-            # time.sleep(3)
-            #
-            # # click Update button btn btn-warning
-            # self.automation.click_button("btn-warning")
-            # button = driver.find_element(By.CLASS_NAME, "btn-warning")
-            # driver.execute_script("arguments[0].scrollIntoView();", button)
-            # driver.save_screenshot("configs_after_click_btn-warning.png")
-        except NoSuchElementException:
-            # create new fellowship type "Clinical Informatics"
-            #print("create new fellowship type Clinical Informatics")
-            self.automation.click_button("btn-primary")
-            time.sleep(3)
-
-            # self.automation.select_option(
-            #     "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
-            #     ".select2-search .select2-input",
-            #     "Clinical Informatics"
-            #     )
-            self.automation.select_option(
-                "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
-                ".select2-search .select2-input",
-                fellapp_name
-            )
-
-            time.sleep(3)
-            self.automation.click_button_by_id("oleg_fellappbundle_fellappfellowshipapplicationtype_save")
-
-        time.sleep(3)
 
     def config_single_more(self, fellapp_name, users):
         driver = self.automation.get_driver()
@@ -370,108 +260,51 @@ class FellApp:
                 interviewer = "Admin Admin"
                 print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
                 #print("self.existing_users:",self.existing_users)
-                user_id = self.existing_users[interviewer]
-                #user_id = 2 #id of administrator #self.existing_users['administrator']
+                #user_id = self.existing_users[interviewer]
+                if interviewer in self.existing_users:
+                    user_id = self.existing_users[interviewer]
+                else:
+                    user_id = 2  #handle the missing case appropriately by default id 2
                 print(f"interviewer ({interviewer}) user ID: {user_id}")
+
                 script = f"""
                     $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
                 """
-                driver.execute_script(script)
+                #driver.execute_script(script)
+                try:
+                    driver.execute_script(script)
+                    for entry in driver.get_log('browser'):
+                        print(entry)
+                except JavascriptException as e:
+                    print("interviewer JavaScript execution failed:")
+                    print(e.msg)  # concise error message
+                    print(e.stacktrace)  # full stack trace if available
+
                 print(f"After set interviewer ({interviewer}) with user ID {user_id}")
                 time.sleep(3)
                 #driver.find_element(By.TAG_NAME, "body").click()
                 #time.sleep(1)
-
-                # combobox = wait.until(
-                #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
-                # )
-                #
-                # # Check if already selected
-                # selected_labels = combobox.find_elements(By.CSS_SELECTOR, ".select2-search-choice div")
-                # already_selected = any(interviewer in label.text for label in selected_labels)
-                #
-                # if not already_selected:
-                #     combobox.click()
-                #     search_box = wait.until(
-                #         EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
-                #     )
-                #     search_box.send_keys(interviewer)
-                #     search_box.send_keys(Keys.ENTER)
-                #     time.sleep(1)
-                #     driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-                #     time.sleep(1)
-                # driver.find_element(By.TAG_NAME, "body").click()
-                # time.sleep(1)
                 print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
             except Exception as e:
                 print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
                 time.sleep(3)
-            # try:
-            #     # print(f"config_single_more: {fellapp_name} interviewer: administrator")
-            #     # combobox = wait.until(
-            #     #     EC.element_to_be_clickable((By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers"))
-            #     # )
-            #     # combobox.click()
-            #     # search_box = wait.until(
-            #     #     EC.presence_of_element_located((By.CSS_SELECTOR, ".select2-choices .select2-input"))
-            #     # )
-            #     # search_box.send_keys("administrator")
-            #     # search_box.send_keys(Keys.ENTER)
-            #     # time.sleep(1)
-            #     # driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-            #
-            #     # Step 1: Locate the specific Select2 container
-            #     container = wait.until(EC.presence_of_element_located(
-            #         (By.ID, "s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers")
-            #     ))
-            #
-            #     # Step 2: Find the input inside that container
-            #     input_box = container.find_element(By.CSS_SELECTOR, "input.select2-input")
-            #     print(f"config_single_more: finded input.select2-input")
-            #     time.sleep(3)
-            #
-            #     # Step 3: Interact with the input
-            #     input_box.click()
-            #     input_box.clear()
-            #     time.sleep(3)
-            #     print(f"config_single_more: clicked input field")
-            #
-            #     input_box.send_keys("administrator")
-            #     time.sleep(3)
-            #     print(f"config_single_more: typed administrator")
-            #
-            #     # Step 4: Wait for dropdown and select the correct option
-            #     option = wait.until(EC.element_to_be_clickable((
-            #         By.XPATH,
-            #         "//div[contains(@class, 'select2-result-label') and contains(text(), 'administrator')]"
-            #     )))
-            #     option.click()
-            #     time.sleep(3)
-            #     print(f"config_single_more: after click")
-            #
-            #     driver.find_element(By.TAG_NAME, "body").click()
-            #     time.sleep(3)
-            #
-            #     #Step 5: Wait for the Select2 mask to disappear
-            #     wait.until(EC.invisibility_of_element_located((By.ID, "select2-drop-mask")))
-            #
-            #     time.sleep(1)
-            #     print(f"config_single_more: {fellapp_name} director added: administrator")
-            # except Exception as e:
-            #     print(f"config_single_more: unable to set interviewer administrator for {fellapp_name}: {e}")
 
+            #Click Update button
+            time.sleep(3)
             try:
-                button = driver.find_element(By.CLASS_NAME, "btn-warning")
-                driver.execute_script("arguments[0].scrollIntoView();", button)
+                update_button = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "button.btn.btn-warning"))
+                )
+                update_button.click()
+                print(f"config_single_more: after click Update button for {fellapp_name}")
+                time.sleep(3)
+                driver.execute_script("arguments[0].scrollIntoView();", update_button)
                 driver.save_screenshot("configs_after_click_btn-warning.png")
+                for entry in driver.get_log('browser'):
+                    print(entry)
             except NoSuchElementException as e:
                 print(
                     f"config_single_more: error in clicking button for {fellapp_name}. NoSuchElementException: {e}")
-
-            # click Update button btn btn-warning
-            time.sleep(3)
-            self.automation.click_button("btn-warning")
-            print(f"config_single_more: after click Update button for {fellapp_name}")
 
             #testing
             #return
@@ -479,6 +312,117 @@ class FellApp:
             # create new fellowship type "Clinical Informatics"
             print(f"config_single_more: error in creating coordinator, director, interviewer for {fellapp_name}. NoSuchElementException: {e}")
 
+    # def config_single(self, fellapp_name):
+    #     driver = self.automation.get_driver()
+    #     #Add Fellowship Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
+    #     #url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
+    #     fellapp_type_url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/edit-by-listname/FellowshipSubspecialty".lstrip('/')
+    #     driver.get(fellapp_type_url)
+    #
+    #     time.sleep(1)
+    #
+    #     # Wait for the table to load
+    #     wait = WebDriverWait(driver, 10)  # Adjust timeout as needed
+    #     table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'records_list')))
+    #
+    #     # Locate the <td> with the exact text "Clinical Informatics"
+    #     try:
+    #         #target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
+    #         target_td = table.find_element(By.XPATH, f'.//td[text()="{fellapp_name}"]')
+    #         if target_td:
+    #             #print("<td> with text 'Clinical Informatics' already exists.")
+    #             #print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
+    #             pass
+    #         else:
+    #             #create
+    #             create_link = table.find_element(By.XPATH, './/a[text()="Create a new entry"]')
+    #             create_link.click()
+    #             time.sleep(3)
+    #
+    #             name = driver.find_element(By.ID, "oleg_userdirectorybundle_genericlist_list_name")
+    #             #name.send_keys("Clinical Informatics")
+    #             name.send_keys(fellapp_name)
+    #
+    #             #In new version, institution is not required for FellowshipSubspecialty
+    #             # #s2id_oleg_userdirectorybundle_genericlist_institution
+    #             # self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
+    #             #                               ".select2-search .select2-input",
+    #             #                               "Pathology and Laboratory Medicine"
+    #             #                               )
+    #             time.sleep(3)
+    #
+    #             self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
+    #
+    #     except:
+    #         print(f"fellapp configs: Unable to find or create {fellapp_name}")
+    #
+    #     time.sleep(3)
+    #
+    #     #Create fellowship type
+    #     fellowship_type_url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/fellowship-types-settings".lstrip('/')
+    #     driver.get(fellowship_type_url)
+    #
+    #     time.sleep(3)
+    #
+    #     #<a href="/c/demo-institution/demo-department/fellowship-applications/fellowship-type/edit/1">Clinical Informatics</a>
+    #     #fellowship_type = table.find_element(By.XPATH, './/a[text()="Clinical Informatics"]')
+    #     #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+    #     # fellowship_type = WebDriverWait(driver, 10).until(
+    #     #     EC.presence_of_element_located((By.XPATH, "//h4/a[contains(text(), 'Clinical Informatics')]"))
+    #     # )
+    #     try:
+    #         # Try to find the element
+    #         #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
+    #         fellowship_type = driver.find_element("xpath", f"//h4/a[contains(text(), '{fellapp_name}')]")
+    #         #print("Element found!")
+    #         # You can perform actions on the element here
+    #         fellowship_type.click()
+    #         time.sleep(3)
+    #
+    #         # #Add coordinator
+    #         # users = self.users.get_users()
+    #         #
+    #         # # add coordinator
+    #         # coordinator = users[2]
+    #         # print(f"configs: coordinator: {coordinator['displayName']}")
+    #         #
+    #         # # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
+    #         # self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
+    #         #                               ".select2-choices .select2-input",
+    #         #                               coordinator["displayName"]
+    #         #                               )
+    #         #
+    #         # time.sleep(3)
+    #         #
+    #         # driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
+    #         # time.sleep(3)
+    #         #
+    #         # # click Update button btn btn-warning
+    #         # self.automation.click_button("btn-warning")
+    #         # button = driver.find_element(By.CLASS_NAME, "btn-warning")
+    #         # driver.execute_script("arguments[0].scrollIntoView();", button)
+    #         # driver.save_screenshot("configs_after_click_btn-warning.png")
+    #     except NoSuchElementException:
+    #         # create new fellowship type "Clinical Informatics"
+    #         #print("create new fellowship type Clinical Informatics")
+    #         self.automation.click_button("btn-primary")
+    #         time.sleep(3)
+    #
+    #         # self.automation.select_option(
+    #         #     "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
+    #         #     ".select2-search .select2-input",
+    #         #     "Clinical Informatics"
+    #         #     )
+    #         self.automation.select_option(
+    #             "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
+    #             ".select2-search .select2-input",
+    #             fellapp_name
+    #         )
+    #
+    #         time.sleep(3)
+    #         self.automation.click_button_by_id("oleg_fellappbundle_fellappfellowshipapplicationtype_save")
+    #
+    #     time.sleep(3)
 
     def set_site_settings(self):
         # Set fellowship start/end dates
@@ -850,10 +794,11 @@ def main():
     fellapp = FellApp(automation)
 
     # Process in batches of 3
-    fellapp.configs(batch_size=3)
+    fellapp.configs(max_count=1, batch_size=3)
 
     # Set site settings after all configurations are done
-    fellapp.set_site_settings()
+    if 0:
+        fellapp.set_site_settings()
 
     # Clean up
     automation.quit_driver()
@@ -861,17 +806,18 @@ def main():
     del automation
 
     # Now process the fellowship applications
-    automation = WebAutomation(baseurl, run_by_symfony_command)
-    automation.login_to_site()
-    fellapp = FellApp(automation)
+    if 0:
+        automation = WebAutomation(baseurl, run_by_symfony_command)
+        automation.login_to_site()
+        fellapp = FellApp(automation)
 
-    # Create fellowship applications
-    fellapp.create_fellapps()
-    time.sleep(3)
+        # Create fellowship applications
+        fellapp.create_fellapps()
+        time.sleep(3)
 
-    # Accept applications
-    fellapp.accept(1)
-    time.sleep(3)
+        # Accept applications
+        fellapp.accept(1)
+        time.sleep(3)
 
     print("FellApp done!")
 

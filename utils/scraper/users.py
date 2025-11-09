@@ -111,8 +111,8 @@ class Users:
 
         if 1:
             count = 0
-            max_count = 5 #testing
-            #max_count = 0
+            #max_count = 5 #testing
+            max_count = 0
             for first, last, email in raw_data:
                 users.append({
                     'userid': (first + last).lower(),
