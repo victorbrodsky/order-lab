@@ -75,7 +75,7 @@ class FellApp:
 
         return fellapps
 
-    def configs(self):
+    def configs(self, max_count=0):
         fellapp_names = [
             "Blood Banking and Transfusion Medicine",
             "Clinical Chemistry",
@@ -103,11 +103,15 @@ class FellApp:
 
         users = self.users.get_users()
 
+        count = 0
         for fellapp_name in fellapp_names:
             time.sleep(3)
             #self.config_single(fellapp_name)
             self.config_single_more(fellapp_name, users)
+            count += 1  # increment count
             #break #testing
+            if max_count > 0 and count >= max_count:
+                break
 
     def config_single(self, fellapp_name):
         driver = self.automation.get_driver()
@@ -798,7 +802,7 @@ def main():
     automation.login_to_site(url, username_text, password_text)
 
     fellapp = FellApp(automation)
-    fellapp.configs()
+    fellapp.configs(max_count=3)
     #fellapp.set_site_settings()
     #fellapp.create_fellapps()
     #fellapp.accept(1)
