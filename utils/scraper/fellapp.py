@@ -519,7 +519,8 @@ class FellApp:
         driver.get(url)
         time.sleep(1)
 
-        print(f"Start submitting fellapp for {fellapp["displayName"]}")
+        displayName = fellapp["displayName"]
+        print(f"Start submitting fellapp for {displayName}")
 
         #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
         #print("create new fellowship application")
@@ -767,7 +768,7 @@ class FellApp:
         button = driver.find_element(By.ID, "submitSubmitBtn")
         time.sleep(1)
         button.click()
-        print(f"Button to submit fellapp for {fellapp["displayName"]} (submitSubmitBtn) clicked")
+        print(f"Button to submit fellapp for {displayName} (submitSubmitBtn) clicked")
 
         #print("Finish new fellapp")
         time.sleep(5)
