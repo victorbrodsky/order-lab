@@ -342,9 +342,9 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey, baseu
             'users': True,
             'fellapp': True,
             'vacreq': True,
-            #'trp': True,
-            #'callog': True,
-            #'resapp': True
+            'trp': True,
+            'callog': True,
+            'resapp': True
         }
     else:
         demo_ids = {
