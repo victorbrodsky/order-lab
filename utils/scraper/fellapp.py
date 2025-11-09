@@ -298,10 +298,10 @@ class FellApp:
                 update_button.click()
                 print(f"config_single_more: after click Update button for {fellapp_name}")
                 time.sleep(3)
-                driver.execute_script("arguments[0].scrollIntoView();", update_button)
-                driver.save_screenshot("configs_after_click_btn-warning.png")
-                for entry in driver.get_log('browser'):
-                    print(entry)
+                #driver.execute_script("arguments[0].scrollIntoView();", update_button)
+                #driver.save_screenshot("configs_after_click_btn-warning.png")
+                #for entry in driver.get_log('browser'):
+                #    print(entry)
             except NoSuchElementException as e:
                 print(
                     f"config_single_more: error in clicking button for {fellapp_name}. NoSuchElementException: {e}")
