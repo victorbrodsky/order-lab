@@ -20,13 +20,11 @@
             {#Since the Live site variable is not set (right?) it should not show the last sentence at all.#}
             {% set environmentServer = user_security_utility.getSiteSettingParameter('environment') %}
             {% if environmentServer %}
-                {% if environmentServer != 'live' %}
-                    {% if environmentServer != 'dev' %}
-                        {#redirect for non admin users#}
-                        {% if app.user and is_granted('IS_AUTHENTICATED_FULLY') and not (is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_TESTER')) %}
-                            {% if "test" not in app.user.primaryPublicUserId %}
-                                <meta http-equiv="refresh" content="0; url={{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}" />
-                            {% endif %}
+                {% if environmentServer != 'live' and environmentServer != 'dev' and environmentServer != 'demo' %}
+                    {#redirect for non admin users#}
+                    {% if app.user and is_granted('IS_AUTHENTICATED_FULLY') and not (is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_TESTER')) %}
+                        {% if "test" not in app.user.primaryPublicUserId %}
+                            <meta http-equiv="refresh" content="0; url={{ user_security_utility.getSiteSettingParameter('liveSiteRootUrl') }}" />
                         {% endif %}
                     {% endif %}
                 {% endif %}
