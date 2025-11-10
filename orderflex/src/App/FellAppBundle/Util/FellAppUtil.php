@@ -718,18 +718,20 @@ class FellAppUtil {
             return true;
         }
 
-        //echo "felltypeid=".$felltypeid."<br>";
+        echo "felltypeid=".$felltypeid."<br>";
 
         foreach( $user->getRoles() as $rolename ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
             $roleObject = $em->getRepository(Roles::class)->findOneByName($rolename);
             if( $roleObject ) {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
+                    echo "fellowshipSubspecialty->getId()=".$fellowshipSubspecialty->getId()."<br>";
                     if( $felltypeid == $fellowshipSubspecialty->getId() ) {
                         //it is safer to check also for fellowshipSubspecialty's institution is under roleObject's institution
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-                        if( $em->getRepository(Institution::class)->isNodeUnderParentnode( $roleObject->getInstitution(), $fellowshipSubspecialty->getInstitution() ) ) {
+                        if( $em->getRepository(Institution::class)->isNodeUnderParentnode(
+                            $roleObject->getInstitution(),
+                            $fellowshipSubspecialty->getInstitution()
+                        ) ) {
                             return true;
                         }
                     }
@@ -737,6 +739,7 @@ class FellAppUtil {
             }
         }
 
+        exit('hasSameFellowshipTypeId return false'); //testing exit
         return false;
     }
 
