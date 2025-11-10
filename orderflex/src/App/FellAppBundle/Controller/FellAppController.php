@@ -130,7 +130,7 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
-        exit('indexAction: after all check for permission');
+        //exit('indexAction: after all check for permission');
 
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
@@ -362,9 +362,10 @@ class FellAppController extends OrderAbstractController {
 
         //force check: check user role. Change filter according to the user roles
         if( $filter && $fellappUtil->hasSameFellowshipTypeId($user,$filter) == false ) {
-            //exit('no permission');
+            exit('fellapp hasSameFellowshipTypeId no permission');
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
+        exit('exit fellapp after all check');
 
         //$fellApps = $em->getRepository('AppUserdirectoryBundle:FellowshipApplication')->findAll();
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
