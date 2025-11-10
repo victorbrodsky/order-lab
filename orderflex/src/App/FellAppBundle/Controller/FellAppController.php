@@ -107,6 +107,7 @@ class FellAppController extends OrderAbstractController {
                 false == $this->isGranted("read","FellowshipApplication") &&
                 false == $this->isGranted("create","Interview")
             ){
+                exit("indexAction: no permission: read FellowshipApplication, create Interview");
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -128,6 +129,8 @@ class FellAppController extends OrderAbstractController {
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
+
+        exit('indexAction: after all check for permission');
 
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
