@@ -41,8 +41,13 @@
     {% for entity in entities %}
 
         {% set seasonYear = "Set season start/end date" %}
-        {% set seasonYearStart = entity.getSeasonYearStart() %}
-        {% set seasonYearEnd = entity.getSeasonYearEnd() %}
+        {#{% set seasonYearStart = entity.getSeasonYearStart() %}#}
+        {#{% set seasonYearEnd = entity.getSeasonYearEnd() %}#}
+        {% set seasonStartEndDates = fellapp_util.getAcademicStartYearByFellowship(entity) %}
+        {% if seasonStartEndDates and seasonStartEndDates|length > 0 %}
+            {% set seasonYearStart = seasonStartEndDates['startDate'] %}
+            {% set seasonYearEnd = seasonStartEndDates['endDate'] %}
+        {% endif %}
         {% if seasonYearStart or seasonYearEnd %}
             {% set seasonYear = "Season start date " ~ seasonYearStart|date("F d",false) ~ ", end date " ~ seasonYearEnd|date("F d",false) %}
         {% endif %}
@@ -55,7 +60,7 @@
 
         {% if seasonYear %}
             <a
-                href="{{ path('fellowshipsubspecialtys_edit', { 'id': entity.id}) }}">{{ seasonYear }}
+                href="{{ path('fellowshipsubspecialtys_edit', { 'id': entity.id}) }}" title="Use the fellowship’s default dates, unless overridden by the specialty’s specific dates">{{ seasonYear }}
             </a>
         {% endif %}
 

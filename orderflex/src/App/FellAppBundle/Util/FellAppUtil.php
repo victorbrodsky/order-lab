@@ -325,6 +325,34 @@ class FellAppUtil {
         return $startDates;
     }
 
+    //Get specific fellowship type start/end dates or default
+    public function getAcademicStartYearByFellowship( $fellowshipType ) {
+        if( !$fellowshipType ) {
+            return null;
+        }
+
+        //1) get fellowship start/end dates
+        $startDate = $fellowshipType->getSeasonYearStart();
+        $endDate = $fellowshipType->getSeasonYearEnd();
+
+        //$currentYear = $this->getDefaultAcademicStartYear();
+        //$currentYear, $asDateTimeObject=false, $yearOffset=null
+        $startEndDates = $this->getAcademicYearStartEndDates(null);
+
+        if( $startDate == NULL || $startDate == '' ) {
+            $startDate = $startEndDates['startDate'];
+        }
+
+        if( $endDate == NULL || $endDate == '' ) {
+            $endDate = $startEndDates['endDate'];
+        }
+
+        return array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        );
+    }
+
 //    public function getFellAppByUserAndStatusAndYear($subjectUser, $status,$fellSubspecId,$year=null) {
 //
 //        $repository = $this->em->getRepository('AppFellAppBundle:FellowshipApplication');
@@ -705,7 +733,6 @@ class FellAppUtil {
 
         //echo "res=".$res."<br>";
         //exit('hasFellappPermission return false'); //testing exit
-
         return false;
     }
 
