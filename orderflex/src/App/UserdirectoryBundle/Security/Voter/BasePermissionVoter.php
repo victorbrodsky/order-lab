@@ -211,7 +211,7 @@ abstract class BasePermissionVoter extends Voter {
         //echo "Base: canView before checkPermittedInstitutions <br>";
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         if( $this->checkPermittedInstitutions( $subject, $user ) == false ) {
-            exit('check Permitted Institutions: can not View exit'); //testing exit
+            //exit('check Permitted Institutions: can not View exit'); //testing exit
             return false;
         }
 
@@ -220,13 +220,13 @@ abstract class BasePermissionVoter extends Voter {
         //check if the user has role with a permission $subject class name (i.e. "Patient") and "read"
         if( $this->em->getRepository(User::class)->isUserHasPermissionObjectAction( $user, $className, "read" ) ) {
             //exit('can View! exxit');
-            echo "isUserHasPermissionObjectAction!!! className=".$className."<br>";
+            //echo "isUserHasPermissionObjectAction!!! className=".$className."<br>";
             return true;
         } else {
-            echo "can not view ".$className."<br>";
+            //echo "can not view ".$className."<br>";
         }
 
-        exit('can not View exit'); //testing exit
+        //exit('can not View exit'); //testing exit
         return false;
     }
 
