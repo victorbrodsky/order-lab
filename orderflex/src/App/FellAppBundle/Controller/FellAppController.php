@@ -97,7 +97,7 @@ class FellAppController extends OrderAbstractController {
                 if( $this->isGranted("create","Interview") ) {
                     return $this->redirect( $this->generateUrl('fellapp_myinterviewees') );
                 }
-                //exit("indexAction: no permission: read FellowshipApplication");
+                exit("indexAction: no permission: read FellowshipApplication");
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -107,7 +107,7 @@ class FellAppController extends OrderAbstractController {
                 false == $this->isGranted("read","FellowshipApplication") &&
                 false == $this->isGranted("create","Interview")
             ){
-                //exit("indexAction: no permission: read FellowshipApplication, create Interview");
+                exit("indexAction: no permission: read FellowshipApplication, create Interview");
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -365,7 +365,7 @@ class FellAppController extends OrderAbstractController {
             //exit('fellapp hasSameFellowshipTypeId no permission');
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
-        //exit('exit fellapp after all check');
+        exit('exit fellapp after all check');
 
         //$fellApps = $em->getRepository('AppUserdirectoryBundle:FellowshipApplication')->findAll();
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
