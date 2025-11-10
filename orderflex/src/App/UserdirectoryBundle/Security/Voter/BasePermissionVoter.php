@@ -183,7 +183,7 @@ abstract class BasePermissionVoter extends Voter {
         }
 
         $siteRoleBase = $this->getSiteRoleBase();
-        $sitename = $this->getSitename();
+        //$sitename = $this->getSitename();
 
         //ROLE_DEIDENTIFICATOR_ADMIN can do anything
         if( $this->decisionManager->decide($token, array('ROLE_'.$siteRoleBase.'_ADMIN')) ) {
