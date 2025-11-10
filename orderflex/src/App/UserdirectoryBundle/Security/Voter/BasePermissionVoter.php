@@ -211,7 +211,7 @@ abstract class BasePermissionVoter extends Voter {
         //echo "Base: canView before checkPermittedInstitutions <br>";
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         if( $this->checkPermittedInstitutions( $subject, $user ) == false ) {
-            exit('check Permitted Institutions: can not View exxit');
+            exit('check Permitted Institutions: can not View exit'); //testing exit
             return false;
         }
 
@@ -226,7 +226,7 @@ abstract class BasePermissionVoter extends Voter {
             //echo "can not view ".$className."<br>";
         }
 
-        //exit('can not View exxit');
+        exit('can not View exit'); //testing exit
         return false;
     }
 
