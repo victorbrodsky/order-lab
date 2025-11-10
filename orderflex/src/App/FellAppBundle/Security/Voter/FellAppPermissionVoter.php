@@ -47,7 +47,7 @@ class FellAppPermissionVoter extends BasePermissionVoter
 
     protected function canView($subject, TokenInterface $token) : bool
     {
-        //exit('fellapp canView');
+        exit('fellapp canView');
 
         //can view if user is an interviewer or observer
         if( is_object($subject) ) {
