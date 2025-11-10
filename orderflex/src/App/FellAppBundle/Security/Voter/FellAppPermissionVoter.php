@@ -63,7 +63,7 @@ class FellAppPermissionVoter extends BasePermissionVoter
         //exit('fellapp no canEdit');
 
         if( parent::canView($subject,$token) ) {
-            exit('fellapp parent canView parent ok');
+            exit('fellapp parent canView parent ok'); //testing exit
             return $this->fellappAdditionalCheck($subject,$token);
             //return true;
         }

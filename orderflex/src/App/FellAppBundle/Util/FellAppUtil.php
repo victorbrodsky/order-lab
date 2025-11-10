@@ -704,7 +704,7 @@ class FellAppUtil {
         }
 
         //echo "res=".$res."<br>";
-        exit('hasFellappPermission return false');
+        exit('hasFellappPermission return false'); //testing exit
 
         return false;
     }
