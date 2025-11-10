@@ -728,6 +728,8 @@ class FellAppUtil {
                     echo "fellowshipSubspecialty->getId()=".$fellowshipSubspecialty->getId()."<br>";
                     if( $felltypeid == $fellowshipSubspecialty->getId() ) {
                         //it is safer to check also for fellowshipSubspecialty's institution is under roleObject's institution
+                        echo "roleObject->getInstitution=".$roleObject->getInstitution()."<br>";
+                        echo "fellowshipSubspecialty->getInstitution=".$fellowshipSubspecialty->getInstitution()."<br>";
                         if( $em->getRepository(Institution::class)->isNodeUnderParentnode(
                             $roleObject->getInstitution(),
                             $fellowshipSubspecialty->getInstitution()
