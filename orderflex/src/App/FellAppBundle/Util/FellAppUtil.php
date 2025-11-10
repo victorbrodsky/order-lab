@@ -710,6 +710,13 @@ class FellAppUtil {
     }
 
     //check fellowship types based on the user roles
+    //Old concept:
+    //Role used to have obligatory institution and fellowship subspecialty
+    //fellowship subspecialty  used to have obligatory institution
+    //So, this function checks if both institution are matched or in the same tree branch
+    //New concept:
+    //for multitenancy does not require such strict institution checks
+    // => compare if only both institutions are present
     public function hasSameFellowshipTypeId( $user, $felltypeid ) {
         $em = $this->em;
         $userSecUtil = $this->container->get('user_security_utility');
@@ -718,18 +725,24 @@ class FellAppUtil {
             return true;
         }
 
-        echo "felltypeid=".$felltypeid."<br>";
+        //echo "felltypeid=".$felltypeid."<br>";
 
         foreach( $user->getRoles() as $rolename ) {
             $roleObject = $em->getRepository(Roles::class)->findOneByName($rolename);
             if( $roleObject ) {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
-                    echo "fellowshipSubspecialty->getId()=".$fellowshipSubspecialty->getId()."<br>";
+                    //echo "fellowshipSubspecialty->getId()=".$fellowshipSubspecialty->getId()."<br>";
                     if( $felltypeid == $fellowshipSubspecialty->getId() ) {
                         //it is safer to check also for fellowshipSubspecialty's institution is under roleObject's institution
-                        echo "roleObject->getInstitution=".$roleObject->getInstitution()."<br>";
-                        echo "fellowshipSubspecialty->getInstitution=".$fellowshipSubspecialty->getInstitution()."<br>";
+                        //echo "roleObject->getInstitution=".$roleObject->getInstitution()."<br>";
+                        //echo "fellowshipSubspecialty->getInstitution=".$fellowshipSubspecialty->getInstitution()."<br>";
+
+                        //compare if only both institutions are present
+                        if( !$roleObject->getInstitution() || !$fellowshipSubspecialty->getInstitution() ) {
+                            return true;
+                        }
+
                         if( $em->getRepository(Institution::class)->isNodeUnderParentnode(
                             $roleObject->getInstitution(),
                             $fellowshipSubspecialty->getInstitution()
@@ -741,7 +754,7 @@ class FellAppUtil {
             }
         }
 
-        exit('hasSameFellowshipTypeId return false'); //testing exit
+        //exit('hasSameFellowshipTypeId return false'); //testing exit
         return false;
     }
 

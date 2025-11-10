@@ -362,7 +362,7 @@ class FellAppController extends OrderAbstractController {
 
         //force check: check user role. Change filter according to the user roles
         if( $filter && $fellappUtil->hasSameFellowshipTypeId($user,$filter) == false ) {
-            exit('fellapp hasSameFellowshipTypeId no permission');
+            //exit('fellapp hasSameFellowshipTypeId no permission');
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
         //exit('exit fellapp after all check');
