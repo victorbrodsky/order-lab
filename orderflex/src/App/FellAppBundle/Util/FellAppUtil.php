@@ -704,7 +704,7 @@ class FellAppUtil {
         }
 
         //echo "res=".$res."<br>";
-        //exit('1');
+        exit('hasFellappPermission return false');
 
         return false;
     }
@@ -725,7 +725,7 @@ class FellAppUtil {
             return true;
         }
 
-        echo "felltypeid=".$felltypeid."<br>";
+        //echo "felltypeid=".$felltypeid."<br>";
 
         foreach( $user->getRoles() as $rolename ) {
             $roleObject = $em->getRepository(Roles::class)->findOneByName($rolename);
@@ -735,8 +735,8 @@ class FellAppUtil {
                     //echo "fellowshipSubspecialty->getId()=".$fellowshipSubspecialty->getId()."<br>";
                     if( $felltypeid == $fellowshipSubspecialty->getId() ) {
                         //it is safer to check also for fellowshipSubspecialty's institution is under roleObject's institution
-                        echo "roleObject->getInstitution=".$roleObject->getInstitution()."<br>";
-                        echo "fellowshipSubspecialty->getInstitution=".$fellowshipSubspecialty->getInstitution()."<br>";
+                        //echo "roleObject->getInstitution=".$roleObject->getInstitution()."<br>";
+                        //echo "fellowshipSubspecialty->getInstitution=".$fellowshipSubspecialty->getInstitution()."<br>";
 
                         //compare if only both institutions are present
                         if( !$roleObject->getInstitution() || !$fellowshipSubspecialty->getInstitution() ) {
@@ -754,7 +754,7 @@ class FellAppUtil {
             }
         }
 
-        exit('hasSameFellowshipTypeId return false'); //testing exit
+        //exit('hasSameFellowshipTypeId return false'); //testing exit
         return false;
     }
 

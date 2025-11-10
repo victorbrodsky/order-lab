@@ -107,7 +107,7 @@ class FellAppController extends OrderAbstractController {
                 false == $this->isGranted("read","FellowshipApplication") &&
                 false == $this->isGranted("create","Interview")
             ){
-                exit("indexAction: no permission: read FellowshipApplication, create Interview");
+                //exit("indexAction: no permission: read FellowshipApplication, create Interview");
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -365,7 +365,7 @@ class FellAppController extends OrderAbstractController {
             //exit('fellapp hasSameFellowshipTypeId no permission');
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
-        exit('exit fellapp after all check');
+        //exit('exit fellapp after all check');
 
         //$fellApps = $em->getRepository('AppUserdirectoryBundle:FellowshipApplication')->findAll();
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
@@ -804,12 +804,12 @@ class FellAppController extends OrderAbstractController {
         //if( $user ) {
             //exit('user ok');
         //} else {
-        //    exit('no user');
+        //    //exit('no user');
         //}
 //        if( $this->container->get('security.token_storage')->getToken() ) {
-//            exit('token ok');
+//            //exit('token ok');
 //        } else {
-//            exit('no token');
+//            //exit('no token');
 //        }
 //        $user = NULL;
 //        //if( $this->container->get('security.token_storage')->getToken() ) {
@@ -866,7 +866,7 @@ class FellAppController extends OrderAbstractController {
         //exit('testing');
 
 //        if( false == $this->isGranted("interview",$entity) ) {
-//            exit('fellapp interview permission not ok ID:'.$entity->getId());
+//            //exit('fellapp interview permission not ok ID:'.$entity->getId());
 //        }
 
         //user who has the same fell type can view or edit
@@ -1641,11 +1641,11 @@ class FellAppController extends OrderAbstractController {
 //        $btnSubmit = $request->request->get('btnSubmit');
 //        echo "btnSubmit=$btnSubmit <br>";
 //        if ($btnSubmit === 'draft') {
-//            exit("Handle draft logic: skip required fields, save partial data");
+//            //exit("Handle draft logic: skip required fields, save partial data");
 //        } elseif ($btnSubmit === 'active') {
-//            exit("Validate and process full application");
+//            //exit("Validate and process full application");
 //        } else {
-//            exit("Unknown button");
+//            //exit("Unknown button");
 //        }
         /////////
 
@@ -2354,9 +2354,9 @@ class FellAppController extends OrderAbstractController {
 
 //            echo "interviewer=".$interviewer."<br>";
 //            if( !$interviewer ) {
-//                exit('no interviewer');
+//                //exit('no interviewer');
 //            }
-//            exit('1');
+//            //exit('1');
 
             //Set an actual submitter of the scores
             $interview->setSubmitter($user);
@@ -2631,7 +2631,7 @@ class FellAppController extends OrderAbstractController {
     //        }
     //
     //        echo "reports = " . count($entity->getReports()) . "<br>";
-    //        exit();
+    //        //exit();
     //
     //        //update report if report does not exists
     //        if( count($entity->getReports()) == 0 ) {
@@ -2807,7 +2807,7 @@ class FellAppController extends OrderAbstractController {
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $errorMsg = "convert To Pdf: PDF is corrupted; filePath=".$filepath;
 //        $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
-//        exit();
+//        //exit();
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $numUpdated = $fellappRepGen->resetQueueRun();
@@ -3106,7 +3106,7 @@ class FellAppController extends OrderAbstractController {
 //        $fellowshipApplication = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find(162);
 //        $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication,$fellowshipApplication->getUser());
 //        return new Response("OK Test");
-//        exit('email test');
+//        //exit('email test');
 
         $googleSheetManagement = $this->container->get('fellapp_googleSheetManagement');
 
@@ -3240,7 +3240,7 @@ class FellAppController extends OrderAbstractController {
         //$userSecUtil->userLogout(null);
 
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
-//            exit('no');
+//            //exit('no');
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
@@ -3515,11 +3515,11 @@ class FellAppController extends OrderAbstractController {
 //        $btnSubmit = $request->request->get('btnSubmit');
 //        echo "/applicant/apply POST: btnSubmit=$btnSubmit <br>";
 //        if ($btnSubmit === 'fellapp-draft') {
-//            exit("Handle draft logic: skip required fields, save partial data");
+//            //exit("Handle draft logic: skip required fields, save partial data");
 //        } elseif ($btnSubmit === 'fellapp-submit') {
-//            exit("Validate and process full application");
+//            //exit("Validate and process full application");
 //        } else {
-//            exit("Unknown button");
+//            //exit("Unknown button");
 //        }
         /////////
 
@@ -3559,7 +3559,7 @@ class FellAppController extends OrderAbstractController {
 //            foreach ($form as $child) {
 //                dump($child->getName());
 //            }
-//            exit();
+//            //exit();
 
 //            $applicantEmail = $formData['user']['infos'][0]['email'] ?? null;
             if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
