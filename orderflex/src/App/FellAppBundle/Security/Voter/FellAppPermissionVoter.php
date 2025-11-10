@@ -67,7 +67,7 @@ class FellAppPermissionVoter extends BasePermissionVoter
             return $this->fellappAdditionalCheck($subject,$token);
             //return true;
         }
-        exit('fellapp canView false');
+        exit('fellapp canView false'); //testing exit
 
         return false;
     }
