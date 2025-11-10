@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 #from selenium.webdriver.common.action_chains import ActionChains
 import time
 import datetime
+import random
 #from datetime import date
 #from dateutil.relativedelta import relativedelta
 #from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
@@ -176,7 +177,8 @@ class FellApp:
 
             # add coordinator with explicit waits
             try:
-                coordinator = users[2]
+                #coordinator = users[2]
+                coordinator = users[random.randint(3, len(users) - 1)]
                 # user_id = self.users.get_existing_user('John Doe')
                 user_id = self.existing_users[coordinator['displayName']]
                 print(f"coordinator {coordinator['displayName']} User ID: {user_id}")
@@ -219,7 +221,8 @@ class FellApp:
 
             # add director with explicit waits
             try:
-                director = users[3]
+                #director = users[3]
+                director = users[random.randint(3, len(users) - 1)]
                 print(f"config_single_more: {fellapp_name} director: {director['displayName']}")
                 user_id = self.existing_users[director['displayName']]
                 print(f"director {director['displayName']} User ID: {user_id}")
@@ -265,6 +268,36 @@ class FellApp:
                     user_id = self.existing_users[interviewer]
                 else:
                     user_id = 2  #handle the missing case appropriately by default id 2
+                print(f"interviewer ({interviewer}) user ID: {user_id}")
+
+                script = f"""
+                    $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
+                """
+                #driver.execute_script(script)
+                try:
+                    driver.execute_script(script)
+                    for entry in driver.get_log('browser'):
+                        print(entry)
+                except JavascriptException as e:
+                    print("interviewer JavaScript execution failed:")
+                    print(e.msg)  # concise error message
+                    print(e.stacktrace)  # full stack trace if available
+
+                print(f"After set interviewer ({interviewer}) with user ID {user_id}")
+                time.sleep(3)
+                #driver.find_element(By.TAG_NAME, "body").click()
+                #time.sleep(1)
+                print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
+            except Exception as e:
+                print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
+                time.sleep(3)
+            #Add second interviewer from users
+            try:
+                interviewer = users[random.randint(3, len(users) - 1)]
+                print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
+                #print("self.existing_users:",self.existing_users)
+                #user_id = self.existing_users[interviewer]
+                user_id = self.existing_users[interviewer]
                 print(f"interviewer ({interviewer}) user ID: {user_id}")
 
                 script = f"""

@@ -20,6 +20,19 @@ import time
 #Make Swap Permanent. Add this line to /etc/fstab: /swapfile none swap sw 0 0
 
 #Error: Message: session not created: Chrome instance exited. Examine ChromeDriver verbose log to determine the cause.
+#Install google-chrome:
+#wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+#sudo dnf localinstall ./google-chrome-stable_current_x86_64.rpm
+#google-chrome --version
+#Remove downloaded RPM file: rm google-chrome-stable_current_x86_64.rpm
+#
+#wget https://storage.googleapis.com/chrome-for-testing-public/142.0.7444.61/linux64/chromedriver-linux64.zip
+#unzip chromedriver-linux64.zip
+#sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+#chmod +x /usr/local/bin/chromedriver
+#chromedriver --version
+
+
 
 class WebAutomation:
     def __init__(self, baseurl, run_by_symfony_command=False):
