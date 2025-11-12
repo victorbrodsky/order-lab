@@ -197,8 +197,22 @@ class DemoDbUtil {
 
             //1) backup DB (might not be need it)
             echo "process DemoDb: dbManagePython \n<br>";
-            $resBackupArr = $userServiceUtil->dbManagePython($backupPath, 'backup');
-            $res = $res . implode(',', $resBackupArr);
+            //$resBackupArr = $userServiceUtil->dbManagePython($backupPath, 'backup');
+            //$res = $res . implode(',', $resBackupArr);
+            try {
+                $resBackupArr = $userServiceUtil->dbManagePython($backupPath, 'backup');
+
+                // Defensive fallback if result is not an array
+                if (!is_array($resBackupArr)) {
+                    $resBackupArr = ['backup result not array'];
+                }
+
+                $res .= implode(',', $resBackupArr);
+            } catch (\Throwable $e) {
+                // Log or echo error, but continue
+                error_log("Backup failed: " . $e->getMessage());
+                $res .= 'backup failed';
+            }
 
             //2) reset DB
             //php bin/console doctrine:database:drop --force
