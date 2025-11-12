@@ -1902,7 +1902,7 @@ class FellAppUtil {
                 exit('createOrEnableFellAppRole: update role for '.$subspecialtyType);
             }
             echo "fellapp specialty=".$role->getFellowshipSubspecialty()."; role=".$role."<br>";
-            exit('createOrEnableFellAppRole: after check update role for '.$subspecialtyType);
+            //exit('createOrEnableFellAppRole: after check update role for '.$subspecialtyType);
 
             $roleType = $role->getType();
             //exit('2: '.$roleType);
