@@ -1896,10 +1896,21 @@ class FellAppUtil {
         } else {
             $changed = false;
 
+            if( $roleType == "INTERVIEWER" ) {
+                $role->setLevel(30);
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create",true);
+            }
+
             if( $roleType == "COORDINATOR" ) {
                 $role->setLevel(40);
-                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create");
-                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update");
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create",true);
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update",true);
+            }
+
+            if( $roleType == "DIRECTOR" ) {
+                $role->setLevel(50);
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create",true);
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update",true);
             }
 
             //Make sure the fellowship is assigned to this role

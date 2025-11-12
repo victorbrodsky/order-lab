@@ -2190,7 +2190,7 @@ class UserSecurityUtil {
     }
 
     //checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create")
-    public function checkAndAddPermissionToRole($role,$permissionListStr,$permissionObjectListStr,$permissionActionListStr) {
+    public function checkAndAddPermissionToRole($role,$permissionListStr,$permissionObjectListStr,$permissionActionListStr,$persistPermission=false) {
         echo "checkAndAddPermissionToRole: role=$role, permissionListStr=$permissionListStr <br>";
 
         $count = 0;
@@ -2214,6 +2214,9 @@ class UserSecurityUtil {
             //exit('create new permission='.$permissionListStr);//testing exit
             echo $role.': create new permission='.$permissionListStr."<br>";
             $rolePermission = new Permission();
+            if( $persistPermission ) {
+                $em->persist($rolePermission);
+            }
             $rolePermission->setPermission($permission);
             $role->addPermission($rolePermission);
             $count++;
