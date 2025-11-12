@@ -2212,7 +2212,7 @@ class UserSecurityUtil {
         echo "permissionExists=$permissionExists <br>";
         if( !$permissionExists ) {
             //exit('create new permission='.$permissionListStr);//testing exit
-            //echo $role.': create new permission='.$permissionListStr."<br>";
+            echo $role.': create new permission='.$permissionListStr."<br>";
             $rolePermission = new Permission();
             $rolePermission->setPermission($permission);
             $role->addPermission($rolePermission);
