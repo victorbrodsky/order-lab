@@ -2191,6 +2191,7 @@ class UserSecurityUtil {
 
     //checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create")
     public function checkAndAddPermissionToRole($role,$permissionListStr,$permissionObjectListStr,$permissionActionListStr) {
+        echo "checkAndAddPermissionToRole: role=$role, permissionListStr=$permissionListStr <br>";
 
         $count = 0;
         $em = $this->em;
@@ -2203,10 +2204,12 @@ class UserSecurityUtil {
         //check if role has permission (Permission): PermissionList with $permissionListStr
         $permissionExists = false;
         foreach( $role->getPermissions() as $rolePermission ) {
+            echo "check rolePermission=$rolePermission <br>";
             if( $rolePermission->getPermission() && $rolePermission->getPermission()->getId() == $permission->getId() ) {
                 $permissionExists = true;
             }
         }
+        echo "permissionExists=$permissionExists <br>";
         if( !$permissionExists ) {
             exit('create new permission='.$permissionListStr);//testing exit
             //echo $role.': create new permission='.$permissionListStr."<br>";
