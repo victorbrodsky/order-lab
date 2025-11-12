@@ -1898,19 +1898,40 @@ class FellAppUtil {
 
             if( $roleType == "INTERVIEWER" ) {
                 $role->setLevel(30);
-                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create",true);
+                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create",true);
+                if( $countPermission > 0 ) {
+                    $count = $count + $countPermission;
+                    $changed = true;
+                }
+                //$count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create",true);
             }
 
             if( $roleType == "COORDINATOR" ) {
                 $role->setLevel(40);
-                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create",true);
-                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update",true);
+                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create",true);
+                if( $countPermission > 0 ) {
+                    $count = $count + $countPermission;
+                    $changed = true;
+                }
+                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update",true);
+                if( $countPermission > 0 ) {
+                    $count = $count + $countPermission;
+                    $changed = true;
+                }
             }
 
             if( $roleType == "DIRECTOR" ) {
                 $role->setLevel(50);
-                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create",true);
-                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update",true);
+                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create",true);
+                if( $countPermission > 0 ) {
+                    $count = $count + $countPermission;
+                    $changed = true;
+                }
+                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update",true);
+                if( $countPermission > 0 ) {
+                    $count = $count + $countPermission;
+                    $changed = true;
+                }
             }
 
             //Make sure the fellowship is assigned to this role
