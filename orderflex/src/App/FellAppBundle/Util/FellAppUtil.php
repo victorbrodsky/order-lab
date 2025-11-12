@@ -1897,7 +1897,8 @@ class FellAppUtil {
             //Update role
             $changed = false;
 
-            $updateRolePermission = false;
+            //$updateRolePermission = false;
+            $updateRolePermission = true;
             if( $updateRolePermission ) {
                 if ($roleType == "INTERVIEWER") {
                     $role->setLevel(30);
