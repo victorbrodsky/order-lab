@@ -853,8 +853,6 @@ class FellAppManagement extends OrderAbstractController {
 
         $msg = $this->createDefaultFellowshipTypes($request); //WCM $institution is optional
 
-        //$msg = $this->createDefaultFellowshipTypes($request); //others
-
         $request->getSession()->getFlashBag()->add(
             'notice',
             $msg
