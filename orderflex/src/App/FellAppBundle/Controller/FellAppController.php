@@ -93,7 +93,7 @@ class FellAppController extends OrderAbstractController {
         if( $route == "fellapp_home" ) {
             if( false == $this->isGranted("read","FellowshipApplication") ){
                 //check if has role interviewer => redirect to 'fellapp_myinterviewees'
-                exit("indexAction: no permission to read FellowshipApplication"); //testing exit
+                //exit("indexAction: no permission to read FellowshipApplication"); //testing exit
                 //if( $this->isGranted("ROLE_FELLAPP_INTERVIEWER") ) {
                 if( $this->isGranted("create","Interview") ) {
                     return $this->redirect( $this->generateUrl('fellapp_myinterviewees') );
@@ -3462,7 +3462,7 @@ class FellAppController extends OrderAbstractController {
             }
 
             if (!$applicant) {
-                exit('Unable to find or create Fellowship Applicant for ' . $fellowshipApplication);
+                //exit('Unable to find or create Fellowship Applicant for ' . $fellowshipApplication);
                 throw $this->createNotFoundException('Unable to find or create Fellowship Applicant for ' . $fellowshipApplication);
             }
 
