@@ -1854,6 +1854,7 @@ class FellAppUtil {
             //echo "roleName=$roleName<br>";
             $role = $em->getRepository(Roles::class)->findOneByName($roleNameLegacy);
         }
+        echo "##### createOrEnableFellAppRole: role=[".$role."] #####<br>";
 
         if( !$role ) {
             $roleTypeStr = ucfirst(strtolower($roleType));
@@ -1899,6 +1900,7 @@ class FellAppUtil {
             if( !$role->getFellowshipSubspecialty() ) {
                 $role->setFellowshipSubspecialty($subspecialtyType);
                 $changed = true;
+                echo "createOrEnableFellAppRole: original specialty=[".$role->getFellowshipSubspecialty()."]<br>";
                 echo 'createOrEnableFellAppRole: update role for '.$subspecialtyType."<br>";
                 //exit('createOrEnableFellAppRole: update role for '.$subspecialtyType);
             }
@@ -1914,6 +1916,7 @@ class FellAppUtil {
 
             if( $changed ) {
                 if( !$testing ) {
+                    echo "createOrEnableFellAppRole: new specialty=[".$role->getFellowshipSubspecialty()."]<br>";
                     $em->persist($role);
                     $em->flush($role);
                 }
