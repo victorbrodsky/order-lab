@@ -1113,14 +1113,12 @@ class FellAppManagement extends OrderAbstractController {
             $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType);
             $msg = $msg . $resArr['msg'];
             $count = $count + $resArr['count'];
-            exit('11111'); //testing exit
-
         } //foreach
 
         if( !$msg ) {
             $msg = 'No fellowship types and roles has been created.';
         }
-
+        exit('11111'); //testing exit
         return $msg;
     }
 
