@@ -1920,6 +1920,7 @@ class FellAppUtil {
                 $changed = true;
             }
 
+            $testing = true;
             if( $changed ) {
                 if( !$testing ) {
                     //echo "createOrEnableFellAppRole: new specialty=[".$role->getFellowshipSubspecialty()."]<br>";
