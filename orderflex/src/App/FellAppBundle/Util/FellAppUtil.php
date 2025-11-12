@@ -1899,7 +1899,8 @@ class FellAppUtil {
             if( !$role->getFellowshipSubspecialty() ) {
                 $role->setFellowshipSubspecialty($subspecialtyType);
                 $changed = true;
-                exit('createOrEnableFellAppRole: update role for '.$subspecialtyType);
+                echo 'createOrEnableFellAppRole: update role for '.$subspecialtyType."<br>";
+                //exit('createOrEnableFellAppRole: update role for '.$subspecialtyType);
             }
             echo "fellapp specialty=".$role->getFellowshipSubspecialty()."; role=".$role."<br>";
             //exit('createOrEnableFellAppRole: after check update role for '.$subspecialtyType);
