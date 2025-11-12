@@ -1894,43 +1894,47 @@ class FellAppUtil {
             }
 
         } else {
+            //Update role
             $changed = false;
 
-            if( $roleType == "INTERVIEWER" ) {
-                $role->setLevel(30);
-                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create",true);
-                if( $countPermission > 0 ) {
-                    $count = $count + $countPermission;
-                    $changed = true;
+            $updateRolePermission = false;
+            if( $updateRolePermission ) {
+                if ($roleType == "INTERVIEWER") {
+                    $role->setLevel(30);
+                    $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Submit an interview evaluation", "Interview", "create", true);
+                    if ($countPermission > 0) {
+                        $count = $count + $countPermission;
+                        $changed = true;
+                    }
+                    //$count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create",true);
                 }
-                //$count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create",true);
-            }
 
-            if( $roleType == "COORDINATOR" ) {
-                $role->setLevel(40);
-                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create",true);
-                if( $countPermission > 0 ) {
-                    $count = $count + $countPermission;
-                    $changed = true;
+                if ($roleType == "COORDINATOR") {
+                    $role->setLevel(40);
+                    $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Create a New Fellowship Application", "FellowshipApplication", "create", true);
+                    if ($countPermission > 0) {
+                        $count = $count + $countPermission;
+                        $changed = true;
+                    }
+                    $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Modify a Fellowship Application", "FellowshipApplication", "update", true);
+                    if ($countPermission > 0) {
+                        $count = $count + $countPermission;
+                        $changed = true;
+                    }
                 }
-                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update",true);
-                if( $countPermission > 0 ) {
-                    $count = $count + $countPermission;
-                    $changed = true;
-                }
-            }
 
-            if( $roleType == "DIRECTOR" ) {
-                $role->setLevel(50);
-                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create",true);
-                if( $countPermission > 0 ) {
-                    $count = $count + $countPermission;
-                    $changed = true;
-                }
-                $countPermission = $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update",true);
-                if( $countPermission > 0 ) {
-                    $count = $count + $countPermission;
-                    $changed = true;
+                if ($roleType == "DIRECTOR") {
+                    $role->setLevel(50);
+                    $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Create a New Fellowship Application", "FellowshipApplication", "create", true);
+                    if ($countPermission > 0) {
+                        $count = $count + $countPermission;
+                        $changed = true;
+                    }
+                    $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Modify a Fellowship Application", "FellowshipApplication", "update", true);
+                    if ($countPermission > 0) {
+                        $count = $count + $countPermission;
+                        $changed = true;
+                    }
                 }
             }
 
