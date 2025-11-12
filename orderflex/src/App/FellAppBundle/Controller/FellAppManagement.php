@@ -1034,7 +1034,7 @@ class FellAppManagement extends OrderAbstractController {
                 ->where('LOWER(f.name) = LOWER(:name)')
                 ->setParameter('name', $fellowshipSubspecialtyName);
             $subspecialtyTypies = $qb->getQuery()->getResult();
-            echo 'createDefaultFellowshipTypes: $subspecialtyTypies='.count($subspecialtyTypies)."<br>";
+            echo 'createDefaultFellowshipTypes: $subspecialtyTypies='.count($subspecialtyTypies)." for ".$fellowshipSubspecialtyName."<br>";
 
             $subspecialtyType = null;
             
@@ -1090,25 +1090,6 @@ class FellAppManagement extends OrderAbstractController {
                     $count++;
                 }
             }
-
-            //////// 2) create a new role (if not existed) ////////
-//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$institution,$testing);
-//            if( $countInt > 0 ) {
-//                $msg = $msg . " INTERVIEWER role has been created/enabled.";
-//                $count = $count + $countInt;
-//            }
-//
-//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$institution,$testing);
-//            if( $countInt > 0 ) {
-//                $msg = $msg . " COORDINATOR role has been created/enabled.";
-//                $count = $count + $countInt;
-//            }
-//
-//            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$institution,$testing);
-//            if( $countInt > 0 ) {
-//                $msg = $msg . " DIRECTOR role has been created/enabled.";
-//                $count = $count + $countInt;
-//            }
 
             $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType);
             $msg = $msg . $resArr['msg'];
