@@ -1893,10 +1893,23 @@ class FellAppUtil {
             }
 
         } else {
+            $changed = false;
+
+            //Make sure the fellowship is assigned to this role
+            if( !$role->getFellowshipSubspecialty() ) {
+                $role->setFellowshipSubspecialty($subspecialtyType);
+                $changed = true;
+            }
+
+
             $roleType = $role->getType();
             //exit('2: '.$roleType);
             if( $roleType != 'default' && $roleType != 'user-added' ) {
                 $role->setType('default');
+                $changed = true;
+            }
+
+            if( $changed ) {
                 if( !$testing ) {
                     $em->persist($role);
                     $em->flush($role);
