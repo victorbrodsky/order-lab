@@ -2194,7 +2194,6 @@ class UserSecurityUtil {
 
         $count = 0;
         $em = $this->em;
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionList'] by [PermissionList::class]
         $permission = $em->getRepository(PermissionList::class)->findOneByName($permissionListStr);
         if( !$permission ) {
             exit("Permission is not found by name=".$permissionListStr);
@@ -2209,7 +2208,7 @@ class UserSecurityUtil {
             }
         }
         if( !$permissionExists ) {
-            //exit('create new permission='.$permissionListStr);//testing
+            exit('create new permission='.$permissionListStr);//testing exit
             //echo $role.': create new permission='.$permissionListStr."<br>";
             $rolePermission = new Permission();
             $rolePermission->setPermission($permission);
@@ -2219,7 +2218,6 @@ class UserSecurityUtil {
 
         //make sure object is set
         if( !$permission->getPermissionObjectList() ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionObjectList'] by [PermissionObjectList::class]
             $permissionObject = $em->getRepository(PermissionObjectList::class)->findOneByName($permissionObjectListStr);
             if( $permissionObject ) {
                 $permission->setPermissionObjectList($permissionObject);
@@ -2232,7 +2230,6 @@ class UserSecurityUtil {
 
         //make sure action is set
         if( !$permission->getPermissionActionList() ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:PermissionActionList'] by [PermissionActionList::class]
             $permissionAction = $em->getRepository(PermissionActionList::class)->findOneByName($permissionActionListStr);
             if( $permissionAction ) {
                 $permission->setPermissionActionList($permissionAction);

@@ -1099,7 +1099,7 @@ class FellAppManagement extends OrderAbstractController {
         if( !$msg ) {
             $msg = 'No fellowship types and roles has been created.';
         }
-        //exit('11111'); //testing exit
+        exit('createDefaultFellowshipTypes: exit end'); //testing exit
         return $msg;
     }
 
