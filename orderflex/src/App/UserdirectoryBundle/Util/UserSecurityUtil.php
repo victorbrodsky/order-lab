@@ -2233,7 +2233,7 @@ class UserSecurityUtil {
                 exit("Permission Object is not found by name=".$permissionObjectListStr);
             }
         } else {
-            echo 'permission object exists: '.$permission->getPermissionObjectList()."<br>";
+            echo $permissionListStr.': permission object exists: '.$permission->getPermissionObjectList()."<br>";
         }
 
         //make sure action is set
@@ -2247,7 +2247,7 @@ class UserSecurityUtil {
                 exit("Permission Action is not found by name=".$permissionActionListStr);
             }
         } else {
-            echo 'permission action exists: '.$permission->getPermissionActionList()."<br>";
+            echo $permissionListStr.': permission action exists: '.$permission->getPermissionActionList()."<br>";
         }
 
         return $count;
