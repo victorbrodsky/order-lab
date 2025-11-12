@@ -488,25 +488,25 @@ class FellAppManagement extends OrderAbstractController {
     //assign ROLE_FELLAPP_INTERVIEWER corresponding to application
     public function assignFellAppAccessRoles($fellowshipSubspecialty,$users,$roleSubstr) {
 
-        echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".
-            $fellowshipSubspecialty->getId().
-            ")=$fellowshipSubspecialty; roleSubstr=$roleSubstr <br>"; //testing exit
+        //echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".
+        //    $fellowshipSubspecialty->getId().
+         //   ")=$fellowshipSubspecialty; roleSubstr=$roleSubstr <br>"; //testing exit
 
         $em = $this->getDoctrine()->getManager();
 
         $interviewerRoleFellType = null;
         $interviewerFellTypeRoles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
-        echo "interviewerFellTypeRoles=".count($interviewerFellTypeRoles)."<br>";
+        //echo "interviewerFellTypeRoles=".count($interviewerFellTypeRoles)."<br>";
         foreach( $interviewerFellTypeRoles as $role ) {
-            echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
+            //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos((string)$role,$roleSubstr) !== false ) {
                 $interviewerRoleFellType = $role;
                 break;
             }
         }
         if( !$interviewerRoleFellType ) {
-            exit('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.
-                $fellowshipSubspecialty.']'); //testing exit
+//            exit('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.
+//                $fellowshipSubspecialty.']'); //testing exit
             throw new EntityNotFoundException('FellAppManagement: 
             assignFellAppAccessRoles: Unable to find role by 
             FellowshipSubspecialty=['.$fellowshipSubspecialty.']');
@@ -1034,7 +1034,7 @@ class FellAppManagement extends OrderAbstractController {
                 ->where('LOWER(f.name) = LOWER(:name)')
                 ->setParameter('name', $fellowshipSubspecialtyName);
             $subspecialtyTypies = $qb->getQuery()->getResult();
-            echo 'createDefaultFellowshipTypes: $subspecialtyTypies='.count($subspecialtyTypies)." for ".$fellowshipSubspecialtyName."<br>";
+            //echo 'createDefaultFellowshipTypes: $subspecialtyTypies='.count($subspecialtyTypies)." for ".$fellowshipSubspecialtyName."<br>";
 
             $subspecialtyType = null;
             
@@ -1042,8 +1042,8 @@ class FellAppManagement extends OrderAbstractController {
 
             if( count($subspecialtyTypies) > 1 ) {
                 foreach($subspecialtyTypies as $subspecialtyType) {
-                    echo 'createDefaultFellowshipTypes: $subspecialtyType='.$subspecialtyType.", ID=".$subspecialtyType->getId()."<br>";
-                    echo 'createDefaultFellowshipTypes: Multiple $subspecialtyType found, count='.count($subspecialtyTypies)." => choose enabled"."<br>";
+                    //echo 'createDefaultFellowshipTypes: $subspecialtyType='.$subspecialtyType.", ID=".$subspecialtyType->getId()."<br>";
+                    //echo 'createDefaultFellowshipTypes: Multiple $subspecialtyType found, count='.count($subspecialtyTypies)." => choose enabled"."<br>";
                     //choose that not disabled
                     $type = $subspecialtyType->getType();
                     if( $type == 'default' || $type == 'user-added' ) {
@@ -1099,7 +1099,7 @@ class FellAppManagement extends OrderAbstractController {
         if( !$msg ) {
             $msg = 'No fellowship types and roles has been created.';
         }
-        exit('11111'); //testing exit
+        //exit('11111'); //testing exit
         return $msg;
     }
 
