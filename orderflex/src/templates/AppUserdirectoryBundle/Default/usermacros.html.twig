@@ -2255,7 +2255,8 @@
             <!-- Current avatar -->
             <div class="avatar-view" title="Change the photo" style="height:126px; width:116px;">
                 {#<img src="{{ avatarImage }}" alt="Avatar" height="126" width="116">                #}
-                {% if user.avatar %}
+                {% if user.avatar and user.avatar.id %}
+                    {#user.avatar.id={{ user.avatar.id }}#}
                     {{ usermacros.showDocumentAsImage(user.avatar,'Avatar','','objectFull') }}
                 {% else %}
                     {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
