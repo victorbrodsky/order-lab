@@ -1439,6 +1439,7 @@ class UserTenantUtil
                 $tenant->setEnabled($tenantArr['enabled']);
                 $tenant->setShowOnHomepage($tenantArr['showonhomepage']);
                 $tenant->setInstitutionTitle($tenantArr['institutiontitle']);
+                $tenant->setDepartmentTitle($tenantArr['departmenttitle']);
 
                 $showOnHomepage = $tenant->getShowOnHomepage();
                 if ($showOnHomepage !== true) {
