@@ -1800,6 +1800,9 @@ class FellAppUtil {
         $msg = "";
         $count = 0;
 
+        $logger = $this->container->get('logger');
+        $logger->notice("createOrEnableFellAppRoleGroup: start. subspecialtyType=$subspecialtyType, institution=$institution");
+
         $countInt = $this->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$institution,$testing);
         if( $countInt > 0 ) {
             $msg = $msg . " INTERVIEWER role has been created/enabled.";
@@ -1818,6 +1821,8 @@ class FellAppUtil {
             $count = $count + $countInt;
         }
 
+        $logger->notice("createOrEnableFellAppRoleGroup: finished. msg=$msg, count=$count");
+
         return ['msg' => $msg, 'count' => $count];
     }
 
@@ -1833,7 +1838,9 @@ class FellAppUtil {
         $em = $this->em;
         $user = $this->security->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:SiteList'] by [SiteList::class]
+        $logger = $this->container->get('logger');
+        $logger->notice("createOrEnableFellAppRole: start. subspecialtyType=$subspecialtyType, roleType=$roleType");
+
         $site = $em->getRepository(SiteList::class)->findOneByAbbreviation('fellapp');
 
         $count = 0;
@@ -1855,10 +1862,12 @@ class FellAppUtil {
             $role = $em->getRepository(Roles::class)->findOneByName($roleNameLegacy);
         }
         //echo "##### createOrEnableFellAppRole: role=[".$role."] #####<br>";
+        $logger->notice("createOrEnableFellAppRole: found role=$role");
 
         if( !$role ) {
             $roleTypeStr = ucfirst(strtolower($roleType));
             //exit('1: '.$roleTypeStr);
+            $logger->notice("createOrEnableFellAppRole: create a new role. roleName=$roleName");
 
             $role = new Roles();
             $role = $userSecUtil->setDefaultList($role, null, $user, $roleName);
@@ -1967,6 +1976,8 @@ class FellAppUtil {
                 $count++;
             }
         }
+
+        $logger->notice("createOrEnableFellAppRole: finished. count=$count");
 
         return $count;
     }

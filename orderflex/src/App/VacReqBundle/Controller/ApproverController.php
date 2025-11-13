@@ -355,14 +355,16 @@ class ApproverController extends OrderAbstractController
 
         //find role approvers by institution
         $approvers = array();
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleApprover = null;
         $roleApprovers = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_APPROVER', $institutionId);
-        $roleApprover = $roleApprovers[0];
-        //echo "roleApprover=".$roleApprover."<br>";
-        if( $roleApprover ) {
-            $approvers = $em->getRepository(User::class)->findUserByRole($roleApprover->getName(),"infos.lastName",$onlyWorking);
+        if( count($roleApprovers) > 0 ) {
+            $roleApprover = $roleApprovers[0];
+            //echo "roleApprover=".$roleApprover."<br>";
+            if ($roleApprover) {
+                $approvers = $em->getRepository(User::class)->findUserByRole($roleApprover->getName(), "infos.lastName", $onlyWorking);
+            }
+            //echo "approvers=".count($approvers)."<br>";
         }
-        //echo "approvers=".count($approvers)."<br>";
 
         //$vacreqUtil = $this->container->get('vacreq_util');
         $partialRoleNames = array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR');
@@ -372,13 +374,14 @@ class ApproverController extends OrderAbstractController
 
         //find role submitters by institution
         $submitters = array();
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $roleSubmitter = null;
         $roleSubmitters = $em->getRepository(User::class)->findRolesBySiteAndPartialRoleName( "vacreq", 'ROLE_VACREQ_SUBMITTER', $institutionId);
-        $roleSubmitter = $roleSubmitters[0];
-        //echo "roleSubmitter=".$roleSubmitter."<br>";
-        if( $roleSubmitter ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
-            $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(),"infos.lastName",$onlyWorking);
+        if( count($roleSubmitters) > 0 ) {
+            $roleSubmitter = $roleSubmitters[0];
+            //echo "roleSubmitter=".$roleSubmitter."<br>";
+            if ($roleSubmitter) {
+                $submitters = $em->getRepository(User::class)->findUserByRole($roleSubmitter->getName(), "infos.lastName", $onlyWorking);
+            }
         }
 
         //find role proxy submitters by institution

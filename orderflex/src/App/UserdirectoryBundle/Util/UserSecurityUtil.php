@@ -2195,8 +2195,12 @@ class UserSecurityUtil {
 
         $count = 0;
         $em = $this->em;
+        $logger = $this->container->get('logger');
+        $logger->notice("checkAndAddPermissionToRole: start. role=$role, permissionListStr=$permissionListStr, permissionObjectListStr=$permissionObjectListStr");
+
         $permission = $em->getRepository(PermissionList::class)->findOneByName($permissionListStr);
         if( !$permission ) {
+            $logger->notice("checkAndAddPermissionToRole: exit. "."Permission is not found by name=".$permissionListStr);
             exit("Permission is not found by name=".$permissionListStr);
         }
 
@@ -2210,7 +2214,9 @@ class UserSecurityUtil {
             }
         }
         //echo "permissionExists=$permissionExists <br>";
+        $logger->notice("checkAndAddPermissionToRole: permissionExists=$permissionExists");
         if( !$permissionExists ) {
+            $logger->notice("checkAndAddPermissionToRole: create new permission=$permissionListStr");
             //exit('create new permission='.$permissionListStr);//testing exit
             //echo $role.': create new permission='.$permissionListStr."<br>";
             $rolePermission = new Permission();
@@ -2225,31 +2231,39 @@ class UserSecurityUtil {
         //make sure object is set
         if( !$permission->getPermissionObjectList() ) {
             $permissionObject = $em->getRepository(PermissionObjectList::class)->findOneByName($permissionObjectListStr);
+            $logger->notice("checkAndAddPermissionToRole: set permissionObject=$permissionObject");
             if( $permissionObject ) {
                 $permission->setPermissionObjectList($permissionObject);
                 $count++;
+                $logger->notice("checkAndAddPermissionToRole: set permission object=$permissionObjectListStr");
                 //echo 'set permission object: '.$permissionObjectListStr."<br>";
             } else {
+                $logger->notice("checkAndAddPermissionToRole: set Permission Object is not found by name=$permissionObjectListStr");
                 exit("Permission Object is not found by name=".$permissionObjectListStr);
             }
         } else {
+            $logger->notice("checkAndAddPermissionToRole: set Permission Object exists: ".$permission->getPermissionObjectList());
             echo $permissionListStr.': permission object exists: '.$permission->getPermissionObjectList()."<br>";
         }
 
         //make sure action is set
         if( !$permission->getPermissionActionList() ) {
             $permissionAction = $em->getRepository(PermissionActionList::class)->findOneByName($permissionActionListStr);
+            $logger->notice("checkAndAddPermissionToRole: set permissionAction=$permissionAction");
             if( $permissionAction ) {
                 $permission->setPermissionActionList($permissionAction);
                 $count++;
                 //echo 'set permission action: '.$permissionActionListStr."<br>";
             } else {
+                $logger->notice("checkAndAddPermissionToRole: Permission Action is not found by name=$permissionActionListStr");
                 exit("Permission Action is not found by name=".$permissionActionListStr);
             }
         } else {
+            $logger->notice("checkAndAddPermissionToRole: permission action exists:".$permission->getPermissionActionList());
             echo $permissionListStr.': permission action exists: '.$permission->getPermissionActionList()."<br>";
         }
 
+        $logger->notice("checkAndAddPermissionToRole: finished. count=$count");
         return $count;
     }
 

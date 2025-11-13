@@ -4482,7 +4482,10 @@ class ListController extends OrderAbstractController
 
         $userServiceUtil = $this->container->get('user_service_utility');
         $url = $userServiceUtil->getSiteParamListUrl($listName);
-        echo 'url='.$url."<br>";
+        if( !$url ) {
+            throw $this->createNotFoundException('Unable to find url by listName='.$listName);
+        }
+        //echo 'url='.$url."<br>";
 
         $logger = $this->container->get('logger');
         $logger->notice("url for $listName=$url");
