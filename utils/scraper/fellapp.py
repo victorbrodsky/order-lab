@@ -44,7 +44,8 @@ class FellApp:
             #specialty, school, year (current + 2), city, state, country
             'fellowship_specialty': ['Surgical Pathology Fellowship', 'Memorial Sloan Kettering Cancer Center', 'New-York', 'New-York', 'United States'],
             'interview_date': '09/12/2026',
-            'interview_score': '4.3'
+            'interview_score': '4.3',
+            'comment': "I enjoyed talking to this outstanding candidate and I believe this would be a valuable addition to our program!"
         })
         fellapps.append({
             'type': '1',  # 'Clinical Informatics'
@@ -59,7 +60,8 @@ class FellApp:
             'residency_specialty': ['AP', 'University of California', 'San Francisco', 'California', 'United States'],
             'fellowship_specialty': ['Breast Pathology Fellowship', 'Mayo Clinic', 'Rochester', 'New-York', 'United States'],
             'interview_date': '14/12/2026',
-            'interview_score': '3.9'
+            'interview_score': '3.9',
+            'comment': "Wonderful candidate who did amazing work on the immunobiology research project. Looking forward to working together!"
         })
         fellapps.append({
             'type': '1',  # 'Clinical Informatics'
@@ -74,7 +76,8 @@ class FellApp:
             'residency_specialty': ['CP', 'Stanford University Medical Center', 'Stanford', 'California', 'United States'],
             'fellowship_specialty': ['Hematopathology Fellowship', 'MD Anderson Cancer Center', 'Houston', 'Texas', 'United States'],
             'interview_date': '17/12/2026',
-            'interview_score': '4.2'
+            'interview_score': '4.2',
+            'comment': "Interesting candidate. Shows leadership potential and strong interest in research."
         })
 
         return fellapps
@@ -581,8 +584,68 @@ class FellApp:
             )
 
             #oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank
-            signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank")
-            signature.send_keys(fellapp["interview_score"])
+            #signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank")
+            #signature.send_keys(fellapp["interview_score"])
+
+            #s2id_oleg_fellappbundle_fellowshipapplication_interviews_0_academicRank
+            try:
+                # Choose a random academic rank from 1 to 5
+                academic_rank_value = random.randint(1, 5)
+                print(f"Setting academicRank to: {academic_rank_value}")
+                # Inject the value into the Select2-enhanced field
+                script = f"""
+                    $("#oleg_fellappbundle_fellowshipapplication_interviews_0_academicRank")
+                        .val("{academic_rank_value}")
+                        .trigger("change");
+                """
+                driver.execute_script(script)
+                time.sleep(1)
+                print(f"✓ academicRank set to {academic_rank_value}")
+            except Exception as e:
+                print(f"Error setting academicRank: {e}")
+
+            #oleg_fellappbundle_fellowshipapplication_interviews_0_personalityRank
+            try:
+                # Choose a random rank from 1 to 5
+                academic_rank_value = random.randint(1, 5)
+                print(f"Setting personalityRank to: {academic_rank_value}")
+                # Inject the value into the Select2-enhanced field
+                script = f"""
+                    $("#oleg_fellappbundle_fellowshipapplication_interviews_0_personalityRank")
+                        .val("{academic_rank_value}")
+                        .trigger("change");
+                """
+                driver.execute_script(script)
+                time.sleep(1)
+                print(f"✓ personalityRank set to {academic_rank_value}")
+            except Exception as e:
+                print(f"Error setting personalityRank: {e}")
+
+            # oleg_fellappbundle_fellowshipapplication_interviews_0_potentialRank
+            try:
+                # Choose a random rank from 1 to 5
+                academic_rank_value = random.randint(1, 5)
+                print(f"Setting potentialRank to: {academic_rank_value}")
+                # Inject the value into the Select2-enhanced field
+                script = f"""
+                            $("#oleg_fellappbundle_fellowshipapplication_interviews_0_potentialRank")
+                                .val("{academic_rank_value}")
+                                .trigger("change");
+                        """
+                driver.execute_script(script)
+                time.sleep(1)
+                print(f"✓ potentialRank set to {academic_rank_value}")
+            except Exception as e:
+                print(f"Error setting potentialRank: {e}")
+
+            #oleg_fellappbundle_fellowshipapplication_interviews_0_comment
+            comment_text = fellapp['comment']
+            script = f"""
+                document.getElementById("oleg_fellappbundle_fellowshipapplication_interviews_0_comment").value = {json.dumps(comment_text)};
+            """
+            driver.execute_script(script)
+            time.sleep(1)
+            print(f"✓ Interview comment set: {comment_text}")
 
             #interview_date
             # oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
