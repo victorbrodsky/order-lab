@@ -45,6 +45,7 @@ use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced
 use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
 
 
+use App\UserdirectoryBundle\Entity\PermissionList;
 use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
 
 
@@ -1984,6 +1985,7 @@ class FellAppUtil {
         $permissions = $role->getPermissions();
         $permission = $permissions[0];
         $logger->notice("createOrEnableFellAppRole: testing.".", permission=".$permission);
+        $permission = $em->getRepository(PermissionList::class)->findOneByName("Create a New Fellowship Application");
         $logger->notice("createOrEnableFellAppRole: testing.".", PermissionObjectList=".$permission->getPermissionObjectList());
         $logger->notice("createOrEnableFellAppRole: testing.".", PermissionActionList=".$permission->getPermissionActionList());
 
