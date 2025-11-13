@@ -9,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import datetime
 import random
+import json
 #from datetime import date
 #from dateutil.relativedelta import relativedelta
 #from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
@@ -129,6 +130,7 @@ class FellApp:
                 self.automation = batch_automation
                 
                 try:
+                    max_count = 3 #testing
                     for fellapp_name in batch:
                         try:
                             time.sleep(3)
@@ -175,40 +177,77 @@ class FellApp:
             fellowship_type.click()
             time.sleep(3)
 
-            # add first coordinator with explicit waits
-            try:
-                #coordinator = users[2]
-                coordinator = users[random.randint(3, len(users) - 1)]
-                # user_id = self.users.get_existing_user('John Doe')
-                user_id = self.existing_users[coordinator['displayName']]
-                print(f"coordinator {coordinator['displayName']} User ID: {user_id}")
-                script = f"""
-                            $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators").select2('val','{user_id}');
-                        """
-                driver.execute_script(script)
-                time.sleep(1)
-                print(f"config_single_more: {fellapp_name} coordinator added: {coordinator['displayName']}")
-            except Exception as e:
-                print(f"config_single_more: unable to set coordinator {coordinator['displayName']} for {fellapp_name}: {e}")
+            # # add first coordinator with explicit waits
+            # try:
+            #     #coordinator = users[2]
+            #     coordinator = users[random.randint(3, len(users) - 1)]
+            #     # user_id = self.users.get_existing_user('John Doe')
+            #     user_id = self.existing_users[coordinator['displayName']]
+            #     print(f"coordinator {coordinator['displayName']} User ID: {user_id}")
+            #     script = f"""
+            #                 $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators").select2('val','{user_id}');
+            #             """
+            #     driver.execute_script(script)
+            #     time.sleep(1)
+            #     print(f"config_single_more: {fellapp_name} coordinator added: {coordinator['displayName']}")
+            # except Exception as e:
+            #     print(f"config_single_more: unable to set coordinator {coordinator['displayName']} for {fellapp_name}: {e}")
+            #
+            # # add second coordinator with explicit waits
+            # try:
+            #     # coordinator = users[2]
+            #     coordinator = users[random.randint(3, len(users) - 1)]
+            #     # user_id = self.users.get_existing_user('John Doe')
+            #     user_id = self.existing_users[coordinator['displayName']]
+            #     print(f"coordinator {coordinator['displayName']} User ID: {user_id}")
+            #     script = f"""
+            #                         $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators").select2('val','{user_id}');
+            #                     """
+            #     driver.execute_script(script)
+            #     time.sleep(1)
+            #     print(f"config_single_more: {fellapp_name} coordinator added: {coordinator['displayName']}")
+            # except Exception as e:
+            #     print(
+            #         f"config_single_more: unable to set coordinator {coordinator['displayName']} for {fellapp_name}: {e}")
 
-            # add second coordinator with explicit waits
+            ###############################
+            #####   Add coordinator  #####
+            ###############################
             try:
-                # coordinator = users[2]
-                coordinator = users[random.randint(3, len(users) - 1)]
-                # user_id = self.users.get_existing_user('John Doe')
-                user_id = self.existing_users[coordinator['displayName']]
-                print(f"coordinator {coordinator['displayName']} User ID: {user_id}")
-                script = f"""
-                                    $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators").select2('val','{user_id}');
-                                """
-                driver.execute_script(script)
-                time.sleep(1)
-                print(f"config_single_more: {fellapp_name} coordinator added: {coordinator['displayName']}")
-            except Exception as e:
-                print(
-                    f"config_single_more: unable to set coordinator {coordinator['displayName']} for {fellapp_name}: {e}")
+                # Select 2 random coordinators from users[3:] (adjust as needed)
+                selected_coordinators = random.sample(users[3:], 2)
 
-            # add director with explicit waits
+                coordinator_ids = []
+                for coordinator in selected_coordinators:
+                    display_name = coordinator['displayName']
+                    print(f"config_single_more: {fellapp_name} coordinator: {display_name}")
+                    coordinator_user_id = self.existing_users.get(display_name)
+
+                    if not coordinator_user_id:
+                        print(f"Skipping unknown coordinator: {display_name}")
+                        continue
+
+                    coordinator_ids.append(coordinator_user_id)
+                    print(f"✓ Coordinator {display_name} User ID: {coordinator_user_id}")
+
+                if coordinator_ids:
+                    # Inject all selected coordinator IDs into the Select2 field
+                    script = f"""
+                                $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators")
+                                    .select2('val', {json.dumps(coordinator_ids)});
+                            """
+                    driver.execute_script(script)
+                    time.sleep(1)
+                    print(f"✓ {fellapp_name}: {len(coordinator_ids)} coordinator(s) added.")
+                else:
+                    print(f"No valid coordinators found for {fellapp_name}.")
+
+            except Exception as e:
+                print(f"config_single_more: error setting coordinators for {fellapp_name}: {e}")
+
+            ###############################
+            #####    Add director     #####
+            ###############################
             try:
                 #director = users[3]
                 director = users[random.randint(3, len(users) - 1)]
@@ -225,91 +264,144 @@ class FellApp:
             except Exception as e:
                 print(f"config_single_more: unable to set director {director['displayName']} for {fellapp_name}: {e}")
 
-            # Add first interviewer from users using director_user_id
+            # # Add first interviewer from users using director_user_id
+            # try:
+            #     print(f"interviewer the same as director with user ID: {director_user_id}")
+            #
+            #     script = f"""
+            #         $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{director_user_id}');
+            #     """
+            #     # driver.execute_script(script)
+            #     try:
+            #         driver.execute_script(script)
+            #         for entry in driver.get_log('browser'):
+            #             print(entry)
+            #     except JavascriptException as e:
+            #         print("interviewer JavaScript execution failed:")
+            #         print(e.msg)  # concise error message
+            #         print(e.stacktrace)  # full stack trace if available
+            #
+            #     print(f"After set interviewer the same as director with user ID {director_user_id}")
+            #     time.sleep(3)
+            #     # driver.find_element(By.TAG_NAME, "body").click()
+            #     # time.sleep(1)
+            #     print(f"config_single_more: {fellapp_name} interviewer added: the same as director")
+            # except Exception as e:
+            #     print(f"config_single_more: unable to set interviewer the same as director for {fellapp_name}: {e}")
+            #     time.sleep(3)
+            #
+            # #Add second interviewer from users
+            # try:
+            #     interviewer = users[random.randint(3, len(users) - 1)]
+            #     print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
+            #     user_id = self.existing_users[interviewer]
+            #     print(f"interviewer ({interviewer}) user ID: {user_id}")
+            #
+            #     interviewer_ids = []
+            #     for director in selected_directors:
+            #         display_name = director['displayName']
+            #         print(f"config_single_more: {fellapp_name} director: {display_name}")
+            #         director_user_id = self.existing_users.get(display_name)
+            #
+            #         if not director_user_id:
+            #             print(f"⚠️ Skipping unknown director: {display_name}")
+            #             continue
+            #
+            #         director_ids.append(director_user_id)
+            #         print(f"✓ Director {display_name} User ID: {director_user_id}")
+            #
+            #     script = f"""
+            #         $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
+            #     """
+            #     #driver.execute_script(script)
+            #     try:
+            #         driver.execute_script(script)
+            #         for entry in driver.get_log('browser'):
+            #             print(entry)
+            #     except JavascriptException as e:
+            #         print("interviewer JavaScript execution failed:")
+            #         print(e.msg)  # concise error message
+            #         print(e.stacktrace)  # full stack trace if available
+            #
+            #     print(f"After set interviewer ({interviewer}) with user ID {user_id}")
+            #     time.sleep(3)
+            #     #driver.find_element(By.TAG_NAME, "body").click()
+            #     #time.sleep(1)
+            #     print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
+            # except Exception as e:
+            #     print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
+            #     time.sleep(3)
+            #
+            # # Add third interviewer from users
+            # try:
+            #     interviewer = users[random.randint(3, len(users) - 1)]
+            #     print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
+            #     user_id = self.existing_users[interviewer]
+            #     print(f"interviewer ({interviewer}) user ID: {user_id}")
+            #
+            #     script = f"""
+            #                 $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
+            #             """
+            #     # driver.execute_script(script)
+            #     try:
+            #         driver.execute_script(script)
+            #         for entry in driver.get_log('browser'):
+            #             print(entry)
+            #     except JavascriptException as e:
+            #         print("interviewer JavaScript execution failed:")
+            #         print(e.msg)  # concise error message
+            #         print(e.stacktrace)  # full stack trace if available
+            #
+            #     print(f"After set interviewer ({interviewer}) with user ID {user_id}")
+            #     time.sleep(3)
+            #     # driver.find_element(By.TAG_NAME, "body").click()
+            #     # time.sleep(1)
+            #     print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
+            # except Exception as e:
+            #     print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
+            #     time.sleep(3)
+
+            ###############################
+            #####   Add interviewers  #####
+            ###############################
             try:
-                print(f"interviewer the same as director with user ID: {director_user_id}")
+                # Select 2 random interviewers from users[3:] (adjust as needed)
+                selected_interviewers = random.sample(users[3:], 2)
 
-                script = f"""
-                    $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{director_user_id}');
-                """
-                # driver.execute_script(script)
-                try:
+                interviewer_ids = []
+                for interviewer in selected_interviewers:
+                    display_name = interviewer['displayName']
+                    print(f"config_single_more: {fellapp_name} interviewer: {display_name}")
+                    interviewer_user_id = self.existing_users.get(display_name)
+
+                    if not interviewer_user_id:
+                        print(f"Skipping unknown interviewer: {display_name}")
+                        continue
+
+                    interviewer_ids.append(interviewer_user_id)
+                    print(f"✓ Interviewer {display_name} User ID: {interviewer_user_id}")
+
+                #Add director
+                interviewer_ids.append(director_user_id)
+
+                if interviewer_ids:
+                    # Inject all selected interviewer IDs into the Select2 field
+                    script = f"""
+                        $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers")
+                            .select2('val', {json.dumps(interviewer_ids)});
+                    """
                     driver.execute_script(script)
-                    for entry in driver.get_log('browser'):
-                        print(entry)
-                except JavascriptException as e:
-                    print("interviewer JavaScript execution failed:")
-                    print(e.msg)  # concise error message
-                    print(e.stacktrace)  # full stack trace if available
+                    time.sleep(1)
+                    print(f"✓ {fellapp_name}: {len(interviewer_ids)} interviewer(s) added.")
+                else:
+                    print(f"No valid interviewers found for {fellapp_name}.")
 
-                print(f"After set interviewer the same as director with user ID {director_user_id}")
-                time.sleep(3)
-                # driver.find_element(By.TAG_NAME, "body").click()
-                # time.sleep(1)
-                print(f"config_single_more: {fellapp_name} interviewer added: the same as director")
             except Exception as e:
-                print(f"config_single_more: unable to set interviewer the same as director for {fellapp_name}: {e}")
-                time.sleep(3)
+                print(f"config_single_more: error setting interviewers for {fellapp_name}: {e}")
 
-            #Add second interviewer from users
-            try:
-                interviewer = users[random.randint(3, len(users) - 1)]
-                print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
-                user_id = self.existing_users[interviewer]
-                print(f"interviewer ({interviewer}) user ID: {user_id}")
-
-                script = f"""
-                    $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
-                """
-                #driver.execute_script(script)
-                try:
-                    driver.execute_script(script)
-                    for entry in driver.get_log('browser'):
-                        print(entry)
-                except JavascriptException as e:
-                    print("interviewer JavaScript execution failed:")
-                    print(e.msg)  # concise error message
-                    print(e.stacktrace)  # full stack trace if available
-
-                print(f"After set interviewer ({interviewer}) with user ID {user_id}")
-                time.sleep(3)
-                #driver.find_element(By.TAG_NAME, "body").click()
-                #time.sleep(1)
-                print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
-            except Exception as e:
-                print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
-                time.sleep(3)
-
-            # Add third interviewer from users
-            try:
-                interviewer = users[random.randint(3, len(users) - 1)]
-                print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
-                user_id = self.existing_users[interviewer]
-                print(f"interviewer ({interviewer}) user ID: {user_id}")
-
-                script = f"""
-                            $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
-                        """
-                # driver.execute_script(script)
-                try:
-                    driver.execute_script(script)
-                    for entry in driver.get_log('browser'):
-                        print(entry)
-                except JavascriptException as e:
-                    print("interviewer JavaScript execution failed:")
-                    print(e.msg)  # concise error message
-                    print(e.stacktrace)  # full stack trace if available
-
-                print(f"After set interviewer ({interviewer}) with user ID {user_id}")
-                time.sleep(3)
-                # driver.find_element(By.TAG_NAME, "body").click()
-                # time.sleep(1)
-                print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
-            except Exception as e:
-                print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
-                time.sleep(3)
-
-            #Click Update button
+            ###############################
+            ##### Click Update button #####
+            ###############################
             time.sleep(3)
             try:
                 update_button = WebDriverWait(driver, 10).until(
@@ -821,7 +913,9 @@ def main():
     fellapp.configs(max_count=1, batch_size=3)
 
     # Set site settings after all configurations are done
-    if 1:
+    testing = True
+    #testing = False
+    if not testing:
         fellapp.set_site_settings()
 
     # Clean up
@@ -830,7 +924,7 @@ def main():
     del automation
 
     # Now process the fellowship applications
-    if 1:
+    if not testing:
         automation = WebAutomation(baseurl, run_by_symfony_command)
         automation.login_to_site()
         fellapp = FellApp(automation)
