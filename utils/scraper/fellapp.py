@@ -133,7 +133,7 @@ class FellApp:
                 self.automation = batch_automation
                 
                 try:
-                    max_count = 3 #testing
+                    #max_count = 3 #testing
                     for fellapp_name in batch:
                         try:
                             time.sleep(3)
@@ -735,7 +735,7 @@ def main():
 
     # Set site settings after all configurations are done
     testing = True
-    #testing = False
+    testing = False
     if not testing:
         fellapp.set_site_settings()
 
