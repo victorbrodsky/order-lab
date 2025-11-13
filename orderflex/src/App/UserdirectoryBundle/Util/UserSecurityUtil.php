@@ -2203,6 +2203,7 @@ class UserSecurityUtil {
             $logger->notice("checkAndAddPermissionToRole: exit. "."Permission is not found by name=".$permissionListStr);
             exit("Permission is not found by name=".$permissionListStr);
         }
+        $logger->notice("checkAndAddPermissionToRole: found permission=$permission, ID=".$permission->getId());
 
         //make sure permission is added to role: role->permissions(Permission)->permission(PermissionList)->(PermissionObjectList,PermissionActionList)
         //check if role has permission (Permission): PermissionList with $permissionListStr
