@@ -1986,6 +1986,7 @@ class FellAppUtil {
         $permission = $permissions[0];
         $logger->notice("createOrEnableFellAppRole: testing.".", permission=".$permission);
         $permission = $em->getRepository(PermissionList::class)->findOneByName("Create a New Fellowship Application");
+        $logger->notice("createOrEnableFellAppRole: testing.".", permission=".$permission->getId());
         $logger->notice("createOrEnableFellAppRole: testing.".", PermissionObjectList=".$permission->getPermissionObjectList());
         $logger->notice("createOrEnableFellAppRole: testing.".", PermissionActionList=".$permission->getPermissionActionList());
 
