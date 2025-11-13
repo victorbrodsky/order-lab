@@ -2265,7 +2265,7 @@ class UserSecurityUtil {
             echo $permissionListStr.': permission action exists: '.$permission->getPermissionActionList()."<br>";
         }
 
-        $logger->notice("checkAndAddPermissionToRole: finished. count=$count");
+        $logger->notice("checkAndAddPermissionToRole: finished $role. count=$count");
         return $count;
     }
 
