@@ -2268,7 +2268,8 @@ class FellAppUtil {
             $rejectedEmailSubject = "Thank you for applying to the "
                 .$fellappType
                 ." ".$startDateStr
-                ." fellowship at ".$inst
+                ." fellowship at "
+                .$inst //fellowship might not have institution anymore. Use subinstitutionname
             ;
         } else {
             $rejectedEmailSubject = $this->siteSettingsConstantReplace($rejectedEmailSubject,$fellapp);

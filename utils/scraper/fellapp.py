@@ -63,7 +63,7 @@ class FellApp:
         })
         fellapps.append({
             'type': '1',  # 'Clinical Informatics'
-            'firstName': 'Haides',
+            'firstName': 'Harry',
             'lastName': 'Neon',
             'displayName': 'Haides Neon',
             'email': 'cinava@yahoo.com',
@@ -177,38 +177,24 @@ class FellApp:
             fellowship_type.click()
             time.sleep(3)
 
-            # # add first coordinator with explicit waits
-            # try:
-            #     #coordinator = users[2]
-            #     coordinator = users[random.randint(3, len(users) - 1)]
-            #     # user_id = self.users.get_existing_user('John Doe')
-            #     user_id = self.existing_users[coordinator['displayName']]
-            #     print(f"coordinator {coordinator['displayName']} User ID: {user_id}")
-            #     script = f"""
-            #                 $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators").select2('val','{user_id}');
-            #             """
-            #     driver.execute_script(script)
-            #     time.sleep(1)
-            #     print(f"config_single_more: {fellapp_name} coordinator added: {coordinator['displayName']}")
-            # except Exception as e:
-            #     print(f"config_single_more: unable to set coordinator {coordinator['displayName']} for {fellapp_name}: {e}")
-            #
-            # # add second coordinator with explicit waits
-            # try:
-            #     # coordinator = users[2]
-            #     coordinator = users[random.randint(3, len(users) - 1)]
-            #     # user_id = self.users.get_existing_user('John Doe')
-            #     user_id = self.existing_users[coordinator['displayName']]
-            #     print(f"coordinator {coordinator['displayName']} User ID: {user_id}")
-            #     script = f"""
-            #                         $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators").select2('val','{user_id}');
-            #                     """
-            #     driver.execute_script(script)
-            #     time.sleep(1)
-            #     print(f"config_single_more: {fellapp_name} coordinator added: {coordinator['displayName']}")
-            # except Exception as e:
-            #     print(
-            #         f"config_single_more: unable to set coordinator {coordinator['displayName']} for {fellapp_name}: {e}")
+            ###############################
+            #####    Add director     #####
+            ###############################
+            try:
+                # director = users[3]
+                director = users[random.randint(3, len(users) - 1)]
+                print(f"config_single_more: {fellapp_name} director: {director['displayName']}")
+                director_user_id = self.existing_users[director['displayName']]
+                print(f"director {director['displayName']} User ID: {director_user_id}")
+                script = f"""
+                                $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_directors").select2('val','{director_user_id}');
+                            """
+                driver.execute_script(script)
+                time.sleep(1)
+
+                print(f"config_single_more: {fellapp_name} director added: {director['displayName']}")
+            except Exception as e:
+                print(f"config_single_more: unable to set director {director['displayName']} for {fellapp_name}: {e}")
 
             ###############################
             #####   Add coordinator  #####
@@ -244,122 +230,6 @@ class FellApp:
 
             except Exception as e:
                 print(f"config_single_more: error setting coordinators for {fellapp_name}: {e}")
-
-            ###############################
-            #####    Add director     #####
-            ###############################
-            try:
-                #director = users[3]
-                director = users[random.randint(3, len(users) - 1)]
-                print(f"config_single_more: {fellapp_name} director: {director['displayName']}")
-                director_user_id = self.existing_users[director['displayName']]
-                print(f"director {director['displayName']} User ID: {director_user_id}")
-                script = f"""
-                    $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_directors").select2('val','{director_user_id}');
-                """
-                driver.execute_script(script)
-                time.sleep(1)
-
-                print(f"config_single_more: {fellapp_name} director added: {director['displayName']}")
-            except Exception as e:
-                print(f"config_single_more: unable to set director {director['displayName']} for {fellapp_name}: {e}")
-
-            # # Add first interviewer from users using director_user_id
-            # try:
-            #     print(f"interviewer the same as director with user ID: {director_user_id}")
-            #
-            #     script = f"""
-            #         $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{director_user_id}');
-            #     """
-            #     # driver.execute_script(script)
-            #     try:
-            #         driver.execute_script(script)
-            #         for entry in driver.get_log('browser'):
-            #             print(entry)
-            #     except JavascriptException as e:
-            #         print("interviewer JavaScript execution failed:")
-            #         print(e.msg)  # concise error message
-            #         print(e.stacktrace)  # full stack trace if available
-            #
-            #     print(f"After set interviewer the same as director with user ID {director_user_id}")
-            #     time.sleep(3)
-            #     # driver.find_element(By.TAG_NAME, "body").click()
-            #     # time.sleep(1)
-            #     print(f"config_single_more: {fellapp_name} interviewer added: the same as director")
-            # except Exception as e:
-            #     print(f"config_single_more: unable to set interviewer the same as director for {fellapp_name}: {e}")
-            #     time.sleep(3)
-            #
-            # #Add second interviewer from users
-            # try:
-            #     interviewer = users[random.randint(3, len(users) - 1)]
-            #     print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
-            #     user_id = self.existing_users[interviewer]
-            #     print(f"interviewer ({interviewer}) user ID: {user_id}")
-            #
-            #     interviewer_ids = []
-            #     for director in selected_directors:
-            #         display_name = director['displayName']
-            #         print(f"config_single_more: {fellapp_name} director: {display_name}")
-            #         director_user_id = self.existing_users.get(display_name)
-            #
-            #         if not director_user_id:
-            #             print(f"⚠️ Skipping unknown director: {display_name}")
-            #             continue
-            #
-            #         director_ids.append(director_user_id)
-            #         print(f"✓ Director {display_name} User ID: {director_user_id}")
-            #
-            #     script = f"""
-            #         $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
-            #     """
-            #     #driver.execute_script(script)
-            #     try:
-            #         driver.execute_script(script)
-            #         for entry in driver.get_log('browser'):
-            #             print(entry)
-            #     except JavascriptException as e:
-            #         print("interviewer JavaScript execution failed:")
-            #         print(e.msg)  # concise error message
-            #         print(e.stacktrace)  # full stack trace if available
-            #
-            #     print(f"After set interviewer ({interviewer}) with user ID {user_id}")
-            #     time.sleep(3)
-            #     #driver.find_element(By.TAG_NAME, "body").click()
-            #     #time.sleep(1)
-            #     print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
-            # except Exception as e:
-            #     print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
-            #     time.sleep(3)
-            #
-            # # Add third interviewer from users
-            # try:
-            #     interviewer = users[random.randint(3, len(users) - 1)]
-            #     print(f"config_single_more: {fellapp_name}, add interviewer: {interviewer}")
-            #     user_id = self.existing_users[interviewer]
-            #     print(f"interviewer ({interviewer}) user ID: {user_id}")
-            #
-            #     script = f"""
-            #                 $("#s2id_oleg_fellappbundle_fellowshipSubspecialty_interviewers").select2('val','{user_id}');
-            #             """
-            #     # driver.execute_script(script)
-            #     try:
-            #         driver.execute_script(script)
-            #         for entry in driver.get_log('browser'):
-            #             print(entry)
-            #     except JavascriptException as e:
-            #         print("interviewer JavaScript execution failed:")
-            #         print(e.msg)  # concise error message
-            #         print(e.stacktrace)  # full stack trace if available
-            #
-            #     print(f"After set interviewer ({interviewer}) with user ID {user_id}")
-            #     time.sleep(3)
-            #     # driver.find_element(By.TAG_NAME, "body").click()
-            #     # time.sleep(1)
-            #     print(f"config_single_more: {fellapp_name} interviewer added: {interviewer}")
-            # except Exception as e:
-            #     print(f"config_single_more: unable to set interviewer {interviewer} for {fellapp_name}: {e}")
-            #     time.sleep(3)
 
             ###############################
             #####   Add interviewers  #####
@@ -423,118 +293,6 @@ class FellApp:
         except NoSuchElementException as e:
             # create new fellowship type "Clinical Informatics"
             print(f"config_single_more: error in creating coordinator, director, interviewer for {fellapp_name}. NoSuchElementException: {e}")
-
-    # def config_single(self, fellapp_name):
-    #     driver = self.automation.get_driver()
-    #     #Add Fellowship Subspecialty: https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/id/1/37
-    #     #url = "https://view.online/c/demo-institution/demo-department/directory/admin/list-manager/?filter%5Bsearch%5D=Subspecialty&filter%5Btype%5D%5B%5D=default&filter%5Btype%5D%5B%5D=user-added"
-    #     fellapp_type_url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/edit-by-listname/FellowshipSubspecialty".lstrip('/')
-    #     driver.get(fellapp_type_url)
-    #
-    #     time.sleep(1)
-    #
-    #     # Wait for the table to load
-    #     wait = WebDriverWait(driver, 10)  # Adjust timeout as needed
-    #     table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'records_list')))
-    #
-    #     # Locate the <td> with the exact text "Clinical Informatics"
-    #     try:
-    #         #target_td = table.find_element(By.XPATH, './/td[text()="Clinical Informatics"]')
-    #         target_td = table.find_element(By.XPATH, f'.//td[text()="{fellapp_name}"]')
-    #         if target_td:
-    #             #print("<td> with text 'Clinical Informatics' already exists.")
-    #             #print("Class name of the <td> is:", target_td.get_attribute('class'))  # Print the class name of the <td>
-    #             pass
-    #         else:
-    #             #create
-    #             create_link = table.find_element(By.XPATH, './/a[text()="Create a new entry"]')
-    #             create_link.click()
-    #             time.sleep(3)
-    #
-    #             name = driver.find_element(By.ID, "oleg_userdirectorybundle_genericlist_list_name")
-    #             #name.send_keys("Clinical Informatics")
-    #             name.send_keys(fellapp_name)
-    #
-    #             #In new version, institution is not required for FellowshipSubspecialty
-    #             # #s2id_oleg_userdirectorybundle_genericlist_institution
-    #             # self.automation.select_option("s2id_oleg_userdirectorybundle_genericlist_institution", "CSS_SELECTOR",
-    #             #                               ".select2-search .select2-input",
-    #             #                               "Pathology and Laboratory Medicine"
-    #             #                               )
-    #             time.sleep(3)
-    #
-    #             self.automation.click_button_by_id("oleg_userdirectorybundle_genericlist_submit")
-    #
-    #     except:
-    #         print(f"fellapp configs: Unable to find or create {fellapp_name}")
-    #
-    #     time.sleep(3)
-    #
-    #     #Create fellowship type
-    #     fellowship_type_url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/fellowship-types-settings".lstrip('/')
-    #     driver.get(fellowship_type_url)
-    #
-    #     time.sleep(3)
-    #
-    #     #<a href="/c/demo-institution/demo-department/fellowship-applications/fellowship-type/edit/1">Clinical Informatics</a>
-    #     #fellowship_type = table.find_element(By.XPATH, './/a[text()="Clinical Informatics"]')
-    #     #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
-    #     # fellowship_type = WebDriverWait(driver, 10).until(
-    #     #     EC.presence_of_element_located((By.XPATH, "//h4/a[contains(text(), 'Clinical Informatics')]"))
-    #     # )
-    #     try:
-    #         # Try to find the element
-    #         #fellowship_type = driver.find_element("xpath", "//h4/a[contains(text(), 'Clinical Informatics')]")
-    #         fellowship_type = driver.find_element("xpath", f"//h4/a[contains(text(), '{fellapp_name}')]")
-    #         #print("Element found!")
-    #         # You can perform actions on the element here
-    #         fellowship_type.click()
-    #         time.sleep(3)
-    #
-    #         # #Add coordinator
-    #         # users = self.users.get_users()
-    #         #
-    #         # # add coordinator
-    #         # coordinator = users[2]
-    #         # print(f"configs: coordinator: {coordinator['displayName']}")
-    #         #
-    #         # # s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators
-    #         # self.automation.select_option("s2id_oleg_fellappbundle_fellowshipSubspecialty_coordinators", "CSS_SELECTOR",
-    #         #                               ".select2-choices .select2-input",
-    #         #                               coordinator["displayName"]
-    #         #                               )
-    #         #
-    #         # time.sleep(3)
-    #         #
-    #         # driver.execute_script("document.getElementById('select2-drop-mask').style.display = 'none';")
-    #         # time.sleep(3)
-    #         #
-    #         # # click Update button btn btn-warning
-    #         # self.automation.click_button("btn-warning")
-    #         # button = driver.find_element(By.CLASS_NAME, "btn-warning")
-    #         # driver.execute_script("arguments[0].scrollIntoView();", button)
-    #         # driver.save_screenshot("configs_after_click_btn-warning.png")
-    #     except NoSuchElementException:
-    #         # create new fellowship type "Clinical Informatics"
-    #         #print("create new fellowship type Clinical Informatics")
-    #         self.automation.click_button("btn-primary")
-    #         time.sleep(3)
-    #
-    #         # self.automation.select_option(
-    #         #     "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
-    #         #     ".select2-search .select2-input",
-    #         #     "Clinical Informatics"
-    #         #     )
-    #         self.automation.select_option(
-    #             "s2id_oleg_fellappbundle_fellappfellowshipapplicationtype_fellowshipsubspecialtytype", "CSS_SELECTOR",
-    #             ".select2-search .select2-input",
-    #             fellapp_name
-    #         )
-    #
-    #         time.sleep(3)
-    #         self.automation.click_button_by_id("oleg_fellappbundle_fellappfellowshipapplicationtype_save")
-    #
-    #     time.sleep(3)
 
     def set_site_settings(self):
         # Set fellowship start/end dates
