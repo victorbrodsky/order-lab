@@ -119,7 +119,8 @@ class Users:
         ]
 
         if with_admin:
-            raw_data.append(["Jack", "Reacher", ""])
+            raw_data.append(["Admin", "Admin", ""])
+            #raw_data.append(["Jack", "Reacher (admin)", ""])
 
         #Returns:
         #    list: A list of user dictionaries containing user details.
