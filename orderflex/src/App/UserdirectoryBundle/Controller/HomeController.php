@@ -308,7 +308,7 @@ class HomeController extends OrderAbstractController {
                     continue;
                 }
 
-                $databasename = $tenant->getDatabaseName();
+                //$databasename = $tenant->getDatabaseName();
                 $url = $tenant->getUrlslug();
                 $instTitle = $tenant->getInstitutionTitle();
                 $depTitle = $tenant->getDepartmentTitle();
