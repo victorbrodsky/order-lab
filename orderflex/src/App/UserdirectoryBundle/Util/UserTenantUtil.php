@@ -1448,6 +1448,7 @@ class UserTenantUtil
                 //$databasename = $tenant->getDatabaseName();
                 $url = $tenant->getUrlslug();
                 $instTitle = $tenant->getInstitutionTitle();
+                $depTitle = $tenant->getDepartmentTitle();
                 //echo $databasename.": url=".$url."<br>";
                 //echo $databasename.": instTitle=".$instTitle."<br>";
 
@@ -1460,6 +1461,10 @@ class UserTenantUtil
 
                     if (!$instTitle) {
                         $instTitle = $tenantBaseUrl;
+                    }
+
+                    if( $instTitle && $depTitle ) {
+                        $instTitle = $instTitle . " - " . $depTitle;
                     }
 
                     //
