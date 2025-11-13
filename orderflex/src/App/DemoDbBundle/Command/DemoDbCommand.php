@@ -117,12 +117,12 @@ class DemoDbCommand extends Command {
             $toEmailsArr = array('oli2002@med.cornell.edu');
             $verifyErrorRes = $demoDbUtil->verifyDemoDb();
             if ($verifyErrorRes) {
-                $verifyMsg = "Not all demos were generated for baseurl=$baseurl: " . $verifyErrorRes;
+                $verifyMsg = "demo-db-reset: Not all demos were generated for baseurl=$baseurl: " . $verifyErrorRes;
                 $logger->error($verifyMsg);
-                $userSecUtil->sendEmailToSystemEmail("DB Demos Error", $verifyMsg, $toEmailsArr);
+                $userSecUtil->sendEmailToSystemEmail("DB Demos: Error for baseurl=$baseurl", $verifyMsg, $toEmailsArr);
             } else {
-                $msg = "cron demo-db-reset Verify DB baseurl=$baseurl: ".$resStr;
-                $userSecUtil->sendEmailToSystemEmail("DB Demos Completed Successfully for baseurl=$baseurl", $msg, $toEmailsArr);
+                $msg = "demo-db-reset: Verify DB baseurl=$baseurl: ".$resStr;
+                $userSecUtil->sendEmailToSystemEmail("DB Demos: Completed Successfully for baseurl=$baseurl", $msg, $toEmailsArr);
             }
         }
 
