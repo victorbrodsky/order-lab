@@ -181,8 +181,15 @@ class Users:
         return users
 
     def get_existing_users(self,with_admin=False):
+        print("get_existing_users: start")
         automation = self.automation
         driver = automation.get_driver()
+
+        #check if login
+        if not automation.check_if_loggedin():
+            automation.login_to_site()
+
+        print("get_existing_users: list users")
         driver.get(self.automation.baseurl.rstrip('/') + '/' + 'directory/users'.lstrip('/'))
         time.sleep(1)
         for user in self.get_users(with_admin):
@@ -194,7 +201,7 @@ class Users:
             #)
             #user_link = driver.find_element(By.XPATH, "//td/a[contains(normalize-space(text()), 'John Doe')]")
             #user_link = driver.find_element(By.XPATH, "//a/strong[contains(text(), 'John Doe')]")
-            #print("get_existing_users: searching for displayName", user['displayName'])
+            print("get_existing_users: searching for displayName", user['displayName'])
             user_link = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.XPATH, "//a[strong[contains(text(), '"+user['displayName']+"')]]"))
             )
