@@ -1904,6 +1904,7 @@ class FellAppUtil {
 
         } else {
             //Update role
+            $logger->notice("createOrEnableFellAppRole: update role $role");
             $changed = false;
 
             //$updateRolePermission = false;
@@ -1969,6 +1970,7 @@ class FellAppUtil {
             //$testing = true;
             if( $changed ) {
                 if( !$testing ) {
+                    $logger->notice("createOrEnableFellAppRole: persist and flush role $role");
                     //echo "createOrEnableFellAppRole: new specialty=[".$role->getFellowshipSubspecialty()."]<br>";
                     $em->persist($role);
                     $em->flush($role);
@@ -1977,8 +1979,15 @@ class FellAppUtil {
             }
         }
 
-        $logger->notice("createOrEnableFellAppRole: finished. count=$count");
+        //testing
+        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
+        $permissions = $role->getPermissions();
+        $permission = $permissions[0];
+        $logger->notice("createOrEnableFellAppRole: testing.".", permission=".$permission);
+        $logger->notice("createOrEnableFellAppRole: testing.".", PermissionObjectList=".$permission->getPermissionObjectList());
+        $logger->notice("createOrEnableFellAppRole: testing.".", PermissionActionList=".$permission->getPermissionActionList());
 
+        $logger->notice("createOrEnableFellAppRole: finished. count=$count");
         return $count;
     }
 
