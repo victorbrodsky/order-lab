@@ -403,7 +403,7 @@ class FellApp:
         time.sleep(3)
         print("fellappAcademicYear Start/End dates populated")
 
-    def create_fellapps(self,max_count):
+    def create_fellapps(self,max_count=0):
         users = self.users.get_users()
         comments = self.get_comments()
         fellapps = self.get_fell_apps()
