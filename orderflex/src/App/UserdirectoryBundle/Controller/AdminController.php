@@ -219,7 +219,7 @@ class AdminController extends OrderAbstractController
         $users = $roles = $em->getRepository(User::class)->findAll();
         $logger->notice('firstTimeLoginGenerationAction: users='.count($users));
 
-        if (count($users) == 0) {
+        if( 1 || count($users) == 0 ) {
 
             //1) get systemuser
             $userSecUtil = $this->container->get('user_security_utility');

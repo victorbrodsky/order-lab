@@ -46,6 +46,7 @@ class FellApp:
         comments.append(
             "Demonstrated deep curiosity and a proactive approach to learning—an asset to any research team.")
         comments.append("Has a compelling personal story that aligns well with the mission and values of our program.")
+        return comments
 
     def get_fell_apps(self):
         fellapps = []
@@ -412,7 +413,7 @@ class FellApp:
             self.create_single_fellapp(fellapp,users,comments)
             #break #enable for test run only one
 
-    def create_single_fellapp(self, fellapp,users, comments):
+    def create_single_fellapp(self, fellapp, users, comments):
         driver = self.automation.get_driver()
         url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/new/".lstrip('/')
         #url = "http://127.0.0.1/fellowship-applications/new/"
@@ -790,6 +791,7 @@ class FellApp:
             # oleg_fellappbundle_fellowshipapplication_interviews_0_comment
             time.sleep(1)
             #comment_text = fellapp['comment']
+            print(f"Before set rank comment text",comments)
             comment_text = random.choice(comments)
             print(f"Set rank comment text: {comment_text}")
             comment_field = WebDriverWait(driver, 10).until(

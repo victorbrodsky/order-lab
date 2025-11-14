@@ -49,7 +49,7 @@ class Init:
         time.sleep(3)
         try:
             #oleg_userdirectorybundle_initialconfigurationtype_environment
-            select_element = driver.find_element(By.ID, "oleg_userdirectorybundle_initialconfigurationtype_environment")
+            #select_element = driver.find_element(By.ID, "oleg_userdirectorybundle_initialconfigurationtype_environment")
             time.sleep(3)
             self.config_initializing()
         except NoSuchElementException:
