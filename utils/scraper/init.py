@@ -388,6 +388,25 @@ class Init:
         driver.get(url)
         time.sleep(3)
 
+    def update_admin_display_name(self):
+        driver = self.automation.get_driver()
+        url = self.automation.baseurl.rstrip('/') + '/' + "directory/edit-user-profile/2"
+        driver.get(url)
+        time.sleep(3)
+        #oleg_userdirectorybundle_user_infos_0_displayName
+        display_name = driver.find_element(By.ID,
+                                             "oleg_userdirectorybundle_user_infos_0_displayName")
+        display_name.clear()
+        display_name.send_keys("Adrian Adams")
+        time.sleep(3)
+
+        wait = WebDriverWait(driver, 10)
+        buttons = wait.until(EC.presence_of_all_elements_located((By.NAME, "btnSubmit")))
+        if buttons:
+            buttons[0].click()  # Click the first matching button
+        else:
+            print("No matching buttons found.")
+
     def run_deploy(self):
         driver = self.automation.get_driver()
         url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/update-system-cache-assets/".lstrip('/')
@@ -448,6 +467,7 @@ def main(mailer_user,mailer_password,captcha_sitekey,captcha_secretkey):
     init.remove_crons()
     init.init_mailer(mailer_user,mailer_password)
     init.init_captcha(captcha_sitekey, captcha_secretkey)
+    init.update_admin_display_name()
     init.run_deploy()
     print("init done!")
     automation.quit_driver()

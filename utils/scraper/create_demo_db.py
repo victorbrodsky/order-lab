@@ -39,6 +39,7 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             init.remove_crons()
             init.init_mailer(mailer_user,mailer_password)
             init.init_captcha(captcha_sitekey, captcha_secretkey)
+            init.update_admin_display_name()
             init.run_deploy()
             time.sleep(3)
             automation.quit_driver()
