@@ -1164,7 +1164,7 @@ class FellowshipApplication extends BaseUserAttributes {
     }
     
     //$trainingTypeName: Medical, Residency, GME, Post-Residency Fellowship
-    public function getSchoolByTrainingTypeName( $trainingTypeName, $withGeoLocation=false, $withResidencySpecialty=false ) {
+    public function getSchoolByTrainingTypeName( $trainingTypeName, $withGeoLocation=false, $withResidencySpecialty=false, $separator='<br>' ) {
         $schoolName = "";
 
         foreach( $this->getTrainings() as $item ) {
@@ -1174,7 +1174,8 @@ class FellowshipApplication extends BaseUserAttributes {
 
                 //AP, CP, AP/CP, other or Area of Training
                 if( $withResidencySpecialty && $item->getResidencySpecialty() ) {
-                    $schoolName = $schoolName . $item->getResidencySpecialty();
+                    //$schoolName = $schoolName . $item->getResidencySpecialty();
+                    $schoolName = $item->getResidencySpecialty() . " at " . $schoolName;
                 }
                 if( $withResidencySpecialty && $item->getMajors() ) {
                     $majorArr = array();
@@ -1186,14 +1187,18 @@ class FellowshipApplication extends BaseUserAttributes {
                     if( $schoolName && count($majorArr)>0 ) {
                         $schoolName = $schoolName . "; ";
                     }
-                    $schoolName = $schoolName . implode(", ",$majorArr);
+                    //$schoolName = $schoolName . implode(", ",$majorArr);
+                    $majorStr = implode(", ",$majorArr);
+                    if( trim($majorStr) ) {
+                        $schoolName = trim($majorStr) . " at " . $schoolName;
+                    }
                 }
 
                 //Institution
                 if( $item->getInstitution() ) {
-                    $separator = "";
-                    if( $schoolName ) {
-                        $separator = "<br>";
+                    //$separator = "";
+                    if( !$schoolName ) {
+                        $separator = "";
                     }
                     $schoolName = $schoolName . $separator . $this->capitalizeMultiIfNotAllCapital($item->getInstitution()) . "";
                 }

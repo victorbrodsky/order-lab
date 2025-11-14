@@ -292,19 +292,19 @@
            href="{{ url('fellapp_download_pdf', { 'id': fellapp.id}) }}"
                 >{{ downloadTitleStr|raw }}</a>
 
-        {% set medschool = fellapp.getSchoolByTrainingTypeName('Medical') %}
+        {% set medschool = fellapp.getSchoolByTrainingTypeName('Medical',false,true,' ') %}
         {% if medschool %}
-            <br>Medical School: {{ medschool }}
+            <br>Medical School: {{ medschool|raw }}
         {% endif %}
 
-        {% set resschool = fellapp.getSchoolByTrainingTypeName('Residency',false,true) %}
+        {% set resschool = fellapp.getSchoolByTrainingTypeName('Residency',false,true,' ') %}
         {% if resschool %}
-            <br>Residency: {{ resschool }}
+            <br>Residency: {{ resschool|raw }}
         {% endif %}
 
-        {% set fellappschool = fellapp.getSchoolByTrainingTypeName('Post-Residency Fellowship',false,true) %}
+        {% set fellappschool = fellapp.getSchoolByTrainingTypeName('Post-Residency Fellowship',false,true,' ') %}
         {% if fellappschool %}
-            <br>Preceding Fellowship: {{ fellappschool }}
+            <br>Preceding Fellowship: {{ fellappschool|raw }}
         {% endif %}
 
         {% set usmleArr = fellapp.getUsmleArr() %}
