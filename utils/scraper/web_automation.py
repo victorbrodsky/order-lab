@@ -181,30 +181,53 @@ class WebAutomation:
             #sys.exit()
             return False
 
-    def select_option(self, element_id, selector_option, selector_text, option_text):
-        #print("ID=",select_id,", CLASS=", select_classname)
-        #"""Selects an option from the Select2 combobox."""
-        combobox = self.driver.find_element(By.ID, element_id)
-        actions = ActionChains(self.driver)
-        actions.move_to_element(combobox).click().perform()
-        
-        time.sleep(1)
+    # def select_option(self, element_id, selector_option, selector_text, option_text):
+    #     #print("ID=",select_id,", CLASS=", select_classname)
+    #     #"""Selects an option from the Select2 combobox."""
+    #     combobox = self.driver.find_element(By.ID, element_id)
+    #     actions = ActionChains(self.driver)
+    #     actions.move_to_element(combobox).click().perform()
+    #
+    #     time.sleep(1)
+    #
+    #     if selector_option == "ID":
+    #         search_box = self.driver.find_element(By.ID, selector_text)
+    #         #print("search by ID=",selector_text)
+    #     if selector_option == "CLASS_NAME":
+    #         search_box = self.driver.find_element(By.CLASS_NAME, selector_text)
+    #         #print("search by CLASS_NAME=",selector_text)
+    #     if selector_option == "CSS_SELECTOR":
+    #         search_box = self.driver.find_element(By.CSS_SELECTOR, selector_text)
+    #         #print("search by CSS_SELECTOR=",selector_text)
+    #
+    #     time.sleep(1)
+    #     search_box.send_keys(option_text)
+    #     time.sleep(1)
+    #     search_box.send_keys(Keys.ENTER)
+    #     #time.sleep(3)
 
+    def select_option(self, element_id, selector_option, selector_text, option_text):
+        """Selects an option from the Select2 combobox."""
+        wait = WebDriverWait(self.driver, 10)
+
+        # Wait for and click the combobox
+        combobox = wait.until(EC.element_to_be_clickable((By.ID, element_id)))
+        ActionChains(self.driver).move_to_element(combobox).click().perform()
+
+        # Wait for the search box based on selector type
         if selector_option == "ID":
-            search_box = self.driver.find_element(By.ID, selector_text)
-            #print("search by ID=",selector_text)
-        if selector_option == "CLASS_NAME":
-            search_box = self.driver.find_element(By.CLASS_NAME, selector_text)
-            #print("search by CLASS_NAME=",selector_text)
-        if selector_option == "CSS_SELECTOR":
-            search_box = self.driver.find_element(By.CSS_SELECTOR, selector_text)
-            #print("search by CSS_SELECTOR=",selector_text)
-            
-        time.sleep(1)
+            search_box = wait.until(EC.visibility_of_element_located((By.ID, selector_text)))
+        elif selector_option == "CLASS_NAME":
+            search_box = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, selector_text)))
+        elif selector_option == "CSS_SELECTOR":
+            search_box = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, selector_text)))
+        else:
+            raise ValueError(f"Unsupported selector_option: {selector_option}")
+
+        # Send the option text and confirm selection
         search_box.send_keys(option_text)
-        time.sleep(1)
+        wait.until(lambda d: option_text.lower() in search_box.get_attribute("value").lower())
         search_box.send_keys(Keys.ENTER)
-        #time.sleep(3)
 
     def click_button(self, class_name):
         """Clicks a button with the specified class name."""

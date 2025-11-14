@@ -380,8 +380,11 @@ class FellApp:
         time.sleep(3)
         print("fellappAcademicYear Start/End dates populated")
 
-    def create_fellapps(self):
-        for fellapp in self.get_fell_apps():
+    def create_fellapps(self,max_count):
+        fellapps = self.get_fell_apps()
+        if max_count > 0:
+            fellapps = fellapps[:max_count]
+        for fellapp in fellapps:
             self.create_single_fellapp(fellapp)
             #break #enable for test run only one
 
@@ -458,7 +461,7 @@ class FellApp:
             "#select2-drop .select2-input",
             fellapp["medschool"]
         )
-        time.sleep(1)
+        time.sleep(2)
 
         #residency_specialty s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_residencySpecialty
         self.automation.select_option(
@@ -466,7 +469,7 @@ class FellApp:
             "#select2-drop .select2-input",
             fellapp["residency_specialty"][0]
         )
-        time.sleep(1)
+        time.sleep(2)
 
         #s2id_oleg_fellappbundle_fellowshipapplication_trainings_3_institution
         self.automation.select_option(
@@ -683,15 +686,17 @@ class FellApp:
         #     print("Failed to click the button:", e)
 
         interviewer_count = 0
+        interviewer_name = 'administrator'
         try:
-            self.set_interviewer(driver, fellapp, formatted_interview_date, interviewer_count)
+            self.set_interviewer(driver, fellapp, formatted_interview_date, interviewer_name, interviewer_count)
             print(f"Success to add interviewer {interviewer_count}")
         except Exception as e:
             print(f"Failed to add interviewer {interviewer_count}:", e)
 
         interviewer_count = 1
+        interviewer_name = 'aeinstein'
         try:
-            self.set_interviewer(driver, fellapp, formatted_interview_date, 1)
+            self.set_interviewer(driver, fellapp, formatted_interview_date, interviewer_name, interviewer_count)
             print(f"Success to add interviewer {interviewer_count}")
         except Exception as e:
             print(f"Failed to add interviewer {interviewer_count}:", e)
@@ -750,7 +755,7 @@ class FellApp:
         driver.get(accept_url)
         time.sleep(1)
 
-    def set_interviewer(self, driver, fellapp, formatted_interview_date, count):
+    def set_interviewer(self, driver, fellapp, formatted_interview_date, interviewer_name, count):
         try:
             # Wait until the button is present and clickable
             add_button = WebDriverWait(driver, 10).until(
@@ -764,7 +769,7 @@ class FellApp:
             self.automation.select_option(
                 f"s2id_oleg_fellappbundle_fellowshipapplication_interviews_{count}_interviewer", "CSS_SELECTOR",
                 "#select2-drop .select2-input",
-                'administrator'
+                f"{interviewer_name}"
             )
             time.sleep(1)
 
@@ -833,6 +838,7 @@ class FellApp:
 
             # Set total rank total_rank oleg_fellappbundle_fellowshipapplication_interviews_0_totalRank
             time.sleep(1)
+            total_rank = round(total_rank / 3, 1)
             print(f"Before set total_rankt: {total_rank}")
             comment_field = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located(
@@ -904,7 +910,7 @@ def main():
         fellapp = FellApp(automation)
 
         # Create fellowship applications
-        fellapp.create_fellapps()
+        fellapp.create_fellapps(max_count=1)
         time.sleep(3)
 
         # Accept applications
