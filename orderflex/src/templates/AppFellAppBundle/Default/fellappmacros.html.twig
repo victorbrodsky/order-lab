@@ -302,6 +302,11 @@
             <br>Residency: {{ resschool }}
         {% endif %}
 
+        {% set fellappschool = fellapp.getSchoolByTrainingTypeName('Post-Residency Fellowship') %}
+        {% if fellappschool %}
+            <br>Preceding Fellowship: {{ fellappschool }}
+        {% endif %}
+
         {% set usmleArr = fellapp.getUsmleArr() %}
         {% if usmleArr|length > 0 %}
             <br>USMLE: {{ usmleArr|join(' / ') }}

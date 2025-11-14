@@ -1163,7 +1163,7 @@ class FellowshipApplication extends BaseUserAttributes {
         return $degree;
     }
     
-    //$trainingTypeName: Medical, Residency, GME
+    //$trainingTypeName: Medical, Residency, GME, Post-Residency Fellowship
     public function getSchoolByTrainingTypeName( $trainingTypeName, $withGeoLocation=false, $withResidencySpecialty=false ) {
         $schoolName = "";
 
