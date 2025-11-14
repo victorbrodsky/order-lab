@@ -37,8 +37,19 @@ def run_demos(demo_ids, attempts, max_attempts, run_by_symfony_command, mailer_u
             init.run_site_settngs()
             init.init_other_settings()
             init.remove_crons()
-            init.init_mailer(mailer_user,mailer_password)
-            init.init_captcha(captcha_sitekey, captcha_secretkey)
+            #init.init_mailer(mailer_user,mailer_password)
+            #init.init_captcha(captcha_sitekey, captcha_secretkey)
+
+            try:
+                init.init_mailer(mailer_user, mailer_password)
+            except Exception as e:
+                print("init_mailer failed:", e)
+
+            try:
+                init.init_captcha(captcha_sitekey, captcha_secretkey)
+            except Exception as e:
+                print("init_captcha failed:", e)
+
             init.update_admin_display_name()
             init.run_deploy()
             time.sleep(3)
