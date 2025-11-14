@@ -58,10 +58,22 @@ class ResApp:
         resapp_type_url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/list/edit-by-listname/ResidencyTrackList".lstrip('/')
         driver.get(resapp_type_url)
         time.sleep(1)
+        print(f"Resapp configs: resapp_type_url={resapp_type_url}")
+
+        wait = WebDriverWait(driver, 10)  # Adjust timeout as needed
 
         # Wait for the table to load
-        wait = WebDriverWait(driver, 10)  # Adjust timeout as needed
-        table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'records_list')))
+        table = None
+        try:
+            table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'records_list')))
+        except Exception as e:
+            #if the ResidencyTrackList does not exists, this mean that the populate All Lists Part A failed => try it again
+            print(f"Error founding ResidencyTrackList try it again. error: {str(e)}")
+            populate_url = self.automation.baseurl.rstrip(
+                '/') + '/' + "directory/admin/populate-all-lists-with-default-values".lstrip('/')
+            driver.get(populate_url)
+            time.sleep(3)
+            table = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'records_list')))
 
         # Locate the <td> with the exact text "AP/CP"
         try:
@@ -280,20 +292,37 @@ class ResApp:
 
 
 def main():
-    url = None
-    username_text = "administrator"
-    password_text = "1234567890"
+    #url = None
+    #username_text = "administrator"
+    #password_text = "1234567890"
+    #baseurl = "https://view.online/c/demo-institution/demo-department"
+    # automation = WebAutomation(baseurl, False)
+    # automation.login_to_site(url, username_text, password_text)
+    # resapp = ResApp(automation)
+    # #resapp.configs()
+    # resapp.create_resapps()
+    # print("ResApp done!")
+    # automation.quit_driver()
+
+    run_by_symfony_command = False
     baseurl = "https://view.online/c/demo-institution/demo-department"
-    automation = WebAutomation(baseurl, False)
-    automation.login_to_site(url, username_text, password_text)
 
+    automation = WebAutomation(baseurl, run_by_symfony_command)
+    automation.login_to_site()
     resapp = ResApp(automation)
-    #resapp.configs()
+    resapp.configs()
+    del automation
+    del resapp
+
+    automation = WebAutomation(baseurl, run_by_symfony_command)
+    automation.login_to_site()
+    resapp = ResApp(automation)
     resapp.create_resapps()
-
-    print("ResApp done!")
-
+    time.sleep(3)
     automation.quit_driver()
+    del automation
+    del resapp
+    print("resapp done!")
 
 if __name__ == "__main__":
     main()

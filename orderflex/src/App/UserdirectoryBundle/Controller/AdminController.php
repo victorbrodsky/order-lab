@@ -9413,11 +9413,14 @@ class AdminController extends OrderAbstractController
             //$administrator->setDisplayName('Jack Reacher (admin)');
 
             $fullDomain = trim($request->getPathInfo());
+            $logger->notice("generate AdministratorAction: fullDomain=$fullDomain");
             if (str_contains($fullDomain, 'demo-institution')) {
-                $administrator->setFirstName('Admin');
-                $administrator->setLastName('Admin');
+                $logger->notice("generate AdministratorAction: set display name as 'Adrian Adams'");
+                //$administrator->setFirstName('Admin');
+                //$administrator->setLastName('Admin');
                 $administrator->setDisplayName('Adrian Adams'); //set meaningful admin name for demo DB
             }
+            $logger->notice("generate AdministratorAction: admin DisplayName=".$administrator->getDisplayName());
 
             //$encodedPassword = $encoder->encodePassword($administrator, "1234567890");
             $authUtil = $this->container->get('authenticator_utility');
