@@ -562,101 +562,139 @@ class FellApp:
         # Format it back to 'd/m/Y' (this step is optional if you just need the date object)
         formatted_interview_date = interview_date_obj.strftime("%d/%m/%Y")
 
-        #Add interviewer administrator
+        ########################################################
+        ################## Add interviewer #####################
+        ########################################################
         applicant_data_element = driver.find_element(By.CSS_SELECTOR, "h4.panel-title > a[href='#interviews']")
         applicant_data_element.click()
         time.sleep(3)
 
+        # try:
+        #     # Wait until the button is present and clickable
+        #     add_button = WebDriverWait(driver, 10).until(
+        #         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Interviewer')]"))
+        #     )
+        #     add_button.click()
+        #     time.sleep(2)
+        #     print("Clicked 'Add Interviewer' button.")
+        #
+        #     #s2id_oleg_fellappbundle_fellowshipapplication_interviews_1_interviewer add administrator
+        #     self.automation.select_option(
+        #         "s2id_oleg_fellappbundle_fellowshipapplication_interviews_0_interviewer", "CSS_SELECTOR",
+        #         "#select2-drop .select2-input",
+        #         'administrator'
+        #     )
+        #     time.sleep(1)
+        #
+        #     #oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank
+        #     #signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank")
+        #     #signature.send_keys(fellapp["interview_score"])
+        #
+        #     total_rank = 0
+        #
+        #     #s2id_oleg_fellappbundle_fellowshipapplication_interviews_0_academicRank
+        #     try:
+        #         # Choose a random academic rank from 1 to 5
+        #         academic_rank_value = random.randint(1, 5)
+        #         print(f"Setting academicRank to: {academic_rank_value}")
+        #         # Inject the value into the Select2-enhanced field
+        #         script = f"""
+        #             $("#oleg_fellappbundle_fellowshipapplication_interviews_0_academicRank")
+        #                 .val("{academic_rank_value}")
+        #                 .trigger("change");
+        #         """
+        #         driver.execute_script(script)
+        #         time.sleep(1)
+        #         total_rank = total_rank + academic_rank_value
+        #         print(f"✓ academicRank set to {academic_rank_value}")
+        #     except Exception as e:
+        #         print(f"Error setting academicRank: {e}")
+        #
+        #     #oleg_fellappbundle_fellowshipapplication_interviews_0_personalityRank
+        #     try:
+        #         # Choose a random rank from 1 to 5
+        #         academic_rank_value = random.randint(1, 5)
+        #         print(f"Setting personalityRank to: {academic_rank_value}")
+        #         # Inject the value into the Select2-enhanced field
+        #         script = f"""
+        #             $("#oleg_fellappbundle_fellowshipapplication_interviews_0_personalityRank")
+        #                 .val("{academic_rank_value}")
+        #                 .trigger("change");
+        #         """
+        #         driver.execute_script(script)
+        #         time.sleep(1)
+        #         total_rank = total_rank + academic_rank_value
+        #         print(f"✓ personalityRank set to {academic_rank_value}")
+        #     except Exception as e:
+        #         print(f"Error setting personalityRank: {e}")
+        #
+        #     # oleg_fellappbundle_fellowshipapplication_interviews_0_potentialRank
+        #     try:
+        #         # Choose a random rank from 1 to 5
+        #         academic_rank_value = random.randint(1, 5)
+        #         print(f"Setting potentialRank to: {academic_rank_value}")
+        #         # Inject the value into the Select2-enhanced field
+        #         script = f"""
+        #                     $("#oleg_fellappbundle_fellowshipapplication_interviews_0_potentialRank")
+        #                         .val("{academic_rank_value}")
+        #                         .trigger("change");
+        #                 """
+        #         driver.execute_script(script)
+        #         time.sleep(1)
+        #         total_rank = total_rank + academic_rank_value
+        #         print(f"✓ potentialRank set to {academic_rank_value}")
+        #     except Exception as e:
+        #         print(f"Error setting potentialRank: {e}")
+        #
+        #     #Set total rank total_rank oleg_fellappbundle_fellowshipapplication_interviews_0_totalRank
+        #     time.sleep(1)
+        #     print(f"Before set total_rankt: {total_rank}")
+        #     comment_field = WebDriverWait(driver, 10).until(
+        #         EC.visibility_of_element_located(
+        #             (By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_0_totalRank"))
+        #     )
+        #     comment_field.clear()
+        #     comment_field.send_keys(total_rank)
+        #     time.sleep(1)
+        #     print(f"✓ total_rank set: {total_rank}")
+        #
+        #     #oleg_fellappbundle_fellowshipapplication_interviews_0_comment
+        #     time.sleep(1)
+        #     comment_text = fellapp['comment']
+        #     print(f"Set rank comment text: {comment_text}")
+        #     comment_field = WebDriverWait(driver, 10).until(
+        #         EC.visibility_of_element_located(
+        #             (By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_0_comment"))
+        #     )
+        #     comment_field.clear()
+        #     comment_field.send_keys(comment_text)
+        #     time.sleep(1)
+        #     print(f"✓ Interview comment set: {comment_text}")
+        #
+        #     #interview_date
+        #     # oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
+        #
+        #     interview_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_0_interviewDate")
+        #     interview_date.clear()
+        #     interview_date.send_keys(formatted_interview_date)
+        #     time.sleep(3)
+        #
+        # except Exception as e:
+        #     print("Failed to click the button:", e)
+
+        interviewer_count = 0
         try:
-            # Wait until the button is present and clickable
-            add_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Interviewer')]"))
-            )
-            add_button.click()
-            time.sleep(2)
-            print("Clicked 'Add Interviewer' button.")
-
-            #s2id_oleg_fellappbundle_fellowshipapplication_interviews_1_interviewer add administrator
-            self.automation.select_option(
-                "s2id_oleg_fellappbundle_fellowshipapplication_interviews_1_interviewer", "CSS_SELECTOR",
-                "#select2-drop .select2-input",
-                'administrator'
-            )
-
-            #oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank
-            #signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank")
-            #signature.send_keys(fellapp["interview_score"])
-
-            #s2id_oleg_fellappbundle_fellowshipapplication_interviews_0_academicRank
-            try:
-                # Choose a random academic rank from 1 to 5
-                academic_rank_value = random.randint(1, 5)
-                print(f"Setting academicRank to: {academic_rank_value}")
-                # Inject the value into the Select2-enhanced field
-                script = f"""
-                    $("#oleg_fellappbundle_fellowshipapplication_interviews_0_academicRank")
-                        .val("{academic_rank_value}")
-                        .trigger("change");
-                """
-                driver.execute_script(script)
-                time.sleep(1)
-                print(f"✓ academicRank set to {academic_rank_value}")
-            except Exception as e:
-                print(f"Error setting academicRank: {e}")
-
-            #oleg_fellappbundle_fellowshipapplication_interviews_0_personalityRank
-            try:
-                # Choose a random rank from 1 to 5
-                academic_rank_value = random.randint(1, 5)
-                print(f"Setting personalityRank to: {academic_rank_value}")
-                # Inject the value into the Select2-enhanced field
-                script = f"""
-                    $("#oleg_fellappbundle_fellowshipapplication_interviews_0_personalityRank")
-                        .val("{academic_rank_value}")
-                        .trigger("change");
-                """
-                driver.execute_script(script)
-                time.sleep(1)
-                print(f"✓ personalityRank set to {academic_rank_value}")
-            except Exception as e:
-                print(f"Error setting personalityRank: {e}")
-
-            # oleg_fellappbundle_fellowshipapplication_interviews_0_potentialRank
-            try:
-                # Choose a random rank from 1 to 5
-                academic_rank_value = random.randint(1, 5)
-                print(f"Setting potentialRank to: {academic_rank_value}")
-                # Inject the value into the Select2-enhanced field
-                script = f"""
-                            $("#oleg_fellappbundle_fellowshipapplication_interviews_0_potentialRank")
-                                .val("{academic_rank_value}")
-                                .trigger("change");
-                        """
-                driver.execute_script(script)
-                time.sleep(1)
-                print(f"✓ potentialRank set to {academic_rank_value}")
-            except Exception as e:
-                print(f"Error setting potentialRank: {e}")
-
-            #oleg_fellappbundle_fellowshipapplication_interviews_0_comment
-            comment_text = fellapp['comment']
-            print(f"Set rank comment text: {comment_text}")
-            comment_field = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_0_comment")
-            comment_field.clear()
-            comment_field.send_keys(comment_text)
-            time.sleep(1)
-            print(f"✓ Interview comment set: {comment_text}")
-
-            #interview_date
-            # oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
-
-            interview_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_1_interviewDate")
-            interview_date.clear()
-            interview_date.send_keys(formatted_interview_date)
-            time.sleep(3)
-
+            self.set_interviewer(driver, fellapp, formatted_interview_date, interviewer_count)
+            print(f"Success to add interviewer {interviewer_count}")
         except Exception as e:
-            print("Failed to click the button:", e)
+            print(f"Failed to add interviewer {interviewer_count}:", e)
+
+        interviewer_count = 1
+        try:
+            self.set_interviewer(driver, fellapp, formatted_interview_date, 1)
+            print(f"Success to add interviewer {interviewer_count}")
+        except Exception as e:
+            print(f"Failed to add interviewer {interviewer_count}:", e)
 
         interview_date = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviewDate")
         interview_date.clear()
@@ -712,6 +750,122 @@ class FellApp:
         driver.get(accept_url)
         time.sleep(1)
 
+    def set_interviewer(self, driver, fellapp, formatted_interview_date, count):
+        try:
+            # Wait until the button is present and clickable
+            add_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Add Interviewer')]"))
+            )
+            add_button.click()
+            time.sleep(2)
+            print("Clicked 'Add Interviewer' button.")
+
+            # s2id_oleg_fellappbundle_fellowshipapplication_interviews_1_interviewer add administrator
+            self.automation.select_option(
+                f"s2id_oleg_fellappbundle_fellowshipapplication_interviews_{count}_interviewer", "CSS_SELECTOR",
+                "#select2-drop .select2-input",
+                'administrator'
+            )
+            time.sleep(1)
+
+            # oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank
+            # signature = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_1_totalRank")
+            # signature.send_keys(fellapp["interview_score"])
+
+            total_rank = 0
+
+            # s2id_oleg_fellappbundle_fellowshipapplication_interviews_0_academicRank
+            try:
+                time.sleep(1)
+                # Choose a random academic rank from 1 to 5
+                academic_rank_value = random.randint(1, 5)
+                print(f"Setting academicRank to: {academic_rank_value}")
+                # Inject the value into the Select2-enhanced field
+                script = f"""
+                    $("#oleg_fellappbundle_fellowshipapplication_interviews_{count}_academicRank")
+                        .val("{academic_rank_value}")
+                        .trigger("change");
+                """
+                driver.execute_script(script)
+                time.sleep(1)
+                total_rank = total_rank + academic_rank_value
+                print(f"✓ academicRank set to {academic_rank_value}")
+            except Exception as e:
+                print(f"Error setting academicRank: {e}")
+
+            # oleg_fellappbundle_fellowshipapplication_interviews_0_personalityRank
+            try:
+                time.sleep(1)
+                # Choose a random rank from 1 to 5
+                academic_rank_value = random.randint(1, 5)
+                print(f"Setting personalityRank to: {academic_rank_value}")
+                # Inject the value into the Select2-enhanced field
+                script = f"""
+                    $("#oleg_fellappbundle_fellowshipapplication_interviews_{count}_personalityRank")
+                        .val("{academic_rank_value}")
+                        .trigger("change");
+                """
+                driver.execute_script(script)
+                time.sleep(1)
+                total_rank = total_rank + academic_rank_value
+                print(f"✓ personalityRank set to {academic_rank_value}")
+            except Exception as e:
+                print(f"Error setting personalityRank: {e}")
+
+            # oleg_fellappbundle_fellowshipapplication_interviews_0_potentialRank
+            try:
+                time.sleep(1)
+                # Choose a random rank from 1 to 5
+                academic_rank_value = random.randint(1, 5)
+                print(f"Setting potentialRank to: {academic_rank_value}")
+                # Inject the value into the Select2-enhanced field
+                script = f"""
+                            $("#oleg_fellappbundle_fellowshipapplication_interviews_{count}_potentialRank")
+                                .val("{academic_rank_value}")
+                                .trigger("change");
+                        """
+                driver.execute_script(script)
+                time.sleep(1)
+                total_rank = total_rank + academic_rank_value
+                print(f"✓ potentialRank set to {academic_rank_value}")
+            except Exception as e:
+                print(f"Error setting potentialRank: {e}")
+
+            # Set total rank total_rank oleg_fellappbundle_fellowshipapplication_interviews_0_totalRank
+            time.sleep(1)
+            print(f"Before set total_rankt: {total_rank}")
+            comment_field = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.ID, f"oleg_fellappbundle_fellowshipapplication_interviews_{count}_totalRank"))
+            )
+            comment_field.clear()
+            comment_field.send_keys(total_rank)
+            time.sleep(1)
+            print(f"✓ total_rank set: {total_rank}")
+
+            # oleg_fellappbundle_fellowshipapplication_interviews_0_comment
+            time.sleep(1)
+            comment_text = fellapp['comment']
+            print(f"Set rank comment text: {comment_text}")
+            comment_field = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.ID, f"oleg_fellappbundle_fellowshipapplication_interviews_{count}_comment"))
+            )
+            comment_field.clear()
+            comment_field.send_keys(comment_text)
+            time.sleep(1)
+            print(f"✓ Interview comment set: {comment_text}")
+
+            # interview_date
+            # oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
+
+            interview_date = driver.find_element(By.ID,
+                                                 f"oleg_fellappbundle_fellowshipapplication_interviews_{count}_interviewDate")
+            interview_date.clear()
+            interview_date.send_keys(formatted_interview_date)
+            time.sleep(3)
+        except Exception as e:
+            print(f"Failed to click the button for interviewer {count}:", e)
 
 def main():
     url = None
@@ -731,12 +885,11 @@ def main():
     fellapp = FellApp(automation)
 
     # Process in batches of 3
-    fellapp.configs(max_count=1, batch_size=3)
+    if 0:
+        fellapp.configs(max_count=1, batch_size=3)
 
     # Set site settings after all configurations are done
-    testing = True
-    testing = False
-    if not testing:
+    if 0:
         fellapp.set_site_settings()
 
     # Clean up
@@ -745,7 +898,7 @@ def main():
     del automation
 
     # Now process the fellowship applications
-    if not testing:
+    if 1:
         automation = WebAutomation(baseurl, run_by_symfony_command)
         automation.login_to_site()
         fellapp = FellApp(automation)
