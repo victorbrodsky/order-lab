@@ -256,7 +256,7 @@ class AdminController extends OrderAbstractController
             }
 
             //generate or update default admin user
-            $adminRes = $this->generateAdministratorAction(true);
+            $adminRes = $this->generateAdministratorAction($request,true);
             $logger->notice('Finished generate AdministratorAction. adminRes='.$adminRes);
 
             //generate multitenancy parameters (SERVER ROLE AND NETWORK ACCESS, etc)
@@ -1045,7 +1045,7 @@ class AdminController extends OrderAbstractController
         $count_VacReqFloatingTypeList = $this->generateVacReqFloatingTypeList();
         //return "Finished generateVacReqFloatingTypeList";
 
-        $adminRes = $this->generateAdministratorAction(); //testing this cause logout
+        $adminRes = $this->generateAdministratorAction($request); //testing this cause logout
         $logger->notice("Finished generate AdministratorAction");
         //return "Finished generateAdministratorAction";
 
@@ -9275,7 +9275,7 @@ class AdminController extends OrderAbstractController
         return $mapper;
     }
 
-    public function generateAdministratorAction($force=false) {
+    public function generateAdministratorAction($request,$force=false) {
 
         if( $force == false ) {
             if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
@@ -9411,6 +9411,13 @@ class AdminController extends OrderAbstractController
             $administrator->setLastName('Admin');
             $administrator->setDisplayName('Admin Admin');
             //$administrator->setDisplayName('Jack Reacher (admin)');
+
+            $fullDomain = trim($request->getPathInfo());
+            if (str_contains($fullDomain, 'demo-institution')) {
+                $administrator->setFirstName('Admin');
+                $administrator->setLastName('Admin');
+                $administrator->setDisplayName('Adrian Adams'); //set meaningful admin name for demo DB
+            }
 
             //$encodedPassword = $encoder->encodePassword($administrator, "1234567890");
             $authUtil = $this->container->get('authenticator_utility');

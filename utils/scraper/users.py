@@ -118,9 +118,10 @@ class Users:
             ["Alex", "Riley", "Alex.Riley@example.com"]
         ]
 
-        if with_admin:
-            raw_data.append(["Admin", "Admin", ""])
-            #raw_data.append(["Jack", "Reacher (admin)", ""])
+        #if with_admin:
+            #raw_data.append(["Admin", "Admin", ""])
+            #Adrian Adams
+            #raw_data.append(["Adrian", "Adams", ""])
 
         #Returns:
         #    list: A list of user dictionaries containing user details.
