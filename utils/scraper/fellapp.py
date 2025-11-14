@@ -640,10 +640,10 @@ class FellApp:
 
             #oleg_fellappbundle_fellowshipapplication_interviews_0_comment
             comment_text = fellapp['comment']
-            script = f"""
-                document.getElementById("oleg_fellappbundle_fellowshipapplication_interviews_0_comment").value = {json.dumps(comment_text)};
-            """
-            driver.execute_script(script)
+            print(f"Set rank comment text: {comment_text}")
+            comment_field = driver.find_element(By.ID, "oleg_fellappbundle_fellowshipapplication_interviews_0_comment")
+            comment_field.clear()
+            comment_field.send_keys(comment_text)
             time.sleep(1)
             print(f"✓ Interview comment set: {comment_text}")
 
