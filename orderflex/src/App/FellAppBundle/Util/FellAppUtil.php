@@ -2288,6 +2288,9 @@ class FellAppUtil {
         if( !$rejectedEmailSubject ) {
             //Thank you for applying to the [Subspecialty] [Year] fellowship at [Institution]
             $inst = $fellapp->getInstitution()."";
+            if( !$inst ) {
+                $inst = "our institution!";
+            }
             $rejectedEmailSubject = "Thank you for applying to the "
                 .$fellappType
                 ." ".$startDateStr

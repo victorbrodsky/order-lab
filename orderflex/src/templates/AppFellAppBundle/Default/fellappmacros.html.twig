@@ -297,12 +297,12 @@
             <br>Medical School: {{ medschool }}
         {% endif %}
 
-        {% set resschool = fellapp.getSchoolByTrainingTypeName('Residency') %}
+        {% set resschool = fellapp.getSchoolByTrainingTypeName('Residency',false,true) %}
         {% if resschool %}
             <br>Residency: {{ resschool }}
         {% endif %}
 
-        {% set fellappschool = fellapp.getSchoolByTrainingTypeName('Post-Residency Fellowship') %}
+        {% set fellappschool = fellapp.getSchoolByTrainingTypeName('Post-Residency Fellowship',false,true) %}
         {% if fellappschool %}
             <br>Preceding Fellowship: {{ fellappschool }}
         {% endif %}
