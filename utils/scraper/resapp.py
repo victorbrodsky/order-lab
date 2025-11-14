@@ -158,7 +158,7 @@ class ResApp:
         time.sleep(1)
 
         #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
-        #print("create new residency application")
+        print(f"create new residency application for {resapp['firstName']} {resapp['lastName']}")
 
         applicant_data_element = driver.find_element(By.CSS_SELECTOR,
                                                      "h4.panel-title > a[href='#residencyApplicantData']")
@@ -287,7 +287,7 @@ class ResApp:
         #click submit btn-warning
         self.automation.click_button("btn-warning")
 
-        #print("Finish new resapp")
+        print(f"Finish new resapp for {resapp['firstName']} {resapp['lastName']}")
         time.sleep(10)
 
 
@@ -311,6 +311,8 @@ def main():
     automation.login_to_site()
     resapp = ResApp(automation)
     resapp.configs()
+
+    automation.quit_driver()
     del automation
     del resapp
 
@@ -319,9 +321,13 @@ def main():
     resapp = ResApp(automation)
     resapp.create_resapps()
     time.sleep(3)
-    automation.quit_driver()
-    del automation
-    del resapp
+
+    if 'resapp' in locals():
+        del resapp
+    if 'automation' in locals():
+        automation.quit_driver()
+        del automation
+
     print("resapp done!")
 
 if __name__ == "__main__":
