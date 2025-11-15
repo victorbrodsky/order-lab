@@ -821,6 +821,7 @@ class FellApp:
         except Exception as e:
             print(f"Error setting language for {interviewer_name}, count={count}: {e}")
 
+        time.sleep(1)
         # interview_date
         # oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
         interview_date = driver.find_element(By.ID,
