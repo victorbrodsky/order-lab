@@ -807,7 +807,7 @@ class FellApp:
         try:
             time.sleep(1)
             # Choose a random rank from 1 to 3
-            language_value = random.randint(1, 3)
+            language_value = random.randint(1, 2)
             print(f"Setting language to: {language_value}")
             # Inject the value into the Select2-enhanced field
             script = f"""
