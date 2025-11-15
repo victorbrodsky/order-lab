@@ -804,20 +804,22 @@ class FellApp:
             print(f"✓ Interview comment set: {comment_text}")
 
         #select language
-        random_value = str(random.randint(1, 4))
-        # Inject the value into the hidden select and trigger Select2 update
-        select_id = "oleg_fellappbundle_fellowshipapplication_interviews_0_languageProficiency"
-        js_script = f"""
-        var select = document.getElementById("{select_id}");
-        if (select) {{
-            select.value = "{random_value}";
-            var event = new Event('change', {{ bubbles: true }});
-            select.dispatchEvent(event);
-        }} else {{
-            console.warn("Select element not found.");
-        }}
-        """
-        driver.execute_script(js_script)
+        try:
+            time.sleep(1)
+            # Choose a random rank from 1 to 3
+            language_value = random.randint(1, 3)
+            print(f"Setting language to: {language_value}")
+            # Inject the value into the Select2-enhanced field
+            script = f"""
+                        $("#oleg_fellappbundle_fellowshipapplication_interviews_{count}_languageProficiency")
+                            .val("{language_value}")
+                            .trigger("change");
+                    """
+            driver.execute_script(script)
+            time.sleep(1)
+            print(f"✓ language set to {academic_rank_value} for {interviewer_name}, count={count}")
+        except Exception as e:
+            print(f"Error setting language for {interviewer_name}, count={count}: {e}")
 
         # interview_date
         # oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
