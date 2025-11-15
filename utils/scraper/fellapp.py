@@ -803,6 +803,22 @@ class FellApp:
             time.sleep(1)
             print(f"✓ Interview comment set: {comment_text}")
 
+        #select language
+        random_value = str(random.randint(1, 4))
+        # Inject the value into the hidden select and trigger Select2 update
+        select_id = "oleg_fellappbundle_fellowshipapplication_interviews_0_languageProficiency"
+        js_script = f"""
+        var select = document.getElementById("{select_id}");
+        if (select) {{
+            select.value = "{random_value}";
+            var event = new Event('change', {{ bubbles: true }});
+            select.dispatchEvent(event);
+        }} else {{
+            console.warn("Select element not found.");
+        }}
+        """
+        driver.execute_script(js_script)
+
         # interview_date
         # oleg_fellappbundle_fellowshipapplication_interviewDate interview_date '17/12/2026',
         interview_date = driver.find_element(By.ID,
