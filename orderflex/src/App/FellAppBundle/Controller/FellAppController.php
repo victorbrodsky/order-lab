@@ -271,13 +271,13 @@ class FellAppController extends OrderAbstractController {
 
         $filter = null;
         $globalfilter = null;
-        if ($filterform->has('globalfilter')) {
+        if ($filterform->has('filter')) {
             $filter = $filterform['filter']->getData(); //fellowship specialty
         }
         if ($filterform->has('globalfilter')) {
             $globalfilter = $filterform['globalfilter']->getData(); //fellowship specialty
         }
-        
+
         $search = $filterform['search']->getData();
         $startDates = $filterform['startDates']->getData(); //startDates: currentYear is year only i.e. 2021
         $hidden = $filterform['hidden']->getData();
@@ -405,7 +405,7 @@ class FellAppController extends OrderAbstractController {
             $searchFlag = true;
         }
 
-        //echo "filter=".$filter."<br>";
+        echo "filter=".$filter."<br>";
         //exit('111');
         $fellSubspecId = null;
         if( $filter ) { //&& $filter != "ALL"
@@ -417,7 +417,7 @@ class FellAppController extends OrderAbstractController {
         //$globalfilter
         $globalfilterId = null;
         if( $globalfilter ) { //&& $filter != "ALL"
-            $dql->andWhere("fellowshipSubspecialty.id = ".$globalfilter);
+            $dql->andWhere("globalFellowshipSpecialty.id = ".$globalfilter);
             $searchFlag = true;
             $globalfilterId = $fellSubspecId = $globalfilter;
         }
