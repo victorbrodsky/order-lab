@@ -1182,7 +1182,7 @@ class FellowshipApplication extends BaseUserAttributes {
                     foreach( $item->getMajors() as $major ) {
                         $major = strtolower($major);
                         $major = ucwords($major);
-                        $majorArr[] = $major."111";
+                        $majorArr[] = $major."";
                     }
                     if( $schoolName && count($majorArr)>0 ) {
                         $schoolName = $schoolName . "; ";
@@ -1241,6 +1241,12 @@ class FellowshipApplication extends BaseUserAttributes {
         if( !$s ) {
             return $s;
         }
+
+        // Only apply if length > 4
+        if (strlen($s) <= 4) {
+            return $s;
+        }
+
         $convert = false;
         //check if all UPPER
         if( strtoupper($s) == $s ) {
@@ -1253,7 +1259,7 @@ class FellowshipApplication extends BaseUserAttributes {
         if( $convert ) {
             return ucwords( strtolower($s) );
         }
-        return $s."222";
+        return $s."";
     }
     
     public function getAllReferences() {
