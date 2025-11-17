@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 #from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoAlertPresentException
 import time
 import datetime
 import random
@@ -61,6 +62,7 @@ class FellApp:
             'usmlestep2': 253,
             'usmlestep3': 242,
             'specialty': 'Molecular Genetic Pathology',
+            'photo': 'lisa-chen.jpeg',
             'medschool': 'Johns Hopkins University School of Medicine',
             #AP/CP Pathology — Massachusetts General Hospital / Harvard Medical School
             #AP/CP, school, year (current + 1), city, state, country
@@ -82,6 +84,7 @@ class FellApp:
             'usmlestep2': 247,
             'usmlestep3': 238,
             'specialty': 'Clinical Informatics',
+            'photo': 'jessica-santiago.jpeg',
             'medschool': 'Washington University School of Medicine in St. Louis',
             'residency_specialty': ['AP', 'University of California', 'San Francisco', 'California', 'United States'],
             'fellowship_specialty': ['Breast Pathology Fellowship', 'Mayo Clinic', 'Rochester', 'New-York', 'United States'],
@@ -99,6 +102,7 @@ class FellApp:
             'usmlestep2': 258,
             'usmlestep3': 244,
             'specialty': 'Gastrointestinal Pathology',
+            'photo': 'peter-neon.jpeg',
             'medschool': 'University of Pennsylvania Perelman School of Medicine',
             'residency_specialty': ['CP', 'Stanford University Medical Center', 'Stanford', 'California', 'United States'],
             'fellowship_specialty': ['Hematopathology Fellowship', 'MD Anderson Cancer Center', 'Houston', 'Texas', 'United States'],
@@ -431,12 +435,12 @@ class FellApp:
         #print("create new fellowship application")
 
         #### testing
-        if 0:
+        if 1:
             applicant_data_element = driver.find_element(By.CSS_SELECTOR,
                                                          "h4.panel-title > a[href='#uploads']")
             applicant_data_element.click()
             time.sleep(3)
-            self.add_file()
+            self.add_file(fellapp["photo"]) #("Jessica-Santiago.jpeg")
             exit()
         #### testing
 
@@ -697,21 +701,41 @@ class FellApp:
         driver.get(accept_url)
         time.sleep(1)
 
-    def add_file(self):
+    #user-itinerarys
+    #user-photo
+    def add_file(self,file_name):
         driver = self.automation.get_driver()
 
         # Get the directory where the current script is located
         script_dir = os.path.dirname(os.path.abspath(__file__))
         # Build the relative path
-        relative_path = "../../orderflex/src/App/FellAppBundle/Util/Jessica-Santiago.jpeg"
+        relative_path = f"../../orderflex/src/App/FellAppBundle/Util/{file_name}"
         # Resolve to an absolute path
         file_path = os.path.abspath(os.path.join(script_dir, relative_path))
-        print(file_path)
+        print(f"file_path={file_path}")
 
-        file_input = driver.find_element("css selector", "input.dz-hidden-input")
+        # ✅ First locate the specific dropzone container
+        container = driver.find_element(
+            By.CSS_SELECTOR,
+            "div.well.form-element-holder.user-photo.user-FellowshipApplication"
+        )
+
+        # ✅ Then find the hidden input inside that container
+        file_input = container.find_element(By.CSS_SELECTOR, "input.dz-hidden-input")
+
+        #file_input = driver.find_element("css selector", "input.dz-hidden-input")
         # Send the absolute path of the file you want to upload
         file_input.send_keys(file_path)
 
+        try:
+            # Wait briefly for alert to appear
+            time.sleep(3)
+            alert = driver.switch_to.alert
+            print(f"Alert text: {alert.text}")
+            alert.accept()  # Click OK
+            print("Alert accepted.")
+        except NoAlertPresentException:
+            print("No alert appeared after file upload.")
 
     def set_interviewer(self, driver, fellapp, formatted_interview_date, interviewer_name, comments, count, with_rank=True):
         # Wait until the button is present and clickable
