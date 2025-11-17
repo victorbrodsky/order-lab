@@ -1865,6 +1865,25 @@ class FellAppUtil {
         //echo "##### createOrEnableFellAppRole: role=[".$role."] #####<br>";
         $logger->notice("createOrEnableFellAppRole: found role=$role");
 
+        //////////// 1 testing ////////////////
+        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
+        $permissions = $role->getPermissions();
+        echo "<br>######### 1 ###########<br>";
+        foreach($permissions as $permission) {
+            echo "Permission object. ID=".$permission->getId()."<br>";
+        }
+        $permission = $permissions[0];
+        $permMsg =  "createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
+            "permission: ID=".$permission->getId().
+            ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
+            ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName().
+            ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
+            ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
+            ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
+        echo $permMsg;
+        $logger->notice($permMsg);
+        //////////// EOF 1 testing ////////////////
+
         if( !$role ) {
             $roleTypeStr = ucfirst(strtolower($roleType));
             //exit('1: '.$roleTypeStr);
@@ -1980,10 +1999,10 @@ class FellAppUtil {
             }
         } //if else
 
-        //testing
+        //////////// testing ////////////////
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
         $permissions = $role->getPermissions();
-        echo "<br>####################<br>";
+        echo "<br>######## 2 ############<br>";
         foreach($permissions as $permission) {
             echo "Permission object. ID=".$permission->getId()."<br>";
         }
