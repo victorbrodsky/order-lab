@@ -51,6 +51,13 @@ function fellappSendRejectionEmails() {
     var year = $('#filter_startDates').val();
     var confirmText = "Would you like to send the following rejection notification email to the selected applicants for the "
         +year+" intake for the applicants: "+nameString+"?";
+    if( ids.length == 1 ) {
+        //Would you like to send the rejection notification email to the following selected applicant: Haides Neon?
+        confirmText = "Would you like to send the rejection notification email to the following selected applicant: "+nameString+"?";
+    } else {
+        //Would you like to send rejection notification emails to the following selected applicants: Haides Neon, Joe Smith?
+        confirmText = "Would you like to send rejection notification emails to the following selected applicants: "+nameString+"?";
+    }
     if( confirm(confirmText) ) {
         //txt = "You pressed OK!";
     } else {
