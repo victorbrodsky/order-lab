@@ -1865,28 +1865,28 @@ class FellAppUtil {
         //echo "##### createOrEnableFellAppRole: role=[".$role."] #####<br>";
         $logger->notice("createOrEnableFellAppRole: found role=$role");
 
-        //////////// 1 testing ////////////////
-        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
-        $permissions = $role->getPermissions();
-        echo "<br>######### 1 ###########<br>";
-        foreach($permissions as $permission) {
-            echo "Permission object. ID=".$permission->getId()."<br>";
-        }
-        $permission = $permissions[0];
-        $permMsg =  "1 createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
-            "permission: ID=".$permission->getId().
-            ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
-            ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName()."<br>";
-        if( $permission->getPermission()->getPermissionObjectList() ) {
-            $permMsg = $permMsg . ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
-            ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
-            ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
-        } else {
-            $permMsg = $permMsg . " <br> PermissionObjectList does not exists!!!!!!! <br>";
-        }
-        echo $permMsg;
-        $logger->notice($permMsg);
-        //////////// EOF 1 testing ////////////////
+//        //////////// 1 testing ////////////////
+//        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
+//        $permissions = $role->getPermissions();
+//        echo "<br>######### 1 ###########<br>";
+//        foreach($permissions as $permission) {
+//            echo "Permission object. ID=".$permission->getId()."<br>";
+//        }
+//        $permission = $permissions[0];
+//        $permMsg =  "1 createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
+//            "permission: ID=".$permission->getId().
+//            ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
+//            ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName()."<br>";
+//        if( $permission->getPermission()->getPermissionObjectList() ) {
+//            $permMsg = $permMsg . ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
+//            ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
+//            ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
+//        } else {
+//            $permMsg = $permMsg . " <br> PermissionObjectList does not exists!!!!!!! <br>";
+//        }
+//        echo $permMsg;
+//        $logger->notice($permMsg);
+//        //////////// EOF 1 testing ////////////////
 
         if( !$role ) {
             $roleTypeStr = ucfirst(strtolower($roleType));
@@ -1993,7 +1993,7 @@ class FellAppUtil {
                 $changed = true;
             }
 
-            echo "count=$count, changed=$changed, testing=$testing <br>";
+            //echo "count=$count, changed=$changed, testing=$testing <br>";
             //$testing = true;
             if( $changed ) {
                 $logger->notice("createOrEnableFellAppRole: changed. Before persist and flush role $role");
@@ -2003,38 +2003,38 @@ class FellAppUtil {
                     //$em->persist($role);
                     $em->persist($role);
                     $em->flush();
-                    echo "$role: persist and flush>br>";
+                    //echo "$role: persist and flush>br>";
                 }
                 $count++;
             }
         } //if else
 
-        //////////// testing ////////////////
-        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
-        $permissions = $role->getPermissions();
-        echo "<br>######## 2 ############<br>";
-        foreach($permissions as $permission) {
-            echo "Permission object. ID=".$permission->getId()."<br>";
-        }
-        $permission = $permissions[0];
-        $permMsg =  "2 createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
-            "permission: ID=".$permission->getId().
-            ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
-            ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName()."<br>";
-        if( $permission->getPermission()->getPermissionObjectList() ) {
-            $permMsg = $permMsg . "<br> PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
-                ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
-                ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
-        } else {
-            $permMsg = $permMsg . " <br> PermissionObjectList does not exists!!!!!!! <br>";
-        }
-        echo $permMsg;
-        $logger->notice($permMsg);
-
-        $permission = $em->getRepository(PermissionList::class)->findOneByName("Create a New Fellowship Application");
-        $logger->notice("createOrEnableFellAppRole: testing.".", permission=".$permission->getId());
-        $logger->notice("createOrEnableFellAppRole: testing.".", PermissionObjectList=".$permission->getPermissionObjectList());
-        $logger->notice("createOrEnableFellAppRole: testing.".", PermissionActionList=".$permission->getPermissionActionList());
+//        //////////// testing ////////////////
+//        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
+//        $permissions = $role->getPermissions();
+//        echo "<br>######## 2 ############<br>";
+//        foreach($permissions as $permission) {
+//            echo "Permission object. ID=".$permission->getId()."<br>";
+//        }
+//        $permission = $permissions[0];
+//        $permMsg =  "2 createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
+//            "permission: ID=".$permission->getId().
+//            ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
+//            ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName()."<br>";
+//        if( $permission->getPermission()->getPermissionObjectList() ) {
+//            $permMsg = $permMsg . "<br> PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
+//                ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
+//                ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
+//        } else {
+//            $permMsg = $permMsg . " <br> PermissionObjectList does not exists!!!!!!! <br>";
+//        }
+//        echo $permMsg;
+//        $logger->notice($permMsg);
+//
+//        $permission = $em->getRepository(PermissionList::class)->findOneByName("Create a New Fellowship Application");
+//        $logger->notice("createOrEnableFellAppRole: testing.".", permission=".$permission->getId());
+//        $logger->notice("createOrEnableFellAppRole: testing.".", PermissionObjectList=".$permission->getPermissionObjectList());
+//        $logger->notice("createOrEnableFellAppRole: testing.".", PermissionActionList=".$permission->getPermissionActionList());
 
         $logger->notice("createOrEnableFellAppRole: finished. count=$count");
         return $count;
