@@ -1972,12 +1972,13 @@ class FellAppUtil {
                 if( !$testing ) {
                     $logger->notice("createOrEnableFellAppRole: persist and flush role $role");
                     //echo "createOrEnableFellAppRole: new specialty=[".$role->getFellowshipSubspecialty()."]<br>";
+                    //$em->persist($role);
                     $em->persist($role);
                     $em->flush($role);
                 }
                 $count++;
             }
-        }
+        } //if else
 
         //testing
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);

@@ -2243,7 +2243,7 @@ class UserSecurityUtil {
                 exit("Permission Object is not found by name=".$permissionObjectListStr);
             }
         } else {
-            $logger->notice("checkAndAddPermissionToRole: set Permission Object exists: ".$permission->getPermissionObjectList());
+            $logger->notice("checkAndAddPermissionToRole: Permission Object exists: ".$permission->getPermissionObjectList().", ID=".$permission->getId());
             echo $permissionListStr.': permission object exists: '.$permission->getPermissionObjectList()."<br>";
         }
 
@@ -2261,7 +2261,7 @@ class UserSecurityUtil {
                 exit("Permission Action is not found by name=".$permissionActionListStr);
             }
         } else {
-            $logger->notice("checkAndAddPermissionToRole: permission action exists:".$permission->getPermissionActionList());
+            $logger->notice("checkAndAddPermissionToRole: permission action exists:".$permission->getPermissionActionList().", ID=".$permission->getId());
             echo $permissionListStr.': permission action exists: '.$permission->getPermissionActionList()."<br>";
         }
 
