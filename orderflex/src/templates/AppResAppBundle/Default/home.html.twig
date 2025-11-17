@@ -607,7 +607,7 @@
 
 
                     {% if route_path == "resapp_send_rejection_emails" %}
-                        <td class="rowlink-skip">
+                        <td>
                             {#checkbox bootstrap table data-link="row" checkbox first toggle not working#}
                             {#onclick="alert('click!');"#}
                             <input
@@ -1410,7 +1410,12 @@
 
         $(document).ready(function() {
 
-            $('[data-toggle="tooltip"]').tooltip({html: true});           
+            $('[data-toggle="tooltip"]').tooltip({html: true});
+
+            //Prevent propagation of the checkbox click to open href in this row
+            $('.notificationemail').on('click', function(e) {
+                e.stopPropagation();
+            });
 
             if(0) {
                 var target = ".datepicker-only-year";
