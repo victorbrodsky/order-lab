@@ -2235,11 +2235,11 @@ class UserSecurityUtil {
             $logger->notice("checkAndAddPermissionToRole: set permissionObject=$permissionObject");
             if( $permissionObject ) {
                 $permission->setPermissionObjectList($permissionObject);
-                if( $persistPermission ) {
-                    //$em->persist($permissionObject);
-                    echo "checkAndAddPermissionToRole: permissionObject ".$permissionObject->getId()." persisted<br>";
-                    $logger->notice("checkAndAddPermissionToRole: permissionObject ".$permissionObject->getId()." persisted");
-                }
+//                if( $persistPermission ) {
+//                    //$em->persist($permissionObject);
+//                    echo "checkAndAddPermissionToRole: permissionObject ".$permissionObject->getId()." persisted<br>";
+//                    $logger->notice("checkAndAddPermissionToRole: permissionObject ".$permissionObject->getId()." persisted");
+//                }
                 $count++;
                 $logger->notice("checkAndAddPermissionToRole: done set permission object=$permissionObjectListStr");
                 echo 'set permission object: '.$permissionObjectListStr.", count=$count"."<br>";
@@ -2260,11 +2260,11 @@ class UserSecurityUtil {
             $logger->notice("checkAndAddPermissionToRole: set permissionAction=$permissionAction");
             if( $permissionAction ) {
                 $permission->setPermissionActionList($permissionAction);
-                if( $persistPermission ) {
-                    //$em->persist($permissionAction);
-                    echo "checkAndAddPermissionToRole: permissionAction ".$permissionAction->getId()." persisted<br>";
-                    $logger->notice("checkAndAddPermissionToRole: permissionAction ".$permissionAction->getId()." persisted");
-                }
+//                if( $persistPermission ) {
+//                    //$em->persist($permissionAction);
+//                    echo "checkAndAddPermissionToRole: permissionAction ".$permissionAction->getId()." persisted<br>";
+//                    $logger->notice("checkAndAddPermissionToRole: permissionAction ".$permissionAction->getId()." persisted");
+//                }
                 $count++;
                 $logger->notice("checkAndAddPermissionToRole: done set permission action=$permissionActionListStr");
                 //echo 'set permission action: '.$permissionActionListStr."<br>";
@@ -2281,11 +2281,11 @@ class UserSecurityUtil {
             echo $permissionListStr.': permission action exists: '.$permission->getPermissionActionList()."<br>";
         }
 
-        if( $persistPermission ) {
-            //$em->persist($permission);
-            echo "checkAndAddPermissionToRole: permission ".$permission->getId()." persisted<br>";
-            $logger->notice("checkAndAddPermissionToRole: permission ".$permission->getId()." persisted");
-        }
+//        if( $persistPermission ) {
+//            //$em->persist($permission);
+//            echo "checkAndAddPermissionToRole: permission ".$permission->getId()." persisted<br>";
+//            $logger->notice("checkAndAddPermissionToRole: permission ".$permission->getId()." persisted");
+//        }
 
         echo "checkAndAddPermissionToRole: finished $role. count=$count"."<br>";
         $logger->notice("checkAndAddPermissionToRole: finished $role. count=$count");
