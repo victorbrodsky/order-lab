@@ -25,6 +25,7 @@ use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 use App\UserdirectoryBundle\Entity\Institution;
+use App\UserdirectoryBundle\Entity\Roles;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -324,8 +325,26 @@ class DefaultController extends OrderAbstractController
 //        $userTenantUtil = $this->container->get('user_tenant_utility');
 //        $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
 //        echo "tenantUrlBase=". $tenantUrlBase . "<br>";
-//
-//        exit();
+
+        $em = $this->getDoctrine()->getManager();
+        $roleName = "ROLE_FELLAPP_COORDINATOR_SURGICALPATHOLOGY";
+        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
+        $permissions = $role->getPermissions();
+        echo "<br>####################<br>";
+        foreach($permissions as $permission) {
+            echo "Permission object. ID=".$permission->getId()."<br>";
+        }
+        $permission = $permissions[0];
+        $permMsg =  "createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
+            "permission: ID=".$permission->getId().
+            ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
+            ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName().
+            ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
+            ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
+            ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
+        echo $permMsg;
+
+        exit('fellapp default controller');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }

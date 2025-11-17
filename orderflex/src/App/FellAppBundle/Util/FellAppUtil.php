@@ -1983,18 +1983,19 @@ class FellAppUtil {
         //testing
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
         $permissions = $role->getPermissions();
+        echo "<br>####################<br>";
         foreach($permissions as $permission) {
             echo "Permission object. ID=".$permission->getId()."<br>";
         }
         $permission = $permissions[0];
-        $permMsg =  "#### createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
+        $permMsg =  "createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
             "permission: ID=".$permission->getId().
             ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
             ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName().
             ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
             ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
             ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
-        echo "<br>".$permMsg;
+        echo $permMsg;
         $logger->notice($permMsg);
 
         $permission = $em->getRepository(PermissionList::class)->findOneByName("Create a New Fellowship Application");
