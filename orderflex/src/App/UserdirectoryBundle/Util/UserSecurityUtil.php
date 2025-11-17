@@ -2271,6 +2271,12 @@ class UserSecurityUtil {
             echo $permissionListStr.': permission action exists: '.$permission->getPermissionActionList()."<br>";
         }
 
+        if( $persistPermission ) {
+            $em->persist($permission);
+            echo "checkAndAddPermissionToRole: permission ".$permission->getId()." persisted<br>";
+            $logger->notice("checkAndAddPermissionToRole: permission ".$permission->getId()." persisted");
+        }
+
         echo "checkAndAddPermissionToRole: finished $role. count=$count"."<br>";
         $logger->notice("checkAndAddPermissionToRole: finished $role. count=$count");
         return $count;

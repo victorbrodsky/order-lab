@@ -2000,7 +2000,7 @@ class FellAppUtil {
                 if( !$testing ) {
                     $logger->notice("createOrEnableFellAppRole: persist and flush role $role");
                     //echo "createOrEnableFellAppRole: new specialty=[".$role->getFellowshipSubspecialty()."]<br>";
-                    $em->persist($role);
+                    //$em->persist($role);
                     $em->persist($role);
                     $em->flush($role);
                     echo "$role: persist and flush>br>";
