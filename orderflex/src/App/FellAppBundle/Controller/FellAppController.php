@@ -405,7 +405,7 @@ class FellAppController extends OrderAbstractController {
             $searchFlag = true;
         }
 
-        echo "filter=".$filter."<br>";
+        //echo "filter=".$filter."<br>";
         //exit('111');
         $fellSubspecId = null;
         if( $filter ) { //&& $filter != "ALL"
