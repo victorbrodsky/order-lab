@@ -1954,9 +1954,7 @@ class FellAppUtil {
             if( !$role->getFellowshipSubspecialty() ) {
                 $role->setFellowshipSubspecialty($subspecialtyType);
                 $changed = true;
-                //echo "createOrEnableFellAppRole: original specialty=[".$role->getFellowshipSubspecialty()."]<br>";
-                //echo 'createOrEnableFellAppRole: update role for '.$subspecialtyType."<br>";
-                //exit('createOrEnableFellAppRole: update role for '.$subspecialtyType);
+                $logger->notice("createOrEnableFellAppRole: setFellowshipSubspecialty for role $role");
             }
             //echo "fellapp specialty=".$role->getFellowshipSubspecialty()."; role=".$role."<br>";
             //exit('createOrEnableFellAppRole: after check update role for '.$subspecialtyType);
@@ -1970,6 +1968,7 @@ class FellAppUtil {
 
             //$testing = true;
             if( $changed ) {
+                $logger->notice("createOrEnableFellAppRole: changed. Before persist and flush role $role");
                 if( !$testing ) {
                     $logger->notice("createOrEnableFellAppRole: persist and flush role $role");
                     //echo "createOrEnableFellAppRole: new specialty=[".$role->getFellowshipSubspecialty()."]<br>";

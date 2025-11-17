@@ -2452,7 +2452,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
-    //NOT USED anymore since specific fellapp roles are removed
+    //NOT USED anymore since specific fellapp roles are removed?
     //Create and set up roles when FellowshipSubspecialty is generated
     //entity - role object
     //role - role string
