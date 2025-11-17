@@ -817,7 +817,7 @@ class FellApp:
                     """
             driver.execute_script(script)
             time.sleep(1)
-            print(f"✓ language set to {academic_rank_value} for {interviewer_name}, count={count}")
+            print(f"✓ language set to {language_value} for {interviewer_name}, count={count}")
         except Exception as e:
             print(f"Error setting language for {interviewer_name}, count={count}: {e}")
 
