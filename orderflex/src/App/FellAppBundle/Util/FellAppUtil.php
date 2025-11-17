@@ -1947,11 +1947,13 @@ class FellAppUtil {
                 if ($roleType == "COORDINATOR") {
                     $role->setLevel(40);
                     $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Create a New Fellowship Application", "FellowshipApplication", "create", true);
+                    echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
                     if ($countPermission > 0) {
                         $count = $count + $countPermission;
                         $changed = true;
                     }
                     $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Modify a Fellowship Application", "FellowshipApplication", "update", true);
+                    echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
                     if ($countPermission > 0) {
                         $count = $count + $countPermission;
                         $changed = true;
@@ -1961,11 +1963,13 @@ class FellAppUtil {
                 if ($roleType == "DIRECTOR") {
                     $role->setLevel(50);
                     $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Create a New Fellowship Application", "FellowshipApplication", "create", true);
+                    echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
                     if ($countPermission > 0) {
                         $count = $count + $countPermission;
                         $changed = true;
                     }
                     $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Modify a Fellowship Application", "FellowshipApplication", "update", true);
+                    echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
                     if ($countPermission > 0) {
                         $count = $count + $countPermission;
                         $changed = true;
@@ -1989,14 +1993,14 @@ class FellAppUtil {
                 $changed = true;
             }
 
-            echo "changed=$changed, testing=$testing <br>";
+            echo "count=$count, changed=$changed, testing=$testing <br>";
             //$testing = true;
             if( $changed ) {
                 $logger->notice("createOrEnableFellAppRole: changed. Before persist and flush role $role");
                 if( !$testing ) {
                     $logger->notice("createOrEnableFellAppRole: persist and flush role $role");
                     //echo "createOrEnableFellAppRole: new specialty=[".$role->getFellowshipSubspecialty()."]<br>";
-                    //$em->persist($role);
+                    $em->persist($role);
                     $em->persist($role);
                     $em->flush($role);
                     echo "$role: persist and flush>br>";
