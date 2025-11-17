@@ -338,10 +338,12 @@ class DefaultController extends OrderAbstractController
         $permMsg =  "createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
             "permission: ID=".$permission->getId().
             ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
-            ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName().
-            ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
-            ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
-            ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
+            ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName()."<br>";
+        if( $permission->getPermission()->getPermissionObjectList() ) {
+            $permMsg = $permMsg . ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
+                ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
+                ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
+        }
         echo $permMsg;
 
         exit('fellapp default controller');
