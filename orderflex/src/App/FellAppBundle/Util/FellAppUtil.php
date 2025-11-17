@@ -1989,6 +1989,7 @@ class FellAppUtil {
                 $changed = true;
             }
 
+            echo "changed=$changed, testing=$testing <br>";
             //$testing = true;
             if( $changed ) {
                 $logger->notice("createOrEnableFellAppRole: changed. Before persist and flush role $role");
@@ -1998,6 +1999,7 @@ class FellAppUtil {
                     //$em->persist($role);
                     $em->persist($role);
                     $em->flush($role);
+                    echo "$role: persist and flush>br>";
                 }
                 $count++;
             }
