@@ -34,3 +34,9 @@ use createOrEnableFellAppRole in generateAllFellowshipSubspecialties?
 
 Changes - don't use institution (or institution is optional) in fellowship subspecialty:
 replace getFellowshipTypesByInstitution by getValidFellowshipTypes
+
+Role-Permission
+
+Role -> Permission -> PermissionList (Create a New Fellowship Application) -> PermissionObjectList (FellowshipApplication), PermissionActionList (create)
+
+

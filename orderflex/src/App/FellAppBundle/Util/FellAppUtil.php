@@ -1854,12 +1854,12 @@ class FellAppUtil {
 
         //create Director role
         $roleName = "ROLE_FELLAPP_".$roleType."_".$roleNameBase;
-        //echo "roleName=$roleName<br>";
+        echo "1 roleName=$roleName<br>";
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
 
         if( !$role ) {
             $roleNameLegacy = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase; //check legacy role name
-            //echo "roleName=$roleName<br>";
+            echo "2 roleName=$roleName<br>";
             $role = $em->getRepository(Roles::class)->findOneByName($roleNameLegacy);
         }
         //echo "##### createOrEnableFellAppRole: role=[".$role."] #####<br>";
