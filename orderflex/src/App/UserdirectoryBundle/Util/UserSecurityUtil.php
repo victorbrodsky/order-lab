@@ -2237,7 +2237,7 @@ class UserSecurityUtil {
                 $permission->setPermissionObjectList($permissionObject);
                 $count++;
                 $logger->notice("checkAndAddPermissionToRole: done set permission object=$permissionObjectListStr");
-                echo 'set permission object: '.$permissionObjectListStr."<br>";
+                echo 'set permission object: '.$permissionObjectListStr.", count=$count"."<br>";
             } else {
                 $logger->notice("checkAndAddPermissionToRole: set Permission Object is not found by name=$permissionObjectListStr");
                 exit("Permission Object is not found by name=".$permissionObjectListStr);
