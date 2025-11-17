@@ -1992,7 +1992,7 @@ class FellAppUtil {
             ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
             ", PermissionList: getPermission()->getName=".$permission->getPermission()->getName().
             ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
-            ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>"
+            ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
             ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
         echo "<br>".$permMsg;
         $logger->notice($permMsg);
