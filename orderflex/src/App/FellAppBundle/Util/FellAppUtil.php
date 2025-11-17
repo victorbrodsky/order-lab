@@ -1882,7 +1882,7 @@ class FellAppUtil {
             ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
             ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
         } else {
-            $permMsg = $permMsg . ", PermissionObjectList does not exists!";
+            $permMsg = $permMsg . " <br> PermissionObjectList does not exists! <br>";
         }
         echo $permMsg;
         $logger->notice($permMsg);
@@ -2020,7 +2020,7 @@ class FellAppUtil {
                 ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
                 ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
         } else {
-            $permMsg = $permMsg . ", PermissionObjectList does not exists!";
+            $permMsg = $permMsg . " <br> PermissionObjectList does not exists! <br>";
         }
         echo $permMsg;
         $logger->notice($permMsg);
