@@ -2002,7 +2002,7 @@ class FellAppUtil {
                     //echo "createOrEnableFellAppRole: new specialty=[".$role->getFellowshipSubspecialty()."]<br>";
                     //$em->persist($role);
                     $em->persist($role);
-                    $em->flush($role);
+                    $em->flush();
                     echo "$role: persist and flush>br>";
                 }
                 $count++;

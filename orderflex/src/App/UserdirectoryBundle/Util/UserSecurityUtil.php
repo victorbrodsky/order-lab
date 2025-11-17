@@ -2236,7 +2236,7 @@ class UserSecurityUtil {
             if( $permissionObject ) {
                 $permission->setPermissionObjectList($permissionObject);
                 if( $persistPermission ) {
-                    $em->persist($permissionObject);
+                    //$em->persist($permissionObject);
                     echo "checkAndAddPermissionToRole: permissionObject ".$permissionObject->getId()." persisted<br>";
                     $logger->notice("checkAndAddPermissionToRole: permissionObject ".$permissionObject->getId()." persisted");
                 }
@@ -2261,7 +2261,7 @@ class UserSecurityUtil {
             if( $permissionAction ) {
                 $permission->setPermissionActionList($permissionAction);
                 if( $persistPermission ) {
-                    $em->persist($permissionAction);
+                    //$em->persist($permissionAction);
                     echo "checkAndAddPermissionToRole: permissionAction ".$permissionAction->getId()." persisted<br>";
                     $logger->notice("checkAndAddPermissionToRole: permissionAction ".$permissionAction->getId()." persisted");
                 }
@@ -2282,7 +2282,7 @@ class UserSecurityUtil {
         }
 
         if( $persistPermission ) {
-            $em->persist($permission);
+            //$em->persist($permission);
             echo "checkAndAddPermissionToRole: permission ".$permission->getId()." persisted<br>";
             $logger->notice("checkAndAddPermissionToRole: permission ".$permission->getId()." persisted");
         }
