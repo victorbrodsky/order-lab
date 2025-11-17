@@ -11,6 +11,7 @@ import time
 import datetime
 import random
 import json
+import os
 #from datetime import date
 #from dateutil.relativedelta import relativedelta
 #from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
@@ -429,6 +430,16 @@ class FellApp:
         #Create a new fellapp https://view.online/c/demo-institution/demo-department/fellowship-applications/new/
         #print("create new fellowship application")
 
+        #### testing
+        if 0:
+            applicant_data_element = driver.find_element(By.CSS_SELECTOR,
+                                                         "h4.panel-title > a[href='#uploads']")
+            applicant_data_element.click()
+            time.sleep(3)
+            self.add_file()
+            exit()
+        #### testing
+
         applicant_data_element = driver.find_element(By.CSS_SELECTOR,
                                                      "h4.panel-title > a[href='#fellowshipApplicantData']")
         applicant_data_element.click()
@@ -685,6 +696,22 @@ class FellApp:
         accept_url = self.automation.baseurl.rstrip('/') + '/' + f"fellowship-applications/change-status/{fellapp_id}/accepted".lstrip('/')
         driver.get(accept_url)
         time.sleep(1)
+
+    def add_file(self):
+        driver = self.automation.get_driver()
+
+        # Get the directory where the current script is located
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Build the relative path
+        relative_path = "../../orderflex/src/App/FellAppBundle/Util/Jessica-Santiago.jpeg"
+        # Resolve to an absolute path
+        file_path = os.path.abspath(os.path.join(script_dir, relative_path))
+        print(file_path)
+
+        file_input = driver.find_element("css selector", "input.dz-hidden-input")
+        # Send the absolute path of the file you want to upload
+        file_input.send_keys(file_path)
+
 
     def set_interviewer(self, driver, fellapp, formatted_interview_date, interviewer_name, comments, count, with_rank=True):
         # Wait until the button is present and clickable

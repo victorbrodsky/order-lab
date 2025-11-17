@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from web_automation import WebAutomation
 import subprocess
 import getpass
@@ -125,9 +125,11 @@ class Init:
 
         #self.open_misc_panel()
         url = self.automation.baseurl.rstrip('/') + '/' + "directory/admin/populate-all-lists-with-default-values".lstrip('/')
-        #driver.get(url)
-        #time.sleep(10)
-        self.populate_url(url)
+        success = self.populate_url(url)
+        if success:
+            print("Populate-all-lists completed successfully.")
+        else:
+            print("Populate-all-lists failed after retries.")
 
         #do it again, it might give error gateway on the first run
         #self.open_misc_panel()
@@ -170,6 +172,30 @@ class Init:
         return True
 
     def populate_url(self, url):
+        print("populate_url: Populate url =", url)
+        driver = self.automation.get_driver()
+        max_retries = 5
+        retry_delay = 10  # seconds
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                driver.get(url)
+                # ✅ Wait for the success <p> element with the alert classes
+                WebDriverWait(driver, 120).until(
+                    EC.presence_of_element_located(
+                        (By.CSS_SELECTOR, "p.alert.center-block")
+                    )
+                )
+                print("populate_url: Success marker found — page loaded correctly.")
+                return True
+            except (TimeoutException, WebDriverException) as e:
+                print(f"populate_url: Attempt {attempt} failed: {e}. Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+
+        print("populate_url: All attempts failed — success marker not found.")
+        return False
+
+    def populate_url_ORIG(self, url):
         time.sleep(10)
         print("Populate url=",url)
         driver = self.automation.get_driver()
