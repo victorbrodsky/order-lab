@@ -335,12 +335,12 @@ class DefaultController extends OrderAbstractController
             echo "Permission object. ID=".$permission->getId()."<br>";
         }
         $permission = $permissions[0];
-        $permMsg =  "1 createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
+        $permMsg =  "2 createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
             "permission: ID=".$permission->getId().
             ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
             ", <br>PermissionList: getPermission()->getName=".$permission->getPermission()->getName()."<br>";
         if( $permission->getPermission()->getPermissionObjectList() ) {
-            $permMsg = $permMsg . ", PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
+            $permMsg = $permMsg . "<br> PermissionObjectList: object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
                 ", PermissionObjectList: object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>".
                 ", PermissionObjectList: action name=".$permission->getPermission()->getPermissionActionList()->getName()."<br>";
         } else {
