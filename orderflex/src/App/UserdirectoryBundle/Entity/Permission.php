@@ -167,7 +167,7 @@ class Permission
         $res = "Permission ID " . $this->getId();
 
         if( $this->getPermission() ) {
-            $res .= " - '" . $this->getPermission() . "'";
+            $res .= ", PermissionList: ID=".$this->getPermission()->getId().", name='" . $this->getPermission()->getName() . "'";
         }
 
         if( count($this->getInstitutions()) > 0 ) {
