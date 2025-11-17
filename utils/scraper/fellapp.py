@@ -52,13 +52,14 @@ class FellApp:
         fellapps = []
         fellapps.append({
             'type': '1',  # 'Clinical Informatics'
-            'firstName': 'Joe',
-            'lastName': 'Simpson',
-            'displayName': 'Joe Simpson',
+            'firstName': 'Lisa',
+            'lastName': 'Chen',
+            'displayName': 'Lisa Chen', #'Joe Simpson',
             'email': 'cinava@yahoo.com',
             'usmlestep1': 'Pass',
             'usmlestep2': 253,
             'usmlestep3': 242,
+            'specialty': 'Molecular Genetic Pathology',
             'medschool': 'Johns Hopkins University School of Medicine',
             #AP/CP Pathology — Massachusetts General Hospital / Harvard Medical School
             #AP/CP, school, year (current + 1), city, state, country
@@ -72,13 +73,14 @@ class FellApp:
         })
         fellapps.append({
             'type': '1',  # 'Clinical Informatics'
-            'firstName': 'Soleil',
-            'lastName': 'Teresia',
-            'displayName': 'Soleil Teresia',
+            'firstName': 'Jessica',
+            'lastName': 'Santiago',
+            'displayName': 'Jessica Santiago', #'Soleil Teresia',
             'email': 'cinava@yahoo.com',
             'usmlestep1': 'Pass',
             'usmlestep2': 247,
             'usmlestep3': 238,
+            'specialty': 'Clinical Informatics',
             'medschool': 'Washington University School of Medicine in St. Louis',
             'residency_specialty': ['AP', 'University of California', 'San Francisco', 'California', 'United States'],
             'fellowship_specialty': ['Breast Pathology Fellowship', 'Mayo Clinic', 'Rochester', 'New-York', 'United States'],
@@ -88,13 +90,14 @@ class FellApp:
         })
         fellapps.append({
             'type': '1',  # 'Clinical Informatics'
-            'firstName': 'Harry',
+            'firstName': 'Peter',
             'lastName': 'Neon',
-            'displayName': 'Haides Neon',
+            'displayName': 'Peter Neon', #'Haides Neon',
             'email': 'cinava@yahoo.com',
             'usmlestep1': 'Pass',
             'usmlestep2': 258,
             'usmlestep3': 244,
+            'specialty': 'Gastrointestinal Pathology',
             'medschool': 'University of Pennsylvania Perelman School of Medicine',
             'residency_specialty': ['CP', 'Stanford University Medical Center', 'Stanford', 'California', 'United States'],
             'fellowship_specialty': ['Hematopathology Fellowship', 'MD Anderson Cancer Center', 'Houston', 'Texas', 'United States'],
@@ -434,7 +437,8 @@ class FellApp:
         self.automation.select_option(
             "s2id_oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty", "CSS_SELECTOR",
             "#select2-drop .select2-input",
-            "Clinical Informatics"
+            #"Clinical Informatics"
+            fellapp["specialty"]
         )
         time.sleep(3)
 
