@@ -2243,7 +2243,9 @@ class UserSecurityUtil {
                 exit("Permission Object is not found by name=".$permissionObjectListStr);
             }
         } else {
-            $logger->notice("checkAndAddPermissionToRole: Permission Object exists: ".$permission->getPermissionObjectList().", ID=".$permission->getId());
+            $tempMsg = "checkAndAddPermissionToRole: Permission Object exists: ".$permission->getPermissionObjectList().", ID=".$permission->getId();
+            echo $tempMsg."<br>";
+            $logger->notice($tempMsg);
             echo $permissionListStr.': permission object exists: '.$permission->getPermissionObjectList()."<br>";
         }
 
@@ -2257,11 +2259,15 @@ class UserSecurityUtil {
                 $logger->notice("checkAndAddPermissionToRole: done set permission action=$permissionActionListStr");
                 //echo 'set permission action: '.$permissionActionListStr."<br>";
             } else {
-                $logger->notice("checkAndAddPermissionToRole: Permission Action is not found by name=$permissionActionListStr");
+                $tempMsg = "checkAndAddPermissionToRole: Permission Action is not found by name=$permissionActionListStr";
+                echo $tempMsg."<br>";
+                $logger->notice($tempMsg);
                 exit("Permission Action is not found by name=".$permissionActionListStr);
             }
         } else {
-            $logger->notice("checkAndAddPermissionToRole: permission action exists:".$permission->getPermissionActionList().", ID=".$permission->getId());
+            $tempMsg = "checkAndAddPermissionToRole: permission action exists:".$permission->getPermissionActionList().", ID=".$permission->getId();
+            echo $tempMsg."<br>";
+            $logger->notice($tempMsg);
             echo $permissionListStr.': permission action exists: '.$permission->getPermissionActionList()."<br>";
         }
 
