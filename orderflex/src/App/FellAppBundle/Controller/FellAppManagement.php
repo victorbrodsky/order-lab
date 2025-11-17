@@ -1094,7 +1094,7 @@ class FellAppManagement extends OrderAbstractController {
             $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType);
             $msg = $msg . $resArr['msg'];
             $count = $count + $resArr['count'];
-            exit('testing exit'); //testing exit
+            exit("testing exit. count=$count, msg=$msg"); //testing exit
         } //foreach
 
         if( !$msg ) {
