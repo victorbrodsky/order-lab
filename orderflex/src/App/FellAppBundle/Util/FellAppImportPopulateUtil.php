@@ -2528,12 +2528,21 @@ class FellAppImportPopulateUtil {
             //Create error notification email
             $subject = "[ORDER] WARNING: Last Fellowship Application successfully imported over 24 hours ago";
 
-            $body = "Verify Fellowship application import Warning! Last fellowship application was successfully imported over 24 hours ago. 
-            This usually indicates an issue with the automated import process for all fellowship applications 
-            potentially resulting in some successfully submitted fellowship applications not being received. 
-            Please check Google Sheets and Google Drive (as well as your e-mail confirmation notifications) 
-            to verify that each of the submitted applications appears in the system, 
-            then troubleshoot the import process to make sure each API call and process step completes fully.";
+//            $body = "Verify Fellowship application import Warning! Last fellowship application was successfully imported over 24 hours ago.
+//            This usually indicates an issue with the automated import process for all fellowship applications
+//            potentially resulting in some successfully submitted fellowship applications not being received.
+//            Please check Google Sheets and Google Drive (as well as your e-mail confirmation notifications)
+//            to verify that each of the submitted applications appears in the system,
+//            then troubleshoot the import process to make sure each API call and process step completes fully.";
+
+            $body = "Warning! Please verify fellowship application import. 
+            The last fellowship application was successfully imported over 24 hours ago. 
+            This usually indicates an issue with the automated import process for all fellowship 
+            applications potentially resulting in some successfully submitted fellowship 
+            applications not being received. Please check Google Sheets and Google Drive 
+            (as well as your e-mail confirmation notifications) to verify that each of 
+            the submitted applications appears in the system, then troubleshoot the import 
+            process to make sure each API call and process step completes fully.";
 
             $logger->error($body);
 
