@@ -1984,11 +1984,13 @@ class FellAppUtil {
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
         $permissions = $role->getPermissions();
         foreach($permissions as $permission) {
-            echo "permission ID=".$permission->getId()."<br>";
+            echo "Permission object. ID=".$permission->getId()."<br>";
         }
         $permission = $permissions[0];
         $permMsg =  "#### createOrEnableFellAppRole: $roleName: permission count=".count($permissions).", testing.<br>".
             "permission: ID=".$permission->getId().
+            ", PermissionList: getPermission()->getId=".$permission->getPermission()->getId().
+            ", PermissionList: getPermission()->getName=".$permission->getPermission()->getName().
             ", object ID=".$permission->getPermission()->getPermissionObjectList()->getId().
             ", object name=".$permission->getPermission()->getPermissionObjectList()->getName()."<br>";
         echo "<br>".$permMsg;
