@@ -756,7 +756,7 @@ class FellApp:
             files = {"file": f}
             data = {
                 "fellapp_id": fellapp_id,
-                "filename": os.path.basename(file_path),
+                "filepath": os.path.basename(file_path),
                 "documenttype": documenttype,
             }
             if sitename:

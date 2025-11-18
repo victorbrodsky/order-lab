@@ -47,19 +47,19 @@ class DemoDataController extends OrderAbstractController
         $logger->info("apiUploadFile: Starting file upload");
         
         // Get the uploaded file
-        $uploadedFile = $request->files->get('file');
-        if (!$uploadedFile) {
+        $filepath = $request->files->get('filepath');
+        if (!$filepath) {
             return new JsonResponse(['error' => 'No file uploaded'], 400);
         }
 
         // Get fellowship application ID
-        $fellappId = $request->request->get('fellappId');
+        $fellappId = $request->request->get('fellapp_id');
         if (!$fellappId) {
             return new JsonResponse(['error' => 'fellappId is required'], 400);
         }
 
         // Get document type (default to 'Other' if not specified)
-        $documentType = $request->request->get('documentType', 'Other');
+        $documentType = $request->request->get('documenttype', 'Other');
         $sitename = $request->request->get('sitename', 'fellapp');
 
         try {
@@ -79,11 +79,30 @@ class DemoDataController extends OrderAbstractController
                 }
             }
 
+            $currentDatetime = new \DateTime();
+            $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+            $fileExt = pathinfo($filepath, PATHINFO_EXTENSION);
+            $fileExtStr = "";
+            if( $fileExt ) {
+                $fileExtStr = ".".$fileExt;
+            }
+
+            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$filepath.$fileExtStr;  //.'_title='.$fileTitle;
+
+            $filesize = null;
+            if (file_exists($filepath)) {
+                $sizeInBytes = filesize($filepath);
+                echo "File size: " . $sizeInBytes . " bytes\n";
+            } else {
+                echo "File does not exist.";
+            }
+
             // Create a new Document entity
             $document = new Document($user);
-            $document->setCleanOriginalname($uploadedFile->getClientOriginalName());
-            $document->setSize($uploadedFile->getSize());
-            $document->setUniquename(uniqid() . '_' . $uploadedFile->getClientOriginalName());
+            $document->setUniqueid($fileUniqueName);
+            $document->setUniquename($fileUniqueName);
+            $document->setUploadDirectory($filepath);
+            $document->setSize($filesize);
             
             // Set document type if provided
             if ($documentType) {
@@ -99,9 +118,6 @@ class DemoDataController extends OrderAbstractController
             if (!file_exists($uploadDirectory)) {
                 mkdir($uploadDirectory, 0777, true);
             }
-            
-            $filePath = $uploadDirectory . $document->getUniquename();
-            $uploadedFile->move($uploadDirectory, $document->getUniquename());
             
             // Set the upload directory in the document
             $document->setUploadDirectory('/uploaded/fellapp/documents/');
