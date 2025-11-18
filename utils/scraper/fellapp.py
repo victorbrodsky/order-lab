@@ -991,7 +991,7 @@ def main():
     resp = fellapp.upload_fellowship_file(
         url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
         fellapp_id=fellapp_id,
-        file_name=fellapp["photo"],
+        file_name="lisa-chen.jpeg",
         documenttype="Fellowship Photo",
         sitename="fellapp",
         headers={"Authorization": "Bearer <token>"}
