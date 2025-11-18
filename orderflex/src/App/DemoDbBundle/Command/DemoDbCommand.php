@@ -85,8 +85,8 @@ class DemoDbCommand extends Command {
 
         echo "DemoDbCommand execute: environment=$environment, projectRoot=$projectRoot" . "\n";
 
-        if( $environment && $environment != 'demo' ) {
-            $resStr = "Demo DB can be run only in demo environment. environment=$environment, projectRoot=$projectRoot". "\n";
+        if( $environment && $environment == 'live' ) {
+            $resStr = "Demo DB can not be run on live environment. environment=$environment, projectRoot=$projectRoot". "\n";
             $logger->notice("cron demo-db-reset: ".$resStr);
             $output->writeln($resStr);
             return Command::FAILURE;
