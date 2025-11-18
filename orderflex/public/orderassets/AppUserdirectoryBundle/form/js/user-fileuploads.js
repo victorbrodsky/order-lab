@@ -101,7 +101,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
         }
     }
 
-    //console.log('clickable='+clickable);
+    console.log('dropzone: clickable='+clickable);
     //console.log('addRemoveLinks='+addRemoveLinks);
 
     //overwrite maxfiles

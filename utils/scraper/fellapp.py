@@ -716,13 +716,17 @@ class FellApp:
         print(f"file_path={file_path}")
 
         # Step 1: Click the dropzone container
-        container = driver.find_element(
-            By.CSS_SELECTOR,
-            "div.well.form-element-holder.user-photo.user-FellowshipApplication"
+        container = WebDriverWait(driver, 120).until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "div.well.form-element-holder.user-photo.user-FellowshipApplication")
+            )
         )
+        print("container found")
         time.sleep(3)
         # Step 2: Send file path to hidden input
-        file_input = container.find_element(By.CSS_SELECTOR, "input[type='file']")
+        file_input = WebDriverWait(container, 120).until(
+            lambda c: c.find_element(By.CSS_SELECTOR, "input[type='file']")
+        )
         print("input file found")
         time.sleep(3)
 
