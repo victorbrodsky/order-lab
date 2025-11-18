@@ -346,7 +346,7 @@
                     
                     // Build new URL
                     const newUrl = window.location.pathname + '?' + urlParams.toString() + window.location.hash;
-                    
+
                     // Update browser history without page reload
                     history.pushState({ changedParam: paramName, changedValue: paramValue }, '', newUrl);
                     
