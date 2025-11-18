@@ -700,10 +700,10 @@ class FellApp:
         print("Current URL:", current_url)
         # Extract the last part after the final slash
         fellapp_id = current_url.rstrip('/').split('/')[-1]
-        print("Extracted fellapp ID:", last_id)
+        print("Extracted fellapp ID:", fellapp_id)
 
-        resp = upload_fellowship_file(
-            base_url=self.automation.baseurl.rstrip('/') + '/' + f"api/upload-file/{fellapp_id}",
+        resp = self.upload_fellowship_file(
+            base_url=self.automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
             fellapp_id=fellapp_id,
             file_name=fellapp["photo"],
             documenttype="Fellowship Photo",
@@ -718,7 +718,7 @@ class FellApp:
         time.sleep(5)
 
     def upload_fellowship_file(self,
-                               base_url: str,
+                               url: str,
                                fellapp_id: int,
                                file_name: str,
                                documenttype: str = "Fellowship Photo",
@@ -747,7 +747,7 @@ class FellApp:
         file_path = os.path.abspath(os.path.join(script_dir, relative_path))
         print(f"file_path={file_path}")
 
-        accept_url = base_url.rstrip('/') + '/' + f"api/upload-file/{fellapp_id}".lstrip('/')
+        #accept_url = base_url.rstrip('/') + '/' + f"api/upload-file".lstrip('/')
 
         if not os.path.isfile(file_path):
             raise FileNotFoundError(f"File not found: {file_path}")
@@ -762,7 +762,7 @@ class FellApp:
             if sitename:
                 data["sitename"] = sitename
 
-            response = requests.post(accept_url, files=files, data=data, headers=headers)
+            response = requests.post(url, files=files, data=data, headers=headers)
             response.raise_for_status()  # raise error if status != 200
 
             return response.json()
@@ -985,6 +985,19 @@ def main():
     automation = WebAutomation(baseurl, run_by_symfony_command)
     automation.login_to_site()
     fellapp = FellApp(automation)
+
+    # Test the file upload
+    fellapp_id = 1
+    resp = fellapp.upload_fellowship_file(
+        base_url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
+        fellapp_id=fellapp_id,
+        file_name="Jessica-Santiago.jpeg",
+        documenttype="Fellowship Photo",
+        sitename="fellapp",
+        headers={"Authorization": "Bearer <token>"}
+    )
+    print("upload-file resp=", resp)
+    exit()
 
     # Process in batches of 3
     if 0:
