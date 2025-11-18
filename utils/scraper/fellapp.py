@@ -14,6 +14,7 @@ import datetime
 import random
 import json
 import os
+import requests
 #from datetime import date
 #from dateutil.relativedelta import relativedelta
 #from selenium.webdriver.support.expected_conditions import visibility_of_all_elements_located
@@ -692,9 +693,79 @@ class FellApp:
         time.sleep(1)
         button.click()
         print(f"Button to submit fellapp for {displayName} (submitSubmitBtn) clicked")
+        time.sleep(3)
+
+        #TODO: upload photo and itinerary by api
+        current_url = driver.current_url
+        print("Current URL:", current_url)
+        # Extract the last part after the final slash
+        fellapp_id = current_url.rstrip('/').split('/')[-1]
+        print("Extracted fellapp ID:", last_id)
+
+        resp = upload_fellowship_file(
+            base_url=self.automation.baseurl.rstrip('/') + '/' + f"api/upload-file/{fellapp_id}",
+            fellapp_id=fellapp_id,
+            file_name=fellapp["photo"],
+            documenttype="Fellowship Photo",
+            sitename="fellapp",
+            headers={"Authorization": "Bearer <token>"}
+        )
+        print("upload-file resp=",resp)
+
+        print(resp)  # should contain documentid and documentsrc
 
         #print("Finish new fellapp")
         time.sleep(5)
+
+    def upload_fellowship_file(self,
+                               base_url: str,
+                               fellapp_id: int,
+                               file_name: str,
+                               documenttype: str = "Fellowship Photo",
+                               sitename: str = None,
+                               headers: dict = None) -> dict:
+        """
+        Upload a file to the Symfony fellowship application API.
+
+        Args:
+            base_url (str): Base URL of your application (e.g. https://example.com).
+            fellapp_id (int): Fellowship application ID.
+            file_name (str): file name.
+            documenttype (str, optional): Document type (default: Fellowship Photo).
+            sitename (str, optional): Site name.
+            headers (dict, optional): Extra headers (e.g. Authorization).
+
+        Returns:
+            dict: JSON response from the API.
+        """
+
+        # Get the directory where the current script is located
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Build the relative path
+        relative_path = f"../../orderflex/src/App/FellAppBundle/Util/{file_name}"
+        # Resolve to an absolute path
+        file_path = os.path.abspath(os.path.join(script_dir, relative_path))
+        print(f"file_path={file_path}")
+
+        accept_url = base_url.rstrip('/') + '/' + f"api/upload-file/{fellapp_id}".lstrip('/')
+
+        if not os.path.isfile(file_path):
+            raise FileNotFoundError(f"File not found: {file_path}")
+
+        with open(file_path, "rb") as f:
+            files = {"file": f}
+            data = {
+                "fellapp_id": fellapp_id,
+                "filename": os.path.basename(file_path),
+                "documenttype": documenttype,
+            }
+            if sitename:
+                data["sitename"] = sitename
+
+            response = requests.post(accept_url, files=files, data=data, headers=headers)
+            response.raise_for_status()  # raise error if status != 200
+
+            return response.json()
 
     def accept(self, fellapp_id):
         driver = self.automation.get_driver()

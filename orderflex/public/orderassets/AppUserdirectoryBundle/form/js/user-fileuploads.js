@@ -73,7 +73,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     //var url = dataElement.dataset.uploadurl;
     var url = dataElement.getAttribute('data-uploadurl');
-    //console.log('url='+url);
+    console.log('data-uploadurl url='+url);
 
     //var userid = dataElement.dataset.userid;
     var userid = dataElement.getAttribute('data-userid');
@@ -279,7 +279,7 @@ function populateDropzoneWithData(thisDropzone,data,withRemoveLinks) {
     //console.log(thisDropzone);
     var holder = $(thisDropzone.element).closest('.files-upload-holder');
 
-    var existedfiles = holder.find('.file-holder');
+    //var existedfiles = holder.find('.file-holder');
     //console.log('existedfiles len='+existedfiles.length);
 
     //console.log('data len='+data.length);

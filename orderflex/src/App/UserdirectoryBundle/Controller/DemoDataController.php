@@ -40,6 +40,32 @@ class DemoDataController extends OrderAbstractController
     private $baseUrl = 'https://view.online/c/demo-institution/demo-department';
     //private $baseUrl = 'http://localhost';
 
+    // http://127.0.0.1/directory/api/upload-file
+    #[Route(path: '/api/upload-file', name: 'employees_api_upload_file', methods: ['GET','POST'])]
+    public function apiUploadFile(Request $request) {
+        exit("apiUploadFile");
+
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+
+        $fellappid = 1;
+        $fellowshipApplication = $this->em->getRepository(FellowshipApplication::class)->find($fellappid);
+
+        //uploadedPhotoUrl
+        $uploadedPhotoUrl = $fellappImportPopulateUtil->getValueByHeaderName('uploadedPhotoUrl',$rowData,$headers);
+        $uploadedPhotoId = $fellappImportPopulateUtil->getFileIdByUrl( $uploadedPhotoUrl );
+        $uploadedPhotoUrl = "";
+        $uploadedPhotoId = "";
+        if( $uploadedPhotoId ) {
+            $uploadedPhotoDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedPhotoId, 'Fellowship Photo', $uploadPath);
+            if( !$uploadedPhotoDb ) {
+                throw new IOException('Unable to download file to server: uploadedPhotoUrl='.$uploadedPhotoUrl.', fileDB='.$uploadedPhotoDb);
+            }
+            //$user->setAvatar($uploadedPhotoDb); //set this file as Avatar
+            $fellowshipApplication->addAvatar($uploadedPhotoDb);
+        }
+    }
+
     //[Route(path: '/reset-demo-data/', name: 'employees_reset_demo_data', methods: ['GET'])]
     #[Route(path: '/reset-demo-data-ajax/', name: 'employees_reset_demo_data_ajax', methods: ['POST'])]
     public function resetDemoDataAction(Request $request)
