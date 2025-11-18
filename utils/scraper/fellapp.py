@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 #from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoAlertPresentException
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 import datetime
 import random
@@ -435,7 +436,7 @@ class FellApp:
         #print("create new fellowship application")
 
         #### testing
-        if 1:
+        if 0:
             applicant_data_element = driver.find_element(By.CSS_SELECTOR,
                                                          "h4.panel-title > a[href='#uploads']")
             applicant_data_element.click()
@@ -714,14 +715,22 @@ class FellApp:
         file_path = os.path.abspath(os.path.join(script_dir, relative_path))
         print(f"file_path={file_path}")
 
-        # ✅ First locate the specific dropzone container
+        # Step 1: Click the dropzone container
         container = driver.find_element(
             By.CSS_SELECTOR,
             "div.well.form-element-holder.user-photo.user-FellowshipApplication"
         )
+        time.sleep(3)
+        # Step 2: Send file path to hidden input
+        file_input = container.find_element(By.CSS_SELECTOR, "input[type='file']")
+        print("input file found")
+        time.sleep(3)
 
-        # ✅ Then find the hidden input inside that container
-        file_input = container.find_element(By.CSS_SELECTOR, "input.dz-hidden-input")
+        # Make the input visible if it's hidden (optional, but often necessary)
+        driver.execute_script("arguments[0].style.display = 'block';", file_input)
+        time.sleep(5)
+
+        file_input.send_keys(file_path)
 
         #file_input = driver.find_element("css selector", "input.dz-hidden-input")
         # Send the absolute path of the file you want to upload
