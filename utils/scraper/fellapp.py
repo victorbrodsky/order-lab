@@ -703,7 +703,7 @@ class FellApp:
         print("Extracted fellapp ID:", fellapp_id)
 
         resp = self.upload_fellowship_file(
-            base_url=self.automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
+            url=self.automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
             fellapp_id=fellapp_id,
             file_name=fellapp["photo"],
             documenttype="Fellowship Photo",
@@ -989,9 +989,9 @@ def main():
     # Test the file upload
     fellapp_id = 1
     resp = fellapp.upload_fellowship_file(
-        base_url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
+        url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
         fellapp_id=fellapp_id,
-        file_name="Jessica-Santiago.jpeg",
+        file_name=fellapp["photo"],
         documenttype="Fellowship Photo",
         sitename="fellapp",
         headers={"Authorization": "Bearer <token>"}
