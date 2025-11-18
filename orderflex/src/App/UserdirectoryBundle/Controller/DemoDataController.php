@@ -43,6 +43,7 @@ class DemoDataController extends OrderAbstractController
     // http://127.0.0.1/directory/api/upload-file
     #[Route(path: '/api/upload-file', name: 'employees_api_upload_file', methods: ['GET','POST'])]
     public function apiUploadFile(Request $request) {
+        exit("Under construction");
         $logger = $this->container->get('logger');
         $logger->info("apiUploadFile: Starting file upload");
         
