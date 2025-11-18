@@ -1854,12 +1854,12 @@ class FellAppUtil {
 
         //create Director role
         $roleName = "ROLE_FELLAPP_".$roleType."_".$roleNameBase;
-        echo "1 roleName=$roleName<br>";
+        //echo "1 roleName=$roleName<br>";
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
 
         if( !$role ) {
             $roleNameLegacy = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase; //check legacy role name
-            echo "2 roleName=$roleName<br>";
+            //echo "2 roleName=$roleName<br>";
             $role = $em->getRepository(Roles::class)->findOneByName($roleNameLegacy);
         }
         //echo "##### createOrEnableFellAppRole: role=[".$role."] #####<br>";
@@ -1947,13 +1947,13 @@ class FellAppUtil {
                 if ($roleType == "COORDINATOR") {
                     $role->setLevel(40);
                     $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Create a New Fellowship Application", "FellowshipApplication", "create", true);
-                    echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
+                    //echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
                     if ($countPermission > 0) {
                         $count = $count + $countPermission;
                         $changed = true;
                     }
                     $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Modify a Fellowship Application", "FellowshipApplication", "update", true);
-                    echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
+                    //echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
                     if ($countPermission > 0) {
                         $count = $count + $countPermission;
                         $changed = true;
@@ -1963,13 +1963,13 @@ class FellAppUtil {
                 if ($roleType == "DIRECTOR") {
                     $role->setLevel(50);
                     $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Create a New Fellowship Application", "FellowshipApplication", "create", true);
-                    echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
+                    //echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
                     if ($countPermission > 0) {
                         $count = $count + $countPermission;
                         $changed = true;
                     }
                     $countPermission = $userSecUtil->checkAndAddPermissionToRole($role, "Modify a Fellowship Application", "FellowshipApplication", "update", true);
-                    echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
+                    //echo "after checkAndAddPermissionToRole for $roleType, countPermission=$countPermission <br>";
                     if ($countPermission > 0) {
                         $count = $count + $countPermission;
                         $changed = true;

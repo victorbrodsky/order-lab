@@ -385,6 +385,7 @@ class FellAppController extends OrderAbstractController {
         $dql->orderBy("fellapp.id","DESC");
         $dql->leftJoin("fellapp.appStatus", "appStatus");
         $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
+        $dql->leftJoin("fellapp.globalFellowshipSpecialty", "globalFellowshipSpecialty");
         $dql->leftJoin("fellapp.user", "applicant");
         $dql->leftJoin("applicant.infos", "applicantinfos");
         //$dql->leftJoin("applicant.credentials", "credentials");
