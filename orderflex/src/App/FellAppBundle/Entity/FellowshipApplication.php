@@ -1164,7 +1164,7 @@ class FellowshipApplication extends BaseUserAttributes {
     }
     
     //$trainingTypeName: Medical, Residency, GME, Post-Residency Fellowship
-    public function getSchoolByTrainingTypeName( $trainingTypeName, $withGeoLocation=false, $withResidencySpecialty=false, $separator='<br>' ) {
+    public function getSchoolByTrainingTypeName( $trainingTypeName, $withGeoLocation=false, $withResidencySpecialty=false, $separator='<br>', $withAt=true ) {
         $schoolName = "";
 
         foreach( $this->getTrainings() as $item ) {
@@ -1175,7 +1175,11 @@ class FellowshipApplication extends BaseUserAttributes {
                 //AP, CP, AP/CP, other or Area of Training
                 if( $withResidencySpecialty && $item->getResidencySpecialty() ) {
                     //$schoolName = $schoolName . $item->getResidencySpecialty();
-                    $schoolName = $item->getResidencySpecialty() . " at1 " . $schoolName;
+                    if( $withAt ) {
+                        $schoolName = $item->getResidencySpecialty() . " at " . $schoolName;
+                    } else {
+                        $schoolName = $item->getResidencySpecialty() . " " . $schoolName;
+                    }
                 }
                 if( $withResidencySpecialty && $item->getMajors() ) {
                     $majorArr = array();
@@ -1190,7 +1194,11 @@ class FellowshipApplication extends BaseUserAttributes {
                     //$schoolName = $schoolName . implode(", ",$majorArr);
                     $majorStr = implode(", ",$majorArr);
                     if( trim($majorStr) ) {
-                        $schoolName = trim($majorStr) . " at2 " . $schoolName;
+                        if( $withAt ) {
+                            $schoolName = trim($majorStr) . " at " . $schoolName;
+                        } else {
+                            $schoolName = trim($majorStr) . " " . $schoolName;
+                        }
                     }
                 }
 
