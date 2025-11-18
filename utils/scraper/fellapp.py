@@ -30,6 +30,64 @@ class FellApp:
         self.users = Users(automation)
         self.existing_users = self.users.get_existing_users(with_admin=True)
 
+    def get_references(self):
+        references = []
+        references.append({
+            'firstName': 'Helena',
+            'lastName': 'Markovic',
+            'displayName': 'Helena Markovic',
+            'email': 'Helena.Markovic@example.com',
+        })
+        references.append({
+            'firstName': 'Kazuki',
+            'lastName': 'Tanaka',
+            'displayName': 'Kazuki Tanaka',
+            'email': 'Kazuki.Tanaka@example.com',
+        })
+        references.append({
+            'firstName': 'Gregory',
+            'lastName': 'Ashford',
+            'displayName': 'Gregory Ashford',
+            'email': 'Gregory.Ashford@example.com',
+        })
+        references.append({
+            'firstName': 'Amitabh',
+            'lastName': 'Banerjee',
+            'displayName': 'Amitabh Banerjee',
+            'email': 'Amitabh.Banerjee@example.com',
+        })
+        references.append({
+            'firstName': 'Mei-Ling',
+            'lastName': 'Zhou',
+            'displayName': 'Mei-Ling Zhou',
+            'email': 'Mei-Ling.Zhou@example.com',
+        })
+        references.append({
+            'firstName': 'Sylvia',
+            'lastName': 'Marwood',
+            'displayName': 'Sylvia Marwood',
+            'email': 'Sylvia.Marwood@example.com',
+        })
+        references.append({
+            'firstName': 'Adewale',
+            'lastName': 'Okonjo',
+            'displayName': 'Adewale Okonjo',
+            'email': 'Adewale.Okonjo@example.com',
+        })
+        references.append({
+            'firstName': 'Sofia',
+            'lastName': 'Mendez',
+            'displayName': 'Sofia Mendez',
+            'email': 'Sofia.Mendez@example.com',
+        })
+        references.append({
+            'firstName': 'Lucien',
+            'lastName': 'Dubois',
+            'displayName': 'Lucien Dubois',
+            'email': 'Lucien.Dubois@example.com',
+        })
+        return references
+
     def get_comments(self):
         comments = []
         comments.append("I enjoyed talking to this outstanding candidate and I believe this would be a valuable addition to our program!")
@@ -417,13 +475,16 @@ class FellApp:
         users = self.users.get_users()
         comments = self.get_comments()
         fellapps = self.get_fell_apps()
+        references = self.get_references()
+        count = 0
         if max_count > 0:
             fellapps = fellapps[:max_count]
         for fellapp in fellapps:
-            self.create_single_fellapp(fellapp,users,comments)
+            self.create_single_fellapp(count,fellapp,users,comments,references)
+            count = count + 3
             #break #enable for test run only one
 
-    def create_single_fellapp(self, fellapp, users, comments):
+    def create_single_fellapp(self, count, fellapp, users, comments, references):
         driver = self.automation.get_driver()
         url = self.automation.baseurl.rstrip('/') + '/' + "fellowship-applications/new/".lstrip('/')
         #url = "http://127.0.0.1/fellowship-applications/new/"
@@ -654,6 +715,19 @@ class FellApp:
         interview_date.send_keys(formatted_interview_date)
         time.sleep(5)
 
+        ########################
+        #### set references #####
+        ########################
+        applicant_data_element = driver.find_element(By.CSS_SELECTOR, "h4.panel-title > a[href='#recommendations']")
+        applicant_data_element.click()
+        time.sleep(3)
+        set_reference(self, driver, references, count)
+        set_reference(self, driver, references, count+1)
+        set_reference(self, driver, references, count+2)
+        ########################
+        #### EOF set references #####
+        ########################
+
         #click somewhere to close datepicker dialog box
         # body = driver.find_element(By.TAG_NAME, "body")
         # body.send_keys(Keys.ESCAPE)  # Close the datepicker
@@ -716,6 +790,51 @@ class FellApp:
 
         #print("Finish new fellapp")
         time.sleep(5)
+
+    def set_reference(self,driver,references,count):
+        reference_first_name = references[count]['firstName']
+        reference_last_name = references[count]['lastName']
+        reference_display_name = references[count]['displayName']
+        reference_email = references[count]['email']
+        # reference_first_name
+        try:
+            first_name_input = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.ID, f"oleg_fellappbundle_fellowshipapplication_references_{count}_firstName")
+                )
+            )
+            # Clear any existing text and set new value
+            first_name_input.clear()
+            first_name_input.send_keys(reference_first_name)
+            print(f"Success to add reference reference_first_name={reference_first_name}, count={count}")
+        except Exception as e:
+            print(f"Failed to add reference reference_first_name={reference_first_name}, count={count}:", e)
+        # reference_last_name
+        try:
+            first_name_input = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.ID, f"oleg_fellappbundle_fellowshipapplication_references_{count}_lastName")
+                )
+            )
+            # Clear any existing text and set new value
+            first_name_input.clear()
+            first_name_input.send_keys(reference_last_name)
+            print(f"Success to add reference reference_last_name={reference_last_name}, count={count}")
+        except Exception as e:
+            print(f"Failed to add reference reference_last_name={reference_last_name}, count={count}:", e)
+        # reference_email
+        try:
+            email_input = WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(
+                    (By.ID, f"oleg_fellappbundle_fellowshipapplication_references_{count}_email")
+                )
+            )
+            # Clear any existing text and set new value
+            email_input.clear()
+            email_input.send_keys(reference_email)
+            print(f"Success to add reference reference_email={reference_email}, count={count}")
+        except Exception as e:
+            print(f"Failed to add reference reference_email={reference_email}, count={count}:", e)
 
     def upload_fellowship_file(self,
                                url: str,
