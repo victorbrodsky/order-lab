@@ -1175,7 +1175,7 @@ class FellowshipApplication extends BaseUserAttributes {
                 //AP, CP, AP/CP, other or Area of Training
                 if( $withResidencySpecialty && $item->getResidencySpecialty() ) {
                     //$schoolName = $schoolName . $item->getResidencySpecialty();
-                    $schoolName = $item->getResidencySpecialty() . " at " . $schoolName;
+                    $schoolName = $item->getResidencySpecialty() . " at1 " . $schoolName;
                 }
                 if( $withResidencySpecialty && $item->getMajors() ) {
                     $majorArr = array();
@@ -1190,7 +1190,7 @@ class FellowshipApplication extends BaseUserAttributes {
                     //$schoolName = $schoolName . implode(", ",$majorArr);
                     $majorStr = implode(", ",$majorArr);
                     if( trim($majorStr) ) {
-                        $schoolName = trim($majorStr) . " at " . $schoolName;
+                        $schoolName = trim($majorStr) . " at2 " . $schoolName;
                     }
                 }
 
