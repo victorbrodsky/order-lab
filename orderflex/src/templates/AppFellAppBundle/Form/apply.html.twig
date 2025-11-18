@@ -327,11 +327,112 @@
             let syncingInst = false;
             let syncingGlobal = false;
 
+            // Enterprise-grade URL parameter management
+            function updateUrlParameter(paramName, paramValue) {
+                try {
+                    // Create URLSearchParams object for modern browsers
+                    const urlParams = new URLSearchParams(window.location.search);
+                    
+                    // Handle array-style parameters (e.g., program[]=155)
+                    if (paramValue) {
+                        // Remove existing instances of this parameter
+                        urlParams.delete(paramName);
+                        // Add new value
+                        urlParams.append(paramName, paramValue);
+                    } else {
+                        // Remove parameter if value is empty/null
+                        urlParams.delete(paramName);
+                    }
+                    
+                    // Build new URL
+                    const newUrl = window.location.pathname + '?' + urlParams.toString() + window.location.hash;
+                    
+                    // Update browser history without page reload
+                    history.pushState({ changedParam: paramName, changedValue: paramValue }, '', newUrl);
+                    
+                    console.log('URL updated:', paramName, '=', paramValue, 'New URL:', newUrl);
+                } catch (error) {
+                    // Fallback for older browsers
+                    console.warn('URLSearchParams not supported, using fallback method');
+                    let url = window.location.pathname;
+                    let separator = '?';
+                    
+                    // Remove existing parameter
+                    const regex = new RegExp('([?&])' + paramName + '=[^&]*', 'i');
+                    const existingUrl = window.location.search;
+                    
+                    if (regex.test(existingUrl)) {
+                        url += existingUrl.replace(regex, '');
+                        // Check if we still have parameters
+                        if (url.indexOf('?') > -1) {
+                            separator = '&';
+                        } else {
+                            separator = '?';
+                        }
+                    } else {
+                        url += existingUrl;
+                        separator = existingUrl.indexOf('?') > -1 ? '&' : '?';
+                    }
+                    
+                    // Add new parameter if value exists
+                    if (paramValue) {
+                        url += separator + paramName + '=' + encodeURIComponent(paramValue);
+                    }
+                    
+                    url += window.location.hash;
+                    
+                    history.pushState({ changedParam: paramName, changedValue: paramValue }, '', url);
+                    console.log('URL updated (fallback):', paramName, '=', paramValue, 'New URL:', url);
+                }
+            }
+
+            // Function to initialize URL parameters from existing URL on page load
+            function initializeUrlParameters() {
+                try {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const programParam = urlParams.get('program[]');
+                    
+                    if (programParam) {
+                        console.log('Found program parameter in URL:', programParam);
+                        // Pre-select the institution if program parameter exists
+                        if (inst.length && !inst.val()) {
+                            inst.val(programParam).trigger('change');
+                        }
+                    }
+                } catch (error) {
+                    // Fallback for older browsers
+                    const regex = new RegExp('[?&]program[]=([^&#]*)', 'i');
+                    const results = regex.exec(window.location.search);
+                    if (results && results[1]) {
+                        const programParam = decodeURIComponent(results[1].replace(/\+/g, " "));
+                        console.log('Found program parameter in URL (fallback):', programParam);
+                        if (inst.length && !inst.val()) {
+                            inst.val(programParam).trigger('change');
+                        }
+                    }
+                }
+            }
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function(event) {
+                if (event.state && event.state.changedParam === 'program[]') {
+                    console.log('Popstate: Restoring program parameter:', event.state.changedValue);
+                    // Re-trigger change event to maintain consistency
+                    if (inst.val() !== event.state.changedValue) {
+                        inst.val(event.state.changedValue).trigger('change');
+                    }
+                }
+            });
+
             inst.on('change', function(){
                 if (syncingInst) return;
                 syncingGlobal = true;
                 var instId = $(this).val();
                 console.log('Institution changed:', instId);
+                
+                // Update URL with program parameter
+                updateUrlParameter('program[]', instId);
+                
                 filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
                 isSyncing = false;
             });
@@ -350,6 +451,10 @@
             var initGlobal = global.val();
             console.log('Initial institution:', initInst);
             console.log('Initial fellapp type:', initGlobal);
+            
+            // Initialize URL parameters from existing URL
+            initializeUrlParameters();
+            
             if( !initGlobal ) {
                 filterGlobalByInstitution(initInst);
             } else {
