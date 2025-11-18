@@ -1523,9 +1523,10 @@ class FellowshipApplication extends BaseUserAttributes {
 
     //School Name, Finish Date
     //City, Country Abbreviation such as USA (Full name of country if not available)
-    public function getMedicalSchoolDescription() {
+    public function getMedicalSchoolDescription($withAt=false) {
         $resArr = array();
-        $name = $this->getSchoolByTrainingTypeName("Medical",true);
+        //$name = $this->getSchoolByTrainingTypeName("Medical",true);
+        $name = $this->getSchoolByTrainingTypeName("Medical",true,true,'<br>',$withAt);
         $resArr[] = $name;
         return implode(", ",$resArr);
     }
@@ -1533,9 +1534,9 @@ class FellowshipApplication extends BaseUserAttributes {
     //AP, CP, AP/CP, other
     //Residency Institution, Finish Date
     //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
-    public function getResidencyDescription() {
+    public function getResidencyDescription($withAt=false) {
         $resArr = array();
-        $name = $this->getSchoolByTrainingTypeName("Residency",true,true);
+        $name = $this->getSchoolByTrainingTypeName("Residency",true,true,'<br>',$withAt);
         $resArr[] = $name;
         return implode(", ",$resArr);
     }
@@ -1545,7 +1546,7 @@ class FellowshipApplication extends BaseUserAttributes {
     //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
     public function getPostResidencyFellowshipDescription() {
         $resArr = array();
-        $name = $this->getSchoolByTrainingTypeName("Post-Residency Fellowship",true,true);
+        $name = $this->getSchoolByTrainingTypeName("Post-Residency Fellowship",true,true,'<br>',$withAt);
         $resArr[] = $name;
         $description = implode(", ",$resArr);
         return $description;
