@@ -705,7 +705,7 @@ class FellAppController extends OrderAbstractController {
                     'warning',
                     "Google configuration file can not be retrieved from Google Drive.".
                     " Please verify if the 'Full path to the credential authentication JSON file for Google'".
-                    " parameter in the site settings has been provided and exist on the server"
+                    " parameter in the site settings has been provided and exists on the server"
                 );
             }
             $acceptingApplication = "- ".$acceptingApplication;
