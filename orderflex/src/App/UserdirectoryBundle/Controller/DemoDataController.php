@@ -41,28 +41,101 @@ class DemoDataController extends OrderAbstractController
     //private $baseUrl = 'http://localhost';
 
     // http://127.0.0.1/directory/api/upload-file
-    #[Route(path: '/api/upload-file', name: 'employees_api_upload_file', methods: ['GET','POST'])]
+    #[Route(path: '/api/upload-file', name: 'employees_api_upload_file', methods: ['POST'])]
     public function apiUploadFile(Request $request) {
-        exit("apiUploadFile");
+        $logger = $this->container->get('logger');
+        $logger->info("apiUploadFile: Starting file upload");
+        
+        // Get the uploaded file
+        $uploadedFile = $request->files->get('file');
+        if (!$uploadedFile) {
+            return new JsonResponse(['error' => 'No file uploaded'], 400);
+        }
 
-        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
-        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        // Get fellowship application ID
+        $fellappId = $request->request->get('fellappId');
+        if (!$fellappId) {
+            return new JsonResponse(['error' => 'fellappId is required'], 400);
+        }
 
-        $fellappid = 1;
-        $fellowshipApplication = $this->em->getRepository(FellowshipApplication::class)->find($fellappid);
+        // Get document type (default to 'Other' if not specified)
+        $documentType = $request->request->get('documentType', 'Other');
+        $sitename = $request->request->get('sitename', 'fellapp');
 
-        //uploadedPhotoUrl
-        $uploadedPhotoUrl = $fellappImportPopulateUtil->getValueByHeaderName('uploadedPhotoUrl',$rowData,$headers);
-        $uploadedPhotoId = $fellappImportPopulateUtil->getFileIdByUrl( $uploadedPhotoUrl );
-        $uploadedPhotoUrl = "";
-        $uploadedPhotoId = "";
-        if( $uploadedPhotoId ) {
-            $uploadedPhotoDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedPhotoId, 'Fellowship Photo', $uploadPath);
-            if( !$uploadedPhotoDb ) {
-                throw new IOException('Unable to download file to server: uploadedPhotoUrl='.$uploadedPhotoUrl.', fileDB='.$uploadedPhotoDb);
+        try {
+            // Get the fellowship application
+            $fellowshipApplication = $this->em->getRepository('AppFellappBundle:FellowshipApplication')->find($fellappId);
+            if (!$fellowshipApplication) {
+                return new JsonResponse(['error' => 'Fellowship application not found'], 404);
             }
-            //$user->setAvatar($uploadedPhotoDb); //set this file as Avatar
-            $fellowshipApplication->addAvatar($uploadedPhotoDb);
+
+            // Get the user (system user if not authenticated)
+            $user = $this->getUser();
+            if (!$user) {
+                $userSecUtil = $this->container->get('user_security_utility');
+                $user = $userSecUtil->findSystemUser();
+                if (!$user) {
+                    return new JsonResponse(['error' => 'User not found and could not get system user'], 500);
+                }
+            }
+
+            // Create a new Document entity
+            $document = new Document($user);
+            $document->setCleanOriginalname($uploadedFile->getClientOriginalName());
+            $document->setSize($uploadedFile->getSize());
+            $document->setUniquename(uniqid() . '_' . $uploadedFile->getClientOriginalName());
+            
+            // Set document type if provided
+            if ($documentType) {
+                $transformer = new GenericTreeTransformer($this->em, $user, "DocumentTypeList", "UserdirectoryBundle");
+                $documentTypeObject = $transformer->reverseTransform($documentType);
+                if ($documentTypeObject) {
+                    $document->setType($documentTypeObject);
+                }
+            }
+
+            // Move the file to the upload directory
+            $uploadDirectory = $this->getParameter('kernel.project_dir') . '/public/uploaded/fellapp/documents/';
+            if (!file_exists($uploadDirectory)) {
+                mkdir($uploadDirectory, 0777, true);
+            }
+            
+            $filePath = $uploadDirectory . $document->getUniquename();
+            $uploadedFile->move($uploadDirectory, $document->getUniquename());
+            
+            // Set the upload directory in the document
+            $document->setUploadDirectory('/uploaded/fellapp/documents/');
+
+            // Generate thumbnails if it's an image
+            $fileExtension = strtolower(pathinfo($document->getCleanOriginalname(), PATHINFO_EXTENSION));
+            if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+                $userServiceUtil = $this->container->get('user_service_utility');
+                $userServiceUtil->generateTwoThumbnails($document);
+            }
+
+            // Add the document to the fellowship application
+            $fellowshipApplication->addDocument($document);
+
+            // Save everything
+            $this->em->persist($document);
+            $this->em->persist($fellowshipApplication);
+            $this->em->flush();
+
+            // Log the upload event
+            $userSecUtil = $this->container->get('user_security_utility');
+            $eventDescription = "Document has been uploaded to the server by " . $user;
+            $userSecUtil->createUserEditEvent($sitename, $eventDescription, $user, $document, $request, $documentType . ' Uploaded');
+
+            return new JsonResponse([
+                'status' => 'success',
+                'documentId' => $document->getId(),
+                'documentName' => $document->getCleanOriginalname(),
+                'documentPath' => $document->getRelativeUploadFullPath()
+            ]);
+
+        } catch (\Exception $e) {
+            $logger->error("apiUploadFile error: " . $e->getMessage());
+            return new JsonResponse(['error' => 'Failed to upload file: ' . $e->getMessage()], 500);
         }
     }
 
