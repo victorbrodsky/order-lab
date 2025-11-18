@@ -1115,7 +1115,7 @@
                                                 <a
                                                     general-data-confirm="Are you sure you want to change status of this Application to 'Declined'?"
                                                     general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'declined' }, true) }}">Decline
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'declined' }, true) }}">Mark as Declined Interview/Acceptance
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -1315,7 +1315,7 @@
                                                 general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application for {{ entity.getFellowshipSubspecialty() }} from {{ startYear }} to {{ startYear+1 }}?"
                                                 general-data-callback="refreshpage"
                                                 href="{{ path('fellapp_application_move_year', {'id': entity.id, 'year': +1}, true) }}">
-                                                Move to {{ startYear+1 }} year
+                                                Move application to {{ startYear+1 }} year
                                             </a>
                                         </li>
                                         <li>
@@ -1323,7 +1323,7 @@
                                                 general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application for {{ entity.getFellowshipSubspecialty() }} from {{ startYear }} to {{ startYear-1 }}?"
                                                 general-data-callback="refreshpage"
                                                 href="{{ path('fellapp_application_move_year', {'id': entity.id, 'year': -1}, true) }}">
-                                                Move to {{ startYear-1 }} year
+                                                Move application to {{ startYear-1 }} year
                                             </a>
                                         </li>
 
