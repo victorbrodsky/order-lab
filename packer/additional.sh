@@ -53,7 +53,7 @@ deactivate
 cd "$bashpath"/orderflex/
 
 #Create python environment for scraper
-echo -e ${COLOR} Installing env python for scraper to "$bashpath" ${NC}
+#echo -e ${COLOR} Installing env python for scraper to "$bashpath" ${NC}
 #cd "$bashpath"/utils/scrapper/
 #ls -a
 #python3 -m venv venv
@@ -63,24 +63,41 @@ echo -e ${COLOR} Installing env python for scraper to "$bashpath" ${NC}
 #deactivate
 #cd "$bashpath"/orderflex/
 
-# Define the target folder
-TARGET_DIR="$bashpath/utils/scraper"
-ENV_NAME="venv"
+## Define the target folder
+#TARGET_DIR="$bashpath/utils/scraper"
+#ENV_NAME="venv"
+#
+## Navigate to the target directory
+#cd "$TARGET_DIR" || { echo "Directory not found"; exit 1; }
+#
+## Create the virtual environment
+#python -m venv "$ENV_NAME"
+#
+## Activate the environment (this works for Linux/macOS)
+#source "$TARGET_DIR/$ENV_NAME/bin/activate"
+#
+#echo "Virtual environment '$ENV_NAME' created and activated in '$TARGET_DIR'"
+#
+#python -m pip install -r "$TARGET_DIR/requirements.txt"
+#
+#deactivate
+#
+#echo "Deactivate virtual environment '$ENV_NAME' in '$TARGET_DIR'"
 
-# Navigate to the target directory
-cd "$TARGET_DIR" || { echo "Directory not found"; exit 1; }
+#Create python environment for scraper
+#cd /srv/order-lab-tenantapp1/utils/scraper/
+#folder: /srv/order-lab/packer/
+echo -e ${COLOR} Installing env python for scraper to "$bashpath" ${NC}
+cd "$bashpath"/utils/scraper/
+python -m venv venv
+source venv/bin/activate
+#sudo pip3 install -r requirements.txt
 
-# Create the virtual environment
-python -m venv "$ENV_NAME"
+echo -e ${COLOR} Upgrade pip for "$bashpath" ${NC}
+pip install --upgrade pip
 
-# Activate the environment (this works for Linux/macOS)
-source "$TARGET_DIR/$ENV_NAME/bin/activate"
-
-echo "Virtual environment '$ENV_NAME' created and activated in '$TARGET_DIR'"
-
-python -m pip install -r "$TARGET_DIR/requirements.txt"
-
+echo -e ${COLOR} Install requirements.txt for "$bashpath" ${NC}
+python -m pip install -r "$bashpath"/utils/scraper/requirements.txt
 deactivate
-
-echo "Deactivate virtual environment '$ENV_NAME' in '$TARGET_DIR'"
+cd "$bashpath"/orderflex/
 
