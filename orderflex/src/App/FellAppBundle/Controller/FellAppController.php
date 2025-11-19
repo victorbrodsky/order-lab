@@ -2147,7 +2147,7 @@ class FellAppController extends OrderAbstractController {
             $cycle = "edit";
         }
 
-        //this user is admin
+        //1) check if this user is admin => show "Select the interviewer on whose behalf you would like to submit the evaluation form" page
         if ($this->isGranted('ROLE_FELLAPP_COORDINATOR') ||
             $this->isGranted('ROLE_FELLAPP_DIRECTOR') ||
             $this->isGranted('ROLE_FELLAPP_ADMIN')
@@ -2162,7 +2162,7 @@ class FellAppController extends OrderAbstractController {
             );
         }
 
-        //1) check if this user is an interviewer for this application
+        //1) check if this user is an interviewer for this application => show the evaluation for this user
         $interviews = $fellappUtil->findInterviewByFellappAndUser($fellapp,$user);
         if( count($interviews) > 0 ) {
             if( count($interviews) == 1 ) {
