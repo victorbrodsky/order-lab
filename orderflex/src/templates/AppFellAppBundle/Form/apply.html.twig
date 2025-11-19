@@ -391,6 +391,7 @@
                 try {
                     const urlParams = new URLSearchParams(window.location.search);
                     const programParam = urlParams.get('program[]');
+                    const specialtyParam = urlParams.get('specialty[]');
                     
                     if (programParam) {
                         console.log('Found program parameter in URL:', programParam);
@@ -399,15 +400,33 @@
                             inst.val(programParam).trigger('change');
                         }
                     }
+
+                    if (specialtyParam) {
+                        console.log('Found specialty parameter in URL:', specialtyParam);
+                        // Pre-select the global specialty if exists
+                        if (global.length && !global.val()) {
+                            global.val(specialtyParam).trigger('change');
+                        }
+                    }
                 } catch (error) {
                     // Fallback for older browsers
-                    const regex = new RegExp('[?&]program[]=([^&#]*)', 'i');
-                    const results = regex.exec(window.location.search);
-                    if (results && results[1]) {
-                        const programParam = decodeURIComponent(results[1].replace(/\+/g, " "));
+                    const regexProg = new RegExp('[?&]program\[]=([^&#]*)', 'i');
+                    const resultsProg = regexProg.exec(window.location.search);
+                    if (resultsProg && resultsProg[1]) {
+                        const programParam = decodeURIComponent(resultsProg[1].replace(/\+/g, " "));
                         console.log('Found program parameter in URL (fallback):', programParam);
                         if (inst.length && !inst.val()) {
                             inst.val(programParam).trigger('change');
+                        }
+                    }
+
+                    const regexSpec = new RegExp('[?&]specialty\[]=([^&#]*)', 'i');
+                    const resultsSpec = regexSpec.exec(window.location.search);
+                    if (resultsSpec && resultsSpec[1]) {
+                        const specialtyParam = decodeURIComponent(resultsSpec[1].replace(/\+/g, " "));
+                        console.log('Found specialty parameter in URL (fallback):', specialtyParam);
+                        if (global.length && !global.val()) {
+                            global.val(specialtyParam).trigger('change');
                         }
                     }
                 }
@@ -420,6 +439,13 @@
                     // Re-trigger change event to maintain consistency
                     if (inst.val() !== event.state.changedValue) {
                         inst.val(event.state.changedValue).trigger('change');
+                    }
+                }
+
+                if (event.state && event.state.changedParam === 'specialty[]') {
+                    console.log('Popstate: Restoring specialty parameter:', event.state.changedValue);
+                    if (global.val() !== event.state.changedValue) {
+                        global.val(event.state.changedValue).trigger('change');
                     }
                 }
             });
@@ -443,6 +469,10 @@
                 syncingInst = true;
                 var globalId = $(this).val();
                 console.log('globalId changed:', globalId);
+
+                // Update URL with specialty parameter
+                updateUrlParameter('specialty[]', globalId);
+                
                 filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
                 isSyncing = false;
             });
