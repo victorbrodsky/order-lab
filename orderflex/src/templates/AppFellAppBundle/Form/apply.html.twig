@@ -307,7 +307,7 @@
             });
 
             var hashValue = window.location.hash;
-            console.log("hashValue="+hashValue);
+            //console.log("hashValue="+hashValue);
             if( hashValue == '#interviews' ) {
                 //console.log("open panel");
                 $('#interviews').collapse('show');
@@ -484,7 +484,7 @@
                 //async: false,
                 dataType: 'json'
             }).then(function (data) {
-                console.log('Fetched data:', data);
+                //console.log('Fetched data:', data);
 
                 var comboboxEl = $('select.fellapp-globalFellowshipSpecialty');
                 comboboxEl.empty();//.trigger("change");
@@ -493,7 +493,7 @@
                 var newOption = new Option('', '', false, false);
                 comboboxEl.append(newOption);//.trigger('change');
 
-                console.log('Fetched data.length=', data.length);
+                //console.log('Fetched data.length=', data.length);
                 if( data.length > 0 ) {
                     data.forEach(function (item) {
                         var thisEncounterId = item['id'];
@@ -529,7 +529,7 @@
                 //async: false,
                 dataType: 'json'
             }).then(function (data) {
-                console.log('filterInstitutionByGlobal: Fetched data:', data);
+                //console.log('filterInstitutionByGlobal: Fetched data:', data);
 
                 if( data ) {
                     var comboboxEl = $('select.fellapp-institution');
