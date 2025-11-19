@@ -553,10 +553,12 @@ class RecLetterUtil {
         $service = $googlesheetmanagement->getGoogleService();
 
         if( !$service ) {
+            $userServiceUtil = $this->container->get('user_service_utility');
             $event = "importSheetsFromGoogleDriveFolder: Google API service failed!";
-            $logger->warning($event);
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Error');
-            $userSecUtil->sendEmailToSystemEmail($event, $event);
+            $fullMsg = $event . " <br> " . $userServiceUtil->getInstalledSoftware();
+            $logger->warning($fullMsg);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$fullMsg,$systemUser,null,null,'Error');
+            $userSecUtil->sendEmailToSystemEmail($event, $fullMsg);
             return null;
         }
 

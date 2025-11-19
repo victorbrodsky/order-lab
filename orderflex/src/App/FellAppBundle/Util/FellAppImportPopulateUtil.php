@@ -352,12 +352,14 @@ class FellAppImportPopulateUtil {
         $service = $googlesheetmanagement->getGoogleService();
 
         if( !$service ) {
+            $userServiceUtil = $this->container->get('user_service_utility');
             $event = "Google API service failed!";
-            $logger->warning($event);
+            $fullMsg = $event . " <br> " . $userServiceUtil->getInstalledSoftware();
+            $logger->warning($fullMsg);
             if( $testing == false ) {
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Error');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $fullMsg, $systemUser, null, null, 'Error');
             }
-            $this->sendEmailToSystemEmail($event, $event);
+            $this->sendEmailToSystemEmail($event, $fullMsg);
             return null;
         }
 
