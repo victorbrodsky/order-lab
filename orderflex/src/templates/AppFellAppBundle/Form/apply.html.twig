@@ -456,8 +456,25 @@
                 var instId = $(this).val();
                 console.log('Institution changed:', instId);
                 
-                // Update URL with program parameter
-                updateUrlParameter('program[]', instId);
+                // Update URL with program parameter only if specialty[] is NOT present
+                try {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const hasSpecialty = urlParams.get('specialty[]');
+                    if (!hasSpecialty) {
+                        // No specialty in URL; maintain program[]
+                        updateUrlParameter('program[]', instId);
+                    } else {
+                        console.log('specialty[] present in URL; skipping program[] update');
+                    }
+                } catch (e) {
+                    // Fallback: regex check
+                    const hasSpecialty = /[?&]specialty\[]=/i.test(window.location.search);
+                    if (!hasSpecialty) {
+                        updateUrlParameter('program[]', instId);
+                    } else {
+                        console.log('specialty[] present in URL (fallback); skipping program[] update');
+                    }
+                }
                 
                 filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
                 isSyncing = false;
@@ -469,10 +486,9 @@
                 syncingInst = true;
                 var globalId = $(this).val();
                 console.log('globalId changed:', globalId);
-
-                // Update URL with specialty parameter
+                // Replace program[] with specialty[] in URL
+                updateUrlParameter('program[]', null);
                 updateUrlParameter('specialty[]', globalId);
-                
                 filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
                 isSyncing = false;
             });
