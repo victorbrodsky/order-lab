@@ -14,3 +14,10 @@ python -m pip install <package-name>
 python -m pip freeze > requirements.txt
 python -m pip install -r requirements.txt
 deactivate
+
+Scraper required google-chrome
+#Install google-chrome:
+#wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+#sudo dnf localinstall ./google-chrome-stable_current_x86_64.rpm
+#google-chrome --version
+
