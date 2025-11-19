@@ -21,3 +21,4 @@ Scraper required google-chrome
 #sudo dnf localinstall ./google-chrome-stable_current_x86_64.rpm
 #google-chrome --version
 
+#Check selenium: python3 -m pip show selenium

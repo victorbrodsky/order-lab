@@ -32,6 +32,7 @@ import time
 #chmod +x /usr/local/bin/chromedriver
 #chromedriver --version
 
+#Check selenium: python3 -m pip show selenium
 
 
 class WebAutomation:
