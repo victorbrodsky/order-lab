@@ -2147,6 +2147,21 @@ class FellAppController extends OrderAbstractController {
             $cycle = "edit";
         }
 
+        //this user is admin
+        if ($this->isGranted('ROLE_FELLAPP_COORDINATOR') ||
+            $this->isGranted('ROLE_FELLAPP_DIRECTOR') ||
+            $this->isGranted('ROLE_FELLAPP_ADMIN')
+        ) {
+            //show all interviews selector
+            $interviews = $fellapp->getInterviews();
+            return array(
+                'fellapp' => $fellapp,
+                'interviews' => $interviews,
+                'cycle' => $cycle,
+                'sitename' => $this->getParameter('fellapp.sitename')
+            );
+        }
+
         //1) check if this user is an interviewer for this application
         $interviews = $fellappUtil->findInterviewByFellappAndUser($fellapp,$user);
         if( count($interviews) > 0 ) {
@@ -2170,20 +2185,20 @@ class FellAppController extends OrderAbstractController {
             }
 
         } else {
-            //this user is not interviewer for this application
-            if ($this->isGranted('ROLE_FELLAPP_COORDINATOR') ||
-                $this->isGranted('ROLE_FELLAPP_DIRECTOR') ||
-                $this->isGranted('ROLE_FELLAPP_ADMIN')
-            ) {
-                //show all interviews selector
-                $interviews = $fellapp->getInterviews();
-                return array(
-                    'fellapp' => $fellapp,
-                    'interviews' => $interviews,
-                    'cycle' => $cycle,
-                    'sitename' => $this->getParameter('fellapp.sitename')
-                );
-            }
+//            //this user is not interviewer for this application
+//            if ($this->isGranted('ROLE_FELLAPP_COORDINATOR') ||
+//                $this->isGranted('ROLE_FELLAPP_DIRECTOR') ||
+//                $this->isGranted('ROLE_FELLAPP_ADMIN')
+//            ) {
+//                //show all interviews selector
+//                $interviews = $fellapp->getInterviews();
+//                return array(
+//                    'fellapp' => $fellapp,
+//                    'interviews' => $interviews,
+//                    'cycle' => $cycle,
+//                    'sitename' => $this->getParameter('fellapp.sitename')
+//                );
+//            }
         }
 
         return $this->redirect($this->generateUrl('fellapp-nopermission'));
