@@ -354,7 +354,7 @@ class FellAppImportPopulateUtil {
         if( !$service ) {
             $userServiceUtil = $this->container->get('user_service_utility');
             $event = "Google API service failed!";
-            $fullMsg = $event . " <br> " . $userServiceUtil->getInstalledSoftware();
+            $fullMsg = $event . " <br> InstalledSoftware: " . $userServiceUtil->getInstalledSoftware();
             $logger->warning($fullMsg);
             if( $testing == false ) {
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $fullMsg, $systemUser, null, null, 'Error');

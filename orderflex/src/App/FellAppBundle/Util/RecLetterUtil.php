@@ -555,7 +555,7 @@ class RecLetterUtil {
         if( !$service ) {
             $userServiceUtil = $this->container->get('user_service_utility');
             $event = "importSheetsFromGoogleDriveFolder: Google API service failed!";
-            $fullMsg = $event . " <br> " . $userServiceUtil->getInstalledSoftware();
+            $fullMsg = $event . " <br> InstalledSoftware: " . $userServiceUtil->getInstalledSoftware();
             $logger->warning($fullMsg);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$fullMsg,$systemUser,null,null,'Error');
             $userSecUtil->sendEmailToSystemEmail($event, $fullMsg);
