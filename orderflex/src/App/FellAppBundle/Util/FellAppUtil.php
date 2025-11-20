@@ -598,6 +598,16 @@ class FellAppUtil {
         return $institutions;
     }
 
+    //TODO:
+    //Wraper function to get fellowship specialties according to the Server Network Accessibility and Role
+    public function getFellowshipSpecialtyByServer() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $serverRole."" != 'Internet (Hub)' ) {
+            
+        }
+    }
+
 //    public function getInstitutionByGlobalFelltype( $globalFellType ) {
 //
 //    }

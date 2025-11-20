@@ -1666,16 +1666,16 @@ class FellAppController extends OrderAbstractController {
 
         $applicant = $fellowshipApplication->getUser();
         if( !$fellowshipApplication->getFellowshipSubspecialty() && !$fellowshipApplication->getGlobalFellowshipSpecialty() ) {
-            $form['fellowshipSubspecialty']->addError(new FormError('Please select in the Fellowship Type before uploading'));
+            $form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
         }
         if( !$applicant->getEmail() ) {
-            $form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before uploading'));
+            $form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before submitting'));
         }
         if( !$applicant->getFirstName() ) {
-            $form['user']['infos'][0]['firstName']->addError(new FormError('Please fill in the First Name before uploading'));
+            $form['user']['infos'][0]['firstName']->addError(new FormError('Please fill in the First Name before submitting'));
         }
         if( !$applicant->getLastName() ) {
-            $form['user']['infos'][0]['lastName']->addError(new FormError('Please fill in the Last Name before uploading'));
+            $form['user']['infos'][0]['lastName']->addError(new FormError('Please fill in the Last Name before submitting'));
         }
 
         if( $form->isValid() ) {
