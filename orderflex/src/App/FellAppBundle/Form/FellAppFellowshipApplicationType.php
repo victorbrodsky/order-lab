@@ -43,7 +43,7 @@ class FellAppFellowshipApplicationType extends AbstractType
         $builder->add( 'fellowshipsubspecialtytype', EntityType::class, array(
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
             'class' => FellowshipSubspecialty::class,
-            'label'=> "Fellowship Subspecialty:",
+            'label'=> "Fellowship Specialty:",
             'required'=> false,
             //'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
