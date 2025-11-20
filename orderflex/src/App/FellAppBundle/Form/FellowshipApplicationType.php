@@ -336,7 +336,7 @@ class FellowshipApplicationType extends AbstractType
         $builder->add('notes', null, array(
             'required' => false,
             'label' => false, //"Notes and comments",
-            'disabled' => false,
+            //'disabled' => false, //override not working
             'attr' => array('class' => 'textarea form-control')
         ));
 

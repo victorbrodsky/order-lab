@@ -1158,7 +1158,7 @@ class FellAppController extends OrderAbstractController {
 //            $form->add('notes', null, array(
 //                'required' => false,
 //                'label' => false,
-//                //'disabled' => false,
+//                'disabled' => false,
 //                'attr' => array('class' => 'textarea form-control')
 //            ));
 ////        }
