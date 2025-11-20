@@ -63,10 +63,14 @@
             {#{{ acceptingApplication }}#}
         {#</i>#}
         <i>Last successful import:
-            {{ lastImportTimestamp|date('m/d/Y h:i A') }}
-            {{ serverTimeZone }}
-            ({{ time_zone_util.ago(lastImportTimestamp) }})
-            {{ acceptingApplication }}
+            {% if lastImportTimestamp %}
+                {{ lastImportTimestamp|date('m/d/Y h:i A') }}
+                {{ serverTimeZone }}
+                ({{ time_zone_util.ago(lastImportTimestamp) }})
+                {{ acceptingApplication }}
+            {% else %}
+                Unable to retrieve submitted applications when Google connection settings are not configured - {{ acceptingApplication }}
+            {% endif %}
         </i>
     </p>
 
