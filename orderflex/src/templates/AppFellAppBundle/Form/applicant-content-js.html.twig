@@ -41,7 +41,9 @@
         });
 
         //enable notes field
-        $('#oleg_fellappbundle_fellowshipapplication_notes').prop('disabled', false);
+        if ($('#oleg_fellappbundle_fellowshipapplication_notes').length) {
+            $('#oleg_fellappbundle_fellowshipapplication_notes').prop('disabled', false);
+        }
 
         //console.log('cycle0=('+cycle+')');
 
