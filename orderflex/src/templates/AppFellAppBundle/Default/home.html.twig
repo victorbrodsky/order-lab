@@ -69,7 +69,7 @@
                 ({{ time_zone_util.ago(lastImportTimestamp) }})
                 {{ acceptingApplication }}
             {% else %}
-                Unable to retrieve submitted applications when Google connection settings are not configured - {{ acceptingApplication }}
+                Unable to retrieve submitted applications when Google connection settings are not configured {{ acceptingApplication }}
             {% endif %}
         </i>
     </p>
