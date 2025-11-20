@@ -1152,6 +1152,17 @@ class FellAppController extends OrderAbstractController {
             )
         );
 
+//        // Enable notes field on show page while keeping the rest read-only
+////        if ($cycle === 'show') {
+//            echo "enable notes <br>";
+//            $form->add('notes', null, array(
+//                'required' => false,
+//                'label' => false,
+//                //'disabled' => false,
+//                'attr' => array('class' => 'textarea form-control')
+//            ));
+////        }
+
         //clear em, because createUserEditEvent will flush em
         $em = $this->getDoctrine()->getManager();
         $em->clear();
