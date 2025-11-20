@@ -329,61 +329,28 @@
 
             // Enterprise-grade URL parameter management
             function updateUrlParameter(paramName, paramValue) {
-                try {
-                    // Create URLSearchParams object for modern browsers
-                    const urlParams = new URLSearchParams(window.location.search);
-                    
-                    // Handle array-style parameters (e.g., program[]=155)
-                    if (paramValue) {
-                        // Remove existing instances of this parameter
-                        urlParams.delete(paramName);
-                        // Add new value
-                        urlParams.append(paramName, paramValue);
-                    } else {
-                        // Remove parameter if value is empty/null
-                        urlParams.delete(paramName);
+                // Build query manually to preserve square brackets in parameter names
+                const search = window.location.search ? window.location.search.substring(1) : '';
+                const parts = search ? search.split('&').filter(Boolean) : [];
+                const kept = [];
+                for (let i = 0; i < parts.length; i++) {
+                    const part = parts[i];
+                    const eqIdx = part.indexOf('=');
+                    const keyRaw = eqIdx >= 0 ? part.substring(0, eqIdx) : part;
+                    const keyDecoded = decodeURIComponent(keyRaw);
+                    // Drop any existing occurrences of this param (match by decoded name)
+                    if (keyDecoded !== paramName) {
+                        kept.push(part);
                     }
-                    
-                    // Build new URL
-                    const newUrl = window.location.pathname + '?' + urlParams.toString() + window.location.hash;
-
-                    // Update browser history without page reload
-                    history.pushState({ changedParam: paramName, changedValue: paramValue }, '', newUrl);
-                    
-                    console.log('URL updated:', paramName, '=', paramValue, 'New URL:', newUrl);
-                } catch (error) {
-                    // Fallback for older browsers
-                    console.warn('URLSearchParams not supported, using fallback method');
-                    let url = window.location.pathname;
-                    let separator = '?';
-                    
-                    // Remove existing parameter
-                    const regex = new RegExp('([?&])' + paramName + '=[^&]*', 'i');
-                    const existingUrl = window.location.search;
-                    
-                    if (regex.test(existingUrl)) {
-                        url += existingUrl.replace(regex, '');
-                        // Check if we still have parameters
-                        if (url.indexOf('?') > -1) {
-                            separator = '&';
-                        } else {
-                            separator = '?';
-                        }
-                    } else {
-                        url += existingUrl;
-                        separator = existingUrl.indexOf('?') > -1 ? '&' : '?';
-                    }
-                    
-                    // Add new parameter if value exists
-                    if (paramValue) {
-                        url += separator + paramName + '=' + encodeURIComponent(paramValue);
-                    }
-                    
-                    url += window.location.hash;
-                    
-                    history.pushState({ changedParam: paramName, changedValue: paramValue }, '', url);
-                    console.log('URL updated (fallback):', paramName, '=', paramValue, 'New URL:', url);
                 }
+                if (paramValue) {
+                    // Append new pair with unencoded name (so [ ] remain), encode only the value
+                    kept.push(paramName + '=' + encodeURIComponent(paramValue));
+                }
+                const newQuery = kept.join('&');
+                const newUrl = window.location.pathname + (newQuery ? '?' + newQuery : '') + window.location.hash;
+                history.pushState({ changedParam: paramName, changedValue: paramValue }, '', newUrl);
+                console.log('URL updated (manual):', paramName, '=', paramValue, 'New URL:', newUrl);
             }
 
             // Function to initialize URL parameters from existing URL on page load
