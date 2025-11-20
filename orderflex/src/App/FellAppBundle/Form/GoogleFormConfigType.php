@@ -78,7 +78,7 @@ class GoogleFormConfigType extends AbstractType
         $builder->add('fellowshipSubspecialties', EntityType::class, array(
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
             'class' => FellowshipSubspecialty::class,
-            'label' => "Fellowship Application Types".$this->params['fellappTypesListLink'].":",
+            'label' => "Fellowship specialties to display on the public application page for which applications should be accepted".$this->params['fellappTypesListLink'].":",
             'required' => false,
             'multiple' => true,
             'choices' => $this->params['fellTypes'],
