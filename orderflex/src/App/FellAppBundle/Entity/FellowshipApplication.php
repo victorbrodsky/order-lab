@@ -116,6 +116,10 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $signatureDate;
 
+    //Notes and comments
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $notes;
+
     #[ORM\Column(type: 'string', nullable: true)]
     private $interviewScore;
 
@@ -267,7 +271,9 @@ class FellowshipApplication extends BaseUserAttributes {
     private $boardCertifications;
 
     /////////// EOF user objects /////////////
-    
+
+
+
 
     public function __construct($author=null) {
         parent::__construct($author); //use only in $this->setAuthor($author);
@@ -844,6 +850,22 @@ class FellowshipApplication extends BaseUserAttributes {
     }
 
     /**
+     * @return mixed
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param mixed $notes
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+    }
+
+    /**
      * @param mixed $publications
      */
     public function setPublications($publications)
@@ -1004,8 +1026,6 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         $this->rank = $rank;
     }
-
-
 
 
 

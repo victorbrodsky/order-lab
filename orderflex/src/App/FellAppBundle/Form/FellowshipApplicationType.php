@@ -333,6 +333,11 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('notes', null, array(
+            'required' => false,
+            'label' => false, //"Notes and comments",
+            'attr' => array('class' => 'textarea form-control')
+        ));
 
         $builder->add('signatureName', null, array(
             'label' => 'Signature:',

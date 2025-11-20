@@ -186,6 +186,12 @@
 
 <div class="fellapp-application-holder">
 
+    {% if cycle != "download" %}
+        {% if form.notes is defined %}
+            {% include 'AppFellAppBundle/Form/Notes.html.twig' %}
+        {% endif %}
+    {% endif %}
+
     {% include 'AppFellAppBundle/Form/AdminData.html.twig' %}
 
     <!-- Fellowship Type, Training period, Applicant Name -->
