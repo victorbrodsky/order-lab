@@ -3414,10 +3414,41 @@ class FellAppController extends OrderAbstractController {
         return $response;
     }
 
+    #[Route(path: '/set-notes', name: 'fellapp-set-notes', methods: ['POST'], options: ['expose' => true])]
+    public function setNotesAndComments(Request $request): JsonResponse
+    {
+        if (
+            false === $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false === $this->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false === $this->isGranted('ROLE_FELLAPP_INTERVIEWER')
+        ) {
+            return new JsonResponse(['status' => 'error', 'error' => 'Access denied'], Response::HTTP_FORBIDDEN);
+        }
 
-//    public function canonicalize($string)
-//    {
-//        if (null === $string) {
+        $id = $request->request->get('id');
+        $notes = $request->request->get('notes');
+
+        if (!$id) {
+            return new JsonResponse(['status' => 'error', 'error' => 'Missing id'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $repo = $this->getDoctrine()->getRepository(FellowshipApplication::class);
+        $entity = $repo->find($id);
+        if (!$entity) {
+            return new JsonResponse(['status' => 'error', 'error' => 'FellowshipApplication not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        try {
+            $entity->setNotes($notes);
+            $em->persist($entity);
+            $em->flush();
+        } catch (\Exception $e) {
+            return new JsonResponse(['status' => 'error', 'error' => 'Save failed'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return new JsonResponse(['status' => 'ok']);
+    }
 //            return null;
 //        }
 //
@@ -3761,5 +3792,7 @@ class FellAppController extends OrderAbstractController {
         );
 
     }
+
+    
 
 }

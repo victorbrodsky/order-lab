@@ -451,6 +451,46 @@
 
     function saveNotesAndComments() {
         console.log('saveNotesAndComments clicked');
+        var $btn = $('#saveNotesAndComments-button');
+        var fellappId = $('#fellapp_id').val();
+        var notesPanel = $('#notes');
+        var notesVal = notesPanel.find('textarea').first().val();
+
+        if (!fellappId) {
+            alert('Missing application ID.');
+            return;
+        }
+
+        $btn.prop('disabled', true).text('Saving...');
+
+        var url = Routing.generate('fellapp-set-notes');
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            timeout: _ajaxTimeout,
+            data: { id: fellappId, notes: notesVal }
+        }).done(function (data) {
+            // expect JSON {status: 'ok'}
+            if (data && data.status === 'ok') {
+                $btn.text('Saved');
+                setTimeout(function(){
+                    $btn.text('Save notes and comments');
+                }, 1500);
+            } else {
+                alert('Failed to save notes.');
+                $btn.text('Save notes and comments');
+            }
+        }).fail(function (xhr) {
+            var msg = 'Save failed';
+            if (xhr && xhr.responseJSON && xhr.responseJSON.error) {
+                msg += ': ' + xhr.responseJSON.error;
+            }
+            alert(msg);
+            $btn.text('Save notes and comments');
+        }).always(function(){
+            $btn.prop('disabled', false);
+        });
     }
 
 //    function updateFellapp(fellappId) {

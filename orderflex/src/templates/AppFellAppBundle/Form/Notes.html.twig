@@ -37,7 +37,9 @@
             </div>
 
             {# Custom button that won't submit the form #}
-            <button type="button" id="saveNotesAndComments" onclick="saveNotesAndComments()">Save notes and comments</button>
+            {% if cycle == "edit" or cycle == "show" %}
+                <button type="button" id="saveNotesAndComments-button" onclick="saveNotesAndComments()">Save notes and comments</button>
+            {% endif %}
 
         </div> <!-- panel-body -->
     </div> <!-- panel-collapse -->
