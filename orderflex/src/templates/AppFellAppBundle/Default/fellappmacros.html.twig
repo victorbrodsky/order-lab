@@ -413,11 +413,11 @@
                 <strong>Notes and comments</strong>
             </div>
             <div class="panel-body">
-                <div class="well">
+                {#<div class="well">#}
                     <textarea class="form-control fellapp-notes-textarea" rows="4">{{ fellapp.notes }}</textarea>
-                </div>
-                <button type="button"
-                        class="btn btn-default btn-sm fellapp-notes-save-btn"
+                {#</div>#}
+                <button type="button" style="margin-top: 10px;"
+                        class="btn btn-default btn-sm fellapp-notes-save-btn center-block"
                         onclick="saveNotesAndComments(this, {{ fellapp.id }})">
                     Save notes and comments
                 </button>

@@ -3450,6 +3450,8 @@ class FellAppController extends OrderAbstractController {
             return new JsonResponse(['status' => 'error', 'error' => 'FellowshipApplication not found'], Response::HTTP_NOT_FOUND);
         }
 
+        $originalNote = $entity->getNotes();
+
         try {
             $entity->setNotes($notes);
             $em->persist($entity);
@@ -3457,6 +3459,14 @@ class FellAppController extends OrderAbstractController {
         } catch (\Exception $e) {
             return new JsonResponse(['status' => 'error', 'error' => 'Save failed'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        //EventLog
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->getUser();
+        $event = "Notes and Comments has been saved for Fellowship Application with ID".$id." provided by ".$user.".";
+        $event = $event . "<br>" . "original value: [".$originalNote."];<br> new value: [" . $entity->getNotes() . "]";
+        $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Save notes and comments');
+
 
         return new JsonResponse(['status' => 'ok']);
     }
