@@ -407,8 +407,22 @@
             {{ render(controller('App\\FellAppBundle\\Controller\\FellAppApplicantController::intervieweScoreRankAction', { 'id': fellapp.id })) }}
         </p>
 
-        {# add Notes and comments #}
-        Notes and comments: {{ fellapp.notes }}
+        {# add Notes and comments (editable with AJAX save) #}
+        <div class="panel panel-default fellapp-notes-panel">
+            <div class="panel-heading">
+                <strong>Notes and comments</strong>
+            </div>
+            <div class="panel-body">
+                <div class="well">
+                    <textarea class="form-control fellapp-notes-textarea" rows="4">{{ fellapp.notes }}</textarea>
+                </div>
+                <button type="button"
+                        class="btn btn-default btn-sm fellapp-notes-save-btn"
+                        onclick="saveNotesAndComments(this)">
+                    Save notes and comments
+                </button>
+            </div>
+        </div>
 
     {% endif %}
 

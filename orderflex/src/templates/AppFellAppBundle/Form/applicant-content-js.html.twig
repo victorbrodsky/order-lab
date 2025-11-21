@@ -453,12 +453,28 @@
         
     }
 
-    function saveNotesAndComments() {
+    function saveNotesAndComments(btn) {
         console.log('saveNotesAndComments clicked');
-        var $btn = $('#saveNotesAndComments-button');
+
         var fellappId = $('#fellapp_id').val();
-        var notesPanel = $('#notes');
-        var notesVal = notesPanel.find('textarea').first().val();
+        var $btn;
+        var notesVal;
+
+        // Prefer context from passed-in button (used by applicantInterviewsInfo macro)
+        if (btn) {
+            $btn = $(btn);
+            var $panel = $btn.closest('.fellapp-notes-panel');
+            if ($panel.length) {
+                notesVal = $panel.find('.fellapp-notes-textarea').first().val();
+            }
+        }
+
+        // Fallback to legacy selectors used on the main Notes tab
+        if (!notesVal) {
+            $btn = $('#saveNotesAndComments-button');
+            var notesPanel = $('#notes');
+            notesVal = notesPanel.find('textarea').first().val();
+        }
 
         if (!fellappId) {
             alert('Missing application ID.');

@@ -334,18 +334,25 @@ class FellowshipApplicationType extends AbstractType
         ));
 
         //show notes only on regular form, not apply
-        if(
+        if( array_key_exists('container', $this->params) && (
+                $this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_FELLAPP_COORDINATOR') ||
+                $this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_FELLAPP_DIRECTOR') ||
+                $this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_FELLAPP_INTERVIEWER')
+            )
+        ) {
+            if (
             !(
                 ($this->params && $this->params['routeName'] == 'fellapp_apply')
                 || $this->params['routeName'] == 'fellapp_apply_post'
             )
-        ) {
-            $builder->add('notes', null, array(
-                'required' => false,
-                'label' => false, //"Notes and comments",
-                //'disabled' => false, //override not working
-                'attr' => array('class' => 'textarea form-control')
-            ));
+            ) {
+                $builder->add('notes', null, array(
+                    'required' => false,
+                    'label' => false, //"Notes and comments",
+                    //'disabled' => false, //override not working
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+            }
         }
 
         $builder->add('signatureName', null, array(
