@@ -1,7 +1,11 @@
-function saveNotesAndComments(btn) {
+function saveNotesAndComments(btn, fellappId) {
     console.log('saveNotesAndComments clicked');
 
-    var fellappId = $('#fellapp_id').val();
+    // If fellappId is not passed explicitly (e.g. from modal), try to read it from the form
+    if (!fellappId) {
+        fellappId = $('#fellapp_id').val();
+    }
+
     var $btn;
     var notesVal;
 
