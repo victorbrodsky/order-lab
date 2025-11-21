@@ -6,13 +6,17 @@ function saveNotesAndComments(btn, fellappId) {
         fellappId = $('#fellapp_id').val();
     }
 
-    var $btn;
+    var btn;
     var notesVal;
+
+    // if (!btn || !btn.length) {
+    //     btn = $('#saveNotesAndComments-button');
+    // }
 
     // Prefer context from passed-in button (used by applicantInterviewsInfo macro)
     if (btn) {
-        $btn = $(btn);
-        var $panel = $btn.closest('.fellapp-notes-panel');
+        btn = $(btn);
+        var $panel = btn.closest('.fellapp-notes-panel');
         if ($panel.length) {
             notesVal = $panel.find('.fellapp-notes-textarea').first().val();
         }
@@ -20,7 +24,7 @@ function saveNotesAndComments(btn, fellappId) {
 
     // Fallback to legacy selectors used on the main Notes tab
     if (!notesVal) {
-        $btn = $('#saveNotesAndComments-button');
+        //btn = $('#saveNotesAndComments-button');
         var notesPanel = $('#notes');
         notesVal = notesPanel.find('textarea').first().val();
     }
@@ -30,12 +34,12 @@ function saveNotesAndComments(btn, fellappId) {
         return;
     }
 
-    if (!$btn || !$btn.length) {
+    if (!btn || !btn.length) {
         alert('Save button not found.');
         return;
     }
 
-    $btn.prop('disabled', true).text('Saving...');
+    btn.prop('disabled', true).text('Saving...');
 
     var url = Routing.generate('fellapp-set-notes');
 
@@ -47,13 +51,13 @@ function saveNotesAndComments(btn, fellappId) {
     }).done(function (data) {
         // expect JSON {status: 'ok'}
         if (data && data.status === 'ok') {
-            $btn.text('Saved');
+            btn.text('Saved');
             setTimeout(function(){
-                $btn.text('Save notes and comments');
+                btn.text('Save notes and comments');
             }, 1500);
         } else {
             alert('Failed to save notes.');
-            $btn.text('Save notes and comments');
+            btn.text('Save notes and comments');
         }
     }).fail(function (xhr) {
         var msg = 'Save failed';
@@ -61,8 +65,8 @@ function saveNotesAndComments(btn, fellappId) {
             msg += ': ' + xhr.responseJSON.error;
         }
         alert(msg);
-        $btn.text('Save notes and comments');
+        btn.text('Save notes and comments');
     }).always(function(){
-        $btn.prop('disabled', false);
+        btn.prop('disabled', false);
     });
 }
