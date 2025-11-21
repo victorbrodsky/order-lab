@@ -825,6 +825,10 @@
                             {#</a>#}
                             {#<div id="#interview-info-{{entity.id}}"></div>#}
 
+                        {% else %}
+                            <div class="btn btn-sm btn-interview-info-modal" type="button" style="padding:0px;" data-id="{{ entity.id }}">
+                                <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" title="Save notes and comments"></span>
+                            </div>
                         {% endif %}
                             </div>
                         </div>
