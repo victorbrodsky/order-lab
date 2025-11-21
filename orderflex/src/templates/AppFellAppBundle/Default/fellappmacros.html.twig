@@ -224,8 +224,6 @@
                 {{ fellappmacros.interviewsDetails(fellapp,false) }}
               
           </div>
-{#          <div class="modal-footer">            #}
-{#          </div>#}
         </div>
       </div>
     </div>
@@ -405,11 +403,12 @@
             </p>
         {% endif %}
 
-
         <p>
-            {#<div class="interview-score-rank">Calculating score rank...</div>#}
             {{ render(controller('App\\FellAppBundle\\Controller\\FellAppApplicantController::intervieweScoreRankAction', { 'id': fellapp.id })) }}
         </p>
+
+        {#add Notes and comments#}
+        Notes and comments: {{ fellapp.notes }}
 
     {% endif %}
 

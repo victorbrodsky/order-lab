@@ -95,7 +95,7 @@ class FellAppApplicantController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
 
         //echo "invite interviewers to rate <br>";
-        //exit();
+        //exit('intervieweScoreRankAction');
         $res = "";
 
         //$logger = $this->container->get('logger');
@@ -116,13 +116,13 @@ class FellAppApplicantController extends OrderAbstractController {
         }
 
         $fellappType = $entity->getFellowshipSubspecialty();
+        $fellappGlobalType = $entity->getGlobalFellowshipSpecialty();
 
         //$startDate = $entity->getStartDate();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
         //$startDateStr = $transformer->transform($startDate);
 
 //        $applicants = $em->getRepository('AppFellAppBundle:FellowshipApplication')->find($id);
-        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $repository = $em->getRepository(FellowshipApplication::class);
         $dql = $repository->createQueryBuilder("fellapp");
         //TODO: optimize this by a single query without foreach loop
@@ -134,7 +134,13 @@ class FellAppApplicantController extends OrderAbstractController {
         $dql->select('fellapp');
         $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
 
-        $dql->where("fellowshipSubspecialty.id = " . $fellappType->getId() );
+
+        if( $fellappType ) {
+            $dql->where("fellowshipSubspecialty.id = " . $fellappType->getId());
+        }
+        if( $fellappGlobalType ) {
+            $dql->where("globalFellowshipSpecialty.id = " . $fellappGlobalType->getId());
+        }
 
         $startDate = $entity->getStartDate();
         $startDateStr = $startDate->format('Y');
