@@ -1781,8 +1781,15 @@ class ReportGenerator {
         $currentDate = new \DateTime();
         $subjectUser = $entity->getUser();
 
-        if( $entity->getFellowshipSubspecialty() ) {
-            $fellappType = $entity->getFellowshipSubspecialty()->getName();
+//        if( $entity->getFellowshipSubspecialty() ) {
+//            $fellappType = $entity->getFellowshipSubspecialty()->getName();
+//        } else {
+//            $fellappType = "Unknown";
+//            $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());
+//        }
+
+        if( $entity->getFellowshipSpecialtyByServer() ) {
+            $fellappType = $entity->getFellowshipSpecialtyByServer()->getName();
         } else {
             $fellappType = "Unknown";
             $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());
