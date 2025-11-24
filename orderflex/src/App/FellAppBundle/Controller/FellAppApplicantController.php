@@ -190,6 +190,10 @@ class FellAppApplicantController extends OrderAbstractController {
                 $rankStr = $rank."rd";
             }
 
+            if( !$fellappType ) {
+                $fellappType = $fellappGlobalType;
+            }
+
             $res = "Interview Score (lower is better): ".
                 $entity->getInterviewScore().
                 " (".$rankStr." best of ".count($applicantions).

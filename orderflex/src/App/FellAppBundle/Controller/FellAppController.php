@@ -1240,6 +1240,34 @@ class FellAppController extends OrderAbstractController {
         $form = $this->createFellAppEditForm($entity,$cycle);
         $form->handleRequest($request);
 
+        if( $form->isSubmitted() ) {
+            if( $form->has('fellowshipSubspecialty') ) {
+                $formValue = $form->get('fellowshipSubspecialty')->getData();
+                //echo "fellowshipSubspecialty formValue=".$formValue."<br>";
+                if( !$formValue ) {
+                    //$form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
+                    $this->addFlash(
+                        'warning',
+                        'Please select the fellowship specialty before submitting'
+                    );
+                    //exit('edit: form submitted: error fellowshipSubspecialty');
+                }
+            }
+            if( $form->has('globalFellowshipSpecialty') ) {
+                if( !$form->get('globalFellowshipSpecialty')->getData() ) {
+                    //$form['globalFellowshipSpecialty']->addError(new FormError('Please select the global fellowship specialty before submitting'));
+                    $this->addFlash(
+                        'warning',
+                        'Please select the global fellowship specialty before submitting'
+                    );
+                    //exit('edit: form submitted: error globalFellowshipSpecialty');
+                }
+            }
+            //echo "fellowshipSubspecialty=".$entity->getFellowshipSubspecialty()."<br>";
+            //echo "globalFellowshipSpecialty=".$entity->getGlobalFellowshipSpecialty()."<br>";
+            //exit('edit: form submitted');
+        }
+
         if ($form->isSubmitted() && $form->isValid() ) {
 
             ////// set status edit GET POST application//////
@@ -1676,8 +1704,11 @@ class FellAppController extends OrderAbstractController {
         }
 
         $applicant = $fellowshipApplication->getUser();
-        if( !$fellowshipApplication->getFellowshipSubspecialty() && !$fellowshipApplication->getGlobalFellowshipSpecialty() ) {
+        if( !$fellowshipApplication->getFellowshipSubspecialty() && $form->has('fellowshipSubspecialty') ) {
             $form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
+        }
+        if( !$fellowshipApplication->getGlobalFellowshipSpecialty() && $form->has('globalFellowshipSpecialty') ) {
+            $form['globalFellowshipSpecialty']->addError(new FormError('Please select the global fellowship specialty before submitting'));
         }
         if( !$applicant->getEmail() ) {
             $form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before submitting'));

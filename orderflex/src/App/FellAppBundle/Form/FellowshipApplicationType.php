@@ -44,6 +44,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 
 class FellowshipApplicationType extends AbstractType
@@ -105,8 +106,10 @@ class FellowshipApplicationType extends AbstractType
                 //'required' => true,
                 'required' => false,
                 'choices' => $fellappChoices,   //$this->params['fellappTypes'], //$fellTypes,
-                'invalid_message' => 'fellowshipSubspecialty invalid value',
-                //'choices_as_values' => true,
+                //'invalid_message' => 'fellowshipSubspecialty invalid value',
+                'constraints' => [
+                    new NotBlank(['message' => 'Please select the fellowship specialty before submitting']),
+                ],
                 'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
             ));
         }
@@ -124,7 +127,10 @@ class FellowshipApplicationType extends AbstractType
                 //'choice_label' => "getNameInstitution",
                 'required' => false,
                 'choices' => $globalFellappTypes,
-                'invalid_message' => 'globalFellowshipSpecialty invalid value',
+                //'invalid_message' => 'globalFellowshipSpecialty invalid value',
+                'constraints' => [
+                    new NotBlank(['message' => 'Please select the global fellowship specialty before submitting']),
+                ],
                 'data' => $this->params['programSpecialty'],
                 'attr' => array(
                     'class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty',

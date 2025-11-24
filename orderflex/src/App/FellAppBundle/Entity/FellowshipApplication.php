@@ -484,6 +484,9 @@ class FellowshipApplication extends BaseUserAttributes {
     public function setFellowshipSubspecialty($fellowshipSubspecialty)
     {
         $this->fellowshipSubspecialty = $fellowshipSubspecialty;
+//        if( !$fellowshipSubspecialty ) {
+//            $this->fellowshipSubspecialty = $fellowshipSubspecialty;
+//        }
     }
 
     /**
@@ -491,13 +494,13 @@ class FellowshipApplication extends BaseUserAttributes {
      */
     public function getFellowshipSubspecialty()
     {
-        //return $this->fellowshipSubspecialty;
+        return $this->fellowshipSubspecialty;
 
-        $fellappType = $this->fellowshipSubspecialty;
-        if( !$fellappType ) {
-            $fellappType = $this->getGlobalFellowshipSpecialty();
-        }
-        return $fellappType;
+//        $fellappType = $this->fellowshipSubspecialty;
+//        if( !$fellappType ) {
+//            $fellappType = $this->getGlobalFellowshipSpecialty();
+//        }
+//        return $fellappType;
     }
 
     /**
@@ -514,6 +517,9 @@ class FellowshipApplication extends BaseUserAttributes {
     public function setGlobalFellowshipSpecialty($globalFellowshipSpecialty)
     {
         $this->globalFellowshipSpecialty = $globalFellowshipSpecialty;
+//        if( !$globalFellowshipSpecialty ) {
+//            $this->globalFellowshipSpecialty = $globalFellowshipSpecialty;
+//        }
     }
 
 
