@@ -39,7 +39,8 @@
                 <div class="row">
                     <div class="col-xs-6">
                         <br>
-                        {% if form.fellowshipSubspecialty is defined and form.fellowshipSubspecialty %}
+                        {#{% if form.fellowshipSubspecialty is defined and form.fellowshipSubspecialty %}#}
+                        {% if form.fellowshipSubspecialty is defined %}
                             {#form.fellowshipSubspecialty={{ form.fellowshipSubspecialty.vars.value }}#}
                             {{ form_row(form.fellowshipSubspecialty) }}
                         {% endif %}

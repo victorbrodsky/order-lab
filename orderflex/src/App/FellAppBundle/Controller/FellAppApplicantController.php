@@ -133,8 +133,8 @@ class FellAppApplicantController extends OrderAbstractController {
         //$dql->select('((SELECT COUNT(1) AS num FROM stats  WHERE stats.marks  > s.marks ) + 1)  AS rank');
         $dql->select('fellapp');
         $dql->leftJoin("fellapp.fellowshipSubspecialty", "fellowshipSubspecialty");
-
-
+        $dql->leftJoin("fellapp.globalFellowshipSpecialty", "globalFellowshipSpecialty");
+        
         if( $fellappType ) {
             $dql->where("fellowshipSubspecialty.id = " . $fellappType->getId());
         }

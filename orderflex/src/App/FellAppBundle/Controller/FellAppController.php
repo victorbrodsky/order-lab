@@ -1629,6 +1629,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();
         $user = $this->getUser();
@@ -1660,7 +1661,25 @@ class FellAppController extends OrderAbstractController {
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
 
         //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        $fellTypes = $fellappUtil->getValidFellowshipTypes(true);
+        //$fellTypes = $fellappUtil->getValidFellowshipTypes(true);
+
+        //$fellTypes = $fellappUtil->getValidFellowshipTypes($asEntities=true);
+        //$globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false);
+        $fellTypes = array();
+        $globalFellTypes = array();
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        //echo '$serverRole='.$serverRole.'<br>';
+        if( $serverRole."" != 'Internet (Hub)' ) {
+            //$fellowshipTypes = $fellappUtil->getFellowshipTypesByUser($user);
+            $fellTypes = $fellappUtil->getValidFellowshipTypes($asEntities=true);
+            //echo "fellowshipTypes count=".count($fellTypes)."<br>";
+        } else {
+            //$globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution(null, 'id-text'); //return as array
+            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false);
+            //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
+        }
+        echo "createApplicantAction: fellowshipTypes count=".count($fellTypes)."<br>";
+        echo "createApplicantAction: globalFellTypes count=".count($globalFellTypes)."<br>";
 
         $params = array(
             'cycle' => 'new',
@@ -1670,7 +1689,8 @@ class FellAppController extends OrderAbstractController {
             'roles' => $user->getRoles(),
             'container' => $this->container,
             'fellappTypes' => $fellTypes, //FellowshipSubspecialty::class new
-            'fellappVisas' => $fellappVisas,
+            'globalFellappTypes' => $globalFellTypes,
+            'fellappVisas' => $fellappVisas
             //'security' => $security
         );
         //$form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );

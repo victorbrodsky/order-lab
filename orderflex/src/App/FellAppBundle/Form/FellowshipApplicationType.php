@@ -98,7 +98,9 @@ class FellowshipApplicationType extends AbstractType
             $this->params['programSpecialty'] = null;
         }
 
+        //echo "form: fellowshipSubspecialty count=".count($fellappChoices)."<br>";
         if( $fellappChoices && count($fellappChoices) > 0 ) {
+            //echo "before add fellowshipSubspecialty <br>";
             $builder->add('fellowshipSubspecialty', EntityType::class, array(
                 'class' => FellowshipSubspecialty::class,
                 'label' => "Fellowship Application Type:",
@@ -116,9 +118,11 @@ class FellowshipApplicationType extends AbstractType
 //        dump($globalFellappTypes);
 //        dump($fellappChoices);
 //        exit('111');
+        //echo "form: globalFellowshipSpecialty count=".count($globalFellappTypes)."<br>";
         if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
             //dump($globalFellappTypes);
             //exit('111');
+            //echo "before add globalFellowshipSpecialty <br>";
             //echo "before add globalFellappTypes this->params['programSpecialty']=".$this->params['programSpecialty']->getId()."<br>";
             $builder->add('globalFellowshipSpecialty', EntityType::class, array(
                 'class' => GlobalFellowshipSpecialty::class,
