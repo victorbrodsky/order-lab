@@ -1777,6 +1777,7 @@ class ReportGenerator {
 
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
+        $fellappUtil = $this->container->get('fellapp_util');
 
         $currentDate = new \DateTime();
         $subjectUser = $entity->getUser();
@@ -1788,8 +1789,8 @@ class ReportGenerator {
 //            $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());
 //        }
 
-        if( $entity->getFellowshipSpecialtyByServer() ) {
-            $fellappType = $entity->getFellowshipSpecialtyByServer()->getName();
+        if( $fellappUtil->getFellowshipSpecialtyByServer($entity) ) {
+            $fellappType = $fellappUtil->getFellowshipSpecialtyByServer($entity)->getName($entity);
         } else {
             $fellappType = "Unknown";
             $logger->warning("Unknown fellowship type for fellapp id=".$entity->getId());

@@ -601,6 +601,9 @@ class FellAppUtil {
     //TODO: replace getFellowshipSubspecialty and getGlobalFellowshipSpecialty where it is possible.
     //Wrapper function to get fellowship specialties according to the Server Network Accessibility and Role
     public function getFellowshipSpecialtyByServer( $fellapp ) {
+        if( !$fellapp ) {
+            return null;
+        }
         $userSecUtil = $this->container->get('user_security_utility');
         $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
         if( $serverRole."" != 'Internet (Hub)' ) {
