@@ -901,7 +901,7 @@ class FellAppController extends OrderAbstractController {
 //            }
 //        }
 
-        $args = $this->getShowParameters($routeName,$entity); //edit
+        $args = $this->getShowParameters($routeName,$entity); //edit, show
 
         if( $routeName == 'fellapp_download' ) {
             return $this->render('AppFellAppBundle/Form/download.html.twig', $args);
@@ -1018,6 +1018,9 @@ class FellAppController extends OrderAbstractController {
             $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
             //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
         }
+
+        //echo "getFellowshipSubspecialty=".$entity->getFellowshipSubspecialty()."<br>";
+        //echo "getGlobalFellowshipSpecialty=".$entity->getGlobalFellowshipSpecialty()."<br>";
 
         $fellappVisas = $fellappUtil->getFellowshipVisaStatuses(false,false);
         //var_dump($fellappVisas);
@@ -1179,7 +1182,6 @@ class FellAppController extends OrderAbstractController {
         );
     }
 
-
     /**
      * Separate edit/update controller action to insure csrf token is valid
      * Displays a form to edit an existing fellapp entity.
@@ -1245,7 +1247,7 @@ class FellAppController extends OrderAbstractController {
                 $formValue = $form->get('fellowshipSubspecialty')->getData();
                 //echo "fellowshipSubspecialty formValue=".$formValue."<br>";
                 if( !$formValue ) {
-                    //$form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
+                    $form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
                     $this->addFlash(
                         'warning',
                         'Please select the fellowship specialty before submitting'
@@ -1255,7 +1257,7 @@ class FellAppController extends OrderAbstractController {
             }
             if( $form->has('globalFellowshipSpecialty') ) {
                 if( !$form->get('globalFellowshipSpecialty')->getData() ) {
-                    //$form['globalFellowshipSpecialty']->addError(new FormError('Please select the global fellowship specialty before submitting'));
+                    $form['globalFellowshipSpecialty']->addError(new FormError('Please select the global fellowship specialty before submitting'));
                     $this->addFlash(
                         'warning',
                         'Please select the global fellowship specialty before submitting'
@@ -1263,9 +1265,6 @@ class FellAppController extends OrderAbstractController {
                     //exit('edit: form submitted: error globalFellowshipSpecialty');
                 }
             }
-            //echo "fellowshipSubspecialty=".$entity->getFellowshipSubspecialty()."<br>";
-            //echo "globalFellowshipSpecialty=".$entity->getGlobalFellowshipSpecialty()."<br>";
-            //exit('edit: form submitted');
         }
 
         if ($form->isSubmitted() && $form->isValid() ) {
@@ -1398,28 +1397,22 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect($this->generateUrl('fellapp_simple_confirmation',array('id' => $id)));
 
         } else {
-//            if( !$form->isSubmitted() ){
-//                echo "form is not submitted<br>";
-//            }
-//            if( !$form->isValid() ){
-//                echo "form is not valid<br>";
-//            }
 
             if( $routeName == "fellapp_edit_default_interviewers" ) {
                 $this->addFlash(
                     'pnotify',
                     "Important Note: Please manually review added default interviewers in the 'Interviews' section and click 'Update' button to save the changes!"
                 );
+
+                //event log
+                //$em = $this->getDoctrine()->getManager();
+                $actionStr = "viewed on edit page after adding default interviewers";
+                $eventType = 'Fellowship Application Page Viewed';
+                //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+                $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
+
+                $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
             }
-
-            //event log
-            $em = $this->getDoctrine()->getManager();
-            $actionStr = "viewed on edit page";
-            $eventType = 'Fellowship Application Page Viewed';
-            //$user = $em->getRepository('AppUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
-            $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
-
-            $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         }
 
         return array(
@@ -1704,12 +1697,18 @@ class FellAppController extends OrderAbstractController {
         }
 
         $applicant = $fellowshipApplication->getUser();
-        if( !$fellowshipApplication->getFellowshipSubspecialty() && $form->has('fellowshipSubspecialty') ) {
-            $form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
-        }
-        if( !$fellowshipApplication->getGlobalFellowshipSpecialty() && $form->has('globalFellowshipSpecialty') ) {
-            $form['globalFellowshipSpecialty']->addError(new FormError('Please select the global fellowship specialty before submitting'));
-        }
+//        if( !$fellowshipApplication->getFellowshipSubspecialty() ) {
+//            $form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
+//        }
+//        if( !$fellowshipApplication->getFellowshipSubspecialty() && !$fellowshipApplication->getGlobalFellowshipSpecialty() ) {
+//            $form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
+//        }
+//        if( !$fellowshipApplication->getFellowshipSubspecialty() && $form->has('fellowshipSubspecialty') ) {
+//            $form['fellowshipSubspecialty']->addError(new FormError('Please select the fellowship specialty before submitting'));
+//        }
+//        if( !$fellowshipApplication->getGlobalFellowshipSpecialty() && $form->has('globalFellowshipSpecialty') ) {
+//            $form['globalFellowshipSpecialty']->addError(new FormError('Please select the global fellowship specialty before submitting'));
+//        }
         if( !$applicant->getEmail() ) {
             $form['user']['infos'][0]['email']->addError(new FormError('Please fill in the email before submitting'));
         }

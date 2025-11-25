@@ -611,6 +611,15 @@ class FellAppUtil {
         return $fellowshipSpecialty;
     }
 
+    public function isHubServer() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $serverRole."" === 'Internet (Hub)' ) {
+            return true;
+        }
+        return false;
+    }
+
 //    public function getInstitutionByGlobalFelltype( $globalFellType ) {
 //
 //    }

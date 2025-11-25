@@ -662,13 +662,16 @@
                     {% endif %}
 
                     <td>
-                        {% if serverRole != 'Internet (Hub)' %}
-                            {% if entity.fellowshipSubspecialty %}
-                                {{  entity.fellowshipSubspecialty.name }}
+                        {#serverRole={{ serverRole }}#}
+                        {% if serverRole == 'Internet (Hub)' %}
+                            {% if entity.globalFellowshipSpecialty %}
+                                {#globalFellowshipSpecialty#}
+                                {{  entity.globalFellowshipSpecialty.name }}
                             {% endif %}
                         {% else %}
-                            {% if entity.globalFellowshipSpecialty %}
-                                {{  entity.globalFellowshipSpecialty.name }}
+                            {#fellowshipSubspecialty#}
+                            {% if entity.fellowshipSubspecialty %}
+                                {{  entity.fellowshipSubspecialty.name }}
                             {% endif %}
                         {% endif %}
                     </td>

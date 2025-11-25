@@ -40,11 +40,13 @@
                     <div class="col-xs-6">
                         <br>
                         {% if form.fellowshipSubspecialty is defined and form.fellowshipSubspecialty %}
+                            {#form.fellowshipSubspecialty={{ form.fellowshipSubspecialty.vars.value }}#}
                             {{ form_row(form.fellowshipSubspecialty) }}
                         {% endif %}
                         {#form.globalFellowshipSpecialty|length={{ form.globalFellowshipSpecialty|length }}#}
                         {#{% if form.globalFellowshipSpecialty is defined and form.globalFellowshipSpecialty and form.globalFellowshipSpecialty|length > 0 %}#}
                         {% if form.globalFellowshipSpecialty is defined %}
+                            {#form.globalFellowshipSpecialty={{ form.globalFellowshipSpecialty.vars.value }}#}
                             {{ form_row(form.globalFellowshipSpecialty) }}
                         {% endif %}
                     </div>

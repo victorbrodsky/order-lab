@@ -100,16 +100,15 @@ class FellowshipApplicationType extends AbstractType
 
         if( $fellappChoices && count($fellappChoices) > 0 ) {
             $builder->add('fellowshipSubspecialty', EntityType::class, array(
-                //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
                 'class' => FellowshipSubspecialty::class,
                 'label' => "Fellowship Application Type:",
                 //'required' => true,
                 'required' => false,
                 'choices' => $fellappChoices,   //$this->params['fellappTypes'], //$fellTypes,
                 //'invalid_message' => 'fellowshipSubspecialty invalid value',
-                'constraints' => [
-                    new NotBlank(['message' => 'Please select the fellowship specialty before submitting']),
-                ],
+//                'constraints' => [
+//                    new NotBlank(['message' => 'Please select the fellowship specialty before submitting']),
+//                ],
                 'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
             ));
         }
@@ -128,10 +127,10 @@ class FellowshipApplicationType extends AbstractType
                 'required' => false,
                 'choices' => $globalFellappTypes,
                 //'invalid_message' => 'globalFellowshipSpecialty invalid value',
-                'constraints' => [
-                    new NotBlank(['message' => 'Please select the global fellowship specialty before submitting']),
-                ],
-                'data' => $this->params['programSpecialty'],
+//                'constraints' => [
+//                    new NotBlank(['message' => 'Please select the global fellowship specialty before submitting']),
+//                ],
+                //'data' => $this->params['programSpecialty'],
                 'attr' => array(
                     'class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty',
                 ),
