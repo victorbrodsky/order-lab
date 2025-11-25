@@ -5964,7 +5964,9 @@ class AdminController extends OrderAbstractController
         ////// 2) get WashU pathology //////
         $washU = $em->getRepository(Institution::class)->findOneByAbbreviation("WashU");
         if( !$washU ) {
-            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU"');
+            //exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU"');
+            echo 'generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU" <br>';
+            return $count;
         }
         $mapper = array(
             'prefix' => 'App',
