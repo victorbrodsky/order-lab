@@ -242,6 +242,22 @@
                     </div>
                     &nbsp;&nbsp;
 
+                    {#priorityinterviewee#}
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.priorityinterviewee) }}   {{ form_label(fellappfilter.priorityinterviewee) }}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[priorityinterviewee]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                        {{ priorityinterviewee }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[priorityinterviewee]':1,'filter[filter]':filter}) }}">{{ priorityintervieweeTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('priorityinterviewee') }}
+                    </div>
+                    &nbsp;&nbsp;
+
                     <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.complete) }}   {{ form_label(fellappfilter.complete) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, complete, completeTotal, 'complete' ) }}#}
@@ -537,6 +553,11 @@
                 {% if entity.appStatus.name == 'priority' %}
                     {#{% set trclassname = "order-onhold-status" %}#}
                     {% set trclassname = "fell-app-status-legend-priority" %}
+                {% endif %}
+
+                {% if entity.appStatus.name == 'priorityinterviewee' %}
+                    {#{% set trclassname = "order-onhold-status" %}#}
+                    {% set trclassname = "fell-app-status-legend-priorityinterviewee" %}
                 {% endif %}
 
                 {% if entity.appStatus.name == 'accepted' %}
@@ -1002,6 +1023,16 @@
                                                         general-data-confirm="Are you sure you want to mark this Application as Priority?"
                                                         general-data-callback="refreshpage"
                                                         href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priority' }, true) }}">Mark as Priority
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus.name != 'priorityinterviewee' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to mark this Application as Priority Interviewee?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priorityinterviewee' }, true) }}">Mark as Priority Interviewee
                                                 </a>
                                             </li>
                                         {% endif %}

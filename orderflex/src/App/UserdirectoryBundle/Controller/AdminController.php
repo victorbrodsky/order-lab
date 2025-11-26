@@ -6600,6 +6600,7 @@ class AdminController extends OrderAbstractController
             'reject'=>'Rejected',
             'hide'=>'Hidden',
             'priority'=>'Priority',
+            'priorityinterviewee'=>'Priority Interviewee',
             'archive'=>'Archived',
             'accepted'=>'Accepted',
             'declined'=>'Declined',

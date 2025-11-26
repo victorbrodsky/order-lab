@@ -1650,6 +1650,9 @@ class FellowshipApplication extends BaseUserAttributes {
             if( $fellAppStatusEntity->getName() == 'interviewee' ) {
                 return true;
             }
+            if( $fellAppStatusEntity->getName() == 'priorityinterviewee' ) {
+                return true;
+            }
         }
 
         // (b) does not have any interview feedback

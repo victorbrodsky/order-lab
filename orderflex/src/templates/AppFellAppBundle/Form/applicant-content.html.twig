@@ -53,6 +53,9 @@
         {% if entity.appStatus.name == 'priority' %}
             {% set trclassname = "alert alert-success" %}
         {% endif %}
+        {% if entity.appStatus.name == 'priorityinterviewee' %}
+            {% set trclassname = "alert alert-success" %}
+        {% endif %}
         {% if entity.appStatus.name == 'accepted' %}
             {% set trclassname = "alert alert-success" %}
         {% endif %}

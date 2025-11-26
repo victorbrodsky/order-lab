@@ -289,6 +289,7 @@ class FellAppController extends OrderAbstractController {
         $declined = $filterform['declined']->getData();
         //$onhold = $filterform['onhold']->getData();
         $priority = $filterform['priority']->getData();
+        $priorityinterviewee = $filterform['priorityinterviewee']->getData();
         $draft = $filterform['draft']->getData();
 
         $accepted = $filterform['accepted']->getData();
@@ -340,6 +341,7 @@ class FellAppController extends OrderAbstractController {
                     'filter[complete]' => 1,
                     'filter[interviewee]' => 1,
                     'filter[priority]' => 1,
+                    'filter[priorityinterviewee]' => 1,
                     'filter[reject]' => 1,
                     'filter[filter]' => $fellowshipTypeId,
                 )
@@ -362,6 +364,7 @@ class FellAppController extends OrderAbstractController {
                     'filter[interviewee]' => 1,
                     //'filter[onhold]' => 1,
                     'filter[priority]' => 1,
+                    'filter[priorityinterviewee]' => 1,
                     'filter[accepted]' => 1,
                     'filter[acceptedandnotified]' => 1,
                     'filter[filter]' => $fellowshipTypeId,
@@ -498,6 +501,11 @@ class FellAppController extends OrderAbstractController {
 
         if( $priority ) {
             $orWhere[] = "appStatus.name = 'priority'";
+            $searchFlag = true;
+        }
+
+        if( $priorityinterviewee ) {
+            $orWhere[] = "appStatus.name = 'priorityinterviewee'";
             $searchFlag = true;
         }
 
@@ -649,6 +657,9 @@ class FellAppController extends OrderAbstractController {
         $priority = $fellappUtil->getFellAppByStatusAndYear('priority',$fellSubspecId,$startYearStr);
         $priorityTotal = $fellappUtil->getFellAppByStatusAndYear('priority',$fellSubspecId);
 
+        $priorityinterviewee = $fellappUtil->getFellAppByStatusAndYear('priorityinterviewee',$fellSubspecId,$startYearStr);
+        $priorityintervieweeTotal = $fellappUtil->getFellAppByStatusAndYear('priorityinterviewee',$fellSubspecId);
+
         $accepted = $fellappUtil->getFellAppByStatusAndYear('accepted',$fellSubspecId,$startYearStr);
         $acceptedTotal = $fellappUtil->getFellAppByStatusAndYear('accepted',$fellSubspecId);
 
@@ -745,6 +756,10 @@ class FellAppController extends OrderAbstractController {
             //'onholdTotal' => count($onholdTotal),
             'priority' => count($priority),
             'priorityTotal' => count($priorityTotal),
+
+            'priorityinterviewee' => count($priorityinterviewee),
+            'priorityintervieweeTotal' => count($priorityintervieweeTotal),
+
             'complete' => count($complete),
             'completeTotal' => count($completeTotal),
             'interviewee' => count($interviewee),
@@ -2033,18 +2048,24 @@ class FellAppController extends OrderAbstractController {
         $em->persist($fellapp);
         $em->flush();
 
-        //Every time an application is marked as "Priority", send an email to the user(s) with the corresponding "Fellowship Prpgram Coordinator" role (Cytopathology, etc), - in our case it will be Jessica - saying:
-        if( $status == 'priority' ) {
+        //Every time an application is marked as "Priority", send an email to the user(s) with the corresponding "Fellowship Program Coordinator" role (Cytopathology, etc), - in our case it will be Jessica - saying:
+        if( $status == 'priority' || $status == 'priorityinterviewee' ) {
+
+            $statusStr = 'Priority';
+            if( $status == 'priorityinterviewee' ) {
+                $statusStr = 'Priority Interviewee';
+            }
+
             //$break = "\r\n";
             $break = "<br>";
             $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellapp);
             $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);
             $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
-            $logger->notice("Fellowship application ".$fellapp->getId()." status has been marked as Priority to the directors and coordinators emails " . implode(", ",$responsibleEmails));
+            $logger->notice("Fellowship application ".$fellapp->getId()." status has been marked as $statusStr to the directors and coordinators emails " . implode(", ",$responsibleEmails));
 
             //Subject: FirstName LastName has marked FirstName LastName's FellowshipType fellowship application (ID:id#) as "Priority"
             $emailSubject = $user." has marked ".$fellapp->getUser()->getUsernameShortest()."'s ".$fellapp->getFellowshipSubspecialty().
-                " fellowship application (ID:".$fellapp->getId().") as 'Priority'";
+                " fellowship application (ID:".$fellapp->getId().") as '$statusStr'";
 
             //Body: FirstName LastName (CWID: xxx1234) has marked FirstName LastName's FellowshipType
             // fellowship application (ID:id#) as "Priority" on MM/DD/YYY at HH:MM.

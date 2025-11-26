@@ -173,6 +173,12 @@ class FellAppFilterType extends AbstractType
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
+        $builder->add('priorityinterviewee', CheckboxType::class, array(
+            'required'=>false,
+            'label' => 'Priority Interviewee',
+            'attr' => array('class' => 'filter-status-checkbox'),
+        ));
+
         $builder->add('accepted', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Accepted',
