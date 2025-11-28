@@ -120,7 +120,6 @@ class FellAppUtil {
     public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
 
         //echo "year=$year<br>";
-        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $repository = $this->em->getRepository(FellowshipApplication::class);
         $dql =  $repository->createQueryBuilder("fellapp");
         $dql->select('fellapp');
@@ -134,12 +133,12 @@ class FellAppUtil {
                 $statusNot = $statusArr[1];
                 if ($statusNot && $statusNot == 'not') {
                     //'interviewee-not' is dummy status which is all statuses but not interviewee
-                    echo "select status != $statusStr <br>";
+                    echo "### select status != $statusStr <br>";
                     $dql->where("appStatus.name != '" . $statusStr . "'");
                 }
             } else {
                 //Case: interviewee
-                echo "select status = $status <br>";
+                echo "### select status = $status <br>";
                 $dql->where("appStatus.name = '" . $status . "'");
             }
         }
@@ -206,17 +205,18 @@ class FellAppUtil {
         $query = $dql->getQuery();
         $applicants = $query->getResult();
 
-        if( 1   ) {
+        if( 0 ) {
             //if( str_contains($status, 'interviewee') ) {
                 echo "$status applicants count=" . count($applicants) . "<br>";
                 foreach ($applicants as $fellapp) {
                     if ($fellapp->getStartDate()) {
-                        echo "ID " . $fellapp->getId() .
+                        echo
+                            "ID " . $fellapp->getId() .
                             "; startDate=" . $fellapp->getStartDate()->format('Y-m-d') .
                             "; status=" . $fellapp->getAppStatus()->getName() .
                             "; type=" . $fellapp->getFellowshipSubspecialty() .
-                            "; interviewer=$interviewer" .
-                            "<br>";
+                            "; interviewer=$interviewer"
+                            . "<br>";
                     }
                 }
             //}

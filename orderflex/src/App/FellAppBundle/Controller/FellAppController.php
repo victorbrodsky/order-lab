@@ -685,15 +685,19 @@ class FellAppController extends OrderAbstractController {
                 $fellSubspecArg = $fellowshipTypes;
             }
 
+            //status 'interviewee' means that applicant has been interviewed.
+            //TODO: status 'priorityinterviewee' means that applicant has been interviewed and his status is priority?
             echo "<br> ##### START ####### <br>";
             $awaitedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee-not',$fellSubspecArg,$startYearStr,$user));
             $receivedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecArg,$startYearStr,$user));
             $awaitedPriorityInterviews = count($fellappUtil->getFellAppByStatusAndYear('priorityinterviewee-not',$fellSubspecArg,$startYearStr,$user));
             $receivedPriorityInterviews = count($fellappUtil->getFellAppByStatusAndYear('priorityinterviewee',$fellSubspecArg,$startYearStr,$user));
             echo "awaitedInterviews=".$awaitedInterviews."<br>";
+            echo "awaitedPriorityInterviews=".$awaitedPriorityInterviews."<br>";
             echo "receivedInterviews=".$receivedInterviews."<br>";
+            echo "receivedPriorityInterviews=".$receivedPriorityInterviews."<br>";
             $receivedInterviews = $receivedInterviews + $receivedPriorityInterviews;
-            $awaitedInterviews = $awaitedInterviews + $awaitedPriorityInterviews;
+            //$awaitedInterviews = $awaitedInterviews + $awaitedPriorityInterviews;
             echo "2 receivedInterviews=".$receivedInterviews."<br>";
             echo "2 awaitedInterviews=".$awaitedInterviews."<br>";
             echo "<br> ##### END ####### <br>";
@@ -2479,9 +2483,10 @@ class FellAppController extends OrderAbstractController {
             $this->calculateScore($fellapp);
             
             //Upon submitting the first interview evaluation form for a given application, 
-            //if the current application status is not "Interviewee", automatically switch it to "Interviewee".
-            if( $fellapp->getAppStatus()->getName()."" != "interviewee" ) {
-                $this->changeFellAppStatus($fellapp, "interviewee", $request);
+            //if the current application status is not 'Interviewee', automatically switch it to 'Interviewee'.
+            $statusStr = $fellapp->getAppStatus()->getName()."";
+            if ($statusStr !== 'interviewee' && $statusStr !== 'priorityinterviewee') {
+                $this->changeFellAppStatus($fellapp, 'interviewee', $request);
             }
             
             $em->persist($interview);
