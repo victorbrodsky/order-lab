@@ -116,6 +116,7 @@ class FellAppUtil {
 
     //$fellSubspecArg: single fellowshipSubspecialty id or array of fellowshipSubspecialty ids
     //$year can be multiple dates "2019,2020,2021..."
+    //$status might be interviewee, priority, priorityinterviewee
     public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
 
         //echo "year=$year<br>";
@@ -127,20 +128,30 @@ class FellAppUtil {
 
         if( $status ) {
             if (strpos((string)$status, "-") !== false) {
+                //Case: interviewee-not
                 $statusArr = explode("-", $status);
                 $statusStr = $statusArr[0];
                 $statusNot = $statusArr[1];
                 if ($statusNot && $statusNot == 'not') {
-                    //'interviewee-not' is dummy status which is all statuses but not
+                    //'interviewee-not' is dummy status which is all statuses but not interviewee
+                    echo "select status != $statusStr <br>";
                     $dql->where("appStatus.name != '" . $statusStr . "'");
                 }
             } else {
+                //Case: interviewee
+                echo "select status = $status <br>";
                 $dql->where("appStatus.name = '" . $status . "'");
             }
         }
 
+        //dump($fellSubspecArg);
+        //exit('111');
         if( $fellSubspecArg ) {
-            $dql->leftJoin("fellapp.fellowshipSubspecialty","fellowshipSubspecialty");
+            if( $this->isHubServer() ) {
+                $dql->leftJoin("fellapp.globalFellowshipSpecialty","fellowshipSubspecialty");
+            } else {
+                $dql->leftJoin("fellapp.fellowshipSubspecialty","fellowshipSubspecialty");
+            }
             if( is_array($fellSubspecArg) ) {
                 $felltypeArr = array();
                 foreach( $fellSubspecArg as $fellowshipTypeID => $fellowshipTypeName ) {
@@ -194,17 +205,22 @@ class FellAppUtil {
 
         $query = $dql->getQuery();
         $applicants = $query->getResult();
-        
-//        echo "applicants=".count($applicants)."<br>";
-//        if( $status == 'active' ) {
-//            foreach ($applicants as $fellapp) {
-//                echo "ID " . $fellapp->getId() .
-//                    "; startDate=" . $fellapp->getStartDate()->format('Y-m-d') .
-//                    "; status=" . $fellapp->getAppStatus()->getName() .
-//                    "; type=" . $fellapp->getFellowshipSubspecialty()->getName() .
-//                    "<br>";
-//            }
-//        }
+
+        if( 1   ) {
+            //if( str_contains($status, 'interviewee') ) {
+                echo "$status applicants count=" . count($applicants) . "<br>";
+                foreach ($applicants as $fellapp) {
+                    if ($fellapp->getStartDate()) {
+                        echo "ID " . $fellapp->getId() .
+                            "; startDate=" . $fellapp->getStartDate()->format('Y-m-d') .
+                            "; status=" . $fellapp->getAppStatus()->getName() .
+                            "; type=" . $fellapp->getFellowshipSubspecialty() .
+                            "; interviewer=$interviewer" .
+                            "<br>";
+                    }
+                }
+            //}
+        }
 
         return $applicants;
     }

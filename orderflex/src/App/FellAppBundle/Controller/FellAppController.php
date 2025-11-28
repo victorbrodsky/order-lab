@@ -685,10 +685,18 @@ class FellAppController extends OrderAbstractController {
                 $fellSubspecArg = $fellowshipTypes;
             }
 
+            echo "<br> ##### START ####### <br>";
             $awaitedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee-not',$fellSubspecArg,$startYearStr,$user));
             $receivedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecArg,$startYearStr,$user));
-            //echo "awaitedInterviews=".$awaitedInterviews."<br>";
-            //echo "receivedInterviews=".$receivedInterviews."<br>";
+            $awaitedPriorityInterviews = count($fellappUtil->getFellAppByStatusAndYear('priorityinterviewee-not',$fellSubspecArg,$startYearStr,$user));
+            $receivedPriorityInterviews = count($fellappUtil->getFellAppByStatusAndYear('priorityinterviewee',$fellSubspecArg,$startYearStr,$user));
+            echo "awaitedInterviews=".$awaitedInterviews."<br>";
+            echo "receivedInterviews=".$receivedInterviews."<br>";
+            $receivedInterviews = $receivedInterviews + $receivedPriorityInterviews;
+            $awaitedInterviews = $awaitedInterviews + $awaitedPriorityInterviews;
+            echo "2 receivedInterviews=".$receivedInterviews."<br>";
+            echo "2 awaitedInterviews=".$awaitedInterviews."<br>";
+            echo "<br> ##### END ####### <br>";
         }
 
         //allowPopulateFellApp
@@ -779,6 +787,7 @@ class FellAppController extends OrderAbstractController {
 
             'awaitedInterviews' => $awaitedInterviews,
             'receivedInterviews' => $receivedInterviews,
+            //'receivedPriorityInterviews' => $receivedPriorityInterviews,
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "", //date_default_timezone_get(),
             'fellappids' => implode("-",$idsArr),
