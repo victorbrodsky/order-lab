@@ -126,19 +126,25 @@ class FellAppUtil {
         $dql->leftJoin("fellapp.appStatus", "appStatus");
 
         if( $status ) {
-            if (strpos((string)$status, "-") !== false) {
-                //Case: interviewee-not
-                $statusArr = explode("-", $status);
-                $statusStr = $statusArr[0];
-                $statusNot = $statusArr[1];
-                if ($statusNot && $statusNot == 'not') {
-                    //'interviewee-not' is dummy status which is all statuses but not interviewee
-                    echo "### select status != $statusStr <br>";
-                    $dql->where("appStatus.name != '" . $statusStr . "'");
-                }
-            } else {
+//            if (strpos((string)$status, "-") !== false) {
+//                //Case: interviewee-not
+//                $statusArr = explode("-", $status);
+//                $statusStr = $statusArr[0];
+//                $statusNot = $statusArr[1];
+//                if ($statusNot && $statusNot == 'not') {
+//                    //'interviewee-not' is dummy status which is all statuses but not interviewee
+//                    //echo "### select status != $statusStr <br>";
+//                    $dql->where("appStatus.name != '" . $statusStr . "'");
+//                }
+//            }
+            if( (string)$status == 'has-rank' ) {
+                //Case: interviewed
+                //fellapp->interviews (Interview) (find by interviewer)->totalRank
+                //Select it later below in if( $interviewer )
+            }
+            else {
                 //Case: interviewee
-                echo "### select status = $status <br>";
+                //echo "### select status = $status <br>";
                 $dql->where("appStatus.name = '" . $status . "'");
             }
         }
@@ -196,6 +202,12 @@ class FellAppUtil {
             $dql->leftJoin("fellapp.interviews", "interviews");
             $dql->leftJoin("interviews.interviewer", "interviewer");
             $dql->andWhere("interviewer.id=".$interviewer->getId());
+
+            if( (string)$status == 'has-rank' ) {
+                //fellapp->interviews (Interview) (find by interviewer)->totalRank
+                $dql->andWhere("interviews.totalRank IS NOT NULL");
+            }
+
         }
 
         $dql->orderBy("fellapp.id","ASC");

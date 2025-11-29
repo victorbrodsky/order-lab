@@ -685,22 +685,21 @@ class FellAppController extends OrderAbstractController {
                 $fellSubspecArg = $fellowshipTypes;
             }
 
-            //status 'interviewee' means that applicant has been interviewed.
-            //TODO: status 'priorityinterviewee' means that applicant has been interviewed and his status is priority?
-            echo "<br> ##### START ####### <br>";
-            $awaitedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee-not',$fellSubspecArg,$startYearStr,$user));
-            $receivedInterviews = count($fellappUtil->getFellAppByStatusAndYear('interviewee',$fellSubspecArg,$startYearStr,$user));
-            $awaitedPriorityInterviews = count($fellappUtil->getFellAppByStatusAndYear('priorityinterviewee-not',$fellSubspecArg,$startYearStr,$user));
-            $receivedPriorityInterviews = count($fellappUtil->getFellAppByStatusAndYear('priorityinterviewee',$fellSubspecArg,$startYearStr,$user));
-            echo "awaitedInterviews=".$awaitedInterviews."<br>";
-            echo "awaitedPriorityInterviews=".$awaitedPriorityInterviews."<br>";
-            echo "receivedInterviews=".$receivedInterviews."<br>";
-            echo "receivedPriorityInterviews=".$receivedPriorityInterviews."<br>";
-            $receivedInterviews = $receivedInterviews + $receivedPriorityInterviews;
-            //$awaitedInterviews = $awaitedInterviews + $awaitedPriorityInterviews;
-            echo "2 receivedInterviews=".$receivedInterviews."<br>";
-            echo "2 awaitedInterviews=".$awaitedInterviews."<br>";
-            echo "<br> ##### END ####### <br>";
+            //status 'interviewee' means that applicant is interviewing or has been interviewed.
+            //status 'priorityinterviewee' means that applicant is interviewing or has been interviewed and his status is priority
+            
+            //Use total rank as a flag if interviewed
+            $allInterviewApplications = $fellappUtil->getFellAppByStatusAndYear(null,$fellSubspecArg,$startYearStr,$user);
+//            foreach($allInterviewApplications as $allInterviewApplication) {
+//                echo "allInterviewApplication=".$allInterviewApplication->getId()."<br>";
+//            }
+            $receivedInterviewApplications = $fellappUtil->getFellAppByStatusAndYear('has-rank',$fellSubspecArg,$startYearStr,$user);
+//            foreach($receivedInterviewApplications as $receivedInterviewApplication) {
+//                echo "receivedInterviewApplication=".$receivedInterviewApplication->getId()."<br>";
+//            }
+            $receivedInterviews = count($receivedInterviewApplications);
+            $awaitedInterviews = count($allInterviewApplications) - $receivedInterviews;
+            //echo "receivedInterviews=".$receivedInterviews.", awaitedInterviews=$awaitedInterviews"."<br>";
         }
 
         //allowPopulateFellApp
