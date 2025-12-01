@@ -117,7 +117,7 @@ class FellAppUtil {
     //$fellSubspecArg: single fellowshipSubspecialty id or array of fellowshipSubspecialty ids
     //$year can be multiple dates "2019,2020,2021..."
     //$status might be interviewee, priority, priorityinterviewee
-    public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null) {
+    public function getFellAppByStatusAndYear($status,$fellSubspecArg,$year=null,$interviewer=null,$hasRank=false) {
 
         //echo "year=$year<br>";
         $repository = $this->em->getRepository(FellowshipApplication::class);
@@ -137,16 +137,17 @@ class FellAppUtil {
 //                    $dql->where("appStatus.name != '" . $statusStr . "'");
 //                }
 //            }
-            if( (string)$status == 'has-rank' ) {
-                //Case: interviewed
-                //fellapp->interviews (Interview) (find by interviewer)->totalRank
-                //Select it later below in if( $interviewer )
-            }
-            else {
-                //Case: interviewee
-                //echo "### select status = $status <br>";
-                $dql->where("appStatus.name = '" . $status . "'");
-            }
+//            if( (string)$status == 'has-rank' ) {
+//                //Case: interviewed
+//                //fellapp->interviews (Interview) (find by interviewer)->totalRank
+//                //Select it later below in if( $interviewer )
+//            }
+//            else {
+//                //Case: interviewee
+//                //echo "### select status = $status <br>";
+//                $dql->where("appStatus.name = '" . $status . "'");
+//            }
+            $dql->where("appStatus.name = '" . $status . "'");
         }
 
         //dump($fellSubspecArg);
@@ -203,7 +204,8 @@ class FellAppUtil {
             $dql->leftJoin("interviews.interviewer", "interviewer");
             $dql->andWhere("interviewer.id=".$interviewer->getId());
 
-            if( (string)$status == 'has-rank' ) {
+            //if( (string)$status == 'has-rank' ) {
+            if( $hasRank ) {
                 //fellapp->interviews (Interview) (find by interviewer)->totalRank
                 $dql->andWhere("interviews.totalRank IS NOT NULL");
             }

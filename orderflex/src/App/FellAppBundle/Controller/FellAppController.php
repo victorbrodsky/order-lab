@@ -693,7 +693,7 @@ class FellAppController extends OrderAbstractController {
 //            foreach($allInterviewApplications as $allInterviewApplication) {
 //                echo "allInterviewApplication=".$allInterviewApplication->getId()."<br>";
 //            }
-            $receivedInterviewApplications = $fellappUtil->getFellAppByStatusAndYear('has-rank',$fellSubspecArg,$startYearStr,$user);
+            $receivedInterviewApplications = $fellappUtil->getFellAppByStatusAndYear(null,$fellSubspecArg,$startYearStr,$user,$hasRank=true);
 //            foreach($receivedInterviewApplications as $receivedInterviewApplication) {
 //                echo "receivedInterviewApplication=".$receivedInterviewApplication->getId()."<br>";
 //            }
