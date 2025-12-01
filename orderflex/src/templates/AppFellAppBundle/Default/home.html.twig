@@ -627,6 +627,23 @@
 {#                {% endif %}#}
                 {#EOF Calculating evaluation received and evaluation modal#}
 
+                {#fellowship specialty#}
+                {% set fellowshipSpecialtyName = '' %}
+                {% if serverRole == 'Internet (Hub)' %}
+                    {% if entity.globalFellowshipSpecialty %}
+                        {#globalFellowshipSpecialty#}
+                        {% set fellowshipSpecialtyName = entity.globalFellowshipSpecialty.name %}
+                    {% endif %}
+                {% else %}
+                    {#fellowshipSubspecialty#}
+                    {% if entity.fellowshipSubspecialty %}
+                        {#{{  entity.fellowshipSubspecialty.name }}#}
+                        {% set fellowshipSpecialtyName = entity.fellowshipSubspecialty.name %}
+                    {% endif %}
+                {% endif %}
+
+                {% set startYear = entity.getStartYear() %}
+
                 <tr class="{{ trclassname }}">
 
 
@@ -684,17 +701,18 @@
 
                     <td>
                         {#serverRole={{ serverRole }}#}
-                        {% if serverRole == 'Internet (Hub)' %}
-                            {% if entity.globalFellowshipSpecialty %}
+                        {#{% if serverRole == 'Internet (Hub)' %}#}
+                            {#{% if entity.globalFellowshipSpecialty %}#}
                                 {#globalFellowshipSpecialty#}
-                                {{  entity.globalFellowshipSpecialty.name }}
-                            {% endif %}
-                        {% else %}
+                                {#{{  entity.globalFellowshipSpecialty.name }}#}
+                            {#{% endif %}#}
+                        {#{% else %}#}
                             {#fellowshipSubspecialty#}
-                            {% if entity.fellowshipSubspecialty %}
-                                {{  entity.fellowshipSubspecialty.name }}
-                            {% endif %}
-                        {% endif %}
+                            {#{% if entity.fellowshipSubspecialty %}#}
+                                {#{{  entity.fellowshipSubspecialty.name }}#}
+                            {#{% endif %}#}
+                        {#{% endif %}#}
+                        {{ fellowshipSpecialtyName }}
                     </td>
 
                     <td>
@@ -1040,11 +1058,29 @@
 
                                         {% if entity.appStatus.name != 'interviewee' %}
                                             <li>
-                                                <a
-                                                    general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
-                                                    general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
-                                                </a>
+                                                {% if entity.appStatus.name == 'priority' %}
+                                                    {#When user clicks "Action > Mark as an Interviewee" AND current status is "Priority", show a confirmation modal#}
+                                                    {#"[FirstName LastName]'s application for [Specialty] [Year] has the current status of 'Priority'. #}
+                                                    {#Are you sure you would like to change the application status to 'Interviewee', #}
+                                                    {#or would you prefer to change the status to 'Priority Interviewee' instead?"#}
+                                                    {#[Change status from 'Priority' to 'Interviewee'] #}
+                                                    {#[Change status from 'Priority' to 'Priority Interviewee'] [Cancel]#}
+                                                    <a
+                                                            general-data-confirm="{{ entity.getApplicantFullName }}'s application for
+                                                                {{ fellowshipSpecialtyName }} {{ startYear }}
+                                                                has the current status of 'Priority'. Are you sure you would like
+                                                                to change the application status to 'Interviewee',
+                                                                or would you prefer to change the status to 'Priority Interviewee' instead?"
+                                                            general-data-callback="refreshpage"
+                                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
+                                                    </a>
+                                                {% else %}
+                                                    <a
+                                                        general-data-confirm="Are you sure you want to mark this Application as belonging to an Interviewee?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
+                                                    </a>
+                                                {% endif %}
                                             </li>
                                         {% endif %}
 
@@ -1350,11 +1386,11 @@
                                             </a>
                                         </li>
 
-                                        {% set startYear = entity.getStartYear() %}
                                         <li>
                                             {#Are you sure you would like to move FirstName LastName’s application for [Specialty] from [application year] to [target application year]?#}
                                             <a
-                                                general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application for {{ entity.getFellowshipSubspecialty() }} from {{ startYear }} to {{ startYear+1 }}?"
+                                                general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application
+                                                for {{ fellowshipSpecialtyName }} from {{ startYear }} to {{ startYear+1 }}?"
                                                 general-data-callback="refreshpage"
                                                 href="{{ path('fellapp_application_move_year', {'id': entity.id, 'year': +1}, true) }}">
                                                 Move application to year {{ startYear+1 }}
@@ -1362,7 +1398,8 @@
                                         </li>
                                         <li>
                                             <a
-                                                general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application for {{ entity.getFellowshipSubspecialty() }} from {{ startYear }} to {{ startYear-1 }}?"
+                                                general-data-confirm="Are you sure you would like to move {{ entity.getApplicantFullName() }}'s application
+                                                for {{ fellowshipSpecialtyName }} from {{ startYear }} to {{ startYear-1 }}?"
                                                 general-data-callback="refreshpage"
                                                 href="{{ path('fellapp_application_move_year', {'id': entity.id, 'year': -1}, true) }}">
                                                 Move application to year {{ startYear-1 }}
