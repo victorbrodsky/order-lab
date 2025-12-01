@@ -1338,7 +1338,7 @@ function generalConfirmAction() {
                     '<div class="modal-body text-center">' +
                     '</div>' +
                     '<div class="modal-footer">' +
-                    '<button class="btn btn-primary general-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                    '<button class="btn btn-default general-data-confirm-cancel" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
                     '<a class="btn btn-primary general-data-confirm-ok" id="dataConfirmOK">OK</a>' +
                     '<button style="display: none;" class="btn btn-primary data-comment-ok">OK</button>' +
                     '</div>' +
@@ -1976,7 +1976,7 @@ function constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUs
         '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
         '</div>' +
         '<div class="modal-footer">' +
-        '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+        '<button id="user-add-btn-cancel" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
         '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction(this,'+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
         '</div>' +
         '</div>' +

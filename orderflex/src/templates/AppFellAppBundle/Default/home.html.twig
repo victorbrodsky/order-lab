@@ -1066,13 +1066,14 @@
                                                     {#[Change status from 'Priority' to 'Interviewee'] #}
                                                     {#[Change status from 'Priority' to 'Priority Interviewee'] [Cancel]#}
                                                     <a
-                                                            general-data-confirm="{{ entity.getApplicantFullName }}'s application for
-                                                                {{ fellowshipSpecialtyName }} {{ startYear }}
-                                                                has the current status of 'Priority'. Are you sure you would like
-                                                                to change the application status to 'Interviewee',
-                                                                or would you prefer to change the status to 'Priority Interviewee' instead?"
-                                                            general-data-callback="refreshpage"
-                                                            href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee
+                                                        class="fellapp-priority-interviewee-link"
+                                                        data-priority-interviewee-confirm="{{ entity.getApplicantFullName }}'s application for
+                                                            {{ fellowshipSpecialtyName }} {{ startYear }} has the current status of 'Priority'.
+                                                            Are you sure you would like to change the application status to 'Interviewee',
+                                                            or would you prefer to change the status to 'Priority Interviewee' instead?"
+                                                        data-href-interviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}"
+                                                        data-href-priorityinterviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priorityinterviewee' }, true) }}"
+                                                        href="#">Mark as an Interviewee
                                                     </a>
                                                 {% else %}
                                                     <a
@@ -1600,6 +1601,8 @@
             changeFilterColorButton();
 
             fellappStatusNotificationConfirmAction();
+
+            fellappPriorityIntervieweeConfirmAction();
 
             //onInterviewModalShow();
 

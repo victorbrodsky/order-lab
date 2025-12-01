@@ -289,3 +289,81 @@ function checkAllCheckboxBtn() {
     }
 }
 
+// Priority -> Interviewee custom confirmation modal
+// Triggered on links with class 'fellapp-priority-interviewee-link'
+// and data attributes:
+//   data-priority-interviewee-confirm - confirmation message text (HTML allowed)
+//   data-href-interviewee - URL to change status to 'interviewee'
+//   data-href-priorityinterviewee - URL to change status to 'priorityinterviewee'
+function fellappPriorityIntervieweeConfirmAction() {
+
+    $('body').on('click', 'a.fellapp-priority-interviewee-link', function (ev) {
+
+        ev.preventDefault();
+
+        var linkEl = $(this);
+        var confirmText = linkEl.attr('data-priority-interviewee-confirm');
+        var hrefInterviewee = linkEl.attr('data-href-interviewee');
+        var hrefPriorityInterviewee = linkEl.attr('data-href-priorityinterviewee');
+
+        if( !confirmText ) {
+            confirmText = '';
+        }
+
+        // Build modal only once; reuse for subsequent clicks
+        if( !$('#fellappPriorityIntervieweeModal').length ) {
+            var modalHtml =
+                '<div id="fellappPriorityIntervieweeModal" class="modal fade">' +
+                    '<div class="modal-dialog">' +
+                        '<div class="modal-content">' +
+                            '<div class="modal-header text-center">' +
+                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                                '<h3 id="fellappPriorityIntervieweeLabel">Confirmation</h3>' +
+                            '</div>' +
+                            '<div class="modal-body text-center"></div>' +
+                            '<div class="modal-footer">' +
+                                '<p><a class="btn btn-primary fellapp-priority-interviewee-to-interviewee">Change status from \'Priority\' to \'Interviewee\'</a></p>' +
+                                '<p><a class="btn btn-primary fellapp-priority-interviewee-to-priorityinterviewee">Change status from \'Priority\' to \'Priority Interviewee\'</a></p>' +
+                                '<p><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button></p>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            $('body').append(modalHtml);
+        }
+
+        var modal = $('#fellappPriorityIntervieweeModal');
+
+        modal.find('.modal-body').html(confirmText);
+
+        // Unbind previous handlers to avoid stacking
+        modal.find('.fellapp-priority-interviewee-to-interviewee').off('click');
+        modal.find('.fellapp-priority-interviewee-to-priorityinterviewee').off('click');
+
+        modal.find('.fellapp-priority-interviewee-to-interviewee').on('click', function (event) {
+            if( hrefInterviewee ) {
+                if( typeof refreshpage === 'function' ) {
+                    refreshpage(hrefInterviewee, this);
+                } else {
+                    window.location.href = hrefInterviewee;
+                }
+            }
+        });
+
+        modal.find('.fellapp-priority-interviewee-to-priorityinterviewee').on('click', function (event) {
+            if( hrefPriorityInterviewee ) {
+                if( typeof refreshpage === 'function' ) {
+                    refreshpage(hrefPriorityInterviewee, this);
+                } else {
+                    window.location.href = hrefPriorityInterviewee;
+                }
+            }
+        });
+
+        modal.modal({show:true});
+
+        return false;
+    });
+}
+
