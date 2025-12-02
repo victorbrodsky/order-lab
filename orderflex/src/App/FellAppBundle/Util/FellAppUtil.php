@@ -913,6 +913,7 @@ class FellAppUtil {
     //Get role (ROLE_FELLAPP_DIRECTOR_WCM_PAINMEDICINE) by
     // fellowship specialty name ($fellowshipSubspecialty->getName()) and partial role name (_DIRECTOR_)
     //$roleName is a partial role name: _DIRECTOR_
+    //$fellowshipSubspecialty - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
     public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
         //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
 
@@ -2128,6 +2129,7 @@ class FellAppUtil {
     //When the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
     //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles:
     //get all users with specific coordinator role and add them (if not added) to the $coordinators in the FellowshipSubspecialty object
+    //$fellowshipTypes - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
     public function synchroniseFellowshipSubspecialtyAndProfileRoles( $fellowshipTypes ) {
         //return null; //testing
         //echo "sync FellowshipSubspecialty count=".count($fellowshipTypes)."<br>";
@@ -2139,6 +2141,7 @@ class FellAppUtil {
             $this->synchroniseSingleFellowshipSubspecialtyAndProfileRoles($fellowshipSubspecialty,"_INTERVIEWER_");
         }
     }
+    //$fellowshipSubspecialty - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
     public function synchroniseSingleFellowshipSubspecialtyAndProfileRoles( $fellowshipSubspecialty, $roleName ) {
         //1) get all users with role ROLE_FELLAPP_DIRECTOR_WCM_PAINMEDICINE
         $users = $this->getUsersOfFellowshipSubspecialtyByRole($fellowshipSubspecialty,$roleName); //"_COORDINATOR_"

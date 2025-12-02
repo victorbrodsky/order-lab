@@ -66,16 +66,26 @@ class FellAppManagement extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $fellappUtil = $this->container->get('fellapp_util');
 
         //get all fellowship types using institution: FellowshipSubspecialty objects that have $coordinators, $directors, $interviewers
         //Show only fellapp specialties linked to the WCM->Pathology institution
         //TODO: add fellapp institution to the site settings and use it for fellapp specialties generation OR don't use institution at all
         //$fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        $fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true);
+        //$fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true);
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $serverRole."" != 'Internet (Hub)' ) {
+            $fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true); //array of entities
+            //echo "fellowshipTypes count=".count($fellTypes)."<br>";
+        } else {
+            $fellowshipTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
+            //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
+        }
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
         //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
+        //$fellowshipTypes - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
         $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles($fellowshipTypes);
 
         //manual message how to add/remove fellowship types
