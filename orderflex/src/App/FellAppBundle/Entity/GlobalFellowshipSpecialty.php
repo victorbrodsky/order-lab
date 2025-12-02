@@ -47,6 +47,24 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\JoinColumn(name: 'institution_id', referencedColumnName: 'id', nullable: true)]
     private $institution;
 
+    #[ORM\JoinTable(name: 'fellapp_globalspecialty_coordinator')]
+    #[ORM\JoinColumn(name: 'fellowshipSubspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'coordinator_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    private $coordinators;
+
+    #[ORM\JoinTable(name: 'fellapp_globalspecialty_director')]
+    #[ORM\JoinColumn(name: 'fellowshipSubspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'director_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    private $directors;
+
+    #[ORM\JoinTable(name: 'fellapp_globalspecialty_interviewer')]
+    #[ORM\JoinColumn(name: 'fellowshipSubspecialty_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'interviewer_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
+    private $interviewers;
+
     /**
      * Application season start date
      */
@@ -80,6 +98,9 @@ class GlobalFellowshipSpecialty extends ListAbstract
 
     public function __construct()
     {
+        $this->coordinators = new ArrayCollection();
+        $this->directors = new ArrayCollection();
+        $this->interviewers = new ArrayCollection();
         $this->apiImportKeys = new ArrayCollection();
     }
 
@@ -97,6 +118,54 @@ class GlobalFellowshipSpecialty extends ListAbstract
     public function getInstitution()
     {
         return $this->institution;
+    }
+
+    public function addCoordinator($item)
+    {
+        if( $item && !$this->coordinators->contains($item) ) {
+            $this->coordinators->add($item);
+        }
+        return $this;
+    }
+    public function removeCoordinator($item)
+    {
+        $this->coordinators->removeElement($item);
+    }
+    public function getCoordinators()
+    {
+        return $this->coordinators;
+    }
+
+    public function addDirector($item)
+    {
+        if( $item && !$this->directors->contains($item) ) {
+            $this->directors->add($item);
+        }
+        return $this;
+    }
+    public function removeDirector($item)
+    {
+        $this->directors->removeElement($item);
+    }
+    public function getDirectors()
+    {
+        return $this->directors;
+    }
+
+    public function addInterviewer($item)
+    {
+        if( $item && !$this->interviewers->contains($item) ) {
+            $this->interviewers->add($item);
+        }
+        return $this;
+    }
+    public function removeInterviewer($item)
+    {
+        $this->interviewers->removeElement($item);
+    }
+    public function getInterviewers()
+    {
+        return $this->interviewers;
     }
 
     /**
