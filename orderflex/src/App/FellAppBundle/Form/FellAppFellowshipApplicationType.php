@@ -37,16 +37,35 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FellAppFellowshipApplicationType extends AbstractType
 {
 
+    protected $params;
+
+    public function formConstructor( $params=null )
+    {
+        $this->params = $params;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('fellowshipsubspecialtytype', CustomSelectorType::class, array(
-            'label' => "Fellowship Specialty:",
-            'required' => false,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden'),
-            'classtype' => 'fellowshipsubspecialty'
-        ));
+        //echo 'serverRole='.$this->params['serverRole']."<br>";
+        if( $this->params['serverRole'] != 'Internet (Hub)' ) {
+            //echo "define fellowshipsubspecialtytype<br>";
+            $builder->add('fellowshipsubspecialtytype', CustomSelectorType::class, array(
+                'label' => "Fellowship Specialty:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden'),
+                'classtype' => 'fellowshipsubspecialty'
+            ));
+        } else {
+            //echo "define globalfellowshipspecialty<br>";
+            $builder->add('globalfellowshipspecialty', CustomSelectorType::class, array(
+                'label' => "Global Fellowship Specialty:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-globalfellowshipspecialty', 'type' => 'hidden'),
+                'classtype' => 'globalfellowshipspecialty'
+            ));
+        }
 
         $builder->add('save', SubmitType::class,
             array(
@@ -61,6 +80,8 @@ class FellAppFellowshipApplicationType extends AbstractType
     {
         $resolver->setDefaults(array(
             //'data_class' => 'App\UserdirectoryBundle\Entity\Training',
+            'data_class' => null,
+            'form_custom_value' => null
         ));
     }
 

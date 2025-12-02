@@ -22,18 +22,27 @@
 
 
 {% block title %}
-    Create a New Fellowship Application Type and Associated Coordinator, Director, Interviewer Roles
+    Create a New Fellowship Application Type and Associated Coordinator, Director, Interviewer Roles - {{ serverRole }}
 {% endblock %}
 
 
 {% block content %}
 
+    <p>
+        Create a New Fellowship Application Type and Associated Coordinator, Director, Interviewer Roles - {{ serverRole }}
+    </p>
 
     {{ form_start(form) }}
 
         {{ form_errors(form) }}
 
-        {{ formmacros.field(form.fellowshipsubspecialtytype)}}
+        {% if form.fellowshipsubspecialtytype is defined %}
+            {{ formmacros.field(form.fellowshipsubspecialtytype)}}
+        {% endif %}
+
+        {% if form.globalfellowshipspecialty is defined %}
+            {{ formmacros.field(form.globalfellowshipspecialty)}}
+        {% endif %}
 
         <p>
             {{ form_widget(form.save) }}

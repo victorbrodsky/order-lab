@@ -77,10 +77,10 @@ class FellAppManagement extends OrderAbstractController {
         $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
         if( $serverRole."" != 'Internet (Hub)' ) {
             $fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true); //array of entities
-            //echo "fellowshipTypes count=".count($fellTypes)."<br>";
+            //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
         } else {
             $fellowshipTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
-            //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
+            //echo "globalFellTypes count=".count($fellowshipTypes)."<br>";
         }
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
@@ -123,6 +123,7 @@ class FellAppManagement extends OrderAbstractController {
         //exit("addFellowshipTypeAction");
         //echo " => userId=".$id."<br>";
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
@@ -134,7 +135,11 @@ class FellAppManagement extends OrderAbstractController {
 //        }
 
         //form with 'Fellowship Subspecialties' list
-        $form = $this->createForm(FellAppFellowshipApplicationType::class);
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        $params = array('serverRole' => $serverRole);
+        $form = $this->createForm(FellAppFellowshipApplicationType::class,null,array(
+            'form_custom_value' => $params
+        ));
 
         $form->handleRequest($request);
 
@@ -271,6 +276,7 @@ class FellAppManagement extends OrderAbstractController {
 
         return array(
             'form' => $form->createView(),
+            'serverRole' => $serverRole
             //'roleId' => $roleId,
             //'instid' => $instid
         );
