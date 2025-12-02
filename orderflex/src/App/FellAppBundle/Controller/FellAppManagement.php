@@ -105,7 +105,8 @@ class FellAppManagement extends OrderAbstractController {
 
         return array(
             'entities' => $fellowshipTypes,
-            'manual' => $manual
+            'manual' => $manual,
+            'serverrole' => $serverRole
         );
 
     }

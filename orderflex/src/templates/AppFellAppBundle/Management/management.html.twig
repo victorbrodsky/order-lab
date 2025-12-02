@@ -22,7 +22,7 @@
 
 
 {% block title %}
-    Fellowship Settings
+    Fellowship Settings {{ serverrole }}
 {% endblock %}
 
 
@@ -32,7 +32,8 @@
     <br>
     <div class="well">
         Please use this page to add or remove Directors, Coordinators and Interviewers for specific fellowship type.<br>
-        It is not recommended to manually add or remove fellowship roles directly in the user profile page.
+        It is not recommended to manually add or remove fellowship roles directly in the user profile page.<br>
+        Server role - {{ serverrole }}
         {#because changes (user's roles and FellowshipSubspecialty's directors,coordinators,interviewers) are synchronised when Fellowship Setting or Specific Fellowship type setting pages are open#}
     </div>
     <br>
