@@ -150,7 +150,7 @@ class FellAppManagement extends OrderAbstractController {
                 );
             }
 
-            //exit('subspecialtyType='.$subspecialtyType);
+            //exit('subspecialtyType='.$subspecialtyType.", ID=".$subspecialtyType->getId());
 
             $institution = null; //Or get it from site settings as future optional feature
             $count = 0;

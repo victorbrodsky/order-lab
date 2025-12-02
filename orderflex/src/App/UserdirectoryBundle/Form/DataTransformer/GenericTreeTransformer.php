@@ -32,6 +32,7 @@ use App\OrderformBundle\Entity\MessageCategory;
 use App\OrderformBundle\Entity\PatientListHierarchy;
 use App\UserdirectoryBundle\Entity\BaseCompositeNode;
 use App\UserdirectoryBundle\Entity\CommentTypeList;
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use App\UserdirectoryBundle\Entity\FormNode;
 use App\UserdirectoryBundle\Entity\Institution;
 use Doctrine\ORM\EntityManagerInterface;
@@ -214,8 +215,9 @@ class GenericTreeTransformer implements DataTransformerInterface
                 $newEntity->setDescription($origName);
             }
 
-            if( method_exists($newEntity,'getParent') && !($newEntity instanceof BaseCompositeNode) ) {
+            if( method_exists($newEntity,'getParent') && !($newEntity instanceof BaseCompositeNode) && !($newEntity instanceof FellowshipSubspecialty) ) {
                 //don't flush this entity because it has parent and parent can not be set here
+                //Exception: FellowshipSubspecialty it has parent but it can be created a usual way
                 //echo "this entity has parent => don't create <br>";
                 //echo "name=".$newEntity->getBlockPrefix()."<br>";
                 //$this->em->persist($newEntity);

@@ -1852,6 +1852,7 @@ class FellAppUtil {
     }
 
     //create a new role (if not existed)
+    //$subspecialtyType - entity
     public function createOrEnableFellAppRoleGroup( $subspecialtyType, $institution=null, $testing=false ) {
         $msg = "";
         $count = 0;
@@ -1978,7 +1979,7 @@ class FellAppUtil {
 
             if( $count > 0 && !$testing ) {
                 $em->persist($role);
-                $em->flush($role);
+                $em->flush();
             }
 
         } else {

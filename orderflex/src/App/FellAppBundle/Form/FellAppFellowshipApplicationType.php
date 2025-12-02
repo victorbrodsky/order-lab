@@ -23,6 +23,7 @@ use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: 
 
 use App\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,22 +41,11 @@ class FellAppFellowshipApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'fellowshipsubspecialtytype', EntityType::class, array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
-            'class' => FellowshipSubspecialty::class,
-            'label'=> "Fellowship Specialty:",
-            'required'=> false,
-            //'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                ));
-            },
+        $builder->add('fellowshipsubspecialtytype', CustomSelectorType::class, array(
+            'label' => "Fellowship Specialty:",
+            'required' => false,
+            'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden'),
+            'classtype' => 'fellowshipsubspecialty'
         ));
 
         $builder->add('save', SubmitType::class,
