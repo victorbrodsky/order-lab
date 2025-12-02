@@ -174,6 +174,9 @@ class CustomSelectorType extends AbstractType {
             case "fellowshipsubspecialty":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'FellowshipSubspecialty');
                 break;
+            case "globalfellowshipspecialty":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'GlobalFellowshipSpecialty', 'FellAppBundle');
+                break;
             case "locationusers":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'User');
                 break;
