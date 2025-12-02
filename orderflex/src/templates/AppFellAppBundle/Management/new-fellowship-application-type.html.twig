@@ -56,6 +56,18 @@
 
 
 
+{#getComboboxGeneric(newForm,'fellowshipsubspecialty',_fellowshipSubspecialtys,false);#}
+{% block additionaljs %}
 
+    <script language="Javascript">
+        var _fellowshipSubspecialtys = [];
+        var _globalfellowshipspecialtys = [];
+        $(document).ready(function() {
+            getComboboxGeneric(null,'fellowshipsubspecialty',_fellowshipSubspecialtys,false);
+            getComboboxGeneric(null,'globalfellowshipspecialty',_globalfellowshipspecialtys,false);
+        });
 
+    </script>
+
+{% endblock %}
 
