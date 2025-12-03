@@ -19,38 +19,23 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
-use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
+//use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\OrderformBundle\Entity\Patient;
 use App\UserdirectoryBundle\Entity\BuildingList;
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
-
-
 use App\UserdirectoryBundle\Entity\Location; //process.py script: replaced namespace by ::class: added use line for classname=Location
-
-
 use App\UserdirectoryBundle\Entity\ResearchLab; //process.py script: replaced namespace by ::class: added use line for classname=ResearchLab
-
-
 use App\UserdirectoryBundle\Entity\GrantComment; //process.py script: replaced namespace by ::class: added use line for classname=GrantComment
-
-
 use App\UserdirectoryBundle\Entity\GrantEffort; //process.py script: replaced namespace by ::class: added use line for classname=GrantEffort
-
-
 use App\UserdirectoryBundle\Entity\Grant; //process.py script: replaced namespace by ::class: added use line for classname=Grant
-
-
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
-
 use App\UserdirectoryBundle\Util\UserUtil;
 use App\UserdirectoryBundle\Security\Authentication\AuthUtil;
 
@@ -292,38 +277,38 @@ class UtilController extends OrderAbstractController {
         return $response;
     }
 
-    #[Route(path: '/common/globalfellowshipspecialty', name: 'employees_get_globalfellowshipspecialty', methods: ['GET'])]
-    public function getGlobalFellowshipSpecialtyAction() {
-        exit('getGlobalFellowshipSpecialtyAction');
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQueryBuilder()
-            ->from(GlobalFellowshipSpecialty::class, 'list')
-            ->select("list")
-            ->orderBy("list.orderinlist","ASC");
-
-        $locationusers = $query->getQuery()->getResult();
-
-        $output = array();
-
-        $output[] = array('id'=>null,'text'=>'None');
-        $output[] = array('id'=>null,'text'=>'Multiple');
-
-        //$output = array_merge($output, $locationusers);
-
-        foreach( $locationusers as $locationuser ) {
-            $element = array(
-                'id'        => $locationuser->getId(),
-                'text'      => $locationuser.""
-            );
-            $output[] = $element;
-        }
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/json');
-        $response->setContent(json_encode($output));
-        return $response;
-    }
+//    #[Route(path: '/common/globalfellowshipspecialty', name: 'employees_get_globalfellowshipspecialty', methods: ['GET'])]
+//    public function getGlobalFellowshipSpecialtyAction() {
+//        exit('getGlobalFellowshipSpecialtyAction');
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $query = $em->createQueryBuilder()
+//            ->from(GlobalFellowshipSpecialty::class, 'list')
+//            ->select("list")
+//            ->orderBy("list.orderinlist","ASC");
+//
+//        $locationusers = $query->getQuery()->getResult();
+//
+//        $output = array();
+//
+//        $output[] = array('id'=>null,'text'=>'None');
+//        $output[] = array('id'=>null,'text'=>'Multiple');
+//
+//        //$output = array_merge($output, $locationusers);
+//
+//        foreach( $locationusers as $locationuser ) {
+//            $element = array(
+//                'id'        => $locationuser->getId(),
+//                'text'      => $locationuser.""
+//            );
+//            $output[] = $element;
+//        }
+//
+//        $response = new Response();
+//        $response->headers->set('Content-Type', 'application/json');
+//        $response->setContent(json_encode($output));
+//        return $response;
+//    }
 
     #[Route(path: '/common/traininginstitution', name: 'employees_get_traininginstitution', methods: ['GET'])]
     public function getTrainingInstitutionAction(Request $request) {
