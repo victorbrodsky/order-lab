@@ -138,10 +138,19 @@ class UtilController extends OrderAbstractController {
 
 
                 default:
-                    $query =
-                        $em->createQueryBuilder()->from($fullClassName, 'list')
-                        ->select("list.id as id, list.name as text")
-                        ->orderBy("list.orderinlist","ASC");
+                    if( $fullClassName == 'GlobalFellowshipSpecialty' ) {
+                        $query =
+                            $em->createQueryBuilder()->from($fullClassName, 'list')
+                                ->select("list.id AS id, CONCAT(institutionparent.abbreviation, ' ', institution.name, ' - ', list.name) AS text")
+                                ->leftJoin("list.institution", "institution")
+                                ->leftJoin("institution.parent", "institutionparent")
+                                ->orderBy("list.orderinlist","ASC");
+                    } else {
+                        $query =
+                            $em->createQueryBuilder()->from($fullClassName, 'list')
+                                ->select("list.id as id, list.name as text")
+                                ->orderBy("list.orderinlist","ASC");
+                    }
 
                     // Add condition for non-empty names
                     $query->andWhere("list.name IS NOT NULL AND list.name != ''");
@@ -1694,7 +1703,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $subjectUser = $em->getRepository(User::class)->find($userid);
+        //$subjectUser = $em->getRepository(User::class)->find($userid);
 
         //$encoder = $this->container->get('security.password_encoder');
         //$encodeRes = $encoder->isPasswordValid($user,$userpassword);
