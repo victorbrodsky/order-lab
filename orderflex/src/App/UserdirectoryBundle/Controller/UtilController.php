@@ -138,7 +138,7 @@ class UtilController extends OrderAbstractController {
 
 
                 default:
-                    if( $fullClassName == 'GlobalFellowshipSpecialty' ) {
+                    if( $className == 'GlobalFellowshipSpecialty' ) {
                         $query =
                             $em->createQueryBuilder()->from($fullClassName, 'list')
                                 ->select("list.id AS id, CONCAT(institutionparent.abbreviation, ' ', institution.name, ' - ', list.name) AS text")
