@@ -44,7 +44,7 @@ var _medicaltitles = [];
 //trainings 6 from 8
 var _residencySpecialtys = [];
 var _fellowshipSubspecialtys = [];
-var _globalfellowshipspecialtys = [];
+//var _globalfellowshipspecialtys = [];
 var _trainingmajors = [];
 var _trainingminors = [];
 var _traininghonors = [];
@@ -417,7 +417,7 @@ function getComboboxResidencyspecialty(holder) {
         //console.log('getComboboxResidencyspecialty: show_user');
         getComboboxGeneric(holder,'residencyspecialty',_residencySpecialtys,false);
         getComboboxGeneric(holder,'fellowshipsubspecialty',_fellowshipSubspecialtys,false);
-        getComboboxGeneric(holder,'globalfellowshipspecialty',_globalfellowshipspecialtys,false);
+        //getComboboxGeneric(holder,'globalfellowshipspecialty',_globalfellowshipspecialtys,false);
         return;
     }
 

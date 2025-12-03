@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\OrderformBundle\Entity\Patient;
 use App\UserdirectoryBundle\Entity\BuildingList;
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
@@ -193,6 +194,8 @@ class UtilController extends OrderAbstractController {
 //                    'request'  => $request
 //                ]);
                 return $this->redirectToRoute('get-fellowshipsubspecialty-by-parent');
+            case 'globalfellowshipspecialty':
+                return $this->redirectToRoute('employees_get_globalfellowshipspecialty');
             case 'traininginstitution':
                 return $this->redirectToRoute('employees_get_traininginstitution');
             case 'institution-all':
@@ -282,6 +285,39 @@ class UtilController extends OrderAbstractController {
         }
 
         //print_r($output);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
+
+    #[Route(path: '/common/globalfellowshipspecialty', name: 'employees_get_globalfellowshipspecialty', methods: ['GET'])]
+    public function getGlobalFellowshipSpecialtyAction() {
+        exit('getGlobalFellowshipSpecialtyAction');
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQueryBuilder()
+            ->from(GlobalFellowshipSpecialty::class, 'list')
+            ->select("list")
+            ->orderBy("list.orderinlist","ASC");
+
+        $locationusers = $query->getQuery()->getResult();
+
+        $output = array();
+
+        $output[] = array('id'=>null,'text'=>'None');
+        $output[] = array('id'=>null,'text'=>'Multiple');
+
+        //$output = array_merge($output, $locationusers);
+
+        foreach( $locationusers as $locationuser ) {
+            $element = array(
+                'id'        => $locationuser->getId(),
+                'text'      => $locationuser.""
+            );
+            $output[] = $element;
+        }
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

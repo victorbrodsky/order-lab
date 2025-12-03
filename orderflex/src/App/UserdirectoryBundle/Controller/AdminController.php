@@ -8272,7 +8272,7 @@ class AdminController extends OrderAbstractController
 
             "samlconfig" => array('SamlConfig','samlconfig-list','Saml Configuration List'),
 
-            "globalfellowshipfpecialty" => array('GlobalFellowshipSpecialty','globalfellowshipfpecialty-list','Global Fellowship Specialty'),
+            "globalfellowshipspecialty" => array('GlobalFellowshipSpecialty','globalfellowshipspecialty-list','Global Fellowship Specialty'),
         );
 
         if( $withcustom ) {

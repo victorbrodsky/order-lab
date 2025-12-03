@@ -551,7 +551,7 @@ function setDeidentificatorNavBar() {
 }
 
 function setFellappNavBar() {
-    console.log("setFellappNavBar");
+    //console.log("setFellappNavBar");
 
     var id = 'fellapphome';
 
