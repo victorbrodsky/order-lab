@@ -194,8 +194,8 @@ class UtilController extends OrderAbstractController {
 //                    'request'  => $request
 //                ]);
                 return $this->redirectToRoute('get-fellowshipsubspecialty-by-parent');
-            case 'globalfellowshipspecialty':
-                return $this->redirectToRoute('employees_get_globalfellowshipspecialty');
+            //case 'globalfellowshipspecialty':
+            //    return $this->redirectToRoute('employees_get_globalfellowshipspecialty');
             case 'traininginstitution':
                 return $this->redirectToRoute('employees_get_traininginstitution');
             case 'institution-all':
@@ -2007,6 +2007,10 @@ class UtilController extends OrderAbstractController {
                 break;
             case "fellowshipsubspecialty":
                 $className = "FellowshipSubspecialty";
+                break;
+            case "globalfellowshipspecialty":
+                $className = "GlobalFellowshipSpecialty";
+                $bundleName = "FellAppBundle";
                 break;
 
             //tree
