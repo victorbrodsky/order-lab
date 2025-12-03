@@ -208,7 +208,7 @@ class UtilController extends OrderAbstractController {
             case 'userwrapper':
                 return $this->redirectToRoute('employees_get_userwrapper');
             default:
-                exit("COntroller not found by urlprefix=".$urlprefix);
+                exit("Controller not found by urlprefix=".$urlprefix);
         }
 
 //        if( $response ) {
