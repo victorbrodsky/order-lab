@@ -517,7 +517,8 @@ class FellAppManagement extends OrderAbstractController {
 
         $institutions = $fellappUtil->getFellowshipInstitutions();
         $params = array(
-            'institutions' => $institutions
+            'institutions' => $institutions,
+            'isHubServer' => $fellappUtil->isHubServer()
         );
 
         $form = $this->createForm(

@@ -33,6 +33,7 @@ class FellowshipSubspecialtyType extends AbstractType
 {
 
     protected $params;
+    private $selectStr;
 
     public function formConstructor( $params=null )
     {
@@ -43,6 +44,12 @@ class FellowshipSubspecialtyType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        $this->selectStr = "employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL";
+        if( $this->params['isHubServer'] == true ) {
+            $this->selectStr = '';
+        }
+        $this->selectStr = '';
+
         $builder->add('coordinators', EntityType::class, array(
             'class' => User::class,
             'label' => "Coordinator(s):",
@@ -50,15 +57,21 @@ class FellowshipSubspecialtyType extends AbstractType
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('user')
+                $qb = $er->createQueryBuilder('user')
                     ->leftJoin("user.infos", "infos")
                     ->leftJoin("user.preferences", "preferences")
                     ->leftJoin("user.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("infos.lastName NOT LIKE 'test%'")// AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                    ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere($this->selectStr)
                     ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                     ->orderBy("user.username", "ASC");
+
+                if (!empty($this->selectStr)) {
+                    $qb->andWhere($this->selectStr);
+                }
+                return $qb;
             }
         ));
 
@@ -70,14 +83,19 @@ class FellowshipSubspecialtyType extends AbstractType
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('user')
+                    $qb = $er->createQueryBuilder('user')
                         ->leftJoin("user.infos", "infos")
                         ->leftJoin("user.preferences", "preferences")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        //->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
                         ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                         ->orderBy("user.username", "ASC");
+
+                    if (!empty($this->selectStr)) {
+                        $qb->andWhere($this->selectStr);
+                    }
+                    return $qb;
                 }
         ));
 
@@ -88,14 +106,19 @@ class FellowshipSubspecialtyType extends AbstractType
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('user')
+                    $qb = $er->createQueryBuilder('user')
                         ->leftJoin("user.infos", "infos")
                         ->leftJoin("user.preferences", "preferences")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                        //->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
                         ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
                         ->orderBy("user.username", "ASC");
+
+                    if (!empty($this->selectStr)) {
+                        $qb->andWhere($this->selectStr);
+                    }
+                    return $qb;
                 }
         ));
 
@@ -105,20 +128,9 @@ class FellowshipSubspecialtyType extends AbstractType
             'choice_label' => "getTreeRootNameChildName",
             'required' => false,
             'choices' => $this->params['institutions'],
-            'invalid_message' => 'institution invalid value',
+            //'invalid_message' => 'institution invalid value',
             'attr' => array('class' => 'combobox combobox-width fellapp-institution'),
         ));
-//        $builder->add('institution', EntityType::class, array(
-//            'class' => Institution::class,
-//            'label' => "Institution:",
-//            'choice_label' => "getTreeRootNameChildName",
-//            'required' => false,
-//            'attr' => array('class' => 'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('user')
-//                    ->orderBy("user.orderinlist", "ASC");
-//            }
-//        ));
 
     }
 
