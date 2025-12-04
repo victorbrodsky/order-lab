@@ -37,7 +37,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FellAppFellowshipApplicationType extends AbstractType
 {
 
-    private string $customPrefix;
     protected $params;
 
     public function formConstructor( $params=null )
@@ -47,7 +46,6 @@ class FellAppFellowshipApplicationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->customPrefix = $options['block_prefix'];
         $this->formConstructor($options['form_custom_value']);
 
         //echo 'isHubServer='.$this->params['isHubServer']."<br>";
@@ -80,20 +78,15 @@ class FellAppFellowshipApplicationType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver) : void
     {
-        $resolver->setDefaults(
-            array(
+        $resolver->setDefaults(array(
             //'data_class' => 'App\UserdirectoryBundle\Entity\Training',
             'data_class' => null,
-            'form_custom_value' => null,
-            'block_prefix' => 'oleg_fellappbundle_fellappfellowshipapplicationtype',
-            )
-        );
+            'form_custom_value' => null
+        ));
     }
 
     public function getBlockPrefix(): string
     {
-        //return 'oleg_fellappbundle_fellappfellowshipapplicationtype';
-        return $this->customPrefix ?? 'oleg_fellappbundle_fellappfellowshipapplicationtype';
-
+        return 'oleg_fellappbundle_fellappfellowshipapplicationtype';
     }
 }

@@ -32,6 +32,7 @@ class FellowshipSubspecialtyType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        echo "data_class=".$options['data_class']."<br>";
 
         $builder->add('coordinators', EntityType::class, array(
             'class' => User::class,
@@ -95,8 +96,8 @@ class FellowshipSubspecialtyType extends AbstractType
     public function configureOptions(OptionsResolver $resolver) : void
     {
         $resolver->setDefaults(array(
-            'data_class' => 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty',
-            //'csrf_protection' => false,
+            //'data_class' => 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty',
+            'data_class' => null,
         ));
     }
 

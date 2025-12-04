@@ -506,10 +506,10 @@ class FellAppManagement extends OrderAbstractController {
 
         if( $fellappUtil->isHubServer() ) {
             $dataClass = GlobalFellowshipSpecialty::class;
-            $blockPrefix = 'oleg_fellappbundle_fellappglobalfellowshipapplicationtype';
+            //$blockPrefix = 'oleg_fellappbundle_fellappglobalfellowshipapplicationtype';
         } else {
             $dataClass = FellowshipSubspecialty::class;
-            $blockPrefix = 'oleg_fellappbundle_fellappfellowshipapplicationtype';
+            //$blockPrefix = 'oleg_fellappbundle_fellappfellowshipapplicationtype';
         }
 
         $form = $this->createForm(
@@ -518,7 +518,7 @@ class FellAppManagement extends OrderAbstractController {
             array(
                 'data_class' => $dataClass,
                 'disabled' => $disabled,
-                'block_prefix' => $blockPrefix,
+                //'block_prefix' => $blockPrefix,
                 //'method' => $method,
                 //'action' => $action
             )
