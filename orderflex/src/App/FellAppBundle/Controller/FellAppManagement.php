@@ -499,7 +499,7 @@ class FellAppManagement extends OrderAbstractController {
 //            $action = $this->generateUrl('fellapp_fellowshiptype_setting_update', array('id' => $felltype->getId()));
 //        }
 
-        //$fellappUtil = $this->container->get('fellapp_util');
+        $fellappUtil = $this->container->get('fellapp_util');
 
         if( $cycle == "show" ) {
             $disabled = true;
@@ -515,12 +515,18 @@ class FellAppManagement extends OrderAbstractController {
 //            $dataClass = FellowshipSubspecialty::class;
 //        }
 
+        $institutions = $fellappUtil->getFellowshipInstitutions();
+        $params = array(
+            'institutions' => $institutions
+        );
+
         $form = $this->createForm(
             FellowshipSubspecialtyType::class,
             $felltype,
             array(
                 'data_class' => get_class($felltype), //$dataClass,
                 'disabled' => $disabled,
+                'form_custom_value' => $params
                 //'method' => $method,
                 //'action' => $action
             )

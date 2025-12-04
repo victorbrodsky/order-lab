@@ -18,6 +18,7 @@
 namespace App\FellAppBundle\Form;
 
 
+use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -31,8 +32,17 @@ use Symfony\Component\Form\FormEvent;
 class FellowshipSubspecialtyType extends AbstractType
 {
 
+    protected $params;
+
+    public function formConstructor( $params=null )
+    {
+        $this->params = $params;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
+
         $builder->add('coordinators', EntityType::class, array(
             'class' => User::class,
             'label' => "Coordinator(s):",
@@ -89,6 +99,26 @@ class FellowshipSubspecialtyType extends AbstractType
                 }
         ));
 
+        $builder->add('institution', EntityType::class, array(
+            'class' => Institution::class,
+            'label' => "Institution:",
+            'choice_label' => "getTreeRootNameChildName",
+            'required' => false,
+            'choices' => $this->params['institutions'],
+            'invalid_message' => 'institution invalid value',
+            'attr' => array('class' => 'combobox combobox-width fellapp-institution'),
+        ));
+//        $builder->add('institution', EntityType::class, array(
+//            'class' => Institution::class,
+//            'label' => "Institution:",
+//            'choice_label' => "getTreeRootNameChildName",
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('user')
+//                    ->orderBy("user.orderinlist", "ASC");
+//            }
+//        ));
 
     }
 
@@ -97,6 +127,7 @@ class FellowshipSubspecialtyType extends AbstractType
         $resolver->setDefaults(array(
             //'data_class' => 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty',
             'data_class' => null,
+            'form_custom_value' => null,
         ));
     }
 
