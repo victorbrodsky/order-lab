@@ -155,7 +155,7 @@ class FellAppManagement extends OrderAbstractController {
             //$site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
 
             //$subspecialtyType = $form["fellowshipsubspecialtytype"]->getData();
-            if( $this->params['serverRole'] == 'Internet (Hub)' ) {
+            if( $serverRole == 'Internet (Hub)' ) {
                 $subspecialtyType = $form["globalfellowshipspecialty"]->getData();
             } else {
                 $subspecialtyType = $form["fellowshipsubspecialtytype"]->getData();
