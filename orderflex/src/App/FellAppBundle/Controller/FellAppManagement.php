@@ -563,9 +563,11 @@ class FellAppManagement extends OrderAbstractController {
         if( !$interviewerRoleFellType ) {
 //            exit('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.
 //                $fellowshipSubspecialty.']'); //testing exit
-            throw new EntityNotFoundException('FellAppManagement: 
-            assignFellAppAccessRoles: Unable to find role by 
-            FellowshipSubspecialty=['.$fellowshipSubspecialty.']');
+            throw new EntityNotFoundException(
+                'FellAppManagement: 
+                assignFellAppAccessRoles: Unable to find role by 
+                FellowshipSubspecialty=['.$fellowshipSubspecialty.']'
+            );
         }
 
         foreach( $users as $user ) {
