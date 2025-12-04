@@ -239,7 +239,17 @@ class FellowshipSubspecialty extends ListAbstract
         return false;
     }
 
-
+    //Clinical Informatics (WCM => Pathology)" becomes
+    //"WCM Department of Pathology and Laboratory Medicine - Clinical Informatics
+    public function getNameInstitution() {
+        $name = $this->getName();
+        $institution = null;
+        if( $this->getInstitution() ) {
+            $institution = $this->getInstitution()->getTreeRootAbbreviationChildName(' ');
+            return $institution . " - " . $name;
+        }
+        return $name;
+    }
 
     public function getClassName()
     {

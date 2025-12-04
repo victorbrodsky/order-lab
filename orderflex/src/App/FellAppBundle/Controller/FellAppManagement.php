@@ -78,15 +78,16 @@ class FellAppManagement extends OrderAbstractController {
         $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
         if( $fellappUtil->isHubServer() ) {
             $fellowshipTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
-            echo "globalFellTypes count=".count($fellowshipTypes)."<br>";
+            //echo "globalFellTypes count=".count($fellowshipTypes)."<br>";
         } else {
             $fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true); //array of entities
-            echo "fellTypes count=".count($fellowshipTypes)."<br>";
+            //echo "fellTypes count=".count($fellowshipTypes)."<br>";
         }
 
-        foreach($fellowshipTypes as $fellowshipType) {
-            echo $serverRole.': fellowshipType='.$fellowshipType.'<br>';
-        }
+        //testing
+        //foreach($fellowshipTypes as $fellowshipType) {
+        //    echo $serverRole.': fellowshipType='.$fellowshipType.'<br>';
+        //}
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
         //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles

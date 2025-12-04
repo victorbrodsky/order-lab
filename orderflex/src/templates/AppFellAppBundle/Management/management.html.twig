@@ -56,8 +56,10 @@
         {% endif %}
 
         <h4>
+            {#{{ entity.name }}#}
             <a
-                href="{{ path('fellapp_fellowshiptype_setting_edit', { 'id': entity.id}) }}" title="Edit fellowship specialty settings">{{ entity.name }}
+                href="{{ path('fellapp_fellowshiptype_setting_edit', { 'id': entity.id}) }}"
+                title="Edit fellowship specialty settings">{{ entity.getNameInstitution }}
             </a>
         </h4>
 
