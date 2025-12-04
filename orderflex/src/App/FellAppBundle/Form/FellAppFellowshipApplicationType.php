@@ -48,8 +48,8 @@ class FellAppFellowshipApplicationType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        //echo 'serverRole='.$this->params['serverRole']."<br>";
-        if( $this->params['serverRole'] == 'Internet (Hub)' ) {
+        //echo 'isHubServer='.$this->params['isHubServer']."<br>";
+        if( $this->params['isHubServer'] ) {
             //echo "define globalfellowshipspecialty<br>";
             $builder->add('globalfellowshipspecialty', CustomSelectorType::class, array(
                 'label' => "Global Fellowship Specialty:",

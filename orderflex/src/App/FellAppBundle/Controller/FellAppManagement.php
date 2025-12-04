@@ -19,6 +19,7 @@ namespace App\FellAppBundle\Controller;
 
 
 
+use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 
 
@@ -75,12 +76,12 @@ class FellAppManagement extends OrderAbstractController {
         //$fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
         //$fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true);
         $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
-        if( $serverRole."" != 'Internet (Hub)' ) {
-            $fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true); //array of entities
-            //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
-        } else {
+        if( $fellappUtil->isHubServer() ) {
             $fellowshipTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
             //echo "globalFellTypes count=".count($fellowshipTypes)."<br>";
+        } else {
+            $fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true); //array of entities
+            //echo "fellTypes count=".count($fellowshipTypes)."<br>";
         }
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
@@ -136,7 +137,7 @@ class FellAppManagement extends OrderAbstractController {
 
         //form with 'Fellowship Subspecialties' list
         $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
-        $params = array('serverRole' => $serverRole);
+        $params = array('isHubServer' => $fellappUtil->isHubServer());
         $form = $this->createForm(FellAppFellowshipApplicationType::class,null,array(
             'form_custom_value' => $params
         ));
@@ -155,7 +156,7 @@ class FellAppManagement extends OrderAbstractController {
             //$site = $em->getRepository('AppUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
 
             //$subspecialtyType = $form["fellowshipsubspecialtytype"]->getData();
-            if( $serverRole == 'Internet (Hub)' ) {
+            if( $fellappUtil->isHubServer() ) {
                 $subspecialtyType = $form["globalfellowshipspecialty"]->getData();
             } else {
                 $subspecialtyType = $form["fellowshipsubspecialtytype"]->getData();
@@ -302,14 +303,19 @@ class FellAppManagement extends OrderAbstractController {
 
         //echo " => userId=".$id."<br>";
         //exit('removeFellowshipTypeAction id='.$fellaptypeid);
-
+        $fellappUtil = $this->container->get('fellapp_util');
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
-        $subspecialtyType = $em->getRepository(FellowshipSubspecialty::class)->find($fellaptypeid);
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $fellappUtil->isHubServer() ) {
+            $subspecialtyType = $em->getRepository(GlobalFellowshipSpecialty::class)->find($fellaptypeid);
+        } else {
+            $subspecialtyType = $em->getRepository(FellowshipSubspecialty::class)->find($fellaptypeid);
+        }
         if( !$subspecialtyType ) {
-            throw $this->createNotFoundException('Unable to find FellowshipSubspecialty by id='.$fellaptypeid);
+            throw $this->createNotFoundException('Unable to find FellowshipSubspecialty ('.$serverRole.') by id='.$fellaptypeid);
         }
 
         //exit('not implemented');
@@ -322,18 +328,18 @@ class FellAppManagement extends OrderAbstractController {
 
         //2) set roles to disabled
         $removedRoles = array();
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
-        $roles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($subspecialtyType);
+        //$roles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($subspecialtyType);
+        $roles = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($subspecialtyType);
         foreach( $roles as $role ) {
             $role->setType('disabled');
             $em->persist($role);
-            $em->flush($role);
+            $em->flush();
             $removedRoles[] = $role->getName()."";
         }
 
         if( count($removedRoles) > 0 ) {
             //Event Log
-            $event = "Fellowship Application Type " . $subspecialtyType->getName() . " has been removed by " . $user ." by unlinking institution ".$inst.
+            $event = "Fellowship Application Type " . $subspecialtyType->getName() . " has been removed by " . $user ." by unlinking institution '".$inst."'".
                 " and disabling corresponding roles: ".implode(", ",$removedRoles);
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Removed');
@@ -399,10 +405,20 @@ class FellAppManagement extends OrderAbstractController {
         $cycle = "edit";
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
-        $felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
-
+        //$felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
+        if( $fellappUtil->isHubServer() ) {
+            $felltype = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
+            if( !$felltype ) {
+                throw $this->createNotFoundException('Unable to find Global Fellowship Specialty Type by id='.$id);
+            }
+        } else {
+            $felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
+            if( !$felltype ) {
+                throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
+            }
+        }
         if( !$felltype ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
+            throw $this->createNotFoundException('Unable to find any Fellowship Specialty Type by id='.$id);
         }
 
         $origDirectors = new ArrayCollection();
@@ -478,6 +494,8 @@ class FellAppManagement extends OrderAbstractController {
 //            $action = $this->generateUrl('fellapp_fellowshiptype_setting_update', array('id' => $felltype->getId()));
 //        }
 
+        $fellappUtil = $this->container->get('fellapp_util');
+
         if( $cycle == "show" ) {
             $disabled = true;
         }
@@ -486,21 +504,24 @@ class FellAppManagement extends OrderAbstractController {
             $disabled = false;
         }
 
+        if( $fellappUtil->isHubServer() ) {
+            $dataClass = GlobalFellowshipSpecialty::class;
+        } else {
+            $dataClass = FellowshipSubspecialty::class;
+        }
+
         $form = $this->createForm(
             FellowshipSubspecialtyType::class,
             $felltype,
             array(
+                'data_class' => $dataClass,
                 'disabled' => $disabled,
                 //'method' => $method,
                 //'action' => $action
             )
         );
 
-//        return array(
-//            'cycle' => $cycle,
-//            'entity' => $felltype,
-//            'form' => $form->createView()
-//        );
+
 
         return $form;
     }
@@ -515,10 +536,12 @@ class FellAppManagement extends OrderAbstractController {
         //    $fellowshipSubspecialty->getId().
          //   ")=$fellowshipSubspecialty; roleSubstr=$roleSubstr <br>"; //testing exit
 
-        $em = $this->getDoctrine()->getManager();
+        $fellappUtil = $this->container->get('fellapp_util');
+        //$em = $this->getDoctrine()->getManager();
 
         $interviewerRoleFellType = null;
-        $interviewerFellTypeRoles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        //$interviewerFellTypeRoles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
+        $interviewerFellTypeRoles = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleSubstr);
         //echo "interviewerFellTypeRoles=".count($interviewerFellTypeRoles)."<br>";
         foreach( $interviewerFellTypeRoles as $role ) {
             //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
@@ -550,8 +573,6 @@ class FellAppManagement extends OrderAbstractController {
 
             }
         }
-
-
     }
 
 

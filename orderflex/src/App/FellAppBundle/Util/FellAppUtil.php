@@ -634,12 +634,12 @@ class FellAppUtil {
         if( !$fellapp ) {
             return null;
         }
-        $userSecUtil = $this->container->get('user_security_utility');
-        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
-        if( $serverRole."" != 'Internet (Hub)' ) {
-            $fellowshipSpecialty = $fellapp->getFellowshipSubspecialty();
-        } else {
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $this->isHubServer() ) {
             $fellowshipSpecialty = $fellapp->getGlobalFellowshipSpecialty();
+        } else {
+            $fellowshipSpecialty = $fellapp->getFellowshipSubspecialty();
         }
         return $fellowshipSpecialty;
     }
@@ -916,6 +916,45 @@ class FellAppUtil {
     //$fellowshipSubspecialty - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
     public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
         //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
+//        $fellowshipSubspecialtyName = $fellowshipSubspecialty->getName(); //Pain Medicine
+//        $fellowshipSubspecialtyName = strtoupper(str_replace(' ', '', $fellowshipSubspecialtyName)); //PAINMEDICINE
+//
+//        $partialRoleName = 'ROLE_FELLAPP'.$roleName; //ROLE_FELLAPP_DIRECTOR_
+//
+//        $repository = $this->em->getRepository(Roles::class);
+//        $dql = $repository->createQueryBuilder("list");
+//        $dql->select('list');
+//        $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
+//        $parameters = array(
+//            "name1" => '%' . $partialRoleName . '%',
+//            "name2" => '%' . $fellowshipSubspecialtyName . '%'
+//        );
+//        $query = $dql->getQuery();
+//        $query->setParameters($parameters);
+//        $roles = $query->getResult();
+
+        $roles = $this->getRolesByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName );
+
+        //echo "roles=" . count($roles) . "<br>";
+
+        if( count($roles) > 0 ) {
+            $role = $roles[0];
+            return $role;
+        }
+
+        foreach( $roles as $role ) {
+            if( strpos((string)$role,$roleName) !== false ) {
+                return $role;
+                break;
+            }
+        }
+
+        return null;
+    }
+    //$roleName is a partial role name: _DIRECTOR_
+    //$fellowshipSubspecialty - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
+    public function getRolesByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
+        //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
 
         $fellowshipSubspecialtyName = $fellowshipSubspecialty->getName(); //Pain Medicine
         $fellowshipSubspecialtyName = strtoupper(str_replace(' ', '', $fellowshipSubspecialtyName)); //PAINMEDICINE
@@ -939,19 +978,7 @@ class FellAppUtil {
 
         //echo "roles=" . count($roles) . "<br>";
 
-        if( count($roles) > 0 ) {
-            $role = $roles[0];
-            return $role;
-        }
-
-        foreach( $roles as $role ) {
-            if( strpos((string)$role,$roleName) !== false ) {
-                return $role;
-                break;
-            }
-        }
-
-        return null;
+        return $roles;
     }
     public function getRoleByFellowshipSubspecialtyAndRolename_ORIG( $fellowshipSubspecialty, $roleName ) {
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
