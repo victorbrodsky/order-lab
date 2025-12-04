@@ -238,10 +238,13 @@ class GlobalFellowshipSpecialty extends ListAbstract
     public function getNameInstitution() {
 //        $institution = $this->getInstitution()->getNodeNameWithParent();
         //$institution = $this->getInstitution()->getTreeAbbreviation();
-        $institution = $this->getInstitution()->getTreeRootAbbreviationChildName(' ');
         $name = $this->getName();
-        //return $name . " (" . $institution . ")";
-        return $institution . " - " . $name;
+        $institution = null;
+        if( $this->getInstitution() ) {
+            $institution = $this->getInstitution()->getTreeRootAbbreviationChildName(' ');
+            return $institution . " - " . $name;
+        }
+        return $name;
     }
 
     public function __toString() {
