@@ -49,21 +49,21 @@ class FellAppFellowshipApplicationType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         //echo 'serverRole='.$this->params['serverRole']."<br>";
-        if( $this->params['serverRole'] != 'Internet (Hub)' ) {
-            //echo "define fellowshipsubspecialtytype<br>";
-            $builder->add('fellowshipsubspecialtytype', CustomSelectorType::class, array(
-                'label' => "Fellowship Specialty:",
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden'),
-                'classtype' => 'fellowshipsubspecialty'
-            ));
-        } else {
+        if( $this->params['serverRole'] == 'Internet (Hub)' ) {
             //echo "define globalfellowshipspecialty<br>";
             $builder->add('globalfellowshipspecialty', CustomSelectorType::class, array(
                 'label' => "Global Fellowship Specialty:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-globalfellowshipspecialty', 'type' => 'hidden'),
                 'classtype' => 'globalfellowshipspecialty'
+            ));
+        } else {
+            //echo "define fellowshipsubspecialtytype<br>";
+            $builder->add('fellowshipsubspecialtytype', CustomSelectorType::class, array(
+                'label' => "Fellowship Specialty:",
+                'required' => false,
+                'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden'),
+                'classtype' => 'fellowshipsubspecialty'
             ));
         }
 
