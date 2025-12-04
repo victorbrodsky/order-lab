@@ -240,7 +240,9 @@ class Training extends BaseUserAttributes
      */
     public function setFellowshipSubspecialty($fellowshipSubspecialty)
     {
-        $this->fellowshipSubspecialty = $fellowshipSubspecialty;
+        if( $fellowshipSubspecialty instanceof FellowshipSubspecialty ) {
+            $this->fellowshipSubspecialty = $fellowshipSubspecialty;
+        }
     }
 
     /**

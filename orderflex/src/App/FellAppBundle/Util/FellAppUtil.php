@@ -1959,7 +1959,10 @@ class FellAppUtil {
             if( $institution ) {
                 $role->setInstitution($institution);
             }
-            $role->setFellowshipSubspecialty($subspecialtyType);
+
+            if( $subspecialtyType instanceof FellowshipSubspecialty ) {
+                $role->setFellowshipSubspecialty($subspecialtyType);
+            }
 
             if( $roleType == "INTERVIEWER" ) {
                 $role->setLevel(30);
