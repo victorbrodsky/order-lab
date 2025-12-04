@@ -84,6 +84,10 @@ class FellAppManagement extends OrderAbstractController {
             //echo "fellTypes count=".count($fellowshipTypes)."<br>";
         }
 
+        foreach($fellowshipTypes as $fellowshipType) {
+            echo $serverRole.': fellowshipType='.$fellowshipType.'<br>';
+        }
+
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
         //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
         //$fellowshipTypes - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
@@ -494,7 +498,7 @@ class FellAppManagement extends OrderAbstractController {
 //            $action = $this->generateUrl('fellapp_fellowshiptype_setting_update', array('id' => $felltype->getId()));
 //        }
 
-        $fellappUtil = $this->container->get('fellapp_util');
+        //$fellappUtil = $this->container->get('fellapp_util');
 
         if( $cycle == "show" ) {
             $disabled = true;
