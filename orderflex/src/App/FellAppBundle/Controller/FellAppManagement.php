@@ -504,27 +504,22 @@ class FellAppManagement extends OrderAbstractController {
             $disabled = false;
         }
 
-        if( $fellappUtil->isHubServer() ) {
-            $dataClass = GlobalFellowshipSpecialty::class;
-            //$blockPrefix = 'oleg_fellappbundle_fellappglobalfellowshipapplicationtype';
-        } else {
-            $dataClass = FellowshipSubspecialty::class;
-            //$blockPrefix = 'oleg_fellappbundle_fellappfellowshipapplicationtype';
-        }
+//        if( $fellappUtil->isHubServer() ) {
+//            $dataClass = GlobalFellowshipSpecialty::class;
+//        } else {
+//            $dataClass = FellowshipSubspecialty::class;
+//        }
 
         $form = $this->createForm(
             FellowshipSubspecialtyType::class,
             $felltype,
             array(
-                'data_class' => $dataClass,
+                'data_class' => get_class($felltype), //$dataClass,
                 'disabled' => $disabled,
-                //'block_prefix' => $blockPrefix,
                 //'method' => $method,
                 //'action' => $action
             )
         );
-
-
 
         return $form;
     }

@@ -23,6 +23,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\Options;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -32,8 +33,6 @@ class FellowshipSubspecialtyType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        echo "data_class=".$options['data_class']."<br>";
-
         $builder->add('coordinators', EntityType::class, array(
             'class' => User::class,
             'label' => "Coordinator(s):",
