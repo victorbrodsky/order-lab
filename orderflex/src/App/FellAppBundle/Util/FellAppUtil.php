@@ -959,7 +959,14 @@ class FellAppUtil {
         $fellowshipSubspecialtyName = $fellowshipSubspecialty->getName(); //Pain Medicine
         $fellowshipSubspecialtyName = strtoupper(str_replace(' ', '', $fellowshipSubspecialtyName)); //PAINMEDICINE
 
+        // First, strip any existing underscores at the start/end
+        $normalized = trim($roleName, '_');
+        // Then wrap with underscores
+        $roleName = '_' . $normalized . '_';
+
+        //role example: ROLE_FELLAPP_DIRECTOR_SPECIALTY1
         $partialRoleName = 'ROLE_FELLAPP'.$roleName; //ROLE_FELLAPP_DIRECTOR_
+        echo '$fellowshipSubspecialtyName='.$fellowshipSubspecialtyName.', $partialRoleName='.$partialRoleName.'<br>';
 
         $repository = $this->em->getRepository(Roles::class);
         $dql = $repository->createQueryBuilder("list");

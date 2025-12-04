@@ -83,20 +83,20 @@ class FellowshipSubspecialtyType extends AbstractType
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                    $qb = $er->createQueryBuilder('user')
-                        ->leftJoin("user.infos", "infos")
-                        ->leftJoin("user.preferences", "preferences")
-                        ->leftJoin("user.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        //->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                        ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
-                        ->orderBy("user.username", "ASC");
+                $qb = $er->createQueryBuilder('user')
+                    ->leftJoin("user.infos", "infos")
+                    ->leftJoin("user.preferences", "preferences")
+                    ->leftJoin("user.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    //->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
+                    ->orderBy("user.username", "ASC");
 
-                    if (!empty($this->selectStr)) {
-                        $qb->andWhere($this->selectStr);
-                    }
-                    return $qb;
+                if (!empty($this->selectStr)) {
+                    $qb->andWhere($this->selectStr);
                 }
+                return $qb;
+            }
         ));
 
         $builder->add('interviewers', EntityType::class, array(
@@ -106,20 +106,20 @@ class FellowshipSubspecialtyType extends AbstractType
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                    $qb = $er->createQueryBuilder('user')
-                        ->leftJoin("user.infos", "infos")
-                        ->leftJoin("user.preferences", "preferences")
-                        ->leftJoin("user.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        //->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                        ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
-                        ->orderBy("user.username", "ASC");
+                $qb = $er->createQueryBuilder('user')
+                    ->leftJoin("user.infos", "infos")
+                    ->leftJoin("user.preferences", "preferences")
+                    ->leftJoin("user.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    //->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
+                    ->andWhere("preferences.hide IS NULL OR preferences.hide=false")
+                    ->orderBy("user.username", "ASC");
 
-                    if (!empty($this->selectStr)) {
-                        $qb->andWhere($this->selectStr);
-                    }
-                    return $qb;
+                if (!empty($this->selectStr)) {
+                    $qb->andWhere($this->selectStr);
                 }
+                return $qb;
+            }
         ));
 
         $builder->add('institution', EntityType::class, array(

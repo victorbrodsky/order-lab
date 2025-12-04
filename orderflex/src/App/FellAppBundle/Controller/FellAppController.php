@@ -1705,8 +1705,8 @@ class FellAppController extends OrderAbstractController {
             $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false);
             //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
         }
-        echo "createApplicantAction: fellowshipTypes count=".count($fellTypes)."<br>";
-        echo "createApplicantAction: globalFellTypes count=".count($globalFellTypes)."<br>";
+        //echo "createApplicantAction: fellowshipTypes count=".count($fellTypes)."<br>";
+        //echo "createApplicantAction: globalFellTypes count=".count($globalFellTypes)."<br>";
 
         $params = array(
             'cycle' => 'new',
