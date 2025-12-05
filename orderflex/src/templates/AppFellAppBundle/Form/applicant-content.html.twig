@@ -287,9 +287,9 @@
         {#if draft - 'save updated draft', if not 'Update'#}
         {#Remove button 'Save as Draft' if not initial apply page#}
         {% if entity.appStatus == 'draft' %}
-            <button id="triggerUpdate" class="btn btn-warning" name="btnSubmit" type="submit" value="fellapp-update">Safe Updated Draft</button>
+            <button id="triggerUpdate" class="btn btn-info" name="btnSubmit" type="submit" value="fellapp-update">Safe Updated Draft</button>
         {% else %}
-            <button id="triggerUpdate" class="btn btn-warning" name="btnSubmit" type="submit" value="fellapp-update">Update</button>
+            <button id="triggerUpdate" class="btn btn-info" name="btnSubmit" type="submit" value="fellapp-update">Update</button>
         {% endif %}
 
         {#{% if entity.appStatus == 'active' %}#}
@@ -299,7 +299,7 @@
             <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="fellapp-submit">Submit Application</button>
         {% endif %}
 
-        <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
+        <a class="btn_margin_top btn btn-default btn-success" href="{{ path(fellapp_sitename~'_show',{'id':entity.id}) }}">Cancel</a>
     </p>
 {% endif %}
 
