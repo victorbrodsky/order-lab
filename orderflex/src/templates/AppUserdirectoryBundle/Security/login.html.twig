@@ -154,9 +154,9 @@
                 changeLoginInstruction();
                 userPnotifyDisplay();
                 regularCombobox();
-                
+
                 //Issue: freshly loaded chrome browser -> click login or somewhere else -> "No matches found” in select2 field
-                //Disable autocomplete on the Select2 focusser
+                //Disable autocomplete on the Select2
                 $("#display-username").attr("autocomplete", "username");
                 $("#s2id_autogen1_search").attr("autocomplete", "off");
                 $(".select2-input")
@@ -164,7 +164,6 @@
                     .attr("name", "select2-ignore-autocomplete");
 
                 loginTypeOnchange();
-
                 
                 //$("#s2id_autogen1_search").attr("autocomplete", "off");
                 //$(".select2-input").attr("autocomplete", "off");
