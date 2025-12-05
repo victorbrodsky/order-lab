@@ -150,10 +150,24 @@
 
             $(document).ready(function() {
 
+
                 changeLoginInstruction();
                 userPnotifyDisplay();
                 regularCombobox();
+                
+                //Issue: freshly loaded chrome browser -> click login or somewhere else -> "No matches found” in select2 field
+                //Disable autocomplete on the Select2 focusser
+                $("#display-username").attr("autocomplete", "username");
+                $("#s2id_autogen1_search").attr("autocomplete", "off");
+                $(".select2-input")
+                    .attr("autocomplete", "off")
+                    .attr("name", "select2-ignore-autocomplete");
+
                 loginTypeOnchange();
+
+                
+                //$("#s2id_autogen1_search").attr("autocomplete", "off");
+                //$(".select2-input").attr("autocomplete", "off");
 
                 $("#login-form").on("submit", function () {
                     setFullUsername();
@@ -314,7 +328,7 @@
 
 
             function loginTypeOnchange() {
-
+                console.log('loginTypeOnchange');
                 $('#usernametypeid_show').on( 'change', function() {
                     $('#message').html("").hide();
                     $('#password').show();
