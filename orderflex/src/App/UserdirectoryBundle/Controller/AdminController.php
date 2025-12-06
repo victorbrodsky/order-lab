@@ -2373,6 +2373,24 @@ class AdminController extends OrderAbstractController
                     );
                 }
 
+                //set sitename
+                if( isset($aliasDescription[3]) && count($entity->getSites()) == 0 ) {
+                    //the element exists in the array. write your code here.
+                    //i.e. $aliasDescription[3] === 'translational-research'
+                    //$input = array("a", "b", "c", "d", "e");
+                    //$output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
+                    $roleParts = explode('_', $roleName); //ROLE TRANSRES IRB ...
+                    $rolePartSecondArr = array_slice($roleParts, 1, 1);
+                    $rolePartSecond = "_".$rolePartSecondArr[0]."_"; //_TRANSRES_
+                    //exit("rolePartSecond=".$rolePartSecond);
+                    $this->addSingleSite($entity,$rolePartSecond,$aliasDescription[3]);
+                    $em->flush();
+                    $this->addFlash(
+                        'notice',
+                        "Add site [".$aliasDescription[3]."] for $roleName"
+                    );
+                }
+
                 continue; //temporary disable to override alias, description, level
             }
 
