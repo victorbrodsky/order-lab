@@ -8908,7 +8908,6 @@ class AdminController extends OrderAbstractController
     //http://127.0.0.1/directory/admin/add-sites-only-if-none/
     #[Route(path: '/add-sites-only-if-none/', name: 'user_add_sites_only_if_none', methods: ['GET'])]
     public function addSitesOnlyIfNoneAction() {
-
         //exit('addSitesOnlyIfNoneAction not permitted. only for exceptions to sync roles and sites');
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
