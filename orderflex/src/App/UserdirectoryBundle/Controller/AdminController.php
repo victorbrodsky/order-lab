@@ -8929,6 +8929,7 @@ class AdminController extends OrderAbstractController
 //            }
             $resCount = 0;
 
+            echo "testing role $role: site count=".count($role->getSites())."<br>";
             if( count($role->getSites()) == 0 ) {
                 $resCount = $resCount + $this->addSites($role, '_DEIDENTIFICATOR_', 'deidentifier');
                 $resCount = $resCount + $this->addSites($role, '_VACREQ_', 'time-away-request');
