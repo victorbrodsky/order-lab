@@ -87,23 +87,19 @@ class DefaultController extends OrderAbstractController
         $logDir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR . "log";
 
         $systemLogFile = NULL;
-        //$files = scandir($logDir, SCANDIR_SORT_DESCENDING);
 
-        $files = glob($logDir.'/prod-*.log');
+        // collect both prod and dev logs
+        $prodFiles = glob($logDir.'/prod-*.log');
+        $devFiles  = glob($logDir.'/dev-*.log');
+
+        $files = array_merge($prodFiles ?: [], $devFiles ?: []);
+
         usort($files, function($a, $b) {
             return filemtime($b) - filemtime($a);
         });
 
-        //dump($files);
-        //echo "files=".count($files)."<br>";
         if( count($files) > 0 ) {
             $systemLogFile = $files[0];
-//            foreach($files as $file) {
-//                if( str_contains($file, 'prod-') ) {
-//                    $systemLogFile = $file;
-//                    break;
-//                }
-//            }
         }
         //echo "newestLogFile=$newestLogFile <br>";
         //exit('111');

@@ -227,6 +227,9 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $common = strpos((string)$lastRoute, '/common/');
         //$newproject = strpos((string)$lastRoute, '/project/new/');
 
+        //Added for autologin: Fallback from idle-logout: use idle_last_route if we have it
+        //$idleLastRoute = $session->get('idle_last_route'); //it might be: _time-away-request_
+
         $filedownload = strpos((string)$lastRoute, '/file-download');
         if( $filedownload ) {
             $lastRouteArr = explode("/", $lastRoute);
@@ -240,7 +243,12 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //echo "keepalive=".$keepalive."<br>";
         //echo "lastRoute=".$lastRoute."<br>";exit();
 
-        if( 
+        //Added for autologin: Prefer idle_last_route when lastRoute is idle-logout or empty
+        //if ($idleLastRoute) {
+        //    $referer_url = $idleLastRoute;
+        //    $session->remove('idle_last_route');  // clean up
+        //} elseif (
+        if(
             $lastRoute && $lastRoute != '' && 
             $loginpos === false && $nopermpos === false && 
             $nocheck === false && $keepalive === false && 
@@ -256,6 +264,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 //            $referer_url = $this->router->generate($this->siteName.'_home',$parameters);
         }
 
+        //$this->logger->notice("onAuthenticationSuccess: target_path=$lastRoute, idle_last_route=".$session->get('idle_last_route').", referer_url=$referer_url");
+        $this->logger->notice("onAuthenticationSuccess: target_path=$lastRoute, referer_url=$referer_url");
         //echo("referer_url=".$referer_url);
         //exit();
 

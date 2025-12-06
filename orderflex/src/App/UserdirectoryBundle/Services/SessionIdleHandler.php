@@ -78,6 +78,10 @@ class SessionIdleHandler
             if ($lapse > $this->maxIdleTime) {
                 //exit("$lapse > ".$this->maxIdleTime);
 
+                //Added for autologin: Save current URL so we can send user back here after login
+                $currentUrl = $request->getSchemeAndHttpHost() . $request->getRequestUri();
+                $session->set('idle_last_route', $currentUrl);
+
                 $event->setResponse(new RedirectResponse($this->router->generate('employees_idlelogout')));
                 //$event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
                 //$event->setResponse(new RedirectResponse($this->router->generate('employees_login')));
