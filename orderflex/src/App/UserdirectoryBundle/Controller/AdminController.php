@@ -2373,28 +2373,6 @@ class AdminController extends OrderAbstractController
                     );
                 }
 
-                //set sitename
-                echo "testing role [$roleName] site count=".count($entity->getSites())."<br>";
-                if( isset($aliasDescription[3]) ) {
-                    echo "site=".$aliasDescription[3].", site count=".count($entity->getSites())."<br>";
-                    if( count($entity->getSites()) == 0 ) {
-                        //the element exists in the array. write your code here.
-                        //i.e. $aliasDescription[3] === 'translational-research'
-                        //$input = array("a", "b", "c", "d", "e");
-                        //$output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
-                        $roleParts = explode('_', $roleName); //ROLE TRANSRES IRB ...
-                        $rolePartSecondArr = array_slice($roleParts, 1, 1);
-                        $rolePartSecond = "_" . $rolePartSecondArr[0] . "_"; //_TRANSRES_
-                        //exit("rolePartSecond=".$rolePartSecond);
-                        $this->addSingleSite($entity, $rolePartSecond, $aliasDescription[3]);
-                        $em->flush();
-                        $this->addFlash(
-                            'notice',
-                            "Add site [" . $aliasDescription[3] . "] for $roleName"
-                        );
-                    }
-                }
-
                 continue; //temporary disable to override alias, description, level
             }
 
@@ -8927,6 +8905,52 @@ class AdminController extends OrderAbstractController
         //exit('resCount='.$resCount);
         return $count;
     }
+    //http://127.0.0.1/directory/admin/add-sites-only-if-none/
+    #[Route(path: '/add-sites-only-if-none/', name: 'user_add_sites_only_if_none', methods: ['GET'])]
+    public function addSitesOnlyIfNoneAction() {
+
+        //exit('addSitesOnlyIfNoneAction not permitted. only for exceptions to sync roles and sites');
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+        $em = $this->getDoctrine()->getManager();
+        $roles = $em->getRepository(Roles::class)->findAll();
+
+        $count = 0;
+
+        foreach( $roles as $role ) {
+
+//            if( strpos((string)$role, '_DEIDENTIFICATOR_') !== false ) {
+//                $site = $em->getRepository(SiteList::class)->findOneByName('deidentifier');
+//                if( $role->getSites() && !$role->getSites()->contains($site) ) {
+//                    $role->addSite($site);
+//                    $count++;
+//                }
+//            }
+            $resCount = 0;
+
+            if( count($role->getSites()) == 0 ) {
+                $resCount = $resCount + $this->addSites($role, '_DEIDENTIFICATOR_', 'deidentifier');
+                $resCount = $resCount + $this->addSites($role, '_VACREQ_', 'time-away-request');
+                $resCount = $resCount + $this->addSites($role, '_FELLAPP_', 'fellowship-applications');
+                $resCount = $resCount + $this->addSites($role, '_RESAPP_', 'residency-applications');
+                $resCount = $resCount + $this->addSites($role, '_SCANORDER_', 'scan');
+                $resCount = $resCount + $this->addSites($role, '_USERDIRECTORY_', 'directory');
+                $resCount = $resCount + $this->addSites($role, '_CALLLOG_', 'call-log-book');
+                $resCount = $resCount + $this->addSites($role, '_CRN_', 'critical-result-notifications');
+                $resCount = $resCount + $this->addSites($role, '_DASHBOARD_', 'dashboards'); //Dashboard
+            }
+
+            if( $resCount > 0 ) {
+                $count++;
+                $em->persist($role);
+                $em->flush();
+            }
+        }
+
+        exit('addSitesOnlyIfNoneAction: resCount='.$resCount);
+        return $count;
+    }
     public function addSites( $role, $roleStr, $sitename ) {
         $count = 0;
         if( strpos((string)$role, $roleStr) !== false ) {
@@ -8958,7 +8982,7 @@ class AdminController extends OrderAbstractController
             if( !$site ) {
                 $site = $em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
             }
-            if( !$role->getSites()->contains($site) ) {
+            if( $site && !$role->getSites()->contains($site) ) {
                 $role->addSite($site);
                 $count++;
             }
