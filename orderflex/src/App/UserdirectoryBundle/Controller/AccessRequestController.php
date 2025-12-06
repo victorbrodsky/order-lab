@@ -1281,6 +1281,8 @@ class AccessRequestController extends OrderAbstractController
 
         //Roles
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
+        dump($rolesArr);
+        exit('111');
 
         $params = array(
             //'institutions' => $institutions,
