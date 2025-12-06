@@ -1284,9 +1284,9 @@ class AccessRequestController extends OrderAbstractController
         //TODO: on https://view.online/c/test-institution/test-department the roles don't have site set.
         //Role example: https://view.online/c/test-institution/test-department/directory/admin/list-manager/id/4/23
         //Role example correct: http://127.0.0.1/directory/admin/list-manager/id/4/19
-        echo 'siteName='.$this->siteName.'<br>';
-        dump($rolesArr);
-        exit('111');
+        //echo 'siteName='.$this->siteName.'<br>';
+        //dump($rolesArr);
+        //exit('111');
 
         $params = array(
             //'institutions' => $institutions,
