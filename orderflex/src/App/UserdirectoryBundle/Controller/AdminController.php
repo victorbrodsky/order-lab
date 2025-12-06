@@ -2374,6 +2374,7 @@ class AdminController extends OrderAbstractController
                 }
 
                 //set sitename
+                echo "testing role [$roleName] site count=".count($entity->getSites())."<br>";
                 if( isset($aliasDescription[3]) ) {
                     echo "site=".$aliasDescription[3].", site count=".count($entity->getSites())."<br>";
                     if( count($entity->getSites()) == 0 ) {
