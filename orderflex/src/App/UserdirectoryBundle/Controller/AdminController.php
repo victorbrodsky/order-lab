@@ -2469,7 +2469,7 @@ class AdminController extends OrderAbstractController
 
         } //foreach
 
-        //exit("EOF generate Roles");
+        exit("EOF generate Roles");
 
         return round($count/10);
     }
