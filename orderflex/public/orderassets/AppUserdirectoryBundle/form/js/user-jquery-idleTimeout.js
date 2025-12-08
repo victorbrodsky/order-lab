@@ -181,7 +181,7 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     /////// TESTING PARAMETERS ///////
     //_idleAfter = 25; //sec testing
     //sessionKeepAliveTimer = 3; //false; //testing
-    //dialogDisplayLimit = 15; //sec
+    dialogDisplayLimit = 15; //sec
     //urlIdleTimeoutLogout = false; //testing
     /////// EOF TESTING PARAMETERS ///////
 
@@ -334,17 +334,22 @@ function userCheckIfConnected() {
     $.get(urlIdleTimeoutLogout).done(function () {
         //alert("success");
         console.log("url ok");
-    }).fail(function () {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log("url error");
         console.log("url urlIdleTimeoutLogout="+urlIdleTimeoutLogout);
         //console.log("dialogTitle="+$.fn.idleTimeout().dialogTitle);
         //alert("failed.");
 
+        // Detailed error info:
+        console.log("Status: " + textStatus);       // e.g. "timeout", "error", "abort", "parsererror"
+        console.log("Error thrown: " + errorThrown); // e.g. "Not Found", "Internal Server Error"
+        console.log("Response text: " + jqXHR.responseText); // server response body if any
+
         var warningMessage = "A network connection interruption was detected and " +
             "your account was logged out due to inactivity. To continue, please " +
             "make sure you are connected to the network (and to the VPN, if applicable) " +
             "and log in again.";
-        //alert(warningMessage); //disable for SAML
+        alert(warningMessage, 'textStatus='+textStatus, 'errorThrown='+errorThrown, 'jqXHR.responseText='+jqXHR.responseText); //disable for SAML
 
         //var currentConfig = idleTimeout.currentConfig;
         //$.fn.idleTimeout().redirectUrl = false;

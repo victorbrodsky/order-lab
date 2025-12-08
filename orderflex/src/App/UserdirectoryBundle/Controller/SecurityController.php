@@ -532,6 +532,8 @@ class SecurityController extends OrderAbstractController
         if( $routename == "dashboard_idlelogout" ) {
             $sitename = $this->getParameter('dashboard.sitename');
         }
+        $logger = $this->container->get('logger');
+        $logger->notice("idlelogoutAction: sitename=$sitename");
 
 //        $request->getSession()->getFlashBag()->add(
 //            'notice',
@@ -540,14 +542,14 @@ class SecurityController extends OrderAbstractController
         //exit('idlelogoutAction exit');
 
         $userSecUtil = $this->container->get('user_security_utility');
-        return $userSecUtil->idleLogout( $request, $sitename, $flag );
+        return $userSecUtil->idleLogout( $request, $sitename, $url=null, $flag ); //idlelogoutAction
     }
     //Used by Routing.generate in idleTimeoutClass.prototype.checkIdleTimeout.
     //idle log out with refereal url, from this url we can get the sitename and then redirect properly to the same system
     #[Route(path: '/idle-log-out-ref/{url}', name: 'employees_idlelogout_ref', options: ['expose' => true])]
     public function idlelogoutRefAction( Request $request, $url = null )
     {
-        //exit('idlelogoutAction');
+        //exit('idlelogoutRefAction'); //testing
         //$routename = $request->get('_route');
 
         //default
@@ -588,9 +590,11 @@ class SecurityController extends OrderAbstractController
                 $sitename = $this->getParameter('dashboard.sitename');
             }
         }
+        $logger = $this->container->get('logger');
+        $logger->notice("idlelogoutRefAction: url=$url, sitename=$sitename");
 
         $userSecUtil = $this->container->get('user_security_utility');
-        return $userSecUtil->idleLogout( $request, $sitename );
+        return $userSecUtil->idleLogout( $request, $sitename, $url ); //idlelogoutRefAction
     }
 
     /**

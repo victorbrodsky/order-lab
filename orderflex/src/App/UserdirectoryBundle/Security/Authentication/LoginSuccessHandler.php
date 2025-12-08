@@ -88,6 +88,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //return new RedirectResponse($this->router->generate('employees_initial_configuration'));
 
         $response = null;
+        $referer_url = null;
 
         $user = $token->getUser();
 
@@ -227,9 +228,6 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $common = strpos((string)$lastRoute, '/common/');
         //$newproject = strpos((string)$lastRoute, '/project/new/');
 
-        //Added for autologin: Fallback from idle-logout: use idle_last_route if we have it
-        //$idleLastRoute = $session->get('idle_last_route'); //it might be: _time-away-request_
-
         $filedownload = strpos((string)$lastRoute, '/file-download');
         if( $filedownload ) {
             $lastRouteArr = explode("/", $lastRoute);
@@ -244,10 +242,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //echo "lastRoute=".$lastRoute."<br>";exit();
 
         //Added for autologin: Prefer idle_last_route when lastRoute is idle-logout or empty
-        //if ($idleLastRoute) {
-        //    $referer_url = $idleLastRoute;
-        //    $session->remove('idle_last_route');  // clean up
-        //} elseif (
+//        if ($idleLastRoute) {
+//            $referer_url = $idleLastRoute;
+//            $session->remove('idle_last_route');  // clean up
+//        } elseif (
         if(
             $lastRoute && $lastRoute != '' && 
             $loginpos === false && $nopermpos === false && 
@@ -264,12 +262,20 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 //            $referer_url = $this->router->generate($this->siteName.'_home',$parameters);
         }
 
+        //Added for autologin: Fallback from idle-logout: use idle_last_route if we have it
+        $idleLastRoute = $session->get('idle_last_route'); //it might be: _time-away-request_
+        if( $idleLastRoute ) {
+            $this->logger->notice("onAuthenticationSuccess: idleLastRoute=$idleLastRoute");
+            $referer_url = $idleLastRoute;
+            $session->remove('idle_last_route');  // clean up
+        }
+
         //$this->logger->notice("onAuthenticationSuccess: target_path=$lastRoute, idle_last_route=".$session->get('idle_last_route').", referer_url=$referer_url");
         $this->logger->notice("onAuthenticationSuccess: target_path=$lastRoute, referer_url=$referer_url");
         //echo("referer_url=".$referer_url);
         //exit();
 
-        //Add redirect o verify page if "Only allow log in if the primary mobile number is verified and ask to verify" is yes
+        //Add redirect to verify page if "Only allow log in if the primary mobile number is verified and ask to verify" is yes
         $userSecUtil = $this->container->get('user_security_utility');
         if( $userSecUtil->isRequireMobilePhoneToLogin($this->siteName) ) {
             $userInfo = $user->getUserInfo();

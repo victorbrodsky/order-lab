@@ -380,7 +380,7 @@ class UserSecurityUtil {
     }
 
     //Forking function
-    function idleLogout( $request, $sitename, $flag = null ) {
+    function idleLogout( $request, $sitename, $idelLastUrl, $flag = null ) {
         //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
         $session = $request->getSession();
         $logintype = $session->get('logintype');
@@ -392,14 +392,15 @@ class UserSecurityUtil {
         }
 
         //Regular logout
-        $this->idleRegularLogout($request,$sitename,$flag);
+        $this->idleRegularLogout($request,$sitename,$idelLastUrl,$flag);
 
         //Two above logout methods will redirect, therefore, below will not be reached
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
     }
-    function idleRegularLogout( $request, $sitename, $flag = null ) {
+    function idleRegularLogout( $request, $sitename, $idelLastUrl, $flag = null ) {
 
         $logger = $this->container->get('logger');
+        $logger->notice("idleRegularLogout: sitename=$sitename, idelLastUrl=$idelLastUrl");
         //$userUtil = new UserUtil();
         //$res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->security,$this->container);
 
@@ -423,6 +424,12 @@ class UserSecurityUtil {
             }
 
         }
+
+        //Added for autologin: Save current URL so we can send user back here after login
+        $session = $this->requestStack->getCurrentRequest()->getSession();
+        //$session = $request->getSession();
+        $session->set('idle_last_route', $idelLastUrl);
+        $logger->notice("idleRegularLogout: set idelLastUrl=$idelLastUrl");
 
         $user = $this->security->getUser();
         $eventType = "User Auto Logged Out";
@@ -465,10 +472,13 @@ class UserSecurityUtil {
         //$session->invalidate();
         //$this->security->logout(false);
 
-        $logger->notice("idleRegularLogout: before redirect to login page");
-        //return $this->redirect($this->generateUrl($sitename.'_login'));
+        $logger->notice("idleRegularLogout: before redirect to login page. idelLastUrl=$idelLastUrl");
+
+        if( $idelLastUrl ) {
+            return new RedirectResponse( $idelLastUrl );
+        }
+
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
-        //return new RedirectResponse( $this->container->get('router')->generate($sitename.'_logout') );
     }
     function idleSamlLogout( $request, $sitename, $logintype ) {
         $logger = $this->container->get('logger');
