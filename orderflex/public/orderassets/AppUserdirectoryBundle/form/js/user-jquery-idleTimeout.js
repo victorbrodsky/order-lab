@@ -179,7 +179,7 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     var dialogDisplayLimit = 60; //sec
 
     /////// TESTING PARAMETERS ///////
-    //_idleAfter = 25; //sec testing
+    _idleAfter = 120; //25; //sec testing
     //sessionKeepAliveTimer = 3; //false; //testing
     //dialogDisplayLimit = 15; //sec
     //urlIdleTimeoutLogout = false; //testing

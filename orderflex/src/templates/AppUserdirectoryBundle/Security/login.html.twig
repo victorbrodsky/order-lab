@@ -191,6 +191,7 @@
                         //console.log("username="+username);
                         //return false;
                         var url = Routing.generate('employees_user_check_custom');
+                        console.log("employees_user_check_custom: url="+url);
                         $.ajax({
                             url: url,
                             timeout: 5000, // sets timeout to 5 seconds
@@ -219,7 +220,7 @@
                             }
                             //$('#lastRoute').val(data['lastroute']);
                         }).fail(function(jqXHR, exception, error) {
-                            var failMsg = "exception="+exception+", error="+error;
+                            var failMsg = "employees_user_check_custom: exception="+exception+", error="+error;
                             console.log(failMsg);
                             alert(failMsg);
                         }).done(function() {
