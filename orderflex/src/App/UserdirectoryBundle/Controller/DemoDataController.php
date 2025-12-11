@@ -54,6 +54,7 @@ class DemoDataController extends OrderAbstractController
         //    return new JsonResponse(['error' => 'No file uploaded'], 400);
         //}
 
+        dd($request->getContent());
         dd($request->request->all());
 
         // Get fellowship application ID
