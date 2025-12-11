@@ -890,7 +890,7 @@ class FellApp:
             print("Status:", response.status_code)
             print("Headers:", response.headers)
             print("Body snippet:")
-            print(response.text[:500])
+            print(response.text)
             raise
 
         # if not os.path.isfile(file_path):
@@ -1134,6 +1134,7 @@ def main():
 
     ######## Test the file upload ########
     if 1:
+        automation.login_to_site()
         fellapp_id = 1
         url = automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file"
         print(f"upload-file url={url}")
