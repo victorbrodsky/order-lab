@@ -1122,7 +1122,7 @@ def main():
     if 1:
         fellapp_id = 1
         url = automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file"
-        print(f"url={url}")
+        print(f"upload-file url={url}")
         resp = fellapp.upload_fellowship_file(
             #url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
             url=url,
