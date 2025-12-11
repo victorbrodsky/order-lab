@@ -1117,7 +1117,12 @@ class FellAppUtil {
         if( $remoteAccessUrl ) {
             $remoteAccessUrl = "(".$remoteAccessUrl.")";
         }
-        $populatedBodyFellApp .= $break.$break."If you are off site, please connect via VPN first $remoteAccessUrl and then follow the links above.";
+        //$populatedBodyFellApp .= $break.$break."If you are off site, please connect via VPN first $remoteAccessUrl and then follow the links above.";
+        $populatedBodyFellApp .=
+            $break . $break .
+            'If you are off site, please connect via VPN first <a href="' .
+            $remoteAccessUrl . '" target="_blank">' .
+            $remoteAccessUrl . '</a> and then follow the links above.';
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );

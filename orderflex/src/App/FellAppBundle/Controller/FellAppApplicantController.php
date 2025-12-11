@@ -382,7 +382,10 @@ class FellAppApplicantController extends OrderAbstractController {
         if( $remoteAccessUrl ) {
             $remoteAccessUrl = "(".$remoteAccessUrl.")";
         }
-        $text .= "If you are off site, please connect via VPN first $remoteAccessUrl and then follow the links above.";
+        //$text .= "If you are off-site, please connect via VPN first $remoteAccessUrl and then follow the links above.";
+        $text .= 'If you are off site, please connect via VPN first <a href="' .
+            $remoteAccessUrl . '" target="_blank">' . $remoteAccessUrl .
+            '</a> and then follow the links above.';
         $text .= $break.$break;
 
         $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
