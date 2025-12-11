@@ -836,6 +836,7 @@ class FellApp:
         except Exception as e:
             print(f"Failed to add reference reference_email={reference_email}, count={count}:", e)
 
+    #url - api/upload-file
     def upload_fellowship_file(self,
                                url: str,
                                fellapp_id: int,
@@ -872,6 +873,7 @@ class FellApp:
             "fellapp_id": fellapp_id,
             "filepath": os.path.basename(file_path),
             "documenttype": documenttype,
+            "sitename": 'fellapp'
         }
         response = requests.post(url, data=data, headers=headers)
         response.raise_for_status()  # raise error if status != 200
@@ -1107,16 +1109,23 @@ def main():
     run_by_symfony_command = False
     baseurl = "https://view.online/c/demo-institution/demo-department"
 
+    #baseurl = "http://127.0.0.1"
+    #username_text = "oli2002l"
+    #password_text = "pass"
+
     # First, process the fellowship configurations in small batches
     automation = WebAutomation(baseurl, run_by_symfony_command)
     automation.login_to_site()
     fellapp = FellApp(automation)
 
     ######## Test the file upload ########
-    if 0:
+    if 1:
         fellapp_id = 1
+        url = automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file"
+        print(f"url={url}")
         resp = fellapp.upload_fellowship_file(
-            url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
+            #url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
+            url=url,
             fellapp_id=fellapp_id,
             file_name="lisa-chen.jpeg",
             documenttype="Fellowship Photo",

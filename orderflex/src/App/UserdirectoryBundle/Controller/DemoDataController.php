@@ -25,6 +25,7 @@ use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -43,31 +44,49 @@ class DemoDataController extends OrderAbstractController
     // http://127.0.0.1/directory/api/upload-file
     #[Route(path: '/api/upload-file', name: 'employees_api_upload_file', methods: ['GET','POST'])]
     public function apiUploadFile(Request $request) {
-        exit("Under construction");
+        //exit("Under construction");
         $logger = $this->container->get('logger');
         $logger->info("apiUploadFile: Starting file upload");
         
         // Get the uploaded file
-        $filepath = $request->files->get('filepath');
-        if (!$filepath) {
-            return new JsonResponse(['error' => 'No file uploaded'], 400);
-        }
+        //$filepath = $request->files->get('filepath');
+        //if (!$filepath) {
+        //    return new JsonResponse(['error' => 'No file uploaded'], 400);
+        //}
 
         // Get fellowship application ID
         $fellappId = $request->request->get('fellapp_id');
         if (!$fellappId) {
             return new JsonResponse(['error' => 'fellappId is required'], 400);
         }
+        $documentType = $request->request->get('documenttype');
+        if (!$fellappId) {
+            return new JsonResponse(['error' => 'documenttype is required'], 400);
+        }
+        $filepath = $request->request->get('filepath');
+        if (!$filepath) {
+            return new JsonResponse(['error' => 'filepath is required'], 400);
+        }
+        $sitename = $request->request->get('sitename');
+        if (!$sitename) {
+            return new JsonResponse(['error' => 'sitename is required'], 400);
+        }
 
         // Get document type (default to 'Other' if not specified)
-        $documentType = $request->request->get('documenttype', 'Other');
-        $sitename = $request->request->get('sitename', 'fellapp');
+        //$documentType = $request->request->get('documenttype', 'Other');
+        //$sitename = $request->request->get('sitename', 'fellapp');
+
+        $logger->info("$fellappId=fellappId, $documentType=documentType, $filepath=filepath, $sitename=sitename");
+        return new JsonResponse([
+            'status' => 'status ok',
+            'error' => null
+        ], 200);
 
         try {
             // Get the fellowship application
             $fellowshipApplication = $this->em->getRepository('AppFellappBundle:FellowshipApplication')->find($fellappId);
             if (!$fellowshipApplication) {
-                return new JsonResponse(['error' => 'Fellowship application not found'], 404);
+                return new JsonResponse(['status' => '', 'error' => 'Fellowship application not found'], 404);
             }
 
             // Get the user (system user if not authenticated)
