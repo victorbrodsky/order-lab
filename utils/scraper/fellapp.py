@@ -875,9 +875,23 @@ class FellApp:
             "documenttype": documenttype,
             "sitename": 'fellapp'
         }
-        response = requests.post(url, data=data, headers=headers)
+        # Pass through headers (e.g. Authorization) if provided
+        if headers:
+            response = requests.post(url, data=data, headers=headers)
+        else:
+            response = requests.post(url, data=data)
         response.raise_for_status()  # raise error if status != 200
-        return response.json()
+
+        # Try to parse JSON; if it fails, print diagnostics and re-raise
+        try:
+            return response.json()
+        except ValueError:
+            print("upload_fellowship_file: non-JSON response received")
+            print("Status:", response.status_code)
+            print("Headers:", response.headers)
+            print("Body snippet:")
+            print(response.text[:500])
+            raise
 
         # if not os.path.isfile(file_path):
         #     raise FileNotFoundError(f"File not found: {file_path}")
@@ -1130,7 +1144,7 @@ def main():
             file_name="lisa-chen.jpeg",
             documenttype="Fellowship Photo",
             sitename="fellapp",
-            headers={"Authorization": "Bearer <token>"}
+            #headers={"Authorization": "Bearer <token>"}
         )
         print("upload-file resp=", resp)
         exit()
