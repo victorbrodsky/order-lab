@@ -164,7 +164,7 @@ class DemoDataController extends OrderAbstractController
                 echo "File does not exist. filepath=$filepath";
                 return new JsonResponse([
                     'status' => 'error',
-                    'error' => "File does not exist. filepath=$filepath"
+                    'error' => "File does not exist. projectRoot=$projectRoot, filepath=$filepath"
                 ], 500);
             }
 
