@@ -90,6 +90,13 @@ class DemoDataController extends OrderAbstractController
                 'error' => 'relative_path is required'
             ], 400);
         }
+        $fileName = $request->request->get('file_name');
+        if (!$fileName) {
+            return new JsonResponse([
+                'status' => 'error',
+                'error' => 'file_name is required'
+            ], 400);
+        }
         $sitename = $request->request->get('sitename');
         if (!$sitename) {
             return new JsonResponse([
@@ -105,7 +112,7 @@ class DemoDataController extends OrderAbstractController
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $filepath = $projectRoot . DIRECTORY_SEPARATOR . $relativePath;
 
-        $inputParameters = "fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
+        $inputParameters = "apiUploadFile: fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
 
         $logger->info($inputParameters);
 //        return new JsonResponse([
@@ -147,7 +154,7 @@ class DemoDataController extends OrderAbstractController
                 $fileExtStr = ".".$fileExt;
             }
 
-            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$filepath.$fileExtStr;  //.'_title='.$fileTitle;
+            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$fileName.$fileExtStr;  //.'_title='.$fileTitle;
 
             $filesize = null;
             if (file_exists($filepath)) {

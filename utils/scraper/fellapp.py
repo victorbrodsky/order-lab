@@ -875,6 +875,7 @@ class FellApp:
             "fellapp_id": fellapp_id,
             "filepath": os.path.basename(file_path),
             "relative_path": relative_path,
+            "file_name": file_name,
             "documenttype": documenttype,
             "sitename": 'fellapp'
         }
