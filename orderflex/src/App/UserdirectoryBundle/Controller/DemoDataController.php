@@ -82,6 +82,13 @@ class DemoDataController extends OrderAbstractController
                 'error' => 'filepath is required'
             ], 400);
         }
+        $relativePath = $request->request->get('relative_path');
+        if (!$relativePath) {
+            return new JsonResponse([
+                'status' => 'error',
+                'error' => 'relative_path is required'
+            ], 400);
+        }
         $sitename = $request->request->get('sitename');
         if (!$sitename) {
             return new JsonResponse([
@@ -94,7 +101,7 @@ class DemoDataController extends OrderAbstractController
         //$documentType = $request->request->get('documenttype', 'Other');
         //$sitename = $request->request->get('sitename', 'fellapp');
 
-        $inputParameters = "$fellappId=fellappId, $documentType=documentType, $filepath=filepath, $sitename=sitename";
+        $inputParameters = "fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
 
         $logger->info($inputParameters);
 //        return new JsonResponse([

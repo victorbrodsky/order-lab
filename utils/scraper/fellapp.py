@@ -866,12 +866,14 @@ class FellApp:
         # Resolve to an absolute path
         file_path = os.path.abspath(os.path.join(script_dir, relative_path))
         print(f"file_path={file_path}")
+        print(f"relative_path={relative_path}")
 
         #accept_url = base_url.rstrip('/') + '/' + f"api/upload-file".lstrip('/')
 
         data = {
             "fellapp_id": fellapp_id,
             "filepath": os.path.basename(file_path),
+            "relative_path": relative_path,
             "documenttype": documenttype,
             "sitename": 'fellapp'
         }
