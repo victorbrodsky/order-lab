@@ -886,8 +886,8 @@ class FellApp:
 
         # Try to parse JSON; if it fails, print diagnostics and re-raise
         try:
-            return response.json()
-            #return response.text
+            #return response.json()
+            return response.text
         except ValueError:
             print("upload_fellowship_file: non-JSON response received")
             print("Status:", response.status_code)

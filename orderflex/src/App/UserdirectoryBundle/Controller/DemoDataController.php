@@ -143,7 +143,7 @@ class DemoDataController extends OrderAbstractController
                 $sizeInBytes = filesize($filepath);
                 echo "File size: " . $sizeInBytes . " bytes\n";
             } else {
-                echo "File does not exist.";
+                echo "File does not exist. filepath=$filepath";
             }
 
             // Create a new Document entity
