@@ -862,7 +862,8 @@ class FellApp:
         # Get the directory where the current script is located
         script_dir = os.path.dirname(os.path.abspath(__file__))
         # Build the relative path
-        relative_path = f"../../orderflex/src/App/FellAppBundle/Util/{file_name}"
+        #relative_path = f"../../orderflex/src/App/FellAppBundle/Util/{file_name}"
+        relative_path = f"src/App/FellAppBundle/Util/{file_name}"
         # Resolve to an absolute path
         file_path = os.path.abspath(os.path.join(script_dir, relative_path))
         print(f"file_path={file_path}")

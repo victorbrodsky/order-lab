@@ -82,6 +82,7 @@ class DemoDataController extends OrderAbstractController
                 'error' => 'filepath is required'
             ], 400);
         }
+        // src/App/FellAppBundle/Util/{file_name}
         $relativePath = $request->request->get('relative_path');
         if (!$relativePath) {
             return new JsonResponse([
@@ -100,6 +101,9 @@ class DemoDataController extends OrderAbstractController
         // Get document type (default to 'Other' if not specified)
         //$documentType = $request->request->get('documenttype', 'Other');
         //$sitename = $request->request->get('sitename', 'fellapp');
+
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
+        $filepath = $projectRoot . DIRECTORY_SEPARATOR . $relativePath;
 
         $inputParameters = "fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
 
