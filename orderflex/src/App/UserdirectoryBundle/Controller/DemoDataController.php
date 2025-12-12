@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\FellAppBundle\Entity\FellowshipApplication;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 use App\UserdirectoryBundle\Entity\User;
@@ -92,7 +93,8 @@ class DemoDataController extends OrderAbstractController
 
         try {
             // Get the fellowship application
-            $fellowshipApplication = $em->getRepository('AppFellappBundle:FellowshipApplication')->find($fellappId);
+            //$fellowshipApplication = $em->getRepository('AppFellappBundle:FellowshipApplication')->find($fellappId);
+            $fellowshipApplication = $em->getRepository(FellowshipApplication::class)->find($fellappId);
             if (!$fellowshipApplication) {
                 return new JsonResponse(['status' => '', 'error' => 'Fellowship application not found'], 404);
             }
