@@ -22,6 +22,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -79,15 +80,19 @@ class DemoDataController extends OrderAbstractController
         //$documentType = $request->request->get('documenttype', 'Other');
         //$sitename = $request->request->get('sitename', 'fellapp');
 
-        $logger->info("$fellappId=fellappId, $documentType=documentType, $filepath=filepath, $sitename=sitename");
-        return new JsonResponse([
-            'status' => 'status ok: $fellappId='.$fellappId,
-            'error' => null
-        ], 200);
+        $inputParameters = "$fellappId=fellappId, $documentType=documentType, $filepath=filepath, $sitename=sitename";
+
+        $logger->info($inputParameters);
+//        return new JsonResponse([
+//            'status' => 'status ok: inputParameters='.$inputParameters,
+//            'error' => null
+//        ], 200);
+
+        $em = $this->getDoctrine()->getManager();
 
         try {
             // Get the fellowship application
-            $fellowshipApplication = $this->em->getRepository('AppFellappBundle:FellowshipApplication')->find($fellappId);
+            $fellowshipApplication = $em->getRepository('AppFellappBundle:FellowshipApplication')->find($fellappId);
             if (!$fellowshipApplication) {
                 return new JsonResponse(['status' => '', 'error' => 'Fellowship application not found'], 404);
             }
@@ -129,7 +134,7 @@ class DemoDataController extends OrderAbstractController
             
             // Set document type if provided
             if ($documentType) {
-                $transformer = new GenericTreeTransformer($this->em, $user, "DocumentTypeList", "UserdirectoryBundle");
+                $transformer = new GenericTreeTransformer($em, $user, "DocumentTypeList", "UserdirectoryBundle");
                 $documentTypeObject = $transformer->reverseTransform($documentType);
                 if ($documentTypeObject) {
                     $document->setType($documentTypeObject);
@@ -156,13 +161,13 @@ class DemoDataController extends OrderAbstractController
             $fellowshipApplication->addDocument($document);
 
             // Save everything
-            $this->em->persist($document);
-            $this->em->persist($fellowshipApplication);
-            $this->em->flush();
+            $em->persist($document);
+            $em->persist($fellowshipApplication);
+            $em->flush();
 
             // Log the upload event
             $userSecUtil = $this->container->get('user_security_utility');
-            $eventDescription = "Document has been uploaded to the server by " . $user;
+            $eventDescription = "Document $filepath has been added to the fellowship application ID $fellappId by " . $user;
             $userSecUtil->createUserEditEvent($sitename, $eventDescription, $user, $document, $request, $documentType . ' Uploaded');
 
             return new JsonResponse([
