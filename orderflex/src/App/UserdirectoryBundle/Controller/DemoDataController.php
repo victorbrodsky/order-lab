@@ -22,6 +22,7 @@ namespace App\UserdirectoryBundle\Controller;
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
+use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\User;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Bridge\Twig\Attribute\Template;
