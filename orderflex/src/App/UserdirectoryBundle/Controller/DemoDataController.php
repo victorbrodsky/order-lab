@@ -112,7 +112,7 @@ class DemoDataController extends OrderAbstractController
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $filepath = $projectRoot . DIRECTORY_SEPARATOR . $relativePath;
 
-        $inputParameters = "apiUploadFile: fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
+        $inputParameters = "apiUploadFile: projectRoot=$projectRoot, fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
 
         $logger->info($inputParameters);
 //        return new JsonResponse([
