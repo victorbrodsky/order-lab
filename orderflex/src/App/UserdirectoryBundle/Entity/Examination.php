@@ -104,6 +104,8 @@ class Examination
     #[ORM\Column(type: 'date', nullable: true)]
     private $ECFMGCertificateDate;
 
+    //TODO: add upload certificate document
+
     //COMLEX-USA Level 1 Score,	COMLEX-USA Level 2 CE Score, COMLEX-USA Level 2 PE Score (Pass/Fail), COMLEX-USA Level 3 Score
     //COMLEX Level 1 result is pass/fail since May 10, 2022.
     #[ORM\Column(type: 'string', nullable: true)]

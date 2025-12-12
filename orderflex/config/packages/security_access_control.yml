@@ -41,7 +41,7 @@ security:
 
        - { path: ^.*/directory/send-confirmation-email/, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/trigger-post-db-updates/, role: PUBLIC_ACCESS }
-       - { path: ^.*/directory/api/upload-file/, role: PUBLIC_ACCESS }
+#       - { path: ^.*/directory/api/upload-file/, role: PUBLIC_ACCESS }
 
        ############################## common idle time out logic ##############################
        - { path: ^.*/directory/common/, role: ROLE_USER }

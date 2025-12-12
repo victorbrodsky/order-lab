@@ -63,19 +63,31 @@ class DemoDataController extends OrderAbstractController
         // Get fellowship application ID
         $fellappId = $request->request->get('fellapp_id');
         if (!$fellappId) {
-            return new JsonResponse(['error' => 'fellappId is required'], 400);
+            return new JsonResponse([
+                'status' => 'error',
+                'error' => 'fellappId is required'
+            ], 400);
         }
         $documentType = $request->request->get('documenttype');
         if (!$fellappId) {
-            return new JsonResponse(['error' => 'documenttype is required'], 400);
+            return new JsonResponse([
+                'status' => 'error',
+                'error' => 'documenttype is required'
+            ], 400);
         }
         $filepath = $request->request->get('filepath');
         if (!$filepath) {
-            return new JsonResponse(['error' => 'filepath is required'], 400);
+            return new JsonResponse([
+                'status' => 'error',
+                'error' => 'filepath is required'
+            ], 400);
         }
         $sitename = $request->request->get('sitename');
         if (!$sitename) {
-            return new JsonResponse(['error' => 'sitename is required'], 400);
+            return new JsonResponse([
+                'status' => 'error',
+                'error' => 'sitename is required'
+            ], 400);
         }
 
         // Get document type (default to 'Other' if not specified)
@@ -97,7 +109,10 @@ class DemoDataController extends OrderAbstractController
             //$fellowshipApplication = $em->getRepository('AppFellappBundle:FellowshipApplication')->find($fellappId);
             $fellowshipApplication = $em->getRepository(FellowshipApplication::class)->find($fellappId);
             if (!$fellowshipApplication) {
-                return new JsonResponse(['status' => '', 'error' => 'Fellowship application not found'], 404);
+                return new JsonResponse([
+                    'status' => 'error',
+                    'error' => 'Fellowship application not found'
+                ], 404);
             }
 
             // Get the user (system user if not authenticated)
@@ -106,7 +121,10 @@ class DemoDataController extends OrderAbstractController
                 $userSecUtil = $this->container->get('user_security_utility');
                 $user = $userSecUtil->findSystemUser();
                 if (!$user) {
-                    return new JsonResponse(['error' => 'User not found and could not get system user'], 500);
+                    return new JsonResponse([
+                        'status' => 'error',
+                        'error' => 'User not found and could not get system user'
+                    ], 500);
                 }
             }
 
@@ -178,11 +196,14 @@ class DemoDataController extends OrderAbstractController
                 'documentId' => $document->getId(),
                 'documentName' => $document->getCleanOriginalname(),
                 'documentPath' => $document->getRelativeUploadFullPath()
-            ]);
+            ], 200);
 
         } catch (\Exception $e) {
             $logger->error("apiUploadFile error: " . $e->getMessage());
-            return new JsonResponse(['error' => 'Failed to upload file: ' . $e->getMessage()], 500);
+            return new JsonResponse([
+                'status' => 'error',
+                'error' => 'Failed to upload file: ' . $e->getMessage()
+            ], 500);
         }
     }
 
