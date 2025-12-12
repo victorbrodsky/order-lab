@@ -81,7 +81,7 @@ class DemoDataController extends OrderAbstractController
 
         $logger->info("$fellappId=fellappId, $documentType=documentType, $filepath=filepath, $sitename=sitename");
         return new JsonResponse([
-            'status' => 'status ok',
+            'status' => 'status ok: $fellappId='.$fellappId,
             'error' => null
         ], 200);
 

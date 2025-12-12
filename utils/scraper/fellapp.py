@@ -878,9 +878,11 @@ class FellApp:
         # Pass through headers (e.g. Authorization) if provided
         if headers:
             response = requests.post(url, data=data, headers=headers)
+            #response = requests.get(url, data=data, headers=headers)
         else:
             response = requests.post(url, data=data)
-        response.raise_for_status()  # raise error if status != 200
+            #response = requests.get(url, data=data)
+        #response.raise_for_status()  # raise error if status != 200
 
         # Try to parse JSON; if it fails, print diagnostics and re-raise
         try:
@@ -1136,7 +1138,7 @@ def main():
     if 1:
         automation.login_to_site()
         fellapp_id = 1
-        url = automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file"
+        url = automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/"
         print(f"upload-file url={url}")
         resp = fellapp.upload_fellowship_file(
             #url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
