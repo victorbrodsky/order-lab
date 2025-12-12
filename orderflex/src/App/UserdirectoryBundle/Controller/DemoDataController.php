@@ -217,7 +217,8 @@ class DemoDataController extends OrderAbstractController
                 'status' => 'success',
                 'documentId' => $document->getId(),
                 'documentName' => $document->getCleanOriginalname(),
-                'documentPath' => $document->getRelativeUploadFullPath()
+                'documentPath' => $document->getRelativeUploadFullPath(),
+                'message' => $inputParameters
             ], 200);
 
         } catch (\Exception $e) {
@@ -227,6 +228,10 @@ class DemoDataController extends OrderAbstractController
                 'error' => 'Failed to upload file: ' . $e->getMessage()
             ], 500);
         }
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => $inputParameters
+        ], 200);
     }
 
     //[Route(path: '/reset-demo-data/', name: 'employees_reset_demo_data', methods: ['GET'])]
