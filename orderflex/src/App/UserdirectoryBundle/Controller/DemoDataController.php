@@ -144,6 +144,10 @@ class DemoDataController extends OrderAbstractController
                 echo "File size: " . $sizeInBytes . " bytes\n";
             } else {
                 echo "File does not exist. filepath=$filepath";
+                return new JsonResponse([
+                    'status' => 'error',
+                    'error' => "File does not exist. filepath=$filepath"
+                ], 500);
             }
 
             // Create a new Document entity
