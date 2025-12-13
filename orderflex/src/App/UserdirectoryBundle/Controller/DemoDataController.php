@@ -188,6 +188,7 @@ class DemoDataController extends OrderAbstractController
             $document->setUniqueid($fileUniqueName);
             $document->setUniquename($fileUniqueName);
             $document->setOriginalname($fileName);
+            $document->setTitle($fileName);
             $document->setUploadDirectory($filepath);
             $document->setSize($filesize);
             
