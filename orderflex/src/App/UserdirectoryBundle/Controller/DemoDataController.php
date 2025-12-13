@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Panther\Client;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Filesystem\Filesystem;
 
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
@@ -218,8 +219,15 @@ class DemoDataController extends OrderAbstractController
 //                mkdir($uploadDirectory, 0700, true);
 //                chmod($uploadDirectory, 0700);
 //            }
-            file_put_contents($target_file, $filepath);
-            
+            //file_put_contents($target_file, $filepath);
+            $filesystem = new Filesystem();
+            try {
+                $filesystem->copy($filepath, $target_file, true); // true = overwrite
+            } catch (\Exception $e) {
+                throw new \Exception("Copy failed: " . $e->getMessage());
+            }
+
+
             // Set the upload directory in the document
             $document->setUploadDirectory('Uploaded/fellapp/documents');
 
