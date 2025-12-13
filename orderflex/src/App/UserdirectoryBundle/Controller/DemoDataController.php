@@ -50,7 +50,9 @@ class DemoDataController extends OrderAbstractController
         //exit("Under construction");
         $logger = $this->container->get('logger');
         $logger->notice("apiUploadFile: Starting file upload");
-        
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
         // Get the uploaded file
         //$filepath = $request->files->get('filepath');
         //if (!$filepath) {
