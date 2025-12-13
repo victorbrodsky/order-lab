@@ -189,7 +189,7 @@ class DemoDataController extends OrderAbstractController
             $document->setUniquename($fileUniqueName);
             $document->setOriginalname($fileName);
             $document->setTitle($fileName);
-            $document->setUploadDirectory($filepath);
+            //$document->setUploadDirectory($filepath);
             $document->setSize($filesize);
             
             // Set document type if provided
@@ -205,7 +205,20 @@ class DemoDataController extends OrderAbstractController
             $uploadDirectory = $this->getParameter('kernel.project_dir') . '/public/Uploaded/fellapp/documents';
             if (!file_exists($uploadDirectory)) {
                 mkdir($uploadDirectory, 0777, true);
+                chmod($uploadDirectory, 0700);
             }
+
+            //Copy file to upload folder
+            //$fullpath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $path;
+            $target_file = $uploadDirectory . DIRECTORY_SEPARATOR . $fileUniqueName;
+            //$target_file = $fullpath . 'uploadtestfile.jpg';
+            //echo "target_file=".$target_file."<br>";
+//            if( !file_exists($fileUniqueName) ) {
+//                // 0600 - Read/write/execute for owner, nothing for everybody else
+//                mkdir($uploadDirectory, 0700, true);
+//                chmod($uploadDirectory, 0700);
+//            }
+            file_put_contents($target_file, $filepath);
             
             // Set the upload directory in the document
             $document->setUploadDirectory('Uploaded/fellapp/documents');
