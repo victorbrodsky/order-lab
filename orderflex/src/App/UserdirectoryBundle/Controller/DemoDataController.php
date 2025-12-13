@@ -114,16 +114,16 @@ class DemoDataController extends OrderAbstractController
             ], 400);
         }
 
-        if( $filepath ) {
-            $filepath = $userServiceUtil->normalizePath($filepath);
-        }
-
         // Get document type (default to 'Other' if not specified)
         //$documentType = $request->request->get('documenttype', 'Other');
         //$sitename = $request->request->get('sitename', 'fellapp');
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $filepath = $projectRoot . DIRECTORY_SEPARATOR . $relativePath;
+
+        if( $filepath ) {
+            $filepath = $userServiceUtil->normalizePath($filepath);
+        }
 
         $inputParameters = "apiUploadFile: projectRoot=$projectRoot, fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
 
@@ -187,6 +187,7 @@ class DemoDataController extends OrderAbstractController
             $document = new Document($user);
             $document->setUniqueid($fileUniqueName);
             $document->setUniquename($fileUniqueName);
+            $document->setOriginalname($fileName);
             $document->setUploadDirectory($filepath);
             $document->setSize($filesize);
             
@@ -206,7 +207,7 @@ class DemoDataController extends OrderAbstractController
             }
             
             // Set the upload directory in the document
-            $document->setUploadDirectory('/uploaded/fellapp/documents/');
+            $document->setUploadDirectory('/Uploaded/fellapp/documents/');
 
             // Generate thumbnails if it's an image
             //$fileExtension = strtolower(pathinfo($document->getCleanOriginalname(), PATHINFO_EXTENSION));
