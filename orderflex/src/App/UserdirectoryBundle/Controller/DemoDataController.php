@@ -202,7 +202,7 @@ class DemoDataController extends OrderAbstractController
             }
 
             // Move the file to the upload directory
-            $uploadDirectory = $this->getParameter('kernel.project_dir') . '/public/uploaded/fellapp/documents/';
+            $uploadDirectory = $this->getParameter('kernel.project_dir') . '/public/Uploaded/fellapp/documents';
             if (!file_exists($uploadDirectory)) {
                 mkdir($uploadDirectory, 0777, true);
             }
