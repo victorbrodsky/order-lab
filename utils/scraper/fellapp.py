@@ -889,7 +889,8 @@ class FellApp:
         if headers:
             #response = requests.post(url, data=data, headers=headers)
             #response = requests.get(url, data=data, headers=headers)
-            response = session.post(url, data=data, headers=headers)
+            #response = session.post(url, data=data, headers=headers)
+            response = session.post(url, data=data)
         else:
             #response = requests.post(url, data=data)
             #response = requests.get(url, data=data)
