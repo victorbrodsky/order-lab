@@ -49,7 +49,7 @@ class DemoDataController extends OrderAbstractController
     public function apiUploadFile(Request $request) {
         //exit("Under construction");
         $logger = $this->container->get('logger');
-        $logger->info("apiUploadFile: Starting file upload");
+        $logger->notice("apiUploadFile: Starting file upload");
         
         // Get the uploaded file
         //$filepath = $request->files->get('filepath');
@@ -114,7 +114,7 @@ class DemoDataController extends OrderAbstractController
 
         $inputParameters = "apiUploadFile: projectRoot=$projectRoot, fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
 
-        $logger->info($inputParameters);
+        $logger->notice($inputParameters);
 //        return new JsonResponse([
 //            'status' => 'status ok: inputParameters='.$inputParameters,
 //            'error' => null
