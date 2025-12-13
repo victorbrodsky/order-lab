@@ -112,6 +112,10 @@ class DemoDataController extends OrderAbstractController
             ], 400);
         }
 
+        if( $filepath ) {
+            $filepath = $userServiceUtil->normalizePath($filepath);
+        }
+
         // Get document type (default to 'Other' if not specified)
         //$documentType = $request->request->get('documenttype', 'Other');
         //$sitename = $request->request->get('sitename', 'fellapp');
@@ -175,9 +179,7 @@ class DemoDataController extends OrderAbstractController
                 ], 500);
             }
 
-            if( $filepath ) {
-                $filepath = $userServiceUtil->normalizePath($filepath);
-            }
+
 
             // Create a new Document entity
             $document = new Document($user);
