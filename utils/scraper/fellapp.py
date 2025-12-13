@@ -1167,6 +1167,11 @@ def main():
             }
         )
         print("upload_fellowship_file response=", resp)
+
+        del fellapp
+        automation.quit_driver()
+        del automation
+
         exit()
     ######## EOF Test the file upload #######
 

@@ -161,7 +161,7 @@ class DemoDataController extends OrderAbstractController
                 $fileExtStr = ".".$fileExt;
             }
 
-            $fileUniqueName = $currentDatetimeTimestamp.'ID'.$fileName.$fileExtStr;  //.'_title='.$fileTitle;
+            $fileUniqueName = $currentDatetimeTimestamp.'_'.$fileName.$fileExtStr;  //.'_title='.$fileTitle;
 
             $filesize = null;
             if (file_exists($filepath)) {
@@ -173,6 +173,10 @@ class DemoDataController extends OrderAbstractController
                     'status' => 'error',
                     'error' => "File does not exist. projectRoot=$projectRoot, filepath=$filepath"
                 ], 500);
+            }
+
+            if( $filepath ) {
+                $filepath = $userServiceUtil->normalizePath($filepath);
             }
 
             // Create a new Document entity
@@ -222,6 +226,7 @@ class DemoDataController extends OrderAbstractController
 
             return new JsonResponse([
                 'status' => 'success',
+                'filepath' => $filepath,
                 'documentId' => $document->getId(),
                 'documentName' => $document->getUniquename(),
                 'documentPath' => $document->getRelativeUploadFullPath(),
