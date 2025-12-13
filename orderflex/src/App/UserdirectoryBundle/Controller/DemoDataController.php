@@ -223,7 +223,7 @@ class DemoDataController extends OrderAbstractController
             return new JsonResponse([
                 'status' => 'success',
                 'documentId' => $document->getId(),
-                'documentName' => $document->getCleanOriginalname(),
+                'documentName' => $document->getUniquename(),
                 'documentPath' => $document->getRelativeUploadFullPath(),
                 'message' => $inputParameters
             ], 200);
