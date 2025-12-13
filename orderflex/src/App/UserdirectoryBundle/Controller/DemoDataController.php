@@ -239,7 +239,8 @@ class DemoDataController extends OrderAbstractController
             }
 
             // Add the document to the fellowship application
-            $fellowshipApplication->addDocument($document);
+            $fellowshipApplication->addAvatar($document);
+            //$fellowshipApplication->addItinerary($document);
 
             // Save everything
             $em->persist($document);
