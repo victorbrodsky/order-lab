@@ -167,7 +167,7 @@ class DemoDataController extends OrderAbstractController
                 $fileExtStr = ".".$fileExt;
             }
 
-            $fileUniqueName = $currentDatetimeTimestamp.'_'.$fileName.$fileExtStr;  //.'_title='.$fileTitle;
+            $fileUniqueName = $currentDatetimeTimestamp.'_'.$fileName;  //.'_title='.$fileTitle;
 
             $filesize = null;
             if (file_exists($filepath)) {
