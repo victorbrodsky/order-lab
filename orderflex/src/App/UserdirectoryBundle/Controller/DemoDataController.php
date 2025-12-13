@@ -57,12 +57,12 @@ class DemoDataController extends OrderAbstractController
         //    return new JsonResponse(['error' => 'No file uploaded'], 400);
         //}
         $data = json_decode($request->getContent(), true);
-        $fellappid = $data['fellappid'] ?? null;
-        return new JsonResponse([
-            'received' => $request->request->all(),
-            'fellappid1' => $request->request->get('fellappid'),
-            'fellappid2' => $fellappid
-        ]);
+//         $fellappid = $data['fellappid'] ?? null;
+//         return new JsonResponse([
+//             'received' => $request->request->all(),
+//             'fellappid1' => $request->request->get('fellappid'),
+//             'fellappid2' => $fellappid
+//         ]);
 
         //dd($request->getContent());
         //dd($request->request->all());
@@ -72,7 +72,7 @@ class DemoDataController extends OrderAbstractController
         if (!$fellappId) {
             return new JsonResponse([
                 'status' => 'error',
-                'error' => 'fellappId is required'
+                'error' => 'fellappId is required, $fellappId='.$fellappId
             ], 400);
         }
         $documentType = $request->request->get('documenttype');
