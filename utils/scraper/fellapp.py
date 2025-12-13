@@ -872,10 +872,10 @@ class FellApp:
         #accept_url = base_url.rstrip('/') + '/' + f"api/upload-file".lstrip('/')
 
         data = {
-            "fellapp_id": fellapp_id,
+            "fellappid": fellapp_id,
             "filepath": os.path.basename(file_path),
-            "relative_path": relative_path,
-            "file_name": file_name,
+            "relativepath": relative_path,
+            "filename": file_name,
             "documenttype": documenttype,
             "sitename": 'fellapp'
         }
@@ -1160,7 +1160,10 @@ def main():
             file_name="lisa-chen.jpeg",
             documenttype="Fellowship Photo",
             sitename="fellapp",
-            #headers={"Authorization": "Bearer <token>"}
+            headers={
+                "Authorization": "Bearer 12832",
+                "Content-Type": "application/json"
+            }
         )
         print("upload_fellowship_file response=", resp)
         exit()

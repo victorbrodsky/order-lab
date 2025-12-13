@@ -61,7 +61,7 @@ class DemoDataController extends OrderAbstractController
         //dd($request->request->all());
 
         // Get fellowship application ID
-        $fellappId = $request->request->get('fellapp_id');
+        $fellappId = $request->request->get('fellappid');
         if (!$fellappId) {
             return new JsonResponse([
                 'status' => 'error',
@@ -83,18 +83,18 @@ class DemoDataController extends OrderAbstractController
             ], 400);
         }
         // src/App/FellAppBundle/Util/{file_name}
-        $relativePath = $request->request->get('relative_path');
+        $relativePath = $request->request->get('relativepath');
         if (!$relativePath) {
             return new JsonResponse([
                 'status' => 'error',
-                'error' => 'relative_path is required'
+                'error' => 'relativepath is required'
             ], 400);
         }
-        $fileName = $request->request->get('file_name');
+        $fileName = $request->request->get('filename');
         if (!$fileName) {
             return new JsonResponse([
                 'status' => 'error',
-                'error' => 'file_name is required'
+                'error' => 'filename is required'
             ], 400);
         }
         $sitename = $request->request->get('sitename');
