@@ -56,8 +56,12 @@ class DemoDataController extends OrderAbstractController
         //if (!$filepath) {
         //    return new JsonResponse(['error' => 'No file uploaded'], 400);
         //}
+        $data = json_decode($request->getContent(), true);
+        $fellappid = $data['fellappid'] ?? null;
         return new JsonResponse([
-            'received' => $request->request->all()
+            'received' => $request->request->all(),
+            'fellappid1' => $request->request->get('fellappid'),
+            'fellappid2' => $fellappid
         ]);
 
         //dd($request->getContent());
