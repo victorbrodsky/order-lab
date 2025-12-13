@@ -879,13 +879,21 @@ class FellApp:
             "documenttype": documenttype,
             "sitename": 'fellapp'
         }
+
+        driver = self.automation.get_driver()
+        session = requests.Session()
+        for cookie in driver.get_cookies():
+            session.cookies.set(cookie['name'], cookie['value'])
+
         # Pass through headers (e.g. Authorization) if provided
         if headers:
-            response = requests.post(url, data=data, headers=headers)
+            #response = requests.post(url, data=data, headers=headers)
             #response = requests.get(url, data=data, headers=headers)
+            response = session.post(url, data=data, headers=headers)
         else:
-            response = requests.post(url, data=data)
+            #response = requests.post(url, data=data)
             #response = requests.get(url, data=data)
+            response = session.post(url, data=data)
         #response.raise_for_status()  # raise error if status != 200
 
         # Try to parse JSON; if it fails, print diagnostics and re-raise
@@ -1154,7 +1162,7 @@ def main():
             sitename="fellapp",
             #headers={"Authorization": "Bearer <token>"}
         )
-        print("upload-file resp=", resp)
+        print("upload_fellowship_file response=", resp)
         exit()
     ######## EOF Test the file upload #######
 
