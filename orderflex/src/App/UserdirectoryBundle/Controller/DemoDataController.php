@@ -194,8 +194,8 @@ class DemoDataController extends OrderAbstractController
             $document->setUploadDirectory('/uploaded/fellapp/documents/');
 
             // Generate thumbnails if it's an image
-            $fileExtension = strtolower(pathinfo($document->getCleanOriginalname(), PATHINFO_EXTENSION));
-            if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif'])) {
+            //$fileExtension = strtolower(pathinfo($document->getCleanOriginalname(), PATHINFO_EXTENSION));
+            if (in_array($fileExtStr, ['jpg', 'jpeg', 'png', 'gif'])) {
                 $userServiceUtil = $this->container->get('user_service_utility');
                 $userServiceUtil->generateTwoThumbnails($document);
             }
