@@ -208,7 +208,7 @@ class DemoDataController extends OrderAbstractController
             }
             
             // Set the upload directory in the document
-            $document->setUploadDirectory('/Uploaded/fellapp/documents');
+            $document->setUploadDirectory('Uploaded/fellapp/documents');
 
             // Generate thumbnails if it's an image
             //$fileExtension = strtolower(pathinfo($document->getCleanOriginalname(), PATHINFO_EXTENSION));
