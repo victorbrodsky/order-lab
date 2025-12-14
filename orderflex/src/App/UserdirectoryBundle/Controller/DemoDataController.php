@@ -59,7 +59,7 @@ class DemoDataController extends OrderAbstractController
         //if (!$filepath) {
         //    return new JsonResponse(['error' => 'No file uploaded'], 400);
         //}
-        $data = json_decode($request->getContent(), true);
+//        $data = json_decode($request->getContent(), true);
 //         $fellappid = $data['fellappid'] ?? null;
 //         return new JsonResponse([
 //             'received' => $request->request->all(),
@@ -115,10 +115,6 @@ class DemoDataController extends OrderAbstractController
             ], 400);
         }
 
-        // Get document type (default to 'Other' if not specified)
-        //$documentType = $request->request->get('documenttype', 'Other');
-        //$sitename = $request->request->get('sitename', 'fellapp');
-
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $filepath = $projectRoot . DIRECTORY_SEPARATOR . $relativePath;
 
@@ -138,7 +134,6 @@ class DemoDataController extends OrderAbstractController
 
         try {
             // Get the fellowship application
-            //$fellowshipApplication = $em->getRepository('AppFellappBundle:FellowshipApplication')->find($fellappId);
             $fellowshipApplication = $em->getRepository(FellowshipApplication::class)->find($fellappId);
             if (!$fellowshipApplication) {
                 return new JsonResponse([
@@ -182,15 +177,12 @@ class DemoDataController extends OrderAbstractController
                 ], 500);
             }
 
-
-
             // Create a new Document entity
             $document = new Document($user);
             $document->setUniqueid($fileUniqueName);
             $document->setUniquename($fileUniqueName);
             $document->setOriginalname($fileName);
             $document->setTitle($fileName);
-            //$document->setUploadDirectory($filepath);
             $document->setSize($filesize);
             
             // Set document type if provided
@@ -210,16 +202,7 @@ class DemoDataController extends OrderAbstractController
             }
 
             //Copy file to upload folder
-            //$fullpath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $path;
             $target_file = $uploadDirectory . DIRECTORY_SEPARATOR . $fileUniqueName;
-            //$target_file = $fullpath . 'uploadtestfile.jpg';
-            //echo "target_file=".$target_file."<br>";
-//            if( !file_exists($fileUniqueName) ) {
-//                // 0600 - Read/write/execute for owner, nothing for everybody else
-//                mkdir($uploadDirectory, 0700, true);
-//                chmod($uploadDirectory, 0700);
-//            }
-            //file_put_contents($target_file, $filepath);
             $filesystem = new Filesystem();
             try {
                 $filesystem->copy($filepath, $target_file, true); // true = overwrite
@@ -227,20 +210,22 @@ class DemoDataController extends OrderAbstractController
                 throw new \Exception("Copy failed: " . $e->getMessage());
             }
 
-
             // Set the upload directory in the document
             $document->setUploadDirectory('Uploaded/fellapp/documents');
 
             // Generate thumbnails if it's an image
-            //$fileExtension = strtolower(pathinfo($document->getCleanOriginalname(), PATHINFO_EXTENSION));
             if (in_array($fileExtStr, ['jpg', 'jpeg', 'png', 'gif'])) {
                 $userServiceUtil = $this->container->get('user_service_utility');
                 $userServiceUtil->generateTwoThumbnails($document);
             }
 
             // Add the document to the fellowship application
-            $fellowshipApplication->addAvatar($document);
-            //$fellowshipApplication->addItinerary($document);
+            if( $documentType == "Fellowship Photo" ) {
+                $fellowshipApplication->addAvatar($document);
+            }
+            if( $documentType == "Itinerary" ) {
+                $fellowshipApplication->addItinerary($document);
+            }
 
             // Save everything
             $em->persist($document);

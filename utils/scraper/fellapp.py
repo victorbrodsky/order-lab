@@ -770,7 +770,7 @@ class FellApp:
         time.sleep(3)
 
         #TODO: upload photo and itinerary by api
-        if 0:
+        if 1:
             current_url = driver.current_url
             print("Current URL:", current_url)
             # Extract the last part after the final slash
@@ -778,15 +778,32 @@ class FellApp:
             print("Extracted fellapp ID:", fellapp_id)
 
             resp = self.upload_fellowship_file(
-                url=self.automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
+                url=automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
                 fellapp_id=fellapp_id,
                 file_name=fellapp["photo"],
                 documenttype="Fellowship Photo",
                 sitename="fellapp",
-                headers={"Authorization": "Bearer <token>"}
+                headers = {
+                    "Authorization": "Bearer 12832",
+                    "Content-Type": "application/json"
+                }
             )
-            print("upload-file resp=",resp)
-            print(resp)  # should contain documentid and documentsrc
+            print("Fellowship Photo upload-file resp=",resp)
+            #print(resp)  # should contain documentid and documentsrc
+
+            resp = self.upload_fellowship_file(
+                url=automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
+                fellapp_id=fellapp_id,
+                file_name="sample_itinerary.pdf",
+                documenttype="Itinerary",
+                sitename="fellapp",
+                headers={
+                    "Authorization": "Bearer 12832",
+                    "Content-Type": "application/json"
+                }
+            )
+            print("Itinerary upload-file resp=", resp)
+            #print(resp)  # should contain documentid and documentsrc
 
         #print("Finish new fellapp")
         time.sleep(5)
@@ -877,7 +894,7 @@ class FellApp:
             "relativepath": relative_path,
             "filename": file_name,
             "documenttype": documenttype,
-            "sitename": 'fellapp'
+            "sitename": sitename, #'fellapp'
         }
 
         driver = self.automation.get_driver()
@@ -889,8 +906,8 @@ class FellApp:
         if headers:
             #response = requests.post(url, data=data, headers=headers)
             #response = requests.get(url, data=data, headers=headers)
-            #response = session.post(url, data=data, headers=headers)
-            response = session.post(url, data=data)
+            response = session.post(url, data=data, headers=headers)
+            #response = session.post(url, data=data)
         else:
             #response = requests.post(url, data=data)
             #response = requests.get(url, data=data)
@@ -1149,7 +1166,7 @@ def main():
     fellapp = FellApp(automation)
 
     ######## Test the file upload ########
-    if 1:
+    if 0:
         automation.login_to_site()
         fellapp_id = 1
         url = automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/"
@@ -1176,11 +1193,11 @@ def main():
     ######## EOF Test the file upload #######
 
     # Process in batches of 3
-    if 0:
+    if 1:
         fellapp.configs(max_count=1, batch_size=3)
 
     # Set site settings after all configurations are done
-    if 0:
+    if 1:
         fellapp.set_site_settings()
 
     # Clean up
