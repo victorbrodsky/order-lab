@@ -774,7 +774,7 @@ class FellApp:
             current_url = driver.current_url
             print("Current URL:", current_url)
             # Extract the last part after the final slash
-            fellapp_id = current_url.rstrip('/').split('/')[-1]
+            fellapp_id = int(current_url.rstrip('/').split('/')[-1])
             print("Extracted fellapp ID:", fellapp_id)
             print("photo:", fellapp["photo"])
 
@@ -876,6 +876,11 @@ class FellApp:
         Returns:
             dict: JSON response from the API.
         """
+        print("upload fellowship_file url=", url)
+        print("upload fellowship_file fellapp_id=", fellapp_id)
+        print("upload fellowship_file file_name=", file_name)
+        print("upload fellowship_file documenttype=", documenttype)
+        print("upload fellowship_file sitename=", sitename)
 
         # Get the directory where the current script is located
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -1194,11 +1199,11 @@ def main():
     ######## EOF Test the file upload #######
 
     # Process in batches of 3
-    if 1:
+    if 0:
         fellapp.configs(max_count=1, batch_size=3)
 
     # Set site settings after all configurations are done
-    if 1:
+    if 0:
         fellapp.set_site_settings()
 
     # Clean up
