@@ -844,25 +844,11 @@ class FellApp:
 
     #url - api/upload-file
     def upload_fellowship_file(self, fellapp_id, file_name, documenttype):
-        """
-        Upload a file to the Symfony fellowship application API.
-        Args:
-            base_url (str): Base URL of your application (e.g. https://example.com).
-            fellapp_id (int): Fellowship application ID.
-            file_name (str): file name.
-            documenttype (str, optional): Document type (default: Fellowship Photo).
-            sitename (str, optional): Site name.
-            headers (dict, optional): Extra headers (e.g. Authorization).
-
-        Returns:
-            dict: JSON response from the API.
-        """
-
-        url = self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
-        sitename = "fellapp",
+        url = self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/"
+        sitename = "fellapp"
         headers = {
-            "Authorization": "Bearer 12832",
-            "Content-Type": "application/json"
+            "Authorization": "Bearer 12832"
+            #"Content-Type": "application/json"
         }
 
         print("upload fellowship_file url=", url)
@@ -880,8 +866,6 @@ class FellApp:
         file_path = os.path.abspath(os.path.join(script_dir, relative_path))
         print(f"file_path={file_path}")
         print(f"relative_path={relative_path}")
-
-        #accept_url = base_url.rstrip('/') + '/' + f"api/upload-file".lstrip('/')
 
         data = {
             "fellappid": fellapp_id,
@@ -911,10 +895,12 @@ class FellApp:
 
         # Try to parse JSON; if it fails, print diagnostics and re-raise
         try:
-            return response.json()
-            #return response.text
+            #print("STATUS:", response.status_code)
+            #print("TEXT:", response.text)
+            #return response.json()
+            return response.text
         except ValueError:
-            print("upload_fellowship_file: non-JSON response received")
+            print("upload fellowship_file: non-JSON response received")
             print("Status:", response.status_code)
             print("Headers:", response.headers)
             print("Body snippet:")
@@ -1163,7 +1149,7 @@ def main():
     ######## Test the file upload ########
     if 0:
         automation.login_to_site()
-        fellapp_id = 1
+        fellapp_id = 15
         resp = fellapp.upload_fellowship_file(
             fellapp_id=fellapp_id,
             file_name="lisa-chen.jpeg",
