@@ -75,8 +75,10 @@ class DemoDataController extends OrderAbstractController
         //dd($request->getContent());
         //dd($request->request->all());
 
-        $logger->notice("apiUploadFile: request->all=",$request->request->all());
-        $logger->notice("apiUploadFile: getContent=",$request->getContent());
+        #$logger->notice("apiUploadFile: request->all=".$request->request->all());
+        #$logger->notice("apiUploadFile: getContent=".$request->getContent());
+        $logger->notice('apiUploadFile: fellappId=' . json_encode($request->request->all()));
+        $logger->notice('apiUploadFile: getContent=' . json_encode($request->getContent()));
 
         // Get fellowship application ID
         $fellappId = $request->request->get('fellappid');
