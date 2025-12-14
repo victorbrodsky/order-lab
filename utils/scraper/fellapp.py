@@ -779,29 +779,17 @@ class FellApp:
             print("photo:", fellapp["photo"])
 
             resp = self.upload_fellowship_file(
-                url=self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
                 fellapp_id=fellapp_id,
                 file_name=fellapp["photo"],
                 documenttype="Fellowship Photo",
-                sitename="fellapp",
-                headers = {
-                    "Authorization": "Bearer 12832",
-                    "Content-Type": "application/json"
-                }
             )
             print("Fellowship Photo upload-file resp=",resp)
             #print(resp)  # should contain documentid and documentsrc
 
             resp = self.upload_fellowship_file(
-                url=self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
                 fellapp_id=fellapp_id,
                 file_name="sample_itinerary.pdf",
                 documenttype="Itinerary",
-                sitename="fellapp",
-                headers={
-                    "Authorization": "Bearer 12832",
-                    "Content-Type": "application/json"
-                }
             )
             print("Itinerary upload-file resp=", resp)
             #print(resp)  # should contain documentid and documentsrc
@@ -855,16 +843,9 @@ class FellApp:
             print(f"Failed to add reference reference_email={reference_email}, count={count}:", e)
 
     #url - api/upload-file
-    def upload_fellowship_file(self,
-                               url: str,
-                               fellapp_id: int,
-                               file_name: str,
-                               documenttype: str = "Fellowship Photo",
-                               sitename: str = None,
-                               headers: dict = None) -> dict:
+    def upload_fellowship_file(self, fellapp_id, file_name, documenttype):
         """
         Upload a file to the Symfony fellowship application API.
-
         Args:
             base_url (str): Base URL of your application (e.g. https://example.com).
             fellapp_id (int): Fellowship application ID.
@@ -876,6 +857,14 @@ class FellApp:
         Returns:
             dict: JSON response from the API.
         """
+
+        url = self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
+        sitename = "fellapp",
+        headers = {
+            "Authorization": "Bearer 12832",
+            "Content-Type": "application/json"
+        }
+
         print("upload fellowship_file url=", url)
         print(f"upload fellowship_file fellapp_id=[{fellapp_id}]")
         print("upload fellowship_file file_name=", file_name)
@@ -1175,19 +1164,10 @@ def main():
     if 0:
         automation.login_to_site()
         fellapp_id = 1
-        url = automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/"
-        print(f"upload-file url={url}")
         resp = fellapp.upload_fellowship_file(
-            #url=automation.baseurl.rstrip('/') + '/' + f"api/upload-file",
-            url=url,
             fellapp_id=fellapp_id,
             file_name="lisa-chen.jpeg",
             documenttype="Fellowship Photo",
-            sitename="fellapp",
-            headers={
-                "Authorization": "Bearer 12832",
-                "Content-Type": "application/json"
-            }
         )
         print("upload fellowship_file response=", resp)
 

@@ -100,6 +100,9 @@ class DemoDataController extends OrderAbstractController
             $sitename = $data['sitename'];
         }
 
+        $inputParameters = "apiUploadFile: 1 fellappId=$fellappId, documentType=$documentType, filepath=$filepath, relativePath=$relativePath, fileName=$fileName, sitename=$sitename";
+        $logger->notice($inputParameters);
+
         if (!$fellappId) {
             return new JsonResponse([
                 'status' => 'error',
@@ -147,7 +150,7 @@ class DemoDataController extends OrderAbstractController
             $filepath = $userServiceUtil->normalizePath($filepath);
         }
 
-        $inputParameters = "apiUploadFile: projectRoot=$projectRoot, fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
+        $inputParameters = "apiUploadFile: 2 projectRoot=$projectRoot, fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
 
         $logger->notice($inputParameters);
 //        return new JsonResponse([
