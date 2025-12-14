@@ -721,9 +721,9 @@ class FellApp:
         applicant_data_element = driver.find_element(By.CSS_SELECTOR, "h4.panel-title > a[href='#recommendations']")
         applicant_data_element.click()
         time.sleep(3)
-        self.set_reference(self, driver, references, count)
-        self.set_reference(self, driver, references, count+1)
-        self.set_reference(self, driver, references, count+2)
+        self.set_reference(driver, references, count)
+        self.set_reference(driver, references, count+1)
+        self.set_reference(driver, references, count+2)
         ########################
         #### EOF set references #####
         ########################
