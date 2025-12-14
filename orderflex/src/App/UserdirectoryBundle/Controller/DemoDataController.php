@@ -52,6 +52,11 @@ class DemoDataController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $logger->notice("apiUploadFile: Starting file upload");
 
+//        $authHeader = $request->headers->get('Authorization');
+//        if ($authHeader && str_starts_with($authHeader, 'Bearer ')) {
+//            $token = substr($authHeader, 7); // removes "Bearer "
+//        }
+
         $userServiceUtil = $this->container->get('user_service_utility');
 
         // Get the uploaded file
@@ -72,6 +77,7 @@ class DemoDataController extends OrderAbstractController
 
         // Get fellowship application ID
         $fellappId = $request->request->get('fellappid');
+        $logger->notice("apiUploadFile: fellappId=$fellappId");
         if (!$fellappId) {
             return new JsonResponse([
                 'status' => 'error',

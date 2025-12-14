@@ -778,7 +778,7 @@ class FellApp:
             print("Extracted fellapp ID:", fellapp_id)
 
             resp = self.upload_fellowship_file(
-                url=automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
+                url=self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
                 fellapp_id=fellapp_id,
                 file_name=fellapp["photo"],
                 documenttype="Fellowship Photo",
@@ -792,7 +792,7 @@ class FellApp:
             #print(resp)  # should contain documentid and documentsrc
 
             resp = self.upload_fellowship_file(
-                url=automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
+                url=self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
                 fellapp_id=fellapp_id,
                 file_name="sample_itinerary.pdf",
                 documenttype="Itinerary",
