@@ -776,6 +776,7 @@ class FellApp:
             # Extract the last part after the final slash
             fellapp_id = current_url.rstrip('/').split('/')[-1]
             print("Extracted fellapp ID:", fellapp_id)
+            print("photo:", fellapp["photo"])
 
             resp = self.upload_fellowship_file(
                 url=self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/",
@@ -1183,7 +1184,7 @@ def main():
                 "Content-Type": "application/json"
             }
         )
-        print("upload_fellowship_file response=", resp)
+        print("upload fellowship_file response=", resp)
 
         del fellapp
         automation.quit_driver()
