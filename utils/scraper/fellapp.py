@@ -877,7 +877,7 @@ class FellApp:
             dict: JSON response from the API.
         """
         print("upload fellowship_file url=", url)
-        print("upload fellowship_file fellapp_id=", fellapp_id)
+        print(f"upload fellowship_file fellapp_id=[{fellapp_id}]")
         print("upload fellowship_file file_name=", file_name)
         print("upload fellowship_file documenttype=", documenttype)
         print("upload fellowship_file sitename=", sitename)
