@@ -80,27 +80,39 @@ class DemoDataController extends OrderAbstractController
         $logger->notice('apiUploadFile: request->all=' . json_encode($request->request->all()));
         $logger->notice('apiUploadFile: getContent=' . json_encode($request->getContent()));
 
-        $data = json_decode($request->getContent(), true);
-        $fellappId2 = $data['fellappid'];
-        $logger->notice('apiUploadFile: fellappId2=' . $fellappId2);
-
         // Get fellowship application ID
         $fellappId = $request->request->get('fellappid');
+        $documentType = $request->request->get('documenttype');
+        $filepath = $request->request->get('filepath');
+        $relativePath = $request->request->get('relativepath');
+        $fileName = $request->request->get('filename');
+        $sitename = $request->request->get('sitename');
         $logger->notice("apiUploadFile: fellappId=$fellappId");
+
+        if( !$fellappId ) {
+            $data = json_decode($request->getContent(), true);
+            $fellappId = $data['fellappid'];
+            $logger->notice('apiUploadFile: use $request->getContent(): fellappId=' . $fellappId);
+            $documentType = $data['documenttype'];
+            $filepath = $data['filepath'];
+            $relativePath = $data['relativepath'];
+            $fileName = $data['filename'];
+            $sitename = $data['sitename'];
+        }
+
         if (!$fellappId) {
             return new JsonResponse([
                 'status' => 'error',
                 'error' => 'fellappId is required, $fellappId='.$fellappId
             ], 400);
         }
-        $documentType = $request->request->get('documenttype');
+        //$documentType = $request->request->get('documenttype');
         if (!$fellappId) {
             return new JsonResponse([
                 'status' => 'error',
                 'error' => 'documenttype is required'
             ], 400);
         }
-        $filepath = $request->request->get('filepath');
         if (!$filepath) {
             return new JsonResponse([
                 'status' => 'error',
@@ -108,21 +120,19 @@ class DemoDataController extends OrderAbstractController
             ], 400);
         }
         // src/App/FellAppBundle/Util/{file_name}
-        $relativePath = $request->request->get('relativepath');
         if (!$relativePath) {
             return new JsonResponse([
                 'status' => 'error',
                 'error' => 'relativepath is required'
             ], 400);
         }
-        $fileName = $request->request->get('filename');
+
         if (!$fileName) {
             return new JsonResponse([
                 'status' => 'error',
                 'error' => 'filename is required'
             ], 400);
         }
-        $sitename = $request->request->get('sitename');
         if (!$sitename) {
             return new JsonResponse([
                 'status' => 'error',
