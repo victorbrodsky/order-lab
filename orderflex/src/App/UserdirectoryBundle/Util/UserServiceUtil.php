@@ -6353,7 +6353,7 @@ tracepoint:sched:sched_process_exit
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //https://view.online/c/wcm/pathology/
         //exit('$baseUrl='.$baseUrl);
-        //echo '$baseUrl='.$baseUrl."<br>";
+        echo '$baseUrl='.$baseUrl."<br>";
 
         $uniquename = $document->getUniquename();
         if( !$uniquename ) {
@@ -6373,10 +6373,10 @@ tracepoint:sched:sched_process_exit
             if ($size) {
                 $src = $document->getServerPath($size);
                 if (file_exists($src)) {
-                    //echo "The file $path exists <br>";
+                    //echo "The file $src exists <br>";
                 } else {
                     //echo "The file $path does not exists <br>";
-                    //exit("The file $path does not exists");
+                    //exit("The file $src does not exists");
                     $url = $this->getDocumentAbsoluteUrl($document);
                 }
             } else {

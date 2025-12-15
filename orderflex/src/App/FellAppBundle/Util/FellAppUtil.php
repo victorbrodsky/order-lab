@@ -2753,6 +2753,7 @@ class FellAppUtil {
         }
         
         //$pdfDocumentPath = $pdfDocument->getAbsoluteUploadFullPath();
+        $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
         $pdfDocumentPath = $userServiceUtil->getDocumentAbsoluteUrl($pdfDocument);
 
@@ -2762,6 +2763,8 @@ class FellAppUtil {
 
         $embedPdfHtml = '<object type="application/pdf" width="400px" height="400px" data="'.$pdfDocumentPath.'"></object>';
         $embedPdfHtml = '<br><br>This Complete Application in PDF will be attached to the invitation email:<br><br>' . $embedPdfHtml;
+
+        $logger->notice("pdfDocumentPath={$pdfDocumentPath}, embedPdfHtml={$embedPdfHtml}");
 
         return $embedPdfHtml;
     }
