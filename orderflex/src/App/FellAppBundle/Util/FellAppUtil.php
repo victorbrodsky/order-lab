@@ -2755,12 +2755,15 @@ class FellAppUtil {
         //$pdfDocumentPath = $pdfDocument->getAbsoluteUploadFullPath();
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
+        $userUtil = $this->container->get('user_utility');
 
         $pdfDocumentPath = $userServiceUtil->getDocumentAbsoluteUrl($pdfDocument);
         //$url = $userUtil->getRealSchemeAndHttpHost($request);
-        $scheme = $this->getRealScheme();
-        $pdfDocumentPath = str_replace('http',$scheme,$pdfDocumentPath);
-
+        $scheme = $userUtil->getRealScheme();
+        if( $scheme ) {
+            $pdfDocumentPath = str_replace('http',$scheme,$pdfDocumentPath);
+        }
+        
         if( !$pdfDocumentPath ) {
             return NULL;
         }
