@@ -151,6 +151,13 @@ class UserUtil {
         }
         return NULL;
     }
+    public function getRealSchemeUrl( $url ) {
+        $scheme = $this->getRealScheme();
+        if( $scheme ) {
+            $url = str_replace('http',$scheme,$url);
+        }
+        return $url;
+    }
     public function testSchemeAndHost( $request=NULL ) {
         if( !$request ) {
             $request = $this->getRequest();
