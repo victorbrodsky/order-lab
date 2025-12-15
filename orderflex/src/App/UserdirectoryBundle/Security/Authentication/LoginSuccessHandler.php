@@ -94,10 +94,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         if( $user && $user instanceof UserInterface ) {
             $username = $user->getUserIdentifier(); //getUsername();
-            $this->logger->notice("onAuthenticationSuccess: 1 username=$username");
+            //$this->logger->notice("onAuthenticationSuccess: 1 username=$username");
         } else {
             $username = $user."";
-            $this->logger->notice("onAuthenticationSuccess: 2 username=$username");
+            //$this->logger->notice("onAuthenticationSuccess: 2 username=$username");
         }
         $this->logger->notice("onAuthenticationSuccess: username=$username");
         //$username = $user."";
@@ -111,6 +111,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //I should be redirected to the URL I was trying to visit after login.
         $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
         $lastRoute = $request->getSession()->get($indexLastRoute);
+        if( !$lastRoute ) {
+            //exit('!$lastRoute'); //testing
+            //$lastRoute = $request->getSession()->get('_security.ldap_fellapp_firewall.target_path');
+            $lastRoute = $secUtil->getTargetPath($request->getSession());
+        }
+        //dump($request->getSession());
+        //exit('111'); //testing
         //echo "lastRoute=".$lastRoute."<br>";
         //exit('111');
 
@@ -133,6 +140,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //echo "locale=".$locale."<br>";
         //exit('111');
         //$this->setConnectionParameters($session,$locale);
+
+        //$session->set('originalRouteOnLogin',$lastRoute); //testing
 
         //$res = UserUtil::getMaxIdleTimeAndMaintenance($em,$this->security,$this->container);
         $res = $secUtil->getMaxIdleTimeAndMaintenance();

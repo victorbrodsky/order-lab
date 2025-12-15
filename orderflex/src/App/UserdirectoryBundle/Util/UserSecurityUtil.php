@@ -379,6 +379,24 @@ class UserSecurityUtil {
         return false;
     }
 
+    function getTargetPath( $session ) {
+        $attributes = $session->all();
+        $firewallPrefix = '_security.';
+        $targetSuffix = '.target_path';
+
+        $targetPath = null;
+
+        foreach ($attributes as $key => $value) {
+            echo "$key => $value <br>";
+            if (str_starts_with($key, $firewallPrefix) && str_ends_with($key, $targetSuffix)) {
+                $targetPath = $value;
+                break;
+            }
+        }
+
+        return $targetPath;
+    }
+
     //Forking function
     function idleLogout( $request, $sitename, $idelLastUrl, $flag = null ) {
         //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
