@@ -6353,7 +6353,7 @@ tracepoint:sched:sched_process_exit
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //https://view.online/c/wcm/pathology/
         //exit('$baseUrl='.$baseUrl);
-        echo '$baseUrl='.$baseUrl."<br>";
+        //echo '$baseUrl='.$baseUrl."<br>";
 
         $uniquename = $document->getUniquename();
         if( !$uniquename ) {
