@@ -2772,6 +2772,7 @@ class FellAppUtil {
         //Convert Complete Application in PDF to link
         if( $fellapp ) {
             $pdfLink = $this->container->get('router')->generate('fellapp_download_pdf', array("id" => $fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+            $pdfLink = $userUtil->getRealSchemeUrl($pdfLink);
             $pdfLink = $this->convertToHref($pdfLink,'Complete Application in PDF');
             $embedPdfHtml = '<br><br>This '.$pdfLink.' will be attached to the invitation email:<br><br>' . $embedPdfHtml;
         } else {
