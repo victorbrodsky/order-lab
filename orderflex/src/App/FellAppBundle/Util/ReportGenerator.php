@@ -681,9 +681,11 @@ class ReportGenerator {
         foreach( $ecfmgDocs as $ecfmgDoc ) {
             $logger->notice("before attempt adding ecfmgDoc: $ecfmgDoc");
             if( $this->isValidFile($ecfmgDoc,$fileErrors,"ECFMG certificate") ) {
-                echo "added ecfmgDoc: $ecfmgDoc <br>";
+                //echo "added ecfmgDoc: $ecfmgDoc <br>";
+                $logger->notice("before getAbsoluteServerFilePath ecfmgDoc");
                 $logger->notice("added ecfmgDoc: $ecfmgDoc");
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($ecfmgDoc);
+                $logger->notice("after getAbsoluteServerFilePath ecfmgDoc");
             } else {
                 $logger->notice("added ecfmgDoc: ecfmgDoc is not valid: $ecfmgDoc");
             }
@@ -1285,35 +1287,58 @@ class ReportGenerator {
         return true;
     }
     public function isValidFile( $file, &$fileErrors, $fileType ) {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $filePath = $userSecUtil->getAbsoluteServerFilePath($file);
-        $ext = pathinfo($filePath, PATHINFO_EXTENSION);
-        if( $ext == 'pdf' ) {
-            if( $this->isPdfCorrupted($filePath) ) {
-                $error = "<b>".$fileType . "</b>" . " with the original filename " . "<b>" . $file->getDescriptiveFilename() . "</b>".".";
-
-                //The uploaded file that appears to have caused this issue is located here:
-                $error = $error . "<br>" . "The location of the corrupted file " . $filePath;
-
-                if(0) {
-                    //and can also be viewed by following this link:
-                    $fileLink = $this->container->get('router')->generate(
-                        'fellapp_file_download',
-                        array(
-                            'id' => $file->getId()
-                        ),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-                    $fileLink = '<a href="' . $fileLink . '">' . $fileLink . '</a>';
-                    $error = $error . " and can also be viewed by following this link: " . $fileLink;
+        $logger = $this->container->get('logger');
+        try {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $filePath = $userSecUtil->getAbsoluteServerFilePath($file);
+            $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+            $logger->notice("isValidFile: ext=$ext, file=" . $file );
+            if( $ext == 'pdf' ) {
+                $corrupted = false;
+                try {
+                    $corrupted = $this->isPdfCorrupted($filePath);
+                } catch( \Throwable $eInner ) {
+                    $logger->error('Error in isPdfCorrupted for file ID='.$file->getId().' and type='.$fileType.': '.$eInner->getMessage());
+                    // Treat as invalid file if corruption check fails
+                    $corrupted = true;
                 }
+                $logger->notice("isValidFile: corrupted=$corrupted");
+                if( $corrupted ) {
+                    $error = "<b>".$fileType . "</b>" . " with the original filename " . "<b>" . $file->getDescriptiveFilename() . "</b>".".";
 
-                $fileErrors[] = $error;
+                    //The uploaded file that appears to have caused this issue is located here:
+                    $error = $error . "<br>" . "The location of the corrupted file " . $filePath;
 
-                return false;
+                    if(0) {
+                        //and can also be viewed by following this link:
+                        $fileLink = $this->container->get('router')->generate(
+                            'fellapp_file_download',
+                            array(
+                                'id' => $file->getId()
+                            ),
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        );
+                        $fileLink = '<a href="' . $fileLink . '">' . $fileLink . '</a>';
+                        $error = $error . " and can also be viewed by following this link: " . $fileLink;
+                    }
+
+                    $fileErrors[] = $error;
+
+                    return false;
+                }
             }
+            $logger->notice("isValidFile: return true");
+            return true;
+        } catch( \Throwable $e ) {
+            $logger->error('Error in isValidFile for file ID='.$file->getId().' and type='.$fileType.': '.$e->getMessage());
+
+            $error = "<b>".$fileType . "</b>" . " with the original filename " . "<b>" . $file->getDescriptiveFilename() . "</b>".".";
+            $error = $error . "<br>" . "The file could not be validated due to an internal error.";
+
+            $fileErrors[] = $error;
+
+            return false;
         }
-        return true;
     }
 
 //    //TODO: try https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
