@@ -286,9 +286,12 @@
 
         {% set degree = fellapp.getDegreeByTrainingTypeName('Medical') %}
         <a href="{{ url('fellapp_show', { 'id': fellapp.id }) }}" target="_blank">ID {{fellapp.id}}: {{fellapp.user.getFirstNameUppercase()}} {{fellapp.user.getLastNameUppercase()}}</a>{% if degree %}, {{ degree }}{% endif %}
+        {#<a data-toggle="tooltip" title="Download Complete Application in PDF"#}
+           {#href="{{ url('fellapp_download_pdf', { 'id': fellapp.id}) }}"#}
+                {#>{{ downloadTitleStr|raw }}</a>#}
         <a data-toggle="tooltip" title="Download Complete Application in PDF"
-           href="{{ url('fellapp_download_pdf', { 'id': fellapp.id}) }}"
-                >{{ downloadTitleStr|raw }}</a>
+           href="{{ path('fellapp_download_pdf', { 'id': fellapp.id}) }}"
+        >{{ downloadTitleStr|raw }}</a>
 
         {% set medschool = fellapp.getSchoolByTrainingTypeName('Medical',false,true,' ') %}
         {% if medschool %}
