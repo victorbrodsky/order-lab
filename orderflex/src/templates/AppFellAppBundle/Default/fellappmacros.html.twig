@@ -325,8 +325,8 @@
         {% for ref in fellapp.references %}
         {% if ref.name is not null or ref.documents|length > 0 %}
 
-            {% set refereeNameStr = ref.name %}
-            {% if ref.name is null %}
+            {% set refereeNameStr = ref.getFullName %}
+            {% if ref.getFullName is null %}
                 {% set refereeNameStr = "Unnamed" %}
             {% endif %}
 
