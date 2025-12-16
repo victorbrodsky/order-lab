@@ -285,7 +285,7 @@
         {% endif %}
 
         {% set degree = fellapp.getDegreeByTrainingTypeName('Medical') %}
-        <a href="{{ url('fellapp_show', { 'id': fellapp.id }) }}" target="_blank">ID {{fellapp.id}}: {{fellapp.user.getFirstNameUppercase()}} {{fellapp.user.getLastNameUppercase()}}</a>{% if degree %}, {{ degree }}{% endif %}
+        <a href="{{ path('fellapp_show', { 'id': fellapp.id }) }}" target="_blank">ID {{fellapp.id}}: {{fellapp.user.getFirstNameUppercase()}} {{fellapp.user.getLastNameUppercase()}}</a>{% if degree %}, {{ degree }}{% endif %}
         {#<a data-toggle="tooltip" title="Download Complete Application in PDF"#}
            {#href="{{ url('fellapp_download_pdf', { 'id': fellapp.id}) }}"#}
                 {#>{{ downloadTitleStr|raw }}</a>#}
@@ -334,13 +334,13 @@
 
             {#Case 1: single doc: href with referee name#}
             {% if ref.documents|length == 1 %}
-                {% set refStr = '<a href="'~url('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
+                {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
                 {% if noGlyphicon %}
                     {% set hrefTitleStr = '(Letter)'  %}
                 {% else %}
                     {% set hrefTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
                 {% endif %}
-                {% set refStr = refStr~' <a href="'~url('fellapp_file_download', { 'id': ref.documents|first.id})~'">'~hrefTitleStr~'</a>' %}
+                {% set refStr = refStr~' <a href="'~path('fellapp_file_download', { 'id': ref.documents|first.id})~'">'~hrefTitleStr~'</a>' %}
                 {#                            {% set refStr = '<a href="'~path('fellapp_file_download', { 'id': ref.documents|first.id})~'">'~refereeNameStr~'</a>' %}#}
             {% endif %}
 
@@ -351,18 +351,18 @@
                 {% set manyDocArr = [] %}
                 {% for document in ref.documents %}
                     {#letters of recommendation#}
-                    {% set docHref = '<a href="'~url('fellapp_file_download', { 'id': document.id})~'">Letter '~docCount~'</a>' %}
+                    {% set docHref = '<a href="'~path('fellapp_file_download', { 'id': document.id})~'">Letter '~docCount~'</a>' %}
                     {% set manyDocArr = manyDocArr|merge([docHref]) %}
                     {% set docCount = docCount + 1 %}
                 {% endfor %}
-                {% set refStr = '<a href="'~url('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
+                {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
                 {% set refStr = refStr~" ("~manyDocArr|join(', ')~")" %}
             {% endif %}
 
             {#Case 2: no docs: referee name with href #anchor to ref div#}
             {#If the letter itself has not been uploaded, link to the anchor (add the anchors first) in the application page for that specific letter author:#}
             {% if ref.documents|length == 0 %}
-                {% set refStr = '<a href="'~url('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
+                {% set refStr = '<a href="'~path('fellapp_show', { 'id': fellapp.id})~'#reference'~refcount~'" target="_blank">'~refereeNameStr~'</a>' %}
             {% endif %}
 
             {% set refArr = refArr|merge([refStr]) %}
@@ -388,7 +388,7 @@
             {% else %}
                 {% set hrefDocTitleStr = '<span class="glyphicon glyphicon-file" aria-hidden="true"></span>'  %}
             {% endif %}
-            {% set otherDocStr = otherDocStr~' <a href="'~url('fellapp_file_download', { 'id': fellapp.documents|first.id})~'">'~hrefDocTitleStr~'</a>' %}
+            {% set otherDocStr = otherDocStr~' <a href="'~path('fellapp_file_download', { 'id': fellapp.documents|first.id})~'">'~hrefDocTitleStr~'</a>' %}
             <p>
                 {{ otherDocStr|raw }}
             </p>
@@ -397,7 +397,7 @@
             {% set docCount = 1 %}
             {% set manyDocArr = [] %}
             {% for document in fellapp.documents %}
-                {% set docHref = '<a href="'~url('fellapp_file_download', { 'id': document.id})~'">Document '~docCount~'</a>' %}
+                {% set docHref = '<a href="'~path('fellapp_file_download', { 'id': document.id})~'">Document '~docCount~'</a>' %}
                 {% set manyDocArr = manyDocArr|merge([docHref]) %}
                 {% set docCount = docCount + 1 %}
             {% endfor %}
@@ -481,7 +481,7 @@
                     {% set submitterInfo = "" %}
                 {% endif %}
 
-                {% set interviewerUrl = '<a href="'~url('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %}
+                {% set interviewerUrl = '<a href="'~path('employees_showuser', { 'id': interview.interviewer.id })~'" target="_blank"><strong>'~interview.interviewer.getUsernameOptimal()~'</strong></a>' %}
                 {% set interviewDescrStr =
                 interviewerUrl~submitterInfo~":<br>"~
                 "Academic Score - "~interview.academicRank~
@@ -519,14 +519,14 @@
 
                 {% for interview in interviewsAwaitingArr %}
                     {% if reallinks %}
-                        {% set sendEmail = ' (<a href="'~url('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id })~'">Resend Invitation Email</a>)' %}
+                        {% set sendEmail = ' (<a href="'~path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id })~'">Resend Invitation Email</a>)' %}
                     {% else %}
                         {% set inviteTooltip = 'data-toggle="tooltip" title="Resend Evaluation Invitation to '~interview.interviewer.displayName~'"' %}
                         {% set emailSpan = '<span class="glyphicon glyphicon-envelope" '~inviteTooltip~'></span>' %}
                         {#{% set sendEmail = ' <a '~inviteTooltip~' href="'~path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id })~'">'~emailSpan~'</a>' %}#}
-                        {% set sendEmail = ' <a '~inviteTooltip~' onclick="sendInviteInterviewersToRate(\''~url('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id})~'\',\'Are you sure you want to Invite Interviewer '~interview.interviewer.displayName~' to Rate this Applicant?\');" href="#">'~emailSpan~'</a>' %}
+                        {% set sendEmail = ' <a '~inviteTooltip~' onclick="sendInviteInterviewersToRate(\''~path('fellapp_invite_single_interviewer_to_rate', { 'interviewId': interview.id})~'\',\'Are you sure you want to Invite Interviewer '~interview.interviewer.displayName~' to Rate this Applicant?\');" href="#">'~emailSpan~'</a>' %}
                     {% endif %}
-                    <a href="{{ url('employees_showuser', { 'id': interview.interviewer.id }) }}" target="_blank">{{interview.interviewer.getUsernameOptimal()}}</a>{% if fellapp.itinerarys|length > 0 %}{{ sendEmail|raw }}{% endif %}{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
+                    <a href="{{ path('employees_showuser', { 'id': interview.interviewer.id }) }}" target="_blank">{{interview.interviewer.getUsernameOptimal()}}</a>{% if fellapp.itinerarys|length > 0 %}{{ sendEmail|raw }}{% endif %}{% if interviewsAwaitingArr|length > interviewerCounter %}, {% endif %}
                     {% set interviewerCounter = interviewerCounter + 1 %}
                 {% endfor %}
             </p>
@@ -535,10 +535,10 @@
             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
                 {% if fellapp.itinerarys|length > 0 and fellapp.getRecentReport() %}
                     {% if reallinks %}
-                        <a href="{{ url('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}">Invite these interviewers to submit evaluations</a>
+                        <a href="{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}">Invite these interviewers to submit evaluations</a>
                     {% else %}
                         <a
-                            onclick="sendInviteInterviewersToRate('{{ url('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}','Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores.');"
+                            onclick="sendInviteInterviewersToRate('{{ path('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}','Are you sure you want to Invite Interviewers to Rate this Applicant? Email will be sent to the interviewers who still have not submitted their scores.');"
                             href="#">Invite these interviewers to submit evaluations</a>
                      {% endif %}
                 {% else %}
