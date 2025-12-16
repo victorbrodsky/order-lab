@@ -45,7 +45,7 @@ class Examination
     #[ORM\JoinColumn(name: 'credentials_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $credentials;
 
-
+    //USMLE Scores
     #[ORM\JoinTable(name: 'user_examination_score')]
     #[ORM\JoinColumn(name: 'examination_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'score_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -104,7 +104,13 @@ class Examination
     #[ORM\Column(type: 'date', nullable: true)]
     private $ECFMGCertificateDate;
 
-    //TODO: add upload certificate document
+    //ECFMG Certificate document
+    #[ORM\JoinTable(name: 'user_examination_ecfmgdoc')]
+    #[ORM\JoinColumn(name: 'examination_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'ecfmgdoc_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'Document')]
+    #[ORM\OrderBy(['createdate' => 'ASC'])]
+    private $ecfmgDocs;
 
     //COMLEX-USA Level 1 Score,	COMLEX-USA Level 2 CE Score, COMLEX-USA Level 2 PE Score (Pass/Fail), COMLEX-USA Level 3 Score
     //COMLEX Level 1 result is pass/fail since May 10, 2022.
@@ -153,6 +159,7 @@ class Examination
         $this->setCreationDate( new \DateTime());
 
         $this->scores = new ArrayCollection();
+        $this->ecfmgDocs = new ArrayCollection();
     }
 
     /**
@@ -429,6 +436,24 @@ class Examination
     public function getECFMGCertificate()
     {
         return $this->ECFMGCertificate;
+    }
+
+    public function addEcfmgDoc($item)
+    {
+        if( $item && !$this->ecfmgDocs->contains($item) ) {
+            $this->ecfmgDocs->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeEcfmgDoc($item)
+    {
+        $this->ecfmgDocs->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getEcfmgDocs()
+    {
+        return $this->ecfmgDocs;
     }
 
     /**

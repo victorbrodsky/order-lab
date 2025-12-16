@@ -675,6 +675,14 @@ class ReportGenerator {
             }
         }
 
+        //EcfmgDocs
+        $ecfmgDocs = $entity->getEcfmgDocs();
+        foreach( $ecfmgDocs as $ecfmgDoc ) {
+            if( $this->isValidFile($ecfmgDoc,$fileErrors,"ECFMG certificate") ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($ecfmgDoc);
+            }
+        }
+
         //Reprimand
         $reprimand = $entity->getRecentReprimand();
         if( $reprimand ) {

@@ -1099,6 +1099,18 @@ class FellowshipApplication extends BaseUserAttributes {
         return $scores;
     }
 
+    public function getEcfmgDocs() {
+        $ecfmgDocs = new ArrayCollection();
+        foreach( $this->getExaminations() as $examination ) {
+            foreach( $examination->getEcfmgDocs() as $ecfmgDoc ) {
+                if( $ecfmgDoc && !$ecfmgDocs->contains($ecfmgDoc) ) {
+                    $ecfmgDocs->add($ecfmgDoc);
+                }
+            }
+        }
+        return $ecfmgDocs;
+    }
+
     public function getReferenceLetters() {
         $refletters = new ArrayCollection();
         foreach( $this->getReferences() as $reference ) {

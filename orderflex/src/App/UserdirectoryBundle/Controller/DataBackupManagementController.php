@@ -102,7 +102,6 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees_home'));
         }
 
-        //$param = $userSecUtil->getSingleSiteSettingsParam();
         $param = $userServiceUtil->getSingleSiteSettingParameter();
         if( !$param ) {
             $this->addFlash(

@@ -153,6 +153,16 @@ class ExaminationType extends AbstractType
                 'onclick' => 'showHideWellByRadioButtons(this)',
             ]
         ]);
+        //similar to scores
+        $builder->add('ecfmgDocs', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
 
         $builder->add('COMLEXLevel1DatePassed', null, array(
             'label' => 'Date passed:',
