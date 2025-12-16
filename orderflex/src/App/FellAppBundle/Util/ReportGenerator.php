@@ -677,9 +677,15 @@ class ReportGenerator {
 
         //EcfmgDocs
         $ecfmgDocs = $entity->getEcfmgDocs();
+        $logger->notice("before adding ecfmgDoc: ecfmgDoc count=".count($ecfmgDocs));
         foreach( $ecfmgDocs as $ecfmgDoc ) {
+            $logger->notice("before attempt adding ecfmgDoc: $ecfmgDoc");
             if( $this->isValidFile($ecfmgDoc,$fileErrors,"ECFMG certificate") ) {
+                echo "added ecfmgDoc: $ecfmgDoc <br>";
+                $logger->notice("added ecfmgDoc: $ecfmgDoc");
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($ecfmgDoc);
+            } else {
+                $logger->notice("added ecfmgDoc: ecfmgDoc is not valid: $ecfmgDoc");
             }
         }
 
@@ -742,7 +748,7 @@ class ReportGenerator {
 
             //To address this issue, please follow these steps:
             $errorMsg = $errorMsg . "<br><br>" . "Please replace the corrupted file(s) for this applicant.";
-            //$logger->error($errorMsg);
+            $logger->error($errorMsg);
             $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
         }

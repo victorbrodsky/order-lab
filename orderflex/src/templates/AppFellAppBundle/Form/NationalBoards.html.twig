@@ -15,6 +15,7 @@
 #}
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
 
 {% if collapsein is not defined %}
     {% set collapsein = "in" %}
@@ -138,10 +139,10 @@
                                 <div class="row withpaddingtop">
                                     <div class="col-xs-12">
 
-                                        {% if form.ecfmgDocs is defined %}
-                                            {% for ecfmgDoc in form.ecfmgDocs %}
+                                        {% if form.examinations is defined %}
+                                            {% for examination in form.examinations %}
                                                 {#{{ usermacros.fileuploadLabelField( null, examination.scores, cycle, 'user-scores', 'noprototype' ) }}#}
-                                                {{ usermacros.documentsContainer(null,examination.ecfmgDoc,cycle,'noprototype',8,'default','ECFMG Certificate') }}
+                                                {{ usermacros.documentsContainer(null,examination.ecfmgDocs,cycle,'noprototype',8,'default','ECFMG Certificate') }}
                                             {% endfor %}
                                         {% endif %}
 
@@ -151,7 +152,7 @@
                         </div>
 
                     </div>
-                    
+
                 </div>
             </div>
 

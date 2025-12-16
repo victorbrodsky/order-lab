@@ -1964,7 +1964,8 @@ class FellAppController extends OrderAbstractController {
         //Examination
         foreach( $application->getExaminations() as $examination ) {
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
-            $em->getRepository(Document::class)->processDocuments( $examination );
+            $em->getRepository(Document::class)->processDocuments( $examination ); //, 'score'
+            $em->getRepository(Document::class)->processDocuments( $examination, 'ecfmgDoc' );
         }
 
         //Reference .documents
