@@ -102,6 +102,16 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees_home'));
         }
 
+        //$param = $userSecUtil->getSingleSiteSettingsParam();
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
+        if( !$param ) {
+            $this->addFlash(
+                'pnotify-error',
+                "Cannot continue with Backup: Please initialize the system with Miscellaneous on the Site Settings page"
+            );
+            return $this->redirect($this->generateUrl('employees_home'));
+        }
+
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
@@ -112,7 +122,6 @@ class DataBackupManagementController extends OrderAbstractController
             //set $networkDrivePath to /srv/order-lab-tenantappdemo/orderflex/var/backups/
             $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
             $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
-            $param = $userServiceUtil->getSingleSiteSettingParameter();
             if( $param ) {
                 $param->setNetworkDrivePath($networkDrivePath);
                 $em->flush();
@@ -128,16 +137,6 @@ class DataBackupManagementController extends OrderAbstractController
         //Testing
         //$res = $userServiceUtil->removeOldBackupFiles($networkDrivePath);
         //echo "Testing: removeOldBackupFiles: $res <br>";
-
-        //$param = $userSecUtil->getSingleSiteSettingsParam();
-        $param = $userServiceUtil->getSingleSiteSettingParameter();
-        if( !$param ) {
-            $this->addFlash(
-                'pnotify-error',
-                "Cannot continue with Backup: Please initialize the system with Miscellaneous on the Site Settings page"
-            );
-            return $this->redirect($this->generateUrl('employees_home'));
-        }
 
         if( file_exists($networkDrivePath) == false ) {
             $this->createBackupPath($networkDrivePath);
