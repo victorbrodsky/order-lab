@@ -107,11 +107,16 @@ class DataBackupManagementController extends OrderAbstractController
         //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
-            $this->addFlash(
-                'pnotify-error',
-                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
-            );
-            return $this->redirect($this->generateUrl('employees_home'));
+
+            //set $networkDrivePath to /srv/order-lab-tenantappdemo/orderflex/var/backups/
+            $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
+            $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
+
+//            $this->addFlash(
+//                'pnotify-error',
+//                "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
+//            );
+//            return $this->redirect($this->generateUrl('employees_home'));
         }
 
         //Testing
