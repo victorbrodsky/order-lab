@@ -1128,7 +1128,10 @@ class FellAppUtil {
         $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
     }
 
-    public function convertToHref($url) {
+    public function convertToHref($url, $urlName=null) {
+        if( $urlName ) {
+            return '<a href="'.$url.'">'.$urlName.'</a>';
+        }
         return '<a href="'.$url.'">'.$url.'</a>';
     }
     
@@ -2747,7 +2750,7 @@ class FellAppUtil {
         return $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipTypeId);
     }
 
-    public function getEmbedPdf( $pdfDocument ) {
+    public function getEmbedPdf( $pdfDocument, $fellapp=null ) {
         if( !$pdfDocument ) {
             return NULL;
         }
@@ -2765,7 +2768,15 @@ class FellAppUtil {
         }
 
         $embedPdfHtml = '<object type="application/pdf" width="400px" height="400px" data="'.$pdfDocumentPath.'"></object>';
-        $embedPdfHtml = '<br><br>This Complete Application in PDF will be attached to the invitation email:<br><br>' . $embedPdfHtml;
+        
+        //Convert Complete Application in PDF to link
+        if( $fellapp ) {
+            $pdfLink = $this->container->get('router')->generate('fellapp_download_pdf', array("id" => $fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+            $pdfLink = $this->convertToHref($pdfLink,'Complete Application in PDF');
+            $embedPdfHtml = '<br><br>This '.$pdfLink.' will be attached to the invitation email:<br><br>' . $embedPdfHtml;
+        } else {
+            $embedPdfHtml = '<br><br>This Complete Application in PDF will be attached to the invitation email:<br><br>' . $embedPdfHtml;
+        }
 
         //$logger->notice("pdfDocumentPath={$pdfDocumentPath}");
 

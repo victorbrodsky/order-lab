@@ -554,7 +554,7 @@
                 {% if reallinks %}
                     {#do nothing#}
                 {% else %}
-                    {% set embedPdf = fellapp_util.getEmbedPdf(fellapp.getRecentReport()) %}
+                    {% set embedPdf = fellapp_util.getEmbedPdf(fellapp.getRecentReport(),fellapp) %}
                     {{ embedPdf|raw }}
                 {% endif %}
             {% endif %}
