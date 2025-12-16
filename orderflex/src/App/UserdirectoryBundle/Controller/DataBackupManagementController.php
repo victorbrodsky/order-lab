@@ -92,6 +92,7 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->container->get('user_service_utility');
         if( $userServiceUtil->isWindows() ){
             $this->addFlash(
@@ -111,6 +112,11 @@ class DataBackupManagementController extends OrderAbstractController
             //set $networkDrivePath to /srv/order-lab-tenantappdemo/orderflex/var/backups/
             $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
             $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
+            $param = $userServiceUtil->getSingleSiteSettingParameter();
+            if( $param ) {
+                $param->setNetworkDrivePath($networkDrivePath);
+                $em->flush();
+            }
 
 //            $this->addFlash(
 //                'pnotify-error',
