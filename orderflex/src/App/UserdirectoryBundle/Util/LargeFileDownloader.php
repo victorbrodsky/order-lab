@@ -31,12 +31,16 @@ namespace App\UserdirectoryBundle\Util;
 
 class LargeFileDownloader {
 
+    protected $logger;
 
-
-    function __construct() {
+    function __construct( $logger=null ) {
         /* You may need these ini settings too */
         set_time_limit(600);
         ini_set('memory_limit', '2048M');
+
+        if( $logger ) {
+            $this->logger = $logger;
+        }
     }
 
 
@@ -120,8 +124,7 @@ class LargeFileDownloader {
 
         if( $mimeType ) {
             if( !$size ) {
-                $logger = $this->container->get('logger');
-                $logger->notice('$filenameClean='.$filenameClean);
+                $this->logger->notice('downloadLargeFile: filenameClean='.$filenameClean);
                 $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
             }
         }
