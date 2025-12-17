@@ -125,6 +125,7 @@ class LargeFileDownloader {
         if( $mimeType ) {
             if( !$size ) {
                 $this->logger->notice('downloadLargeFile: filenameClean='.$filenameClean);
+                //logger -> http://view.online/c/demo-institution/demo-department/Uploaded/fellapp/documents/1765962108_jessica-santiago.jpeg
                 $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
             }
         }

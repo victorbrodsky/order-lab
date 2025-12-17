@@ -6346,7 +6346,7 @@ tracepoint:sched:sched_process_exit
     //Document's getAbsoluteUploadFullPath is limited for multitenancy HAproxy when url has 'c/wcm/pathology' prefix:
     //http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
     //Here in service, we can get the full url prefix 'http://view.online/c/wcm/pathology' using router
-    public function getDocumentAbsoluteUrl( $document, $size=null, $onlyResize=false ) {
+    public function getDocumentAbsoluteUrl( $document, $size=null, $onlyResize=false, $useRealScheme=true ) {
         $baseUrl = $this->container->get('router')->generate(
             'main_common_home',
             array(),
@@ -6382,6 +6382,11 @@ tracepoint:sched:sched_process_exit
             } else {
                 //echo "Size is null <br>";
             }
+        }
+
+        if( $useRealScheme ) {
+            $userUtil = $this->container->get('user_utility');
+            $url = $userUtil->getRealSchemeUrl($url);
         }
 
         //exit('$url='.$url);

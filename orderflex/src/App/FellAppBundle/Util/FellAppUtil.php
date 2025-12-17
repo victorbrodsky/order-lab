@@ -2761,7 +2761,7 @@ class FellAppUtil {
         $userUtil = $this->container->get('user_utility');
 
         $pdfDocumentPath = $userServiceUtil->getDocumentAbsoluteUrl($pdfDocument);
-        $pdfDocumentPath = $userUtil->getRealSchemeUrl($pdfDocumentPath);
+        //$pdfDocumentPath = $userUtil->getRealSchemeUrl($pdfDocumentPath);
 
         if( !$pdfDocumentPath ) {
             return NULL;
