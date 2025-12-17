@@ -75,7 +75,7 @@ class LargeFileDownloader {
             //filesize can not get size for http/https http://view.online:80/Uploaded/directory/avatars/avatar/20240708194741
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
         }
-        $this->logger->notice("downloadLargeFile: after filesize 1 size=$size");
+        //$this->logger->notice("downloadLargeFile: after filesize 1 size=$size");
 
         //echo $filenameClean.": size=".$size."<br>";
         //echo "filename=".$filename."<br>";
@@ -125,13 +125,13 @@ class LargeFileDownloader {
         //echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
         //exit("111");
 
-        $this->logger->notice("downloadLargeFile: before filesize 2 size=$size");
+        //$this->logger->notice("downloadLargeFile: before filesize 2 size=$size");
         if( $mimeType ) {
             if( !$size ) {
-                $this->logger->notice('downloadLargeFile: filenameClean='.$filenameClean.", size=$size");
+                //$this->logger->notice('downloadLargeFile: filenameClean='.$filenameClean.", size=$size");
                 //logger -> http://view.online/c/demo-institution/demo-department/Uploaded/fellapp/documents/1765962108_jessica-santiago.jpeg
                 $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
-                $this->logger->notice('downloadLargeFile: 1 size='.$size);
+                //$this->logger->notice('downloadLargeFile: 1 size='.$size);
             }
         }
 

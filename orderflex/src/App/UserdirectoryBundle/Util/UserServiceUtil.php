@@ -1014,7 +1014,7 @@ class UserServiceUtil {
             //$types['wkhtmltopdfpathLinux'] = "xvfb-run wkhtmltopdf";
 
             //set other Linux parameters
-            $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
+            $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/bin";
             $types['libreOfficeConvertToPDFFilenameFellAppLinux'] = "soffice";
             $types['libreOfficeConvertToPDFArgumentsdFellAppLinux'] = "--headless -convert-to pdf -outdir";
             $types['pdftkPathFellAppLinux'] = "/usr/bin";
