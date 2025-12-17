@@ -28,7 +28,7 @@
 
     {% if researches|length > 0 %}
         <p>
-            {{ render(url('research_edit', {'id': entity.research.id})) }}
+            {{ render(path('research_edit', {'id': entity.research.id})) }}
         </p>
     {% endif %}
 
@@ -42,7 +42,7 @@
         <br>
 
         <p>
-            {{ render(url('educational_edit', {'id': entity.educational.id})) }}
+            {{ render(path('educational_edit', {'id': entity.educational.id})) }}
         </p>
     {% endif %}
 

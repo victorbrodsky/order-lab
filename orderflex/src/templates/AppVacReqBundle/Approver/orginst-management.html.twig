@@ -64,7 +64,7 @@
             <div class="panel-body">
 
                 <div class="well">
-                    {{ render( url('vacreq_orginst_approvaltypes',{'instid':organizationalGroupId})) }}
+                    {{ render( path('vacreq_orginst_approvaltypes',{'instid':organizationalGroupId})) }}
                 </div>
 
             </div> <!-- panel-body -->
@@ -106,7 +106,7 @@
                         If you do not see the person you are looking for in the drop down menu above,
                         please follow this link to add the new user to the system, then return to this page and reload it.
                     </a></p>
-                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':approverRoleId,'btnName':'Add Approver(s)'})) }}
+                    {{ render( path('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':approverRoleId,'btnName':'Add Approver(s)'})) }}
                 </div>
 
             </div> <!-- panel-body -->
@@ -134,7 +134,7 @@
                         {#{{ submitter }}#}
                         {#({{ approver.getSiteRoles('SUBMITTER')|join(', ') }})#}
                         {#the same as render(controller('AppVacReqBundle:Approver:userManagement'#}
-                        {{ render( url('vacreq_orginst_user_management',{'userid':submitter.id,'instid':organizationalGroupId, 'roleId':submitterRoleId}), {'default': 'AppUserdirectoryBundle/Default/default-hinclude-content.html.twig'} ) }}
+                        {{ render( path('vacreq_orginst_user_management',{'userid':submitter.id,'instid':organizationalGroupId, 'roleId':submitterRoleId}), {'default': 'AppUserdirectoryBundle/Default/default-hinclude-content.html.twig'} ) }}
                     </div>
                 {% endfor %}
 
@@ -143,7 +143,7 @@
                         If you do not see the person you are looking for in the drop down menu above,
                         please follow this link to add the new user to the system, then return to this page and reload it.
                     </a></p>
-                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':submitterRoleId,'btnName':'Add Submitter(s)'})) }}
+                    {{ render( path('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':submitterRoleId,'btnName':'Add Submitter(s)'})) }}
                 </div>
 
             </div> <!-- panel-body -->
@@ -164,7 +164,7 @@
                 {% if proxySubmitterRoleId %}
                 {% for proxySubmitter in proxySubmitters %}
                     <div class="well">
-                        {{ render( url('vacreq_orginst_user_management',{'userid':proxySubmitter.id,'instid':organizationalGroupId, 'roleId':proxySubmitterRoleId}), {'default': 'AppUserdirectoryBundle/Default/default-hinclude-content.html.twig'} ) }}
+                        {{ render( path('vacreq_orginst_user_management',{'userid':proxySubmitter.id,'instid':organizationalGroupId, 'roleId':proxySubmitterRoleId}), {'default': 'AppUserdirectoryBundle/Default/default-hinclude-content.html.twig'} ) }}
                     </div>
                 {% endfor %}
 
@@ -173,7 +173,7 @@
                             If you do not see the person you are looking for in the drop down menu above,
                             please follow this link to add the new user to the system, then return to this page and reload it.
                         </a></p>
-                    {{ render( url('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':proxySubmitterRoleId,'btnName':'Add Proxy Submitter(s)'})) }}
+                    {{ render( path('vacreq_orginst_add_user',{'instid':organizationalGroupId,'roleId':proxySubmitterRoleId,'btnName':'Add Proxy Submitter(s)'})) }}
                 </div>
                 {% else %}
                     <p>Associated role ROLE_VACREQ_PROXYSUBMITTER does not exist</p>
@@ -221,7 +221,7 @@
             <div class="panel-body">
 
                 <div class="well">
-                    {{ render( url('vacreq_orginst_defaultinformusers',{'instid':organizationalGroupId})) }}
+                    {{ render( path('vacreq_orginst_defaultinformusers',{'instid':organizationalGroupId})) }}
                 </div>
 
             </div> <!-- panel-body -->
@@ -240,7 +240,7 @@
             <div class="panel-body">
 
                 <div class="well">
-                    {{ render( url('vacreq_orginst_emailusers',{'instid':organizationalGroupId})) }}
+                    {{ render( path('vacreq_orginst_emailusers',{'instid':organizationalGroupId})) }}
                 </div>
 
             </div> <!-- panel-body -->
