@@ -49,6 +49,7 @@ class LargeFileDownloader {
     public function downloadLargeFile( $filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null ) {
 
         //exit ("downloadLargeFile: filepath=".$filepath. ", filename=" . $filename. ", size=".$size);
+        $this->logger->notice("downloadLargeFile: downloadLargeFile: filepath=".$filepath. ", filename=" . $filename. ", size=".$size);
         //For multitenancy: filepath=http://view.online:80/Uploaded/directory/avatars/avatar/20240708194741
 
         $filenameClean = str_replace("\\", "/", $filepath);
@@ -71,9 +72,10 @@ class LargeFileDownloader {
 //        }
 
         if( !$size ) {
+            //filesize can not get size for http/https http://view.online:80/Uploaded/directory/avatars/avatar/20240708194741
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
-            //$size = $this->getFileSizeUniversal($filenameClean);
         }
+        $this->logger->notice("downloadLargeFile: after filesize 1 size=$size");
 
         //echo $filenameClean.": size=".$size."<br>";
         //echo "filename=".$filename."<br>";
@@ -123,14 +125,13 @@ class LargeFileDownloader {
         //echo "readfile filename=".$filename."; mimeType=".$mimeType."; viewType=".$viewType."<br>";
         //exit("111");
 
+        $this->logger->notice("downloadLargeFile: before filesize 2 size=$size");
         if( $mimeType ) {
             if( !$size ) {
-                $this->logger->notice('downloadLargeFile: filenameClean='.$filenameClean);
+                $this->logger->notice('downloadLargeFile: filenameClean='.$filenameClean.", size=$size");
                 //logger -> http://view.online/c/demo-institution/demo-department/Uploaded/fellapp/documents/1765962108_jessica-santiago.jpeg
                 $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
                 $this->logger->notice('downloadLargeFile: 1 size='.$size);
-                $size = $this->getFileSizeUniversal($filenameClean);
-                $this->logger->notice('downloadLargeFile: 2 size='.$size);
             }
         }
 
@@ -734,36 +735,6 @@ class LargeFileDownloader {
                         "rar" => "application/x-rar-compressed",
                         "zip" => "application/zip");
         return $mime_types;
-    }
-
-    /**
-     * Get file size for both local paths and remote URLs.
-     *
-     * @param string $path Local filesystem path or HTTP/HTTPS URL
-     * @return int|null Size in bytes, or null if unknown
-     */
-    function getFileSizeUniversal(string $path): ?int
-    {
-        // Remote URL → use HTTP HEAD
-        if (filter_var($path, FILTER_VALIDATE_URL)) {
-            $headers = @get_headers($path, 1);
-
-            if ($headers && isset($headers['Content-Length'])) {
-                // get_headers() may return an array for repeated headers
-                return is_array($headers['Content-Length'])
-                    ? (int) end($headers['Content-Length'])
-                    : (int) $headers['Content-Length'];
-            }
-
-            return null; // size not available
-        }
-
-        // Local file → use filesize()
-        if (is_file($path)) {
-            return @filesize($path) ?: null;
-        }
-
-        return null;
     }
 
 }
