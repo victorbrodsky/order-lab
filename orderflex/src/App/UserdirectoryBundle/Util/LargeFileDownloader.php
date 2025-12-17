@@ -72,6 +72,7 @@ class LargeFileDownloader {
 
         if( !$size ) {
             $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
+            //$size = $this->getFileSizeUniversal($filenameClean);
         }
 
         //echo $filenameClean.": size=".$size."<br>";
@@ -127,7 +128,9 @@ class LargeFileDownloader {
                 $this->logger->notice('downloadLargeFile: filenameClean='.$filenameClean);
                 //logger -> http://view.online/c/demo-institution/demo-department/Uploaded/fellapp/documents/1765962108_jessica-santiago.jpeg
                 $size = filesize($filenameClean); //Returns the size of the file in bytes, or FALSE (and generates an error of level E_WARNING) in case of an error.
-                $this->logger->notice('downloadLargeFile: size='.$size);
+                $this->logger->notice('downloadLargeFile: 1 size='.$size);
+                $size = $this->getFileSizeUniversal($filenameClean);
+                $this->logger->notice('downloadLargeFile: 2 size='.$size);
             }
         }
 
@@ -733,5 +736,34 @@ class LargeFileDownloader {
         return $mime_types;
     }
 
+    /**
+     * Get file size for both local paths and remote URLs.
+     *
+     * @param string $path Local filesystem path or HTTP/HTTPS URL
+     * @return int|null Size in bytes, or null if unknown
+     */
+    function getFileSizeUniversal(string $path): ?int
+    {
+        // Remote URL → use HTTP HEAD
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            $headers = @get_headers($path, 1);
+
+            if ($headers && isset($headers['Content-Length'])) {
+                // get_headers() may return an array for repeated headers
+                return is_array($headers['Content-Length'])
+                    ? (int) end($headers['Content-Length'])
+                    : (int) $headers['Content-Length'];
+            }
+
+            return null; // size not available
+        }
+
+        // Local file → use filesize()
+        if (is_file($path)) {
+            return @filesize($path) ?: null;
+        }
+
+        return null;
+    }
 
 }
