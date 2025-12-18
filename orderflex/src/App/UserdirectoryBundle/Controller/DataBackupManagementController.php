@@ -121,9 +121,12 @@ class DataBackupManagementController extends OrderAbstractController
             //set $networkDrivePath to /srv/order-lab-tenantappdemo/orderflex/var/backups/
             $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
             $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
+            echo "networkDrivePath=".$networkDrivePath."<br>";
             if( $param ) {
+                echo "set networkDrivePath=".$networkDrivePath."<br>";
                 $param->setNetworkDrivePath($networkDrivePath);
                 $em->flush();
+                echo "after set networkDrivePath=".$networkDrivePath."<br>";
             }
 
 //            $this->addFlash(
