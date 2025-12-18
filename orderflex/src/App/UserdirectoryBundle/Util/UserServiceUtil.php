@@ -1677,19 +1677,27 @@ Pathology and Laboratory Medicine",
         }
         $res = $res . "<br>" . "IP: " . $ip;
 
+        $tenant_role = null;
+        if( $this->container->hasParameter('tenant_role') ) {
+            $tenant_role = $this->container->getParameter('tenant_role');
+            if( $tenant_role ) {
+                $res = $res . "<br>" . "Tenant role: " . $tenant_role;
+            }
+        }
+        if( !$tenant_role ) {
+            $res .= '<br><span class="text-danger">Tenant role: ' . 'Not set' . '</span>';
+        }
+
         //tenant base url
         $tenant_base = null;
         if( $this->container->hasParameter('tenant_base') ) {
             $tenant_base = $this->container->getParameter('tenant_base');
             if( $tenant_base ) {
                 $res = $res . "<br>" . "Tenant base url: " . $tenant_base;
-            } else {
-                $res .= '<br><span class="text-danger">Tenant base url: ' . 'Not set' . '</span>';
             }
-        } else {
-            $res .= '<br><span class="text-danger">Tenant base url: ' . 'Not set' . '</span>';
         }
         if( !$tenant_base ) {
+            $res .= '<br><span class="text-danger">Tenant base url: ' . 'Not set' . '</span>';
             //employees_update_parameters
             $linkUrl = $this->container->get('router')->generate(
                 "employees_update_parameters",
