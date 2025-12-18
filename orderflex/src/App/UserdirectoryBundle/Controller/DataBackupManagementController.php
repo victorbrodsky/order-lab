@@ -124,13 +124,10 @@ class DataBackupManagementController extends OrderAbstractController
             $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
             $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
             $logger->notice("set networkDrivePath=".$networkDrivePath);
-            //echo "networkDrivePath=".$networkDrivePath."<br>";
-            $param = $userServiceUtil->getSingleSiteSettingParameter();
+            $param = $userServiceUtil->getSingleSiteSettingParameter(); //get it again to make it manageable for flush
             if( $param ) {
-                //echo "set networkDrivePath=".$networkDrivePath."<br>";
                 $param->setNetworkDrivePath($networkDrivePath);
                 $em->flush();
-                //echo "after set networkDrivePath=".$networkDrivePath."<br>";
                 $logger->notice("after set networkDrivePath=".$networkDrivePath);
             }
 
@@ -141,8 +138,6 @@ class DataBackupManagementController extends OrderAbstractController
 //            return $this->redirect($this->generateUrl('employees_home'));
         }
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        //echo "networkDrivePath=".$networkDrivePath."<br>";
-        //exit('111');
 
         //Testing
         //$res = $userServiceUtil->removeOldBackupFiles($networkDrivePath);
