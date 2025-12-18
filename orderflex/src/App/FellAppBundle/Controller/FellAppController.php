@@ -732,12 +732,15 @@ class FellAppController extends OrderAbstractController {
                     $acceptingApplication = "Now accepting applications";
                 }
             } else {
-                $this->addFlash(
-                    'warning',
-                    "Google configuration file can not be retrieved from Google Drive.".
-                    " Please verify if the 'Full path to the credential authentication JSON file for Google'".
-                    " parameter in the site settings has been provided and exists on the server"
-                );
+                $environment = $userSecUtil->getSiteSettingParameter('environment');
+                if( $environment != 'demo' ) {
+                    $this->addFlash(
+                        'warning',
+                        "Google configuration file can not be retrieved from Google Drive." .
+                        " Please verify if the 'Full path to the credential authentication JSON file for Google'" .
+                        " parameter in the site settings has been provided and exists on the server"
+                    );
+                }
             }
             $acceptingApplication = "- ".$acceptingApplication;
         }

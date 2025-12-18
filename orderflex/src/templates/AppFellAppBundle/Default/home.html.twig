@@ -50,9 +50,11 @@
     {% endif %}
 
     {% if allowPopulateFellApp is defined and allowPopulateFellApp == false %}
-        <div class="alert alert-danger">
-            Automatic import of fellowship applications submitted via the Google form is turned off.
-        </div>
+        {% if user_security_utility.getSiteSettingParameter('environment') != 'demo' %}
+            <div class="alert alert-danger">
+                Automatic import of fellowship applications submitted via the Google form is turned off.
+            </div>
+        {% endif %}
     {% endif %}
 
     <p>
