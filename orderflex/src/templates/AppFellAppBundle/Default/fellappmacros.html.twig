@@ -134,7 +134,8 @@
                     >
                 {% else %}
                     {#{{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}#}
-                    {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null,'snapshot-medium') }}
+                    {#{{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null,'snapshot-medium') }}#}
+                    {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null) }}
                 {% endif %}
             {% else %}
                 {% set avatarImage = asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/img/Placeholder-User-Glyph-Icon.png') %}
