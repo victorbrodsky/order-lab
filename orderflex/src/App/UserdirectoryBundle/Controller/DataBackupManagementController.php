@@ -149,7 +149,7 @@ class DataBackupManagementController extends OrderAbstractController
         //echo "Testing: removeOldBackupFiles: $res <br>";
 
         //echo "2 networkDrivePath=".$networkDrivePath."<br>";
-        $logger->notice("networkDrivePath=".$networkDrivePath);
+        $logger->notice("2 networkDrivePath=".$networkDrivePath);
         if( file_exists($networkDrivePath) == false ) {
             $this->createBackupPath($networkDrivePath);
             $this->addFlash(
