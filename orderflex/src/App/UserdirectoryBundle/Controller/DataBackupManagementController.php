@@ -123,6 +123,7 @@ class DataBackupManagementController extends OrderAbstractController
             //set $networkDrivePath to /srv/order-lab-tenantappdemo/orderflex/var/backups/
             $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
             $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
+            $logger->notice("set networkDrivePath=".$networkDrivePath);
             //echo "networkDrivePath=".$networkDrivePath."<br>";
             if( $param ) {
                 //echo "set networkDrivePath=".$networkDrivePath."<br>";
@@ -2075,7 +2076,7 @@ class DataBackupManagementController extends OrderAbstractController
     public function createBackupPath( $path ) {
         if( file_exists($path) == false ) {
             $logger = $this->container->get('logger');
-            $logger->notice("Warning: Undefined networkDrivePath. Attempting to create $path");
+            $logger->notice("createBackupPath Warning: Undefined networkDrivePath. Attempting to create $path");
             //echo "Warning: Undefined networkDrivePath. Attempting to create $path <br>";
             //create $path /usr/local/bin/order-lab/orderflex/var/backups/
             //Create new folder instead of moved
