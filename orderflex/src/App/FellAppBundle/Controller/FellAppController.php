@@ -751,22 +751,24 @@ class FellAppController extends OrderAbstractController {
         $rejectedEmailSubject = $userSecUtil->getSiteSettingParameter('rejectedEmailSubject',$this->getParameter('fellapp.sitename'));
         $rejectedEmailBody = $userSecUtil->getSiteSettingParameter('rejectedEmailBody',$this->getParameter('fellapp.sitename'));
 
-        $userTenantUtil = $this->container->get('user_tenant_utility');
-        if( $userTenantUtil->getTenantUrlBase() === null ) {
-            //employees_update_parameters
-            $linkUrl = $this->generateUrl(
-                "employees_update_parameters",
-                array(),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            //echo "linkUrl=$linkUrl <br>";
-            $link = '<a href="'.$linkUrl.'" target="_blank">Please run this to fix it.</a>';
-            $this->addFlash(
-                'warning',
-                "tenant_base parameter is not set in the parameters.yml config file. ".
-                "It must be set to the domain name, i.e. 'tenant_base: c/demo-institution/demo-department'. <br>".
-                " $link"
-            );
+        if(0) {
+            $userTenantUtil = $this->container->get('user_tenant_utility');
+            if ($userTenantUtil->getTenantUrlBase() === null) {
+                //employees_update_parameters
+                $linkUrl = $this->generateUrl(
+                    "employees_update_parameters",
+                    array(),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                //echo "linkUrl=$linkUrl <br>";
+                $link = '<a href="' . $linkUrl . '" target="_blank">Please run this to fix it.</a>';
+                $this->addFlash(
+                    'warning',
+                    "tenant_base parameter is not set in the parameters.yml config file. " .
+                    "It must be set to the domain name, i.e. 'tenant_base: c/demo-institution/demo-department'. <br>" .
+                    " $link"
+                );
+            }
         }
 
         return array(
