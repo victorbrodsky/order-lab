@@ -128,6 +128,7 @@ class DataBackupManagementController extends OrderAbstractController
             if( $param ) {
                 //echo "set networkDrivePath=".$networkDrivePath."<br>";
                 $param->setNetworkDrivePath($networkDrivePath);
+                $em->persist($param);
                 $em->flush($param);
                 //echo "after set networkDrivePath=".$networkDrivePath."<br>";
                 $logger->notice("after set networkDrivePath=".$networkDrivePath);
