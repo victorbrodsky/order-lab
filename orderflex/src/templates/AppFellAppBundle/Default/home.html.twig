@@ -206,21 +206,6 @@
                     &nbsp;&nbsp;
 
                     <div style="white-space: nowrap; display: inline;">
-                        {{ form_widget(fellappfilter.withdrawn) }}   {{ form_label(fellappfilter.withdrawn) }}
-                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
-                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[withdrawn]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
-                    {{ withdrawn }}
-                    </a>
-                    </span>
-                        {{ fellappmacros.addSlush() }}
-                        <span class="badge" {{ tooltipBadge }} title="Total">
-                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[withdrawn]':1,'filter[filter]':filter}) }}">{{ withdrawnTotal }}</a>
-                    </span>
-                        {{ fellappmacros.addLegend('withdrawn') }}
-                    </div>
-                    &nbsp;&nbsp;
-
-                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, active, activeTotal, 'active' ) }}#}
                     {#<span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">#}
@@ -342,6 +327,21 @@
                     <a style="color: white;" href="{{ path('fellapp_home',{'filter[acceptedandnotified]':1,'filter[filter]':filter}) }}">{{ acceptedandnotifiedTotal }}</a>
                     </span>
                         {{ fellappmacros.addLegend('acceptedandnotified') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.withdrawn) }}   {{ form_label(fellappfilter.withdrawn) }}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[withdrawn]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                    {{ withdrawn }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[withdrawn]':1,'filter[filter]':filter}) }}">{{ withdrawnTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('withdrawn') }}
                     </div>
                     &nbsp;&nbsp;
 
