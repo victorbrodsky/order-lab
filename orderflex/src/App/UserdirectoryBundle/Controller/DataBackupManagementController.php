@@ -92,6 +92,7 @@ class DataBackupManagementController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->container->get('user_service_utility');
         if( $userServiceUtil->isWindows() ){
@@ -115,6 +116,7 @@ class DataBackupManagementController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         //echo "networkDrivePath=".$networkDrivePath."<br>";
+        $logger->notice("1 networkDrivePath=".$networkDrivePath);
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
 
@@ -127,6 +129,7 @@ class DataBackupManagementController extends OrderAbstractController
                 $param->setNetworkDrivePath($networkDrivePath);
                 $em->flush();
                 //echo "after set networkDrivePath=".$networkDrivePath."<br>";
+                $logger->notice("after set networkDrivePath=".$networkDrivePath);
             }
 
 //            $this->addFlash(
@@ -143,6 +146,8 @@ class DataBackupManagementController extends OrderAbstractController
         //$res = $userServiceUtil->removeOldBackupFiles($networkDrivePath);
         //echo "Testing: removeOldBackupFiles: $res <br>";
 
+        //echo "2 networkDrivePath=".$networkDrivePath."<br>";
+        $logger->notice("networkDrivePath=".$networkDrivePath);
         if( file_exists($networkDrivePath) == false ) {
             $this->createBackupPath($networkDrivePath);
             $this->addFlash(
