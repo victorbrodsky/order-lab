@@ -1680,7 +1680,13 @@ Pathology and Laboratory Medicine",
         //tenant base url
         if( $this->container->hasParameter('tenant_base') ) {
             $tenant_base = $this->container->getParameter('tenant_base');
-            $res = $res . "<br>" . "Tenant base url: " . $tenant_base;
+            if( $tenant_base ) {
+                $res = $res . "<br>" . "Tenant base url: " . $tenant_base;
+            } else {
+                $res .= '<br><span class="text-danger">Tenant base url: ' . 'Not set' . '</span>';
+            }
+        } else {
+            $res .= '<br><span class="text-danger">Tenant base url: ' . 'Not set' . '</span>';
         }
 
         //connection_channel
