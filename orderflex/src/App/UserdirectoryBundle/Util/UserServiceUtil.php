@@ -1696,7 +1696,7 @@ Pathology and Laboratory Medicine",
                 array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $link = '<a href="' . $linkUrl . '" target="_blank">Please click here to fix it.</a>';
+            $link = '<a href="' . $linkUrl . '" target="_blank">Please click here and then run deploy script to fix it.</a>';
             $res .= " (". $link.")<br>";
         }
 
