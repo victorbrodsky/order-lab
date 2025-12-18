@@ -27,6 +27,13 @@
                     <br>[[DIRECTOR]] - program director
                 </p>
 
+                {#5 fields#}
+                {{ formmacros.field(form.localInstitution) }}
+                {{ formmacros.field(form.fromInvitedInterview) }}
+                {{ formmacros.field(form.replyToInvitedInterview) }}
+                {{ formmacros.field(form.subjectInvitedInterview) }}
+                {{ formmacros.field(form.bodyInvitedInterview) }}
+
                 {{ formmacros.field(form.acceptedEmailSubject) }}
 
                 {{ formmacros.field(form.acceptedEmailBody) }}

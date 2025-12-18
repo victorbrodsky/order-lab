@@ -232,6 +232,29 @@ class FellappSiteParameterType extends AbstractType
                 ->addViewTransformer(new DayMonthDateTransformer())
         );
 
+        //5 fields:
+        $builder->add('localInstitution', null, array(
+            'label' => 'Local Institution:',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('fromInvitedInterview', null, array(
+            'label' => 'From (e-mail to the applicant invited for an interview):',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('replyToInvitedInterview', null, array(
+            'label' => 'Reply To (e-mail to the applicant invited for an interview):',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('subjectInvitedInterview', null, array(
+            'label' => 'Subject of e-mail to the applicant invited for an interview:',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('bodyInvitedInterview', null, array(
+            'label' => 'Body of e-mail to the applicant invited for an interview:',
+            'attr' => array('class' => 'form-control')
+        ));
+
+
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(

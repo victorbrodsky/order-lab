@@ -180,7 +180,32 @@ class FellappSiteParameter {
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $enablePublicFellApp;
 
-    
+
+    //5 fields
+    //Local Institution Name:
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $localInstitution;
+
+    //From: - invited for an interview
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $fromInvitedInterview;
+
+    //Reply To:
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $replyToInvitedInterview;
+
+    //Subject of e-mail to the applicant invited for an interview:
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $subjectInvitedInterview;
+
+    //Body of e-mail to the applicant invited for an interview:
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $bodyInvitedInterview;
+
+
+
+
+
     public function __construct() {
         $this->setAllowPopulateFellApp(false);
         $this->setSendEmailUploadLetterFellApp(false);
@@ -607,11 +632,85 @@ class FellappSiteParameter {
         $this->enablePublicFellApp = $enablePublicFellApp;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLocalInstitution()
+    {
+        return $this->localInstitution;
+    }
 
+    /**
+     * @param mixed $localInstitution
+     */
+    public function setLocalInstitution($localInstitution)
+    {
+        $this->localInstitution = $localInstitution;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getFromInvitedInterview()
+    {
+        return $this->fromInvitedInterview;
+    }
 
+    /**
+     * @param mixed $fromInvitedInterview
+     */
+    public function setFromInvitedInterview($fromInvitedInterview)
+    {
+        $this->fromInvitedInterview = $fromInvitedInterview;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getReplyToInvitedInterview()
+    {
+        return $this->replyToInvitedInterview;
+    }
 
+    /**
+     * @param mixed $replyToInvitedInterview
+     */
+    public function setReplyToInvitedInterview($replyToInvitedInterview)
+    {
+        $this->replyToInvitedInterview = $replyToInvitedInterview;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubjectInvitedInterview()
+    {
+        return $this->subjectInvitedInterview;
+    }
+
+    /**
+     * @param mixed $subjectInvitedInterview
+     */
+    public function setSubjectInvitedInterview($subjectInvitedInterview)
+    {
+        $this->subjectInvitedInterview = $subjectInvitedInterview;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBodyInvitedInterview()
+    {
+        return $this->bodyInvitedInterview;
+    }
+
+    /**
+     * @param mixed $bodyInvitedInterview
+     */
+    public function setBodyInvitedInterview($bodyInvitedInterview)
+    {
+        $this->bodyInvitedInterview = $bodyInvitedInterview;
+    }
 
 }
 

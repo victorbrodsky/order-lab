@@ -1331,6 +1331,7 @@ class UserServiceUtil {
         $count = 0;
         $count = $count + $this->generateVacReqSiteParameters();
         $count = $count + $this->generateResAppSiteParameters();
+        //$count = $count + $this->generateFellAppSiteParameters();
         return $count;
     }
 
