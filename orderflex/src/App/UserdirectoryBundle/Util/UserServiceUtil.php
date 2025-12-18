@@ -1678,6 +1678,7 @@ Pathology and Laboratory Medicine",
         $res = $res . "<br>" . "IP: " . $ip;
 
         //tenant base url
+        $tenant_base = null;
         if( $this->container->hasParameter('tenant_base') ) {
             $tenant_base = $this->container->getParameter('tenant_base');
             if( $tenant_base ) {
@@ -1687,6 +1688,16 @@ Pathology and Laboratory Medicine",
             }
         } else {
             $res .= '<br><span class="text-danger">Tenant base url: ' . 'Not set' . '</span>';
+        }
+        if( !$tenant_base ) {
+            //employees_update_parameters
+            $linkUrl = $this->container->get('router')->generate(
+                "employees_update_parameters",
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $link = '<a href="' . $linkUrl . '" target="_blank">Please click here to fix it.</a>';
+            $res .= " (". $link.")<br>";
         }
 
         //connection_channel
