@@ -114,19 +114,19 @@ class DataBackupManagementController extends OrderAbstractController
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        echo "networkDrivePath=".$networkDrivePath."<br>";
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
 
             //set $networkDrivePath to /srv/order-lab-tenantappdemo/orderflex/var/backups/
             $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
             $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
-            echo "networkDrivePath=".$networkDrivePath."<br>";
+            //echo "networkDrivePath=".$networkDrivePath."<br>";
             if( $param ) {
-                echo "set networkDrivePath=".$networkDrivePath."<br>";
+                //echo "set networkDrivePath=".$networkDrivePath."<br>";
                 $param->setNetworkDrivePath($networkDrivePath);
                 $em->flush();
-                echo "after set networkDrivePath=".$networkDrivePath."<br>";
+                //echo "after set networkDrivePath=".$networkDrivePath."<br>";
             }
 
 //            $this->addFlash(
@@ -136,8 +136,8 @@ class DataBackupManagementController extends OrderAbstractController
 //            return $this->redirect($this->generateUrl('employees_home'));
         }
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        echo "networkDrivePath=".$networkDrivePath."<br>";
-        exit('111');
+        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        //exit('111');
 
         //Testing
         //$res = $userServiceUtil->removeOldBackupFiles($networkDrivePath);
