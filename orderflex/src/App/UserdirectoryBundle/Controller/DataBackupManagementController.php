@@ -125,6 +125,7 @@ class DataBackupManagementController extends OrderAbstractController
             $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
             $logger->notice("set networkDrivePath=".$networkDrivePath);
             //echo "networkDrivePath=".$networkDrivePath."<br>";
+            $param = $userServiceUtil->getSingleSiteSettingParameter();
             if( $param ) {
                 //echo "set networkDrivePath=".$networkDrivePath."<br>";
                 $param->setNetworkDrivePath($networkDrivePath);
