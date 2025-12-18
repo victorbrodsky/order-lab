@@ -582,6 +582,9 @@
                 {% if entity.appStatus.name == 'declined' %}
                     {% set trclassname = "fell-app-status-legend-declined" %}
                 {% endif %}
+                {% if entity.appStatus.name == 'withdrawn' %}
+                    {% set trclassname = "fell-app-status-legend-withdrawn" %}
+                {% endif %}
                 {#EOF Set row color#}
 
                 {#Set examination score#}

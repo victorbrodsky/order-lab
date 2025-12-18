@@ -132,6 +132,9 @@
 .fell-app-status-legend-rejectedandnotified {
     background: #7C7C7C;
 }
+.fell-app-status-legend-withdrawn {
+    background: #e6c555;
+}
 
 /*Resapp*/
 .res-app-status-legend {
