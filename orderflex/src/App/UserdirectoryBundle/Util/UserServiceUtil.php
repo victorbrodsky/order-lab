@@ -1658,14 +1658,6 @@ Pathology and Laboratory Medicine",
         $phpVersion2 = PHP_VERSION;
         $res = $res . "<br>" . "PHP_VERSION: ".$phpVersion2;
 
-        //Get DB version
-        $dbInfo = $this->getDbVersion();
-        $res = $res . "<br>" . "DB: ".$dbInfo;
-
-        //$dbName = $this->container->getParameter('database_name');
-        $dbName = $this->em->getConnection()->getDatabase();
-        $res = $res . "<br>" . "DB Name: ".$dbName;
-
         $host= gethostname();
         $ip = gethostbyname($host);
         $serverAddr = null;
@@ -1676,6 +1668,14 @@ Pathology and Laboratory Medicine",
             $ip = $ip . " (". $serverAddr . ")";
         }
         $res = $res . "<br>" . "IP: " . $ip;
+
+        //Get DB version
+        $dbInfo = $this->getDbVersion();
+        $res = $res . "<br>" . "DB: ".$dbInfo;
+
+        //$dbName = $this->container->getParameter('database_name');
+        $dbName = $this->em->getConnection()->getDatabase();
+        $res = $res . "<br>" . "DB Name: ".$dbName;
 
         $tenant_role = null;
         if( $this->container->hasParameter('tenant_role') ) {
