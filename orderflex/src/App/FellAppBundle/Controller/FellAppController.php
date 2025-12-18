@@ -291,6 +291,7 @@ class FellAppController extends OrderAbstractController {
         $priority = $filterform['priority']->getData();
         $priorityinterviewee = $filterform['priorityinterviewee']->getData();
         $draft = $filterform['draft']->getData();
+        $withdrawn = $filterform['withdrawn']->getData();
 
         $accepted = $filterform['accepted']->getData();
         $acceptedandnotified = $filterform['acceptedandnotified']->getData();
@@ -484,6 +485,11 @@ class FellAppController extends OrderAbstractController {
             $searchFlag = true;
         }
 
+        if( $withdrawn ) {
+            $orWhere[] = "appStatus.name = 'withdrawn'";
+            $searchFlag = true;
+        }
+
         if( $reject ) {
             $orWhere[] = "appStatus.name = 'reject'";
             $searchFlag = true;
@@ -639,6 +645,9 @@ class FellAppController extends OrderAbstractController {
         $draft = $fellappUtil->getFellAppByStatusAndYear('draft',$fellSubspecId,$startYearStr);
         $draftTotal = $fellappUtil->getFellAppByStatusAndYear('draft',$fellSubspecId);
 
+        $withdrawn = $fellappUtil->getFellAppByStatusAndYear('withdrawn',$fellSubspecId,$startYearStr);
+        $withdrawnTotal = $fellappUtil->getFellAppByStatusAndYear('withdrawn',$fellSubspecId);
+
         $active = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId,$startYearStr);
         $activeTotal = $fellappUtil->getFellAppByStatusAndYear('active',$fellSubspecId);
 
@@ -759,6 +768,9 @@ class FellAppController extends OrderAbstractController {
             'activeTotal' => count($activeTotal),
             'draft' => count($draft),
             'draftTotal' => count($draftTotal),
+            'withdrawn' => count($withdrawn),
+            'withdrawnTotal' => count($withdrawnTotal),
+            
             'reject' => count($reject),
             'rejectTotal' => count($rejectTotal),
             'declined' => count($declined),

@@ -82,24 +82,19 @@
     {% set resStr = "Applications matching search criteria" %}
 
     {% if lastImportTimestamp and fellappids is defined and fellappids %}
-        <p>
-            <b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
+        <p><b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
             <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
                    data-toggle="tooltip" title="Download displayed application summaries as a spreadsheet">
                    {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
-                    <i class="fa fa-file-excel fa-lg"></i>
-            </a>
+                    <i class="fa fa-file-excel fa-lg"></i></a>
             <a href="{{ path('fellapp_download_interview_applicants_list_doc', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
                data-toggle="tooltip" title="Download displayed interviewee summaries as an editable document">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
-                <i class="fa fa-file-word fa-lg"></i>
-            </a>
+                <i class="fa fa-file-word fa-lg"></i></a>
             <a href="{{ path('fellapp_download_interview_applicants_list_pdf', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
                data-toggle="tooltip" title="Download displayed interviewee summaries as a PDF document">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
-                <i class="fa fa-file-pdf fa-lg"></i>
-            </a>
-        </p>
+                <i class="fa fa-file-pdf fa-lg"></i></a></p>
     {% endif %}
 
     {% if awaitedInterviews is not null and receivedInterviews is not null %}

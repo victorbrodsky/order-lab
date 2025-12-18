@@ -851,6 +851,7 @@ class UserServiceUtil {
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
         $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
+        $networkDrivePath = $this->normalizePath($networkDrivePath);
 
         $logger->notice("generateSiteParameters: Start generating SiteParameters");
 
@@ -1008,6 +1009,8 @@ class UserServiceUtil {
             //"underLoginMsgScan => ""
 
         );
+        //dump($types);
+        //exit();
 
         //set default Third-Party Software Dependencies for Linux not used in container
         if( !$this->isWindows() ) {

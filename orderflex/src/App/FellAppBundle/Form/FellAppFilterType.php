@@ -119,6 +119,12 @@ class FellAppFilterType extends AbstractType
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
+        $builder->add('withdrawn', CheckboxType::class, array(
+            'required'=>false,
+            'label' => 'Withdrawn',
+            'attr' => array('class' => 'filter-status-checkbox'),
+        ));
+
         $builder->add('hidden', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Hidden',
