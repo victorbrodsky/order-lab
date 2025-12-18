@@ -849,6 +849,9 @@ class UserServiceUtil {
             return -1;
         }
 
+        $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
+        $networkDrivePath = $projectRoot . DIRECTORY_SEPARATOR . "var/backups/";
+
         $logger->notice("generateSiteParameters: Start generating SiteParameters");
 
         $types = array(
@@ -859,7 +862,7 @@ class UserServiceUtil {
             "siteEmail" => "", //"email@email.com",
             "loginInstruction" => 'Please use your <a href="https://its.weill.cornell.edu/services/accounts-and-access/center-wide-id">CWID</a> to log in.',
             "remoteAccessUrl" => "https://its.weill.cornell.edu/services/wifi-networks/remote-access",
-            
+            "networkDrivePath" => $networkDrivePath,
             "enableAutoAssignmentInstitutionalScope" => true,
 
             "smtpServerAddress" => "smtp.gmail.com",

@@ -114,7 +114,7 @@ class DataBackupManagementController extends OrderAbstractController
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        //echo "networkDrivePath=".$networkDrivePath."<br>";
+        echo "networkDrivePath=".$networkDrivePath."<br>";
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
 
@@ -132,6 +132,9 @@ class DataBackupManagementController extends OrderAbstractController
 //            );
 //            return $this->redirect($this->generateUrl('employees_home'));
         }
+        $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
+        echo "networkDrivePath=".$networkDrivePath."<br>";
+        exit('111');
 
         //Testing
         //$res = $userServiceUtil->removeOldBackupFiles($networkDrivePath);
