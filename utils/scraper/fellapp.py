@@ -147,7 +147,7 @@ class FellApp:
             'photo': 'jessica-santiago.jpeg',
             'medschool': 'Washington University School of Medicine in St. Louis',
             'residency_specialty': ['AP', 'University of California', 'San Francisco', 'California', 'United States'],
-            'fellowship_specialty': ['Breast Pathology Fellowship', 'Mayo Clinic', 'Rochester', 'New-York', 'United States'],
+            'fellowship_specialty': ['Breast Pathology Fellowship', 'Mayo Clinic', 'Rochester', 'Minnesota', 'United States'],
             'interview_date': '14/12/2026',
             'interview_score': '3.9',
             'comment': "Wonderful candidate who did amazing work on the immunobiology research project. Looking forward to working together!"
