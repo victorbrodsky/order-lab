@@ -46,6 +46,8 @@
     <p>{{ freeSpace|raw }}</p>
     {#<p>Refresh this page to see the uploaded files in the select box below.</p>#}
 
+    {% set disabledFalg = 'disabled' %}
+
     {#Maintenance Mode#}
     <div class="panel panel-default">
         <div class="panel-heading">Maintenance Mode</div>
@@ -229,7 +231,7 @@
             <br>
 
 
-            {% set disabledFalg = 'disabled' %}
+            {#{% set disabledFalg = 'disabled' %}#}
             {#{% if backupFiles|length > 0 %}#}
                 {#{% set disabledFalg = '' %}#}
             {#{% endif %}#}

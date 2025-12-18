@@ -95,6 +95,7 @@ class DataBackupManagementController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         if( $userServiceUtil->isWindows() ){
             $this->addFlash(
                 'pnotify-error',
@@ -113,7 +114,6 @@ class DataBackupManagementController extends OrderAbstractController
         }
 
         //networkDrivePath
-        $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
         //echo "networkDrivePath=".$networkDrivePath."<br>";
         $logger->notice("1 networkDrivePath=".$networkDrivePath);
