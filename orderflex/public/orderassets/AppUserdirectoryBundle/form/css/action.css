@@ -59,6 +59,10 @@
     background: #b08800;
 }
 
+.order-withdrawn-status {
+    background: #e6c555;
+}
+
 /*.order-delete-status {*/
     /*background: white;*/
     /*background-image: linear-gradient(45deg, lightgray 25%, transparent 25%, transparent 50%, darkgray 50%, gray 75%, transparent 75%, transparent);*/

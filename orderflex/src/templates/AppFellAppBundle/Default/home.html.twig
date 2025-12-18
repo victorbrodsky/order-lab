@@ -206,6 +206,21 @@
                     &nbsp;&nbsp;
 
                     <div style="white-space: nowrap; display: inline;">
+                        {{ form_widget(fellappfilter.withdrawn) }}   {{ form_label(fellappfilter.withdrawn) }}
+                        <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[withdrawn]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                    {{ withdrawn }}
+                    </a>
+                    </span>
+                        {{ fellappmacros.addSlush() }}
+                        <span class="badge" {{ tooltipBadge }} title="Total">
+                    <a style="color: white;" href="{{ path('fellapp_home',{'filter[withdrawn]':1,'filter[filter]':filter}) }}">{{ withdrawnTotal }}</a>
+                    </span>
+                        {{ fellappmacros.addLegend('withdrawn') }}
+                    </div>
+                    &nbsp;&nbsp;
+
+                    <div style="white-space: nowrap; display: inline;">
                     {{ form_widget(fellappfilter.active) }}   {{ form_label(fellappfilter.active) }}
                     {#{{ fellappmacros.addBadge( filter, currentYear, active, activeTotal, 'active' ) }}#}
                     {#<span class="badge" data-toggle="tooltip" title="for {{ currentYear }}">#}
@@ -1184,13 +1199,23 @@
                                             </li>
                                         {% endif %}
 
+                                        {% if entity.appStatus.name != 'withdrawn' %}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Withdrawn'?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"
+                                                >Mark as Withdrawn</a>
+                                            </li>
+                                        {% endif %}
+
                                         {% if entity.appStatus.name != 'declined' %}
                                             <li>
                                                 <a
                                                     general-data-confirm="Are you sure you want to change status of this Application to 'Declined'?"
                                                     general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'declined' }, true) }}">Mark as Declined Interview/Acceptance
-                                                </a>
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'declined' }, true) }}"
+                                                >Mark as Declined Interview/Acceptance</a>
                                             </li>
                                         {% endif %}
 

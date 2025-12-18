@@ -6593,6 +6593,7 @@ class AdminController extends OrderAbstractController
 
         $elements = array(
             'draft'=>'Draft',
+            'withdrawn'=>'Withdrawn',
             'active'=>'Active',
             'complete'=>'Complete',
             'interviewee'=>'Interviewee',
