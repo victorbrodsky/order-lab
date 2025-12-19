@@ -32,6 +32,7 @@ class FellApp:
 
     def get_references(self):
         references = []
+        #1
         references.append({
             'firstName': 'Helena',
             'lastName': 'Markovic',
@@ -50,6 +51,7 @@ class FellApp:
             'displayName': 'Gregory Ashford',
             'email': 'Gregory.Ashford@example.com',
         })
+        #2
         references.append({
             'firstName': 'Amitabh',
             'lastName': 'Banerjee',
@@ -68,6 +70,7 @@ class FellApp:
             'displayName': 'Sylvia Marwood',
             'email': 'Sylvia.Marwood@example.com',
         })
+        #3
         references.append({
             'firstName': 'Adewale',
             'lastName': 'Okonjo',
@@ -129,7 +132,7 @@ class FellApp:
             'residency_specialty': ['AP/CP', 'Massachusetts General Hospital / Harvard Medical School', 'Boston', 'Massachusetts', 'United States'],
             #Surgical Pathology Fellowship — Memorial Sloan Kettering Cancer Center
             #specialty, school, year (current + 2), city, state, country
-            'fellowship_specialty': ['Surgical Pathology Fellowship', 'Memorial Sloan Kettering Cancer Center', 'New-York', 'New-York', 'United States'],
+            'fellowship_specialty': ['Surgical Pathology Fellowship', 'Memorial Sloan Kettering Cancer Center', 'New York', 'New York', 'United States'],
             'interview_date': '09/12/2026',
             'interview_score': '4.3',
             'comment': "I enjoyed talking to this outstanding candidate and I believe this would be a valuable addition to our program!"

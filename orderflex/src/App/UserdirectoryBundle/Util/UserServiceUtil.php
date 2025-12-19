@@ -1563,7 +1563,7 @@ Fellowship Program Coordinator
 Weill Cornell Medicine
 Pathology and Laboratory Medicine",
 
-            //"localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)", //Institution entity
+            //"localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)", //it's not string - it's Institution entity
             "spreadsheetsPathFellApp" => "fellapp/Spreadsheets",
             "applicantsUploadPathFellApp" => "fellapp/FellowshipApplicantUploads",
             "reportsUploadPathFellApp" => "fellapp/Reports"
