@@ -2065,6 +2065,48 @@ class FellAppController extends OrderAbstractController {
         $response->setContent(json_encode("ok"));
         return $response;
     }
+
+    #[Route(path: '/send-interview-invitation/{id}', name: 'fellapp_send_interview_invitation', methods: ['POST'], options: ['expose' => true])]
+    public function sendInterviewInvitationAction( Request $request, $id ) {
+
+        if(
+            $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
+            $this->isGranted('ROLE_FELLAPP_DIRECTOR') === false
+        ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $status = trim((string)$request->get('status'));
+        $subject = (string)$request->get('subject');
+        $body = (string)$request->get('body');
+
+        $em = $this->getDoctrine()->getManager();
+        $fellapp = $em->getRepository(FellowshipApplication::class)->find($id);
+        if( !$fellapp ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+
+        if( false == $this->isGranted('update',$fellapp) ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        //send interview invitation email
+        if( $subject && $body ) {
+            $fellappUtil->sendInterviewInvitationEmail($fellapp,$subject,$body);
+        }
+
+        //change status (to interviewee or priorityinterviewee)
+        if( $status ) {
+            $this->changeFellAppStatus($fellapp,$status,$request);
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode('ok'));
+        return $response;
+    }
     
     public function changeFellAppStatus($fellapp, $status, $request) {
 

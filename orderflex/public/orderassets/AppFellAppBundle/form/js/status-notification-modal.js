@@ -383,6 +383,7 @@ function fellappPriorityInterviewInvitationConfirmAction() {
 
         var subject = linkEl.attr('data-interview-subject') || '';
         var body    = linkEl.attr('data-interview-body') || '';
+        var fellappId = linkEl.attr('data-fellapp-id');
         var hrefPriorityInterviewee = linkEl.attr('data-href-priorityinterviewee');
 
         if( !$('#fellappPriorityInterviewInvitationModal').length ) {
@@ -425,15 +426,39 @@ function fellappPriorityInterviewInvitationConfirmAction() {
         modal.find('.fellapp-priority-interview-send-and-update').off('click');
         modal.find('.fellapp-priority-interview-update-only').off('click');
 
-        // For now both actions only change status to Priority Interviewee via refreshpage (no email send implemented yet)
         modal.find('.fellapp-priority-interview-send-and-update').on('click', function (event) {
-            if( hrefPriorityInterviewee ) {
-                if( typeof refreshpage === 'function' ) {
-                    refreshpage(hrefPriorityInterviewee, this);
-                } else {
-                    window.location.href = hrefPriorityInterviewee;
-                }
+            event.preventDefault();
+
+            var currentSubject = modal.find('.fellapp-priority-interview-subject-input').val();
+            var currentBody    = modal.find('.fellapp-priority-interview-body-input').val();
+
+            if( !fellappId ) {
+                return false;
             }
+
+            var footer = modal.find('.modal-footer');
+            footer.html('Please wait ...');
+
+            var url = Routing.generate('fellapp_send_interview_invitation', {id: fellappId});
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                data: {
+                    status: 'priorityinterviewee',
+                    subject: currentSubject,
+                    body: currentBody
+                }
+            }).success(function(data) {
+                // Reload page after successful email+status update
+                location.reload();
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error sending priority interview invitation: ' + errorThrown);
+                location.reload();
+            });
+
+            return false;
         });
 
         modal.find('.fellapp-priority-interview-update-only').on('click', function (event) {
@@ -468,6 +493,7 @@ function fellappInterviewInvitationConfirmAction() {
 
         var subject = linkEl.attr('data-interview-subject') || '';
         var body    = linkEl.attr('data-interview-body') || '';
+        var fellappId = linkEl.attr('data-fellapp-id');
         var hrefInterviewee = linkEl.attr('data-href-interviewee');
 
         if( !$('#fellappInterviewInvitationModal').length ) {
@@ -510,15 +536,39 @@ function fellappInterviewInvitationConfirmAction() {
         modal.find('.fellapp-interview-send-and-update').off('click');
         modal.find('.fellapp-interview-update-only').off('click');
 
-        // For now both actions only change status to Interviewee via refreshpage (no email send implemented yet)
         modal.find('.fellapp-interview-send-and-update').on('click', function (event) {
-            if( hrefInterviewee ) {
-                if( typeof refreshpage === 'function' ) {
-                    refreshpage(hrefInterviewee, this);
-                } else {
-                    window.location.href = hrefInterviewee;
-                }
+            event.preventDefault();
+
+            var currentSubject = modal.find('.fellapp-interview-subject-input').val();
+            var currentBody    = modal.find('.fellapp-interview-body-input').val();
+
+            if( !fellappId ) {
+                return false;
             }
+
+            var footer = modal.find('.modal-footer');
+            footer.html('Please wait ...');
+
+            var url = Routing.generate('fellapp_send_interview_invitation', {id: fellappId});
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                data: {
+                    status: 'interviewee',
+                    subject: currentSubject,
+                    body: currentBody
+                }
+            }).success(function(data) {
+                // Reload page after successful email+status update
+                location.reload();
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error sending interview invitation: ' + errorThrown);
+                location.reload();
+            });
+
+            return false;
         });
 
         modal.find('.fellapp-interview-update-only').on('click', function (event) {

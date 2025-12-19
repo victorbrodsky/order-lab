@@ -1104,6 +1104,7 @@
                                                 <a
                                                     href="#"
                                                     class="fellapp-interview-invitation-link"
+                                                    data-fellapp-id="{{ entity.id }}"
                                                     data-interview-subject="{{ fellapp_util.getInterviewInvitationSubject(entity.id) }}"
                                                     data-interview-body="{{ fellapp_util.getInterviewInvitationBody(entity.id) }}"
                                                     data-href-interviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}"
@@ -1126,6 +1127,7 @@
                                                 <a
                                                     href="#"
                                                     class="fellapp-priority-interview-invitation-link"
+                                                    data-fellapp-id="{{ entity.id }}"
                                                     data-interview-subject="{{ fellapp_util.getInterviewInvitationSubject(entity.id) }}"
                                                     data-interview-body="{{ fellapp_util.getInterviewInvitationBody(entity.id) }}"
                                                     data-href-priorityinterviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priorityinterviewee' }, true) }}"
