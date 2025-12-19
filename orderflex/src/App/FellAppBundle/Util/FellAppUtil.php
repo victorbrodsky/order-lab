@@ -2678,8 +2678,14 @@ class FellAppUtil {
             $startDateStr = NULL;
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution',$this->container->getParameter('fellapp.sitename'));
+        if( !$localInstitutionName ) {
+            $localInstitutionName = "Institution";
+        }
         $directorsStr = $this->getProgramDirectorStr($fellapp->getFellowshipSubspecialty(),$str);
 
+        $str = str_replace("[[LOCAL INSTITUTION NAME]]",$localInstitutionName,$str);
         $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
         $str = str_replace("[[START YEAR]]",$startDateStr,$str);
         $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappType,$str);
