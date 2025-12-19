@@ -2683,6 +2683,13 @@ class FellAppUtil {
         if( !$localInstitutionName ) {
             $localInstitutionName = "Institution";
         }
+
+        $interviewDateStr = "ENTER-THE-PROPOSED-INTERVIEW-DATE-HERE-MANUALLY-INSTEAD-OF-THIS-TEXT";
+        $interviewDate = $fellapp->getInterviewDate();
+        if( $interviewDate ) {
+            $interviewDateStr = $interviewDate->format('m/d/Y'); //MM/DD/YYYY
+        }
+
         $directorsStr = $this->getProgramDirectorStr($fellapp->getFellowshipSubspecialty(),$str);
 
         $str = str_replace("[[LOCAL INSTITUTION NAME]]",$localInstitutionName,$str);
@@ -2691,6 +2698,7 @@ class FellAppUtil {
         $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappType,$str);
         $str = str_replace("[[INSTITUTION]]",$inst,$str);
         $str = str_replace("[[DIRECTOR]]",$directorsStr,$str);
+        $str = str_replace("[[INTERVIEW DATE]]",$interviewDateStr,$str);
 
         return $str;
     }

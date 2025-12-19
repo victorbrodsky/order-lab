@@ -1098,6 +1098,15 @@
                                                     </a>
                                                 {% endif %}
                                             </li>
+
+                                            {#Mark as an Interviewee and send the invitation#}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to mark this Application as an Interviewee and send the invitation?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}">Mark as an Interviewee and send the invitation
+                                                </a>
+                                            </li>
                                         {% endif %}
 
                                         {% if entity.appStatus.name != 'priorityinterviewee' %}
@@ -1106,6 +1115,15 @@
                                                         general-data-confirm="Are you sure you want to mark this Application as a Priority Interviewee?"
                                                         general-data-callback="refreshpage"
                                                         href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priorityinterviewee' }, true) }}">Mark as a Priority Interviewee
+                                                </a>
+                                            </li>
+
+                                            {#Mark as a Priority Interviewee and send the invitation#}
+                                            <li>
+                                                <a
+                                                        general-data-confirm="Are you sure you want to mark this Application as a Priority and send the invitation?"
+                                                        general-data-callback="refreshpage"
+                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priorityinterviewee' }, true) }}">Mark as a Priority Interviewee and send the invitation
                                                 </a>
                                             </li>
                                         {% endif %}
