@@ -2764,6 +2764,27 @@ class FellAppUtil {
         return $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipTypeId);
     }
 
+    public function getInterviewInvitationSubject( $fellappId ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $subject = $userSecUtil->getSiteSettingParameter('subjectInvitedInterview',$this->container->getParameter('fellapp.sitename'));
+
+        $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
+
+        $subject = $this->siteSettingsConstantReplace($subject,$fellapp); //$str,$fellapp
+        
+        return $subject;
+    }
+    public function getInterviewInvitationBody( $fellappId ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $body = $userSecUtil->getSiteSettingParameter('bodyInvitedInterview',$this->container->getParameter('fellapp.sitename'));
+
+        $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
+
+        $body = $this->siteSettingsConstantReplace($body,$fellapp); //$str,$fellapp
+
+        return $body;
+    }
+
     public function getEmbedPdf( $pdfDocument, $fellapp=null ) {
         if( !$pdfDocument ) {
             return NULL;

@@ -367,3 +367,173 @@ function fellappPriorityIntervieweeConfirmAction() {
     });
 }
 
+// Modal for "Mark as a Priority Interviewee and send the invitation".
+// Triggered on links with class 'fellapp-priority-interview-invitation-link' and data attributes:
+//   data-interview-subject       - default subject text
+//   data-interview-body          - default body text
+//   data-href-priorityinterviewee - URL to change status to 'priorityinterviewee'
+// This UI-only version updates status to Priority Interviewee; actual email sending is not yet implemented.
+function fellappPriorityInterviewInvitationConfirmAction() {
+
+    $('body').on('click', 'a.fellapp-priority-interview-invitation-link', function (ev) {
+
+        ev.preventDefault();
+
+        var linkEl = $(this);
+
+        var subject = linkEl.attr('data-interview-subject') || '';
+        var body    = linkEl.attr('data-interview-body') || '';
+        var hrefPriorityInterviewee = linkEl.attr('data-href-priorityinterviewee');
+
+        if( !$('#fellappPriorityInterviewInvitationModal').length ) {
+            var modalHtml =
+                '<div id="fellappPriorityInterviewInvitationModal" class="modal fade">' +
+                    '<div class="modal-dialog">' +
+                        '<div class="modal-content">' +
+                            '<div class="modal-header text-center">' +
+                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                                '<h3>Priority Interview Invitation</h3>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                                '<div class="form-group">' +
+                                    '<label>Subject</label>' +
+                                    '<input type="text" class="form-control fellapp-priority-interview-subject-input" />' +
+                                '</div>' +
+                                '<div class="form-group">' +
+                                    '<label>Body</label>' +
+                                    '<textarea rows="8" class="form-control fellapp-priority-interview-body-input"></textarea>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="modal-footer text-center">' +
+                                '<p><a class="btn btn-primary fellapp-priority-interview-send-and-update">Update status to Priority Interviewee and send this invitation</a></p>' +
+                                '<p><a class="btn btn-primary fellapp-priority-interview-update-only">Update status to Priority Interviewee without sending this invitation</a></p>' +
+                                '<p><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button></p>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            $('body').append(modalHtml);
+        }
+
+        var modal = $('#fellappPriorityInterviewInvitationModal');
+
+        modal.find('.fellapp-priority-interview-subject-input').val(subject);
+        modal.find('.fellapp-priority-interview-body-input').val(body);
+
+        // Clear previous handlers to avoid stacking
+        modal.find('.fellapp-priority-interview-send-and-update').off('click');
+        modal.find('.fellapp-priority-interview-update-only').off('click');
+
+        // For now both actions only change status to Priority Interviewee via refreshpage (no email send implemented yet)
+        modal.find('.fellapp-priority-interview-send-and-update').on('click', function (event) {
+            if( hrefPriorityInterviewee ) {
+                if( typeof refreshpage === 'function' ) {
+                    refreshpage(hrefPriorityInterviewee, this);
+                } else {
+                    window.location.href = hrefPriorityInterviewee;
+                }
+            }
+        });
+
+        modal.find('.fellapp-priority-interview-update-only').on('click', function (event) {
+            if( hrefPriorityInterviewee ) {
+                if( typeof refreshpage === 'function' ) {
+                    refreshpage(hrefPriorityInterviewee, this);
+                } else {
+                    window.location.href = hrefPriorityInterviewee;
+                }
+            }
+        });
+
+        modal.modal({show:true});
+
+        return false;
+    });
+}
+
+// Modal for "Mark as an Interviewee and send the invitation".
+// Triggered on links with class 'fellapp-interview-invitation-link' and data attributes:
+//   data-interview-subject - default subject text
+//   data-interview-body    - default body text
+//   data-href-interviewee  - URL to change status to 'interviewee'
+// This UI-only version updates status to Interviewee; actual email sending is not yet implemented.
+function fellappInterviewInvitationConfirmAction() {
+
+    $('body').on('click', 'a.fellapp-interview-invitation-link', function (ev) {
+
+        ev.preventDefault();
+
+        var linkEl = $(this);
+
+        var subject = linkEl.attr('data-interview-subject') || '';
+        var body    = linkEl.attr('data-interview-body') || '';
+        var hrefInterviewee = linkEl.attr('data-href-interviewee');
+
+        if( !$('#fellappInterviewInvitationModal').length ) {
+            var modalHtml =
+                '<div id="fellappInterviewInvitationModal" class="modal fade">' +
+                    '<div class="modal-dialog">' +
+                        '<div class="modal-content">' +
+                            '<div class="modal-header text-center">' +
+                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                                '<h3>Interview Invitation</h3>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                                '<div class="form-group">' +
+                                    '<label>Subject</label>' +
+                                    '<input type="text" class="form-control fellapp-interview-subject-input" />' +
+                                '</div>' +
+                                '<div class="form-group">' +
+                                    '<label>Body</label>' +
+                                    '<textarea rows="8" class="form-control fellapp-interview-body-input"></textarea>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="modal-footer text-center">' +
+                                '<p><a class="btn btn-primary fellapp-interview-send-and-update">Update status to Interviewee and send this invitation</a></p>' +
+                                '<p><a class="btn btn-primary fellapp-interview-update-only">Update status to Interviewee without sending this invitation</a></p>' +
+                                '<p><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button></p>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            $('body').append(modalHtml);
+        }
+
+        var modal = $('#fellappInterviewInvitationModal');
+
+        modal.find('.fellapp-interview-subject-input').val(subject);
+        modal.find('.fellapp-interview-body-input').val(body);
+
+        // Clear previous handlers to avoid stacking
+        modal.find('.fellapp-interview-send-and-update').off('click');
+        modal.find('.fellapp-interview-update-only').off('click');
+
+        // For now both actions only change status to Interviewee via refreshpage (no email send implemented yet)
+        modal.find('.fellapp-interview-send-and-update').on('click', function (event) {
+            if( hrefInterviewee ) {
+                if( typeof refreshpage === 'function' ) {
+                    refreshpage(hrefInterviewee, this);
+                } else {
+                    window.location.href = hrefInterviewee;
+                }
+            }
+        });
+
+        modal.find('.fellapp-interview-update-only').on('click', function (event) {
+            if( hrefInterviewee ) {
+                if( typeof refreshpage === 'function' ) {
+                    refreshpage(hrefInterviewee, this);
+                } else {
+                    window.location.href = hrefInterviewee;
+                }
+            }
+        });
+
+        modal.modal({show:true});
+
+        return false;
+    });
+}
+
