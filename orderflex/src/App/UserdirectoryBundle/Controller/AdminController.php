@@ -13036,6 +13036,24 @@ class AdminController extends OrderAbstractController
         exit($msg);
     }
 
+    //http://127.0.0.1/directory/admin/update-fellapp-parameters
+    #[Route(path: '/update-fellapp-parameters', name: 'user_update_fellapp_parameters')]
+    public function updateFellAppSiteParametersAction( Request $request )
+    {
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('employees.sitename') . '-nopermission'));
+        }
+
+        //exit("not permitted. It has been used only to test updateFellAppSiteParametersAction.");
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $count = $userServiceUtil->generateFellAppSiteParameters($force=true);
+
+        exit("updateFellAppSiteParametersAction: count=$count");
+    }
+
+
 
 //    /**
 //     * TODO: NOT USED: Instead of this, try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle

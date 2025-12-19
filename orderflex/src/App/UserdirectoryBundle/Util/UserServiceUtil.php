@@ -1497,7 +1497,7 @@ Pathology and Laboratory Medicine",
         return round($count/10);
     }
 
-    public function generateFellAppSiteParameters() {
+    public function generateFellAppSiteParameters( $force=false ) {
         $logger = $this->container->get('logger');
         $em = $this->em;
 
@@ -1513,15 +1513,27 @@ Pathology and Laboratory Medicine",
             return 0;
         }
 
-        if( $siteParameters->getFellappSiteParameter() ) {
+        $fellappParams = $siteParameters->getFellappSiteParameter();
+        if( $fellappParams && $force == false ) {
             $logger->notice("FellappSiteParameters already exists.");
             return 0;
         }
 
         $logger->notice("generateFellAppSiteParameters: Start generating SiteParameters");
 
-
         $types = array(
+            "localInstitution" => "Institution", //[[LOCAL INSTITUTION NAME]]
+            "fromInvitedInterview" => null,
+            "replyToInvitedInterview" => null,
+            "subjectInvitedInterview" => "Interview invitation for the [[FELLOWSHIP TYPE]] [[START YEAR]] fellowship at [[LOCAL INSTITUTION NAME]]",
+            "bodyInvitedInterview" => "Dear [[APPLICANT NAME]],
+You are invited to the interview for the [[FELLOWSHIP TYPE]] [[START YEAR]] position at [[LOCAL INSTITUTION NAME]] on [[INTERVIEW DATE]]!
+
+Please let us know if the proposed date is acceptable as soon as possible.
+
+Sincerely,
+[[DIRECTOR]] ",
+
             "acceptedEmailSubject" => "Congratulations on your acceptance to the [[FELLOWSHIP TYPE]] [[START YEAR]] fellowship at Weill Cornell Medicine",
             "acceptedEmailBody" => "Dear [[APPLICANT NAME]],
 
@@ -1557,21 +1569,33 @@ Pathology and Laboratory Medicine",
             "reportsUploadPathFellApp" => "fellapp/Reports"
         );
 
-        $params = new FellappSiteParameter();
+        $newFellapp = false;
+        if( !$fellappParams ) {
+            $fellappParams = new FellappSiteParameter();
+            $newFellapp = true;
+        }
 
         $count = 0;
         foreach( $types as $key => $value ) {
-            $method = "set".$key;
-            $params->$method( $value );
-            $count = $count + 10;
-            $logger->notice("generateFellAppSiteParameters setter: $method");
+            $getMethod = "get".$key;
+            if( !$fellappParams->$getMethod() ) {
+                $setMethod = "set" . $key;
+                $fellappParams->$setMethod($value);
+                $count = $count + 10;
+                echo "generateFellAppSiteParameters setter=$setMethod <br>";
+                $logger->notice("generateFellAppSiteParameters setter=$setMethod");
+            } else {
+                echo "generateFellAppSiteParameters: parameter already exists, getter=$getMethod <br>";
+                $logger->notice("generateFellAppSiteParameters: parameter already exists, getter=$getMethod");
+            }
         }
 
 
         if( $count > 0 ) {
-            $siteParameters->setFellappSiteParameter($params);
-
-            $em->persist($params);
+            if( $newFellapp ) {
+                $siteParameters->setFellappSiteParameter($fellappParams);
+                $em->persist($fellappParams);
+            }
             $em->flush();
         }
 
