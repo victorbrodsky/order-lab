@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 
+use App\FellAppBundle\Entity\FellappSiteParameter;
 use App\SystemBundle\DynamicConnection\DoctrineMultidatabaseConnection;
 use App\SystemBundle\DynamicConnection\PrimaryReadReplicaConnection;
 use App\SystemBundle\DynamicConnection\DynamicConnectionWrapper;
@@ -1331,7 +1332,7 @@ class UserServiceUtil {
         $count = 0;
         $count = $count + $this->generateVacReqSiteParameters();
         $count = $count + $this->generateResAppSiteParameters();
-        //$count = $count + $this->generateFellAppSiteParameters();
+        $count = $count + $this->generateFellAppSiteParameters();
         return $count;
     }
 
@@ -1492,6 +1493,89 @@ Pathology and Laboratory Medicine",
         }
 
         $logger->notice("Finished generateResAppSiteParameters: count=".$count/10);
+
+        return round($count/10);
+    }
+
+    public function generateFellAppSiteParameters() {
+        $logger = $this->container->get('logger');
+        $em = $this->em;
+
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
+
+        $siteParameters = null;
+        if( count($entities) > 0 ) {
+            $siteParameters = $entities[0];
+        }
+
+        if( !$siteParameters ) {
+            $logger->notice("generateFellAppSiteParameters failed: SiteParameters does not exist.");
+            return 0;
+        }
+
+        if( $siteParameters->getFellappSiteParameter() ) {
+            $logger->notice("FellappSiteParameters already exists.");
+            return 0;
+        }
+
+        $logger->notice("generateFellAppSiteParameters: Start generating SiteParameters");
+
+
+        $types = array(
+            "acceptedEmailSubject" => "Congratulations on your acceptance to the [[FELLOWSHIP TYPE]] [[START YEAR]] fellowship at Weill Cornell Medicine",
+            "acceptedEmailBody" => "Dear [[APPLICANT NAME]],
+
+We are looking forward to having you join us as a [[FELLOWSHIP TYPE]] fellow in [[START YEAR]]!
+
+Weill Cornell Medicine",
+
+            "rejectedEmailSubject" => "Thank you for applying to the [[FELLOWSHIP TYPE]] [[START YEAR]] fellowship at Weill Cornell Medicine",
+
+            "rejectedEmailBody" => "Dear [[APPLICANT NAME]],
+
+We have reviewed your application to the [[FELLOWSHIP TYPE]] fellowship for [[START YEAR]], and we regret to inform you that we are unable to offer you a position at this time. Please contact us if you have any questions.
+
+Weill Cornell Medicine",
+
+            "confirmationSubjectFellApp" => "Your WCM/NYP fellowship application has been successfully received",
+            "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medicine/NewYork Presbyterian Hospital.
+
+Once we receive the associated recommendation letters, your application will be reviewed and considered.
+
+If You have any questions, please do not hesitate to contact me by phone or via email.
+
+
+Sincerely,
+
+Fellowship Program Coordinator
+Weill Cornell Medicine
+Pathology and Laboratory Medicine",
+
+            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)",
+            "spreadsheetsPathFellApp" => "fellapp/Spreadsheets",
+            "applicantsUploadPathFellApp" => "fellapp/FellowshipApplicantUploads",
+            "reportsUploadPathFellApp" => "fellapp/Reports"
+        );
+
+        $params = new FellappSiteParameter();
+
+        $count = 0;
+        foreach( $types as $key => $value ) {
+            $method = "set".$key;
+            $params->$method( $value );
+            $count = $count + 10;
+            $logger->notice("generateFellAppSiteParameters setter: $method");
+        }
+
+
+        if( $count > 0 ) {
+            $siteParameters->setFellappSiteParameter($params);
+
+            $em->persist($params);
+            $em->flush();
+        }
+
+        $logger->notice("Finished generateFellAppSiteParameters: count=".$count/10);
 
         return round($count/10);
     }
