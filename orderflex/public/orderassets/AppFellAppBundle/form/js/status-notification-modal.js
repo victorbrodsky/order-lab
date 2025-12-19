@@ -407,7 +407,7 @@ function fellappPriorityInterviewInvitationConfirmAction() {
                             '</div>' +
                             '<div class="modal-footer text-center">' +
                                 '<p><a class="btn btn-primary fellapp-priority-interview-send-and-update">Update status to Priority Interviewee and send this invitation</a></p>' +
-                                '<p><a class="btn btn-primary fellapp-priority-interview-update-only">Update status to Priority Interviewee without sending this invitation</a></p>' +
+                                '<p><a class="btn btn-warning fellapp-priority-interview-update-only">Update status to Priority Interviewee without sending this invitation</a></p>' +
                                 '<p><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button></p>' +
                             '</div>' +
                         '</div>' +
@@ -517,7 +517,7 @@ function fellappInterviewInvitationConfirmAction() {
                             '</div>' +
                             '<div class="modal-footer text-center">' +
                                 '<p><a class="btn btn-primary fellapp-interview-send-and-update">Update status to Interviewee and send this invitation</a></p>' +
-                                '<p><a class="btn btn-primary fellapp-interview-update-only">Update status to Interviewee without sending this invitation</a></p>' +
+                                '<p><a class="btn btn-warning fellapp-interview-update-only">Update status to Interviewee without sending this invitation</a></p>' +
                                 '<p><button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button></p>' +
                             '</div>' +
                         '</div>' +
