@@ -248,12 +248,15 @@ class DemoDataController extends OrderAbstractController
                 $userServiceUtil->generateTwoThumbnails($document);
             }
 
+            $updated = false;
             // Add the document to the fellowship application
             if( $documentType == "Fellowship Photo" ) {
                 $fellowshipApplication->addAvatar($document);
+                $updated = true;
             }
             if( $documentType == "Itinerary" ) {
                 $fellowshipApplication->addItinerary($document);
+                $updated = true;
             }
             if( $documentType == "Reference Letter" && $email ) {
                 //1) Using $fellowshipApplication, find reference letter object (Reference) by email (Reference->$email)
@@ -263,6 +266,16 @@ class DemoDataController extends OrderAbstractController
                 ]);
                 //2) add reference letter to this reference object
                 $referenceEntity->addDocument($document);
+                $updated = true;
+            }
+
+            if( $updated === false ) {
+                $errorMsg = "apiUploadFile error: updated flag is false for documentType=$documentType, email=$email";
+                $logger->error($errorMsg);
+                return new JsonResponse([
+                    'status' => 'error',
+                    'error' => $errorMsg
+                ], 500);
             }
 
             // Save everything
