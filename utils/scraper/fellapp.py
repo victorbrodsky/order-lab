@@ -30,66 +30,160 @@ class FellApp:
         self.users = Users(automation)
         self.existing_users = self.users.get_existing_users(with_admin=True)
 
-    def get_references(self):
+    def get_references_orig(self):
         references = []
-        #1
+        #1 Lisa Chen
         references.append({
+            'applicant': 'Lisa Chen',
             'firstName': 'Helena',
             'lastName': 'Markovic',
             'displayName': 'Helena Markovic',
             'email': 'Helena.Markovic@example.com',
-            'letter': 'lisa-chen.jpeg'
+            'letter': 'lisa_chen_mgp_recommendation_helena_markovic.pdf'
         })
         references.append({
+            'applicant': 'Lisa Chen',
             'firstName': 'Kazuki',
             'lastName': 'Tanaka',
             'displayName': 'Kazuki Tanaka',
             'email': 'Kazuki.Tanaka@example.com',
+            'letter': 'lisa_chen_mgp_recommendation_kazuki_tanaka.pdf'
         })
         references.append({
+            'applicant': 'Lisa Chen',
             'firstName': 'Gregory',
             'lastName': 'Ashford',
             'displayName': 'Gregory Ashford',
             'email': 'Gregory.Ashford@example.com',
+            'letter': 'lisa_chen_mgp_recommendation_gregory_ashford.pdf'
         })
-        #2
+        #2 Jessica Santiago
         references.append({
+            'applicant': 'Jessica Santiago',
             'firstName': 'Amitabh',
             'lastName': 'Banerjee',
             'displayName': 'Amitabh Banerjee',
             'email': 'Amitabh.Banerjee@example.com',
+            'letter': 'jessica_santiago_clinical_informatics_recommendation_amitabh_banerjee.pdf'
         })
         references.append({
+            'applicant': 'Jessica Santiago',
             'firstName': 'Mei-Ling',
             'lastName': 'Zhou',
             'displayName': 'Mei-Ling Zhou',
             'email': 'Mei-Ling.Zhou@example.com',
+            'letter': 'jessica_santiago_clinical_informatics_recommendation_mei-ling_zhou.pdf'
         })
         references.append({
+            'applicant': 'Jessica Santiago',
             'firstName': 'Sylvia',
             'lastName': 'Marwood',
             'displayName': 'Sylvia Marwood',
             'email': 'Sylvia.Marwood@example.com',
+            'letter': 'jessica_santiago_clinical_informatics_recommendation_sylvia_marwood.pdf'
         })
-        #3
+        #3 Peter Neon
         references.append({
+            'applicant': 'Peter Neon',
             'firstName': 'Adewale',
             'lastName': 'Okonjo',
             'displayName': 'Adewale Okonjo',
             'email': 'Adewale.Okonjo@example.com',
+            'letter': 'peter_neon_gi_pathology_recommendation_adewale_okonjo.pdf'
         })
         references.append({
+            'applicant': 'Peter Neon',
             'firstName': 'Sofia',
             'lastName': 'Mendez',
             'displayName': 'Sofia Mendez',
             'email': 'Sofia.Mendez@example.com',
+            'letter': 'peter_neon_gi_pathology_recommendation_sofia_mendez.pdf'
         })
         references.append({
+            'applicant': 'Peter Neon',
             'firstName': 'Lucien',
             'lastName': 'Dubois',
             'displayName': 'Lucien Dubois',
             'email': 'Lucien.Dubois@example.com',
+            'letter': 'peter_neon_gi_pathology_recommendation_lucien_dubois.pdf'
         })
+        return references
+
+    def get_references(self):
+        references = {
+            "Lisa Chen": [
+                {
+                    'firstName': 'Helena',
+                    'lastName': 'Markovic',
+                    'displayName': 'Helena Markovic',
+                    'email': 'Helena.Markovic@example.com',
+                    'letter': 'lisa_chen_mgp_recommendation_helena_markovic.pdf'
+                },
+                {
+                    'firstName': 'Kazuki',
+                    'lastName': 'Tanaka',
+                    'displayName': 'Kazuki Tanaka',
+                    'email': 'Kazuki.Tanaka@example.com',
+                    'letter': 'lisa_chen_mgp_recommendation_kazuki_tanaka.pdf'
+                },
+                {
+                    'firstName': 'Gregory',
+                    'lastName': 'Ashford',
+                    'displayName': 'Gregory Ashford',
+                    'email': 'Gregory.Ashford@example.com',
+                    'letter': 'lisa_chen_mgp_recommendation_gregory_ashford.pdf'
+                }
+            ],
+
+            "Jessica Santiago": [
+                {
+                    'firstName': 'Amitabh',
+                    'lastName': 'Banerjee',
+                    'displayName': 'Amitabh Banerjee',
+                    'email': 'Amitabh.Banerjee@example.com',
+                    'letter': 'jessica_santiago_clinical_informatics_recommendation_amitabh_banerjee.pdf'
+                },
+                {
+                    'firstName': 'Mei-Ling',
+                    'lastName': 'Zhou',
+                    'displayName': 'Mei-Ling Zhou',
+                    'email': 'Mei-Ling.Zhou@example.com',
+                    'letter': 'jessica_santiago_clinical_informatics_recommendation_mei-ling_zhou.pdf'
+                },
+                {
+                    'firstName': 'Sylvia',
+                    'lastName': 'Marwood',
+                    'displayName': 'Sylvia Marwood',
+                    'email': 'Sylvia.Marwood@example.com',
+                    'letter': 'jessica_santiago_clinical_informatics_recommendation_sylvia_marwood.pdf'
+                }
+            ],
+
+            "Peter Neon": [
+                {
+                    'firstName': 'Adewale',
+                    'lastName': 'Okonjo',
+                    'displayName': 'Adewale Okonjo',
+                    'email': 'Adewale.Okonjo@example.com',
+                    'letter': 'peter_neon_gi_pathology_recommendation_adewale_okonjo.pdf'
+                },
+                {
+                    'firstName': 'Sofia',
+                    'lastName': 'Mendez',
+                    'displayName': 'Sofia Mendez',
+                    'email': 'Sofia.Mendez@example.com',
+                    'letter': 'peter_neon_gi_pathology_recommendation_sofia_mendez.pdf'
+                },
+                {
+                    'firstName': 'Lucien',
+                    'lastName': 'Dubois',
+                    'displayName': 'Lucien Dubois',
+                    'email': 'Lucien.Dubois@example.com',
+                    'letter': 'peter_neon_gi_pathology_recommendation_lucien_dubois.pdf'
+                }
+            ]
+        }
+
         return references
 
     def get_comments(self):
@@ -725,9 +819,9 @@ class FellApp:
         applicant_data_element = driver.find_element(By.CSS_SELECTOR, "h4.panel-title > a[href='#recommendations']")
         applicant_data_element.click()
         time.sleep(3)
-        self.set_reference(driver, references, count)
-        self.set_reference(driver, references, count+1)
-        self.set_reference(driver, references, count+2)
+        self.set_reference(driver, fellapp["displayName"], references, count)
+        self.set_reference(driver, fellapp["displayName"], references, count+1)
+        self.set_reference(driver, fellapp["displayName"], references, count+2)
         ########################
         #### EOF set references #####
         ########################
@@ -798,15 +892,49 @@ class FellApp:
             print("Itinerary upload-file resp=", resp)
             #print(resp)  # should contain documentid and documentsrc
 
+            #3 reference letters
+            #reference_letter_name = references[count]['letter']
+            applicant_refs = references[applicantname]  # list of 3 dicts
+            resp = self.upload_fellowship_file(
+                fellapp_id=fellapp_id,
+                file_name=applicant_refs[count]['letter'],
+                documenttype="Reference Letter",
+                email=applicant_refs[count]['email']
+            )
+            print("Reference letter upload-file resp=", resp)
+            resp = self.upload_fellowship_file(
+                fellapp_id=fellapp_id,
+                file_name=applicant_refs[count+1]['letter'],
+                documenttype="Reference Letter",
+                email=applicant_refs[count + 1]['email']
+            )
+            print("Reference letter upload-file resp=", resp)
+            resp = self.upload_fellowship_file(
+                fellapp_id=fellapp_id,
+                file_name=applicant_refs[count+2]['letter'],
+                documenttype="Reference Letter",
+                email=applicant_refs[count+2]['email']
+            )
+            print("Reference letter upload-file resp=", resp)
+
         #print("Finish new fellapp")
         time.sleep(5)
 
-    def set_reference(self,driver,references,count):
-        reference_first_name = references[count]['firstName']
-        reference_last_name = references[count]['lastName']
-        reference_display_name = references[count]['displayName']
-        reference_email = references[count]['email']
-        reference_letter_name = references[count]['letter']
+    def set_reference(self,driver,applicantname,references,count):
+        applicant_refs = references[applicantname]  # list of 3 dicts
+
+        # reference_first_name = references[count]['firstName']
+        # reference_last_name = references[count]['lastName']
+        # reference_display_name = references[count]['displayName']
+        # reference_email = references[count]['email']
+        # reference_letter_name = references[count]['letter']
+
+        reference_first_name = applicant_refs[count]['firstName']
+        reference_last_name = applicant_refs[count]['lastName']
+        reference_display_name = applicant_refs[count]['displayName']
+        reference_email = applicant_refs[count]['email']
+        reference_letter_name = applicant_refs[count]['letter']
+
         # reference_first_name
         try:
             first_name_input = WebDriverWait(driver, 10).until(
@@ -848,7 +976,7 @@ class FellApp:
             print(f"Failed to add reference reference_email={reference_email}, count={count}:", e)
 
     #url - api/upload-file
-    def upload_fellowship_file(self, fellapp_id, file_name, documenttype):
+    def upload_fellowship_file(self, fellapp_id, file_name, documenttype, email=None):
         url = self.automation.baseurl.rstrip('/') + '/' + f"directory/api/upload-file/"
         sitename = "fellapp"
         headers = {
@@ -879,6 +1007,7 @@ class FellApp:
             "filename": file_name,
             "documenttype": documenttype,
             "sitename": sitename, #'fellapp'
+            "email": email
         }
 
         driver = self.automation.get_driver()

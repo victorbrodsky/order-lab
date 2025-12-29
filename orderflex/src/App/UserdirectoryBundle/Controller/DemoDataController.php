@@ -87,6 +87,7 @@ class DemoDataController extends OrderAbstractController
         $relativePath = $request->request->get('relativepath');
         $fileName = $request->request->get('filename');
         $sitename = $request->request->get('sitename');
+        $email = $request->request->get('email'); //referee email
         $logger->notice("apiUploadFile: fellappId=$fellappId");
 
         if( !$fellappId ) {
@@ -253,6 +254,15 @@ class DemoDataController extends OrderAbstractController
             }
             if( $documentType == "Itinerary" ) {
                 $fellowshipApplication->addItinerary($document);
+            }
+            if( $documentType == "Reference Letter" && $email ) {
+                //1) Using $fellowshipApplication, find reference letter object (Reference) by email (Reference->$email)
+                $referenceEntity = $em->getRepository(Reference::class)->findOneBy([
+                    'fellapp' => $fellowshipApplication,
+                    'email' => $email,
+                ]);
+                //2) add reference letter to this reference object
+                $referenceEntity->addDocument($document);
             }
 
             // Save everything
