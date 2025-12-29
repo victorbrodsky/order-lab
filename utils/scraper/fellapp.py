@@ -38,6 +38,7 @@ class FellApp:
             'lastName': 'Markovic',
             'displayName': 'Helena Markovic',
             'email': 'Helena.Markovic@example.com',
+            'letter': 'lisa-chen.jpeg'
         })
         references.append({
             'firstName': 'Kazuki',
@@ -805,6 +806,7 @@ class FellApp:
         reference_last_name = references[count]['lastName']
         reference_display_name = references[count]['displayName']
         reference_email = references[count]['email']
+        reference_letter_name = references[count]['letter']
         # reference_first_name
         try:
             first_name_input = WebDriverWait(driver, 10).until(
@@ -820,14 +822,14 @@ class FellApp:
             print(f"Failed to add reference reference_first_name={reference_first_name}, count={count}:", e)
         # reference_last_name
         try:
-            first_name_input = WebDriverWait(driver, 10).until(
+            last_name_input = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located(
                     (By.ID, f"oleg_fellappbundle_fellowshipapplication_references_{count}_lastName")
                 )
             )
             # Clear any existing text and set new value
-            first_name_input.clear()
-            first_name_input.send_keys(reference_last_name)
+            last_name_input.clear()
+            last_name_input.send_keys(reference_last_name)
             print(f"Success to add reference reference_last_name={reference_last_name}, count={count}")
         except Exception as e:
             print(f"Failed to add reference reference_last_name={reference_last_name}, count={count}:", e)
@@ -864,7 +866,7 @@ class FellApp:
         script_dir = os.path.dirname(os.path.abspath(__file__))
         # Build the relative path
         #relative_path = f"../../orderflex/src/App/FellAppBundle/Util/{file_name}"
-        relative_path = f"src/App/FellAppBundle/Util/{file_name}"
+        relative_path = f"src/App/DemoDbBundle/Util/docs/{file_name}"
         # Resolve to an absolute path
         file_path = os.path.abspath(os.path.join(script_dir, relative_path))
         print(f"file_path={file_path}")
