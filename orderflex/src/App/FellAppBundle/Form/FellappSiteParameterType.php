@@ -235,23 +235,23 @@ class FellappSiteParameterType extends AbstractType
         //5 fields:
         $builder->add('localInstitution', null, array(
             'label' => 'Local Institution:',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
         $builder->add('fromInvitedInterview', null, array(
             'label' => 'From (e-mail to the applicant invited for an interview):',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
         $builder->add('replyToInvitedInterview', null, array(
             'label' => 'Reply To (e-mail to the applicant invited for an interview):',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
         $builder->add('subjectInvitedInterview', null, array(
             'label' => 'Subject of e-mail to the applicant invited for an interview:',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
         $builder->add('bodyInvitedInterview', null, array(
             'label' => 'Body of e-mail to the applicant invited for an interview:',
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control textarea')
         ));
 
 

@@ -358,7 +358,7 @@ class FellAppSiteParametersController extends SiteParametersController
         $cycle = "show";
 
         $fellappSiteParameter = $this->getOrCreateNewFellAppParameters($cycle);
-        echo "fellappSiteParameter=".$fellappSiteParameter->getId()."<br>";
+        //echo "fellappSiteParameter=".$fellappSiteParameter->getId()."<br>";
 
         $form = $this->createFellAppSiteParameterForm($fellappSiteParameter,$cycle);
         
