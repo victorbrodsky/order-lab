@@ -894,7 +894,7 @@ class FellApp:
 
             #3 reference letters
             #reference_letter_name = references[count]['letter']
-            applicant_refs = references[applicantname]  # list of 3 dicts
+            applicant_refs = references[fellapp["displayName"]]  # list of 3 dicts
             resp = self.upload_fellowship_file(
                 fellapp_id=fellapp_id,
                 file_name=applicant_refs[count]['letter'],
@@ -931,7 +931,7 @@ class FellApp:
 
         reference_first_name = applicant_refs[count]['firstName']
         reference_last_name = applicant_refs[count]['lastName']
-        reference_display_name = applicant_refs[count]['displayName']
+        #reference_display_name = applicant_refs[count]['displayName']
         reference_email = applicant_refs[count]['email']
         reference_letter_name = applicant_refs[count]['letter']
 
