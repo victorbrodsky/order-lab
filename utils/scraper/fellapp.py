@@ -906,7 +906,7 @@ class FellApp:
                 fellapp_id=fellapp_id,
                 file_name=applicant_refs[count+1]['letter'],
                 documenttype="Reference Letter",
-                email=applicant_refs[count + 1]['email']
+                email=applicant_refs[count+1]['email']
             )
             print("Reference letter upload-file resp=", resp)
             resp = self.upload_fellowship_file(
