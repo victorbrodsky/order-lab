@@ -202,7 +202,7 @@ class DemoDataController extends OrderAbstractController
                 $sizeInBytes = filesize($filepath);
                 echo "File size: " . $sizeInBytes . " bytes\n";
             } else {
-                echo "File does not exist. projectRoot=$projectRoot, filepath=$filepath";
+                echo "File does not exist. projectRoot=$projectRoot, filepath=$filepath. Note: use lowercase";
                 return new JsonResponse([
                     'status' => 'error',
                     'error' => "File does not exist. projectRoot=$projectRoot, filepath=$filepath"
