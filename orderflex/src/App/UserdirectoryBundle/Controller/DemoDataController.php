@@ -20,6 +20,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\FellAppBundle\Entity\FellowshipApplication;
+use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 use App\UserdirectoryBundle\Entity\Document;

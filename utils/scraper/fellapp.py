@@ -984,11 +984,11 @@ class FellApp:
             #"Content-Type": "application/json"
         }
 
-        print("upload fellowship_file url=", url)
+        print(f"upload fellowship_file url=[{url}]")
         print(f"upload fellowship_file fellapp_id=[{fellapp_id}]")
-        print("upload fellowship_file file_name=", file_name)
-        print("upload fellowship_file documenttype=", documenttype)
-        print("upload fellowship_file sitename=", sitename)
+        print(f"upload fellowship_file file_name=[{file_name}]")
+        print(f"upload fellowship_file documenttype=[{documenttype}]")
+        print(f"upload fellowship_file sitename=[{sitename}]")
 
         # Get the directory where the current script is located
         script_dir = os.path.dirname(os.path.abspath(__file__))
