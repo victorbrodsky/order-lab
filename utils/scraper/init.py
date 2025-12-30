@@ -445,7 +445,9 @@ class Init:
     #     print("run_deploy_command: after deploy.sh")
 
     def run_deploy_command(self):
+        print("init.py run_deploy_command: before deploy.sh")
         subprocess.run(["/usr/bin/bash", "deploy.sh"], check=True, cwd="/srv/order-lab-tenantappdemo/orderflex")
+        print("init.py run_deploy_command: after deploy.sh")
 
     #NOT USED
     def open_misc_panel(self):

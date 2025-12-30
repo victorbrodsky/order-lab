@@ -394,8 +394,11 @@ def main(mailer_user, mailer_password, captcha_sitekey, captcha_secretkey, baseu
     #/srv/order-lab-tenantappdemo/orderflex
     #os.chdir("/srv/order-lab-tenantappdemo/orderflex/")
     #os.system("/usr/bin/bash /srv/order-lab-tenantappdemo/orderflex/deploy.sh")
-    subprocess.run(["/usr/bin/bash", "/srv/order-lab-tenantappdemo/orderflex/deploy.sh"], check=True)
-    print("main: after deploy.sh")
+    print("create_demo_db.py main: before deploy.sh")
+    #subprocess.run(["/usr/bin/bash", "/srv/order-lab-tenantappdemo/orderflex/deploy.sh"], check=True)
+    subprocess.run(["/usr/bin/bash", "deploy.sh"], check=True, cwd="/srv/order-lab-tenantappdemo/orderflex")
+    run_deploy_command()
+    print("create_demo_db.py main: after deploy.sh")
 
     print("All demos done!")
     #automation.quit_driver()

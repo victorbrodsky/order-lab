@@ -819,9 +819,10 @@ class FellApp:
         applicant_data_element = driver.find_element(By.CSS_SELECTOR, "h4.panel-title > a[href='#recommendations']")
         applicant_data_element.click()
         time.sleep(3)
-        self.set_reference(driver, fellapp["displayName"], references, count)
-        self.set_reference(driver, fellapp["displayName"], references, count+1)
-        self.set_reference(driver, fellapp["displayName"], references, count+2)
+        print("create single fellapp: before set_reference")
+        self.set_reference(driver, fellapp["displayName"], references, 0)
+        self.set_reference(driver, fellapp["displayName"], references, 1)
+        self.set_reference(driver, fellapp["displayName"], references, 2)
         ########################
         #### EOF set references #####
         ########################
@@ -895,25 +896,26 @@ class FellApp:
             #3 reference letters
             #reference_letter_name = references[count]['letter']
             applicant_refs = references[fellapp["displayName"]]  # list of 3 dicts
+            print("create single fellapp: before upload_fellowship_file")
             resp = self.upload_fellowship_file(
                 fellapp_id=fellapp_id,
-                file_name=applicant_refs[count]['letter'],
+                file_name=applicant_refs[0]['letter'],
                 documenttype="Reference Letter",
-                email=applicant_refs[count]['email']
+                email=applicant_refs[0]['email']
             )
             print("Reference letter upload-file resp=", resp)
             resp = self.upload_fellowship_file(
                 fellapp_id=fellapp_id,
-                file_name=applicant_refs[count+1]['letter'],
+                file_name=applicant_refs[1]['letter'],
                 documenttype="Reference Letter",
-                email=applicant_refs[count+1]['email']
+                email=applicant_refs[1]['email']
             )
             print("Reference letter upload-file resp=", resp)
             resp = self.upload_fellowship_file(
                 fellapp_id=fellapp_id,
-                file_name=applicant_refs[count+2]['letter'],
+                file_name=applicant_refs[2]['letter'],
                 documenttype="Reference Letter",
-                email=applicant_refs[count+2]['email']
+                email=applicant_refs[2]['email']
             )
             print("Reference letter upload-file resp=", resp)
 
@@ -1053,6 +1055,8 @@ class FellApp:
         #     }
         #     if sitename:
         #         data["sitename"] = sitename
+
+
             # response = requests.post(url, files=files, data=data, headers=headers)
             # response.raise_for_status()  # raise error if status != 200
             # return response.json()
@@ -1318,7 +1322,8 @@ def main():
         fellapp = FellApp(automation)
 
         # Create fellowship applications
-        fellapp.create_fellapps(max_count=1)
+        #fellapp.create_fellapps(max_count=1)
+        fellapp.create_fellapps()
         time.sleep(3)
 
         # Accept applications
