@@ -952,7 +952,7 @@ class FellApp:
         try:
             last_name_input = WebDriverWait(driver, 10).until(
                 EC.visibility_of_element_located(
-                    (By.ID, f"oleg_fellappbundle_fellowshipapplication_references_{count}_lastName")
+                    (By.ID, f"oleg_fellappbundle_fellowshipapplication_references_{count}_name")
                 )
             )
             # Clear any existing text and set new value

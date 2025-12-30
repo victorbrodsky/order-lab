@@ -267,6 +267,11 @@ class DemoDataController extends OrderAbstractController
                 //2) add reference letter to this reference object
                 $referenceEntity->addDocument($document);
                 $updated = true;
+                $em->persist($referenceEntity);
+                $logger->error(
+                    "apiUploadFile: added reference letter for application ID="
+                    .$fellowshipApplication->getId().", email=$email"
+                );
             }
 
             if( $updated === false ) {
