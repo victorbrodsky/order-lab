@@ -24,6 +24,38 @@
 //    let formToSubmit = null;
 
 
+//open section if reference cliked
+document.addEventListener("DOMContentLoaded", function () {
+    console.log('addEventListener');
+    const hash = window.location.hash;
+
+    if (!hash) {
+        return;
+    }
+
+    const target = document.querySelector(hash);
+    console.log('addEventListener: target='+target);
+    if (!target) {
+        return;
+    }
+
+    // Find the collapsed panel
+    const panel = target.closest('.panel-collapse.collapse');
+
+    if (panel && !panel.classList.contains('in')) {
+        // Trigger the parent toggle
+        const toggle = document.getElementById('section-recommendations');
+        if (toggle) {
+            toggle.click();
+        }
+
+        // After the panel is fully shown, scroll to the anchor
+        $(panel).on('shown.bs.collapse', function () {
+            target.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+});
+
     $(document).ready(function() {
 
         //showHideWell('.fellapp-ecfmgcertificate-field');
@@ -170,8 +202,7 @@
             $('#confirmDraftUserExistModal').modal('hide');
         });
 
-
-    });
+    }); //document ready
 
 
     function userCheckExistUser( submitterEmail ) {
