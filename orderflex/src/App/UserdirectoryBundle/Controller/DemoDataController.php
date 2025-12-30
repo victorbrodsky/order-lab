@@ -263,6 +263,9 @@ class DemoDataController extends OrderAbstractController
                 $updated = true;
                 $em->persist($fellowshipApplication);
             }
+            $logger->notice(
+                "apiUploadFile: before condition reference letter documentType=[$documentType], email=[$email]"
+            );
             if( $documentType == "Reference Letter" && $email ) {
                 //1) Using $fellowshipApplication, find reference letter object (Reference) by email (Reference->$email)
                 $referenceEntity = $em->getRepository(Reference::class)->findOneBy([
@@ -301,6 +304,7 @@ class DemoDataController extends OrderAbstractController
             // Log the upload event
             $userSecUtil = $this->container->get('user_security_utility');
             $eventDescription = "Document $filepath has been added to the fellowship application ID $fellappId by " . $user;
+            $logger->notice("apiUploadFile: ".$eventDescription);
             $userSecUtil->createUserEditEvent($sitename, $eventDescription, $user, $document, $request, $documentType . ' Uploaded');
 
             return new JsonResponse([
