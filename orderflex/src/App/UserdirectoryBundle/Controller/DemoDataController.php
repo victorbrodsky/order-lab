@@ -151,7 +151,10 @@ class DemoDataController extends OrderAbstractController
             $filepath = $userServiceUtil->normalizePath($filepath);
         }
 
-        $inputParameters = "apiUploadFile: 2 projectRoot=$projectRoot, fellappId=$fellappId, documentType=$documentType, filepath=$filepath, $relativePath=relativePath, sitename=$sitename";
+        $inputParameters = "apiUploadFile: 2 projectRoot=$projectRoot, 
+        fellappId=$fellappId, documentType=$documentType, 
+        filepath=$filepath, $relativePath=relativePath, 
+        sitename=$sitename, email=$email";
 
         $logger->notice($inputParameters);
 //        return new JsonResponse([
@@ -253,10 +256,12 @@ class DemoDataController extends OrderAbstractController
             if( $documentType == "Fellowship Photo" ) {
                 $fellowshipApplication->addAvatar($document);
                 $updated = true;
+                $em->persist($fellowshipApplication);
             }
             if( $documentType == "Itinerary" ) {
                 $fellowshipApplication->addItinerary($document);
                 $updated = true;
+                $em->persist($fellowshipApplication);
             }
             if( $documentType == "Reference Letter" && $email ) {
                 //1) Using $fellowshipApplication, find reference letter object (Reference) by email (Reference->$email)
@@ -264,14 +269,19 @@ class DemoDataController extends OrderAbstractController
                     'fellapp' => $fellowshipApplication,
                     'email' => $email,
                 ]);
-                //2) add reference letter to this reference object
-                $referenceEntity->addDocument($document);
-                $updated = true;
-                $em->persist($referenceEntity);
-                $logger->error(
-                    "apiUploadFile: added reference letter for application ID="
-                    .$fellowshipApplication->getId().", email=$email"
-                );
+                if( $referenceEntity ) {
+                    //2) add reference letter to this reference object
+                    $referenceEntity->addDocument($document);
+                    $updated = true;
+                    $em->persist($referenceEntity);
+                    $logger->notice(
+                        "apiUploadFile: added reference letter for application ID="
+                        . $fellowshipApplication->getId() . ", email=$email"
+                    );
+                } else {
+                    $logger->error("apiUploadFile: referenceEntity not found by fellowshipApplication ID=".
+                        $fellowshipApplication->getId().", email=$email");
+                }
             }
 
             if( $updated === false ) {
@@ -285,7 +295,7 @@ class DemoDataController extends OrderAbstractController
 
             // Save everything
             $em->persist($document);
-            $em->persist($fellowshipApplication);
+            #$em->persist($fellowshipApplication);
             $em->flush();
 
             // Log the upload event
