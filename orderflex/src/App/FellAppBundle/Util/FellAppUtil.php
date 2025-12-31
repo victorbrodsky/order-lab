@@ -2323,6 +2323,56 @@ class FellAppUtil {
         return $interviews;
     }
 
+    public function sendInterviewInvitationEmail( $fellapp, $subject, $body ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $user = $this->security->getUser();
+
+        if( $user instanceof User) {
+            //User OK - do nothing
+        } else {
+            $user = $userSecUtil->findSystemUser();
+        }
+        if( !$user ) {
+            $user = $userSecUtil->findSystemUser();
+        }
+
+        $applicant = $fellapp->getUser();
+        if( $applicant ) {
+            $applicantEmail = $applicant->getSingleEmail();
+        } else {
+            return false;
+        }
+
+        $applicantFullName = $fellapp->getApplicantFullName();
+        //$fellappType = $fellapp->getFellowshipSubspecialty()."";
+
+        //get CCs: coordinators and directors
+        $directorEmails = $this->getDirectorsOfFellAppEmails($fellapp);
+        $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellapp);
+        $ccResponsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+
+        //$logger = $this->container->get('logger');
+        //$logger->notice("sendInterviewInvitationEmail: body=".json_encode($body));
+
+        $emailUtil->sendEmail( $applicantEmail, $subject, $body, $ccResponsibleEmails );
+
+        $msg = "Fellowship interview invitation email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
+        $eventMsg = $msg . "<br><br> Subject:<br>". $subject . "<br><br>Body:<br>" . $body;
+
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('fellapp.sitename'), //$sitename
+            $eventMsg,                                          //$event message
+            $user,                                              //user
+            $fellapp,                                           //$subjectEntities
+            null,                                               //$request
+            "FellApp Interview Invitation Email Sent"          //$action
+        );
+
+        return true;
+    }
+
     public function sendAcceptedNotificationEmail($fellapp) {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');

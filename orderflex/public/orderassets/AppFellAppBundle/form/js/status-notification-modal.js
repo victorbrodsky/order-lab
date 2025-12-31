@@ -541,6 +541,7 @@ function fellappInterviewInvitationConfirmAction() {
 
             var currentSubject = modal.find('.fellapp-interview-subject-input').val();
             var currentBody    = modal.find('.fellapp-interview-body-input').val();
+            console.log('currentBody: ' + currentBody);
 
             if( !fellappId ) {
                 return false;

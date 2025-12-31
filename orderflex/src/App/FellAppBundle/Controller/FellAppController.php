@@ -2076,9 +2076,14 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $logger = $this->container->get('logger');
+
         $status = trim((string)$request->get('status'));
         $subject = (string)$request->get('subject');
         $body = (string)$request->get('body');
+
+        $logger->notice("sendInterviewInvitationAction: status=$status, subject=$subject, body=$body");
+        $logger->notice("sendInterviewInvitationAction: body=".json_encode($body));
 
         $em = $this->getDoctrine()->getManager();
         $fellapp = $em->getRepository(FellowshipApplication::class)->find($id);

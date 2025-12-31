@@ -233,7 +233,12 @@ class EmailUtil {
         $message->from($fromEmail);
 
         //for html
-        $body = str_replace("\r\n","<br>",$body);
+        //$body = str_replace("\r\n","<br>",$body);
+
+        //Correct fix: replace both \r\n and \n
+        //$body = str_replace(["\r\n", "\n"], "<br>", $body); //explicit
+        $body = nl2br($body);
+        //$logger->notice("sendEmail: body=".json_encode($body));
 
         $message->html($body);
 
