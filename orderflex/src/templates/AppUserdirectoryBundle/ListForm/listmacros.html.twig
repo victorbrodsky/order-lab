@@ -126,6 +126,7 @@
             {% endif %}
 
             {% if entities|first.section is defined and entities|first.productId is defined and entities|first.feeUnit is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Fee Schedule Version', 'ent.feeScheduleVersion') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Section', 'ent.section') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Product ID', 'ent.productId') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Fee for one', 'ent.fee') }}</th>
@@ -380,6 +381,7 @@
                 {% endif %}
 
                 {% if entity.section is defined and entity.productId is defined and entity.feeUnit is defined and entity.fee is defined %}
+                    <td>{{ entity.feeScheduleVersion }}</td>
                     <td>{{ entity.section }}</td>
                     <td>{{ entity.productId }}</td>
                     <td>{{ entity.fee }}</td>
@@ -1086,6 +1088,9 @@
     {% endif %}
 
     {#RequestCategoryTypeList#}
+    {% if form.feeScheduleVersion is defined %}
+        {{ formmacros.field(form.feeScheduleVersion) }}
+    {% endif %}
     {% if form.section is defined %}
         {{ formmacros.field(form.section) }}
     {% endif %}

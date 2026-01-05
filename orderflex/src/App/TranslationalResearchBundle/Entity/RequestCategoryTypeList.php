@@ -127,8 +127,16 @@ class RequestCategoryTypeList extends ListAbstract
     #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $workQueues;
 
+    //To manage these new services with 'version' field and when I add new services
+    // I will set the version to the value the previous version+1.
+    // Then, the new work request page will show only services
+    // with the maximum version across all existing services:
+    // services where version = (SELECT MAX(version) FROM services)
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $feeScheduleVersion;
 
-    
+
+
     public function __construct($author=null) {
 
         parent::__construct($author);
@@ -298,6 +306,22 @@ class RequestCategoryTypeList extends ListAbstract
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeeScheduleVersion()
+    {
+        return $this->feeScheduleVersion;
+    }
+
+    /**
+     * @param mixed $feeScheduleVersion
+     */
+    public function setFeeScheduleVersion($feeScheduleVersion)
+    {
+        $this->feeScheduleVersion = $feeScheduleVersion;
     }
 
     /**

@@ -5006,9 +5006,17 @@ class TransResRequestUtil
         return $output;
     }
 
-    public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null ) {
+    public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null, $cycle=null ) {
 
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
+        //new work request page will show only services with the maximum version across all existing services
+        $maxVersion = null;
+        if( $cycle == 'new' ) {
+            $repository = $this->em->getRepository(RequestCategoryTypeList::class);
+            $dql =  $repository->createQueryBuilder("list");
+            $dql->select('MAX(list.feeScheduleVersion)');
+            $maxVersion = (int)$dql->getQuery()->getSingleScalarResult();
+        }
+
         $repository = $this->em->getRepository(RequestCategoryTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
@@ -5020,6 +5028,12 @@ class TransResRequestUtil
         
         $dqlParameters["typedef"] = 'default';
         $dqlParameters["typeadd"] = 'user-added';
+
+        //echo '$cycle='.$cycle.', $maxVersion='.$maxVersion.'<br>';
+        if( $cycle == 'new' && $maxVersion ) {
+            $dql->andWhere("list.feeScheduleVersion IS NOT NULL OR list.feeScheduleVersion >= :maxFeeScheduleVersion");
+            $dqlParameters["maxFeeScheduleVersion"] = $maxVersion;
+        }
 
         //show only with $fee (zero, but not null) for this price list.
         if(0) {

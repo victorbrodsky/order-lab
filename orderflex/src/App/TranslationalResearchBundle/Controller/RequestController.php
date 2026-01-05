@@ -2683,7 +2683,7 @@ class RequestController extends OrderAbstractController
             $project = $transresRequest->getProject();
             $projectSpecialty = $transresRequest->getProjectSpecialty();
             if( $projectSpecialty ) {
-                $projectSpecialties = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty,$project);
+                $projectSpecialties = $transresRequestUtil->getProductServiceByProjectSpecialty($projectSpecialty,$project,$cycle);
             }
         }
 

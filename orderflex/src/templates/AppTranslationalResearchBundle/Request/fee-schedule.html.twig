@@ -78,7 +78,7 @@
                 <th>{{ knp_pagination_sortable(fees, 'Name', 'list.name') }}</th>
 
                 <th>{{ knp_pagination_sortable(fees, 'Description', 'list.description') }}</th>
-
+                <th>{{ knp_pagination_sortable(fees, 'Fee Schedule Version', 'list.feeScheduleVersion') }}</th>
 
                 <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
@@ -137,6 +137,10 @@
 
                 <td>
                     {{ fee.description }}
+                </td>
+
+                <td>
+                    {{ fee.feeScheduleVersion }}
                 </td>
 
                 <td>

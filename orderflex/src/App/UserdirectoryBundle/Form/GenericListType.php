@@ -753,6 +753,12 @@ class GenericListType extends AbstractType
 
         //RequestCategoryTypeList
         if( $this->params['entity'] instanceof RequestCategoryTypeList ) {
+            $builder->add('feeScheduleVersion', null, array(
+                'label' => 'Fee Schedule Version:',
+                'required' => false,
+                'attr' => array('class'=>'form-control')
+            ));
+
             $builder->add('section', TextType::class, array(
                 'label' => 'Section:',
                 'required' => false,
