@@ -500,7 +500,6 @@ class ListController extends OrderAbstractController
                 OR LOWER(ent.shortname) LIKE LOWER(:search) 
                 OR LOWER(ent.description) LIKE LOWER(:search)
                 OR LOWER(ent.entityName) LIKE LOWER(:search)
-                OR LOWER(ent.listName) LIKE LOWER(:search)
                 ";
 
 //            //search location: phone, building, room
@@ -515,6 +514,10 @@ class ListController extends OrderAbstractController
 //                $dql->leftJoin("ent.room", "room");
 //                $searchStr = $searchStr . " OR room.name LIKE :search";
 //            }
+
+            if (method_exists($entityClass, 'listName')) {
+                $searchStr = $searchStr . " OR LOWER(ent.listName) LIKE LOWER(:search)";
+            }
 
             if (method_exists($entityClass, 'getSection')) {
                 $searchStr = $searchStr . " OR LOWER(ent.section) LIKE LOWER(:search)";
