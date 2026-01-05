@@ -70,6 +70,7 @@
 /src/App/TranslationalResearchBundle/Util/*.xlsx
 !/src/App/TranslationalResearchBundle/Util/JV*.xlsx
 !/src/App/TranslationalResearchBundle/Util/MISI_with_panels.xlsx
+!/src/App/TranslationalResearchBundle/Util/new_fees_schedule_2026.xlsx
 
 ### Certificate ###
 /src/App/UserdirectoryBundle/Cert/*
