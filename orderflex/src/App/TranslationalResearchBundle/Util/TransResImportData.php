@@ -3899,4 +3899,195 @@ class TransResImportData
 
         $this->em->flush();
     }
+
+    public function addNewFeeSchedules($request, $filename, $feeScheduleVersion, $startRaw=2, $endRaw=null) {
+        set_time_limit(18000); //18000 seconds => 5 hours 3600sec=>1 hour
+        ini_set('memory_limit', '7168M');
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $transresUtil = $this->container->get('transres_util');
+        $logger = $this->container->get('logger');
+        $em = $this->em;
+
+        if( !$filename ) {
+            $filename = 'new_fees_schedule_2026.xlsx';
+        }
+
+        $inputFileName = __DIR__ . "/" . $filename;
+
+        echo "==================== Processing $filename =====================<br>";
+        $logger->notice("==================== Processing $filename =====================");
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( \Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        echo "highestRow=".$highestRow."; highestColum=".$highestColumn."<br>";
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+        $this->headerMapArr = $this->getHeaderMap($headers);
+
+        ////////////// add system user /////////////////
+        $systemUser = $userSecUtil->findSystemUser();
+        ////////////// end of add system user /////////////////
+
+        $bundleName = "TranslationalResearchBundle";
+        $className = "RequestCategoryTypeList";
+        $classFullName = "App\\" . $bundleName . "\\Entity\\" . $className;
+        $orderinlist = $userSecUtil->getMaxField($classFullName);
+        echo "Create a new orderinlist=$orderinlist<br>";
+
+        $internalPriceList = $this->em->getRepository(PriceTypeList::class)->findOneByName("Internal Pricing");
+        if( !$internalPriceList ) {
+            exit("Internal price list does not exist");
+        }
+
+        $ctpWorkQueue = $transresUtil->getWorkQueueObject("CTP Lab");
+
+        $count = 0;
+
+        $limitRow = $highestRow;
+        if( $endRaw && $endRaw <= $highestRow ) {
+            $limitRow = $endRaw;
+        }
+
+        if( $startRaw < 2 ) {
+            $startRaw = 2; //minimum raw
+        }
+
+        echo "start Iteration from $startRaw to ".$limitRow."<br>";
+        $logger->notice("start Iteration from $startRaw to ".$limitRow);
+
+        //for each request in excel (start at row 2)
+        for( $row = $startRaw; $row <= $limitRow; $row++ ) {
+
+            $count++;
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            $catalog = $this->getValueByHeaderName('Catalog', $rowData, $headers);
+            $catalog = trim((string)$catalog);
+            //$requestID = $requestID."0000000"; //test
+            if( !$catalog ) {
+                //echo "Skip: empty row<br>";
+                continue;
+            }
+            echo "<br>" . $count . ": catalog=" . $catalog . "<br>";
+
+            //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:TransResRequest'] by [TransResRequest::class]
+            $feeSchedule = $em->getRepository(RequestCategoryTypeList::class)->findOneByProductId($catalog);
+            if( $feeSchedule ) {
+                echo "Skip: RequestCategoryTypeList already exists, found by Product ID=".$catalog."<br>";
+                continue;
+            }
+
+            $name = $this->getValueByHeaderName('Name', $rowData, $headers);
+            if( $name ) {
+                echo "name=$name<br>";
+            }
+//            $feeSchedule = $em->getRepository(RequestCategoryTypeList::class)->findOneByName($name);
+//            if( !$feeSchedule ) {
+//                echo "Skip: RequestCategoryTypeList already exists, found by name=".$name."<br>";
+//                continue;
+//            }
+
+            $feeOne = $this->getValueByHeaderName('Fee for one', $rowData, $headers);
+            $feeOne = $this->toDecimal($feeOne);
+            if( $feeOne ) {
+                echo "feeOne=$feeOne<br>";
+            }
+
+            $feeAdd = $this->getValueByHeaderName('Fee per additional item', $rowData, $headers);
+            $feeAdd = $this->toDecimal($feeAdd);
+            if( $feeAdd ) {
+                echo "feeAdd=$feeAdd<br>";
+            }
+
+            $feeOneInternal = $this->getValueByHeaderName('Fee for one (Internal Pricing)', $rowData, $headers);
+            $feeOneInternal = $this->toDecimal($feeOneInternal);
+            if( $feeOneInternal ) {
+                echo "feeOneInternal=$feeOneInternal<br>";
+            }
+
+            $feeAddInternal = $this->getValueByHeaderName('Fee per additional item (Internal Pricing)', $rowData, $headers);
+            $feeAddInternal = $this->toDecimal($feeAddInternal);
+            if( $feeAddInternal ) {
+                echo "feeAddInternal=$feeAddInternal<br>";
+            }
+
+            $unit = $this->getValueByHeaderName('Unit', $rowData, $headers);
+            if( $unit ) {
+                echo "unit=$unit<br>";
+            }
+
+            if( $catalog && $name ) {
+                $feeScheduleEntity = new RequestCategoryTypeList($systemUser);
+
+                $orderinlist = $orderinlist + 10;
+                echo "Create a new orderinlist=$orderinlist<br>";
+
+                $userSecUtil->setDefaultList( $feeScheduleEntity, $orderinlist, $systemUser, $name );
+
+                $feeScheduleEntity->setType('default');
+
+                //$feeScheduleEntity->setSection(); //Section
+                $feeScheduleEntity->setProductId($catalog); //Product ID
+                $feeScheduleEntity->setFeeUnit($unit);
+
+                $feeScheduleEntity->setFeeScheduleVersion($feeScheduleVersion);
+
+                if( $ctpWorkQueue ) {
+                    $feeScheduleEntity->addWorkQueue($ctpWorkQueue);
+                }
+
+                $feeScheduleEntity->setFee($feeOne);
+                $feeScheduleEntity->setFeeAdditionalItem($feeAdd);
+                $feeScheduleEntity->setInitialQuantity(1);
+
+                if( $feeOneInternal && $feeAddInternal ) {
+                    $internalPriceObject = new Prices();
+                    $internalPriceObject->setPriceList($internalPriceList);
+                    $feeScheduleEntity->addPrice($internalPriceObject);
+                    $this->em->persist($internalPriceObject);
+                    $updateArr[] = "Created new internal specific price [$internalPriceList]";
+
+                    if( $feeOneInternal ) {
+                        $internalPriceObject->setFee($feeOneInternal);
+                    }
+
+                    if( $feeAddInternal ) {
+                        $internalPriceObject->setFeeAdditionalItem($feeAddInternal);
+                    }
+
+                    $internalPriceObject->setInitialQuantity(1);
+                } else {
+                    echo "Don't update internal fees: feeOneInternal=[$feeOneInternal] feeAddInternal=[$feeAddInternal]";
+                }
+
+                //$this->em->persist($feeScheduleEntity);
+                //$this->em->flush();
+                //exit("added $name");
+            }
+
+        }//for
+
+        return $count;
+    }
 }

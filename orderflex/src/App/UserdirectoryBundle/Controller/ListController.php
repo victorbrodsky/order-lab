@@ -500,6 +500,7 @@ class ListController extends OrderAbstractController
                 OR LOWER(ent.shortname) LIKE LOWER(:search) 
                 OR LOWER(ent.description) LIKE LOWER(:search)
                 OR LOWER(ent.entityName) LIKE LOWER(:search)
+                OR LOWER(ent.listName) LIKE LOWER(:search)
                 ";
 
 //            //search location: phone, building, room
@@ -558,7 +559,6 @@ class ListController extends OrderAbstractController
                 $searchStr = $searchStr . " OR LOWER(ent.datasheet) LIKE LOWER(:search)";
             }
 
-            //echo "searchStr=$searchStr <br>";
             $dql->andWhere($searchStr);
             $dqlParameters['search'] = '%'.$search.'%';
         }
@@ -570,7 +570,7 @@ class ListController extends OrderAbstractController
 
         //echo "dql=".$dql."<br>";
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $limit = 50;
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);

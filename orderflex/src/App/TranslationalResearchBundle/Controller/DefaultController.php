@@ -3558,4 +3558,27 @@ class DefaultController extends OrderAbstractController
         exit('EOF makePublicMISIAction: '.$msg);
     }
 
+
+    /**
+     * Update RequestCategoryTypeList to allow to add new fee schedule with new version $feeScheduleVersion=2
+     * http://127.0.0.1/translational-research/add-fee-schedule
+     */
+    #[Route(path: '/add-fee-schedule', name: 'translationalresearch_add_fee_schedule')]
+    public function updateFeeScheduleAction( Request $request ) {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        //exit("updateFeeScheduleAction: Not allowed");
+
+        $em = $this->getDoctrine()->getManager();
+        $importUtil = $this->container->get('transres_import');
+
+        $filename = 'new_fees_schedule_2026.xlsx';
+        
+        $count = $importUtil->addNewFeeSchedules($request,$filename,$feeScheduleVersion=2);
+
+        exit("updateFeeScheduleAction: End add new Fees Schedule: ".$count);
+    }
+
 }
