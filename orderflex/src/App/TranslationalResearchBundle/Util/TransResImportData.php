@@ -4081,8 +4081,8 @@ class TransResImportData
                     echo "Don't update internal fees: feeOneInternal=[$feeOneInternal] feeAddInternal=[$feeAddInternal]";
                 }
 
-                //$this->em->persist($feeScheduleEntity);
-                //$this->em->flush();
+                $this->em->persist($feeScheduleEntity);
+                $this->em->flush();
                 //exit("added $name");
             }
 
