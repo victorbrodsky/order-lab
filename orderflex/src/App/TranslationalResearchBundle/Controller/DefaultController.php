@@ -3569,7 +3569,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
         }
 
-        //exit("updateFeeScheduleAction: Not allowed");
+        exit("updateFeeScheduleAction: Not allowed");
 
         $em = $this->getDoctrine()->getManager();
         $importUtil = $this->container->get('transres_import');
