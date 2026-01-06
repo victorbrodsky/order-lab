@@ -5008,6 +5008,16 @@ class TransResRequestUtil
 
     public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null, $cycle=null ) {
 
+//        $user = $this->security->getUser();
+//        if( $projectSpecialty ) {
+//            $specialtyPostfix = $projectSpecialty->getUppercaseName();
+//            $specialtyPostfix = "_" . $specialtyPostfix;
+//        } else {
+//            $specialtyPostfix = null;
+//        }
+        $specialtyPostfix = "";
+        //echo "cycle=$cycle <br>";
+
         //new work request page will show only services with the maximum version across all existing services
         $maxVersion = null;
         if( $cycle == 'new' ) {
@@ -5020,19 +5030,47 @@ class TransResRequestUtil
         $repository = $this->em->getRepository(RequestCategoryTypeList::class);
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
-
-        $dql->where("list.type = :typedef OR list.type = :typeadd");
         $dql->orderBy("list.orderinlist","ASC");
 
         $dqlParameters = array();
-        
-        $dqlParameters["typedef"] = 'default';
-        $dqlParameters["typeadd"] = 'user-added';
 
-        //echo '$cycle='.$cycle.', $maxVersion='.$maxVersion.'<br>';
+        $showAll = false;
+        //Show all only for admin/technicians on show/edit page (if( !($cycle == 'new' && $maxVersion)))
+        if( $cycle == 'show' ) {
+            //Show all on all show pages
+            $showAll = true;
+        }
         if( $cycle == 'new' && $maxVersion ) {
+            $showAll = false;
+        }
+        if( $cycle == 'edit' ) {
+            //Show all only for admin/technicians roles
+            if( $this->security->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyPostfix) ||
+                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyPostfix)
+            ) {
+                //echo "User is admin/technician <br>";
+                $showAll = true;
+            } else {
+                //echo "User IS NOT admin/technician <br>";
+                $showAll = false;
+            }
+        }
+
+        //echo "showAll=$showAll <br>";
+        //echo '$cycle='.$cycle.', $maxVersion='.$maxVersion.'<br>';
+        //Show only enabled and new version (maxFeeScheduleVersion) fee schedules only on new page.
+        //For user is admins and technician show all fee schedules for all, not new pages (show, edit)
+        //if( $cycle == 'new' && $maxVersion && $userAdmin === false ) {
+        if( $showAll === false ) {
+            //echo "Showing only enabled with new version<br>";
+            $dql->where("list.type = :typedef OR list.type = :typeadd");
+            $dqlParameters["typedef"] = 'default';
+            $dqlParameters["typeadd"] = 'user-added';
+
             $dql->andWhere("list.feeScheduleVersion IS NOT NULL OR list.feeScheduleVersion >= :maxFeeScheduleVersion");
             $dqlParameters["maxFeeScheduleVersion"] = $maxVersion;
+        } else {
+            //echo "Showing all<br>";
         }
 
         //show only with $fee (zero, but not null) for this price list.
