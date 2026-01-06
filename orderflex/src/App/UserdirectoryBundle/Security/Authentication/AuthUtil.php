@@ -1397,4 +1397,27 @@ class AuthUtil {
         return $adCount;
     }
 
+    /**
+     * Helper: connect to LDAP server with sane defaults.
+     */
+    public function connectToLdap($LDAPHost, $LDAPPort = 389)
+    {
+        if (empty($LDAPHost)) {
+            $this->logger->warning('connectToLdap: empty LDAPHost');
+            return null;
+        }
+
+        $cnx = @ldap_connect($LDAPHost, $LDAPPort);
+        if (!$cnx) {
+            $this->logger->error("Ldap: Failed to connect to {$LDAPHost}:{$LDAPPort}");
+            return null;
+        }
+
+        ldap_set_option($cnx, LDAP_OPT_NETWORK_TIMEOUT, 10);
+        ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($cnx, LDAP_OPT_SIZELIMIT, 1);
+
+        return $cnx;
+    }
+
 } 

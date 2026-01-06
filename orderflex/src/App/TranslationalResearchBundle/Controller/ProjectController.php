@@ -1343,6 +1343,8 @@ class ProjectController extends OrderAbstractController
         if( !$trpAdminEmail ) {
             $userSecUtil = $this->container->get('user_security_utility');
             $trpAdminEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+
+            $trpAdminEmail = '<a href="mailto:'.$trpAdminEmail.'">$trpAdminEmail</a>';
         }
         $supportNote = NULL;
         if( $trpAdminEmail ) {
