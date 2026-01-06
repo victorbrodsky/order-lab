@@ -169,7 +169,10 @@
         {% endif %}
 
         {% if user_security_utility.isSiteShowLinkNavbar(translationalresearch_sitename) %}
-            <p><a href="{{ path('translationalresearch_home') }}">Translational Research</a></p>
+            <p>
+                <a href="{{ path('translationalresearch_home') }}">Translational Research</a>
+                (<a href="{{ path('translationalresearch_project_new_selector') }}">New Project Request</a>)
+            </p>
         {% endif %}
 
         {% if user_security_utility.isSiteShowLinkNavbar(dashboard_sitename) %}
