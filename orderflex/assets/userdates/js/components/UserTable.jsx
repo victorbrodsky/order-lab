@@ -200,8 +200,10 @@ const UserTable = ({cycle}) => {
             url
         );
         let all = new Set([...allUsers, ...response.data.results]);
+        const merged = [...all];
         setAllUsers([...all]);
         setLoading(false);
+        console.log("allUsers merged.length=",merged.length);
 
         //console.log("callUser: totalPages=" + response.data.totalPages);
         setTotalPages(response.data.totalPages);
