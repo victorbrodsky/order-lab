@@ -5041,6 +5041,7 @@ class TransResRequestUtil
             $showAll = true;
         }
         if( $cycle == 'new' && $maxVersion ) {
+            //Showing only enabled with latest version
             $showAll = false;
         }
         if( $cycle == 'edit' ) {
@@ -5048,19 +5049,15 @@ class TransResRequestUtil
             if( $this->security->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyPostfix) ||
                 $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyPostfix)
             ) {
-                //echo "User is admin/technician <br>";
+                //echo "User is admin/technician => show all <br>";
                 $showAll = true;
             } else {
-                //echo "User IS NOT admin/technician <br>";
+                //echo "User IS NOT admin/technician => show only latest <br>";
                 $showAll = false;
             }
         }
 
         //echo "showAll=$showAll <br>";
-        //echo '$cycle='.$cycle.', $maxVersion='.$maxVersion.'<br>';
-        //Show only enabled and new version (maxFeeScheduleVersion) fee schedules only on new page.
-        //For user is admins and technician show all fee schedules for all, not new pages (show, edit)
-        //if( $cycle == 'new' && $maxVersion && $userAdmin === false ) {
         if( $showAll === false ) {
             //echo "Showing only enabled with new version<br>";
             $dql->where("list.type = :typedef OR list.type = :typeadd");
