@@ -1298,6 +1298,7 @@ class ProjectController extends OrderAbstractController
     public function newProjectSelectorAction(Request $request)
     {
         $transresUtil = $this->container->get('transres_util');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
 
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
 
@@ -1332,7 +1333,10 @@ class ProjectController extends OrderAbstractController
         }
 
         //dump($collDivsFiltered);exit('111');
-
+        $reverse = false;
+        if( $userTenantUtil->isHubServer() ) {
+            $reverse = true;
+        }
         $requesterGroups = $transresUtil->getTransResRequesterGroups();
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
