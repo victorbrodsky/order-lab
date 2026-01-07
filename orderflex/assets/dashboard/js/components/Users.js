@@ -22,7 +22,7 @@ class Users extends Component {
         //var url = "/dashboards/api/charts"; //http://127.0.0.1/dashboards/api/charts
         //var url = $.getJSON("/dashboards/api/charts");
         var url = Routing.generate('dashboard_api_users'); //use FOSJsRoutingBundle
-        axios.get(url).then(users => {
+        axios.get(url,{withCredentials: true}).then(users => {
             this.setState({ users: users.data, loading: false})
     })
     }

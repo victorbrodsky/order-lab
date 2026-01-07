@@ -70,7 +70,8 @@ const ScrollList = () => {
         console.log("callProduct: url=["+url+"]");
 
         let response = await axios.get(
-            url
+            url,
+            {withCredentials: true}
         );
         //console.log("response",response);
         console.log("totalPages: pageNum="+pageNum+"; totalPages=",response.data.totalPages);

@@ -28,7 +28,7 @@ function SingleAntibody({antibodyid}) {
 
     const callAntibody = async () => {
         console.log("callAntibody: antibodyUrl="+antibodyUrl);
-        let response = await axios.get(antibodyUrl);
+        let response = await axios.get(antibodyUrl,{withCredentials: true});
         //console.log("Set product: response:",response);
         //console.log("Set product: product:",response.data[0]);
         setProduct(response.data[0]);

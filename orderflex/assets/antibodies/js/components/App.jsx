@@ -50,7 +50,8 @@ const App = () => {
 
         let response = await axios.get(
             //`https://randomuser.me/api/?page=${pageNum}&results=25&seed=abc`
-            url
+            url,
+            {withCredentials: true}
         );
         let all = new Set([...allProducts, ...response.data.results]);
         setAllProducts([...all]);
