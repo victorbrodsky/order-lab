@@ -190,7 +190,7 @@ const UserTable = ({cycle}) => {
         else {
             url = apiUrl+'/?page='+pageNum
         }
-        url = "https://view.online/c/demo-institution/demo-department/directory/users/api/?page=1";
+        url = "http://view.online/c/demo-institution/demo-department/directory/users/api/?page=1";
         console.log("url2=["+url+"]"); ///c/demo-institution/demo-department/directory/users/api/?page=1
 
         let response = await axios.get(url);

@@ -84,7 +84,7 @@ class UserDatesController extends OrderAbstractController
 
     #[Route(path: '/users/api', name: 'employees_users_api', options: ['expose' => true])]
     public function getUsersApiAction( Request $request ) {
-
+        exit("getUsersApiAction exit");
         if( false === $this->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
