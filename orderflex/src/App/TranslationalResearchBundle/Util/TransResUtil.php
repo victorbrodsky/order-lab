@@ -4034,17 +4034,22 @@ class TransResUtil
         return $projects;
     }
 
-    public function getTransResRequesterGroups() {
-
-        //$user = $this->security->getUser();
-
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequesterGroupList'] by [RequesterGroupList::class]
-        $groups = $this->em->getRepository(RequesterGroupList::class)->findBy(
-            array(
-                'type' => array("default","user-added")
-            ),
-            array('orderinlist' => 'ASC')
-        );
+    public function getTransResRequesterGroups( $reverse=false ) {
+        if( $reverse ) {
+            $groups = $this->em->getRepository(RequesterGroupList::class)->findBy(
+                array(
+                    'type' => array("default","user-added")
+                ),
+                array('orderinlist' => 'DESC')
+            );
+        } else {
+            $groups = $this->em->getRepository(RequesterGroupList::class)->findBy(
+                array(
+                    'type' => array("default","user-added")
+                ),
+                array('orderinlist' => 'ASC')
+            );
+        }
 
         return $groups;
     }
