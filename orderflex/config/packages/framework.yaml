@@ -41,8 +41,8 @@ framework:
         cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
 
         #cookie_secure: auto
-        #cookie_samesite: lax
-        cookie_samesite: none
+        #cookie_samesite: lax #default, but Cookies are NOT sent for cross‑site AJAX requests, POST requests from another domain, API calls from React → Symfony
+        cookie_samesite: none #Cookies ARE sent for: cross‑site AJAX requests, React → Symfony requests, if withCredentials: true is used
         cookie_secure: true
 
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
