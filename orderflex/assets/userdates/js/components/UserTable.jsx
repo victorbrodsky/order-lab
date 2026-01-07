@@ -193,8 +193,8 @@ const UserTable = ({cycle}) => {
         //url = "http://view.online/c/demo-institution/demo-department/directory/users/api/?page=1";
         console.log("url2=["+url+"]"); ///c/demo-institution/demo-department/directory/users/api/?page=1
 
-        let response = await axios.get(url);
-        //let response = await axios.get(url,{withCredentials: true});
+        //let response = await axios.get(url);
+        let response = await axios.get(url,{withCredentials: true});
         //console.log("FULL RESPONSE DATA:", response.data);
         //console.log("response.data.results=",response.data.results);
         let all = new Set([...allUsers, ...response.data.results]);
