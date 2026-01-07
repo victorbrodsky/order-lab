@@ -190,7 +190,8 @@ const UserTable = ({cycle}) => {
         else {
             url = apiUrl+'/?page='+pageNum
         }
-        console.log("url2=["+url+"]");
+        console.log("url2=["+url+"]"); ///c/demo-institution/demo-department/directory/users/api/?page=1
+        url = "https://view.online/c/demo-institution/demo-department/directory/users/api/?page=1";
 
         let response = await axios.get(
             //?filter[searchId]=1&filter[startDate]=&filter[endDate]=&direction=DESC&page=3
