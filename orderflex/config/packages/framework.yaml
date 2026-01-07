@@ -39,8 +39,12 @@ framework:
     session:
         handler_id: null
         cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
-        cookie_secure: auto
-        cookie_samesite: lax
+
+        #cookie_secure: auto
+        #cookie_samesite: lax
+        cookie_samesite: none
+        cookie_secure: true
+
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         #http://blog.jmoz.co.uk/symfony2-warning-sessionstart-the-session-id/
         #storage_id: session.storage.filesystem
