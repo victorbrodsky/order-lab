@@ -1337,7 +1337,7 @@ class ProjectController extends OrderAbstractController
         if( $userTenantUtil->isHubServer() ) {
             $reverse = true;
         }
-        $requesterGroups = $transresUtil->getTransResRequesterGroups();
+        $requesterGroups = $transresUtil->getTransResRequesterGroups($reverse);
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
         //$transresUtil->addMinimumRolesToCreateProject();
