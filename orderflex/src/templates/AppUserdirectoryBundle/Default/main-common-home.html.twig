@@ -171,7 +171,9 @@
         {% if user_security_utility.isSiteShowLinkNavbar(translationalresearch_sitename) %}
             <p>
                 <a href="{{ path('translationalresearch_home') }}">Translational Research</a>
-                (<a href="{{ path('translationalresearch_project_new_selector') }}">New Project Request</a>)
+                {% if user_tenant_utility.isHubServer() %}
+                    (<a href="{{ path('translationalresearch_project_new_selector') }}">New Project Request</a>)
+                {% endif %}
             </p>
         {% endif %}
 

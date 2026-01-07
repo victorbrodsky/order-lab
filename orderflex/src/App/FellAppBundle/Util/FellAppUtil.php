@@ -645,12 +645,8 @@ class FellAppUtil {
     }
 
     public function isHubServer() {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
-        if( $serverRole."" === 'Internet (Hub)' ) {
-            return true;
-        }
-        return false;
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        return $userTenantUtil->isHubServer();
     }
 
 //    public function getInstitutionByGlobalFelltype( $globalFellType ) {

@@ -61,6 +61,7 @@ twig:
         user_security_utility: "@user_security_utility"
         user_formnode_utility: "@user_formnode_utility"
         user_service_utility: "@user_service_utility"
+        user_tenant_utility: "@user_tenant_utility"
         calllog_util_form: "@calllog_util_form"
         crn_util_form: "@crn_util_form"
         transres_util: "@transres_util"

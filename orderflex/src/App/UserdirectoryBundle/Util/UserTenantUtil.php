@@ -1748,4 +1748,13 @@ class UserTenantUtil
         //exit('$pageUrl='.$pageUrl);
         return $pageUrl;
     }
+
+    public function isHubServer() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $serverRole."" === 'Internet (Hub)' ) {
+            return true;
+        }
+        return false;
+    }
 }
