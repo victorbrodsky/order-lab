@@ -199,7 +199,7 @@ const UserTable = ({cycle}) => {
             //url+'&page='+pageNum+'&'+queryString
             url
         );
-        console.log("FULL RESPONSE DATA:", response.data);
+        //console.log("FULL RESPONSE DATA:", response.data);
         console.log("response.data.results=",response.data.results);
         let all = new Set([...allUsers, ...response.data.results]);
         const merged = [...all];
