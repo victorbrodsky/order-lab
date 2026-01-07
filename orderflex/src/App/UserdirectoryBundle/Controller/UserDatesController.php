@@ -47,7 +47,7 @@ class UserDatesController extends OrderAbstractController
         }
 
         //check if lastAdCheck is more than 1 day => check activeAD
-        $authUtil = $this->container->get('authenticator_utility');
+        $authUtil = $this->container->get('authenticator_utility'); //AuthUtil
         $authUtil->checkUsersAD();
 
         $cycle = 'show';

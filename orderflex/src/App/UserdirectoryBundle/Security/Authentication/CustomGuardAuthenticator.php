@@ -525,7 +525,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 
         //$authUtil = new AuthUtil($this->container,$this->em);
         $authUtil = $this->container->get('authenticator_utility');
-        $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
+        $ldapAuthUtil = $this->container->get('ldap_authenticator_utility'); //LdapAuthUtil
 
         $user = null;
 
