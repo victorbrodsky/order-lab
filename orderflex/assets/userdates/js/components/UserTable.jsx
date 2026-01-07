@@ -190,16 +190,10 @@ const UserTable = ({cycle}) => {
         else {
             url = apiUrl+'/?page='+pageNum
         }
-        console.log("url2=["+url+"]"); ///c/demo-institution/demo-department/directory/users/api/?page=1
         url = "https://view.online/c/demo-institution/demo-department/directory/users/api/?page=1";
+        console.log("url2=["+url+"]"); ///c/demo-institution/demo-department/directory/users/api/?page=1
 
-        let response = await axios.get(
-            //?filter[searchId]=1&filter[startDate]=&filter[endDate]=&direction=DESC&page=3
-            //'https://randomuser.me/api/?page=${pageNum}&results=25&seed=abc'
-            //url+'/?page='+pageNum
-            //url+'&page='+pageNum+'&'+queryString
-            url
-        );
+        let response = await axios.get(url);
         //console.log("FULL RESPONSE DATA:", response.data);
         console.log("response.data.results=",response.data.results);
         let all = new Set([...allUsers, ...response.data.results]);
