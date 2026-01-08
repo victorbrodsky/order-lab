@@ -1352,7 +1352,7 @@ class ProjectController extends OrderAbstractController
         }
         $supportNote = NULL;
         if( $trpAdminEmail ) {
-            $supportNote = "If you encounter any technical issues, please email TRP support $trpAdminEmail";
+            $supportNote = "If you encounter any technical issues, please email support at $trpAdminEmail";
         }
 
         return array(
