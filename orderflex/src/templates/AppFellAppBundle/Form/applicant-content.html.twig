@@ -190,6 +190,12 @@
     {% set collapsein = "in" %}
 {% endif %}
 
+{% set shoScreeningQuestions = true %}
+{#{% set shoScreeningQuestions = false %}#}
+{% if shoScreeningQuestions %}
+    {% set collapsein = "" %}
+{% endif %}
+
 <div class="fellapp-application-holder">
 
     {% if cycle != "download" %}
@@ -210,6 +216,10 @@
 
     {% if form.institution is defined %}
         {% include 'AppFellAppBundle/Form/Institution.html.twig' %}
+    {% endif %}
+
+    {% if shoScreeningQuestions %}
+        {% include 'AppFellAppBundle/Form/ScreeningQuestions.html.twig' %}
     {% endif %}
 
     <!-- Fellowship Application Admin Data -->

@@ -94,7 +94,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'maxIdleTime' )
         $builder->add('maxIdleTime',null,array(
-            'label'=>'Max Idle Time (min):',
+            'label'=>'Max Idle Time (in minutes, requires re-login):',
             'attr' => array('class'=>'form-control')
         ));
 

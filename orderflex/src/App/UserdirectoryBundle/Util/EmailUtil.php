@@ -71,6 +71,7 @@ class EmailUtil {
     // or array - array( array('path'=>$path1,'name'=>$name1), array('path'=>$path2,'name'=>$name2), ... )
     //$attachmentFilename: attachment file name (optional)
     //$fromEmail: site's email or system email will be used if null (optional)
+    //$replyToEmail: single email
     public function sendEmail(
         $emails,
         $subject,
@@ -78,7 +79,8 @@ class EmailUtil {
         $ccs=null,
         $fromEmail=null,
         $attachmentData=null,
-        $attachmentFilename=null
+        $attachmentFilename=null,
+        $replyToEmail=null
     ) {
 
         //testing
@@ -231,6 +233,10 @@ class EmailUtil {
 
         $message->subject($subject);
         $message->from($fromEmail);
+
+        if( $replyToEmail ) {
+            $message->replyTo( trim($replyToEmail) );
+        }
 
         //for html
         //$body = str_replace("\r\n","<br>",$body);
@@ -385,6 +391,7 @@ class EmailUtil {
                 "; To:".$emailsStr.
                 "; CC:".$ccStr.
                 ", BCC:".$bccStr.
+                ", replyTo=".$replyToEmail.
                 "; subject=".$subject."; body=".$body.
                 "; attachmentPath=".$attachmentPath).
                 "; redirected=".$mailerDeliveryAddressesStr
@@ -417,6 +424,7 @@ class EmailUtil {
             "; To:".$emailsStr.
             "; CC:".$ccStr.
             ", BCC:".$bccStr.
+            ", replyTo=".$replyToEmail.
             "; redirected=".$mailerDeliveryAddressesStr
         ;
         //echo $msg . "<br>";

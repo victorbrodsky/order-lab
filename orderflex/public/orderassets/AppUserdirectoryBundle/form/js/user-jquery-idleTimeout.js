@@ -130,7 +130,7 @@ idleTimeoutClass.prototype.init = function () {
 idleTimeoutClass.prototype.setMaxIdletime = function () {
     
     if( _maxIdleTime ) {
-        //console.log("_maxIdleTime is set = " + _maxIdleTime);
+        console.log("_maxIdleTime is set = " + _maxIdleTime);
         _idleAfter = _maxIdleTime;
         return;
     }
@@ -191,11 +191,11 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     var dialogDisplayLimit = 60; //sec
 
     /////// TESTING PARAMETERS ///////
-    _idleAfter = 25; //sec testing
-    sessionKeepAliveTimer = 3; //false; //testing
+    //_idleAfter = 25; //sec testing
+    //sessionKeepAliveTimer = 3; //false; //testing
     //dialogDisplayLimit = 15; //sec
     //// urlIdleTimeoutLogout = false; //testing
-    console.log( "Testing user-jquery-idleTimeout checkIdleTimeout _idleAfter="+_idleAfter);
+    //console.log( "Testing user-jquery-idleTimeout checkIdleTimeout _idleAfter="+_idleAfter);
     /////// EOF TESTING PARAMETERS ///////
 
     //var thisUrl = window.location.href; // http://127.0.0.1/order/index_dev.php/directory/
@@ -303,6 +303,13 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
         // server-side session keep-alive timer
         sessionKeepAliveTimer: sessionKeepAliveTimer,   // ping the server at this interval in seconds. 600 = 10 Minutes. Set to false to disable pings
         sessionKeepAliveUrl: sessionKeepAliveUrl // set URL to ping - does not apply if sessionKeepAliveTimer: false
+    });
+    
+    // Ensure the idle-timeout dialog appears above all other modals
+    $(document).on('dialogopen', '#idletimer_warning_dialog', function () {
+        var $dialog = $(this).closest('.ui-dialog');
+        $dialog.css('z-index', 20000);
+        $('.ui-widget-overlay').last().css('z-index', 19990);
     });
 };
 

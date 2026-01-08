@@ -2355,14 +2355,30 @@ class FellAppUtil {
         //$logger->notice("sendInterviewInvitationEmail: body=".json_encode($body));
 
         //TODO: Test the "Reply To" ($fromEmail in sendEmail) field value (... $body, $ccs, $fromEmail ...)
-        $fromEmail = $userSecUtil->getSiteSettingParameter('replyToInvitedInterview',$this->container->getParameter('fellapp.sitename'));
+        $fromEmail = $userSecUtil->getSiteSettingParameter('fromInvitedInterview',$this->container->getParameter('fellapp.sitename'));
         if( !trim($fromEmail) ) {
             $fromEmail = NULL;
         }
+        $replyToEmail = $userSecUtil->getSiteSettingParameter('replyToInvitedInterview',$this->container->getParameter('fellapp.sitename'));
+        if( !trim($replyToEmail) ) {
+            $replyToEmail = NULL;
+        }
 
-        $emailUtil->sendEmail( $applicantEmail, $subject, $body, $ccs=null, $fromEmail, $ccResponsibleEmails );
+        $emailUtil->sendEmail(
+            $applicantEmail,        //to $emails
+            $subject,               //$subject
+            $body,                  //$body
+            $ccResponsibleEmails,   //$cc
+            $fromEmail,             //$fromEmail
+            null,                   //$attachmentData
+            null,                   //$attachmentFilename
+            $replyToEmail           //$replyToEmail
+        );
 
-        $msg = "Fellowship interview invitation email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
+        $msg = "Fellowship interview invitation email has been sent to " .
+            $applicantFullName . " (".$applicantEmail.")" .
+            "; CC: ".implode(", ",$ccResponsibleEmails) .
+            "; replyTo: ".$replyToEmail;
         $eventMsg = $msg . "<br><br> Subject:<br>". $subject . "<br><br>Body:<br>" . $body;
 
         $userSecUtil->createUserEditEvent(
