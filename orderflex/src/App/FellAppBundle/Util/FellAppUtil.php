@@ -2344,6 +2344,8 @@ class FellAppUtil {
         $applicantFullName = $fellapp->getApplicantFullName();
         //$fellappType = $fellapp->getFellowshipSubspecialty()."";
 
+        $fromEmail =
+
         //get CCs: coordinators and directors
         $directorEmails = $this->getDirectorsOfFellAppEmails($fellapp);
         $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellapp);
@@ -2352,7 +2354,13 @@ class FellAppUtil {
         //$logger = $this->container->get('logger');
         //$logger->notice("sendInterviewInvitationEmail: body=".json_encode($body));
 
-        $emailUtil->sendEmail( $applicantEmail, $subject, $body, $ccResponsibleEmails );
+        //TODO: Test the "Reply To" ($fromEmail in sendEmail) field value (... $body, $ccs, $fromEmail ...)
+        $fromEmail = $userSecUtil->getSiteSettingParameter('replyToInvitedInterview',$this->container->getParameter('fellapp.sitename'));
+        if( !trim($fromEmail) ) {
+            $fromEmail = NULL;
+        }
+
+        $emailUtil->sendEmail( $applicantEmail, $subject, $body, $ccs=null, $fromEmail, $ccResponsibleEmails );
 
         $msg = "Fellowship interview invitation email has been sent to " . $applicantFullName . " (".$applicantEmail.")" . "; CC: ".implode(", ",$ccResponsibleEmails);
         $eventMsg = $msg . "<br><br> Subject:<br>". $subject . "<br><br>Body:<br>" . $body;

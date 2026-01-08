@@ -146,7 +146,7 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
         timeout: _ajaxTimeout,
         success: function (data) {
             //console.debug("data="+data);
-            //console.log("idletime="+data.maxIdleTime);
+            console.log("getmaxidletime: idletime="+data.maxIdleTime);
             //console.debug("maint="+data.maintenance);
             _idleAfter = data.maxIdleTime;
         },
@@ -160,9 +160,21 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
     });
 };
 
+//TODO: manage z‑index layering. The second modal often appears behind the backdrop unless you manually adjust the stacking order.
+// .modal.modal-top {
+//     z-index: 2000 !important;
+// }
+//
+// .modal-backdrop.modal-backdrop-top {
+//     z-index: 1990 !important;
+// }
+// $('#modalB').addClass('modal-top');
+// $('.modal-backdrop').last().addClass('modal-backdrop-top');
+
+
 //var _idleTimeout = null;
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
-    console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
+    console.log( "############# user-jquery-idleTimeout checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
     //var urlIdleTimeoutLogout = getCommonBaseUrl("idle-log-out");
     //var urlIdleTimeoutLogout = Routing.generate('employees_idlelogout');
     //http://127.0.0.1/order/index_dev.php/directory/idle-log-out
@@ -179,10 +191,11 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
     var dialogDisplayLimit = 60; //sec
 
     /////// TESTING PARAMETERS ///////
-    //_idleAfter = 25; //sec testing
-    //sessionKeepAliveTimer = 3; //false; //testing
+    _idleAfter = 25; //sec testing
+    sessionKeepAliveTimer = 3; //false; //testing
     //dialogDisplayLimit = 15; //sec
-    //urlIdleTimeoutLogout = false; //testing
+    //// urlIdleTimeoutLogout = false; //testing
+    console.log( "Testing user-jquery-idleTimeout checkIdleTimeout _idleAfter="+_idleAfter);
     /////// EOF TESTING PARAMETERS ///////
 
     //var thisUrl = window.location.href; // http://127.0.0.1/order/index_dev.php/directory/

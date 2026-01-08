@@ -118,7 +118,7 @@ idleTimeoutClass.prototype.setMaxIdletime = function () {
 
 idleTimeoutClass.prototype.checkIdleTimeout = function () {
     //console.log( "############# checkIdleTimeout, testvar="+this.testvar+"; " + "_idleAfter="+_idleAfter);
-    console.log( "############# checkIdleTimeout" + ", _idleAfter="+_idleAfter);
+    console.log( "############# user-idleTimeout checkIdleTimeout" + ", _idleAfter="+_idleAfter);
     // start the idle timer plugin; all times are in seconds
     var pollingIntervalShift = 50;
     //var pollingIntervalShift = 10;
