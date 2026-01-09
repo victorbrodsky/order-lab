@@ -190,11 +190,11 @@
     {% set collapsein = "in" %}
 {% endif %}
 
-{% set showScreeningQuestions = true %}
-{% set showScreeningQuestions = false %}
-{% if showScreeningQuestions %}
-    {% set collapsein = "" %}
-{% endif %}
+{#{% set showScreeningQuestions = true %}#}
+{#{% set showScreeningQuestions = false %}#}
+{#{% if showScreeningQuestions %}#}
+    {#{% set collapsein = "" %}#}
+{#{% endif %}#}
 
 <div class="fellapp-application-holder">
 
@@ -222,9 +222,9 @@
     {#[“Fellowship Application Type” | “Start Date” | “Expected Graduation Date”]#}
     {% include 'AppFellAppBundle/Form/FellowshipSpecialty.html.twig' %}
 
-    {% if showScreeningQuestions %}
-        {% include 'AppFellAppBundle/Form/ScreeningQuestions.html.twig' %}
-    {% endif %}
+    {#{% if showScreeningQuestions %}#}
+    {% include 'AppFellAppBundle/Form/ScreeningQuestions.html.twig' %}
+    {#{% endif %}#}
 
     <!-- Fellowship Application Admin Data -->
     {% include 'AppFellAppBundle/Form/ApplicantData.html.twig' %}

@@ -574,7 +574,8 @@ class FellAppUtil {
             if( $asArray && $asArray === 'select2' ) {
                 $resultfilterTypes[] = array(
                     'id' => $type->getId(),
-                    'text' => $type->getNameInstitution() . ""
+                    'text' => $type->getNameInstitution() . "",
+                    'screeningquestions' => $type->getScreeningQuestions()
                 );
                 //echo "111111 <br>";
             } elseif ( $asArray && $asArray === 'id-text' ) {
