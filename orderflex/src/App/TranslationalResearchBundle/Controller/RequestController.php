@@ -3338,8 +3338,8 @@ class RequestController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Request/fee-schedule.html.twig')]
     public function feeScheduleAction(Request $request)
     {
-        if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
+        if (false === $this->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -3350,16 +3350,16 @@ class RequestController extends OrderAbstractController
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:SpecialtyList'] by [SpecialtyList::class]
         $specialties = $em->getRepository(SpecialtyList::class)->findBy(
             array(
-                'type' => array("default","user-added")
+                'type' => array("default", "user-added")
             ),
             array('orderinlist' => 'ASC')
         );
         $filterSpecialties = array();
-        foreach($specialties as $specialty) {
+        foreach ($specialties as $specialty) {
             $filterSpecialties[$specialty->getShortName()] = $specialty->getId();
         }
         $params = array(
-            'specialties'=>$filterSpecialties
+            'specialties' => $filterSpecialties
         );
 
         $filterform = $this->createForm(FeeFilterType::class, null, array(
@@ -3369,16 +3369,32 @@ class RequestController extends OrderAbstractController
         $filterform->handleRequest($request);
         $search = $filterform['search']->getData();
         $specialties = $filterform['specialties']->getData();
+        $feeScheduleVersion = $filterform['feeScheduleVersion']->getData();
 
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:RequestCategoryTypeList'] by [RequestCategoryTypeList::class]
         $repository = $em->getRepository(RequestCategoryTypeList::class); //fee schedule list
-        $dql =  $repository->createQueryBuilder("list");
+        $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.projectSpecialties", "projectSpecialties");
         //$dql->innerJoin("list.projectSpecialties", "projectSpecialties");
         $dql->leftJoin("list.prices", "prices");
 
         $dqlParameters = array();
+
+        /////// non-admin users can see only the latest version //////
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $maxVersion = $transresRequestUtil->getMaxFeeSchedule();
+        $specialtyPostfix = "";
+        if( !(
+                $this->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyPostfix) ||
+                $this->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyPostfix)
+            )
+        ) {
+            if( $maxVersion ) {
+                $dql->andWhere("list.feeScheduleVersion IS NOT NULL OR list.feeScheduleVersion >= :maxFeeScheduleVersion");
+                $dqlParameters["maxFeeScheduleVersion"] = $maxVersion;
+            }
+        }
+        /////// ENDOF non-admin users can see only the latest version //////
 
         if( $search ) {
             $searchStr = "";
@@ -3404,6 +3420,11 @@ class RequestController extends OrderAbstractController
 
             $dql->andWhere($searchStr);
             $dqlParameters['search'] = '%'.$search.'%';
+        }
+
+        if( $feeScheduleVersion ) {
+            $dql->andWhere("list.feeScheduleVersion = :feeScheduleVersion ");
+            $dqlParameters['feeScheduleVersion'] = $feeScheduleVersion;
         }
 
         if( $specialties && count($specialties) > 0 ) {
@@ -3508,6 +3529,7 @@ class RequestController extends OrderAbstractController
             'adminUser' => $adminUser,
             'pathbase' => "translationalresearchfeesschedule",
             'linkToListId' => $linkToListId,
+            'maxVersion' => $maxVersion
         );
     }
 

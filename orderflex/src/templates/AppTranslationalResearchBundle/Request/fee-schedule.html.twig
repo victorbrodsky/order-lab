@@ -25,6 +25,13 @@
             ><span class="fa fa-file-excel fa-lg"></span></a>
         {% endif %}
     </h4>
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+        <p>
+            {% if maxVersion %}
+                (Latest fee schedule version {{ maxVersion }})
+            {% endif %}
+        </p>
+    {% endif %}
 
     <br>
     <div class="well form-search">
@@ -32,11 +39,15 @@
             <div class="row">
                 <div class="col-xs-12">
 
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         {{ form_widget(filterform.search) }}
                     </div>
 
-                    <div class="col-xs-5">
+                    <div class="col-xs-3">
+                        {{ form_widget(filterform.feeScheduleVersion) }}
+                    </div>
+
+                    <div class="col-xs-4">
                         {{ form_widget(filterform.specialties) }}
                     </div>
 
@@ -78,7 +89,11 @@
                 <th>{{ knp_pagination_sortable(fees, 'Name', 'list.name') }}</th>
 
                 <th>{{ knp_pagination_sortable(fees, 'Description', 'list.description') }}</th>
-                <th>{{ knp_pagination_sortable(fees, 'Fee Schedule Version', 'list.feeScheduleVersion') }}</th>
+
+                {#or is_granted('ROLE_TRANSRES_TECHNICIAN')#}
+                {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                    <th>{{ knp_pagination_sortable(fees, 'Fee Schedule Version', 'list.feeScheduleVersion') }}</th>
+                {% endif %}
 
                 <th>{{ knp_pagination_sortable(fees, 'Fee for one', 'list.fee') }}</th>
                 <th>{{ knp_pagination_sortable(fees, 'Fee per additional item', 'list.feeAdditionalItem') }}</th>
@@ -139,9 +154,12 @@
                     {{ fee.description }}
                 </td>
 
-                <td>
-                    {{ fee.feeScheduleVersion }}
-                </td>
+                {#or is_granted('ROLE_TRANSRES_TECHNICIAN')#}
+                {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                    <td>
+                        {{ fee.feeScheduleVersion }}
+                    </td>
+                {% endif %}
 
                 <td>
                     {% if fee.fee %}

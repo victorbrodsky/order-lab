@@ -5006,6 +5006,15 @@ class TransResRequestUtil
         return $output;
     }
 
+    public function getMaxFeeSchedule() {
+        //new work request page will show only services with the maximum version across all existing services
+        $repository = $this->em->getRepository(RequestCategoryTypeList::class);
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('MAX(list.feeScheduleVersion)');
+        $maxVersion = (int)$dql->getQuery()->getSingleScalarResult();
+        return $maxVersion;
+    }
+
     public function getProductServiceByProjectSpecialty( $projectSpecialty, $project=null, $cycle=null ) {
 
 //        $user = $this->security->getUser();
@@ -5021,10 +5030,11 @@ class TransResRequestUtil
         //new work request page will show only services with the maximum version across all existing services
         $maxVersion = null;
         if( $cycle == 'new' ) {
-            $repository = $this->em->getRepository(RequestCategoryTypeList::class);
-            $dql =  $repository->createQueryBuilder("list");
-            $dql->select('MAX(list.feeScheduleVersion)');
-            $maxVersion = (int)$dql->getQuery()->getSingleScalarResult();
+//            $repository = $this->em->getRepository(RequestCategoryTypeList::class);
+//            $dql =  $repository->createQueryBuilder("list");
+//            $dql->select('MAX(list.feeScheduleVersion)');
+//            $maxVersion = (int)$dql->getQuery()->getSingleScalarResult();
+            $maxVersion = $this->getMaxFeeSchedule();
         }
 
         $repository = $this->em->getRepository(RequestCategoryTypeList::class);

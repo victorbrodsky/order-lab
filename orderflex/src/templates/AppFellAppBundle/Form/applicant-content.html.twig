@@ -190,9 +190,9 @@
     {% set collapsein = "in" %}
 {% endif %}
 
-{% set shoScreeningQuestions = true %}
-{% set shoScreeningQuestions = false %}
-{% if shoScreeningQuestions %}
+{% set showScreeningQuestions = true %}
+{% set showScreeningQuestions = false %}
+{% if showScreeningQuestions %}
     {% set collapsein = "" %}
 {% endif %}
 
@@ -218,7 +218,7 @@
         {% include 'AppFellAppBundle/Form/Institution.html.twig' %}
     {% endif %}
 
-    {% if shoScreeningQuestions %}
+    {% if showScreeningQuestions %}
         {% include 'AppFellAppBundle/Form/ScreeningQuestions.html.twig' %}
     {% endif %}
 

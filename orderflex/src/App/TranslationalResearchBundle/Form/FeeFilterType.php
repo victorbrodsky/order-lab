@@ -46,7 +46,17 @@ class FeeFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
+            'attr' => array(
+                'class' => 'form-control form-control-modif limit-font-size submit-on-enter-field',
+                'placeholder'=>"Search by name, description, catalog ..."),
+        ));
+
+        $builder->add('feeScheduleVersion', TextType::class, array(
+            'required' => false,
+            'label' => false,
+            'attr' => array(
+                'class' => 'form-control form-control-modif limit-font-size submit-on-enter-field',
+                'placeholder'=>"Fee Schedule Version"),
         ));
 
 //        if( isset($this->params['specialties']) ) {

@@ -9551,6 +9551,19 @@ class AdminController extends OrderAbstractController
         exit("Test Form Node Tree generated");
     }
 
+    #[Route(path: '/list/generate-fellapp-form-node-tree/', name: 'employees_generate_fellapp_form_node_tree', methods: ['GET'])]
+    public function generateFellappFormNodeAction(Request $request)
+    {
+        if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->getParameter('employees.sitename').'-nopermission') );
+        }
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $formNodeUtil->createFellappFormNodes();
+
+        exit("Fellapp Form Node Tree generated");
+    }
+
     #[Route(path: '/list/generate-cron-jobs/', name: 'user_populate_cron_jobs', methods: ['GET'])]
     public function generateCronJobsAction(Request $request)
     {
