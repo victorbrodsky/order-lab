@@ -82,7 +82,10 @@ class FellowshipSubspecialty extends ListAbstract
     #[ORM\Column(type: 'date', nullable: true)]
     private $seasonYearEnd;
 
-
+    //Show an additional section with screening questions on the Fellowship Application page
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $screeningQuestions;
+    
 
     public function __construct($author=null) {
 
@@ -223,6 +226,22 @@ class FellowshipSubspecialty extends ListAbstract
     public function setSeasonYearEnd($seasonYearEnd)
     {
         $this->seasonYearEnd = $seasonYearEnd;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScreeningQuestions()
+    {
+        return $this->screeningQuestions;
+    }
+
+    /**
+     * @param mixed $screeningQuestions
+     */
+    public function setScreeningQuestions($screeningQuestions)
+    {
+        $this->screeningQuestions = $screeningQuestions;
     }
 
     

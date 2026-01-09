@@ -3770,6 +3770,25 @@ class FormNodeUtil
     public function createFellappScreeningQuestionsFormNode($parent) {
         exit('TODO: createFellappScreeningQuestionsFormNode');
 
+//Will you have completed an MD or PhD or both, and either residency or postdoctoral training by July 1, [[Start Year]]?
+//    () Yes () No
+//
+//Are you able to carry out the responsibilities and requirements at the specific training program to which you are applying with or without reasonable accommodations?
+//            () Yes
+//            () Yes, with reasonable accomodations
+//        () No
+//
+//If a PhD, is your training in biology, genetics, molecular biology, biochemistry, or a related field?
+//            () Not a PhD
+//        () PhD in Biology
+//        () PhD in Genetics
+//        () PhD in Molecular Biology
+//        () PhD in Biochemistry
+//        () PhD in a related field
+//
+//We often receive requests to sponsor H-1 visas. Please note that Washington University (WU) will sponsor J-1 visas for trainees in this program. Existing H-1B visas can be transferred to WU, but WU will not sponsor new H-1B applications for individuals in this program.
+//        [ checkmark ] I understand
+
         $objectTypeForm = $this->getObjectTypeByName('Form');
         $objectTypeSection = $this->getObjectTypeByName('Form Section');
         //$objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');

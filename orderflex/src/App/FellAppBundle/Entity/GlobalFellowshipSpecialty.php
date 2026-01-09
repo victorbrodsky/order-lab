@@ -94,7 +94,12 @@ class GlobalFellowshipSpecialty extends ListAbstract
 
     #[ORM\OneToMany(targetEntity: 'FellAppImportKey', mappedBy: 'globalspecialty', cascade: ['persist'])]
     private $apiImportKeys;
-    
+
+    //Show an additional section with screening questions on the Fellowship Application page
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $screeningQuestions;
+
+
 
     public function __construct()
     {
@@ -232,6 +237,24 @@ class GlobalFellowshipSpecialty extends ListAbstract
     {
         return $this->apiImportKeys;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getScreeningQuestions()
+    {
+        return $this->screeningQuestions;
+    }
+
+    /**
+     * @param mixed $screeningQuestions
+     */
+    public function setScreeningQuestions($screeningQuestions)
+    {
+        $this->screeningQuestions = $screeningQuestions;
+    }
+
+    
 
     //Clinical Informatics (WCM => Pathology)" becomes
     //"WCM Department of Pathology and Laboratory Medicine - Clinical Informatics
