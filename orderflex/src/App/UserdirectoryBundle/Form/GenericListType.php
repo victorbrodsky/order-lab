@@ -211,6 +211,13 @@ class GenericListType extends AbstractType
                 );
         }
 
+        if( method_exists($this->params['entity'],'getScreeningQuestions') ) {
+            $builder->add('screeningQuestions',null,array(
+                'label' => "Show an additional section with screening questions on the Fellowship Application page:",
+                'required' => false
+            ));
+        }
+
         //TODO: make it as institutional tree?
         if( method_exists($this->params['entity'],'getInstitution') ) {
 

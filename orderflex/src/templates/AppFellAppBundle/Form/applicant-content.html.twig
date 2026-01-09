@@ -218,6 +218,10 @@
         {% include 'AppFellAppBundle/Form/Institution.html.twig' %}
     {% endif %}
 
+    {#Fellowship Specialty#}
+    {#[“Fellowship Application Type” | “Start Date” | “Expected Graduation Date”]#}
+    {% include 'AppFellAppBundle/Form/FellowshipSpecialty.html.twig' %}
+
     {% if showScreeningQuestions %}
         {% include 'AppFellAppBundle/Form/ScreeningQuestions.html.twig' %}
     {% endif %}

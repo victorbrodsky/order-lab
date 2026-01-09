@@ -853,6 +853,10 @@
         {{ formmacros.field(edit_form.list.urlSlug) }}
     {% endif %}
 
+    {#{% if edit_form.list.screeningQuestions is defined %}#}
+        {#{{ formmacros.field(edit_form.list.screeningQuestions) }}#}
+    {#{% endif %}#}
+
     {% if entity.updatedby %}
         {#{{ formmacros.field(edit_form.list.updatedby) }}#}
         {{ formmacros.simplefield("Updated by:",entity.updatedby,"","disabled") }}
@@ -1469,6 +1473,10 @@
     {% endif %}
     {% if form.attributeMapping is defined %}
         {{ formmacros.field(form.attributeMapping) }}
+    {% endif %}
+
+    {% if form.screeningQuestions is defined %}
+        {{ formmacros.field(form.screeningQuestions) }}
     {% endif %}
 
 {% endmacro %}

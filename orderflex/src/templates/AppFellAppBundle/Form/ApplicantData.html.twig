@@ -34,31 +34,6 @@
         <div class="panel-body">
 
             <div class="well">
-                {#<label class="col-xs-12 control-label">Applicant:</label>#}
-                {#{{ form_row(form.fellowshipSubspecialty) }}#}
-                <div class="row">
-                    <div class="col-xs-6">
-                        <br>
-                        {#{% if form.fellowshipSubspecialty is defined and form.fellowshipSubspecialty %}#}
-                        {% if form.fellowshipSubspecialty is defined %}
-                            {#form.fellowshipSubspecialty={{ form.fellowshipSubspecialty.vars.value }}#}
-                            {{ form_row(form.fellowshipSubspecialty) }}
-                        {% endif %}
-                        {#form.globalFellowshipSpecialty|length={{ form.globalFellowshipSpecialty|length }}#}
-                        {#{% if form.globalFellowshipSpecialty is defined and form.globalFellowshipSpecialty and form.globalFellowshipSpecialty|length > 0 %}#}
-                        {% if form.globalFellowshipSpecialty is defined %}
-                            {#form.globalFellowshipSpecialty={{ form.globalFellowshipSpecialty.vars.value }}#}
-                            {{ form_row(form.globalFellowshipSpecialty) }}
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-3">
-                        {{ formmacros.fieldDateLabel_vertical(form.startDate,'allow-future-date') }}
-                    </div>
-                    <div class="col-xs-3">
-                        {{ formmacros.fieldDateLabel_vertical(form.endDate,'allow-future-date') }}
-                    </div>
-                </div> <!-- row -->
-
                 {% if form.user.infos is defined %}
                     {% for info in form.user.infos %}
 
