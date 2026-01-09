@@ -172,7 +172,15 @@
             <p>
                 <a href="{{ path('translationalresearch_home') }}">Translational Research</a>
                 {% if user_tenant_utility.isHubServer() %}
-                    (<a href="{{ path('translationalresearch_project_new_selector') }}">New Project Request</a>)
+                    (
+                    <a href="{{ path('translationalresearch_project_new_selector') }}">New Project Request</a>
+                    |
+                    <a href="{{ path('translationalresearchfeesschedule-list') }}">Fee schedule</a>
+                    |
+                    <a href="{{ path('translationalresearch_antibodies_public') }}">Antibody Catalog</a>
+                    |
+                    <a href="{{ path('translationalresearch_antibodies_group_by_panel') }}">Antibody Panels</a>
+                    )
                 {% endif %}
             </p>
         {% endif %}
