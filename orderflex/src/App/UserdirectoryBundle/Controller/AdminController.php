@@ -19,7 +19,9 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\FellAppBundle\Entity\DutiesCapabilityList;
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
+use App\FellAppBundle\Entity\TrainingEligibilityList;
 use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
@@ -1126,6 +1128,10 @@ class AdminController extends OrderAbstractController
 
         $count_generateTransferStatusList = $this->generateTransferStatusList();
 
+        $count_generateTrainingEligibilityList = $this->generateTrainingEligibilityList();
+        $count_generateDutiesCapabilityList = $this->generateDutiesCapabilityList();
+        $count_generatePhdFieldList = $this->generatePhdFieldList();
+
         //exit('testing generateAll()');
 
         $msg =
@@ -1280,6 +1286,9 @@ class AdminController extends OrderAbstractController
 
             'generateTransferStatusList='.$count_generateTransferStatusList.', '.
 
+            'generateTrainingEligibilityList='.$count_generateTrainingEligibilityList.', '.
+            'generateDutiesCapabilityList='.$count_generateDutiesCapabilityList.', '.
+            'generatePhdFieldList='.$count_generatePhdFieldList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -8274,6 +8283,10 @@ class AdminController extends OrderAbstractController
             "samlconfig" => array('SamlConfig','samlconfig-list','Saml Configuration List'),
 
             "globalfellowshipspecialty" => array('GlobalFellowshipSpecialty','globalfellowshipspecialty-list','Global Fellowship Specialty'),
+
+            "trainingeligibility" => array('TrainingEligibilityList','trainingeligibility-list','Training Eligibility List'),
+            "dutiescapability" => array('DutiesCapabilityList','dutiescapability-list','Duties Capability List'),
+            "phdfield" => array('PhdFieldList','phdfield-list','Phd Field List'),
         );
 
         if( $withcustom ) {
@@ -12854,6 +12867,111 @@ class AdminController extends OrderAbstractController
 
         exit("Finished.");
     }
+
+    //FellApp form node
+    public function generateTrainingEligibilityList() {
+
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Yes",
+            "No"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AdditionalCommunicationList'] by [AdditionalCommunicationList::class]
+            $listEntity = $em->getRepository(TrainingEligibilityList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TrainingEligibilityList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    //generateDutiesCapabilityList
+    public function generateDutiesCapabilityList() {
+
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Yes",
+            "Yes, with reasonable accommodations",
+            "No"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AdditionalCommunicationList'] by [AdditionalCommunicationList::class]
+            $listEntity = $em->getRepository(DutiesCapabilityList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new DutiesCapabilityList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    //PhdFieldList
+    public function generatePhdFieldList() {
+
+        $username = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Not a PhD",
+            "PhD in Biology",
+            "PhD in Genetics",
+            "PhD in Molecular Biology",
+            "PhD in Biochemistry",
+            "PhD in a related field"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AdditionalCommunicationList'] by [AdditionalCommunicationList::class]
+            $listEntity = $em->getRepository(DutiesCapabilityList::class)->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new DutiesCapabilityList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
 
     /**
      * Update roles

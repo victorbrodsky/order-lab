@@ -313,6 +313,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodypanels/', name: 'antibodypanels-list', methods: ['GET'])]
     #[Route(path: '/list/samlconfig/', name: 'samlconfig-list', methods: ['GET'])]
     #[Route(path: '/list/globalfellowshipspecialty/', name: 'globalfellowshipspecialty-list', methods: ['GET'])]
+    #[Route(path: '/list/trainingeligibility/', name: 'trainingeligibility-list', methods: ['GET'])]
+    #[Route(path: '/list/dutiescapability/', name: 'dutiescapability-list', methods: ['GET'])]
+    #[Route(path: '/list/phdfield/', name: 'phdfield-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
@@ -1022,6 +1025,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodypanels/', name: 'antibodypanels_create', methods: ['POST'])]
     #[Route(path: '/list/samlconfig/', name: 'samlconfig_create', methods: ['POST'])]
     #[Route(path: '/list/globalfellowshipspecialty/', name: 'globalfellowshipspecialty_create', methods: ['POST'])]
+    #[Route(path: '/list/trainingeligibility/', name: 'trainingeligibility_create', methods: ['POST'])]
+    #[Route(path: '/list/dutiescapability/', name: 'dutiescapability_create', methods: ['POST'])]
+    #[Route(path: '/list/phdfield/', name: 'phdfield_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
@@ -1401,6 +1407,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodypanels/new', name: 'antibodypanels_new', methods: ['GET'])]
     #[Route(path: '/list/samlconfig/new', name: 'samlconfig_new', methods: ['GET'])]
     #[Route(path: '/list/globalfellowshipspecialty/new', name: 'globalfellowshipspecialty_new', methods: ['GET'])]
+    #[Route(path: '/list/trainingeligibility/new', name: 'trainingeligibility_new', methods: ['GET'])]
+    #[Route(path: '/list/dutiescapability/new', name: 'dutiescapability_new', methods: ['GET'])]
+    #[Route(path: '/list/phdfield/new', name: 'phdfield_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
@@ -1725,6 +1734,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_show', methods: ['GET'])]
     #[Route(path: '/list/samlconfig/{id}', name: 'samlconfig_show', methods: ['GET'])]
     #[Route(path: '/list/globalfellowshipspecialty/{id}', name: 'globalfellowshipspecialty_show', methods: ['GET'])]
+    #[Route(path: '/list/trainingeligibility/{id}', name: 'trainingeligibility_show', methods: ['GET'])]
+    #[Route(path: '/list/dutiescapability/{id}', name: 'dutiescapability_show', methods: ['GET'])]
+    #[Route(path: '/list/phdfield/{id}', name: 'phdfield_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
@@ -2038,6 +2050,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodypanels/{id}/edit', name: 'antibodypanels_edit', methods: ['GET'])]
     #[Route(path: '/list/samlconfig/{id}/edit', name: 'samlconfig_edit', methods: ['GET'])]
     #[Route(path: '/list/globalfellowshipspecialty/{id}/edit', name: 'globalfellowshipspecialty_edit', methods: ['GET'])]
+    #[Route(path: '/list/trainingeligibility/{id}/edit', name: 'trainingeligibility_edit', methods: ['GET'])]
+    #[Route(path: '/list/dutiescapability/{id}/edit', name: 'dutiescapability_edit', methods: ['GET'])]
+    #[Route(path: '/list/phdfield/{id}/edit', name: 'phdfield_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -2405,6 +2420,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_update', methods: ['PUT'])]
     #[Route(path: '/list/samlconfig/{id}', name: 'samlconfig_update', methods: ['PUT'])]
     #[Route(path: '/list/globalfellowshipspecialty/{id}', name: 'globalfellowshipspecialty_update', methods: ['PUT'])]
+    #[Route(path: '/list/trainingeligibility/{id}', name: 'trainingeligibility_update', methods: ['PUT'])]
+    #[Route(path: '/list/dutiescapability/{id}', name: 'dutiescapability_update', methods: ['PUT'])]
+    #[Route(path: '/list/phdfield/{id}', name: 'phdfield_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
@@ -3632,6 +3650,23 @@ class ListController extends OrderAbstractController
 //                $displayName = "Crn Entry Tags List";
 //                $bundleName = "CrnBundle";
 //                break;
+            //FellApp form nodes
+            case "trainingeligibility":
+                $className = "TrainingEligibilityList";
+                $displayName = "Training Eligibility List";
+                $bundleName = "FellAppBundle";
+                break;
+            case "dutiescapability":
+                $className = "DutiesCapabilityList";
+                $displayName = "Duties Capability List";
+                $bundleName = "FellAppBundle";
+                break;
+            case "phdfield":
+                $className = "PhdFieldList";
+                $displayName = "Phd Field List";
+                $bundleName = "FellAppBundle";
+                break;
+
 
             //Dashboards (7 lists)
             case "charttypes":
@@ -4421,6 +4456,9 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/antibodypanels/{id}', name: 'antibodypanels_delete', methods: ['DELETE'])]
     #[Route(path: '/list/samlconfig/{id}', name: 'samlconfig_delete', methods: ['DELETE'])]
     #[Route(path: '/list/globalfellowshipspecialty/{id}', name: 'globalfellowshipspecialty_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/trainingeligibility/{id}', name: 'trainingeligibility_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/dutiescapability/{id}', name: 'dutiescapability_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/phdfield/{id}', name: 'phdfield_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {

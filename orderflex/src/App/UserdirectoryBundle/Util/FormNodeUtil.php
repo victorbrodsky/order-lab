@@ -2009,7 +2009,7 @@ class FormNodeUtil
         $username = $this->security->getUser();
 
         $objectType = $params['objectType'];
-        $name = $params['name'];
+        $name = $params['name']; //limit for type character varying(255)
         $parent = $params['parent'];
 
         //classNamespace
@@ -2054,11 +2054,9 @@ class FormNodeUtil
                 'className' => "FormNode",
                 'bundleName' => "UserdirectoryBundle"
             );
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
             $node = $em->getRepository(FormNode::class)->findByChildnameAndParent($name,$parent,$mapper);
         } else {
             exit("Parent must exist!");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
             $node = $em->getRepository(FormNode::class)->findOneByName($name);
         }
 
@@ -2286,7 +2284,6 @@ class FormNodeUtil
         $messageCategory = null;
 
         //$messageCategories = $em->getRepository('AppOrderformBundle:MessageCategory')->findByName($messageCategoryName);
-        //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MessageCategory'] by [MessageCategory::class]
         $messageCategories = $em->getRepository(MessageCategory::class)->findBy(
             array(
                 'type' => array('default','user-added'),
@@ -2806,7 +2803,6 @@ class FormNodeUtil
             }
 
             if( array_key_exists('sectionParentName', $section) ) {
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
                 $thisParentForm = $this->em->getRepository(FormNode::class)->findOneByName($section['sectionParentName']);
                 if( !$thisParentForm ) {
                     exit('Parent form not found by name='.$section['sectionParentName']);
@@ -3751,7 +3747,7 @@ class FormNodeUtil
         $level = 0;
         $count = $this->addNestedsetNodeRecursevely(null,$categories,$level,$username,$count);
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FormNode'] by [FormNode::class]
-        $parentNode = $em->getRepository(FormNode::class)->findOneByName('Critical Result Notification');
+        $parentNode = $em->getRepository(FormNode::class)->findOneByName('Fellowship Screening Questions');
         //echo "rootNode=".$parentNode."<br>";
 
         //Create separate "Form" node for each Message Category.
@@ -3768,14 +3764,14 @@ class FormNodeUtil
         return round($count);
     }
     public function createFellappScreeningQuestionsFormNode($parent) {
-        exit('TODO: createFellappScreeningQuestionsFormNode');
+        //exit('TODO: createFellappScreeningQuestionsFormNode');
 
 //Will you have completed an MD or PhD or both, and either residency or postdoctoral training by July 1, [[Start Year]]?
 //    () Yes () No
 //
 //Are you able to carry out the responsibilities and requirements at the specific training program to which you are applying with or without reasonable accommodations?
 //            () Yes
-//            () Yes, with reasonable accomodations
+//            () Yes, with reasonable accommodations
 //        () No
 //
 //If a PhD, is your training in biology, genetics, molecular biology, biochemistry, or a related field?
@@ -3789,66 +3785,90 @@ class FormNodeUtil
 //We often receive requests to sponsor H-1 visas. Please note that Washington University (WU) will sponsor J-1 visas for trainees in this program. Existing H-1B visas can be transferred to WU, but WU will not sponsor new H-1B applications for individuals in this program.
 //        [ checkmark ] I understand
 
-        $objectTypeForm = $this->getObjectTypeByName('Form');
-        $objectTypeSection = $this->getObjectTypeByName('Form Section');
-        //$objectTypeText = $this->getObjectTypeByName('Form Field - Free Text');
-        $objectTypeText = $this->getObjectTypeByName('Form Field - Free Text, HTML');
-        //echo "objectTypeForm=".$objectTypeForm."<br>";
 
-        //$messageCategoryName = "Pathology Call Log Entry";
-
-        //"Pathology Call Log Entry" [Form]
+        //Form Field - Radio Button
+        $objectTypeRadioButton = $this->getObjectTypeByName('Form Field - Radio Button');
         $formParams = array(
             'parent' => $parent,
-            'name' => "Dermatopathology",
-            'objectType' => $objectTypeForm,
+            'name' => "Will you have completed an MD or PhD or both,".
+                " and either residency or postdoctoral training by July 1, [[Start Year]]?",
+            //'placeholder' => "Additional communication",
+            'objectType' => $objectTypeRadioButton,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "App\\FellAppBundle\\Entity",
+            'className' => "TrainingEligibilityList"
         );
-        $DermatopathologyForm = $this->createV2FormNode($formParams); //$formNode
-        $this->setMessageCategoryListLink("Dermatopathology",$DermatopathologyForm);
+        $radio = $this->createV2FormNode($formParams);
 
-        //Notification Info (Section)
+        //Form Field - Radio Button - Ability to Perform Essential Functions
+        $objectTypeRadioButton = $this->getObjectTypeByName('Form Field - Radio Button');
         $formParams = array(
-            'parent' => $DermatopathologyForm,
-            'name' => "Notification Info",
-            'objectType' => $objectTypeSection,
+            'parent' => $parent,
+            'name' => "Are you able to carry out the responsibilities".
+                " and requirements at the specific training program".
+                " to which you are applying with or without reasonable accommodations?",
+            //'placeholder' => "Additional communication",
+            'objectType' => $objectTypeRadioButton,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "App\\FellAppBundle\\Entity",
+            'className' => "DutiesCapabilityList"
         );
-        $notificationInfoSection = $this->createV2FormNode($formParams);
+        $radio = $this->createV2FormNode($formParams);
+
+        //Form Field - Radio Button - Ability to Perform Essential Functions
+        $objectTypeRadioButton = $this->getObjectTypeByName('Form Field - Radio Button');
+        $formParams = array(
+            'parent' => $parent,
+            'name' => "If a PhD, is your training in biology, genetics, molecular biology, biochemistry, or a related field?",
+            //'placeholder' => "Additional communication",
+            'objectType' => $objectTypeRadioButton,
+            'showLabel' => true,
+            'visible' => true,
+            'classNamespace' => "App\\FellAppBundle\\Entity",
+            'className' => "PhdFieldList"
+        );
+        $radio = $this->createV2FormNode($formParams);
 
         //Provider successfully notified: [checkmark] Form Field - Checkbox
+        //331 characters, max length is 255
         $objectTypeCheckbox = $this->getObjectTypeByName('Form Field - Checkbox');
         $formParams = array(
-            'parent' => $notificationInfoSection,
-            'name' => "Provider successfully notified",
+            'parent' => $parent,
+//            'name' => "We often receive requests to sponsor H-1 visas.".
+//                "Please note that Washington University (WU) will sponsor".
+//                " J-1 visas for trainees in this program. Existing H-1B".
+//                " visas can be transferred to WU, but WU will not sponsor".
+//                " new H-1B applications for individuals in this program.",
+            'name' =>
+                "Washington University (WU) sponsors J‑1 visas for trainees".
+                " in this program. Existing H‑1B visas may be transferred".
+                " to WU, but WU does not sponsor new H‑1B applications.",
             'objectType' => $objectTypeCheckbox,
             'showLabel' => true,
         );
         $checkmark = $this->createV2FormNode($formParams);
 
-        //Additional communication: (radio button) will be necessary (radio button) completed (radio button) not needed
-        //Form Field - Radio Button
-        $objectTypeRadioButton = $this->getObjectTypeByName('Form Field - Radio Button');
-        $formParams = array(
-            'parent' => $notificationInfoSection,
-            'name' => "Additional communication",
-            //'placeholder' => "Additional communication",
-            'objectType' => $objectTypeRadioButton,
-            'showLabel' => true,
-            'visible' => true,
-            'classNamespace' => "App\\UserdirectoryBundle\\Entity",
-            'className' => "AdditionalCommunicationList"
-        );
-        $radio = $this->createV2FormNode($formParams);
-
-        //Comment Text
-        $formParams = array(
-            'parent' => $notificationInfoSection,
-            'name' => "Comment",
-            'objectType' => $objectTypeText,
-            'showLabel' => false,
-        );
-        $commentText = $this->createV2FormNode($formParams);
-
-        return $DermatopathologyForm;
+//        //TODO:
+//        $sections = array(
+//            array(
+//                'sectionName' => "Screening Questions",
+//                'fields' => array(
+//                    'Will you have completed an MD or PhD or both, and either residency or postdoctoral training by July 1, [[Start Year]]?'=>
+//                        array('Form Field - Radio Button',"App\\FellAppBundle\\Entity","TrainingEligibilityList"),
+//                    'Test Field 01'=>'Form Field - Free Text, Single Line',
+//                    'Test Field 02'=>'Form Field - Free Text',
+//                    'Test Field 03'=>'Form Field - Free Text, RTF',
+//                    'Test Field 04'=>'Form Field - Free Text, HTML',
+//                    'Test Field 05'=>'Form Field - Full Date',
+//                    'Test Field 06'=>'Form Field - Time',
+//                    'Test Field 07'=>'Form Field - Full Date and Time',
+//                    'Test Field 08'=>'Form Field - Year',
+//                )
+//            ),
+//        );
+        //$this->addFormToHolder($parentNode,"Screening Questons",$sections);
     }
 
 
