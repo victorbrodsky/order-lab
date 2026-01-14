@@ -54,6 +54,8 @@ security:
        - { path: ^.*/directory/file-delete/, role: ROLE_USER }
        - { path: ^.*/directory/user/only-ajax/, role: ROLE_USER }
        - { path: ^.*/directory/formnode-fields/, role: ROLE_USER }
+       - { path: ^.*/directory/formnode-fields-from-parent/, role: PUBLIC_ACCESS }
+
        ################################# common fos comment ####################################
        - { path: ^.*/api/threads/, role: ROLE_USER }
 

@@ -18,6 +18,8 @@
 
 <script src="{{ asset('orderassets/AppFellAppBundle/form/js/save-notes.js') }}"></script>
 
+<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formnode.js') }}"></script>
+
 <script language="Javascript">
 
 //    let clickedButtonValue = null;
@@ -201,6 +203,9 @@
         $('#cancelDraftUserExistBtn').on('click', function() {
             $('#confirmDraftUserExistModal').modal('hide');
         });
+
+        //Testing
+        renderScreeningQuestions();
 
     }); //document ready
 
@@ -515,6 +520,82 @@
 //            console.log('fellapp update report failed: '+data);
 //        });
 //    }
+
+    //Screening Questions
+    //http://127.0.0.1/directory/admin/list/form-nodes/285
+    function renderScreeningQuestions() {
+        console.log('### renderScreeningQuestions ###');
+        var _holderNamespace = "App\\UserdirectoryBundle\\Entity";
+        var _holderName = "FormNode";
+        var holderId = '286';
+        var _formnode = [];
+        var _entityNamespace = "App\\FellAppBundle\\Entity"; //$('#entityNamespace').val();   //"App\\OrderformBundle\\Entity";
+        var _entityName = "FellowshipApplication"; //$('#entityName').val();             //"Message";
+        var _entityId = '1681'; //var fellappId = $('#fellapp_id').val();     // existing hidden input    //"Message ID";
+        var _formcycle = $('#formcycle').val() || 'new';
+
+    //            var dataParam =
+    //            {
+    //                holderNamespace: _holderNamespace,
+    //                holderName: _holderName,
+    //                holderId: holderId, //'291', //'285',
+    //                cycle: 'new'
+    //            };
+
+        var dataParam =
+        {
+            holderNamespace: _holderNamespace,
+            holderName: _holderName,
+            holderId: holderId,
+            entityNamespace: _entityNamespace,
+            entityName: _entityName,
+            entityId: _entityId,
+            cycle: _formcycle
+        };
+
+        var url = Routing.generate('employees_formnode_fields_from_parent');
+        //var url = Routing.generate('employees_formnode_fields');
+        _formnodeProcessing = true;
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            async: asyncflag,
+            data: dataParam,
+        }).success(function(data) {
+            //console.log("data length="+data.length);
+            //console.log(data);
+
+            if (data.length > 0 && data[0]['formNodeId']) { //make sure we have at least one formNode for formNode Holder
+
+                //console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
+
+                calllogAppendFormNodes(data);
+
+                //console.log("ajax identifier="+identifier);
+                //_formnode[identifier] = data;   //data[0]['formNodeHolderId'];
+
+            } else {
+                //_formnode[identifier] = null;
+                //console.log("No data: data.length="+data.length);
+            }
+
+            //$.bootstrapSortable(true);
+
+            //if( data != "ERROR" ) {
+            //    //holder.find('.calllog-patient-panel-title').html(data);
+            //} else {
+            //    //holder.find('.calllog-patient-panel-title').html("Patient Info");
+            //}
+        }).fail(function() {
+            //_formnode[identifier] = null;
+            alert("Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
+        }).done(function() {
+            //console.log("update patient title done");
+            _formnodeProcessing = false;
+        });
+    }
 
 </script>
 

@@ -375,20 +375,26 @@ class FormNodeController extends OrderAbstractController {
     }
 
     /**
-     * TODO:
+     * Used by fellowship application Screening Questions
+     * This if function gets the html for all form nodes
+     * by getRecursionAllFormNodes without using
+     * $holderForms = $formNodeHolderEntity->getFormNodes();
      */
     #[Route(path: '/formnode-fields-from-parent/', name: 'employees_formnode_fields_from_parent', methods: ['GET', 'POST'], options: ['expose' => true])]
     #[Template('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig')]
     public function getFormNodesFieldsFromParentsAction( Request $request )
     {
-        if( false === $this->isGranted('ROLE_USER') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
+        //if( false === $this->isGranted('ROLE_USER') ) {
+        //    return $this->redirect( $this->generateUrl('employees-nopermission') );
+        //}
 
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $em = $this->getDoctrine()->getManager();
 
         $cycle = $request->query->get('cycle');
+        if( false === $this->isGranted('ROLE_USER') && $cycle != 'new' ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
 
         //formnode's holder (MessageCategory)
         $holderNamespace = $request->query->get('holderNamespace');
@@ -435,6 +441,7 @@ class FormNodeController extends OrderAbstractController {
 
         //Testing: create dummy MessageCategory
         //"Fellowship Screening Questions"
+        //TODO: pass parent $formNode to this function
         $formNode = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
         if( !$formNode ) {
             exit('FormNode not found by "Fellowship Screening Questions"');

@@ -25,6 +25,7 @@ use App\FellAppBundle\Form\ApplyFellowshipApplicationType;
 use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 
 
+use App\UserdirectoryBundle\Entity\FormNode;
 use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
 
@@ -3882,6 +3883,20 @@ class FellAppController extends OrderAbstractController {
 
             //exit('form valid');
 
+            ////// Form Nodes /////////
+            //$data = $request->request->all();
+            //dump($data);
+            //exit("Submit fellapp");
+            //$formNodeUtil = $this->container->get('user_formnode_utility');
+            //$formNodeHolder - entity holding the formnodes
+            //$holderEntity - holder entity (parent entity)
+            //$holderEntity = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+            //if( !$formNode ) {
+            //    exit('FormNode not found by "Fellowship Screening Questions"');
+            //}
+            //$formNodeUtil->processFormNodes($request,$formNodeHolder,$holderEntity,$testing=false); //testing
+            ////// EOF Form Nodes /////////
+
             $this->calculateScore($fellowshipApplication);
 
             $this->processDocuments($fellowshipApplication); //apply POST
@@ -3892,6 +3907,24 @@ class FellAppController extends OrderAbstractController {
             $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication);
 
             $fellowshipApplication->autoSetRecLetterReceived();
+
+            ////// Form Nodes /////////
+            //$data = $request->request->all();
+            //dump($data);
+            //exit("Submit fellapp");
+            //show form nodes only if fellap specialty has it
+            $globalFellowshipSpecialty = $fellowshipApplication->getGlobalFellowshipSpecialty();
+            if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
+                $formNodeUtil = $this->container->get('user_formnode_utility');
+                //$formNodeHolder - entity holding the formnodes
+                //$holderEntity - holder entity (parent entity)
+                $holderEntity = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+                if (!$holderEntity) {
+                    exit('FormNode not found by "Fellowship Screening Questions"');
+                }
+                $formNodeUtil->processFormNodes($request, $fellowshipApplication, $holderEntity, $testing = false); //testing
+            }
+            ////// EOF Form Nodes /////////
 
             //set update author application
 //            $em = $this->getDoctrine()->getManager();

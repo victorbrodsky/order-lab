@@ -67,7 +67,19 @@ class FormNodeUtil
             return;
         }
 
-        $formNodes = $formNodeHolder->getFormNodes();
+        //Fellapp does not have getFormNodes
+        //$formNodes = $formNodeHolder->getFormNodes();
+        if (method_exists($formNodeHolder, 'getFormNodes')) {
+            $formNodes = $formNodeHolder->getFormNodes();
+        } else {
+            //fellapp case => use getRecursionAllFormNodes, where $formNode is the parent formnode
+            //TODO: pass parent $formNode to this function
+            $formNode = $this->em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+            if( !$formNode ) {
+                exit('FormNode not found by "Fellowship Screening Questions"');
+            }
+            $formNodes = $this->getRecursionAllFormNodes($formNode,$formNodes=array(),'real');
+        }
 //        if( $testing ) {
 //            foreach($formNodes as $formNode){
 //                echo "Form Node ID=".$formNode->getId()."<br>";
@@ -610,8 +622,9 @@ class FormNodeUtil
         return false;
     }
 
+    //TODO: this probably will not work without MessageCategory->formNode for fellowship application
     //get unique list object for recording the form's value
-    public function getUniqueFormNodeListRecord($formNode,$holderEntity) {
+    public function getUniqueFormNodeListRecord( $formNode, $holderEntity ) {
         $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////App\UserdirectoryBundle\Entity:ObjectTypeDropdown
 
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -1224,7 +1237,11 @@ class FormNodeUtil
 //        echo '</textarea>';
 
         //xml format
-        $shortInfoXml = $this->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),$table=false,"");
+        if( $message && method_exists($message, 'getMessageCategory') ) {
+            $shortInfoXml = $this->getFormNodeHolderShortInfo($message, $message->getMessageCategory(), $table = false, "");
+        } else {
+            $shortInfoXml = null;
+        }
 
         if(0) {
 //            echo "<br>Array:<pre>";
@@ -1254,21 +1271,23 @@ class FormNodeUtil
 
         //////////// Patient Info //////////////////
         //update patient info when patient info is updated via "Edit Patient Demographics"
-        $patientNames = array();
-        $mrns = array();
-        foreach ($message->getPatient() as $patient) {
-            $patientNames[] = $patient->getFullPatientName(false);
-            $mrns[] = $patient->obtainFullValidKeyName();
-        }
-        //Patient Name
-        $patientNameStr = implode("\n", $patientNames);
-        if( $patientNameStr ) {
-            $message->setPatientNameCache($patientNameStr);
-        }
-        //MRN
-        $mrnsStr = implode("\n", $mrns);
-        if( $mrnsStr ) {
-            $message->setPatientMrnCache($mrnsStr);
+        if( $message && method_exists($message, 'getPatient') ) {
+            $patientNames = array();
+            $mrns = array();
+            foreach ($message->getPatient() as $patient) {
+                $patientNames[] = $patient->getFullPatientName(false);
+                $mrns[] = $patient->obtainFullValidKeyName();
+            }
+            //Patient Name
+            $patientNameStr = implode("\n", $patientNames);
+            if ($patientNameStr) {
+                $message->setPatientNameCache($patientNameStr);
+            }
+            //MRN
+            $mrnsStr = implode("\n", $mrns);
+            if ($mrnsStr) {
+                $message->setPatientMrnCache($mrnsStr);
+            }
         }
         //////////// EOF Patient Info //////////////////
 
