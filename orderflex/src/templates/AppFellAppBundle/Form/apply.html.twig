@@ -598,33 +598,34 @@
             console.log('### renderScreeningQuestions ###');
             var _holderNamespace = "App\\UserdirectoryBundle\\Entity";
             var _holderName = "FormNode";
+            var holderId = '286';
             var _formnode = [];
             var _entityNamespace = "App\\FellAppBundle\\Entity"; //$('#entityNamespace').val();   //"App\\OrderformBundle\\Entity";
             var _entityName = "FellowshipApplication"; //$('#entityName').val();             //"Message";
-            var _entityId = '1681'; //$('#entityId').val();                 //"Message ID";
-            var _formcycle = 'new';
+            var _entityId = '1681'; //var fellappId = $('#fellapp_id').val();     // existing hidden input    //"Message ID";
+            var _formcycle = $('#formcycle').val() || 'new';
+
+//            var dataParam =
+//            {
+//                holderNamespace: _holderNamespace,
+//                holderName: _holderName,
+//                holderId: holderId, //'291', //'285',
+//                cycle: 'new'
+//            };
 
             var dataParam =
             {
                 holderNamespace: _holderNamespace,
                 holderName: _holderName,
-                holderId: '291', //'285',
-                cycle: 'new'
-            };
-
-            var dataParam =
-            {
-                holderNamespace: _holderNamespace,
-                holderName: _holderName,
-                holderId: '291',
+                holderId: holderId,
                 entityNamespace: _entityNamespace,
                 entityName: _entityName,
                 entityId: _entityId,
                 cycle: _formcycle
             };
 
-            //var url = Routing.generate('employees_formnode_fields_from_parent');
-            var url = Routing.generate('employees_formnode_fields');
+            var url = Routing.generate('employees_formnode_fields_from_parent');
+            //var url = Routing.generate('employees_formnode_fields');
             _formnodeProcessing = true;
 
             $.ajax({

@@ -395,6 +395,11 @@ class FormNodeController extends OrderAbstractController {
         $holderName = $request->query->get('holderName');
         $holderId = $request->query->get('holderId');
 
+        //receiving list's entityName (Message)
+        $entityNamespace = $request->query->get('entityNamespace'); //"App\\FellAppBundle\\Entity"
+        $entityName = $request->query->get('entityName'); //"FellowshipApplication";
+        $entityId = $request->query->get('entityId'); //"FellowshipApplication ID";
+
         //add to url: &testing=true
         $testing = $request->query->get('testing');
         if( $testing ) {
@@ -463,7 +468,7 @@ class FormNodeController extends OrderAbstractController {
                 echo "<br>###################### ".$formNode->getId()." ################<br>";
                 echo "############# formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
             }
-            $logger->notice("getFormNodesFieldsFromParentsAction: formNode->getName()=".$formNode->getName().", formNode->getId()=".$formNode->getId().", formNode->getObjectTypeId()=".$formNode->getObjectTypeId());
+            $logger->notice("getFormNodeFieldsAction: formNode->getName()=".$formNode->getName().", formNode->getId()=".$formNode->getId().", formNode->getObjectTypeId()=".$formNode->getObjectTypeId());
 
             if( $formNode && $formNode->getId() ) {
                 $formNodeId = $formNode->getId();
@@ -479,9 +484,195 @@ class FormNodeController extends OrderAbstractController {
                 echo "<br>Check formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
             }
 
+//            $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+//            if( $parentFormNode ) {
+//                $parentFormNodeId = $parentFormNode->getId();
+//            } else {
+//                $parentFormNodeId = null;
+//            }
+
             $parentFormNodeId = null;
             $arraySectionCount = null;
             $parentFormNode = $formNode->getParent();
+
+//            if( $parentFormNode ) {
+//
+////                //get array section count i.e. 0-1
+////                $arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
+//
+////                //insert parent nested sections to resulting from node array
+////                $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr);
+//
+//                //get common (merged) parent section
+//                $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+//
+//                //$lastResArr = $resArr[count($resArr)-1];
+//                //$parentFormNodeId = $lastResArr['formNodeId'];
+//
+//                if( $parentFormNode ) {
+//                    $parentFormNodeId = $parentFormNode->getId();
+//                }
+//            }
+
+            //find FormNode value by entityNamespace, entityName, entityId
+            $formNodeValue = null;
+            $receivingEntity = null;
+            if( $entityId ) {
+                $mapper = array(
+                    'entityNamespace' => $entityNamespace,
+                    'entityName' => $entityName, //"Message"
+                    'entityId' => $entityId,
+                );
+                $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper,false,$cycle);
+                if( $complexRes ) {
+                    $formNodeValue = $complexRes['formNodeValue'];
+                    $receivingEntity = $complexRes['receivingEntity'];
+                }
+            }
+            //echo "formNode=".$formNode->getId()."<br>";
+            //echo "formNodeValue=".$formNodeValue."<br>";
+            if( $this->testing ) {
+                echo "formNodeValue for formNode=".$formNode->getId().":<br>";
+                print "<pre>";
+                print_r($formNodeValue);
+                print "</pre>EOF formNodeValues<br>";
+            }
+
+            if( is_array($formNodeValue) ) {
+
+                /////////////// TODO: create additional sections when show submitted entry ///////////////
+                foreach( $formNodeValue as $formNodeValueArr ) {
+                    $formNodeValue = $formNodeValueArr['formNodeValue'];
+                    $arraySectionCount = $formNodeValueArr['arraySectionIndex']; //in DB arraySectionCount named as arraySectionIndex
+
+                    if( $this->testing ) {
+                        echo "ArraySection arraySectionCount=" . $arraySectionCount . "<br>";
+                    }
+
+//                    if( $arraySectionCount ) {
+//                        $formNodeId = $formNodeId.'_'.$arraySectionCount;
+//                        if( $parentFormNodeId ) {
+//                            $parentFormNodeId = $parentFormNodeId.'_'.$arraySectionCount;
+//                        }
+//                    }
+                    //$formNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($formNodeId,$arraySectionCount);
+//                    if( $parentFormNodeId ) {
+//                        $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
+//                    }
+
+                    //append prefix to clean array section count: 0_0 => prefix_0_0_prefix
+                    $arraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($arraySectionCount);
+
+                    //insert parent nested sections to resulting from node array
+                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
+
+                    //get common (merged) parent section
+                    $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+
+                    if( $parentFormNode ) {
+                        $parentFormNodeId = $parentFormNode->getId();
+                    }
+
+                    //process userWrapper case
+                    $formNodeValue = $formNodeUtil->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+
+                    $formNodeArr = array(
+                        'formNode' => $formNode,
+                        'formNodeId' => $formNodeId,
+                        'formNodeHolderEntity' => $formNodeHolderEntity,
+                        'receivingEntity' => $receivingEntity,
+                        'cycle' => $cycle,
+                        'formNodeValue' => $formNodeValue,
+                        'single' => $this->single,
+                        'arraySectionCount' => $arraySectionCount,
+                        //'arraySectionIndex' => null
+                    );
+
+                    $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
+
+                    //form form node array element
+                    if( $parentFormNodeId ) {
+                        $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
+                    }
+
+                    $res = array(
+                        'formNodeHolderId' => $formNodeHolderId,
+                        'parentFormNodeId' => $newParentFormNodeId,
+                        'formNodeId' => $formNodeId,
+                        'simpleFormNode' => true,
+                        'formNodeObjectType' => $formNode->getObjectType() . "",
+                        'formNodeValue' => $formNodeValue,
+                        'formNodeHtml' => $template,
+                        'arraySectionCount' => $arraySectionCount
+                        //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
+                        //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
+                    );
+
+                    $resArr[] = $res;
+                }
+                /////////////// EOF create additional sections ///////////////
+
+            } else {
+
+                //////////////// Regular form node /////////////////////
+
+                if( $parentFormNode ) {
+
+                    //get array section count i.e. 0-1
+                    $arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
+                    if( $this->testing ) {
+                        echo "Regular arraySectionCount=" . $arraySectionCount . "<br>";
+                    }
+
+                    //insert parent nested sections to resulting from node array
+                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
+
+                    //get common (merged) parent section
+                    $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+
+                    if( $parentFormNode ) {
+                        $parentFormNodeId = $parentFormNode->getId();
+                    }
+                }
+
+                //process userWrapper case
+                $formNodeValue = $formNodeUtil->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+
+                $formNodeArr = array(
+                    'formNode' => $formNode,
+                    'formNodeId' => $formNodeId,
+                    'formNodeHolderEntity' => $formNodeHolderEntity,
+                    'receivingEntity' => $receivingEntity,
+                    'cycle' => $cycle,
+                    'formNodeValue' => $formNodeValue,
+                    'single' => $this->single,
+                    'arraySectionCount' => $arraySectionCount,
+                    //'arraySectionIndex' => null
+                );
+
+                $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
+
+                //form form node array element
+                if( $parentFormNodeId ) {
+                    $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
+                }
+
+                $res = array(
+                    'formNodeHolderId' => $formNodeHolderId,
+                    'parentFormNodeId' => $newParentFormNodeId,
+                    'formNodeId' => $formNodeId,
+                    'simpleFormNode' => true,
+                    'formNodeObjectType' => $formNode->getObjectType() . "",
+                    'formNodeValue' => $formNodeValue,
+                    'formNodeHtml' => $template,
+                    'arraySectionCount' => null
+                    //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
+                    //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
+                );
+
+                $resArr[] = $res;
+                //////////////// EOF Regular form node /////////////////////
+            }//if
 
         }//foreach
 
