@@ -26,6 +26,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 
+use App\OrderformBundle\Entity\MessageCategory;
 use App\UserdirectoryBundle\Entity\FormNode; //process.py script: replaced namespace by ::class: added use line for classname=FormNode
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +76,10 @@ class FormNodeController extends OrderAbstractController {
             $this->testing = true;
         }
 
+        $logger = $this->container->get('logger');
+        $logger->notice("getFormNodeFieldsAction: holderNamespace=$holderNamespace, holderName=$holderName, holderId=$holderId");
+        $logger->notice("getFormNodeFieldsAction: entityNamespace=$entityNamespace, entityName=$entityName, entityId=$entityId");
+
         //echo "entityNamespace=".$entityNamespace."<br>";
         //echo "entityName=".$entityName."<br>";
         //echo "entityId=".$entityId."<br>";
@@ -99,6 +104,8 @@ class FormNodeController extends OrderAbstractController {
         if( !$formNodeHolderEntity ) {
             throw new \Exception( 'Entity not found: holderFullName='.$holderFullName.'; holderId='.$holderId );
         }
+        $logger->notice("getFormNodeFieldsAction: holderFullName=$holderFullName: formNodeHolderEntity ID=".$formNodeHolderEntity->getId());
+        $logger->notice("getFormNodeFieldsAction: formNodeHolderEntity->getName()=".$formNodeHolderEntity->getName().", formNodeHolderEntity->getId()=".$formNodeHolderEntity->getId());
 
         $formNodeHolderId = $formNodeHolderEntity->getId();
         $resArr = array();
@@ -126,6 +133,7 @@ class FormNodeController extends OrderAbstractController {
                 echo "<br>###################### ".$formNode->getId()." ################<br>";
                 echo "############# formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
             }
+            $logger->notice("getFormNodeFieldsAction: formNode->getName()=".$formNode->getName().", formNode->getId()=".$formNode->getId().", formNode->getObjectTypeId()=".$formNode->getObjectTypeId());
 
             if( $formNode && $formNode->getId() ) {
                 $formNodeId = $formNode->getId();
@@ -366,6 +374,138 @@ class FormNodeController extends OrderAbstractController {
 //        return $response;
     }
 
+    /**
+     * TODO:
+     */
+    #[Route(path: '/formnode-fields-from-parent/', name: 'employees_formnode_fields_from_parent', methods: ['GET', 'POST'], options: ['expose' => true])]
+    #[Template('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig')]
+    public function getFormNodesFieldsFromParentsAction( Request $request )
+    {
+        if( false === $this->isGranted('ROLE_USER') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $cycle = $request->query->get('cycle');
+
+        //formnode's holder (MessageCategory)
+        $holderNamespace = $request->query->get('holderNamespace');
+        $holderName = $request->query->get('holderName');
+        $holderId = $request->query->get('holderId');
+
+        //add to url: &testing=true
+        $testing = $request->query->get('testing');
+        if( $testing ) {
+            $this->testing = true;
+        }
+
+        $logger = $this->container->get('logger');
+        $logger->notice("getFormNodesFieldsFromParentsAction: holderNamespace=$holderNamespace, holderName=$holderName, holderId=$holderId");
+
+        //echo "entityNamespace=".$entityNamespace."<br>";
+        //echo "entityName=".$entityName."<br>";
+        //echo "entityId=".$entityId."<br>";
+
+        if( !$holderNamespace || !$holderName || !$holderId ) {
+            //echo "no holder namespace and name";
+            return null;
+        }
+
+        $holderFullName = $holderNamespace . "\\" . $holderName;
+        $formNodeHolderEntity = $em->getRepository($holderFullName)->find($holderId);
+        if( !$formNodeHolderEntity ) {
+            throw new \Exception( 'Entity not found: holderFullName='.$holderFullName.'; holderId='.$holderId );
+        }
+        $logger->notice("getFormNodesFieldsFromParentsAction: holderFullName=$holderFullName: formNodeHolderEntity ID=".$formNodeHolderEntity->getId());
+        $logger->notice("getFormNodesFieldsFromParentsAction: formNodeHolderEntity->getName()=".$formNodeHolderEntity->getName().", formNodeHolderEntity->getId()=".$formNodeHolderEntity->getId());
+
+        $formNodeHolderId = $formNodeHolderEntity->getId();
+        $resArr = array();
+
+        if( $testing ) {
+            echo "cycle=" . $cycle . "<br>";
+        }
+
+        //Testing: create dummy MessageCategory
+        //"Fellowship Screening Questions"
+        $formNode = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+        if( !$formNode ) {
+            exit('FormNode not found by "Fellowship Screening Questions"');
+        }
+        //echo "formNode=".$formNode->getId()."<br>";
+        //$formNodeHolderEntity = new MessageCategory();
+        //$formNodeHolderEntity->addFormNode($formNode);
+        //$holderForms = array($formNode);
+        $formNodes = array();
+        //assume only one form attached to the message category holder
+        $formNodes = $formNodeUtil->getRecursionAllFormNodes($formNode,$formNodes,'real',$cycle);
+        //dump($formNodes);
+        //exit('getFormNodesFieldsFromParentsAction');
+
+        //$formNodes = $formNodeHolderEntity->getFormNodes();
+        //get only 'real' fields as $formNodes
+        //$formNodes = $formNodeUtil->getAllRealFormNodes($formNodeHolderEntity,$cycle);
+
+        //reverse array to show the fields backwards for show and edit, otherwise the order of submitted form fields is reversed.
+        //if( $cycle != "new" ) {
+        //test by link (Test: MessageCategory&holderId=70):
+        // http://localhost/order/directory/formnode-fields/?holderNamespace=App\OrderformBundle\Entity&holderName=MessageCategory&holderId=70&entityNamespace=App\OrderformBundle\Entity&entityName=Message&entityId=222&cycle=show&testing=true
+        //One way to solve it: for show and edit - start calling "formnode-fields" from top to bottom. On show page, this done in opposite way - from bottom to top.
+        //for show use reverse array (don't use it for top to bottom combobox  processing)
+        //$formNodes = array_reverse($formNodes);
+        //}
+
+        foreach( $formNodes as $formNode ) {
+
+            if( $this->testing ) {
+                echo "<br>###################### ".$formNode->getId()." ################<br>";
+                echo "############# formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
+            }
+            $logger->notice("getFormNodesFieldsFromParentsAction: formNode->getName()=".$formNode->getName().", formNode->getId()=".$formNode->getId().", formNode->getObjectTypeId()=".$formNode->getObjectTypeId());
+
+            if( $formNode && $formNode->getId() ) {
+                $formNodeId = $formNode->getId();
+            } else {
+                continue;
+            }
+
+            if( $this->isFormNodeInArray($formNodeId,$resArr) ) {
+                continue;
+            }
+
+            if( $this->testing ) {
+                echo "<br>Check formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
+            }
+
+            $parentFormNodeId = null;
+            $arraySectionCount = null;
+            $parentFormNode = $formNode->getParent();
+
+        }//foreach
+
+        if( $this->testing ) {
+            if(0) {
+                print "<pre>";
+                print_r($resArr);
+                print "</pre>";
+            } else {
+                foreach( $resArr as $res ) {
+                    $res['formNodeHtml'] = 'html';
+                    print "<pre>";
+                    print_r($res);
+                    print "</pre>";
+                }
+            }
+            exit('testing');
+        }
+
+        $json = json_encode($resArr);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 
     //create recursively $formNodeArr containing
     public function createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle ) {

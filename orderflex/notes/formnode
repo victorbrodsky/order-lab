@@ -1,3 +1,35 @@
+MessageCategory has many $formNodes
+CalllogEntryMessage -OneToOne- $message(Message) -ManyToOne- $messageCategory(MessageCategory) -ManyToMany- $formNodes(ManyToMany)
+
+CalllogEntryMessage:
+#[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'calllogEntryMessage')]
+protected $message;
+Message is a holder for form node values
+Save data: $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
+
+getFormNodeValueByFormnodeAndReceivingmapper:
+Value stored using entity identifiers (entitynamespace, entityname, entityid) in the specific field i.e. user_objecttypedropdown
+For fellapp, fellapp can be used as entity identifiers
+
 Append form nodes to <div id="form-node-holder"></div>
 
+Get form nodes data: var url = Routing.generate('employees_formnode_fields');
+var dataParam =
+    {
+        holderNamespace: _holderNamespace,
+        holderName: _holderName,
+        holderId: messageCategoryId,
+        entityNamespace: _entityNamespace,
+        entityName: _entityName,
+        entityId: _entityId,
+        cycle: _formcycle
+    };
 
+Controller:
+$formNodeHolderEntity = $em->getRepository($holderFullName)->find($holderId);
+$formNodes = $formNodeUtil->getAllRealFormNodes($formNodeHolderEntity,$cycle);
+foreach( $formNodes as $formNode ) {
+
+}
+
+Build form: calllogAppendFormNodes(data);

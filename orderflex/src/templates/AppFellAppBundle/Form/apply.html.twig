@@ -299,6 +299,9 @@
             // Initialize select2 for anonymous users
             initializeSelect2ForAnonymous();
 
+            //Testing
+            renderScreeningQuestions();
+
             // Initialize basic form elements
             $('input[type="text"], input[type="email"], textarea').each(function() {
                 if (!$(this).hasClass('select2-input')) {
@@ -478,7 +481,6 @@
 
             // Initialize Screening Questions visibility on page load
             updateScreeningQuestionsVisibility(global.val());
-
         });
 
         function filterGlobalByInstitution(instId, doneCallback) {
@@ -587,6 +589,81 @@
                     comboboxEl.select2('val', data);
                 }
                 if (doneCallback) doneCallback();
+            });
+        }
+
+        //Screening Questions
+        //http://127.0.0.1/directory/admin/list/form-nodes/285
+        function renderScreeningQuestions() {
+            console.log('### renderScreeningQuestions ###');
+            var _holderNamespace = "App\\UserdirectoryBundle\\Entity";
+            var _holderName = "FormNode";
+            var _formnode = [];
+            var _entityNamespace = "App\\FellAppBundle\\Entity"; //$('#entityNamespace').val();   //"App\\OrderformBundle\\Entity";
+            var _entityName = "FellowshipApplication"; //$('#entityName').val();             //"Message";
+            var _entityId = '1681'; //$('#entityId').val();                 //"Message ID";
+            var _formcycle = 'new';
+
+            var dataParam =
+            {
+                holderNamespace: _holderNamespace,
+                holderName: _holderName,
+                holderId: '291', //'285',
+                cycle: 'new'
+            };
+
+            var dataParam =
+            {
+                holderNamespace: _holderNamespace,
+                holderName: _holderName,
+                holderId: '291',
+                entityNamespace: _entityNamespace,
+                entityName: _entityName,
+                entityId: _entityId,
+                cycle: _formcycle
+            };
+
+            //var url = Routing.generate('employees_formnode_fields_from_parent');
+            var url = Routing.generate('employees_formnode_fields');
+            _formnodeProcessing = true;
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                //type: "GET",
+                async: asyncflag,
+                data: dataParam,
+            }).success(function(data) {
+                //console.log("data length="+data.length);
+                //console.log(data);
+
+                if (data.length > 0 && data[0]['formNodeId']) { //make sure we have at least one formNode for formNode Holder
+
+                    //console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
+
+                    calllogAppendFormNodes(data);
+
+                    //console.log("ajax identifier="+identifier);
+                    _formnode[identifier] = data;   //data[0]['formNodeHolderId'];
+
+                } else {
+                    _formnode[identifier] = null;
+                    //console.log("No data: data.length="+data.length);
+                }
+
+                //$.bootstrapSortable(true);
+
+                //if( data != "ERROR" ) {
+                //    //holder.find('.calllog-patient-panel-title').html(data);
+                //} else {
+                //    //holder.find('.calllog-patient-panel-title').html("Patient Info");
+                //}
+            }).fail(function() {
+                _formnode[identifier] = null;
+                alert("Error getting field(s) for "+_holderName+" "+messageCategoryId);
+            }).done(function() {
+                //console.log("update patient title done");
+                _formnodeProcessing = false;
             });
         }
 

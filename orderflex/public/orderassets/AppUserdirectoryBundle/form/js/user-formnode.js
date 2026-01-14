@@ -102,9 +102,9 @@ function treeSelectAdditionalJsAction(comboboxEl) {
     var _entityNamespace = $('#entityNamespace').val();   //"App\\OrderformBundle\\Entity";
     var _entityName = $('#entityName').val();             //"Message";
     var _entityId = $('#entityId').val();                 //"Message ID";
-    //console.log("_entityNamespace="+_entityNamespace);
-    //console.log("_entityName="+_entityName);
-    //console.log("_entityId="+_entityId);
+    console.log("_entityNamespace="+_entityNamespace);
+    console.log("_entityName="+_entityName);
+    console.log("_entityId="+_entityId);
 
     var dataParam =
     {

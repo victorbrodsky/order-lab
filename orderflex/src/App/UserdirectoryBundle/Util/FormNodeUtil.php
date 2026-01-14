@@ -869,6 +869,11 @@ class FormNodeUtil
 
     public function hasValue( $formNode ) {
 
+//        if( !$formNode->getObjectType() ) {
+//            exit('formNode does not have object type: '.$formNode.", ID=".$formNode->getId());
+//            return false;
+//        }
+
         $formNodeTypeName = $formNode->getObjectType()->getName()."";
         //echo "formNodeTypeName=" . $formNodeTypeName . "<br>";
 
@@ -3785,11 +3790,23 @@ class FormNodeUtil
 //We often receive requests to sponsor H-1 visas. Please note that Washington University (WU) will sponsor J-1 visas for trainees in this program. Existing H-1B visas can be transferred to WU, but WU will not sponsor new H-1B applications for individuals in this program.
 //        [ checkmark ] I understand
 
+        $objectTypeForm = $this->getObjectTypeByName('Form');
+        $objectTypeSection = $this->getObjectTypeByName('Form Section');
+
+        //$messageCategoryName = "Pathology Call Log Entry";
+
+        //"Pathology Call Log Entry" [Form]
+        $formParams = array(
+            'parent' => $parent,
+            'name' => "Fellowship Screening Questions Form",
+            'objectType' => $objectTypeForm,
+        );
+        $fellappScreeningQuestionsForm = $this->createV2FormNode($formParams); //$formNode
 
         //Form Field - Radio Button
         $objectTypeRadioButton = $this->getObjectTypeByName('Form Field - Radio Button');
         $formParams = array(
-            'parent' => $parent,
+            'parent' => $fellappScreeningQuestionsForm,
             'name' => "Will you have completed an MD or PhD or both,".
                 " and either residency or postdoctoral training by July 1, [[Start Year]]?",
             //'placeholder' => "Additional communication",
@@ -3804,7 +3821,7 @@ class FormNodeUtil
         //Form Field - Radio Button - Ability to Perform Essential Functions
         $objectTypeRadioButton = $this->getObjectTypeByName('Form Field - Radio Button');
         $formParams = array(
-            'parent' => $parent,
+            'parent' => $fellappScreeningQuestionsForm,
             'name' => "Are you able to carry out the responsibilities".
                 " and requirements at the specific training program".
                 " to which you are applying with or without reasonable accommodations?",
@@ -3820,7 +3837,7 @@ class FormNodeUtil
         //Form Field - Radio Button - Ability to Perform Essential Functions
         $objectTypeRadioButton = $this->getObjectTypeByName('Form Field - Radio Button');
         $formParams = array(
-            'parent' => $parent,
+            'parent' => $fellappScreeningQuestionsForm,
             'name' => "If a PhD, is your training in biology, genetics, molecular biology, biochemistry, or a related field?",
             //'placeholder' => "Additional communication",
             'objectType' => $objectTypeRadioButton,
@@ -3835,7 +3852,7 @@ class FormNodeUtil
         //331 characters, max length is 255
         $objectTypeCheckbox = $this->getObjectTypeByName('Form Field - Checkbox');
         $formParams = array(
-            'parent' => $parent,
+            'parent' => $fellappScreeningQuestionsForm,
 //            'name' => "We often receive requests to sponsor H-1 visas.".
 //                "Please note that Washington University (WU) will sponsor".
 //                " J-1 visas for trainees in this program. Existing H-1B".

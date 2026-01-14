@@ -272,7 +272,10 @@ class FellowshipApplication extends BaseUserAttributes {
 
     /////////// EOF user objects /////////////
 
-
+    //Form node:
+    //This will require to have $calllogEntryMessage in Message entity
+    //#[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'calllogEntryMessage')]
+    //protected $message;
 
 
     public function __construct($author=null) {
