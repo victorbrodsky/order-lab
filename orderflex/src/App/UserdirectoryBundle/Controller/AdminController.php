@@ -21,6 +21,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 use App\FellAppBundle\Entity\DutiesCapabilityList;
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
+use App\FellAppBundle\Entity\PhdFieldList;
 use App\FellAppBundle\Entity\TrainingEligibilityList;
 use App\OrderformBundle\Entity\Patient; //process.py script: replaced namespace by ::class: added use line for classname=Patient
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
@@ -9574,7 +9575,17 @@ class AdminController extends OrderAbstractController
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $formNodeUtil->createFellappFormNodes();
 
-        exit("Fellapp Form Node Tree generated");
+        $count_generateTrainingEligibilityList = $this->generateTrainingEligibilityList();
+        $count_generateDutiesCapabilityList = $this->generateDutiesCapabilityList();
+        $count_generatePhdFieldList = $this->generatePhdFieldList();
+
+        $this->addFlash(
+            'notice',
+            'The Fellowship Application form nodes and their corresponding values have been successfully generated.'
+        );
+
+        //exit("Fellapp Form Node Tree generated");
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
     #[Route(path: '/list/generate-cron-jobs/', name: 'user_populate_cron_jobs', methods: ['GET'])]
@@ -12882,7 +12893,6 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AdditionalCommunicationList'] by [AdditionalCommunicationList::class]
             $listEntity = $em->getRepository(TrainingEligibilityList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
@@ -12916,7 +12926,6 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AdditionalCommunicationList'] by [AdditionalCommunicationList::class]
             $listEntity = $em->getRepository(DutiesCapabilityList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
@@ -12953,13 +12962,12 @@ class AdminController extends OrderAbstractController
         $count = 10;
         foreach( $types as $name ) {
 
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:AdditionalCommunicationList'] by [AdditionalCommunicationList::class]
-            $listEntity = $em->getRepository(DutiesCapabilityList::class)->findOneByName($name);
+            $listEntity = $em->getRepository(PhdFieldList::class)->findOneByName($name);
             if( $listEntity ) {
                 continue;
             }
 
-            $listEntity = new DutiesCapabilityList();
+            $listEntity = new PhdFieldList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

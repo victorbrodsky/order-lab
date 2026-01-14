@@ -480,9 +480,6 @@
             } else {
                 filterInstitutionByGlobal(initGlobal, ()=>{syncingInst=false;});
             }
-
-            // Initialize Screening Questions visibility on page load
-            updateScreeningQuestionsVisibility(global.val());
         });
 
         function filterGlobalByInstitution(instId, doneCallback) {
@@ -514,7 +511,7 @@
                 //first empty element
                 var newOption = new Option('', '', false, false);
                 comboboxEl.append(newOption);//.trigger('change');
-
+                
                 //console.log('Fetched data.length=', data.length);
                 if( data.length > 0 ) {
                     data.forEach(function (item) {
@@ -535,20 +532,42 @@
                     });
                     //comboboxEl.trigger('change');
                 }
+
+                // Set initial selection from URL specialty[] parameter if present
+                var selectedGlobalId = null;
+                try {
+                    var urlParams = new URLSearchParams(window.location.search);
+                    selectedGlobalId = urlParams.get('specialty[]');
+                } catch (e) {
+                    var match = window.location.search.match(/specialty\[]=(\d+)/);
+                    if (match) {
+                        selectedGlobalId = match[1];
+                    }
+                }
+                if (selectedGlobalId) {
+                    comboboxEl.val(selectedGlobalId);
+                }
+
+                // Initialize Screening Questions visibility after options and selection are ready
+                updateScreeningQuestionsVisibility(comboboxEl.val());
+
                 if (doneCallback) doneCallback();
             });
         }
 
         // Show or hide the Screening Questions panel based on selected global fellowship specialty
         function updateScreeningQuestionsVisibility(globalId) {
-            console.log("updateScreeningQuestionsVisibility");
+            console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
             var hasScreening = false;
 
             if (globalId) {
                 var opt = $('select.fellapp-globalFellowshipSpecialty option[value="' + globalId + '"]');
+                console.log("Set opt=",opt);
                 if (opt.length) {
                     var flag = opt.data('screening-questions');
+                    console.log("Set flag="+flag);
                     hasScreening = flag === 1 || flag === '1' || flag === true;
+                    console.log("Set hasScreening="+hasScreening);
                 }
             }
 
@@ -663,7 +682,7 @@
                 //}
             }).fail(function() {
                 //_formnode[identifier] = null;
-                alert("Error getting field(s) for "+_holderName+" "+messageCategoryId);
+                alert("Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
             }).done(function() {
                 //console.log("update patient title done");
                 _formnodeProcessing = false;

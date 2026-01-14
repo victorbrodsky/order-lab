@@ -791,7 +791,7 @@ class FormNodeUtil
                 $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow New Entries"
             ) {
                 $valueArr = $receivingEntity->getIdValues();
-                //echo "!!! Dropdown Menu=".$formNode->getObjectTypeName().": ".implode(',',$valueArr)."<br>";
+                echo "!!! Dropdown Menu=".$formNode->getObjectTypeName().": ".implode(',',$valueArr)."<br>";
                 if( $asString ) {
                     $valueArrStr = array();
                     foreach( $valueArr as $thisValue ) {
@@ -2394,9 +2394,13 @@ class FormNodeUtil
             if( method_exists($dropdownObject,'getOrderinlist') ) {
                 $query->orderBy("list.orderinlist", "ASC");
 
+                //Filter the list by type
+                //Include hidden? //hidden: not on new, yes on view/edit only if value != null
                 //$query->where("list.type = 'default' OR list.type = 'user-added' OR list.type = 'hidden'");
-                //$parameters['typedef'] = 'default';
-                //$parameters['typeadd'] = 'user-added';
+                $query->andWhere("list.type = :typedef OR list.type = :typeadd OR list.type = :typehidden");
+                $parameters['typedef'] = 'default';
+                $parameters['typeadd'] = 'user-added';
+                $parameters['typehidden'] = 'hidden';
             }
 
             if( $formNodeId ) {
@@ -2513,9 +2517,6 @@ class FormNodeUtil
             return null;
         }
 
-//        if( $formNodeType == 'disabled' || $formNodeType == 'draft' || $formNodeType == 'hidden' ) {
-//            return null;
-//        }
         if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,true) === false ) {
             return null;
         }
@@ -2624,7 +2625,7 @@ class FormNodeUtil
 
     //Show or hide the field according to its type, form cycle and value
     public function showFromNodeByTypeCycleValue($formNode,$cycle,$value,$ignoreValue=false) {
-        //echo "cycle=".$cycle."<br>";
+        //echo "showFromNodeByTypeCycleValue: cycle=".$cycle."<br>";
 
         //return true;
         //return false;
@@ -2634,6 +2635,7 @@ class FormNodeUtil
         }
 
         $formNodeType = $formNode->getType();
+        //echo "showFromNodeByTypeCycleValue: formNode Name=".$formNode->getName()."; formNodeType=".$formNodeType."<br>";
 
         //draft: not shown on new/edit/view
         if( $formNodeType == 'draft' ) {
@@ -3861,9 +3863,10 @@ class FormNodeUtil
             'name' =>
                 "Washington University (WU) sponsors J‑1 visas for trainees".
                 " in this program. Existing H‑1B visas may be transferred".
-                " to WU, but WU does not sponsor new H‑1B applications.",
+                " to WU, but WU does not sponsor new H‑1B applications",
             'objectType' => $objectTypeCheckbox,
             'showLabel' => true,
+            'visible' => true,
         );
         $checkmark = $this->createV2FormNode($formParams);
 
