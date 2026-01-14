@@ -647,10 +647,10 @@
                     calllogAppendFormNodes(data);
 
                     //console.log("ajax identifier="+identifier);
-                    _formnode[identifier] = data;   //data[0]['formNodeHolderId'];
+                    //_formnode[identifier] = data;   //data[0]['formNodeHolderId'];
 
                 } else {
-                    _formnode[identifier] = null;
+                    //_formnode[identifier] = null;
                     //console.log("No data: data.length="+data.length);
                 }
 
@@ -662,7 +662,7 @@
                 //    //holder.find('.calllog-patient-panel-title').html("Patient Info");
                 //}
             }).fail(function() {
-                _formnode[identifier] = null;
+                //_formnode[identifier] = null;
                 alert("Error getting field(s) for "+_holderName+" "+messageCategoryId);
             }).done(function() {
                 //console.log("update patient title done");
