@@ -256,6 +256,7 @@ class FormNodeController extends OrderAbstractController {
                     $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
 
                     //form form node array element
+                    $newParentFormNodeId = null;
                     if( $parentFormNodeId ) {
                         $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
                     }
@@ -318,6 +319,7 @@ class FormNodeController extends OrderAbstractController {
                 $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
 
                 //form form node array element
+                $newParentFormNodeId = null;
                 if( $parentFormNodeId ) {
                     $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
                 }
@@ -591,6 +593,7 @@ class FormNodeController extends OrderAbstractController {
                     $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
 
                     //form form node array element
+                    $newParentFormNodeId = null;
                     if( $parentFormNodeId ) {
                         $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
                     }
@@ -653,6 +656,7 @@ class FormNodeController extends OrderAbstractController {
                 $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
 
                 //form form node array element
+                $newParentFormNodeId = null;
                 if( $parentFormNodeId ) {
                     $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
                 }
