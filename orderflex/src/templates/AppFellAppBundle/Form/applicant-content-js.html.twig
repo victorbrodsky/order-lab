@@ -205,10 +205,82 @@
         });
 
         //Testing
-        renderScreeningQuestions();
+        //renderScreeningQuestions();
+        var fellowshipSubspecialty = $('.fellapp-fellowshipSubspecialty').first().select2('val');
+        var globalFellowshipSpecialty = $('.fellapp-globalFellowshipSpecialty').first().select2('val');
+        console.log("1 fellowshipSubspecialty="+fellowshipSubspecialty);
+        console.log("1 globalFellowshipSpecialty="+globalFellowshipSpecialty);
+        if( fellowshipSubspecialty && fellowshipSubspecialty.length != 0 ) {
+            console.log("2 fellowshipSubspecialty="+fellowshipSubspecialty);
+            fellowshipSpecialtyListener(fellowshipSubspecialty);
+        }
+        if( globalFellowshipSpecialty && globalFellowshipSpecialty.length != 0 ) {
+            console.log("2 globalFellowshipSpecialty="+globalFellowshipSpecialty);
+            fellowshipSpecialtyListener(globalFellowshipSpecialty);
+        }
+//        var fellowshipSubspecialty = $('select.fellapp-globalFellowshipSpecialty');
+//        var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty');
+//        if( fellowshipSubspecialty && fellowshipSubspecialty.length === 0 ) {
+//            console.log("fellowshipSubspecialty="+fellowshipSubspecialty.select2('val'));
+//        }
+//        if( globalFellowshipSpecialty && globalFellowshipSpecialty.length === 0 ) {
+//            console.log("globalFellowshipSpecialty="+globalFellowshipSpecialty.select2('val'));
+//        }
+        console.log("after fellowshipSubspecialty");
+//        global.on('change', function(){
+//            if (syncingGlobal) return;
+//            syncingInst = true;
+//            var globalId = $(this).val();
+//            console.log('globalId changed:', globalId);
+//            // Replace program[] with specialty[] in URL
+//            updateUrlParameter('program[]', null);
+//            updateUrlParameter('specialty[]', globalId);
+//            filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
+//            isSyncing = false;
+//            // update Screening Questions visibility based on selected global specialty
+//            updateScreeningQuestionsVisibility(globalId);
+//        });
 
     }); //document ready
 
+    function fellowshipSpecialtyListener( fellowshipSpecialty ) {
+        console.log("fellowshipSpecialtyListener: val="+fellowshipSpecialty.select2('val'));
+        fellowshipSpecialty.on('change', function(){
+            var globalId = $(this).val();
+            console.log('globalId changed:', globalId);
+            // update Screening Questions visibility based on selected global specialty
+            updateScreeningQuestionsVisibility(globalId);
+        });
+    }
+    // Show or hide the Screening Questions panel based on selected global fellowship specialty
+    function updateScreeningQuestionsVisibility(globalId) {
+        console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
+        var hasScreening = false;
+
+        if (globalId) {
+            var opt = $('select.fellapp-globalFellowshipSpecialty option[value="' + globalId + '"]');
+            console.log("Set opt=",opt);
+            if (opt.length) {
+                var flag = opt.data('screening-questions');
+                console.log("Set flag="+flag);
+                hasScreening = flag === 1 || flag === '1' || flag === true;
+                console.log("Set hasScreening="+hasScreening);
+            }
+        }
+
+        var panel = $('#fellowship-screening-questions').closest('.panel');
+        if (!panel.length) {
+            panel = $('#fellowship-screening-questions');
+        }
+
+        if (hasScreening) {
+            console.log("Show fellowship-screening-questions");
+            panel.show();
+        } else {
+            console.log("Hide fellowship-screening-questions");
+            panel.hide();
+        }
+    }
 
     function userCheckExistUser( submitterEmail ) {
         //var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
