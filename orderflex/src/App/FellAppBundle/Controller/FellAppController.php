@@ -3937,7 +3937,7 @@ class FellAppController extends OrderAbstractController {
 //            $sc = $this->container->get('security.context');
 //            $userUtil->setUpdateInfo($fellowshipApplication,$em,$sc);
 
-            exit('eof new applicant');
+            //exit('eof new applicant');
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($fellowshipApplication);
