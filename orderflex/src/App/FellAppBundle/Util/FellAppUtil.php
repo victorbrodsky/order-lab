@@ -30,6 +30,7 @@ use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\FellAppBundle\Entity\VisaStatus; //process.py script: replaced namespace by ::class: added use line for classname=VisaStatus
 
 
+use App\UserdirectoryBundle\Entity\FormNode;
 use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
 
 
@@ -648,6 +649,35 @@ class FellAppUtil {
     public function isHubServer() {
         $userTenantUtil = $this->container->get('user_tenant_utility');
         return $userTenantUtil->isHubServer();
+    }
+
+    public function getParentFormNode( $fellapp ) {
+        $parentFormNode = null;
+        $fellowshipSpecialty = $this->getFellowshipSpecialtyByServer($fellapp);
+        if( $fellowshipSpecialty && method_exists($fellowshipSpecialty, 'getScreeningQuestions') ) {
+            if( $fellowshipSpecialty->getScreeningQuestions() ) {
+                //$formNodeUtil = $this->container->get('user_formnode_utility');
+                //$formNodeHolder - entity holding the formnodes
+                //$holderEntity - holder entity (parent entity)
+                $holderEntity = $this->em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+                if (!$holderEntity) {
+                    //exit('FormNode not found by "Fellowship Screening Questions"');
+                    return null;
+                }
+                //$formNodeUtil->processFormNodes($request, $entity, $holderEntity, $testing=true); //edit post, testing
+
+                $parentFormNode = $this->em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+            }
+        }
+        return $parentFormNode;
+    }
+    public function getParentFormNodeId( $fellapp ) {
+        $parentFormNodeId = null;
+        $parentFormNode = $this->getParentFormNode($fellapp);
+        if( $parentFormNode ) {
+            $parentFormNodeId = $parentFormNode->getId();
+        }
+        return $parentFormNodeId;
     }
 
 //    public function getInstitutionByGlobalFelltype( $globalFellType ) {

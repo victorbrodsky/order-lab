@@ -829,7 +829,7 @@ class FellAppController extends OrderAbstractController {
             'searchFlag' => $searchFlag,
             'serverTimeZone' => "", //date_default_timezone_get(),
             'fellappids' => implode("-",$idsArr),
-            'route_path' => $route,
+            'route_path' => $route, //index
             'fellowshipTypes' => $fellowshipTypes,
             'serverRole' => $serverRole,
             'static' => false, //static=true => dynamically load the email's warning, subject and body
@@ -1239,8 +1239,9 @@ class FellAppController extends OrderAbstractController {
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
             'sitename' => $this->getParameter('fellapp.sitename'),
-            'route_path' => $routeName,
-            'captchaSiteKey' => $captchaSiteKey
+            'route_path' => $routeName, //getShowParameters
+            'captchaSiteKey' => $captchaSiteKey,
+            //'parentFormnodeId' => $parentFormnodeId
         );
     }
 
@@ -1392,6 +1393,37 @@ class FellAppController extends OrderAbstractController {
             $userUtil = $this->container->get('user_utility');
             $userUtil->setUpdateInfo($entity);
 
+            ////// Form Nodes /////////
+            //$data = $request->request->all();
+            //dump($data);
+            //exit("Submit fellapp");
+            //show form nodes only if fellap specialty has it
+            $globalFellowshipSpecialty = $entity->getGlobalFellowshipSpecialty();
+            if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
+                $formNodeUtil = $this->container->get('user_formnode_utility');
+                //$formNodeHolder - entity holding the formnodes
+                //$holderEntity - holder entity (parent entity)
+//                $holderEntity = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+//                if (!$holderEntity) {
+//                    exit('FormNode not found by "Fellowship Screening Questions"');
+//                }
+//                //$formNodeUtil->processFormNodes($request, $entity, $holderEntity, $testing=true); //edit post, testing
+//
+//                $formNode = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+//                if( !$formNode ) {
+//                    exit('FormNode not found by "Fellowship Screening Questions"');
+//                }
+                $parentFormNode = $fellappUtil->getParentFormNode($entity); //same as $formNode
+                $formNodes = $formNodeUtil->getRecursionAllFormNodes($parentFormNode,$formNodes=array(),'real');
+                echo "Form Nodes count".count($formNodes)."<br>";
+                //$testing = true;
+                $testing = false;
+                $formNodeUtil->processFormNodes($request, $formNodes, $entity, $testing); //edit post, testing
+            } else {
+                exit('eof edit post applicant: no $globalFellowshipSpecialty found');
+            }
+            //exit('eof edit post applicant');
+            ////// EOF Form Nodes /////////
 
             /////////////// Add event log on edit (edit or add collection) ///////////////
             /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
@@ -1483,7 +1515,8 @@ class FellAppController extends OrderAbstractController {
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
             'sitename' => $this->getParameter('fellapp.sitename'),
-            'route_path' => $routeName
+            'route_path' => $routeName, //edit
+            //'parentFormnodeId' => $parentFormnodeId
         );
     }
     private function createFellAppEditForm( FellowshipApplication $entity, $cycle )
@@ -1915,8 +1948,9 @@ class FellAppController extends OrderAbstractController {
             'entity' => $fellowshipApplication,
             'pathbase' => 'fellapp',
             'cycle' => 'new',
-            'route_path' => $request->get('_route'),
-            'sitename' => $this->getParameter('fellapp.sitename')
+            'route_path' => $request->get('_route'), //new
+            'sitename' => $this->getParameter('fellapp.sitename'),
+            //'parentFormnodeId' => $parentFormnodeId
         );
 
     }
@@ -2474,7 +2508,7 @@ class FellAppController extends OrderAbstractController {
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
             'sitename' => $this->getParameter('fellapp.sitename'),
-            'route_path' => $routeName
+            'route_path' => $routeName //interview
         );
 
     }
@@ -3883,20 +3917,6 @@ class FellAppController extends OrderAbstractController {
 
             //exit('form valid');
 
-            ////// Form Nodes /////////
-            //$data = $request->request->all();
-            //dump($data);
-            //exit("Submit fellapp");
-            //$formNodeUtil = $this->container->get('user_formnode_utility');
-            //$formNodeHolder - entity holding the formnodes
-            //$holderEntity - holder entity (parent entity)
-            //$holderEntity = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
-            //if( !$formNode ) {
-            //    exit('FormNode not found by "Fellowship Screening Questions"');
-            //}
-            //$formNodeUtil->processFormNodes($request,$formNodeHolder,$holderEntity,$testing=false); //testing
-            ////// EOF Form Nodes /////////
-
             $this->calculateScore($fellowshipApplication);
 
             $this->processDocuments($fellowshipApplication); //apply POST
@@ -3918,11 +3938,14 @@ class FellAppController extends OrderAbstractController {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
                 //$formNodeHolder - entity holding the formnodes
                 //$holderEntity - holder entity (parent entity)
-                $holderEntity = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
-                if (!$holderEntity) {
-                    exit('FormNode not found by "Fellowship Screening Questions"');
-                }
-                $formNodeUtil->processFormNodes($request, $fellowshipApplication, $holderEntity, $testing = false); //testing
+                //$holderEntity = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+                //if (!$holderEntity) {
+                    //exit('FormNode not found by "Fellowship Screening Questions"');
+                //}
+                $parentFormNode = $fellappUtil->getParentFormNode($fellowshipApplication);
+                $formNodeUtil->processFormNodes($request, $fellowshipApplication, $parentFormNode, $testing=true); //testing
+            } else {
+                exit('eof new applicant: no $globalFellowshipSpecialty found');
             }
             ////// EOF Form Nodes /////////
 
@@ -3932,7 +3955,7 @@ class FellAppController extends OrderAbstractController {
 //            $sc = $this->container->get('security.context');
 //            $userUtil->setUpdateInfo($fellowshipApplication,$em,$sc);
 
-            //exit('eof new applicant');
+            exit('eof new applicant');
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($fellowshipApplication);
@@ -4008,7 +4031,8 @@ class FellAppController extends OrderAbstractController {
             'cycle' => 'new',
             'sitename' => $this->getParameter('fellapp.sitename'),
             'captchaSiteKey' => $captchaSiteKey,
-            'route_path' => $routeName
+            'route_path' => $routeName,
+            //'parentFormnodeId' => $parentFormnodeId //apply
         );
 
     }

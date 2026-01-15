@@ -619,7 +619,7 @@ class CallEntrySamePatientController extends CallEntryController
 
                 //process form nodes
                 $formNodeUtil = $this->container->get('user_formnode_utility');
-                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
+                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //same-patient/save
                 //exit('after formnode');
 
 

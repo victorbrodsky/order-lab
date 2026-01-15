@@ -2156,7 +2156,7 @@ class CallEntryController extends OrderAbstractController
 
                 //process form nodes: process each form field and record it to DB
                 $formNodeUtil = $this->container->get('user_formnode_utility');
-                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
+                $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //save
                 //exit('after formnode');
 
                 $calllogUtil->deleteAllOtherMessagesByOid($message,$cycle,$testing);

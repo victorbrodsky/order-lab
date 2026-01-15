@@ -527,13 +527,14 @@
         console.log('### renderScreeningQuestions ###');
         var _holderNamespace = "App\\UserdirectoryBundle\\Entity";
         var _holderName = "FormNode";
-        var holderId = '286';
+        var holderId = '286'; //TODO: pass holderId - parent form node here
         var _formnode = [];
         var _entityNamespace = "App\\FellAppBundle\\Entity"; //$('#entityNamespace').val();   //"App\\OrderformBundle\\Entity";
         var _entityName = "FellowshipApplication"; //$('#entityName').val();             //"Message";
-        var _entityId = '1681'; //var fellappId = $('#fellapp_id').val();     // existing hidden input    //"Message ID";
+        //var _entityId = '1684'; //var fellappId = $('#fellapp_id').val();     // existing hidden input    //"Message ID";
+        var _entityId = $('#fellapp_id').val();
         var _formcycle = $('#formcycle').val() || 'new';
-
+        console.log('renderScreeningQuestions: _entityId='+_entityId);
     //            var dataParam =
     //            {
     //                holderNamespace: _holderNamespace,

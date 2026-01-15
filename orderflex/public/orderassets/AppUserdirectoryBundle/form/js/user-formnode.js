@@ -419,56 +419,6 @@ function richTextInit(formNodeId) {
     $(".note-editable").css({"text-align": "justify", "min-height": "140px"});
 }
 
-////NOT USED
-//function calllogAppendFormNodes_Old( data ) {
-//    for( var index = 0; index < data.length; ++index ) {
-//        var idBreadcrumbsArr = data[index]['idBreadcrumbsArr'];
-//        var formNodeHtml = data[index]['formNodeHtml'];
-//        var formNodeId = data[index]['formNodeId'];
-//        calllogAppendElement(idBreadcrumbsArr,formNodeHtml,formNodeId);
-//    }
-//}
-////NOT USED
-////find the latest parent formnode holder element by breadcrumb ids
-//function calllogAppendElement_Old( idBreadcrumbsArr, formNodeHtml, formNodeId ) {
-//    var appendEl = $("#form-node-holder");
-//
-//    for( var index = 0; index < idBreadcrumbsArr.length; ++index ) {
-//        console.log(index+": idBreadcrumb="+idBreadcrumbsArr[index]);
-//        var holderId = "formnode-holder-"+idBreadcrumbsArr[index]+"-"+formNodeId;
-//        var parentEl = document.getElementById(holderId);
-//        if( parentEl ) {
-//            console.log("parent holderId found="+holderId);
-//            //printF(parentEl,"parent found");
-//            //appendEl = $(parentEl).find('.form-nodes-holder');
-//            appendEl = $(parentEl).find('.row').last();
-//            //if( appendEl.length > 0 ) {
-//            //    console.log("form-nodes-holder found in ="+holderId);
-//            //    //appendEl = $(parentEl).find('.form-nodes-holder');
-//            //} else {
-//            //    console.log("form-nodes-holder not found!!! in ="+holderId);
-//            //    appendEl = $(parentEl).find('.row').parent();
-//            //}
-//            printF(appendEl,"idBreadcrumbsArr: appendEl found:");
-//            console.log(appendEl);
-//            //return $(parentEl).find('.row').last();
-//
-//            //appendEl.after(formNodeHtml);
-//            //console.log("0 formNodeHtml="+formNodeHtml);
-//            //formNodeHtml = "<br>"+formNodeHtml;
-//            //console.log("1 formNodeHtml="+formNodeHtml);
-//            //appendEl.append(formNodeHtml);
-//            appendEl.after(formNodeHtml);
-//            return appendEl;
-//        }
-//    }
-//
-//    printF(appendEl,"appendEl found:");
-//    console.log(appendEl);
-//    appendEl.append(formNodeHtml);
-//    return appendEl;
-//}
-
 function treeSelectAdditionalJsActionRemove(comboboxEl,comboboxId) {
     //console.log("treeSelect AdditionalJsActionRemove: comboboxId="+comboboxId);
     //calllogTreeSelectRemove(comboboxEl,comboboxId);
