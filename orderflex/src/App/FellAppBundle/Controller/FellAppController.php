@@ -1401,18 +1401,6 @@ class FellAppController extends OrderAbstractController {
             $globalFellowshipSpecialty = $entity->getGlobalFellowshipSpecialty();
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
-                //$formNodeHolder - entity holding the formnodes
-                //$holderEntity - holder entity (parent entity)
-//                $holderEntity = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
-//                if (!$holderEntity) {
-//                    exit('FormNode not found by "Fellowship Screening Questions"');
-//                }
-//                //$formNodeUtil->processFormNodes($request, $entity, $holderEntity, $testing=true); //edit post, testing
-//
-//                $formNode = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
-//                if( !$formNode ) {
-//                    exit('FormNode not found by "Fellowship Screening Questions"');
-//                }
                 $parentFormNode = $fellappUtil->getParentFormNode($entity); //same as $formNode
                 $formNodes = $formNodeUtil->getRecursionAllFormNodes($parentFormNode,$formNodes=array(),'real');
                 echo "Form Nodes count".count($formNodes)."<br>";
@@ -3936,13 +3924,7 @@ class FellAppController extends OrderAbstractController {
             $globalFellowshipSpecialty = $fellowshipApplication->getGlobalFellowshipSpecialty();
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
-                //$formNodeHolder - entity holding the formnodes
-                //$holderEntity - holder entity (parent entity)
-                //$holderEntity = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
-                //if (!$holderEntity) {
-                    //exit('FormNode not found by "Fellowship Screening Questions"');
-                //}
-                $parentFormNode = $fellappUtil->getParentFormNode($fellowshipApplication);
+                $parentFormNode = $fellappUtil->getParentFormNode($fellowshipApplication); //the same as $holderEntity
                 $formNodeUtil->processFormNodes($request, $fellowshipApplication, $parentFormNode, $testing=true); //testing
             } else {
                 exit('eof new applicant: no $globalFellowshipSpecialty found');
