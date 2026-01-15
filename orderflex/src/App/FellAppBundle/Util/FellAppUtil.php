@@ -651,29 +651,35 @@ class FellAppUtil {
         return $userTenantUtil->isHubServer();
     }
 
-    public function getParentFormNode( $fellapp ) {
+    public function getFellappParentFormNode() {
+        $holderEntity = $this->em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+        if (!$holderEntity) {
+            //exit('FormNode not found by "Fellowship Screening Questions"');
+            return null;
+        }
+        $parentFormNode = $this->em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+        return $parentFormNode;
+    }
+    public function getFellappParentFormNodeId() {
+        $parentFormNode = $this->getFellappParentFormNode();
+        if( $parentFormNode ) {
+            return $parentFormNode->getId();
+        }
+        return null;
+    }
+    public function getParentFormNodeBySpecialty( $fellapp ) {
         $parentFormNode = null;
         $fellowshipSpecialty = $this->getFellowshipSpecialtyByServer($fellapp);
         if( $fellowshipSpecialty && method_exists($fellowshipSpecialty, 'getScreeningQuestions') ) {
             if( $fellowshipSpecialty->getScreeningQuestions() ) {
-                //$formNodeUtil = $this->container->get('user_formnode_utility');
-                //$formNodeHolder - entity holding the formnodes
-                //$holderEntity - holder entity (parent entity)
-                $holderEntity = $this->em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
-                if (!$holderEntity) {
-                    //exit('FormNode not found by "Fellowship Screening Questions"');
-                    return null;
-                }
-                //$formNodeUtil->processFormNodes($request, $entity, $holderEntity, $testing=true); //edit post, testing
-
-                $parentFormNode = $this->em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+                $parentFormNode = $this->getFellappParentFormNode();
             }
         }
         return $parentFormNode;
     }
-    public function getParentFormNodeId( $fellapp ) {
+    public function getParentFormNodeBySpecialtyId( $fellapp ) {
         $parentFormNodeId = null;
-        $parentFormNode = $this->getParentFormNode($fellapp);
+        $parentFormNode = $this->getParentFormNodeBySpecialty($fellapp);
         if( $parentFormNode ) {
             $parentFormNodeId = $parentFormNode->getId();
         }

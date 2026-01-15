@@ -112,12 +112,22 @@ class FellowshipApplicationType extends AbstractType
 //                    new NotBlank(['message' => 'Please select the fellowship specialty before submitting']),
 //                ],
                 'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
+                'choice_attr' => function ($specialty) {
+                    if (!$specialty || !method_exists($specialty, 'getScreeningQuestions')) {
+                        return ['data-screening-questions' => '0'];
+                    }
+                    $questions = $specialty->getScreeningQuestions();
+                    $hasQuestions = !empty($questions) ? '1' : '0';
+                    return [
+                        'data-screening-questions' => $hasQuestions,
+                    ];
+                },
             ));
         }
 //        dump($this->params['institutions']);
-//        dump($globalFellappTypes);
+        //dump($globalFellappTypes);
 //        dump($fellappChoices);
-//        exit('111');
+        //exit('111');
         //echo "form: globalFellowshipSpecialty count=".count($globalFellappTypes)."<br>";
         if( $globalFellappTypes && count($globalFellappTypes) > 0 ) {
             //dump($globalFellappTypes);
@@ -138,6 +148,19 @@ class FellowshipApplicationType extends AbstractType
                 'attr' => array(
                     'class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty',
                 ),
+                'choice_attr' => function ($specialty) {
+                    if (!$specialty || !method_exists($specialty, 'getScreeningQuestions')) {
+                        return ['data-screening-questions' => '0'];
+                    }
+                    $questions = $specialty->getScreeningQuestions();
+                    $hasQuestions = !empty($questions) ? '1' : '0';
+                    return [
+                        'data-screening-questions' => $hasQuestions,
+                    ];
+                },
+
+
+
             ));
         }
 

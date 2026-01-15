@@ -1401,7 +1401,7 @@ class FellAppController extends OrderAbstractController {
             $globalFellowshipSpecialty = $entity->getGlobalFellowshipSpecialty();
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
-                $parentFormNode = $fellappUtil->getParentFormNode($entity); //same as $formNode
+                $parentFormNode = $fellappUtil->getParentFormNodeBySpecialty($entity); //same as $formNode
                 $formNodes = $formNodeUtil->getRecursionAllFormNodes($parentFormNode,$formNodes=array(),'real');
                 echo "Form Nodes count".count($formNodes)."<br>";
                 //$testing = true;
@@ -3924,7 +3924,7 @@ class FellAppController extends OrderAbstractController {
             $globalFellowshipSpecialty = $fellowshipApplication->getGlobalFellowshipSpecialty();
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
-                $parentFormNode = $fellappUtil->getParentFormNode($fellowshipApplication); //the same as $holderEntity
+                $parentFormNode = $fellappUtil->getParentFormNodeBySpecialty($fellowshipApplication); //the same as $holderEntity
                 $formNodeUtil->processFormNodes($request, $fellowshipApplication, $parentFormNode, $testing=true); //testing
             } else {
                 exit('eof new applicant: no $globalFellowshipSpecialty found');

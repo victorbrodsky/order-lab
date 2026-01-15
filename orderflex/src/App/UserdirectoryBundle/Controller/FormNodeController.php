@@ -384,7 +384,7 @@ class FormNodeController extends OrderAbstractController {
     #[Template('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig')]
     public function getFormNodesFieldsFromParentsAction( Request $request )
     {
-        exit("getFormNodesFieldsFromParentsAction start");
+        //exit("getFormNodesFieldsFromParentsAction start");
         //if( false === $this->isGranted('ROLE_USER') ) {
         //    return $this->redirect( $this->generateUrl('employees-nopermission') );
         //}
