@@ -3925,7 +3925,7 @@ class FellAppController extends OrderAbstractController {
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
                 $parentFormNode = $fellappUtil->getParentFormNodeBySpecialty($fellowshipApplication); //the same as $holderEntity
-                $formNodeUtil->processFormNodes($request, $fellowshipApplication, $parentFormNode, $testing=true); //testing
+                $formNodeUtil->processFormNodes($request, $fellowshipApplication, $parentFormNode, $testing=false); //testing
             } else {
                 //exit('eof new applicant: no $globalFellowshipSpecialty found');
             }

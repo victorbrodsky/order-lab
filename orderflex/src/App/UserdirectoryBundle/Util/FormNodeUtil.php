@@ -87,7 +87,7 @@ class FormNodeUtil
 //            }
 //            $formNodes = $this->getRecursionAllFormNodes($formNode,$formNodes=array(),'real');
             $formNodes = $formNodeHolder;
-            echo "Form Nodes count".count($formNodes)."<br>";
+            //echo "Form Nodes count".count($formNodes)."<br>";
         }
         if( $testing ) {
             foreach($formNodes as $formNode){
