@@ -1408,7 +1408,7 @@ class FellAppController extends OrderAbstractController {
                 $testing = false;
                 $formNodeUtil->processFormNodes($request, $formNodes, $entity, $testing); //edit post, testing
             } else {
-                exit('eof edit post applicant: no $globalFellowshipSpecialty found');
+                //exit('eof edit post applicant: no $globalFellowshipSpecialty found');
             }
             //exit('eof edit post applicant');
             ////// EOF Form Nodes /////////
@@ -2003,7 +2003,7 @@ class FellAppController extends OrderAbstractController {
 
         //Avatar
         $em->getRepository(Document::class)->processDocuments( $application, 'avatar' );
-        echo "count avatar=".count($application->getAvatars())."<br>";
+        //echo "count avatar=".count($application->getAvatars())."<br>";
         //exit('processDocuments');
 
         //CurriculumVitae
@@ -3830,7 +3830,7 @@ class FellAppController extends OrderAbstractController {
             if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
                 $captchaRes = $request->request->get('g-recaptcha-response');
                 if (!$userSecUtil->captchaValidate($request, $captchaRes)) {
-                    echo "Captcha is not valid <br>";
+                    //echo "Captcha is not valid <br>";
                     //<input type="hidden" id="oleg_fellappbundle_fellowshipapplication_recaptcha" name="oleg_fellappbundle_fellowshipapplication[recaptcha]" class="form-control g-recaptcha1">
                     $form->get('recaptcha')->addError(new FormError('Captcha is required'));
                     //$form['oleg_fellappbundle_fellowshipapplication']['recaptcha']->addError(new FormError('Captcha is required'));
@@ -3927,7 +3927,7 @@ class FellAppController extends OrderAbstractController {
                 $parentFormNode = $fellappUtil->getParentFormNodeBySpecialty($fellowshipApplication); //the same as $holderEntity
                 $formNodeUtil->processFormNodes($request, $fellowshipApplication, $parentFormNode, $testing=true); //testing
             } else {
-                exit('eof new applicant: no $globalFellowshipSpecialty found');
+                //exit('eof new applicant: no $globalFellowshipSpecialty found');
             }
             ////// EOF Form Nodes /////////
 
