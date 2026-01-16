@@ -206,6 +206,8 @@
 
         //Testing
         //renderScreeningQuestions();
+        //update Screening Questions visibility based on selected global specialty
+        updateScreeningQuestionsVisibility(null);
         var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
         var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
         console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
@@ -235,20 +237,6 @@
 //            console.log("globalFellowshipSpecialty="+globalFellowshipSpecialty.select2('val'));
 //        }
         console.log("after fellowshipSubspecialty");
-//        global.on('change', function(){
-//            if (syncingGlobal) return;
-//            syncingInst = true;
-//            var globalId = $(this).val();
-//            console.log('globalId changed:', globalId);
-//            // Replace program[] with specialty[] in URL
-//            updateUrlParameter('program[]', null);
-//            updateUrlParameter('specialty[]', globalId);
-//            filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
-//            isSyncing = false;
-//            // update Screening Questions visibility based on selected global specialty
-//            updateScreeningQuestionsVisibility(globalId);
-//        });
-
     }); //document ready
 
     function fellowshipSpecialtyListener( specialtySelect ) {
@@ -265,6 +253,11 @@
         console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
         var hasScreening = false;
 
+        var panel = $('#fellowship-screening-questions').closest('.panel');
+        if (!panel.length) {
+            panel = $('#fellowship-screening-questions');
+        }
+
         if (globalId) {
             var opt = $('select.fellapp-globalFellowshipSpecialty option[value="' + globalId + '"]');
             if (!opt.length) {
@@ -277,11 +270,9 @@
                 hasScreening = flag === 1 || flag === '1' || flag === true;
                 console.log("Set hasScreening="+hasScreening);
             }
-        }
-
-        var panel = $('#fellowship-screening-questions').closest('.panel');
-        if (!panel.length) {
-            panel = $('#fellowship-screening-questions');
+        } else {
+            //console.log("Hide fellowship-screening-questions: globalId is not provided");
+            //panel.hide();
         }
 
         if (hasScreening) {
