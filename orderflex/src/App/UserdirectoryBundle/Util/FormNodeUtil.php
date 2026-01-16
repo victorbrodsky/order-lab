@@ -59,34 +59,45 @@ class FormNodeUtil
     
     //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing);
     //$request - Symfony\Component\HttpFoundation\Request
-    //$formNodeHolder - entity holding the formnodes (Message or FellowshipApplication) or array of formNodes (for FellowshipApplication)
-    //$holderEntity - holder entity (parent entity) used to link values
+    //$formNodeSource - entity holding the formnodes (Message->getFormNodes() or FellowshipApplication) or parent of formNodes (for FellowshipApplication)
+    //$holderEntity - entity to link values
     //$testing - testing flag
-    public function processFormNodes($request, $formNodeHolder, $holderEntity, $testing=false)
+    public function processFormNodes(
+        $request,           //request
+        $formNodeSource,    //source of formNodes - entity holding the parent formnodes or $parentFormNode (for FellowshipApplication)
+        $holderEntity,      //entity to link values (Message or FellowshipApplication)
+        $testing=false      //testing flag
+    )
     {
-        if( !$formNodeHolder ) {
+        if( !$formNodeSource ) {
+            exit('processFormNodes: $formNodeSource is empty => exit');
+            return;
+        }
+
+        if( !$holderEntity ) {
+            exit('processFormNodes: $holderEntity is empty => exit');
             return;
         }
 
         //Fellapp does not have getFormNodes
-        //$formNodes = $formNodeHolder->getFormNodes();
-        if( $formNodeHolder !== null
-            && !is_array($formNodeHolder)
-            && method_exists($formNodeHolder, 'getFormNodes')) {
+        //$formNodes = $formNodeSource->getFormNodes();
+        if( $formNodeSource !== null
+            && !is_array($formNodeSource)
+            && method_exists($formNodeSource, 'getFormNodes')) {
 
             // Safe to treat $holderEntity as a non-array object/value
-            //$formNodeHolder is Message
-            $formNodes = $formNodeHolder->getFormNodes();
+            //$formNodeSource is Message
+            $formNodes = $formNodeSource->getFormNodes();
         } else {
-//            //$formNodeHolder is FellowshipApplication
+//            //$formNodeSource is FellowshipApplication
 //            //fellapp case => use getRecursionAllFormNodes, where $formNode is the parent formnode
 //            //TODO: pass parent $formNode to this function
 //            $formNode = $this->em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
 //            if( !$formNode ) {
 //                exit('FormNode not found by "Fellowship Screening Questions"');
 //            }
-//            $formNodes = $this->getRecursionAllFormNodes($formNode,$formNodes=array(),'real');
-            $formNodes = $formNodeHolder;
+            $formNodes = $this->getRecursionAllFormNodes($formNodeSource,$formNodes=array(),'real');
+            //$formNodes = $formNodeSource;
             //echo "Form Nodes count".count($formNodes)."<br>";
         }
         if( $testing ) {
@@ -102,15 +113,15 @@ class FormNodeUtil
         $userSecUtil = $this->container->get('user_security_utility');
 
         /////// create a new EventLog attempt with id $eventLogId (to make the actions atomic) ///////
-        if( is_array($formNodeHolder) ) {
-            $eventAttempt = "Attempt of cache for form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodes count:<br>".count($formNodeHolder);
+        if( is_array($formNodeSource) ) {
+            $eventAttempt = "Attempt of cache for form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodes count:<br>".count($formNodeSource);
         } else {
-            $eventAttempt = "Attempt of cache for form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodeHolder:<br>".$formNodeHolder;
+            $eventAttempt = "Attempt of cache for form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodeHolder:<br>".$formNodeSource;
         }
 
         //create logger which must be deleted on successfully update cache
         $user = $this->security->getUser();
-        //$eventAttempt = "Attempt of cache for form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodeHolder:<br>".$formNodeHolder;
+        //$eventAttempt = "Attempt of cache for form nodes for holderEntity:<br>" . $holderEntity . "<br><br>formNodeHolder:<br>".$formNodeSource;
         //$sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event'
         $eventLogAttempt = $userSecUtil->createUserEditEvent(
             $this->container->getParameter('employees.sitename'),   //$sitename
@@ -131,9 +142,9 @@ class FormNodeUtil
         //process by form root's children nodes
         //$this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
 
-        //If $holderEntity is Message => replace it with $formNodeHolder
+        //If $holderEntity is Message => replace it with $formNodeSource
         //if ($holderEntity !== null && $holderEntity instanceof Message) {
-        //    $holderEntity = $formNodeHolder;
+        //    $holderEntity = $formNodeSource;
         //}
 
         //process by data partial key name" "formnode-4" => "formnode-"
@@ -181,7 +192,6 @@ class FormNodeUtil
         }
     }
 
-    //$formNodeHolder - object linked to the value: message or FellowshipApplication
     public function processFormNodeByType( $formNode, $formValue, $holderEntity, $testing=false ) {
 
         $formNodeObjectName = $formNode->getObjectTypeName();

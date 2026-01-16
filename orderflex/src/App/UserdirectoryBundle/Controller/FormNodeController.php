@@ -451,9 +451,9 @@ class FormNodeController extends OrderAbstractController {
         //$formNodeHolderEntity = new MessageCategory();
         //$formNodeHolderEntity->addFormNode($formNode);
         //$holderForms = array($formNode);
-        $formNodes = array();
+        //$formNodes = array();
         //assume only one form attached to the message category holder
-        $formNodes = $formNodeUtil->getRecursionAllFormNodes($formNode,$formNodes,'real',$cycle);
+        $formNodes = $formNodeUtil->getRecursionAllFormNodes($formNode,$formNodes=array(),'real',$cycle);
         //dump($formNodes);
         //exit('getFormNodesFieldsFromParentsAction');
 

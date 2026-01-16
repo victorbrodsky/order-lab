@@ -1397,19 +1397,34 @@ class FellAppController extends OrderAbstractController {
             //$data = $request->request->all();
             //dump($data);
             //exit("Submit fellapp");
-            //show form nodes only if fellap specialty has it
+//            //show form nodes only if fellap specialty has it
+//            $globalFellowshipSpecialty = $entity->getGlobalFellowshipSpecialty();
+//            if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
+//                $formNodeUtil = $this->container->get('user_formnode_utility');
+//                $parentFormNode = $fellappUtil->getParentFormNodeBySpecialty($entity); //same as $formNode
+//                $formNodes = $formNodeUtil->getRecursionAllFormNodes($parentFormNode,$formNodes=array(),'real');
+//                echo "Form Nodes count".count($formNodes)."<br>";
+//                //$testing = true;
+//                $testing = false;
+//                $formNodeUtil->processFormNodes($request, $formNodes, $entity, $testing); //edit post, testing
+//            } else {
+//                //exit('eof edit post applicant: no $globalFellowshipSpecialty found');
+//            }
+            ////// Form Nodes /////////
             $globalFellowshipSpecialty = $entity->getGlobalFellowshipSpecialty();
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
-                $parentFormNode = $fellappUtil->getParentFormNodeBySpecialty($entity); //same as $formNode
-                $formNodes = $formNodeUtil->getRecursionAllFormNodes($parentFormNode,$formNodes=array(),'real');
-                echo "Form Nodes count".count($formNodes)."<br>";
-                //$testing = true;
-                $testing = false;
-                $formNodeUtil->processFormNodes($request, $formNodes, $entity, $testing); //edit post, testing
+                $formNodeSource = $fellappUtil->getParentFormNodeBySpecialty($entity); //the same as $holderEntity
+                $formNodeUtil->processFormNodes( //edit post
+                    $request,
+                    $formNodeSource,    //source of formNodes
+                    $entity,            //entity to link values
+                    $testing=false
+                ); //new create
             } else {
-                //exit('eof edit post applicant: no $globalFellowshipSpecialty found');
+                //exit('eof new applicant: no $globalFellowshipSpecialty found');
             }
+            ////// EOF Form Nodes /////////
             //exit('eof edit post applicant');
             ////// EOF Form Nodes /////////
 
@@ -1909,6 +1924,22 @@ class FellAppController extends OrderAbstractController {
             $em->persist($fellowshipApplication);
             $em->persist($applicant);
             $em->flush();
+
+            ////// Form Nodes /////////
+            $globalFellowshipSpecialty = $fellowshipApplication->getGlobalFellowshipSpecialty();
+            if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
+                $formNodeUtil = $this->container->get('user_formnode_utility');
+                $formNodeSource = $fellappUtil->getParentFormNodeBySpecialty($fellowshipApplication); //the same as $holderEntity
+                $formNodeUtil->processFormNodes( //new POST
+                    $request,
+                    $formNodeSource,
+                    $fellowshipApplication,
+                    $testing=false
+                ); //new create
+            } else {
+                //exit('eof new applicant: no $globalFellowshipSpecialty found');
+            }
+            ////// EOF Form Nodes /////////
 
             //update report if report does not exists
             //if( count($entity->getReports()) == 0 ) {
@@ -3917,15 +3948,16 @@ class FellAppController extends OrderAbstractController {
             $fellowshipApplication->autoSetRecLetterReceived();
 
             ////// Form Nodes /////////
-            //$data = $request->request->all();
-            //dump($data);
-            //exit("Submit fellapp");
-            //show form nodes only if fellap specialty has it
             $globalFellowshipSpecialty = $fellowshipApplication->getGlobalFellowshipSpecialty();
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
-                $parentFormNode = $fellappUtil->getParentFormNodeBySpecialty($fellowshipApplication); //the same as $holderEntity
-                $formNodeUtil->processFormNodes($request, $fellowshipApplication, $parentFormNode, $testing=false); //testing
+                $formNodeSource = $fellappUtil->getParentFormNodeBySpecialty($fellowshipApplication); //the same as $holderEntity
+                $formNodeUtil->processFormNodes( //apply
+                    $request,
+                    $formNodeSource,
+                    $fellowshipApplication,
+                    $testing=false
+                ); //new create
             } else {
                 //exit('eof new applicant: no $globalFellowshipSpecialty found');
             }
