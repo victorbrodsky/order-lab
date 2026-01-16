@@ -68,6 +68,9 @@
         showHideWellByRadioButtons('.fellapp-reprimand-field');
         showHideWellByRadioButtons('.fellapp-lawsuit-field');
 
+        //update Screening Questions visibility based on selected global specialty
+        //updateScreeningQuestionsVisibility(null);
+
         $('.textarea').bind('keydown keyup keypress cut copy past blur change', function(){
             copy_to_print_helper(this); // consider debouncing this to avoid slowdowns!
         });
@@ -206,8 +209,6 @@
 
         //Testing
         //renderScreeningQuestions();
-        //update Screening Questions visibility based on selected global specialty
-        updateScreeningQuestionsVisibility(null);
         var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
         var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
         console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
