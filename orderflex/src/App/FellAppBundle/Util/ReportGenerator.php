@@ -1009,7 +1009,7 @@ class ReportGenerator {
                     'PHPSESSID' => $PHPSESSID
                 ),
                 'javascript-delay' => 30000,
-                'no-stop-slow-scripts' => true
+                //'no-stop-slow-scripts' => true
             )
         );
         $this->container->get('knp_snappy.pdf')->generate(
