@@ -42,7 +42,13 @@
                     <div class="col-xs-12">
 
                         {#form-node-holder<br>#}
-                        <div id="form-node-holder"></div>
+                        <div id="form-node-holder">
+                            <style>
+                                #form-node-holder > .formnode-holder:not(:last-child) {
+                                    margin-bottom: 20px;      /* space between rows */
+                                }
+                            </style>
+                        </div>
 
                     </div>
                 </div> <!-- row -->
