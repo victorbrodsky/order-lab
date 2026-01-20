@@ -1,0 +1,86 @@
+I had 3 kernels in /boot:
+[root@xits-po-order-prd2 boot]# rpm -q kernel
+kernel-5.14.0-570.51.1.el9_6.x86_64
+kernel-5.14.0-570.60.1.el9_6.x86_64
+Kernel-5.14.0-611.11.1.el9_7.x86_64
+
+[root@xits-po-order-prd2 boot]# ls -lh /boot
+total 431M
+-rw-r--r--. 1 root root 229K Sep 27 01:16 config-5.14.0-570.51.1.el9_6.x86_64
+-rw-r--r--. 1 root root 229K Oct 25 01:14 config-5.14.0-570.60.1.el9_6.x86_64
+-rw-r--r--. 1 root root 231K Nov 25 05:19 config-5.14.0-611.11.1.el9_7.x86_64
+drwx------. 3 root root 4.0K Dec 31  1969 efi
+drwx------. 3 root root   50 Dec 20 08:38 grub2
+-rw-------. 1 root root 108M May 16  2024 initramfs-0-rescue-b11dff6e6f89414097628462fa5ce23a.img
+-rw-------. 1 root root  39M Nov 15 06:05 initramfs-5.14.0-570.51.1.el9_6.x86_64.img
+-rw-------. 1 root root  41M Oct 18 05:40 initramfs-5.14.0-570.51.1.el9_6.x86_64kdump.img
+-rw-------. 1 root root  39M Nov 15 06:04 initramfs-5.14.0-570.60.1.el9_6.x86_64.img
+-rw-------. 1 root root  41M Nov 15 06:09 initramfs-5.14.0-570.60.1.el9_6.x86_64kdump.img
+-rw-------. 1 root root  39M Dec 20 06:06 initramfs-5.14.0-611.11.1.el9_7.x86_64.img
+-rw-------. 1 root root  43M Dec 20 06:20 initramfs-5.14.0-611.11.1.el9_7.x86_64kdump.img
+drwxr-xr-x. 3 root root   21 May 16  2024 loader
+lrwxrwxrwx. 1 root root   52 Oct 18 05:37 symvers-5.14.0-570.51.1.el9_6.x86_64.gz -> /lib/modules/5.14.0-570.51.1.el9_6.x86_64/symvers.gz
+lrwxrwxrwx. 1 root root   52 Nov 15 06:03 symvers-5.14.0-570.60.1.el9_6.x86_64.gz -> /lib/modules/5.14.0-570.60.1.el9_6.x86_64/symvers.gz
+lrwxrwxrwx. 1 root root   52 Dec 20 06:06 symvers-5.14.0-611.11.1.el9_7.x86_64.gz -> /lib/modules/5.14.0-611.11.1.el9_7.x86_64/symvers.gz
+-rw-------. 1 root root 9.0M Sep 27 01:16 System.map-5.14.0-570.51.1.el9_6.x86_64
+-rw-------. 1 root root 9.0M Oct 25 01:14 System.map-5.14.0-570.60.1.el9_6.x86_64
+-rw-------. 1 root root 9.3M Nov 25 05:19 System.map-5.14.0-611.11.1.el9_7.x86_64
+-rwxr-xr-x. 1 root root  13M May 16  2024 vmlinuz-0-rescue-b11dff6e6f89414097628462fa5ce23a
+-rwxr-xr-x. 1 root root  15M Sep 27 01:16 vmlinuz-5.14.0-570.51.1.el9_6.x86_64
+-rwxr-xr-x. 1 root root  15M Oct 25 01:14 vmlinuz-5.14.0-570.60.1.el9_6.x86_64
+-rwxr-xr-x. 1 root root  15M Nov 25 05:19 vmlinuz-5.14.0-611.11.1.el9_7.x86_64
+
+The running kernel:
+[root@xits-po-order-prd2 boot]# uname -r
+5.14.0-611.11.1.el9_7.x86_64
+
+I have removed the oldest kernel:
+sudo dnf remove kernel-5.14.0-570.51.1.el9_6.x86_64
+
+and manually delete all of its associated files in /boot/ folder:
+initramfs-5.14.0-570.51.1.el9_6.x86_64.img        39M
+initramfs-5.14.0-570.51.1.el9_6.x86_64kdump.img   41M
+vmlinuz-5.14.0-570.51.1.el9_6.x86_64              15M
+System.map-5.14.0-570.51.1.el9_6.x86_64            9M
+config-5.14.0-570.51.1.el9_6.x86_64               229K
+symvers-5.14.0-570.51.1.el9_6.x86_64.gz
+       sudo rm config-5.14.0-570.51.1.el9_6.x86_64
+  924  sudo rm initramfs-5.14.0-570.51.1.el9_6.x86_64.img
+  925  sudo rm initramfs-5.14.0-570.51.1.el9_6.x86_64kdump.img
+  927  sudo rm symvers-5.14.0-570.51.1.el9_6.x86_64.gz
+  928  sudo rm System.map-5.14.0-570.51.1.el9_6.x86_64
+  929  sudo rm vmlinuz-5.14.0-570.51.1.el9_6.x86_64
+  930  df -h
+  931  sudo dnf autoremove
+
+
+Now, the boot has 63% of available space:
+[root@xits-po-order-prd2 boot]# df -h
+Filesystem                                                            Size  Used Avail Use% Mounted on
+devtmpfs                                                              4.0M     0  4.0M   0% /dev
+tmpfs                                                                 3.8G  3.1M  3.8G   1% /dev/shm
+tmpfs                                                                 1.6G  151M  1.4G  10% /run
+efivarfs                                                              256K   34K  218K  14% /sys/firmware/efi/efivars
+/dev/mapper/rootvg-rootlv                                             118G   93G   25G  79% /
+/dev/sda2                                                             586M  367M  220M  63% /boot
+/dev/sda1                                                             649M  7.1M  642M   2% /boot/efi
+tmpfs                                                                 769M  4.0K  769M   1% /run/user/48
+//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup  3.2P  2.3P  935T  72% /mnt/pathology/view-backup/upload-backup
+//brbpathologyfs.med.cornell.edu/pathology/view-backup/db-backup      3.2P  2.3P  935T  72% /mnt/pathology/view-backup/db-backup
+tmpfs                                                                 769M  4.0K  769M   1% /run/user/134841
+
+
+Fix generic:
+rpm -q kernel
+uname -r
+ls -lh /boot -> identify old files to remove manually (use AI)
+Remove files:
+Remove old kernel: sudo dnf remove kernel-5.14.0-570.60.1.el9_6.x86_64
+Remove associated files:
+sudo rm /boot/System.map-5.14.0-570.60.1.el9_6.x86_64
+sudo rm /boot/vmlinuz-5.14.0-570.60.1.el9_6.x86_64
+sudo rm /boot/config-5.14.0-570.60.1.el9_6.x86_64
+sudo rm /boot/initramfs-5.14.0-570.60.1.el9_6.x86_64.img
+sudo rm /boot/initramfs-5.14.0-570.60.1.el9_6.x86_64kdump.img
+sudo rm /boot/symvers-5.14.0-570.60.1.el9_6.x86_64.gz
+

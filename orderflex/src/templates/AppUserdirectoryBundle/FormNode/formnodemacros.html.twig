@@ -872,8 +872,8 @@
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6 {{ requiredClass }}" align="right">
-                <label>{{ formNode.name }}:</label>
+            <div class="col-xs-6" align="right">
+                <label class="{{ requiredClass }}">{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
                 {{ formnodemacros.radioField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
@@ -897,6 +897,12 @@
         {% set disabled = "disabled" %}
     {% endif %}
 
+    {#{% if formNode.required %}#}
+        {#{% set requiredClass = "required" %}#}
+    {#{% else %}#}
+        {#{% set requiredClass = "" %}#}
+    {#{% endif %}#}
+
     <div id="oleg_orderformbundle_messagetype_purpose" class="horizontal_type">
         {% for dropdownValue in dropdownValues %}
             {% if formNodeValue and dropdownValue.id == formNodeValue %}
@@ -913,7 +919,7 @@
                     {{ checked }}
                     {{ disabled }}
                 >
-                <label class="required">
+                <label>
                     {{ dropdownValue.text }}
                 </label>
             </div>

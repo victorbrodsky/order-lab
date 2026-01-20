@@ -2089,6 +2089,13 @@ class FormNodeUtil
 //            $visible = true;
 //        }
 
+        //required
+        if( array_key_exists('required', $params) ) {
+            $required = $params['required'];
+        } else {
+            $required = null;
+        }
+
         //showLabel - default true
         if( array_key_exists('showLabel', $params) ) {
             $showLabel = $params['showLabel'];
@@ -2142,6 +2149,10 @@ class FormNodeUtil
 
             //set showLabel
             $node->setShowLabel($showLabel);
+
+            if( $required && method_exists($node, 'setRequired') ) {
+                $node->setRequired($required);
+            }
 
             if( $classNamespace && $className ) {
                 $node->setEntityNamespace($classNamespace);
@@ -3859,6 +3870,7 @@ class FormNodeUtil
             'objectType' => $objectTypeRadioButton,
             'showLabel' => true,
             'visible' => true,
+            'required' => false,
             'classNamespace' => "App\\FellAppBundle\\Entity",
             'className' => "TrainingEligibilityList"
         );
@@ -3875,6 +3887,7 @@ class FormNodeUtil
             'objectType' => $objectTypeRadioButton,
             'showLabel' => true,
             'visible' => true,
+            'required' => false,
             'classNamespace' => "App\\FellAppBundle\\Entity",
             'className' => "DutiesCapabilityList"
         );
@@ -3889,6 +3902,7 @@ class FormNodeUtil
             'objectType' => $objectTypeRadioButton,
             'showLabel' => true,
             'visible' => true,
+            'required' => false,
             'classNamespace' => "App\\FellAppBundle\\Entity",
             'className' => "PhdFieldList"
         );
@@ -3911,6 +3925,7 @@ class FormNodeUtil
             'objectType' => $objectTypeCheckbox,
             'showLabel' => true,
             'visible' => true,
+            'required' => false,
         );
         $checkmark = $this->createV2FormNode($formParams);
 
