@@ -1008,7 +1008,7 @@ class ReportGenerator {
                 'cookie' => array(
                     'PHPSESSID' => $PHPSESSID
                 ),
-                'javascript-delay' => 50000,
+                'javascript-delay' => 30000,
                 'no-stop-slow-scripts' => true
             )
         );
