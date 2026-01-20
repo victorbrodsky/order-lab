@@ -16,7 +16,7 @@ knp_snappy:
         binary:     '%wkhtmltopdfpath%' #/usr/bin/xvfb-run /usr/bin/wkhtmltopdf #'%wkhtmltopdfpath%'   #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         #binary: '/usr/local/bin/wkhtmltopdf-wrapper.sh'
         options:
-            javascript-delay: 30000 #9000 #9000    #Wait some milliseconds for javascript finish (default 200)
+            javascript-delay: 9000 #9000    #Wait some milliseconds for javascript finish (default 200)
             load-error-handling: ignore
             load-media-error-handling: ignore
             enable-local-file-access: true
