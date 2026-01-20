@@ -1008,7 +1008,22 @@ class ReportGenerator {
                 'cookie' => array(
                     'PHPSESSID' => $PHPSESSID
                 ),
+                'javascript-delay' => 50000,
+                'no-stop-slow-scripts' => true
             )
+        );
+        $this->container->get('knp_snappy.pdf')->generate(
+            $pageUrl,
+            $applicationOutputFilePath,
+            [
+                'cookie' => [
+                    'PHPSESSID' => $PHPSESSID,
+                ],
+                // delay in milliseconds before rendering, e.g. 5 seconds
+                'javascript-delay' => 5000,
+                // optional: prevent stopping on slow JS
+                'no-stop-slow-scripts' => true,
+            ]
         );
 
         //array('cookie' => array($session->getName() => $session->getId()))
