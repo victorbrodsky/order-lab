@@ -1001,17 +1001,17 @@ class ReportGenerator {
 //            ],
 //        ]);
 
-        $this->container->get('knp_snappy.pdf')->generate(
-            $pageUrl,
-            $applicationOutputFilePath,
-            array(
-                'cookie' => array(
-                    'PHPSESSID' => $PHPSESSID
-                ),
-                'javascript-delay' => 30000,
-                //'no-stop-slow-scripts' => true
-            )
-        );
+//        $this->container->get('knp_snappy.pdf')->generate(
+//            $pageUrl,
+//            $applicationOutputFilePath,
+//            array(
+//                'cookie' => array(
+//                    'PHPSESSID' => $PHPSESSID
+//                ),
+//                'javascript-delay' => 30000,
+//                //'no-stop-slow-scripts' => true
+//            )
+//        );
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath,
@@ -1020,7 +1020,7 @@ class ReportGenerator {
                     'PHPSESSID' => $PHPSESSID,
                 ],
                 // delay in milliseconds before rendering, e.g. 5 seconds
-                'javascript-delay' => 5000,
+                'javascript-delay' => 60000,
                 // optional: prevent stopping on slow JS
                 'no-stop-slow-scripts' => true,
             ]
