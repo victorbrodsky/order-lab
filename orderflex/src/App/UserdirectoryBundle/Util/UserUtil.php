@@ -153,6 +153,7 @@ class UserUtil {
     }
     public function getRealSchemeUrl( $url ) {
         $scheme = $this->getRealScheme();
+        echo "scheme=$scheme<br>";
         if( $scheme ) {
             $url = str_replace('http',$scheme,$url);
         }
