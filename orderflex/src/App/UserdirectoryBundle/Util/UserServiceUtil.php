@@ -6492,7 +6492,7 @@ tracepoint:sched:sched_process_exit
             array(),
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //https://view.online/c/wcm/pathology/
-        exit('$baseUrl='.$baseUrl);
+        //exit('$baseUrl='.$baseUrl);
         //echo '$baseUrl='.$baseUrl."<br>";
 
         $uniquename = $document->getUniquename();
