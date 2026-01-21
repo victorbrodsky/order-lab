@@ -6529,7 +6529,7 @@ tracepoint:sched:sched_process_exit
             $url = $userUtil->getRealSchemeUrl($url);
         }
 
-        exit('return $url='.$url);
+        //exit('return $url='.$url);
         return $url;
     }
 
