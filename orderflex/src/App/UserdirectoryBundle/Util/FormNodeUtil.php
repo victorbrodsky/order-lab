@@ -532,7 +532,7 @@ class FormNodeUtil
     //$holderEntity - Message, for generic fellapp it should be FellowshipApplication
     public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $noflush=false, $params=null ) {
 
-        echo "createSingleFormNodeListRecord: formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
+        //echo "createSingleFormNodeListRecord: formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
 //        if( $params ) {
 //            echo "params:<br>";
 //            echo "arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
@@ -544,7 +544,7 @@ class FormNodeUtil
         //1) create a new list element OR get existing listElement for this $holderEntity
         //if( method_exists($holderEntity, 'isEditable') && $holderEntity->isEditable() ){
         if( $this->isHolderEntityEditable($holderEntity,$params) ) {
-            echo "object isEditable => object is editable without creating a new amend copy <br>";
+            //echo "object isEditable => object is editable without creating a new amend copy <br>";
 
             $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
             if( $newListElement ) {
@@ -566,10 +566,10 @@ class FormNodeUtil
 
         }
 
-        echo "object is not editable => create a new amend only<br>";
+        //echo "object is not editable => create a new amend only<br>";
         $newListElement = $this->createNewList($formNode);
 
-        echo "newListElement=".$newListElement."<br>";
+        //echo "newListElement=".$newListElement."<br>";
         if( !$newListElement ) {
             //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
             return null;
@@ -965,7 +965,7 @@ class FormNodeUtil
 //        }
 
         $listClassName = $receivedValueEntityNamespace."\\".$receivedValueEntityName;
-        echo "create new list=[$listClassName] <br>";
+        //echo "create new list=[$listClassName] <br>";
         $newListElement = new $listClassName();
         //$newListElement = new ObjectTypeText();
         $creator = $this->security->getUser();

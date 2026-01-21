@@ -1504,6 +1504,7 @@ class FellAppController extends OrderAbstractController {
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeSource = $fellappUtil->getParentFormNodeBySpecialty($entity); //the same as $holderEntity
+                //TODO: do not create formnode duplicate for fellapp
                 $formNodeUtil->processFormNodes( //edit post
                     $request,
                     $formNodeSource,    //source of formNodes
