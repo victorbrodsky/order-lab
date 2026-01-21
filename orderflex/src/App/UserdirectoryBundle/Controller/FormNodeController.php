@@ -388,8 +388,9 @@ class FormNodeController extends OrderAbstractController {
         //if( false === $this->isGranted('ROLE_USER') ) {
         //    return $this->redirect( $this->generateUrl('employees-nopermission') );
         //}
-        $resArr = array();
+        //All in if(0) replaced by getFellAppFormNodeHtml
         if(0) {
+            $resArr = array();
             $formNodeUtil = $this->container->get('user_formnode_utility');
             $em = $this->getDoctrine()->getManager();
 
@@ -690,7 +691,6 @@ class FormNodeController extends OrderAbstractController {
 
         $fellappUtil = $this->container->get('fellapp_util');
         $resArr = $fellappUtil->getFellAppFormNodeHtml($request);
-
 
         if( $this->testing ) {
             if(0) {

@@ -1244,7 +1244,8 @@ class FellAppController extends OrderAbstractController {
             ];
 
 
-            $screeningQuestionsHtml = $fellappUtil->getFellAppFormNodeHtml(null, $params);
+            $screeningQuestionsArray = $fellappUtil->getFellAppFormNodeHtml(null, $params); //return array
+            //Convert array to flat html
             function flatten(array $arr): array {
                 $out = [];
                 foreach ($arr as $item) {
@@ -1256,7 +1257,7 @@ class FellAppController extends OrderAbstractController {
                 }
                 return $out;
             }
-            $flat = flatten($screeningQuestionsHtml);
+            $flat = flatten($screeningQuestionsArray);
             $screeningQuestionsHtml = implode("\n", $flat);
 
             //dump($screeningQuestionsHtml);
