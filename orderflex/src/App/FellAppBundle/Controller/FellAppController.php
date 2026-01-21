@@ -1245,20 +1245,40 @@ class FellAppController extends OrderAbstractController {
 
 
             $screeningQuestionsArray = $fellappUtil->getFellAppFormNodeHtml(null, $params); //return array
+            //dump($screeningQuestionsArray);
+            //exit('222');
             //Convert array to flat html
+            //TODO: get only formNodeHtml
             function flatten(array $arr): array {
                 $out = [];
+                if (!is_array($arr)) {
+                    return $out;
+                }
                 foreach ($arr as $item) {
+                    //dump($item);
                     if (is_array($item)) {
+                        //$out = array_merge($out, flatten($item));
+                        // If this array has 'formNodeHtml', extract only that
+                        if (array_key_exists('formNodeHtml', $item)) {
+                            $out[] = $item['formNodeHtml'];
+                            continue;
+                        }
+
+                        // Otherwise flatten deeper
                         $out = array_merge($out, flatten($item));
+                        continue;
                     } else {
                         $out[] = $item;
                     }
                 }
+                //dump($out);
+                //exit('111');
                 return $out;
             }
-            $flat = flatten($screeningQuestionsArray);
-            $screeningQuestionsHtml = implode("\n", $flat);
+            if( $screeningQuestionsArray && is_array($screeningQuestionsArray) ) {
+                $flat = flatten($screeningQuestionsArray);
+                $screeningQuestionsHtml = implode("\n", $flat);
+            }
 
             //dump($screeningQuestionsHtml);
             //exit('222');

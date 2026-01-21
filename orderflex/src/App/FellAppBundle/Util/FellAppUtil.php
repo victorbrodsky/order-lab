@@ -797,6 +797,7 @@ class FellAppUtil {
 //            if ($testing) {
 //                $testing = true;
 //            }
+
         }
         if( $params && count($params) > 0 ) {
             $cycle = $params['cycle'];
@@ -989,7 +990,7 @@ class FellAppUtil {
                     if( $parentFormNodeId ) {
                         $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
                     }
-
+                    
                     $res = array(
                         'formNodeHolderId' => $formNodeHolderId,
                         'parentFormNodeId' => $newParentFormNodeId,
@@ -1002,7 +1003,7 @@ class FellAppUtil {
                         //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
                         //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
                     );
-
+                    
                     $resArr[] = $res;
                 }
                 /////////////// EOF create additional sections ///////////////
@@ -1049,13 +1050,13 @@ class FellAppUtil {
                 );
 
                 $template = $this->twig->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr); //->getContent()
-
+                //dump($template);exit('111');
                 //form form node array element
                 $newParentFormNodeId = null;
                 if( $parentFormNodeId ) {
                     $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
                 }
-
+                
                 $res = array(
                     'formNodeHolderId' => $formNodeHolderId,
                     'parentFormNodeId' => $newParentFormNodeId,
@@ -1068,7 +1069,7 @@ class FellAppUtil {
                     //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
                     //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
                 );
-
+                
                 $resArr[] = $res;
                 //////////////// EOF Regular form node /////////////////////
             }//if
