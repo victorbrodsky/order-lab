@@ -692,7 +692,7 @@ class FellAppUtil {
     // Central place to render Screening Questions HTML for a FellowshipApplication.
     // $request is used when called from controllers (to read cycle), and
     // can be null when called from FellAppController::getShowParameters.
-    //AI generated: replaced by getFellAppFormNodeHtml
+    //replaced by getFellAppFormNodeHtml
     public function getScreeningQuestionsHtml_NOTUSED( $request, $entity ) {
 
         // Only support FellowshipApplication entities

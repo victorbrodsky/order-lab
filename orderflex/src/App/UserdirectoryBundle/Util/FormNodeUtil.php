@@ -830,7 +830,7 @@ class FormNodeUtil
                 $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow New Entries"
             ) {
                 $valueArr = $receivingEntity->getIdValues();
-                echo "!!! Dropdown Menu=".$formNode->getObjectTypeName().": ".implode(',',$valueArr)."<br>";
+                //echo "!!! Dropdown Menu=".$formNode->getObjectTypeName().": ".implode(',',$valueArr)."<br>";
                 if( $asString ) {
                     $valueArrStr = array();
                     foreach( $valueArr as $thisValue ) {
