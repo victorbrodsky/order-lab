@@ -163,7 +163,7 @@
         $('#triggerUpdate').on('click', function(e) {
             //console.log('Click triggerUpdate 1');
             $('#btnSubmitHidden').val('fellapp-update'); // Optional hidden field
-            console.log('Click triggerUpdate');
+            //console.log('Click triggerUpdate');
             e.preventDefault(); // prevent default form submission
             $('#fellapp-applicant-form').submit();
         });
@@ -211,10 +211,10 @@
         //renderScreeningQuestions();
         var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
         var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
-        console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
-        console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+        //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+        //console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
         if( fellowshipSubspecialty.length ) {
-            console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+            //console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
             fellowshipSpecialtyListener(fellowshipSubspecialty);
             var initFellowshipSub = fellowshipSubspecialty.val();
             if( initFellowshipSub ) {
@@ -222,7 +222,7 @@
             }
         }
         if( globalFellowshipSpecialty.length ) {
-            console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+            //console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
             fellowshipSpecialtyListener(globalFellowshipSpecialty);
             var initGlobalFell = globalFellowshipSpecialty.val();
             if( initGlobalFell ) {
@@ -237,21 +237,21 @@
 //        if( globalFellowshipSpecialty && globalFellowshipSpecialty.length === 0 ) {
 //            console.log("globalFellowshipSpecialty="+globalFellowshipSpecialty.select2('val'));
 //        }
-        console.log("after fellowshipSubspecialty");
+        //console.log("after fellowshipSubspecialty");
     }); //document ready
 
     function fellowshipSpecialtyListener( specialtySelect ) {
-        console.log("fellowshipSpecialtyListener: val=", specialtySelect.val());
+        //console.log("fellowshipSpecialtyListener: val=", specialtySelect.val());
         specialtySelect.on('change', function(){
             var specialtyId = $(this).val();
-            console.log('specialty changed:', specialtyId);
+            //console.log('specialty changed:', specialtyId);
             // update Screening Questions visibility based on selected specialty
             updateScreeningQuestionsVisibility(specialtyId);
         });
     }
     // Show or hide the Screening Questions panel based on selected fellowship specialty (global or subspecialty)
     function updateScreeningQuestionsVisibility(globalId) {
-        console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
+        //console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
         var hasScreening = false;
 
         var panel = $('#fellowship-screening-questions').closest('.panel');
@@ -264,12 +264,12 @@
             if (!opt.length) {
                 opt = $('select.fellapp-fellowshipSubspecialty option[value="' + globalId + '"]');
             }
-            console.log("Set opt=",opt);
+            //console.log("Set opt=",opt);
             if (opt.length) {
                 var flag = opt.data('screening-questions');
-                console.log("Set flag="+flag);
+                //console.log("Set flag="+flag);
                 hasScreening = flag === 1 || flag === '1' || flag === true;
-                console.log("Set hasScreening="+hasScreening);
+                //console.log("Set hasScreening="+hasScreening);
             }
         } else {
             //console.log("Hide fellowship-screening-questions: globalId is not provided");
@@ -277,13 +277,13 @@
         }
 
         if (hasScreening) {
-            console.log("Show fellowship-screening-questions");
+            //console.log("Show fellowship-screening-questions");
             panel.show();
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
             }
         } else {
-            console.log("Hide fellowship-screening-questions");
+            //console.log("Hide fellowship-screening-questions");
             panel.hide();
         }
     }
@@ -603,6 +603,11 @@
     //http://127.0.0.1/directory/admin/list/form-nodes/285
     function renderScreeningQuestions() {
         console.log('### renderScreeningQuestions ###');
+        var _formcycle = $('#formcycle').val() || 'new';
+        if( _formcycle == 'download' ) {
+            console.log('### renderScreeningQuestions ###, _formcycle='+_formcycle);
+            return;
+        }
         var _holderNamespace = "App\\UserdirectoryBundle\\Entity";
         var _holderName = "FormNode";
         var holderId = $('#parent_formnode_id').val(); //TODO: pass holderId - parent form node here
@@ -611,7 +616,6 @@
         var _entityName = "FellowshipApplication"; //$('#entityName').val();             //"Message";
         //var _entityId = '1684'; //var fellappId = $('#fellapp_id').val();     // existing hidden input    //"Message ID";
         var _entityId = $('#fellapp_id').val();
-        var _formcycle = $('#formcycle').val() || 'new';
         console.log('renderScreeningQuestions: _formcycle='+_formcycle+', holderId='+holderId+', _entityId='+_entityId);
     //            var dataParam =
     //            {

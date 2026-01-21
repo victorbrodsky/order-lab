@@ -1168,15 +1168,102 @@ class FellAppController extends OrderAbstractController {
             $programSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
         }
 
-        //dump($institutions);
-        //exit('111');
-        //echo '$institutions='.count($institutions).'<br>';
-        //foreach ($institutions as $institution) {
-        //    echo '$institutions='.$institution->getTreeAbbreviation().'<br>';
-        //}
-        //exit('111');
-
         $roles = $user ? $user->getRoles() : [];
+
+        // Pre-render Screening Questions form nodes for download (PDF) cycle
+        $screeningQuestionsHtml = null;
+        if( $cycle === 'download' ) {
+//            try {
+//                $formNodeUtil = $this->container->get('user_formnode_utility');
+//                $formNodeRepo = $em->getRepository(\App\UserdirectoryBundle\Entity\FormNode::class);
+//                $rootFormNode = $formNodeRepo->findOneBy(['name' => 'Fellowship Screening Questions Form']);
+//
+//                $thisCycle = 'show';
+//
+//                if( $rootFormNode ) {
+//                    $formNodes = $formNodeUtil->getRecursionAllFormNodes($rootFormNode, array(), 'real', $thisCycle);
+//
+//                    $mapper = array(
+//                        'entityNamespace' => 'App\\FellAppBundle\\Entity',
+//                        'entityName' => 'FellowshipApplication',
+//                        'entityId' => $entity->getId(),
+//                    );
+//
+//                    $htmlParts = array();
+//                    foreach( $formNodes as $formNode ) {
+//
+//                        $formNodeValue = null;
+//                        $receivingEntity = null;
+//                        $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper,false,$thisCycle);
+//                        if( $complexRes ) {
+//                            $formNodeValue = $complexRes['formNodeValue'];
+//                            $receivingEntity = $complexRes['receivingEntity'];
+//                        }
+//
+//                        $processedValue = $formNodeUtil->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+//
+//                        $formNodeArr = array(
+//                            'formNode' => $formNode,
+//                            'formNodeId' => $formNode->getId(),
+//                            'formNodeHolderEntity' => $rootFormNode,
+//                            'receivingEntity' => $receivingEntity,
+//                            'cycle' => $thisCycle,
+//                            'formNodeValue' => $processedValue,
+//                            'single' => true,
+//                            'arraySectionCount' => null,
+//                        );
+//
+//                        $htmlParts[] = $this->renderView('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr);
+//                    }
+//
+//                    if( count($htmlParts) > 0 ) {
+//                        $screeningQuestionsHtml = implode("\n", $htmlParts);
+//                    }
+//                }
+//            } catch( \Exception $e ) {
+//                // Fail silently for screening questions; do not break primary download
+//            }
+            //$screeningQuestionsHtml = $fellappUtil->getScreeningQuestionsHtml(null, $entity);
+
+            $holderNamespace = "App\\UserdirectoryBundle\\Entity";
+            $holderName = "FormNode";
+            $holderId = $fellappUtil->getFellappParentFormNodeId();
+            $entityNamespace = "App\\FellAppBundle\\Entity";
+            $entityName = "FellowshipApplication";
+            $entityId = $entity->getId();
+            $testing = false;
+            $params = [
+                'cycle'           => 'show',
+                'holderNamespace' => $holderNamespace ?? null,
+                'holderName'      => $holderName ?? null,
+                'holderId'        => $holderId,
+                'entityNamespace' => $entityNamespace ?? null,
+                'entityName'      => $entityName ?? null,
+                'entityId'        => $entityId ?? null,
+                'testing'         => $testing ?? false,
+            ];
+
+
+            $screeningQuestionsHtml = $fellappUtil->getFellAppFormNodeHtml(null, $params);
+            function flatten(array $arr): array {
+                $out = [];
+                foreach ($arr as $item) {
+                    if (is_array($item)) {
+                        $out = array_merge($out, flatten($item));
+                    } else {
+                        $out[] = $item;
+                    }
+                }
+                return $out;
+            }
+            $flat = flatten($screeningQuestionsHtml);
+            $screeningQuestionsHtml = implode("\n", $flat);
+
+            //dump($screeningQuestionsHtml);
+            //exit('222');
+        }
+        //$screeningQuestionsHtml = $fellappUtil->getScreeningQuestionsHtml(null, $entity); //testing
+        //$screeningQuestionsHtml = $fellappUtil->getFellAppFormNodeHtml(null, $entity); //testing
 
         //echo "2 globalFellTypes count=".count($globalFellTypes)."<br>";
 
@@ -1241,6 +1328,7 @@ class FellAppController extends OrderAbstractController {
             'sitename' => $this->getParameter('fellapp.sitename'),
             'route_path' => $routeName, //getShowParameters
             'captchaSiteKey' => $captchaSiteKey,
+            'screeningQuestionsHtml' => $screeningQuestionsHtml,
             //'parentFormnodeId' => $parentFormnodeId
         );
     }

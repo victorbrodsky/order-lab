@@ -2560,7 +2560,7 @@ class FormNodeUtil
     //Used by:
     // 1) getFormNodeFieldsAction in FormNodeController to render fields for new/edit/amend
     // 2) getSingleFormNodeHolderShortInfo for info array for home and view pages
-    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper, $asObject=false, $cycle=null ) {
+    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper, $asObject=false, $cycle=null, $single=false ) {
 
         if( !$formNode ) {
             //echo "formNode is null<br>";
@@ -2583,6 +2583,7 @@ class FormNodeUtil
 //        echo "classNamespace=".$classNamespace."<br>";
 //        echo "className=".$className."<br>";
 //        echo "entityId=".$object->getId()."<br>";
+//        echo "cycle=$cycle <br>";
 //        print_r($mapper);
 
         $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////App\UserdirectoryBundle\Entity:ObjectTypeDropdown
@@ -2594,6 +2595,10 @@ class FormNodeUtil
         $dql->andWhere('list.formNode = :formNodeId');
         $dql->orderBy('list.arraySectionIndex','DESC');
         $dql->addOrderBy('list.orderinlist', 'ASC');
+
+        if( $single ) {
+            $dql->setMaxResults(1); //return a single result: prevent multiple identical results
+        }
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
@@ -2610,7 +2615,7 @@ class FormNodeUtil
         );
 
         $results = $query->getResult();
-        //echo "count=".count($results)."<br>";
+        //echo "!!! formNode ID=".$formNode->getId().": entityName=".$mapper['entityName'].": entityNamespace=".$mapper['entityNamespace'].": count=".count($results)."<br>"; //testing
 
         if( $asObject ) {
             //echo "return as object<br>";

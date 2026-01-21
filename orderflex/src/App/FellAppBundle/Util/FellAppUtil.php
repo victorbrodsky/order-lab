@@ -86,6 +86,7 @@ use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Symfony\Bundle\SecurityBundle\Security;
+use Twig\Environment;
 
 
 class FellAppUtil {
@@ -94,11 +95,13 @@ class FellAppUtil {
     protected $container;
     protected $security;
     protected $systemEmail;
+    protected $twig;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security ) {
+    public function __construct( EntityManagerInterface $em, ContainerInterface $container, Security $security, Environment $twig ) {
         $this->em = $em;
         $this->container = $container;
         $this->security = $security;
+        $this->twig = $twig;
     }
 
     //check for active access requests
@@ -684,6 +687,510 @@ class FellAppUtil {
             $parentFormNodeId = $parentFormNode->getId();
         }
         return $parentFormNodeId;
+    }
+
+    // Central place to render Screening Questions HTML for a FellowshipApplication.
+    // $request is used when called from controllers (to read cycle), and
+    // can be null when called from FellAppController::getShowParameters.
+    public function getScreeningQuestionsHtml( $request, $entity ) {
+
+        // Only support FellowshipApplication entities
+        if( !$entity || !$entity instanceof FellowshipApplication ) {
+            return null;
+        }
+
+        // Respect specialty-level screeningQuestions flag and mapping to parent FormNode
+        $parentFormNode = $this->getParentFormNodeBySpecialty($entity);
+        if( !$parentFormNode ) {
+            // Either no specialty or screeningQuestions is false
+            return null;
+        }
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        //$twig = $this->container->get('twig');
+
+        // Determine cycle from request if available; default to a read-only cycle
+        $cycle = 'show';
+        if( $request && method_exists($request, 'query') ) {
+            $reqCycle = $request->query->get('cycle');
+            if( $reqCycle ) {
+                $cycle = $reqCycle;
+            }
+        }
+
+        // Collect all real form nodes under the Screening Questions parent
+        $formNodes = $formNodeUtil->getRecursionAllFormNodes($parentFormNode, array(), 'real', $cycle);
+        if( !$formNodes || count($formNodes) === 0 ) {
+            return null;
+        }
+
+        // Mapper for retrieving values bound to this FellowshipApplication
+        $mapper = array(
+            'entityNamespace' => 'App\\FellAppBundle\\Entity',
+            'entityName' => 'FellowshipApplication',
+            'entityId' => $entity->getId(),
+        );
+
+        $htmlParts = array();
+
+        foreach( $formNodes as $formNode ) {
+
+            $formNodeValue = null;
+            $receivingEntity = null;
+
+            $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode, $mapper, false, $cycle);
+            if( $complexRes ) {
+                $formNodeValue = $complexRes['formNodeValue'];
+                $receivingEntity = $complexRes['receivingEntity'];
+            }
+
+            // Normalize any special wrapper types
+            $processedValue = $formNodeUtil->processFormNodeValue($formNode, $receivingEntity, $formNodeValue);
+
+            $formNodeArr = array(
+                'formNode' => $formNode,
+                'formNodeId' => $formNode->getId(),
+                'formNodeHolderEntity' => $parentFormNode,
+                'receivingEntity' => $receivingEntity,
+                'cycle' => $cycle,
+                'formNodeValue' => $processedValue,
+                'single' => true,
+                'arraySectionCount' => null,
+            );
+
+            $htmlParts[] = $this->twig->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr);
+        }
+
+        dump($htmlParts);
+        exit("end of getScreeningQuestionsHtml");
+
+        if( count($htmlParts) === 0 ) {
+            return null;
+        }
+
+        return implode("\n", $htmlParts);
+    }
+
+    //TODO:
+    public function getFellAppFormNodeHtml( $request, $params=null ) {
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $em = $this->em;
+        $testing = false;
+
+        if( $request ) {
+            $cycle = $request->query->get('cycle');
+//            if (false === $this->security->isGranted('ROLE_USER') && $cycle != 'new') {
+//                return null;
+//            }
+
+            //formnode's holder (MessageCategory)
+            $holderNamespace = $request->query->get('holderNamespace');
+            $holderName = $request->query->get('holderName');
+            $holderId = $request->query->get('holderId');
+
+            //receiving list's entityName (Message)
+            $entityNamespace = $request->query->get('entityNamespace'); //"App\\FellAppBundle\\Entity"
+            $entityName = $request->query->get('entityName'); //"FellowshipApplication";
+            $entityId = $request->query->get('entityId'); //"FellowshipApplication ID";
+
+            //add to url: &testing=true
+            $testing = $request->query->get('testing');
+//            if ($testing) {
+//                $testing = true;
+//            }
+        }
+        if( $params && count($params) > 0 ) {
+            $cycle = $params['cycle'];
+            $holderNamespace = $params['holderNamespace'];
+            $holderName = $params['holderName'];
+            $holderId = $params['holderId'];
+            $entityNamespace = $params['entityNamespace'];
+            $entityName = $params['entityName'];
+            $entityId = $params['entityId'];
+            $testing = $params['testing'];
+        }
+        if ($testing) {
+            $testing = true;
+        }
+
+        if (false === $this->security->isGranted('ROLE_USER') && $cycle != 'new') {
+            return null;
+        }
+
+        $logger = $this->container->get('logger');
+        $logger->notice("getFormNodesFieldsFromParentsAction: holderNamespace=$holderNamespace, holderName=$holderName, holderId=$holderId");
+
+        //echo "entityNamespace=".$entityNamespace."<br>";
+        //echo "entityName=".$entityName."<br>";
+        //echo "entityId=".$entityId."<br>";
+
+        if( !$holderNamespace || !$holderName || !$holderId ) {
+            //echo "no holder namespace and name";
+            return null;
+        }
+
+        $holderFullName = $holderNamespace . "\\" . $holderName;
+        $formNodeHolderEntity = $em->getRepository($holderFullName)->find($holderId);
+        if( !$formNodeHolderEntity ) {
+            throw new \Exception( 'Entity not found: holderFullName='.$holderFullName.'; holderId='.$holderId );
+        }
+        $logger->notice("getFormNodesFieldsFromParentsAction: holderFullName=$holderFullName: formNodeHolderEntity ID=".$formNodeHolderEntity->getId());
+        $logger->notice("getFormNodesFieldsFromParentsAction: formNodeHolderEntity->getName()=".$formNodeHolderEntity->getName().", formNodeHolderEntity->getId()=".$formNodeHolderEntity->getId());
+
+        $formNodeHolderId = $formNodeHolderEntity->getId();
+        $resArr = array();
+
+        if( $testing ) {
+            echo "cycle=" . $cycle . "<br>";
+        }
+
+        //Testing: create dummy MessageCategory
+        //"Fellowship Screening Questions"
+        //TODO: pass parent $formNode to this function
+        $formNode = $em->getRepository(FormNode::class)->findOneByName("Fellowship Screening Questions Form");
+        if( !$formNode ) {
+            exit('FormNode not found by "Fellowship Screening Questions"');
+        }
+        //echo "formNode=".$formNode->getId()."<br>";
+        //$formNodeHolderEntity = new MessageCategory();
+        //$formNodeHolderEntity->addFormNode($formNode);
+        //$holderForms = array($formNode);
+        //$formNodes = array();
+        //assume only one form attached to the message category holder
+        $formNodes = $formNodeUtil->getRecursionAllFormNodes($formNode,$formNodes=array(),'real',$cycle);
+        //dump($formNodes);
+        //exit('getFormNodesFieldsFromParentsAction');
+
+        //$formNodes = $formNodeHolderEntity->getFormNodes();
+        //get only 'real' fields as $formNodes
+        //$formNodes = $formNodeUtil->getAllRealFormNodes($formNodeHolderEntity,$cycle);
+
+        //reverse array to show the fields backwards for show and edit, otherwise the order of submitted form fields is reversed.
+        //if( $cycle != "new" ) {
+        //test by link (Test: MessageCategory&holderId=70):
+        // http://localhost/order/directory/formnode-fields/?holderNamespace=App\OrderformBundle\Entity&holderName=MessageCategory&holderId=70&entityNamespace=App\OrderformBundle\Entity&entityName=Message&entityId=222&cycle=show&testing=true
+        //One way to solve it: for show and edit - start calling "formnode-fields" from top to bottom. On show page, this done in opposite way - from bottom to top.
+        //for show use reverse array (don't use it for top to bottom combobox  processing)
+        //$formNodes = array_reverse($formNodes);
+        //}
+
+        foreach( $formNodes as $formNode ) {
+
+            if( $testing ) {
+                echo "<br>###################### ".$formNode->getId()." ################<br>";
+                echo "############# formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
+            }
+            $logger->notice("getFormNodeFieldsAction: formNode->getName()=".$formNode->getName().", formNode->getId()=".$formNode->getId().", formNode->getObjectTypeId()=".$formNode->getObjectTypeId());
+
+            if( $formNode && $formNode->getId() ) {
+                $formNodeId = $formNode->getId();
+            } else {
+                continue;
+            }
+
+            if( $this->isFormNodeInArray($formNodeId,$resArr) ) {
+                continue;
+            }
+
+            if( $testing ) {
+                echo "<br>Check formNode: holder=" .
+                    $formNodeHolderEntity->getName() . "; formnode=" .
+                    $formNode->getName() . "; objecttype=" .
+                    $formNode->getObjectTypeName() . ":".
+                    $formNode->getObjectTypeId() . "<br>";
+            }
+
+            $parentFormNodeId = null;
+            $arraySectionCount = null;
+            $parentFormNode = $formNode->getParent();
+
+            //find FormNode value by entityNamespace, entityName, entityId
+            $formNodeValue = null;
+            $receivingEntity = null;
+            if( $entityId ) {
+                $mapper = array(
+                    'entityNamespace' => $entityNamespace,
+                    'entityName' => $entityName, //"Message"
+                    'entityId' => $entityId,
+                );
+                $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper,false,$cycle,true);
+                if( $complexRes ) {
+                    $formNodeValue = $complexRes['formNodeValue'];
+                    $receivingEntity = $complexRes['receivingEntity'];
+                }
+            }
+            //echo "formNode=".$formNode->getId()."<br>";
+            //echo "receivingEntity=".$receivingEntity."<br>";
+            if( $testing ) {
+                echo "formNodeValue for formNode=".$formNode->getId().":<br>";
+                //print "<pre>";
+                //print_r($formNodeValue);
+                //print "</pre>EOF formNodeValues<br>";
+                //dump($formNodeValue);
+                //exit();
+            }
+
+            if( is_array($formNodeValue) ) {
+                if( $testing ) {
+                    echo "formNodeValue is array count=" . count($formNodeValue) . "<br>";
+                }
+
+                /////////////// TODO: create additional sections when show submitted entry ///////////////
+                foreach( $formNodeValue as $formNodeValueArr ) {
+                    $formNodeValue = $formNodeValueArr['formNodeValue'];
+                    $arraySectionCount = $formNodeValueArr['arraySectionIndex']; //in DB arraySectionCount named as arraySectionIndex
+
+                    if( $testing ) {
+                        echo "ArraySection arraySectionCount=" . $arraySectionCount . "<br>";
+                    }
+
+//                    if( $arraySectionCount ) {
+//                        $formNodeId = $formNodeId.'_'.$arraySectionCount;
+//                        if( $parentFormNodeId ) {
+//                            $parentFormNodeId = $parentFormNodeId.'_'.$arraySectionCount;
+//                        }
+//                    }
+                    //$formNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($formNodeId,$arraySectionCount);
+//                    if( $parentFormNodeId ) {
+//                        $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
+//                    }
+
+                    //append prefix to clean array section count: 0_0 => prefix_0_0_prefix
+                    $arraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($arraySectionCount);
+
+                    //insert parent nested sections to resulting from node array
+                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
+
+                    //get common (merged) parent section
+                    $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+
+                    if( $parentFormNode ) {
+                        $parentFormNodeId = $parentFormNode->getId();
+                    }
+
+                    //process userWrapper case
+                    $formNodeValue = $formNodeUtil->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+
+                    $formNodeArr = array(
+                        'formNode' => $formNode,
+                        'formNodeId' => $formNodeId,
+                        'formNodeHolderEntity' => $formNodeHolderEntity,
+                        'receivingEntity' => $receivingEntity,
+                        'cycle' => $cycle,
+                        'formNodeValue' => $formNodeValue,
+                        'single' => 'single',
+                        'arraySectionCount' => $arraySectionCount,
+                        //'arraySectionIndex' => null
+                    );
+
+                    $template = $this->twig->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr); //->getContent()
+
+                    //form form node array element
+                    $newParentFormNodeId = null;
+                    if( $parentFormNodeId ) {
+                        $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
+                    }
+
+                    $res = array(
+                        'formNodeHolderId' => $formNodeHolderId,
+                        'parentFormNodeId' => $newParentFormNodeId,
+                        'formNodeId' => $formNodeId,
+                        'simpleFormNode' => true,
+                        'formNodeObjectType' => $formNode->getObjectType() . "",
+                        'formNodeValue' => $formNodeValue,
+                        'formNodeHtml' => $template,
+                        'arraySectionCount' => $arraySectionCount
+                        //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
+                        //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
+                    );
+
+                    $resArr[] = $res;
+                }
+                /////////////// EOF create additional sections ///////////////
+
+            } else {
+
+                //////////////// Regular form node /////////////////////
+                if( $testing ) {
+                    echo "formNodeValue is regular formNodeValue=" . $formNodeValue . "<br>";
+                }
+
+                if( $parentFormNode ) {
+
+                    //get array section count i.e. 0-1
+                    $arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$testing);
+                    if( $testing ) {
+                        echo "Regular arraySectionCount=" . $arraySectionCount . "<br>";
+                    }
+
+                    //insert parent nested sections to resulting from node array
+                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
+
+                    //get common (merged) parent section
+                    $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+
+                    if( $parentFormNode ) {
+                        $parentFormNodeId = $parentFormNode->getId();
+                    }
+                }
+
+                //process userWrapper case
+                $formNodeValue = $formNodeUtil->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
+
+                $formNodeArr = array(
+                    'formNode' => $formNode,
+                    'formNodeId' => $formNodeId,
+                    'formNodeHolderEntity' => $formNodeHolderEntity,
+                    'receivingEntity' => $receivingEntity,
+                    'cycle' => $cycle,
+                    'formNodeValue' => $formNodeValue,
+                    'single' => 'single',
+                    'arraySectionCount' => $arraySectionCount,
+                    //'arraySectionIndex' => null
+                );
+
+                $template = $this->twig->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr); //->getContent()
+
+                //form form node array element
+                $newParentFormNodeId = null;
+                if( $parentFormNodeId ) {
+                    $newParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNodeId,$arraySectionCount);
+                }
+
+                $res = array(
+                    'formNodeHolderId' => $formNodeHolderId,
+                    'parentFormNodeId' => $newParentFormNodeId,
+                    'formNodeId' => $formNodeId,
+                    'simpleFormNode' => true,
+                    'formNodeObjectType' => $formNode->getObjectType() . "",
+                    'formNodeValue' => $formNodeValue,
+                    'formNodeHtml' => $template,
+                    'arraySectionCount' => null
+                    //'parentFormnodeHolderId' => $parentFormnodeHolderId, //parent messageCategory Id
+                    //'idBreadcrumbsArr' => $idBreadcrumbsArr    //implode("=>",$idBreadcrumbsArr)
+                );
+
+                $resArr[] = $res;
+                //////////////// EOF Regular form node /////////////////////
+            }//if
+
+        }//foreach
+        return $resArr;
+    }
+    public function isFormNodeInArray( $formNodeId, $resArr ) {
+        foreach( $resArr as $res ) {
+            if( $res['formNodeId'] == $formNodeId ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public function getParentFormNodeSection( $formNodeHolderEntity, $formNode ) {
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        return $formNodeUtil->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+    }
+    //create recursively $formNodeArr containing
+    public function createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle ) {
+        $testing = false;
+        $formNodeHolderId = $formNodeHolderEntity->getId();
+        if( !$formNodeHolderId ) {
+            return $resArr;
+        }
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+
+        //check if the node has a parent form node type of Section and visible. The node will be placed by JS inside this section
+        $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+
+        if( $parentFormNode ) {
+
+            $parentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNode->getId(),$arraySectionCount);
+
+            if( $this->isFormNodeInArray($parentFormNodeId,$resArr) ) {
+                return $resArr;
+            }
+
+            //only for array sections: get index of this array section from the top "Form". Use $arraySectionCount: count number of indexes (0=>1, 0-1=>2)
+            //$arraySectionIndex = $formNodeUtil->getArraySectionIndexByHolderTreeRecursion($formNodeHolderEntity,$parentFormNode);
+//            if( $arraySectionCount !== "" && $arraySectionCount !== null ) {
+//                $arraySectionCountArr = explode('-',$arraySectionCount);
+//                $arraySectionIndex = count($arraySectionCountArr);
+//                if( $arraySectionIndex > 0 ) {
+//                    $arraySectionIndex = $arraySectionIndex - 1;
+//                } else {
+//                    $arraySectionIndex = 0;
+//                }
+//            }
+
+            if( $testing ) {
+                echo "<br>######## Add Parent: ".$parentFormNode->getId()." #######<br>";
+                //echo "Regular arraySectionCount=" . $arraySectionCount . "<br>";
+            }
+
+            //$arraySectionCount = null;
+            //$formNodeUtil = $this->container->get('user_formnode_utility');
+            //$arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
+
+//            if( $arraySectionCount ) {
+//                $parentFormNodeId = $parentFormNode->getId().'_'.$arraySectionCount;
+//            } else {
+//                $parentFormNodeId = $parentFormNode->getId();
+//            }
+            //$parentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNode->getId(),$arraySectionCount);
+
+            $formNodeArr = array(
+                'formNode' => $parentFormNode,
+                'formNodeId' => $parentFormNodeId,
+                'formNodeHolderEntity' => $formNodeHolderEntity,
+                'receivingEntity' => null,
+                'cycle' => $cycle,  //'edit',
+                'formNodeValue' => null,
+                'single' => $this->single,
+                'arraySectionCount' => $arraySectionCount,
+                //'arraySectionIndex' => $arraySectionIndex
+            );
+
+            $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
+
+            $parentArraySectionCount = 0;
+            $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
+            if( $grandParentFormNode ) {
+
+                if( $formNodeUtil->isUnderArraySectionRecursion($grandParentFormNode,$this->testing) ) {
+                    $cleanArraySectionCount = $formNodeUtil->getCleanedArraySection($arraySectionCount);
+                    $arraySectionCountArr = explode('-', $cleanArraySectionCount);
+                    //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
+                    array_pop($arraySectionCountArr);
+                    $parentArraySectionCount = implode('-', $arraySectionCountArr);
+                    $parentArraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($parentArraySectionCount);
+                    $grandParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($grandParentFormNode->getId(), $parentArraySectionCount);
+                } else {
+                    $grandParentFormNodeId = $grandParentFormNode->getId();
+                }
+            } else {
+                $grandParentFormNodeId = null;
+            }
+
+            $res = array(
+                'formNodeHolderId' => $formNodeHolderId,
+                'parentFormNodeId' => $grandParentFormNodeId,
+                'formNodeId' => $parentFormNodeId,  //$parentFormNode->getId(),
+                'formNodeValue' => null,
+                'formNodeHtml' => $template,
+                'simpleFormNode' => false,
+                'arraySectionCount' => $arraySectionCount,
+                //'arraySectionIndex' => $arraySectionIndex
+            );
+
+            $resArr[] = $res;
+
+            return $this->createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $parentFormNode, $resArr, $parentArraySectionCount, $cycle );
+
+        } else {
+            return $resArr;
+        }
+
+        return $resArr;
     }
 
 //    public function getInstitutionByGlobalFelltype( $globalFellType ) {

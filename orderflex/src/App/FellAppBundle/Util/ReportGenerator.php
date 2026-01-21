@@ -1020,9 +1020,9 @@ class ReportGenerator {
                     'PHPSESSID' => $PHPSESSID,
                 ],
                 // delay in milliseconds before rendering, e.g. 5 seconds
-                'javascript-delay' => 60000,
+                //'javascript-delay' => 60000,
                 // optional: prevent stopping on slow JS
-                'no-stop-slow-scripts' => true,
+                //'no-stop-slow-scripts' => true,
             ]
         );
 

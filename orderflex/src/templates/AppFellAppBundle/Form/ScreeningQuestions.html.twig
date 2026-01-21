@@ -52,6 +52,11 @@
                                     font-weight: normal !important;   /* your new default or put 300 */
                                 }
                             </style>
+
+                            {# When generating a download/PDF, inject pre-rendered Screening Questions HTML #}
+                            {% if cycle is defined and cycle == 'download' and screeningQuestionsHtml is defined and screeningQuestionsHtml %}
+                                {{ screeningQuestionsHtml|raw }}
+                            {% endif %}
                         </div>
 
                     </div>

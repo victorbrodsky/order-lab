@@ -22,14 +22,12 @@ services:
 
     #fellowship application utilities
     fellapp_util:
-            class: App\FellAppBundle\Util\FellAppUtil
+        class: App\FellAppBundle\Util\FellAppUtil
+
     fellapp_importpopulate_util:
         class: App\FellAppBundle\Util\FellAppImportPopulateUtil
 
     fellapp_reportgenerator:
-#        autowire: true
-#        autoconfigure: true
-#        public: true
         class: App\FellAppBundle\Util\ReportGenerator
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
