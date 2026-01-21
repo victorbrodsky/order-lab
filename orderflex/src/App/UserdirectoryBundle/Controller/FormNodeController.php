@@ -141,7 +141,7 @@ class FormNodeController extends OrderAbstractController {
                 continue;
             }
 
-            if( $this->isFormNodeInArray($formNodeId,$resArr) ) {
+            if( $formNodeUtil->isFormNodeInArray($formNodeId,$resArr) ) {
                 continue;
             }
 
@@ -229,10 +229,10 @@ class FormNodeController extends OrderAbstractController {
                     $arraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($arraySectionCount);
 
                     //insert parent nested sections to resulting from node array
-                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
+                    $resArr = $formNodeUtil->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
 
                     //get common (merged) parent section
-                    $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+                    $parentFormNode = $formNodeUtil->getParentFormNodeSection($formNodeHolderEntity,$formNode);
 
                     if( $parentFormNode ) {
                         $parentFormNodeId = $parentFormNode->getId();
@@ -290,10 +290,10 @@ class FormNodeController extends OrderAbstractController {
                     }
 
                     //insert parent nested sections to resulting from node array
-                    $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
+                    $resArr = $formNodeUtil->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
 
                     //get common (merged) parent section
-                    $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+                    $parentFormNode = $formNodeUtil->getParentFormNodeSection($formNodeHolderEntity,$formNode);
 
                     if( $parentFormNode ) {
                         $parentFormNodeId = $parentFormNode->getId();
@@ -486,7 +486,7 @@ class FormNodeController extends OrderAbstractController {
                     continue;
                 }
 
-                if ($this->isFormNodeInArray($formNodeId, $resArr)) {
+                if ($formNodeUtil->isFormNodeInArray($formNodeId, $resArr)) {
                     continue;
                 }
 
@@ -574,10 +574,10 @@ class FormNodeController extends OrderAbstractController {
                         $arraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($arraySectionCount);
 
                         //insert parent nested sections to resulting from node array
-                        $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
+                        $resArr = $formNodeUtil->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
 
                         //get common (merged) parent section
-                        $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity, $formNode);
+                        $parentFormNode = $formNodeUtil->getParentFormNodeSection($formNodeHolderEntity, $formNode);
 
                         if ($parentFormNode) {
                             $parentFormNodeId = $parentFormNode->getId();
@@ -636,10 +636,10 @@ class FormNodeController extends OrderAbstractController {
                         }
 
                         //insert parent nested sections to resulting from node array
-                        $resArr = $this->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
+                        $resArr = $formNodeUtil->createParentFormSectionTemplateRecursively($formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle);
 
                         //get common (merged) parent section
-                        $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity, $formNode);
+                        $parentFormNode = $formNodeUtil->getParentFormNodeSection($formNodeHolderEntity, $formNode);
 
                         if ($parentFormNode) {
                             $parentFormNodeId = $parentFormNode->getId();
@@ -714,109 +714,109 @@ class FormNodeController extends OrderAbstractController {
         return $response;
     }
 
-    //create recursively $formNodeArr containing
-    public function createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle ) {
-
-        $formNodeHolderId = $formNodeHolderEntity->getId();
-        if( !$formNodeHolderId ) {
-            return $resArr;
-        }
-
-        $formNodeUtil = $this->container->get('user_formnode_utility');
-
-        //check if the node has a parent form node type of Section and visible. The node will be placed by JS inside this section
-        $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
-
-        if( $parentFormNode ) {
-
-            $parentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNode->getId(),$arraySectionCount);
-
-            if( $this->isFormNodeInArray($parentFormNodeId,$resArr) ) {
-                return $resArr;
-            }
-
-            //only for array sections: get index of this array section from the top "Form". Use $arraySectionCount: count number of indexes (0=>1, 0-1=>2)
-            //$arraySectionIndex = $formNodeUtil->getArraySectionIndexByHolderTreeRecursion($formNodeHolderEntity,$parentFormNode);
-//            if( $arraySectionCount !== "" && $arraySectionCount !== null ) {
-//                $arraySectionCountArr = explode('-',$arraySectionCount);
-//                $arraySectionIndex = count($arraySectionCountArr);
-//                if( $arraySectionIndex > 0 ) {
-//                    $arraySectionIndex = $arraySectionIndex - 1;
+//    //create recursively $formNodeArr containing
+//    public function createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $formNode, $resArr, $arraySectionCount, $cycle ) {
+//
+//        $formNodeHolderId = $formNodeHolderEntity->getId();
+//        if( !$formNodeHolderId ) {
+//            return $resArr;
+//        }
+//
+//        $formNodeUtil = $this->container->get('user_formnode_utility');
+//
+//        //check if the node has a parent form node type of Section and visible. The node will be placed by JS inside this section
+//        $parentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$formNode);
+//
+//        if( $parentFormNode ) {
+//
+//            $parentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNode->getId(),$arraySectionCount);
+//
+//            if( $formNodeUtil->isFormNodeInArray($parentFormNodeId,$resArr) ) {
+//                return $resArr;
+//            }
+//
+//            //only for array sections: get index of this array section from the top "Form". Use $arraySectionCount: count number of indexes (0=>1, 0-1=>2)
+//            //$arraySectionIndex = $formNodeUtil->getArraySectionIndexByHolderTreeRecursion($formNodeHolderEntity,$parentFormNode);
+////            if( $arraySectionCount !== "" && $arraySectionCount !== null ) {
+////                $arraySectionCountArr = explode('-',$arraySectionCount);
+////                $arraySectionIndex = count($arraySectionCountArr);
+////                if( $arraySectionIndex > 0 ) {
+////                    $arraySectionIndex = $arraySectionIndex - 1;
+////                } else {
+////                    $arraySectionIndex = 0;
+////                }
+////            }
+//
+//            if( $this->testing ) {
+//                echo "<br>######## Add Parent: ".$parentFormNode->getId()." #######<br>";
+//                //echo "Regular arraySectionCount=" . $arraySectionCount . "<br>";
+//            }
+//
+//            //$arraySectionCount = null;
+//            //$formNodeUtil = $this->container->get('user_formnode_utility');
+//            //$arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
+//
+////            if( $arraySectionCount ) {
+////                $parentFormNodeId = $parentFormNode->getId().'_'.$arraySectionCount;
+////            } else {
+////                $parentFormNodeId = $parentFormNode->getId();
+////            }
+//            //$parentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNode->getId(),$arraySectionCount);
+//
+//            $formNodeArr = array(
+//                'formNode' => $parentFormNode,
+//                'formNodeId' => $parentFormNodeId,
+//                'formNodeHolderEntity' => $formNodeHolderEntity,
+//                'receivingEntity' => null,
+//                'cycle' => $cycle,  //'edit',
+//                'formNodeValue' => null,
+//                'single' => $this->single,
+//                'arraySectionCount' => $arraySectionCount,
+//                //'arraySectionIndex' => $arraySectionIndex
+//            );
+//
+//            $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
+//
+//            $parentArraySectionCount = 0;
+//            $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
+//            if( $grandParentFormNode ) {
+//
+//                if( $formNodeUtil->isUnderArraySectionRecursion($grandParentFormNode,$this->testing) ) {
+//                    $cleanArraySectionCount = $formNodeUtil->getCleanedArraySection($arraySectionCount);
+//                    $arraySectionCountArr = explode('-', $cleanArraySectionCount);
+//                    //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
+//                    array_pop($arraySectionCountArr);
+//                    $parentArraySectionCount = implode('-', $arraySectionCountArr);
+//                    $parentArraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($parentArraySectionCount);
+//                    $grandParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($grandParentFormNode->getId(), $parentArraySectionCount);
 //                } else {
-//                    $arraySectionIndex = 0;
+//                    $grandParentFormNodeId = $grandParentFormNode->getId();
 //                }
-//            }
-
-            if( $this->testing ) {
-                echo "<br>######## Add Parent: ".$parentFormNode->getId()." #######<br>";
-                //echo "Regular arraySectionCount=" . $arraySectionCount . "<br>";
-            }
-
-            //$arraySectionCount = null;
-            //$formNodeUtil = $this->container->get('user_formnode_utility');
-            //$arraySectionCount = $formNodeUtil->getArraySectionCount($parentFormNode,$arraySectionCount,$this->testing);
-
-//            if( $arraySectionCount ) {
-//                $parentFormNodeId = $parentFormNode->getId().'_'.$arraySectionCount;
 //            } else {
-//                $parentFormNodeId = $parentFormNode->getId();
+//                $grandParentFormNodeId = null;
 //            }
-            //$parentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($parentFormNode->getId(),$arraySectionCount);
-
-            $formNodeArr = array(
-                'formNode' => $parentFormNode,
-                'formNodeId' => $parentFormNodeId,
-                'formNodeHolderEntity' => $formNodeHolderEntity,
-                'receivingEntity' => null,
-                'cycle' => $cycle,  //'edit',
-                'formNodeValue' => null,
-                'single' => $this->single,
-                'arraySectionCount' => $arraySectionCount,
-                //'arraySectionIndex' => $arraySectionIndex
-            );
-
-            $template = $this->render('AppUserdirectoryBundle/FormNode/formnode_fields.html.twig', $formNodeArr)->getContent();
-
-            $parentArraySectionCount = 0;
-            $grandParentFormNode = $this->getParentFormNodeSection($formNodeHolderEntity,$parentFormNode);
-            if( $grandParentFormNode ) {
-
-                if( $formNodeUtil->isUnderArraySectionRecursion($grandParentFormNode,$this->testing) ) {
-                    $cleanArraySectionCount = $formNodeUtil->getCleanedArraySection($arraySectionCount);
-                    $arraySectionCountArr = explode('-', $cleanArraySectionCount);
-                    //echo "arraySectionCountArr count=".count($arraySectionCountArr)."<br>";
-                    array_pop($arraySectionCountArr);
-                    $parentArraySectionCount = implode('-', $arraySectionCountArr);
-                    $parentArraySectionCount = $formNodeUtil->gePrefixedtArraySectionCount($parentArraySectionCount);
-                    $grandParentFormNodeId = $formNodeUtil->getFormNodeIdWithSectionCount($grandParentFormNode->getId(), $parentArraySectionCount);
-                } else {
-                    $grandParentFormNodeId = $grandParentFormNode->getId();
-                }
-            } else {
-                $grandParentFormNodeId = null;
-            }
-
-            $res = array(
-                'formNodeHolderId' => $formNodeHolderId,
-                'parentFormNodeId' => $grandParentFormNodeId,
-                'formNodeId' => $parentFormNodeId,  //$parentFormNode->getId(),
-                'formNodeValue' => null,
-                'formNodeHtml' => $template,
-                'simpleFormNode' => false,
-                'arraySectionCount' => $arraySectionCount,
-                //'arraySectionIndex' => $arraySectionIndex
-            );
-
-            $resArr[] = $res;
-
-            return $this->createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $parentFormNode, $resArr, $parentArraySectionCount, $cycle );
-
-        } else {
-            return $resArr;
-        }
-
-        return $resArr;
-    }
+//
+//            $res = array(
+//                'formNodeHolderId' => $formNodeHolderId,
+//                'parentFormNodeId' => $grandParentFormNodeId,
+//                'formNodeId' => $parentFormNodeId,  //$parentFormNode->getId(),
+//                'formNodeValue' => null,
+//                'formNodeHtml' => $template,
+//                'simpleFormNode' => false,
+//                'arraySectionCount' => $arraySectionCount,
+//                //'arraySectionIndex' => $arraySectionIndex
+//            );
+//
+//            $resArr[] = $res;
+//
+//            return $this->createParentFormSectionTemplateRecursively( $formNodeHolderEntity, $parentFormNode, $resArr, $parentArraySectionCount, $cycle );
+//
+//        } else {
+//            return $resArr;
+//        }
+//
+//        return $resArr;
+//    }
 
     //only "Form Section" and "Form Section Array" are visible by convention.
 //    public function getParentFormNodeSectionOLD( $formNodeHolderEntity, $formNode ) {
@@ -878,14 +878,14 @@ class FormNodeController extends OrderAbstractController {
     }
 
 
-    public function isFormNodeInArray( $formNodeId, $resArr ) {
-        foreach( $resArr as $res ) {
-            if( $res['formNodeId'] == $formNodeId ) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public function isFormNodeInArray( $formNodeId, $resArr ) {
+//        foreach( $resArr as $res ) {
+//            if( $res['formNodeId'] == $formNodeId ) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
 
 
