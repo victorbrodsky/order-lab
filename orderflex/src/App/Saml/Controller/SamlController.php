@@ -268,8 +268,9 @@ class SamlController extends OrderAbstractController //AbstractController
 
         //$relayState = str_replace('http','https',$relayState);
         $userUtil = $this->container->get('user_utility');
-        $scheme = $userUtil->getRealScheme($request);
-        $relayState = str_replace('http',$scheme,$relayState);
+        //$scheme = $userUtil->getRealScheme($request);
+        //$relayState = str_replace('http',$scheme,$relayState);
+        $relayState = $userUtil->getRealSchemeUrl($relayState);
         $this->logger->notice("SamlController logout: 2relayState=".$relayState);
 
         //return new Response('Redirecting to IdP for logout...', 302);

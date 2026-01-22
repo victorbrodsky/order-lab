@@ -342,6 +342,7 @@ class SecurityController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
+        $userUtil = $this->container->get('user_utility');
         $em = $this->getDoctrine()->getManager();
 
         //$helper = $this->container->get('security.authentication_utils');
@@ -393,16 +394,12 @@ class SecurityController extends OrderAbstractController
         $lastRoute = $request->getSession()->get($indexLastRoute);
         //$logger->notice('1 loginPage: $lastRoute=['.$lastRoute."]");
         //replace http to https
-        $protocol = 'https'; //TODO: looks like we need a real scheme parameter in site settings (in case of haproxy)
-//            if( isset($_SERVER['HTTPS']) ) {
-//                $protocol = 'https';
-//            }
-//            else {
-//                $protocol = 'http';
-//            }
-//            echo 'authenticate: protocol='.$protocol."<br>";
+        //$protocol = 'https'; //TODO: looks like we need a real scheme parameter in site settings (in case of haproxy)
+        //if( $lastRoute ) {
+        //    $lastRoute = str_replace('http', $protocol, $lastRoute);
+        //}
         if( $lastRoute ) {
-            $lastRoute = str_replace('http', $protocol, $lastRoute);
+            $lastRoute = $userUtil->getRealSchemeUrl($lastRoute);
         }
         //echo 'authenticate: lastRoute='.$lastRoute."<br>";
         //$logger->notice('2 loginPage: $lastRoute=['.$lastRoute."]");

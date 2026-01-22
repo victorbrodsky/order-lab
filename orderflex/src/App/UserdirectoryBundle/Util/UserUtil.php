@@ -151,15 +151,15 @@ class UserUtil {
         }
         return NULL;
     }
-    public function getRealSchemeUrl_OLD( $url ) {
-        $scheme = $this->getRealScheme();
-        echo "getRealSchemeUrl: scheme=$scheme<br>";
-        if( $scheme ) {
-            $url = str_replace('http',$scheme,$url);
-        }
-        echo "getRealSchemeUrl: return url=$url<br>";
-        return $url;
-    }
+//    public function getRealSchemeUrl_OLD( $url ) {
+//        $scheme = $this->getRealScheme();
+//        echo "getRealSchemeUrl: scheme=$scheme<br>";
+//        if( $scheme ) {
+//            $url = str_replace('http',$scheme,$url);
+//        }
+//        echo "getRealSchemeUrl: return url=$url<br>";
+//        return $url;
+//    }
     public function getRealSchemeUrl($url)
     {
         $scheme = $this->getRealScheme();
@@ -171,10 +171,9 @@ class UserUtil {
 
             // Replace only the scheme
             if (!empty($parts['scheme'])) {
-                $url = preg_replace('#^https?#i', $scheme, $url);
+                $url = preg_replace('#^https?#i', $scheme, $url); //s? - match an optional s (so it matches both http and https)
             }
         }
-
         //echo "getRealSchemeUrl: return url=$url<br>";
         return $url;
     }
