@@ -129,13 +129,13 @@
                 {% if cycle == "download" %}
                     {#{% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
                     {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(fellapp.avatars|last,"medium") %}
-                    avatarPath={{ avatarPath }}
+                    {#avatarPath={{ avatarPath }}#}
                     <img src="{{ avatarPath }}"
                          alt="{{ "Avatar "~fellapp.avatars|last.getOriginalnameClean }}"
                          style="max-width: 250px;"
                     >
                 {% else %}
-                    showDocumentAsImage
+                    {#showDocumentAsImage#}
                     {#{{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}#}
                     {#{{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null,'snapshot-medium') }}#}
                     {{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar',null,null,null) }}
