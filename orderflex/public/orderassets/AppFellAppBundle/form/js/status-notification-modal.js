@@ -367,6 +367,61 @@ function fellappPriorityIntervieweeConfirmAction() {
     });
 }
 
+// Modal for "Withdraw this application" when clicked by the applicant.
+// Triggered on links with class 'fellapp-withdraw-link' and data attributes:
+//   data-fellowship-type        - fellowship type text
+//   data-start-year             - start year
+//   data-destination-institution - destination institution name
+//   data-href-withdraw          - URL to change status to 'withdraw'
+function fellappWithdrawApplicationConfirmAction() {
+
+    // Delegate to body so it also works for dynamically loaded rows
+    $('body').on('click', 'a.fellapp-withdraw-link', function (ev) {
+
+        ev.preventDefault();
+
+        var linkEl = $(this);
+
+        var fellowshipType = linkEl.attr('data-fellowship-type') || '';
+        var startYear = linkEl.attr('data-start-year') || '';
+        var destinationInstitution = linkEl.attr('data-destination-institution') || '';
+        var hrefWithdraw = linkEl.attr('data-href-withdraw');
+
+        var modal = $('#fellapp-withdraw-modal');
+        if( !modal.length ) {
+            // If the markup is not present, fall back to direct navigation
+            if( hrefWithdraw ) {
+                window.location.href = hrefWithdraw;
+            }
+            return false;
+        }
+
+        // Populate modal content
+        modal.find('#fellapp-withdraw-fellowship-type').text(fellowshipType);
+        modal.find('#fellapp-withdraw-start-year').text(startYear);
+        modal.find('#fellapp-withdraw-destination-institution').text(destinationInstitution);
+
+        // Set form action to withdraw URL and clear previous reason
+        var form = modal.find('#fellapp-withdraw-form');
+        if( hrefWithdraw ) {
+            form.attr('action', hrefWithdraw);
+        }
+        modal.find('#fellapp-withdraw-reason').val('');
+
+        modal.modal({show:true});
+
+        return false;
+    });
+}
+
+// Initialize withdraw confirmation handler on DOM ready, without
+// modifying existing initialization flows for other handlers.
+if( typeof jQuery !== 'undefined' ) {
+    jQuery(function() {
+        fellappWithdrawApplicationConfirmAction();
+    });
+}
+
 // Modal for "Mark as a Priority Interviewee and send the invitation".
 // Triggered on links with class 'fellapp-priority-interview-invitation-link' and data attributes:
 //   data-interview-subject       - default subject text

@@ -39,6 +39,40 @@
 
 <div id="fellapp-rank-modal"></div>
 
+{# Modal used when an applicant withdraws their own application #}
+<div class="modal fade" id="fellapp-withdraw-modal" tabindex="-1" role="dialog" aria-labelledby="fellapp-withdraw-modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="fellapp-withdraw-modal-label">Withdraw this application</h4>
+            </div>
+            <form id="fellapp-withdraw-form" method="get">
+                <div class="modal-body">
+                    <p>
+                        Are you sure you would like to withdraw this application for the
+                        <span id="fellapp-withdraw-fellowship-type"></span>
+                        <span id="fellapp-withdraw-start-year"></span>
+                        position at
+                        <span id="fellapp-withdraw-destination-institution"></span>?
+                        If you withdraw this application, it will no longer be considered.
+                    </p>
+                    <p>
+                        Please kindly let us know the reason you are interested in withdrawing your application:
+                    </p>
+                    <textarea id="fellapp-withdraw-reason" name="withdrawReason" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">
+                        Yes, withdraw this application, I do not want it to be considered
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <p>
 
     {% if is_granted('ROLE_FELLAPP_COORDINATOR') %}
@@ -661,6 +695,18 @@
 
                 {% set startYear = entity.getStartYear() %}
 
+                {# Destination institution name for use in withdrawal confirmation #}
+                {% set destinationInstitutionName = '' %}
+                {% if serverRole == 'Internet (Hub)' %}
+                    {% if entity.globalFellowshipSpecialty and entity.globalFellowshipSpecialty.institution is not null %}
+                        {% set destinationInstitutionName = entity.globalFellowshipSpecialty.institution.name %}
+                    {% endif %}
+                {% else %}
+                    {% if entity.fellowshipSubspecialty and entity.fellowshipSubspecialty.institution is not null %}
+                        {% set destinationInstitutionName = entity.fellowshipSubspecialty.institution.name %}
+                    {% endif %}
+                {% endif %}
+
                 <tr class="{{ trclassname }}">
 
 
@@ -1235,9 +1281,9 @@
                                         {% if entity.appStatus.name != 'withdrawn' %}
                                             <li>
                                                 <a
-                                                        general-data-confirm="Are you sure you want to change status of this Application to 'Withdrawn'?"
-                                                        general-data-callback="refreshpage"
-                                                        href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Withdrawn'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"
                                                 >Mark as Withdrawn</a>
                                             </li>
                                         {% endif %}
@@ -1441,7 +1487,7 @@
                                         </li>
 
                                         {#if logged in user == applicant && status is NOT = "Draft" => show Withdraw this application#}
-                                        {% if entity.appStatus.name != 'draft' and entity.user.id == app.user.getId() %}
+                                        {% if 1 or entity.appStatus.name != 'draft' and entity.user.id == app.user.getId() %}
                                             {#Are you sure you would like to withdraw this application#}
                                             {#for the [[FELLOWSHIP TYPE]] [[START YEAR]] position#}
                                             {#at [[DESTINATION INSTITUTION NAME]]?#}
@@ -1451,8 +1497,12 @@
                                             <li>
                                                 <a
                                                     href="#"
+                                                    class="fellapp-withdraw-link"
                                                     data-fellapp-id="{{ entity.id }}"
-                                                    data-href-priorityinterviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdraw' }, true) }}"
+                                                    data-href-withdraw="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdraw' }, true) }}"
+                                                    data-fellowship-type="{{ fellowshipSpecialtyName }}"
+                                                    data-start-year="{{ startYear }}"
+                                                    data-destination-institution="{{ destinationInstitutionName }}"
                                                 >Withdraw this application
                                                 </a>
                                             </li>
