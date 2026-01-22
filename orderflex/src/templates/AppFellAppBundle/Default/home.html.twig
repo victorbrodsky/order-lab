@@ -1440,6 +1440,25 @@
                                             </a>
                                         </li>
 
+                                        {#if logged in user == applicant && status is NOT = "Draft" => show Withdraw this application#}
+                                        {% if entity.appStatus.name != 'draft' and entity.user.id == app.user.getId() %}
+                                            {#Are you sure you would like to withdraw this application#}
+                                            {#for the [[FELLOWSHIP TYPE]] [[START YEAR]] position#}
+                                            {#at [[DESTINATION INSTITUTION NAME]]?#}
+                                            {#If you withdraw this application, it will no longer be considered.#}
+                                            {#Please kindly let us know the reason you are interested in withdrawing your application: [ ]#}
+                                            {#("Yes, withdraw this application, I do not want it to be considered") ("Cancel")#}
+                                            <li>
+                                                <a
+                                                    href="#"
+                                                    class="fellapp-priority-interview-invitation-link"
+                                                    data-fellapp-id="{{ entity.id }}"
+                                                    data-href-priorityinterviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdraw' }, true) }}"
+                                                >Withdraw this application
+                                                </a>
+                                            </li>
+                                        {% endif %}
+
                                         <li>
                                             {#Are you sure you would like to move FirstName LastName’s application for [Specialty] from [application year] to [target application year]?#}
                                             <a
