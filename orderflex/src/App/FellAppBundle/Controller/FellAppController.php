@@ -81,6 +81,7 @@ class FellAppController extends OrderAbstractController {
      */
     #[Route(path: '/', name: 'fellapp_home')]
     #[Route(path: '/my-interviewees/', name: 'fellapp_myinterviewees')]
+    #[Route(path: '/my-applications/', name: 'fellapp_myapplications')]
     #[Route(path: '/send-rejection-emails', name: 'fellapp_send_rejection_emails')]
     #[Route(path: '/accepted-fellows', name: 'fellapp_accepted_fellows')]
     #[Template('AppFellAppBundle/Default/home.html.twig')]
@@ -128,6 +129,14 @@ class FellAppController extends OrderAbstractController {
 
         if( $route == "fellapp_accepted_fellows" ) {
             if( false == $this->isGranted("read","FellowshipApplication") ){
+                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            }
+        }
+
+        if( $route == "fellapp_myapplications" ) {
+            if(
+                false == $this->isGranted("read","FellowshipApplication")
+            ){
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
@@ -407,7 +416,7 @@ class FellAppController extends OrderAbstractController {
                 "LOWER(applicantinfos.firstName) LIKE LOWER(:search)".
                 " OR LOWER(applicantinfos.lastName) LIKE LOWER(:search)"
             );
-            $parameters["search"] = '%'.$search.'%';;
+            $parameters["search"] = '%'.$search.'%';
             $searchFlag = true;
         }
 
@@ -415,7 +424,9 @@ class FellAppController extends OrderAbstractController {
         //exit('111');
         $fellSubspecId = null;
         if( $filter ) { //&& $filter != "ALL"
-            $dql->andWhere("fellowshipSubspecialty.id = ".$filter);
+            //$dql->andWhere("fellowshipSubspecialty.id = ".$filter);
+            $dql->andWhere("fellowshipSubspecialty.id = :filter");
+            $parameters["filter"] = $filter;
             $searchFlag = true;
             $fellSubspecId = $filter;
         }
@@ -423,7 +434,9 @@ class FellAppController extends OrderAbstractController {
         //$globalfilter
         $globalfilterId = null;
         if( $globalfilter ) { //&& $filter != "ALL"
-            $dql->andWhere("globalFellowshipSpecialty.id = ".$globalfilter);
+            //$dql->andWhere("globalFellowshipSpecialty.id = ".$globalfilter);
+            $dql->andWhere("globalFellowshipSpecialty.id = :globalfilter");
+            $parameters["globalfilter"] = $globalfilter;
             $searchFlag = true;
             $globalfilterId = $fellSubspecId = $globalfilter;
         }
@@ -592,7 +605,14 @@ class FellAppController extends OrderAbstractController {
 
         if( $route == "fellapp_myinterviewees" ) {
             $dql->leftJoin("fellapp.interviews", "interviews");
-            $dql->andWhere("interviews.interviewer = " . $user->getId() );
+            //$dql->andWhere("interviews.interviewer = " . $user->getId() );
+            $dql->andWhere("interviews.interviewer = :interviewer");
+            $parameters["interviewer"] = $user->getId();
+        }
+
+        if( $route == "fellapp_myapplications" ) {
+            $dql->andWhere("applicant = :applicant");
+            $parameters["applicant"] = $user->getId();
         }
 
         //echo "dql=".$dql."<br>";

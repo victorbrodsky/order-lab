@@ -69,6 +69,15 @@
                         </li>
                     {% endif %}
 
+                    {#TODO: show it only to applicants (ROLE_FELLAPP_APPLICANT)?#}
+                    {% if is_granted('ROLE_FELLAPP_USER') %}
+                        <li id="nav-bar-myapplications" class="divider-vertical">
+                            <a href="{{ path('fellapp_myapplications') }}">
+                                My Application
+                            </a>
+                        </li>
+                    {% endif %}
+
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
                         <li id="nav-bar-fellappaccepted" class="divider-vertical">
                             <a href="{{ path('fellapp_accepted_fellows') }}">

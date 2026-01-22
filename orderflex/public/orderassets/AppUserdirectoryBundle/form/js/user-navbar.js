@@ -581,6 +581,10 @@ function setFellappNavBar() {
         id = 'myinterviewees';
     }
 
+    if( full.indexOf("/fellowship-applications/my-applications/") !== -1 ) {
+        id = 'myapplications';
+    }
+
     if( full.indexOf("/fellowship-applications/send-rejection-emails") !== -1 ) {
         id = 'fellapprejectionemails';
     }
@@ -628,6 +632,10 @@ function setResappNavBar() {
 
     if( full.indexOf("/residency-applications/my-interviewees/") !== -1 ) {
         id = 'myinterviewees';
+    }
+
+    if( full.indexOf("/residency-applications/my-applications/") !== -1 ) {
+        id = 'myapplications';
     }
 
     if( full.indexOf("/residency-applications/group-emails") !== -1 ) {
