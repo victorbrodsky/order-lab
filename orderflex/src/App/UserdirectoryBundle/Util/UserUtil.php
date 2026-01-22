@@ -163,7 +163,7 @@ class UserUtil {
     public function getRealSchemeUrl($url)
     {
         $scheme = $this->getRealScheme();
-        echo "getRealSchemeUrl: scheme=$scheme<br>";
+        //echo "getRealSchemeUrl: scheme=$scheme<br>";
 
         if ($scheme) {
             // Parse the URL
@@ -175,7 +175,7 @@ class UserUtil {
             }
         }
 
-        echo "getRealSchemeUrl: return url=$url<br>";
+        //echo "getRealSchemeUrl: return url=$url<br>";
         return $url;
     }
     public function testSchemeAndHost( $request=NULL ) {
