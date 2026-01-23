@@ -2822,6 +2822,21 @@ class FellAppUtil {
         return true;
     }
 
+    public function sendWithdrawnNotificationEmail( $fellapp, $reasonText ) {
+        //Subject: FirstName LastName has withdrawn their fellowship application (ID XXX)
+        //        for a [[FELLOWSHIP TYPE]] [[START YEAR]] position
+        //Body: FirstName LastName has withdrawn their fellowship application
+        //        (ID XXX) for a [[FELLOWSHIP TYPE]] [[START YEAR]]
+        //        position at [[LOCAL INSTITUTION]] on MM-DD-YYYY at HH:MM.
+        //        The applicant provided the following reason for withdrawing the applications: [].
+        //        Applicant's contact information:
+        //E-Mail: []
+        //Phone: []
+        //The preceding status of this application prior to withdrawal was "XXXX",
+        // set by FirstName LastName on MM-DD-YYYY at HH:MM.
+        $emailUtil = $this->container->get('user_mailer_utility');
+    }
+
     public function sendAcceptedNotificationEmail($fellapp) {
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');

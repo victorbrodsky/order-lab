@@ -2385,6 +2385,10 @@ class FellAppController extends OrderAbstractController {
             $fellappUtil->sendRejectedNotificationEmail($fellapp);
         }
 
+        if( $sendEmail && $status == 'withdrawn' ) {
+            $fellappUtil->sendWithdrawnNotificationEmail($fellapp,$reasonText);
+        }
+
         $eventType = 'Fellowship Application Status changed to ' . $statusObj->getAction();
 
         $userSecUtil = $this->container->get('user_security_utility');

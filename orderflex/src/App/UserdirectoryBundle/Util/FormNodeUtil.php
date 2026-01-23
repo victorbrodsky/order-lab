@@ -4026,6 +4026,7 @@ class FormNodeUtil
         );
         $radio = $this->createV2FormNode($formParams);
 
+        //TODO: wrap to the section with a checkbox
         //Provider successfully notified: [checkmark] Form Field - Checkbox
         //331 characters, max length is 255
         $objectTypeCheckbox = $this->getObjectTypeByName('Form Field - Checkbox');
@@ -4038,7 +4039,7 @@ class FormNodeUtil
 //                " new H-1B applications for individuals in this program.",
             'name' =>
                 "Washington University (WU) sponsors J‑1 visas for trainees".
-                " in this program. Existing H‑1B visas may be transferred".
+                " in this program. I understand existing H‑1B visas may be transferred".
                 " to WU, but WU does not sponsor new H‑1B applications",
             'objectType' => $objectTypeCheckbox,
             'showLabel' => true,
