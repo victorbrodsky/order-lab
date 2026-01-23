@@ -1278,15 +1278,15 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'withdrawn' %}
-                                            <li>
-                                                <a
-                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Withdrawn'?"
-                                                    general-data-callback="refreshpage"
-                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"
-                                                >Mark as Withdrawn</a>
-                                            </li>
-                                        {% endif %}
+                                        {#{% if entity.appStatus.name != 'withdrawn' %}#}
+                                            {#<li>#}
+                                                {#<a#}
+                                                    {#general-data-confirm="Are you sure you want to change status of this Application to 'Withdrawn'?"#}
+                                                    {#general-data-callback="refreshpage"#}
+                                                    {#href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"#}
+                                                {#>Mark as Withdrawn</a>#}
+                                            {#</li>#}
+                                        {#{% endif %}#}
 
                                         {% if entity.appStatus.name != 'declined' %}
                                             <li>
@@ -1487,7 +1487,7 @@
                                         </li>
 
                                         {#if logged in user == applicant && status is NOT = "Draft" => show Withdraw this application#}
-                                        {% if 1 or entity.appStatus.name != 'draft' and entity.user.id == app.user.getId() %}
+                                        {% if 1 or entity.appStatus.name != 'withdrawn' and entity.user.id == app.user.getId() %}
                                             {#Are you sure you would like to withdraw this application#}
                                             {#for the [[FELLOWSHIP TYPE]] [[START YEAR]] position#}
                                             {#at [[DESTINATION INSTITUTION NAME]]?#}
@@ -1499,7 +1499,7 @@
                                                     href="#"
                                                     class="fellapp-withdraw-link"
                                                     data-fellapp-id="{{ entity.id }}"
-                                                    data-href-withdraw="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdraw' }, true) }}"
+                                                    data-href-withdraw="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"
                                                     data-fellowship-type="{{ fellowshipSpecialtyName }}"
                                                     data-start-year="{{ startYear }}"
                                                     data-destination-institution="{{ destinationInstitutionName }}"
