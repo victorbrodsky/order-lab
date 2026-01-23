@@ -2305,6 +2305,12 @@ class FellAppController extends OrderAbstractController {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        // Optional free-text reason provided when an application is withdrawn
+        $reasonText = null;
+        if( $request instanceof Request ) {
+            $reasonText = trim((string)$request->get('withdrawReason'));
+        }
+
         //$status might have "-noemail". In this case remove "-noemail" and do not send a notification email.
         $sendEmail = true;
         if( strpos((string)$status, "-noemail") !== false ) {

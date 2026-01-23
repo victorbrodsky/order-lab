@@ -387,14 +387,46 @@ function fellappWithdrawApplicationConfirmAction() {
         var destinationInstitution = linkEl.attr('data-destination-institution') || '';
         var hrefWithdraw = linkEl.attr('data-href-withdraw');
 
-        var modal = $('#fellapp-withdraw-modal');
-        if( !modal.length ) {
-            // If the markup is not present, fall back to direct navigation
-            if( hrefWithdraw ) {
-                window.location.href = hrefWithdraw;
-            }
-            return false;
+        // Build withdraw modal once if it does not already exist
+        if( !$('#fellapp-withdraw-modal').length ) {
+            var modalHtml =
+                '<div class="modal fade" id="fellapp-withdraw-modal" tabindex="-1" role="dialog" aria-labelledby="fellapp-withdraw-modal-label">' +
+                    '<div class="modal-dialog" role="document">' +
+                        '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                                '<h4 class="modal-title" id="fellapp-withdraw-modal-label">Withdraw this application</h4>' +
+                            '</div>' +
+                            '<form id="fellapp-withdraw-form" method="get">' +
+                                '<div class="modal-body">' +
+                                    '<p>' +
+                                        'Are you sure you would like to withdraw this application for the ' +
+                                        '<span id="fellapp-withdraw-fellowship-type"></span> ' +
+                                        '<span id="fellapp-withdraw-start-year"></span> ' +
+                                        'position at ' +
+                                        '<span id="fellapp-withdraw-destination-institution"></span>?' +
+                                        ' If you withdraw this application, it will no longer be considered.' +
+                                    '</p>' +
+                                    '<p>' +
+                                        'Please kindly let us know the reason you are interested in withdrawing your application:' +
+                                    '</p>' +
+                                    '<textarea id="fellapp-withdraw-reason" name="withdrawReason" class="form-control" rows="3"></textarea>' +
+                                '</div>' +
+                                '<div class="modal-footer">' +
+                                    '<button type="submit" class="btn btn-danger">' +
+                                        'Yes, withdraw this application, I do not want it to be considered' +
+                                    '</button>' +
+                                    '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
+                                '</div>' +
+                            '</form>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+
+            $('body').append(modalHtml);
         }
+
+        var modal = $('#fellapp-withdraw-modal');
 
         // Populate modal content
         modal.find('#fellapp-withdraw-fellowship-type').text(fellowshipType);

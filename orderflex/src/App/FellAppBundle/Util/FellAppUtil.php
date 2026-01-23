@@ -2835,6 +2835,8 @@ class FellAppUtil {
         //The preceding status of this application prior to withdrawal was "XXXX",
         // set by FirstName LastName on MM-DD-YYYY at HH:MM.
         $emailUtil = $this->container->get('user_mailer_utility');
+
+        //exit('$reasonText='.$reasonText);
     }
 
     public function sendAcceptedNotificationEmail($fellapp) {
