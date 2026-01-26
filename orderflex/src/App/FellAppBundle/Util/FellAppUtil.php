@@ -3522,8 +3522,8 @@ class FellAppUtil {
 
     //recBackupTemplateFileId
 
-    //Send a confirmation email after submitting public fellapp application
-    public function confirmationEmail( $applicant ) {
+    //Send a confirmation email after submitting public fellapp application via /apply page
+    public function applyConfirmationEmail( $applicant ) {
         $userSecUtil = $this->container->get('user_security_utility');
 
         //1) Check if a user is already registered
@@ -3593,7 +3593,7 @@ class FellAppUtil {
 
     }
 
-    //TODO: replace strings by true, false, null
+    //TODO: replace strings by true, false, null (possible to simplify and return only user or null for all other cases)
 //    public function checkUserExistByPostRequest( $request, $getUser=false ) {
 //        $email = $request->request->get('email');
 //        if( !$email ) {

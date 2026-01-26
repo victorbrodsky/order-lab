@@ -3877,13 +3877,6 @@ class FellAppController extends OrderAbstractController {
             $addobjects = false;
             
             //get $applicantEmail from request
-//            dump($request->request->all());
-//            exit();
-//            $btnSubmit = $request->request->get('btnSubmit');
-//            $formData = $request->request->get('oleg_fellappbundle_fellowshipapplication');
-//            dump($formData);
-//            exit();
-//            $applicantEmail = $formData['user']['infos'][0]['email'] ?? null;
             $data = $request->request->all();
             $applicantEmail = $data['oleg_fellappbundle_fellowshipapplication']['user']['infos'][0]['email'] ?? null;
 
@@ -4168,11 +4161,11 @@ class FellAppController extends OrderAbstractController {
             if( $initialStatusName == "draft" ) {
                 //Send email with hash:
                 //A draft fellowship application has been submitted specifying your email address as belonging to the applicant.
-                $fellappUtil->confirmationEmail($applicant);
+                $fellappUtil->applyConfirmationEmail($applicant);
                 return $this->redirect($this->generateUrl('fellapp_login'));
             }
             if( $initialStatusName == "active" ) {
-                $fellappUtil->confirmationEmail($applicant);
+                $fellappUtil->applyConfirmationEmail($applicant);
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
                 return $this->redirect($this->generateUrl('fellapp_login'));
             }

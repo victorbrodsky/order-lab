@@ -288,6 +288,10 @@ class UserController extends OrderAbstractController
 //        echo "JWT_PUBLIC_KEY=".getenv('JWT_PUBLIC_KEY')."<br>";
 //        exit('saml login');
 
+        dd($_SERVER['APP_ENV'], $_SERVER['APP_DEBUG']);
+
+
+
         return array('sitename'=>$this->getParameter('employees.sitename'));
     }
 
