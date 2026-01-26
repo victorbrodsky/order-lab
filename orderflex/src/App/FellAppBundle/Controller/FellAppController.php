@@ -2233,7 +2233,7 @@ class FellAppController extends OrderAbstractController {
         //echo "status=$status <br>";
         //exit('eof status changed');
 
-        $event = $this->changeFellAppStatus($entity, $status, $request);
+        $event = $this->changeFellAppStatus($entity, $status, $request); //statusAction
 
         $this->addFlash(
             'notice',
@@ -2288,7 +2288,7 @@ class FellAppController extends OrderAbstractController {
 
         //change status (to interviewee or priorityinterviewee)
         if( $status ) {
-            $this->changeFellAppStatus($fellapp,$status,$request);
+            $this->changeFellAppStatus($fellapp,$status,$request); //sendInterviewInvitationAction
         }
 
         $response = new Response();
@@ -2761,7 +2761,7 @@ class FellAppController extends OrderAbstractController {
             //if the current application status is not 'Interviewee', automatically switch it to 'Interviewee'.
             $statusStr = $fellapp->getAppStatus()->getName()."";
             if ($statusStr !== 'interviewee' && $statusStr !== 'priorityinterviewee') {
-                $this->changeFellAppStatus($fellapp, 'interviewee', $request);
+                $this->changeFellAppStatus($fellapp, 'interviewee', $request); //interviewUpdateAction
             }
             
             $em->persist($interview);
@@ -3331,7 +3331,7 @@ class FellAppController extends OrderAbstractController {
                 //send rejection email
                 //record to eventlog
                 $status = "rejectedandnotified";
-                $event = $this->changeFellAppStatus($fellapp, $status, $request);
+                $event = $this->changeFellAppStatus($fellapp, $status, $request); //sendRejectionEmailsAction
 
                 $this->addFlash(
                     'notice',

@@ -448,11 +448,11 @@ function fellappWithdrawApplicationConfirmAction() {
 
 // Initialize withdraw confirmation handler on DOM ready, without
 // modifying existing initialization flows for other handlers.
-if( typeof jQuery !== 'undefined' ) {
-    jQuery(function() {
-        fellappWithdrawApplicationConfirmAction();
-    });
-}
+// if( typeof jQuery !== 'undefined' ) {
+//     jQuery(function() {
+//         fellappWithdrawApplicationConfirmAction();
+//     });
+// }
 
 // Modal for "Mark as a Priority Interviewee and send the invitation".
 // Triggered on links with class 'fellapp-priority-interview-invitation-link' and data attributes:
