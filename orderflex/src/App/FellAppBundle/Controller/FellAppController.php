@@ -2314,7 +2314,11 @@ class FellAppController extends OrderAbstractController {
         }
 
         //previous status
-        $previousStatusStr = $fellapp->getAppStatus()->getName()."";
+        $previousStatusStr = '';
+        $previousStatus = $fellapp->getAppStatus();
+        if( $previousStatus ) {
+            $previousStatusStr = $previousStatus->getName() . "";
+        }
 
         //$status might have "-noemail". In this case remove "-noemail" and do not send a notification email.
         $sendEmail = true;

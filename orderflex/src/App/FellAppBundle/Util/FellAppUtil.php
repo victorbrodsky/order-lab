@@ -2877,11 +2877,9 @@ class FellAppUtil {
         $date = new \DateTime(); // now
         $formattedDate = $date->format('m-d-Y \a\t H:i');
 
-        //TODO: test
+        //Only fellowship sub specialty will be used, not global fellowship specialty
         $directorEmails = $this->getDirectorsOfFellAppEmails($fellapp);
-        //dump($directorEmails);
         $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellapp);
-        //dump($coordinatorEmails);
         $toResponsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
         
         $emailSubject = "$applicantFullName has withdrawn their fellowship application (ID ".$fellapp->getId().")".
