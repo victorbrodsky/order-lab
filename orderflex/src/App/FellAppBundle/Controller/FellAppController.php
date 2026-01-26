@@ -3553,6 +3553,8 @@ class FellAppController extends OrderAbstractController {
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
+        dd($_SERVER['APP_ENV'], $_SERVER['APP_DEBUG']);
+        exit('111. '.$_SERVER['APP_ENV'].", ".$_SERVER['APP_DEBUG']);
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -3854,9 +3856,6 @@ class FellAppController extends OrderAbstractController {
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function applyApplicantAction( Request $request )
     {
-        dd($_SERVER['APP_ENV'], $_SERVER['APP_DEBUG']);
-        exit('111. '.$_SERVER['APP_ENV'].", ".$_SERVER['APP_DEBUG']);
-
         //exit("applyApplicantAction");
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
