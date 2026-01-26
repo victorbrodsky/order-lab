@@ -1295,6 +1295,14 @@ class FellAppUtil {
         $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
         //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
 
+        //Try to get Global Fellowship Specialty instead? - NO. Logic:
+        //Global Fellowship Specialty should be used only on the Hub.
+        //Notification emails to be send to directors, coordinators, interviewers ONLY ON internal institutional server (NOT HUB).
+        //=>Don't try to getGlobalFellowshipSpecialty for notification emails
+        //if( !$fellowshipSubspecialty ) {
+        //    $fellowshipSubspecialty = $fellapp->getGlobalFellowshipSpecialty();
+        //}
+
         if( !$fellowshipSubspecialty ) {
             return null;
         }
@@ -1439,6 +1447,8 @@ class FellAppUtil {
     public function getEmailsOfFellApp( $fellapp, $roleName ) {
 
         $users = $this->getUsersOfFellAppByRole( $fellapp, $roleName );
+        //echo "fellapp ID=".$fellapp->getId().", roleName=$roleName <br>";
+        //dump($users); ///testing
 
         $emails = array();
         if( $users && count($users) > 0 ) {
@@ -2867,8 +2877,11 @@ class FellAppUtil {
         $date = new \DateTime(); // now
         $formattedDate = $date->format('m-d-Y \a\t H:i');
 
+        //TODO: test
         $directorEmails = $this->getDirectorsOfFellAppEmails($fellapp);
+        //dump($directorEmails);
         $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellapp);
+        //dump($coordinatorEmails);
         $toResponsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
         
         $emailSubject = "$applicantFullName has withdrawn their fellowship application (ID ".$fellapp->getId().")".
@@ -2896,7 +2909,9 @@ class FellAppUtil {
             "FellApp Withdrawal"          //$action
         );
 
+        //dump($toResponsibleEmails);
         //exit('$reasonText='.$reasonText);
+        return $emailBody;
     }
 
     public function sendAcceptedNotificationEmail($fellapp) {
