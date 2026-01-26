@@ -3855,6 +3855,7 @@ class FellAppController extends OrderAbstractController {
     public function applyApplicantAction( Request $request )
     {
         dd($_SERVER['APP_ENV'], $_SERVER['APP_DEBUG']);
+        exit('111. '.$_SERVER['APP_ENV'].", ".$_SERVER['APP_DEBUG']);
 
         //exit("applyApplicantAction");
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
