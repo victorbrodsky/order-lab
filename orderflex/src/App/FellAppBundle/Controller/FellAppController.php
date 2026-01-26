@@ -2233,7 +2233,9 @@ class FellAppController extends OrderAbstractController {
         //echo "status=$status <br>";
         //exit('eof status changed');
 
-        $event = $this->changeFellAppStatus($entity, $status, $request); //statusAction
+        if( $status ) {
+            $event = $this->changeFellAppStatus($entity, $status, $request); //statusAction
+        }
 
         $this->addFlash(
             'notice',
@@ -2310,6 +2312,9 @@ class FellAppController extends OrderAbstractController {
         if( $request instanceof Request ) {
             $reasonText = trim((string)$request->get('withdrawReason'));
         }
+
+        //previous status
+        $previousStatusStr = $fellapp->getAppStatus()->getName()."";
 
         //$status might have "-noemail". In this case remove "-noemail" and do not send a notification email.
         $sendEmail = true;
@@ -2392,7 +2397,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         if( $sendEmail && $status == 'withdrawn' ) {
-            $fellappUtil->sendWithdrawnNotificationEmail($fellapp,$reasonText);
+            $fellappUtil->sendWithdrawnNotificationEmail($fellapp,$reasonText,$previousStatusStr);
         }
 
         $eventType = 'Fellowship Application Status changed to ' . $statusObj->getAction();

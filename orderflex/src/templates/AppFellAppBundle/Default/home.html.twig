@@ -1471,6 +1471,16 @@
                                                     data-destination-institution="{{ destinationInstitutionName }}"
                                                 >Withdraw this application
                                                 </a>
+
+                                                {#<a#}
+                                                    {#href="#"#}
+                                                    {#class="fellapp-priority-interview-invitation-link"#}
+                                                    {#data-fellapp-id="{{ entity.id }}"#}
+                                                    {#data-interview-subject="{{ fellapp_util.getInterviewInvitationSubject(entity.id) }}"#}
+                                                    {#data-interview-body="{{ fellapp_util.getInterviewInvitationBody(entity.id) }}"#}
+                                                    {#data-href-priorityinterviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priorityinterviewee' }, true) }}"#}
+                                                {#>Mark as a Priority Interviewee and send the invitation#}
+                                                {#</a>#}
                                             </li>
                                         {% endif %}
 
@@ -1695,7 +1705,7 @@
 
             fellappInterviewInvitationConfirmAction();
 
-            fellappWithdrawApplicationConfirmAction();
+            fellappWithdrawApplicationConfirmAction(); //data-href-withdraw
 
             //onInterviewModalShow();
 

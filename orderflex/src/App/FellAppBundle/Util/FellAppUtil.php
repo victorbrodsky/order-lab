@@ -2822,7 +2822,10 @@ class FellAppUtil {
         return true;
     }
 
-    public function sendWithdrawnNotificationEmail( $fellapp, $reasonText ) {
+    public function sendWithdrawnNotificationEmail( $fellapp, $reasonText, $previousStatusStr ) {
+        //send out the following notification email to the
+        // program director(s) associated with the program AND
+        // coordinators associated with the program
         //Subject: FirstName LastName has withdrawn their fellowship application (ID XXX)
         //        for a [[FELLOWSHIP TYPE]] [[START YEAR]] position
         //Body: FirstName LastName has withdrawn their fellowship application
@@ -2834,7 +2837,64 @@ class FellAppUtil {
         //Phone: []
         //The preceding status of this application prior to withdrawal was "XXXX",
         // set by FirstName LastName on MM-DD-YYYY at HH:MM.
+
+        $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
+        $user = $this->security->getUser();
+
+        $applicantFullName = $fellapp->getApplicantFullName();
+
+        $startDate = $fellapp->getStartDate();
+        if( $startDate ) {
+            $startDateStr = $fellapp->getStartDate()->format('Y');
+        } else {
+            $startDateStr = NULL;
+        }
+
+        $applicantEmail = '';
+        $applicantPhone = '';
+        $applicant = $fellapp->getUser();
+        if( $applicant ) {
+            $applicantEmail = $applicant->getSingleEmail();
+            $applicantPhone = $applicant->getSinglePhone();
+        }
+
+//        $institution = $fellapp->getInstitution();
+//        if( !$institution ) {
+//
+//        }
+
+        $date = new \DateTime(); // now
+        $formattedDate = $date->format('m-d-Y \a\t H:i');
+
+        $directorEmails = $this->getDirectorsOfFellAppEmails($fellapp);
+        $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellapp);
+        $toResponsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
+        
+        $emailSubject = "$applicantFullName has withdrawn their fellowship application (ID ".$fellapp->getId().")".
+            " for a ". $fellapp->getAllFellowshipSpecialty(). //WCM Department of Pathology and Laboratory Medicine - Clinical Informatics
+            " $startDateStr position";
+        $emailBody =
+            //$emailSubject . " at $institution on $formattedDate.
+            $emailSubject . " on $formattedDate."."<br>". //$fellapp->getAllFellowshipSpecialty() has $institution string
+            "The applicant provided the following reason for withdrawing the applications: $reasonText"."<br>".
+            "Applicant's contact information:<br>".
+            "E-Mail: $applicantEmail"."<br>".
+            "Phone: $applicantPhone"."<br>".
+            "The preceding status of this application prior to withdrawal was '$previousStatusStr'"
+            //", set by FirstName LastName on MM-DD-YYYY at HH:MM."
+            ;
+
+        $emailUtil->sendEmail( $toResponsibleEmails, $emailSubject, $emailBody );
+
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('fellapp.sitename'), //$sitename
+            $emailBody,                                          //$event message
+            $user,                                              //user
+            $fellapp,                                           //$subjectEntities
+            null,                                               //$request
+            "FellApp Withdrawal"          //$action
+        );
 
         //exit('$reasonText='.$reasonText);
     }

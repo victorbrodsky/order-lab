@@ -525,6 +525,25 @@ class FellowshipApplication extends BaseUserAttributes {
 //        }
     }
 
+    public function getAllFellowshipSpecialty() {
+        $specialtyStr = '';
+        $fellappSpecialtyArr = [];
+        $fellappType = $this->getFellowshipSubspecialty()."";
+        $globalFellappType = $this->getGlobalFellowshipSpecialty()."";
+        if( $fellappType ) {
+            $fellappSpecialtyArr[] = $fellappType;
+        }
+        if( $globalFellappType ) {
+            $fellappSpecialtyArr[] = $globalFellappType;
+        }
+
+        if( count($fellappSpecialtyArr) > 0 ) {
+            //dump($fellappSpecialtyArr);
+            //exit('111');
+            $specialtyStr = implode(', ', $fellappSpecialtyArr);
+        }
+        return $specialtyStr;
+    }
 
 
     /**

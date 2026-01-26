@@ -348,8 +348,11 @@ class DefaultController extends OrderAbstractController
 //            $permMsg = $permMsg . " <br> PermissionObjectList does not exists!!!!!!! <br>";
 //        }
 //        echo $permMsg;
-//
-//        exit('fellapp default controller');
+        $fellapp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find(1684);
+        $res = $fellapp->getAllFellowshipSpecialty();
+        echo 'res='.$res."<br>";
+        //echo "inst=".$institution = $fellapp->getInstitution()."<br>";
+        exit('fellapp default controller');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }

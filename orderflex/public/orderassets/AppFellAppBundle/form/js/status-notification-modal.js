@@ -440,6 +440,40 @@ function fellappWithdrawApplicationConfirmAction() {
         }
         modal.find('#fellapp-withdraw-reason').val('');
 
+        // Ensure we do not bind multiple submit handlers
+        form.off('submit');
+
+        form.on('submit', function(ev) {
+
+            ev.preventDefault();
+
+            var $form = $(this);
+            var actionUrl = $form.attr('action');
+
+            if( !actionUrl ) {
+                return true;
+            }
+
+            var footer = modal.find('.modal-footer');
+            footer.text('Please wait ...');
+
+            $.ajax({
+                type: 'GET',
+                url: actionUrl,
+                dataType: 'json',
+                data: $form.serialize()
+            }).success(function(data) {
+                if( data === 'ok' ) {
+                    location.reload();
+                }
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error withdrawing application: ' + errorThrown);
+                location.reload();
+            });
+
+            return false;
+        });
+
         modal.modal({show:true});
 
         return false;
