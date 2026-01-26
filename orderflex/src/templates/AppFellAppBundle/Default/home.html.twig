@@ -58,12 +58,6 @@
     {% endif %}
 
     <p>
-        {#<i>Last successful import:#}
-            {#{{ lastImportTimestamp|date('m/d/Y h:i A') }}#}
-            {#{{ serverTimeZone }}#}
-            {#({{ lastImportTimestamp|time_diff }}) |ago#}
-            {#{{ acceptingApplication }}#}
-        {#</i>#}
         <i>
             {% if lastImportTimestamp %}
                 Last successful import:
@@ -85,7 +79,7 @@
     
     {% set resStr = "Applications matching search criteria" %}
 
-    {% if lastImportTimestamp and fellappids is defined and fellappids %}
+    {% if fellappids is defined and fellappids %}
         <p><b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
             <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
                    data-toggle="tooltip" title="Download displayed application summaries as a spreadsheet">
