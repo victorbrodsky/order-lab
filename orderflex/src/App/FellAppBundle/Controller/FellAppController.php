@@ -978,7 +978,7 @@ class FellAppController extends OrderAbstractController {
 
         if( $routeName == "fellapp_edit" ) {
             if( false == $this->isGranted("update",$entity) ) {
-                //exit('fellapp update permission not ok ID:'.$entity->getId());
+                exit('fellapp update permission not ok ID:'.$entity->getId());
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
