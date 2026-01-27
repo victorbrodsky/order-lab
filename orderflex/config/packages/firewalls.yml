@@ -76,7 +76,8 @@ security:
               logout:
                   path:   logout #/%tenantprefix%directory/logout
                   target: login #/%tenantprefix%directory/login
-                  invalidate_session: false
+                  #invalidate_session: false
+                  invalidate_session: true
               lazy: true
               provider: users
               access_denied_url: employees_access_request_new_plain #/%tenantprefix%directory/access-requests/new/create
