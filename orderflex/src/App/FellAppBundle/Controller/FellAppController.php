@@ -877,7 +877,7 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/download/{id}', name: 'fellapp_download')]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function showAction(Request $request, TokenStorageInterface $tokenStorage, $id) {
-
+        exit('showAction');
         //echo "clientip=".$request->getClientIp()."<br>";
         //$ip = $this->container->get('request')->getClientIp();
         //echo "ip=".$ip."<br>";
@@ -960,7 +960,7 @@ class FellAppController extends OrderAbstractController {
         //testing
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$fellappRecLetterUtil->generateFellappRecLetterId($entity);
-        exit('testing');
+        //exit('testing');
 
 //        if( false == $this->isGranted("interview",$entity) ) {
 //            //exit('fellapp interview permission not ok ID:'.$entity->getId());
