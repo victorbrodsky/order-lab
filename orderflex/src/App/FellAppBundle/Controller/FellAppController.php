@@ -134,10 +134,14 @@ class FellAppController extends OrderAbstractController {
         }
 
         if( $route == "fellapp_myapplications" ) {
-            if(
-                false == $this->isGranted("read","FellowshipApplication")
-            ){
-                //exit('indexAction: $route='.$route);
+//            if(
+//                false == $this->isGranted("read","FellowshipApplication")
+//            ){
+//                //exit('indexAction: $route='.$route);
+//                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//            }
+
+            if( false == $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') ) {
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }

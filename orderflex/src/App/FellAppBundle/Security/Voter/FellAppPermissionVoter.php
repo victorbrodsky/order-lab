@@ -66,9 +66,9 @@ class FellAppPermissionVoter extends BasePermissionVoter
         //if( $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') ) {
         //    return true;
         //}
-        if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $token->getRoleNames(), true)) {
-            return true;
-        }
+//        if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $token->getRoleNames(), true)) {
+//            return true;
+//        }
 
 
         if( parent::canView($subject,$token) ) {
