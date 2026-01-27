@@ -76,7 +76,6 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function onLogout(LogoutEvent $event): void
     {
-        exit('onLogout: logout');
         $logger = $this->container->get('logger');
         $logger->notice("onLogout");
 
@@ -95,7 +94,6 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
         $session = $request->getSession();
         //dump($session);
-        exit('onLogout: logout');
 
         $logintype = $session->get('logintype');
         //$logger = $this->container->get('logger');
