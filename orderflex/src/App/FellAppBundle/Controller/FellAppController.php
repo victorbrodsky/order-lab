@@ -137,6 +137,7 @@ class FellAppController extends OrderAbstractController {
             if(
                 false == $this->isGranted("read","FellowshipApplication")
             ){
+                exit('indexAction: $route='.$route);
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
