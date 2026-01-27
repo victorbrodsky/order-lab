@@ -96,7 +96,7 @@ class AccessRequestController extends OrderAbstractController
         //$userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-
+        echo "accessRequestCreatePlain: user=$user <br>";
 
         if( $userSecUtil->isSiteAccessible($this->siteName) === false ) {
             $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
