@@ -944,7 +944,7 @@ class SecurityController extends OrderAbstractController
     public function logoutTestAction( Request $request, Security $security, TokenStorageInterface $tokenStorage )
     {
         echo "logout Action! <br>";
-        exit();
+        exit('logoutTestAction');
 
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->container->get('request')->getSession()->invalidate();

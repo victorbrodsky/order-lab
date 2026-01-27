@@ -96,7 +96,7 @@ class AccessRequestController extends OrderAbstractController
         //$userServiceUtil = $this->container->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        echo "accessRequestCreatePlain: user=$user <br>";
+        echo "accessRequestCreatePlain: user=$user <br>"; //testing
 
         if( $userSecUtil->isSiteAccessible($this->siteName) === false ) {
             $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
@@ -241,7 +241,7 @@ class AccessRequestController extends OrderAbstractController
         $sitename = $this->siteName;
 
         $user = $this->getUser();
-        echo "accessRequestCreateAction: user=$user <br>";
+        echo "accessRequestCreateAction: user=$user <br>"; //testing
 
         $userSecUtil = $this->container->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
@@ -749,7 +749,7 @@ class AccessRequestController extends OrderAbstractController
     #[Route(path: '/no-thanks-access-requests/{sitename}', name: 'employees_no_thanks_accessrequest', methods: ['GET'])]
     public function noThanksAccessRequestAction( Request $request, $sitename )
     {
-        exit('1 noThanksAccessRequestAction');
+        exit('1 noThanksAccessRequestAction'); //testing
         $session = $request->getSession();
 
         // 1. Clear the security token
@@ -765,7 +765,7 @@ class AccessRequestController extends OrderAbstractController
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->tokenStorage->setToken(null); //testing
         //$request->getSession()->invalidate();
-        exit('2 noThanksAccessRequestAction');
+        exit('2 noThanksAccessRequestAction'); //testing
 
         if( $session->get('sitename') == $sitename ) {
             //return $this->redirect($this->generateUrl($sitename . '_logout'));
