@@ -971,7 +971,7 @@ class FellAppController extends OrderAbstractController {
         //$fellappUtil = $this->container->get('fellapp_util');
         //if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
         if( false == $this->isGranted("read",$entity) ) {
-            //exit('fellapp read permission not ok ID:'.$entity->getId());
+            exit('fellapp read permission not ok ID:'.$entity->getId());
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
         //exit('fellapp permission ok ID:'.$entity->getId());
