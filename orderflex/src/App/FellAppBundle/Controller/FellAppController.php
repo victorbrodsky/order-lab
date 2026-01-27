@@ -1410,8 +1410,12 @@ class FellAppController extends OrderAbstractController {
 
         if( $fellappUtil->isApplicant($user,$entity) ) {
             //can not edit if status Active
-            $fellAppStatusEntity = $this->getAppStatus();
+            $fellAppStatusEntity = $entity->getAppStatus();
             if( $fellAppStatusEntity->getName() === 'active' ) {
+                $this->addFlash(
+                    'warning',
+                    'You cannot edit a fellowship application that has already been submitted'
+                );
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }
