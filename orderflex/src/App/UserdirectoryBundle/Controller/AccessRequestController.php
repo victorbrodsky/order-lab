@@ -749,6 +749,7 @@ class AccessRequestController extends OrderAbstractController
     #[Route(path: '/no-thanks-access-requests/{sitename}', name: 'employees_no_thanks_accessrequest', methods: ['GET'])]
     public function noThanksAccessRequestAction( Request $request, $sitename )
     {
+        exit('1 noThanksAccessRequestAction');
         $session = $request->getSession();
 
         // 1. Clear the security token
@@ -764,7 +765,7 @@ class AccessRequestController extends OrderAbstractController
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->tokenStorage->setToken(null); //testing
         //$request->getSession()->invalidate();
-        exit('noThanksAccessRequestAction');
+        exit('2 noThanksAccessRequestAction');
 
         if( $session->get('sitename') == $sitename ) {
             //return $this->redirect($this->generateUrl($sitename . '_logout'));
