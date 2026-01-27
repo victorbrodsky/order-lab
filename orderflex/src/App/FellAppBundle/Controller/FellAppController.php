@@ -3553,7 +3553,7 @@ class FellAppController extends OrderAbstractController {
 //        if( false == $this->isGranted("create","FellowshipApplication") ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
-        dd($_SERVER['APP_ENV'], $_SERVER['APP_DEBUG']);
+        //dd($_SERVER['APP_ENV'], $_SERVER['APP_DEBUG']);
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -4058,7 +4058,8 @@ class FellAppController extends OrderAbstractController {
             $currentDateTimeStr = $currentDateTime->format('m-d-Y-h-i-s');
 
             //Last Name + First Name + Email
-            $applicantname = $applicant->getLastName()."_".$applicant->getFirstName()."_".$applicant->getEmail()."_".$currentDateTimeStr;
+            //$applicantname = $applicant->getLastName()."_".$applicant->getFirstName()."_".$applicant->getEmail()."_".$currentDateTimeStr;
+            $applicantname = $applicant->getEmail();
             $applicant->setPrimaryPublicUserId($applicantname);
 
             //set unique username
