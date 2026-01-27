@@ -62,6 +62,15 @@ class FellAppPermissionVoter extends BasePermissionVoter
 //        }
         //exit('fellapp no canEdit');
 
+        //TODO: how to deal with ROLE_FELLAPP_PUBLIC_SUBMITTER?
+        //if( $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') ) {
+        //    return true;
+        //}
+        if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $token->getRoleNames(), true)) {
+            return true;
+        }
+
+
         if( parent::canView($subject,$token) ) {
             //exit('fellapp parent canView parent ok'); //testing exit
             return $this->fellappAdditionalCheck($subject,$token);
