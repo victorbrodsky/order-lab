@@ -20,10 +20,6 @@ require 'base.php';
 
 echo "*** siteparameters.php: Runing siteparameters.php ***\n"; //testing
 
-//Testing
-putenv('APP_ENV=dev');
-putenv('APP_DEBUG=1');
-
 $useDb = true;
 //$useDb = false; //use when new fields are added to the "SiteParameters" entity
 //TODO: why getSiteSettingParameter (or getSingleSiteSettingParameter) is called when clear cache
