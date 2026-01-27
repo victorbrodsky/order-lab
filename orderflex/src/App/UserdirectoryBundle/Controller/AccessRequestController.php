@@ -270,6 +270,7 @@ class AccessRequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository(User::class)->find($id);
+        echo "accessRequestCreateNew: id=$id, user=$user <br>";
 
         if (!$user) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
