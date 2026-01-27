@@ -206,7 +206,7 @@ class AuthUtil {
 
         if( $user ) {
             $this->logger->notice("Local Authentication: local user found by username=".$token->getUsername()."; userId=".$user->getId());
-            $this->logger->notice("Local Authentication: local user password=".$user->getPassword());
+            $this->logger->notice("Local Authentication: local user password=".$user->getPassword()); //testing
 
             if( !$this->canLogin($user) ) {
                 //exit("User can not login");

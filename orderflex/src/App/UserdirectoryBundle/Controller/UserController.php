@@ -3688,7 +3688,8 @@ class UserController extends OrderAbstractController
 
             //TODO: update username if keytype is changed
             $currentKeyType = $entity->getKeytype();
-            //echo "currentKeyType ID=".$currentKeyType->getId()."<br>";
+            echo "currentKeyType ID=".$currentKeyType->getId().", abbreviation=".$entity->getAbbreviation()."<br>";
+            exit('test update user');
             //echo "originalKeyType ID=".$originalKeyType->getId()."<br>"; //does not exist for test user
             if( $currentKeyType && $originalKeyType ) {
                 if( $currentKeyType && $currentKeyType->getId() != $originalKeyType->getId() ) {
@@ -3746,7 +3747,7 @@ class UserController extends OrderAbstractController
             if( $entity->getPassword() == NULL ) {
                 $entity->setPassword("");
             }
-            //exit("password=".$entity->getPassword());
+            exit("password=".$entity->getPassword()); //testing
             
             //encrypt password
             $this->encryptPassword($entity,$originalPassword); //updateUser
