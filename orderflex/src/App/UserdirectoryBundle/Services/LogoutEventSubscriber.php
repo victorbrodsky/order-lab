@@ -94,7 +94,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //In order to keep session onLogout, set firewall logout: invalidate_session: false then $session->invalidate();
         $session = $request->getSession();
         //dump($session);
-        //exit('logout');
+        exit('onLogout: logout');
 
         $logintype = $session->get('logintype');
         //$logger = $this->container->get('logger');

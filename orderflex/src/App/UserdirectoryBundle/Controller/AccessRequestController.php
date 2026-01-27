@@ -753,9 +753,13 @@ class AccessRequestController extends OrderAbstractController
 
         // 1. Clear the security token
         //$this->tokenStorage->setToken(null);
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->userLogout();
+
         // 2. Invalidate the session
         //$session = $this->requestStack->getSession();
         $session->invalidate();
+
         //$this->container->get('security.context')->setToken(null);
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->tokenStorage->setToken(null); //testing
