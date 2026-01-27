@@ -270,7 +270,7 @@ class AccessRequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository(User::class)->find($id);
-        echo "accessRequestCreateNew: id=$id, user=$user <br>";
+        //echo "accessRequestCreateNew: id=$id, user=$user <br>"; //testing
 
         if (!$user) {
             return $this->redirect($this->generateUrl($sitename.'_login'));
@@ -752,7 +752,7 @@ class AccessRequestController extends OrderAbstractController
         $user = $this->getUser();
         echo "noThanksAccessRequestAction: user=$user <br>"; //testing
         exit('1 noThanksAccessRequestAction'); //testing
-        
+
         $session = $request->getSession();
 
         // 1. Clear the security token
