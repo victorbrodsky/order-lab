@@ -877,7 +877,7 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/download/{id}', name: 'fellapp_download')]
     #[Template('AppFellAppBundle/Form/new.html.twig')]
     public function showAction(Request $request, TokenStorageInterface $tokenStorage, $id) {
-        exit('showAction');
+        //exit('showAction');
         //echo "clientip=".$request->getClientIp()."<br>";
         //$ip = $this->container->get('request')->getClientIp();
         //echo "ip=".$ip."<br>";
@@ -971,14 +971,14 @@ class FellAppController extends OrderAbstractController {
         //$fellappUtil = $this->container->get('fellapp_util');
         //if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
         if( false == $this->isGranted("read",$entity) ) {
-            exit('fellapp read permission not ok ID:'.$entity->getId());
+            //exit('fellapp read permission not ok ID:'.$entity->getId());
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
-        exit('fellapp permission ok ID:'.$entity->getId());
+        //exit('fellapp permission ok ID:'.$entity->getId());
 
         if( $routeName == "fellapp_edit" ) {
             if( false == $this->isGranted("update",$entity) ) {
-                exit('fellapp update permission not ok ID:'.$entity->getId());
+                //exit('fellapp update permission not ok ID:'.$entity->getId());
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
         }

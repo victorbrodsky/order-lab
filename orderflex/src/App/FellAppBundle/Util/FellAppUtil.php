@@ -1212,6 +1212,13 @@ class FellAppUtil {
             return true;
         }
 
+        $applicant = $fellapp->getUser();
+        if( $applicant && $user ) {
+            if( $applicant->getId() === $user->getId() ) {
+                return true;
+            }
+        }
+
         //echo "res=".$res."<br>";
         //exit('hasFellappPermission return false'); //testing exit
         return false;
