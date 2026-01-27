@@ -56,14 +56,8 @@ class FellAppPermissionVoter extends BasePermissionVoter
             }
 
             //if subject (FellowshipApplication) has user == $token
-            $applicant = $subject->getUser();
-            if( $applicant ) {
-                $user = $token->getUser();
-                if( $user && is_object($user) ) {
-                    if( $applicant->getId() && $user->getId() && $applicant->getId() === $user->getId() ) {
-                        return true;
-                    }
-                }
+            if( $this->isOwner($subject, $token) ) {
+                return true;
             }
         }
 
@@ -92,6 +86,10 @@ class FellAppPermissionVoter extends BasePermissionVoter
     protected function canEdit($subject, TokenInterface $token) : bool
     {
         //exit('fellapp canEdit');
+
+        if( $this->isOwner($subject, $token) ) {
+            return true;
+        }
 
         if( parent::canEdit($subject,$token) ) {
             //exit('fellapp parent canEdit');
@@ -145,7 +143,19 @@ class FellAppPermissionVoter extends BasePermissionVoter
         return false;
     }
 
-
+    public function isOwner($subject,$token) {
+        //if subject (FellowshipApplication) has user == $token
+        $applicant = $subject->getUser();
+        if( $applicant ) {
+            $user = $token->getUser();
+            if( $user && is_object($user) ) {
+                if( $applicant->getId() && $user->getId() && $applicant->getId() === $user->getId() ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
 //    protected function canView($subject, TokenInterface $token) {
