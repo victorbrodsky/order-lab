@@ -3688,7 +3688,7 @@ class UserController extends OrderAbstractController
 
             //TODO: update username if keytype is changed
             $currentKeyType = $entity->getKeytype();
-            echo "currentKeyType ID=".$currentKeyType->getId().", abbreviation=".$entity->getAbbreviation()."<br>";
+            echo "currentKeyType ID=".$currentKeyType->getId().", abbreviation=".$currentKeyType->getAbbreviation()."<br>";
             exit('test update user');
             //echo "originalKeyType ID=".$originalKeyType->getId()."<br>"; //does not exist for test user
             if( $currentKeyType && $originalKeyType ) {
