@@ -751,8 +751,8 @@ class AccessRequestController extends OrderAbstractController
     {
         $user = $this->getUser();
         echo "noThanksAccessRequestAction: user=$user <br>"; //testing
-
-        //exit('1 noThanksAccessRequestAction'); //testing
+        exit('1 noThanksAccessRequestAction'); //testing
+        
         $session = $request->getSession();
 
         // 1. Clear the security token
