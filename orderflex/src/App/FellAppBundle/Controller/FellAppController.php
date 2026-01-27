@@ -4071,6 +4071,14 @@ class FellAppController extends OrderAbstractController {
             $applicant->setPassword("");
             $applicant->setCreatedby('manual');
 
+            //$roleName = "ROLE_FELLAPP_USER"; //check legacy role name
+            //$roleObject = $em->getRepository(Roles::class)->findOneByName($roleName);
+            //$roles = array($roleObject);
+            //$applicant->setRoles($roles);
+            $applicant->addRole('ROLE_FELLAPP_USER');
+            $applicant->addRole('ROLE_FELLAPP_PUBLIC_SUBMITTER');
+            $applicant->addRole('ROLE_USERDIRECTORY_OBSERVER');
+
             $default_time_zone = $this->getParameter('default_time_zone');
             $applicant->getPreferences()->setTimezone($default_time_zone);
             $applicant->setLocked(true);
