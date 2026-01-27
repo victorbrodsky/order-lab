@@ -274,6 +274,7 @@ class AccessRequestController extends OrderAbstractController
             return $this->redirect($this->generateUrl($sitename.'_login'));
             //throw $this->createNotFoundException('Unable to find User.');
         }
+        echo "user=$user <br>";
 
         $secUtil = $this->container->get('user_security_utility');
         $userAccessReq = $secUtil->getUserAccessRequest($user,$sitename);

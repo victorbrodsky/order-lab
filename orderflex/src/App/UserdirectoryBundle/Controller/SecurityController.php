@@ -939,6 +939,7 @@ class SecurityController extends OrderAbstractController
 
 
     //Custom logout
+    //This logout is ignored, because logout is intercepted by symfony
     //[Route(path: '/logout', name: 'employees_logout')]
     public function logoutTestAction( Request $request, Security $security, TokenStorageInterface $tokenStorage )
     {
