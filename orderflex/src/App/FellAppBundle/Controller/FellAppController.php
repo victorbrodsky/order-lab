@@ -1394,6 +1394,7 @@ class FellAppController extends OrderAbstractController {
             throw $this->createNotFoundException('Unable to find Fellowship Application');
         }
 
+        $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
 
         $id = $entity->getId();
@@ -1407,8 +1408,15 @@ class FellAppController extends OrderAbstractController {
         $applicant = $entity->getUser();
         //echo "Applicant=".$applicant.", applicantID=".$applicant->getId().", user=".$user."<br>";
 
+        if( $fellappUtil->isApplicant($user,$entity) ) {
+            //can not edit if status Active
+            $fellAppStatusEntity = $this->getAppStatus();
+            if( $fellAppStatusEntity->getName() === 'active' ) {
+                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            }
+        }
+
         //user who has the same fell type can view or edit
-        $fellappUtil = $this->container->get('fellapp_util');
         if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }

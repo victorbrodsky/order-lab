@@ -1212,16 +1212,22 @@ class FellAppUtil {
             return true;
         }
 
+        if( $this->isApplicant($user,$fellapp) ) {
+            return true;
+        }
+
+        //echo "res=".$res."<br>";
+        //exit('hasFellappPermission return false'); //testing exit
+        return false;
+    }
+
+    public function isApplicant( $user, $fellapp ) {
         $applicant = $fellapp->getUser();
         if( $applicant && $user ) {
             if( $applicant->getId() === $user->getId() ) {
                 return true;
             }
         }
-
-        //echo "res=".$res."<br>";
-        //exit('hasFellappPermission return false'); //testing exit
-        return false;
     }
 
     //check fellowship types based on the user roles

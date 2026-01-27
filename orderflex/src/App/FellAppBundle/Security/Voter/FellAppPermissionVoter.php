@@ -56,7 +56,7 @@ class FellAppPermissionVoter extends BasePermissionVoter
             }
 
             //if subject (FellowshipApplication) has user == $token
-            if( $this->isOwner($subject, $token) ) {
+            if( $this->isApplicant($subject, $token) ) {
                 return true;
             }
         }
@@ -87,7 +87,7 @@ class FellAppPermissionVoter extends BasePermissionVoter
     {
         //exit('fellapp canEdit');
 
-        if( $this->isOwner($subject, $token) ) {
+        if( $this->isApplicant($subject, $token) ) {
             return true;
         }
 
@@ -143,7 +143,7 @@ class FellAppPermissionVoter extends BasePermissionVoter
         return false;
     }
 
-    public function isOwner($subject,$token) {
+    public function isApplicant($subject,$token) {
         //if subject (FellowshipApplication) has user == $token
         $applicant = $subject->getUser();
         if( $applicant ) {
