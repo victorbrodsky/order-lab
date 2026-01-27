@@ -550,7 +550,7 @@ class UserSecurityUtil {
         return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
     }
 
-    function userLogout( $sitename ) {
+    function userLogout( $sitename=null ) {
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->security->setToken(null); //testing
         //$this->get('request')->getSession()->invalidate();
