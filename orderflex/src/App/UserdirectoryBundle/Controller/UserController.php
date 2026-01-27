@@ -3747,7 +3747,7 @@ class UserController extends OrderAbstractController
             if( $entity->getPassword() == NULL ) {
                 $entity->setPassword("");
             }
-            exit("password=".$entity->getPassword()); //testing
+            //exit("password=".$entity->getPassword()); //testing
             
             //encrypt password
             $this->encryptPassword($entity,$originalPassword); //updateUser
