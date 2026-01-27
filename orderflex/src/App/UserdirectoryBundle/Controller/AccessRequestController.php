@@ -764,6 +764,7 @@ class AccessRequestController extends OrderAbstractController
         //$this->container->get('security.token_storage')->setToken(null);
         //$this->tokenStorage->setToken(null); //testing
         //$request->getSession()->invalidate();
+        exit('noThanksAccessRequestAction');
 
         if( $session->get('sitename') == $sitename ) {
             //return $this->redirect($this->generateUrl($sitename . '_logout'));
