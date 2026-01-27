@@ -988,6 +988,8 @@ class FellAppController extends OrderAbstractController {
 //            }
 //        }
 
+        exit('fellapp update permission after '.$entity->getId());
+
         $args = $this->getShowParameters($routeName,$entity); //edit, show
 
         if( $routeName == 'fellapp_download' ) {
