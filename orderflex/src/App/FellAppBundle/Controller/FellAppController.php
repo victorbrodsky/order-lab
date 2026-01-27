@@ -960,7 +960,7 @@ class FellAppController extends OrderAbstractController {
         //testing
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$fellappRecLetterUtil->generateFellappRecLetterId($entity);
-        //exit('testing');
+        exit('testing');
 
 //        if( false == $this->isGranted("interview",$entity) ) {
 //            //exit('fellapp interview permission not ok ID:'.$entity->getId());
@@ -974,7 +974,7 @@ class FellAppController extends OrderAbstractController {
             exit('fellapp read permission not ok ID:'.$entity->getId());
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
-        //exit('fellapp permission ok ID:'.$entity->getId());
+        exit('fellapp permission ok ID:'.$entity->getId());
 
         if( $routeName == "fellapp_edit" ) {
             if( false == $this->isGranted("update",$entity) ) {
@@ -988,7 +988,7 @@ class FellAppController extends OrderAbstractController {
 //            }
 //        }
 
-        exit('fellapp update permission after '.$entity->getId());
+        //exit('fellapp update permission after '.$entity->getId());
 
         $args = $this->getShowParameters($routeName,$entity); //edit, show
 
