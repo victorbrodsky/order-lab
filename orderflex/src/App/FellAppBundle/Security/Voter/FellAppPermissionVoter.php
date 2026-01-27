@@ -54,6 +54,17 @@ class FellAppPermissionVoter extends BasePermissionVoter
             if( $this->isObserverOrInterviewer($subject, $token) ) {
                 return true;
             }
+
+            //if subject (FellowshipApplication) has user == $token
+            $applicant = $subject->getUser();
+            if( $applicant ) {
+                $user = $token->getUser();
+                if( $user && is_object($user) ) {
+                    if( $applicant->getId() && $user->getId() && $applicant->getId() === $user->getId() ) {
+                        return true;
+                    }
+                }
+            }
         }
 
         //testing: if can edit than can view: it's already done in the parent class
@@ -63,12 +74,9 @@ class FellAppPermissionVoter extends BasePermissionVoter
         //exit('fellapp no canEdit');
 
         //TODO: how to deal with ROLE_FELLAPP_PUBLIC_SUBMITTER?
-        //if( $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') ) {
+        //if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $token->getRoleNames(), true)) {
         //    return true;
         //}
-//        if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $token->getRoleNames(), true)) {
-//            return true;
-//        }
 
 
         if( parent::canView($subject,$token) ) {
