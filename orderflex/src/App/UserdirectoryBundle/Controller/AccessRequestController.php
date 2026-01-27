@@ -749,9 +749,9 @@ class AccessRequestController extends OrderAbstractController
     #[Route(path: '/no-thanks-access-requests/{sitename}', name: 'employees_no_thanks_accessrequest', methods: ['GET'])]
     public function noThanksAccessRequestAction( Request $request, $sitename )
     {
-        $user = $this->getUser();
-        echo "noThanksAccessRequestAction: user=$user <br>"; //testing
-        exit('1 noThanksAccessRequestAction'); //testing
+        //$user = $this->getUser();
+        //echo "noThanksAccessRequestAction: user=$user <br>"; //testing
+        //exit('1 noThanksAccessRequestAction'); //testing
 
         $session = $request->getSession();
 
