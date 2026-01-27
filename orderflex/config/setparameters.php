@@ -410,5 +410,7 @@ else {
     echo "*** siteparameters.php: No connection to DB ***\n";
 }
 
+echo "*** siteparameters.php: APP_ENV=".$_SERVER['APP_ENV'] . ", APP_DEBUG=" . $_SERVER['APP_DEBUG']." ***\n";
+
 #printSettings($container);
 
