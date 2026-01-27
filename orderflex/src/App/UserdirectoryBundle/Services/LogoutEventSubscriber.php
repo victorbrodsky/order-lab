@@ -76,6 +76,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function onLogout(LogoutEvent $event): void
     {
+        exit('onLogout: logout');
         $logger = $this->container->get('logger');
         $logger->notice("onLogout");
 
