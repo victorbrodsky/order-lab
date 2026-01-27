@@ -750,6 +750,17 @@ class AccessRequestController extends OrderAbstractController
     public function noThanksAccessRequestAction( Request $request, $sitename )
     {
         $session = $request->getSession();
+
+        // 1. Clear the security token
+        //$this->tokenStorage->setToken(null);
+        // 2. Invalidate the session
+        //$session = $this->requestStack->getSession();
+        $session->invalidate();
+        //$this->container->get('security.context')->setToken(null);
+        //$this->container->get('security.token_storage')->setToken(null);
+        //$this->tokenStorage->setToken(null); //testing
+        //$request->getSession()->invalidate();
+
         if( $session->get('sitename') == $sitename ) {
             //return $this->redirect($this->generateUrl($sitename . '_logout'));
             return $this->redirect($this->generateUrl($sitename . '_login'));
