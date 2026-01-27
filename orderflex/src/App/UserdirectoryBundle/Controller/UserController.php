@@ -2714,7 +2714,7 @@ class UserController extends OrderAbstractController
 
             $currentKeyType = $user->getKeytype();
             if( $currentKeyType ) {
-                if( $currentKeyType->getName() != "Local User" && $currentKeyType->getName() != "External Authentication" ) {
+                if( $currentKeyType->getAbbreviation() != "local-user" && $currentKeyType->getAbbreviation() != "external" ) {
                     $user->setPassword(NULL);
                 }
             }
@@ -3688,8 +3688,8 @@ class UserController extends OrderAbstractController
 
             //TODO: update username if keytype is changed
             $currentKeyType = $entity->getKeytype();
-            echo "currentKeyType ID=".$currentKeyType->getId().", abbreviation=".$currentKeyType->getAbbreviation()."<br>";
-            exit('test update user');
+            //echo "currentKeyType ID=".$currentKeyType->getId().", abbreviation=".$currentKeyType->getAbbreviation()."<br>";
+            //exit('test update user');
             //echo "originalKeyType ID=".$originalKeyType->getId()."<br>"; //does not exist for test user
             if( $currentKeyType && $originalKeyType ) {
                 if( $currentKeyType && $currentKeyType->getId() != $originalKeyType->getId() ) {
@@ -3734,7 +3734,7 @@ class UserController extends OrderAbstractController
             //set parents for institution tree for Administrative and Academical Titles
             //$this->setCompositeTreeNode($entity);
 
-            if( $currentKeyType->getName() != "Local User" ) {
+            if( $currentKeyType->getAbbreviation() != "local-user" ) {
                 $entity->setPassword(NULL);
             }
 
