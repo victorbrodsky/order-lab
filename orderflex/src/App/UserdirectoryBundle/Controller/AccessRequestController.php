@@ -755,20 +755,14 @@ class AccessRequestController extends OrderAbstractController
 
         $session = $request->getSession();
 
+        /////////// Logout //////////
         // 1. Clear the security token
-        //$this->tokenStorage->setToken(null);
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->userLogout(); //setToken(null)
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil->userLogout(); //setToken(null)
 
         // 2. Invalidate the session
-        //$session = $this->requestStack->getSession();
-        $session->invalidate();
-
-        //$this->container->get('security.context')->setToken(null);
-        //$this->container->get('security.token_storage')->setToken(null);
-        //$this->tokenStorage->setToken(null); //testing
-        //$request->getSession()->invalidate();
-        //exit('2 noThanksAccessRequestAction'); //testing
+        //$session->invalidate();
+        /////////// EOF Logout //////////
 
         if( $session->get('sitename') == $sitename ) {
             //return $this->redirect($this->generateUrl($sitename . '_logout'));
