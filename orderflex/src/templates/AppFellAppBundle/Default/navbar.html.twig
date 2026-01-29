@@ -71,7 +71,6 @@
                         </li>
                     {% endif %}
 
-                    {#TODO: show it only to applicants (ROLE_FELLAPP_APPLICANT)?#}
                     {% if is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}
                         <li id="nav-bar-myapplications" class="divider-vertical">
                             <a href="{{ path('fellapp_myapplications') }}">

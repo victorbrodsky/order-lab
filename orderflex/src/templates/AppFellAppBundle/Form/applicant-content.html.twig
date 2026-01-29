@@ -340,7 +340,7 @@
 {{ form_end(form, {'render_rest': false}) }}
 
 {% if cycle == "show" %}
-    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or entity.user.id == app.user.id %}
         <br>
         <p>
             <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
