@@ -1019,11 +1019,11 @@ class AuthUtil {
     }
     public function isPasswordValid($user,$plaintextPassword) {
 
-        $encoded = $user->getPassword();
-        $thisEncoded = $this->getEncodedPassword($user,$plaintextPassword);
-        $this->logger->notice("encoded=[$encoded], "."thisEncoded=[$thisEncoded]");
-        $passwordHasherRes = $this->passwordHasher->isPasswordValid($user, $plaintextPassword);
-        $this->logger->notice("plaintextPassword=$plaintextPassword, "."passwordHasherRes=[$passwordHasherRes]");
+        //$encoded = $user->getPassword();
+        //$thisEncoded = $this->getEncodedPassword($user,$plaintextPassword);
+        //$this->logger->notice("encoded=[$encoded], "."thisEncoded=[$thisEncoded]");
+        //$passwordHasherRes = $this->passwordHasher->isPasswordValid($user, $plaintextPassword);
+        //$this->logger->notice("plaintextPassword=$plaintextPassword, "."passwordHasherRes=[$passwordHasherRes]");
         if( $this->passwordHasher->isPasswordValid($user, $plaintextPassword) ) {
             return true;
         }
