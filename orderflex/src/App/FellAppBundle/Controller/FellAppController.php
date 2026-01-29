@@ -103,9 +103,6 @@ class FellAppController extends OrderAbstractController {
                 //exit("indexAction: no permission: read FellowshipApplication"); //testing exit
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
-            if( $this->isGranted("ROLE_FELLAPP_PUBLIC_SUBMITTER") ) {
-                return $this->redirect( $this->generateUrl('fellapp_myapplications') );
-            }
         }
 
         if( $route == "fellapp_myinterviewees" ) {
@@ -161,6 +158,12 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
         $userServiceUtil = $this->container->get('user_service_utility');
 
+        if( $route == "fellapp_home" ) {
+            //check if user specifically has role ROLE_FELLAPP_PUBLIC_SUBMITTER
+            if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
+                return $this->redirect( $this->generateUrl('fellapp_myapplications') );
+            }
+        }
 
         $fellowshipTypes = array();
         $globalFellTypes = array();
