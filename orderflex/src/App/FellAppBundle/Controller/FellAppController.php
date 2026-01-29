@@ -108,7 +108,7 @@ class FellAppController extends OrderAbstractController {
             //if( $route == "fellapp_home" ) {
                 //check if user specifically has role ROLE_FELLAPP_PUBLIC_SUBMITTER
                 if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
-                    ROLE_FELLAPP_PUBLIC_SUBMITTER!!!
+                    //exit('ROLE_FELLAPP_PUBLIC_SUBMITTER!!!');
                     return $this->redirect( $this->generateUrl('fellapp_myapplications') );
                 }
             //}
