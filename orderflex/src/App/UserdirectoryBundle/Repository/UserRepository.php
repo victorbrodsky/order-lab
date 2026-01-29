@@ -199,15 +199,15 @@ class UserRepository extends EntityRepository {
         return $query->getQuery()->getResult();
     }
 
-    public function findUsersByUserName(string $userName): array
-    {
-        return $this->createQueryBuilder('u')
-            //->join('u.infos', 'i')
-            ->andWhere('u.username = :username')
-            ->setParameter('username', $userName)
-            ->getQuery()
-            ->getResult();
-    }
+//    public function findUsersByUserName(string $userName): array
+//    {
+//        return $this->createQueryBuilder('u')
+//            //->join('u.infos', 'i')
+//            ->andWhere('u.username = :username')
+//            ->setParameter('username', $userName)
+//            ->getQuery()
+//            ->getResult();
+//    }
 
     public function findOneUserByUserInfoEmail( $email ) {
         $user = NULL;

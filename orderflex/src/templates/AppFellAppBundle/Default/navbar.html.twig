@@ -48,13 +48,13 @@
                     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
                     {{ usermacros.siteSwitch() }}
 
-                    {% if not is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}
+                    {#{% if not is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}#}
                         <li id="nav-bar-fellapphome" class="hidden-xs divider-vertical">
                             <a href="{{ path(fellapp_sitename~'_home') }}">
                                 <span class="glyphicon glyphicon-file"></span> Home
                             </a>
                         </li>
-                    {% endif %}
+                    {#{% endif %}#}
 
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
