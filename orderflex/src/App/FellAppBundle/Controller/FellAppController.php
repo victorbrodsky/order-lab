@@ -195,7 +195,7 @@ class FellAppController extends OrderAbstractController {
                 //echo "thisCurrentYear=$thisCurrentYear <br>"; //testing
                 $currentYearArr[] = $thisCurrentYear + 2;
             }
-            $currentYear = implode(",",$currentYearArr);
+            $currentYear = implode(", ",$currentYearArr);
             $defaultStartDates = $currentYear;
             //echo "defaultStartDates1=$defaultStartDates <br>";
         }
@@ -209,7 +209,11 @@ class FellAppController extends OrderAbstractController {
             $defaultStartDates = $currentYear; //"2012,2013,2014,2015";
             //echo "defaultStartDates2=$defaultStartDates <br>";
         }
-        //echo "defaultStartDates=$defaultStartDates <br>"; //testing
+        //add +1 year to the $defaultStartDates, for example, if $defaultStartDates=2027 so it will show 2027,2028
+        //echo "1 defaultStartDates=$defaultStartDates <br>"; //testing
+        $defaultStartYear = (int) trim($defaultStartDates);
+        $defaultStartDates = $defaultStartYear . ', ' . ($defaultStartYear + 1);
+        //echo "2 defaultStartDates=$defaultStartDates <br>"; //testing
 
         if( count($fellowshipTypes) == 0 && count($globalFellTypes) == 0 ) {
 //            $linkUrl = $this->generateUrl(
