@@ -199,6 +199,16 @@ class UserRepository extends EntityRepository {
         return $query->getQuery()->getResult();
     }
 
+    public function findByPrimaryPublicUserId(string $publicId): array
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.infos', 'i')
+            ->andWhere('i.primaryPublicUserId = :publicId')
+            ->setParameter('publicId', $publicId)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findOneUserByUserInfoEmail( $email ) {
         $user = NULL;
         $users = $this->findUserByUserInfoEmail($email);
