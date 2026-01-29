@@ -31,7 +31,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            {% if is_granted('ROLE_FELLAPP_USER') and not is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}
+            {% if is_granted('ROLE_FELLAPP_USER') %}
                 <!-- this is for mobile devices - top menu -->
                 <a class="navbar-brand visible-xs visible-sm" href="{{ path(fellapp_sitename~'_home') }}">Home</a>
             {% endif %}
@@ -48,11 +48,13 @@
                     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
                     {{ usermacros.siteSwitch() }}
 
-                    <li id="nav-bar-fellapphome" class="hidden-xs divider-vertical">
-                        <a href="{{ path(fellapp_sitename~'_home') }}">
-                            <span class="glyphicon glyphicon-file"></span> Home
-                        </a>
-                    </li>
+                    {% if not is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}
+                        <li id="nav-bar-fellapphome" class="hidden-xs divider-vertical">
+                            <a href="{{ path(fellapp_sitename~'_home') }}">
+                                <span class="glyphicon glyphicon-file"></span> Home
+                            </a>
+                        </li>
+                    {% endif %}
 
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
@@ -70,7 +72,7 @@
                     {% endif %}
 
                     {#TODO: show it only to applicants (ROLE_FELLAPP_APPLICANT)?#}
-                    {% if is_granted('ROLE_FELLAPP_USER') %}
+                    {% if is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}
                         <li id="nav-bar-myapplications" class="divider-vertical">
                             <a href="{{ path('fellapp_myapplications') }}">
                                 My Application
