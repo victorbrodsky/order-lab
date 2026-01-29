@@ -96,7 +96,7 @@ class FellAppController extends OrderAbstractController {
         if( $route == "fellapp_home" ) {
             //check if user specifically has role ROLE_FELLAPP_PUBLIC_SUBMITTER
             if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
-                exit('ROLE_FELLAPP_PUBLIC_SUBMITTER!!! => redirect to fellapp_myapplications');
+                echo "ROLE_FELLAPP_PUBLIC_SUBMITTER!!! => redirect to fellapp_myapplications <br>";
                 return $this->redirect( $this->generateUrl('fellapp_myapplications') );
             }
         }
@@ -156,7 +156,7 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
-        //exit('indexAction: after all check for permission');
+        exit('fellapp indexAction: after all check for permission');
 
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
