@@ -199,12 +199,12 @@ class UserRepository extends EntityRepository {
         return $query->getQuery()->getResult();
     }
 
-    public function findByPrimaryPublicUserId(string $publicId): array
+    public function findUsersByUserName(string $userName): array
     {
         return $this->createQueryBuilder('u')
-            ->join('u.infos', 'i')
-            ->andWhere('i.primaryPublicUserId = :publicId')
-            ->setParameter('publicId', $publicId)
+            //->join('u.infos', 'i')
+            ->andWhere('u.userName = :userName')
+            ->setParameter('userName', $userName)
             ->getQuery()
             ->getResult();
     }
