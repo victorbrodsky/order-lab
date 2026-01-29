@@ -156,7 +156,7 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
-        exit('fellapp indexAction: after all check for permission');
+        //exit('fellapp indexAction: after all check for permission');
 
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
