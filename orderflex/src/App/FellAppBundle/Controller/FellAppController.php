@@ -4132,22 +4132,6 @@ class FellAppController extends OrderAbstractController {
 
             $fellowshipApplication->autoSetRecLetterReceived();
 
-            ////// Form Nodes /////////
-            $globalFellowshipSpecialty = $fellowshipApplication->getGlobalFellowshipSpecialty();
-            if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
-                $formNodeUtil = $this->container->get('user_formnode_utility');
-                $formNodeSource = $fellappUtil->getParentFormNodeBySpecialty($fellowshipApplication); //the same as $holderEntity
-                $formNodeUtil->processFormNodes( //apply
-                    $request,
-                    $formNodeSource,
-                    $fellowshipApplication,
-                    $testing=false
-                ); //new create
-            } else {
-                //exit('eof new applicant: no $globalFellowshipSpecialty found');
-            }
-            ////// EOF Form Nodes /////////
-
             //set update author application
 //            $em = $this->getDoctrine()->getManager();
 //            $userUtil = new UserUtil();
@@ -4160,6 +4144,22 @@ class FellAppController extends OrderAbstractController {
             $em->persist($fellowshipApplication);
             $em->persist($applicant);
             $em->flush();
+
+            ////// Form Nodes /////////
+            $globalFellowshipSpecialty = $fellowshipApplication->getGlobalFellowshipSpecialty();
+            if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
+                $formNodeUtil = $this->container->get('user_formnode_utility');
+                $formNodeSource = $fellappUtil->getParentFormNodeBySpecialty($fellowshipApplication); //the same as $holderEntity
+                $formNodeUtil->processFormNodes( //apply fellapp_apply_post
+                    $request,
+                    $formNodeSource,
+                    $fellowshipApplication,
+                    $testing=false
+                ); //new create
+            } else {
+                //exit('eof new applicant: no $globalFellowshipSpecialty found');
+            }
+            ////// EOF Form Nodes /////////
 
 //            if( $initialStatusName == "draft" ) {
 //                //TODO: send email to a user if draft: Please confirm this email address ...
