@@ -54,7 +54,7 @@
                         </a>
                     </li>
 
-                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}
+                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
                         <li id="nav-bar-fellappnew" class="divider-vertical">
                             <a href="{{ path('fellapp_new') }}">Add Application</a>
                         </li>
@@ -74,9 +74,9 @@
                                 My Applications
                             </a>
                         </li>
-                        {#<li id="nav-bar-fellappnew" class="divider-vertical">#}
-                            {#<a href="{{ path('fellapp_apply') }}">Add Application</a>#}
-                        {#</li>#}
+                        <li id="nav-bar-fellappnew" class="divider-vertical">
+                            <a href="{{ path('fellapp_apply') }}">Apply</a>
+                        </li>
                     {% endif %}
 
                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
