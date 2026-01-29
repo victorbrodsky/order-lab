@@ -103,6 +103,9 @@ class FellAppController extends OrderAbstractController {
                 //exit("indexAction: no permission: read FellowshipApplication"); //testing exit
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
+            if( $this->isGranted("ROLE_FELLAPP_PUBLIC_SUBMITTER") ) {
+                return $this->redirect( $this->generateUrl('fellapp_myapplications') );
+            }
         }
 
         if( $route == "fellapp_myinterviewees" ) {
