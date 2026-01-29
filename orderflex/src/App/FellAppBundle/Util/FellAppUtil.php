@@ -1231,6 +1231,16 @@ class FellAppUtil {
         }
     }
 
+    public function hasPublicApplicantRole( $user=NULL ) {
+        if( !$user ) {
+            $user = $this->security->getUser();
+        }
+        if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
+            return true;
+        }
+        return false;
+    }
+
     //check fellowship types based on the user roles
     //Old concept:
     //Role used to have obligatory institution and fellowship subspecialty

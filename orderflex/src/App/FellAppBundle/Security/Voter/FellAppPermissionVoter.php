@@ -151,11 +151,13 @@ class FellAppPermissionVoter extends BasePermissionVoter
                 $user = $token->getUser();
                 if ($user && is_object($user)) {
                     if ($applicant->getId() && $user->getId() && $applicant->getId() === $user->getId()) {
+                        //echo "isApplicant!!! <br>";
                         return true;
                     }
                 }
             }
         }
+        //echo "NOT isApplicant!!! <br>";
         return false;
     }
 

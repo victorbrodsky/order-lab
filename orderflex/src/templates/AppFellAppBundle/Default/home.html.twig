@@ -437,6 +437,15 @@
 
     <div style="margin-top:25px;">
 
+        {#{% set applicantUser = false %}#}
+        {#{% if is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}#}
+            {#applicantUser is granted<br>#}
+            {#{% set applicantUser = true %}#}
+        {#{% endif %}#}
+        {#{% set applicantUser = false %}#}
+        {% set applicantUser = fellapp_util.hasPublicApplicantRole() %}
+        applicantUser={{ applicantUser }}
+
         <table class="records_list table table-hover table-condensed text-left">
             <thead>
             <tr>
@@ -478,8 +487,10 @@
                 <th>Residency</th>
                 <th>Preceding Fellowship</th>
 
-                <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
+                {% if not applicantUser %}
+                    <th>{{ knp_pagination_sortable(entities, 'Interview Date', 'fellapp.interviewDate') }}</th>
+                    <th>{{ knp_pagination_sortable(entities, 'Interview Score', 'fellapp.interviewScore') }}</th>
+                {% endif %}
 
                 {% if fellappTypeId > 0 %}
                     <th>{{ knp_pagination_sortable(entities, 'Score', 'rank.rank') }}</th>
@@ -828,6 +839,7 @@
                         {{ entity.getPostResidencyFellowshipDescription()|raw }}
                     </td>
 
+                    {% if not applicantUser %}
                     {#Add a black tooltip over the interview date link in the Interview Date column with text "Download Itinerary"#}
                     <td class="rowlink-skip">
                         {% if entity.interviewDate is not empty %}
@@ -898,6 +910,7 @@
                             </div>
                         </div>
                     </td>
+                    {% endif %}
 
                     {#rank#}
                     {% if fellappTypeId > 0 %}
