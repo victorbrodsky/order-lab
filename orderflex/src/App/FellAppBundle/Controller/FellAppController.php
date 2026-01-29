@@ -94,6 +94,14 @@ class FellAppController extends OrderAbstractController {
         //exit();
 
         if( $route == "fellapp_home" ) {
+            //check if user specifically has role ROLE_FELLAPP_PUBLIC_SUBMITTER
+            if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
+                exit('ROLE_FELLAPP_PUBLIC_SUBMITTER!!!');
+                return $this->redirect( $this->generateUrl('fellapp_myapplications') );
+            }
+        }
+
+        if( $route == "fellapp_home" ) {
             if( false == $this->isGranted("read","FellowshipApplication") ){
                 //check if has role interviewer => redirect to 'fellapp_myinterviewees'
                 //exit("indexAction: no permission to read FellowshipApplication"); //testing exit
@@ -104,14 +112,6 @@ class FellAppController extends OrderAbstractController {
                 //exit("indexAction: no permission: read FellowshipApplication"); //testing exit
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
-
-            //if( $route == "fellapp_home" ) {
-                //check if user specifically has role ROLE_FELLAPP_PUBLIC_SUBMITTER
-                if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
-                    exit('ROLE_FELLAPP_PUBLIC_SUBMITTER!!!');
-                    return $this->redirect( $this->generateUrl('fellapp_myapplications') );
-                }
-            //}
         }
 
         if( $route == "fellapp_myinterviewees" ) {
