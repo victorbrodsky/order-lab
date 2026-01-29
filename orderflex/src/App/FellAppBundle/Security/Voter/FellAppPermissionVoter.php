@@ -144,13 +144,15 @@ class FellAppPermissionVoter extends BasePermissionVoter
     }
 
     public function isApplicant($subject,$token) {
-        //if subject (FellowshipApplication) has user == $token
-        $applicant = $subject->getUser();
-        if( $applicant ) {
-            $user = $token->getUser();
-            if( $user && is_object($user) ) {
-                if( $applicant->getId() && $user->getId() && $applicant->getId() === $user->getId() ) {
-                    return true;
+        if( $subject && is_object($subject) ) {
+            //if subject (FellowshipApplication) has user == $token
+            $applicant = $subject->getUser();
+            if ($applicant) {
+                $user = $token->getUser();
+                if ($user && is_object($user)) {
+                    if ($applicant->getId() && $user->getId() && $applicant->getId() === $user->getId()) {
+                        return true;
+                    }
                 }
             }
         }
