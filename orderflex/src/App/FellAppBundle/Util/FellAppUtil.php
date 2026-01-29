@@ -3679,6 +3679,20 @@ class FellAppUtil {
         $emailCanonical = $this->canonicalize($email);
         //echo "checkUserExistByEmail: emailCanonical=$emailCanonical <br>";
 
+        //New fellowship applicant is generated with email as username => check if username is equal to email address
+        if( !$user ) {
+            $users = $em->getRepository(User::class)->findUserByPrimaryPublicUserId($emailCanonical);
+            if ( count($users) > 0) {
+                $user = $users[0];
+            }
+        }
+        if( !$user ) {
+            $users = $em->getRepository(User::class)->findUserByUserName($emailCanonical."_@_local-user"); //cinava@yahoo.com_@_local-user
+            if ( count($users) > 0) {
+                $user = $users[0];
+            }
+        }
+
         //check if user exists by Email
         if( !$user ) {
             //check by email
