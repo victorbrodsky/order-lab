@@ -203,8 +203,8 @@ class UserRepository extends EntityRepository {
     {
         return $this->createQueryBuilder('u')
             //->join('u.infos', 'i')
-            ->andWhere('u.userName = :userName')
-            ->setParameter('userName', $userName)
+            ->andWhere('u.username = :username')
+            ->setParameter('username', $userName)
             ->getQuery()
             ->getResult();
     }
