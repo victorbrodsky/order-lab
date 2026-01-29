@@ -3688,7 +3688,8 @@ class FellAppUtil {
             }
         }
         if( !$user ) {
-            $users = $em->getRepository(User::class)->findUsersByUserName($emailCanonical."_@_local-user"); //cinava@yahoo.com_@_local-user
+            //$users = $em->getRepository(User::class)->findUsersByUserName($emailCanonical."_@_local-user"); //cinava@yahoo.com_@_local-user
+            $users = $em->getRepository(User::class)->findByUsername($emailCanonical."_@_local-user"); //cinava@yahoo.com_@_local-user
             if ( count($users) > 0) {
                 $user = $users[0];
             }
