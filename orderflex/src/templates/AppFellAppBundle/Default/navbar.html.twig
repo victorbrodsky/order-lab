@@ -31,7 +31,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            {% if is_granted('ROLE_FELLAPP_USER') %}
+            {% if is_granted('ROLE_FELLAPP_USER') and not is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}
                 <!-- this is for mobile devices - top menu -->
                 <a class="navbar-brand visible-xs visible-sm" href="{{ path(fellapp_sitename~'_home') }}">Home</a>
             {% endif %}
