@@ -3681,13 +3681,13 @@ class FellAppUtil {
 
         //New fellowship applicant is generated with email as username => check if username is equal to email address
         if( !$user ) {
-            $users = $em->getRepository(User::class)->findUserByPrimaryPublicUserId($emailCanonical);
+            $users = $em->getRepository(User::class)->findByPrimaryPublicUserId($emailCanonical);
             if ( count($users) > 0) {
                 $user = $users[0];
             }
         }
         if( !$user ) {
-            $users = $em->getRepository(User::class)->findUserByUserName($emailCanonical."_@_local-user"); //cinava@yahoo.com_@_local-user
+            $users = $em->getRepository(User::class)->findByUserName($emailCanonical."_@_local-user"); //cinava@yahoo.com_@_local-user
             if ( count($users) > 0) {
                 $user = $users[0];
             }
