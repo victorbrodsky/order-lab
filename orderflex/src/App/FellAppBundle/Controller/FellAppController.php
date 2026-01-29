@@ -3891,6 +3891,7 @@ class FellAppController extends OrderAbstractController {
         $fellowshipApplication = new FellowshipApplication($user); //apply POST
 
         //Find/Create applicant
+        $applicantExists = false;
         
         if ( !$fellowshipApplication->getUser()) {
             //new applicant
@@ -3901,14 +3902,14 @@ class FellAppController extends OrderAbstractController {
             $applicantEmail = $data['oleg_fellappbundle_fellowshipapplication']['user']['infos'][0]['email'] ?? null;
 
             //$res = $fellappUtil->checkUserExistByPostRequest($request);
-            $res = $fellappUtil->checkUserExistByEmail($applicantEmail);
+            $applicantExists = $fellappUtil->checkUserExistByEmail($applicantEmail);
             //echo "applyApplicantAction: res=$res <br>";
             $applicant = null;
-            if ($res === true) {
+            if( $applicantExists === true ) {
                 //find $applicant by email
                 //$applicant = $fellappUtil->checkUserExistByPostRequest($request,true);
                 $applicant = $fellappUtil->checkUserExistByEmail($applicantEmail, true);
-            } else if ($res === false) {
+            } else if ($applicantExists === false) {
                 $applicant = new User($addobjects);
                 $applicant->setPassword("");
                 $applicant->setCreatedby('manual');
@@ -4066,43 +4067,46 @@ class FellAppController extends OrderAbstractController {
             //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
             ////// EOF set status //////
 
-            //set user
-            $userkeytype = $userSecUtil->getUsernameType('local-user');
-            if( !$userkeytype ) {
-                throw new EntityNotFoundException('Unable to find local user keytype');
-            }
-            $applicant->setKeytype($userkeytype);
+            //set applicant user
+            if( $applicantExists !== true ) {
+                $userkeytype = $userSecUtil->getUsernameType('local-user');
+                if (!$userkeytype) {
+                    throw new EntityNotFoundException('Unable to find local user keytype');
+                }
+                $applicant->setKeytype($userkeytype);
 
-            $currentDateTime = new \DateTime();
-            $currentDateTimeStr = $currentDateTime->format('m-d-Y-h-i-s');
+                $currentDateTime = new \DateTime();
+                $currentDateTimeStr = $currentDateTime->format('m-d-Y-h-i-s');
 
-            //Last Name + First Name + Email
-            //$applicantname = $applicant->getLastName()."_".$applicant->getFirstName()."_".$applicant->getEmail()."_".$currentDateTimeStr;
-            $applicantname = $applicant->getEmail();
-            $applicant->setPrimaryPublicUserId($applicantname);
+                //Last Name + First Name + Email
+                //$applicantname = $applicant->getLastName()."_".$applicant->getFirstName()."_".$applicant->getEmail()."_".$currentDateTimeStr;
+                $applicantname = $applicant->getEmail();
+                $applicant->setPrimaryPublicUserId($applicantname);
 
-            //set unique username
-            $applicantnameUnique = $applicant->createUniqueUsername();
-            $applicant->setUsername($applicantnameUnique);
-            $applicant->setUsernameCanonical($applicantnameUnique);
+                //set unique username
+                $applicantnameUnique = $applicant->createUniqueUsername();
+                $applicant->setUsername($applicantnameUnique);
+                $applicant->setUsernameCanonical($applicantnameUnique);
 
-            $applicant->setEmailCanonical($applicant->getEmail());
-            $applicant->setPassword("");
-            $applicant->setCreatedby('manual');
+                $applicant->setEmailCanonical($applicant->getEmail());
+                $applicant->setPassword("");
+                $applicant->setCreatedby('manual');
 
-            //$roleName = "ROLE_FELLAPP_USER"; //check legacy role name
-            //$roleObject = $em->getRepository(Roles::class)->findOneByName($roleName);
-            //$roles = array($roleObject);
-            //$applicant->setRoles($roles);
-            $applicant->addRole('ROLE_FELLAPP_USER');
-            $applicant->addRole('ROLE_FELLAPP_PUBLIC_SUBMITTER');
-            $applicant->addRole('ROLE_USERDIRECTORY_OBSERVER');
+                //$roleName = "ROLE_FELLAPP_USER"; //check legacy role name
+                //$roleObject = $em->getRepository(Roles::class)->findOneByName($roleName);
+                //$roles = array($roleObject);
+                //$applicant->setRoles($roles);
+                $applicant->addRole('ROLE_FELLAPP_USER');
+                $applicant->addRole('ROLE_FELLAPP_PUBLIC_SUBMITTER');
+                $applicant->addRole('ROLE_USERDIRECTORY_OBSERVER');
 
-            $default_time_zone = $this->getParameter('default_time_zone');
-            $applicant->getPreferences()->setTimezone($default_time_zone);
-            $applicant->setLocked(true);
-            if( $initialStatusName == "draft" ) {
+                $default_time_zone = $this->getParameter('default_time_zone');
+                $applicant->getPreferences()->setTimezone($default_time_zone);
                 $applicant->setLocked(false);
+                //$applicant->setLocked(true);
+                //if ($initialStatusName == "draft") {
+                //    $applicant->setLocked(false);
+                //}
             }
 
             //exit('form valid');
@@ -4190,11 +4194,11 @@ class FellAppController extends OrderAbstractController {
             if( $initialStatusName == "draft" ) {
                 //Send email with hash:
                 //A draft fellowship application has been submitted specifying your email address as belonging to the applicant.
-                $fellappUtil->applyConfirmationEmail($applicant);
+                $fellappUtil->applyConfirmationEmail($fellowshipApplication, $applicant,$initialStatusName);
                 return $this->redirect($this->generateUrl('fellapp_login'));
             }
             if( $initialStatusName == "active" ) {
-                $fellappUtil->applyConfirmationEmail($applicant);
+                $fellappUtil->applyConfirmationEmail($fellowshipApplication, $applicant,$initialStatusName);
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
                 return $this->redirect($this->generateUrl('fellapp_login'));
             }

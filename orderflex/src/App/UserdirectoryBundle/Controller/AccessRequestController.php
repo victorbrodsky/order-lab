@@ -1963,7 +1963,7 @@ class AccessRequestController extends OrderAbstractController
         //$newline = "\r\n";
         $newline = "<br>";
         $passwordNote = "";
-        if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
+        if( !$user->getPassword() && $user->getKeytype()->getAbbreviation() == "local-user" ) {
             //exit("set password");
 
             //check salt

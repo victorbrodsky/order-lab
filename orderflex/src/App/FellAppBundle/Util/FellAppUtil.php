@@ -3536,13 +3536,23 @@ class FellAppUtil {
     //recBackupTemplateFileId
 
     //Send a confirmation email after submitting public fellapp application via /apply page
-    public function applyConfirmationEmail( $applicant ) {
+    public function applyConfirmationEmail( $fellowshipApplication, $applicant, $statusName ) {
         $userSecUtil = $this->container->get('user_security_utility');
+        $userTenantUtil = $this->container->get('user_tenant_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
 
         //1) Check if a user is already registered
         $email = $applicant->getEmail();
 
         if( !$email ) {
+            return null;
+        }
+
+        if( !$fellowshipApplication ) {
+            return null;
+        }
+
+        if( !$fellowshipApplication->getId() ) {
             return null;
         }
 
@@ -3563,16 +3573,20 @@ class FellAppUtil {
 //        }
 
         $sendSignUpEmail = false;
-        $pass = $applicant->getPassword();
-        if( !$pass ) {
-            //send sign up email
-            $sendSignUpEmail = true;
-        } else {
-            //just a confirmation email
+        //check if applicant has type local-user and password is empty
+        $userkeytype = $applicant->getKeytype(); //UsernameType
+        if( $userkeytype && $userkeytype->getAbbreviation() == "local-user" ) {
+            $pass = $applicant->getPassword();
+            if (!$pass) {
+                //send sign up email
+                $sendSignUpEmail = true;
+            } else {
+                //just a confirmation email
+            }
         }
 
         //Send a confirmation email is email is set
-        $emailUtil = $this->container->get('user_mailer_utility');
+
         //$emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
         $adminEmails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
         $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
@@ -3580,18 +3594,43 @@ class FellAppUtil {
             $ccs = $adminEmails;
         }
 
-        $subject = "New Fellowship Applications has been submitted on the public site by " . $applicant . ".";
-        $body = $subject;
+        if( $statusName == 'draft' ) {
+            $subject = "New Fellowship Application draft has been created on the public site by " . $applicant . ".";
+        }
+        if( $statusName == 'active' ) {
+            $subject = "New Fellowship Applications has been submitted on the public site by " . $applicant . ".";
+        }
 
-        $emailUtil = $this->container->get('user_mailer_utility');
+        $applicationLink = $userTenantUtil->routerGenerateExternalChanelWrapper(
+            'fellapp_show',
+            array('id' => $fellowshipApplication->getId())
+        );
+
+        $body = $subject . "<br> Fellowship application ID " . $fellowshipApplication->getId() .
+            ". Please visit this link to view your fellowship application:"."<br>".
+            $applicationLink
+        ;
+        $body = $body."<br>" . "Your email address serves as your username.";
+
+        if( $sendSignUpEmail ) {
+            $resetPasswordUrl = $userTenantUtil->routerGenerateExternalChanelWrapper(
+                'employees_forgot_password'
+            );
+            $resetPasswordLink = '<a href="'.$resetPasswordUrl.'">'.'Reset Password'.'</a>';
+            $body = $body."<br><br>".
+                "To complete account activation and continue editing".
+                " the fellowship application form draft, please visit the following link: ".
+                $resetPasswordLink;
+        }
+
+        $body = $body . "<br><br>" .
+            "If you have not submitted any draft fellowship applications".
+            " or are not clear about the meaning of this message, please ignore this email.";
+
         $emailUtil->sendEmail($email, $subject, $body, $ccs);
 
         $userUtil = $this->container->get('user_utility');
         $session = $userUtil->getSession(); //$this->container->get('session');
-        $session->getFlashBag()->add(
-            'notice',
-            "Confirmation email has been sent to $email"
-        );
 
         //3) Send email with a hash to confirm email
         // https://view.online/fellowship-applications/activate-account-to-edit-draft/12345
@@ -3600,7 +3639,12 @@ class FellAppUtil {
 
             $session->getFlashBag()->add(
                 'notice',
-                "Sign up email has been sent to $email"
+                "Confirmation and activation instruction email has been sent to $email"
+            );
+        } else {
+            $session->getFlashBag()->add(
+                'notice',
+                "Confirmation email has been sent to $email"
             );
         }
 
