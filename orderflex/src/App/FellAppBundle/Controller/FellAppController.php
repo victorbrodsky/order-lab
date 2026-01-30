@@ -2296,7 +2296,7 @@ class FellAppController extends OrderAbstractController {
 //            return $response;
         }
 
-        if( false == $this->isGranted("update","FellowshipApplication") ) {
+        if( false == $this->isGranted("update",$entity) ) { //"FellowshipApplication"
             $logger->notice('FellowshipApplication update no permission');
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //            $response = new Response();
