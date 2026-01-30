@@ -1049,16 +1049,32 @@
                                     %}
                                         <li>
                                             <a
-                                                {#href="{{ path('fellapp_application_log', { 'id': entity.id}) }}">View Activity Log#}
-                                                href="{{ path('fellapp_event-log-per-object_log', { 'filter[objectId]': entity.id}) }}">View Activity Log
+                                                    href="{{ path('fellapp_edit', { 'id': entity.id}) }}" target="_blank">Edit
                                             </a>
                                         </li>
 
                                         <li>
                                             <a
-                                                    href="{{ path('fellapp_edit', { 'id': entity.id}) }}" target="_blank">Edit
+                                                {#href="{{ path('fellapp_application_log', { 'id': entity.id}) }}">View Activity Log#}
+                                                href="{{ path('fellapp_event-log-per-object_log', { 'filter[objectId]': entity.id}) }}">View Activity Log
                                             </a>
                                         </li>
+
+                                        {#if logged in user == applicant && status is NOT = "Draft" => show Withdraw this application#}
+                                        {% if entity.appStatus.name != 'withdrawn' and entity.user.id == app.user.getId() %}
+                                            <li>
+                                                <a
+                                                        href="#"
+                                                        class="fellapp-withdraw-link"
+                                                        data-fellapp-id="{{ entity.id }}"
+                                                        data-href-withdraw="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"
+                                                        data-fellowship-type="{{ fellowshipSpecialtyName }}"
+                                                        data-start-year="{{ startYear }}"
+                                                        data-destination-institution="{{ destinationInstitutionName }}"
+                                                >Withdraw this application
+                                                </a>
+                                            </li>
+                                        {% endif %}
                                     {% endif %}
 
                                     <hr>
@@ -1467,38 +1483,6 @@
 
                                         <hr>
 
-                                        {#if logged in user == applicant && status is NOT = "Draft" => show Withdraw this application#}
-                                        {% if entity.appStatus.name != 'withdrawn' and entity.user.id == app.user.getId() %}
-                                            {#Are you sure you would like to withdraw this application#}
-                                            {#for the [[FELLOWSHIP TYPE]] [[START YEAR]] position#}
-                                            {#at [[DESTINATION INSTITUTION NAME]]?#}
-                                            {#If you withdraw this application, it will no longer be considered.#}
-                                            {#Please kindly let us know the reason you are interested in withdrawing your application: [ ]#}
-                                            {#("Yes, withdraw this application, I do not want it to be considered") ("Cancel")#}
-                                            <li>
-                                                <a
-                                                    href="#"
-                                                    class="fellapp-withdraw-link"
-                                                    data-fellapp-id="{{ entity.id }}"
-                                                    data-href-withdraw="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"
-                                                    data-fellowship-type="{{ fellowshipSpecialtyName }}"
-                                                    data-start-year="{{ startYear }}"
-                                                    data-destination-institution="{{ destinationInstitutionName }}"
-                                                >Withdraw this application
-                                                </a>
-
-                                                {#<a#}
-                                                    {#href="#"#}
-                                                    {#class="fellapp-priority-interview-invitation-link"#}
-                                                    {#data-fellapp-id="{{ entity.id }}"#}
-                                                    {#data-interview-subject="{{ fellapp_util.getInterviewInvitationSubject(entity.id) }}"#}
-                                                    {#data-interview-body="{{ fellapp_util.getInterviewInvitationBody(entity.id) }}"#}
-                                                    {#data-href-priorityinterviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'priorityinterviewee' }, true) }}"#}
-                                                {#>Mark as a Priority Interviewee and send the invitation#}
-                                                {#</a>#}
-                                            </li>
-                                        {% endif %}
-
                                         <li>
                                             {#Are you sure you would like to move FirstName LastName’s application for [Specialty] from [application year] to [target application year]?#}
                                             <a
@@ -1521,13 +1505,15 @@
 
                                         <li>
                                             <a
-                                                href="{{ path('fellapp_application_edit', { 'id': entity.id}) }}" target="_blank">Submit evaluation on behalf of an interviewer
+                                                href="{{ path('fellapp_application_edit', { 'id': entity.id}) }}"
+                                                target="_blank">Submit evaluation on behalf of an interviewer
                                             </a>
                                         </li>
 
                                         <li>
                                             <a
-                                                href="{{ path('fellapp_edit_default_interviewers',{'id':entity.id}) }}#interviews" target="_blank">Add Default Interviewers
+                                                href="{{ path('fellapp_edit_default_interviewers',{'id':entity.id}) }}#interviews"
+                                                target="_blank">Add Default Interviewers
                                             </a>
                                         </li>
 
