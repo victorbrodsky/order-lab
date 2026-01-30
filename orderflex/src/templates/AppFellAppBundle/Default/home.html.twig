@@ -1018,12 +1018,16 @@
                                         <a
                                             href="{{ path('fellapp_show', { 'id': entity.id}) }}" target="_blank">View Application and Documents
                                         </a>
+                                        </a>
                                     </li>
 
                                     {% if entity.itinerarys|length > 0 %}
                                         <li>
                                             <a
-                                                href="{{ path('fellapp_file_download', { 'id': entity.itinerarys|last.id, "eventtype":"Fellowship Interview Itinerary Downloaded"}) }}">Download Itinerary
+                                                href="{{
+                                                    path('fellapp_file_download',
+                                                    { 'id': entity.itinerarys|last.id, "eventtype":"Fellowship Interview Itinerary Downloaded"})
+                                                }}">Download Itinerary
                                             </a>
                                         </li>
                                     {% endif %}
@@ -1039,8 +1043,10 @@
                                         </li>
                                     {% endif %}
 
-                                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
-
+                                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or
+                                            is_granted('ROLE_FELLAPP_DIRECTOR') or
+                                            is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER')
+                                    %}
                                         <li>
                                             <a
                                                 {#href="{{ path('fellapp_application_log', { 'id': entity.id}) }}">View Activity Log#}
@@ -1048,7 +1054,16 @@
                                             </a>
                                         </li>
 
-                                        <hr>
+                                        <li>
+                                            <a
+                                                    href="{{ path('fellapp_edit', { 'id': entity.id}) }}" target="_blank">Edit
+                                            </a>
+                                        </li>
+                                    {% endif %}
+
+                                    <hr>
+
+                                    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
 
                                         {% if entity.appStatus.name != 'active' %}
                                             <li>
@@ -1452,14 +1467,8 @@
 
                                         <hr>
 
-                                        <li>
-                                            <a
-                                                href="{{ path('fellapp_edit', { 'id': entity.id}) }}" target="_blank">Edit
-                                            </a>
-                                        </li>
-
                                         {#if logged in user == applicant && status is NOT = "Draft" => show Withdraw this application#}
-                                        {% if 1 or entity.appStatus.name != 'withdrawn' and entity.user.id == app.user.getId() %}
+                                        {% if entity.appStatus.name != 'withdrawn' and entity.user.id == app.user.getId() %}
                                             {#Are you sure you would like to withdraw this application#}
                                             {#for the [[FELLOWSHIP TYPE]] [[START YEAR]] position#}
                                             {#at [[DESTINATION INSTITUTION NAME]]?#}
