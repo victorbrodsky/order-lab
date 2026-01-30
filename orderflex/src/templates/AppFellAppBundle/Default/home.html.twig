@@ -1055,7 +1055,10 @@
                                     {% endif %}
 
                                     {#if logged in user == applicant && status is NOT = "Draft" => show Withdraw this application#}
-                                    {% if entity.appStatus.name != 'withdrawn' and entity.user.id == app.user.getId() %}
+                                    {% if   entity.appStatus.name != 'withdrawn' and
+                                            entity.appStatus.name != 'draft' and
+                                            entity.user.id == app.user.getId()
+                                    %}
                                         <li>
                                             <a
                                                     href="#"
