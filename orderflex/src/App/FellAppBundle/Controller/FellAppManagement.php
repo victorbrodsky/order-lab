@@ -372,11 +372,20 @@ class FellAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $cycle = "show";
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
-        $felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
-
+        //$felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
+        if( $fellappUtil->isHubServer() ) {
+            $felltype = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
+            if( !$felltype ) {
+                throw $this->createNotFoundException('Unable to find Global Fellowship Specialty Type by id='.$id);
+            }
+        } else {
+            $felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
+            if( !$felltype ) {
+                throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
+            }
+        }
         if( !$felltype ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
+            throw $this->createNotFoundException('Unable to find any Fellowship Specialty Type by id='.$id);
         }
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
