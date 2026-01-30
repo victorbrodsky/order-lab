@@ -2289,20 +2289,20 @@ class FellAppController extends OrderAbstractController {
 
         if( !$entity ) {
             $logger->notice('Unable to find Fellowship Application by id='.$id);
-            //throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
-            $response = new Response();
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setContent(json_encode("notok"));
-            return $response;
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+//            $response = new Response();
+//            $response->headers->set('Content-Type', 'application/json');
+//            $response->setContent(json_encode("notok"));
+//            return $response;
         }
 
         if( false == $this->isGranted("update","FellowshipApplication") ) {
             $logger->notice('FellowshipApplication update no permission');
-            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-            $response = new Response();
-            $response->headers->set('Content-Type', 'application/json');
-            $response->setContent(json_encode("notok"));
-            return $response;
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+//            $response = new Response();
+//            $response->headers->set('Content-Type', 'application/json');
+//            $response->setContent(json_encode("notok"));
+//            return $response;
         }
 
         //echo "id=$id <br>";
