@@ -2282,10 +2282,9 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/status/{id}/{status}', name: 'fellapp_status_email', methods: ['GET'])]
     public function statusAction( Request $request, $id, $status ) {
 
-        //$logger = $this->container->get('logger');
-        //$logger->notice('statusAction: status='.$status);
+        $logger = $this->container->get('logger');
+        $logger->notice('statusAction: status='.$status);
 
-        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $entity = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($id);
 
         if( !$entity ) {
@@ -2468,6 +2467,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         if( $sendEmail && $status == 'withdrawn' ) {
+            $logger->notice('status withdrawn');
             $fellappUtil->sendWithdrawnNotificationEmail($fellapp,$reasonText,$previousStatusStr);
         }
 
