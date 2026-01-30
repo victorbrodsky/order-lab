@@ -1323,9 +1323,10 @@ class FellAppUtil {
         //Global Fellowship Specialty should be used only on the Hub.
         //Notification emails to be send to directors, coordinators, interviewers ONLY ON internal institutional server (NOT HUB).
         //=>Don't try to getGlobalFellowshipSpecialty for notification emails
-        //if( !$fellowshipSubspecialty ) {
-        //    $fellowshipSubspecialty = $fellapp->getGlobalFellowshipSpecialty();
-        //}
+        //Maybe we should use global specialty too because withdrawn is done on the hub server where global fellowship specialty is used
+        if( !$fellowshipSubspecialty ) {
+            $fellowshipSubspecialty = $fellapp->getGlobalFellowshipSpecialty();
+        }
 
         if( !$fellowshipSubspecialty ) {
             return null;
