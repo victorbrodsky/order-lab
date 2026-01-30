@@ -59,7 +59,7 @@ class FellAppFilterType extends AbstractType
             //'placeholder' => 'Start Date',
             'required' => false,
             //'data' => $startDates, //$this->params['defaultStartDates'],
-            'attr' => array('class'=>'datepicker-only-year datepicker-multidate form-control', 'title'=>'Start Year', 'data-toggle'=>'tooltip'),
+            'attr' => array('class' => 'datepicker-only-year datepicker-multidate form-control', 'title' => 'Start Year', 'data-toggle' => 'tooltip'),
         ));
 
 //        $builder->add('filter', 'entity', array(
@@ -82,7 +82,7 @@ class FellAppFilterType extends AbstractType
 //        ));
 
         //fellowshipSubspecialty
-        if( $this->params['fellTypes'] && count($this->params['fellTypes']) > 0 ) {
+        if ($this->params['fellTypes'] && count($this->params['fellTypes']) > 0) {
             $builder->add('filter', ChoiceType::class, array( //flipped
                 'label' => false,
                 'required' => false,
@@ -94,7 +94,7 @@ class FellAppFilterType extends AbstractType
         }
 
         //globalFellowshipSpecialty
-        if( $this->params['globalFellTypes'] && count($this->params['globalFellTypes']) > 0 ) {
+        if ($this->params['globalFellTypes'] && count($this->params['globalFellTypes']) > 0) {
             $builder->add('globalfilter', ChoiceType::class, array( //flipped
                 'label' => false,
                 'required' => false,
@@ -104,65 +104,65 @@ class FellAppFilterType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty-filter'),
             ));
         }
-        
+
         $builder->add('search', TextType::class, array(
             //'placeholder' => 'Search',
             //'max_length'=>200,
-            'required'=>false,
+            'required' => false,
             'label' => false,
-            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
         $builder->add('draft', CheckboxType::class, array(
-            'required'=>false,
+            'required' => false,
             'label' => 'Draft',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('withdrawn', CheckboxType::class, array(
-            'required'=>false,
+            'required' => false,
             'label' => 'Withdrawn',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('hidden', CheckboxType::class, array(
-            'required'=>false,
+            'required' => false,
             'label' => 'Hidden',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('archived', CheckboxType::class, array(
-            'required'=>false,
+            'required' => false,
             'label' => 'Archived',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
-        $builder->add('declined', CheckboxType::class, array(
-            'required'=>false,
-            'label' => 'Declined',
-            'attr' => array('class' => 'filter-status-checkbox'),
-        ));
-
         $builder->add('complete', CheckboxType::class, array(
-            'required'=>false,
+            'required' => false,
             'label' => 'Complete',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('interviewee', CheckboxType::class, array(
-            'required'=>false,
+            'required' => false,
             'label' => 'Interviewee',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
         $builder->add('active', CheckboxType::class, array(
-            'required'=>false,
+            'required' => false,
             'label' => 'Active',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
 
+        $builder->add('declined', CheckboxType::class, array(
+            'required' => false,
+            'label' => 'Declined',
+            'attr' => array('class' => 'filter-status-checkbox'),
+        ));
+
         $builder->add('reject', CheckboxType::class, array(
-            'required'=>false,
+            'required' => false,
             'label' => 'Rejected',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));

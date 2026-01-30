@@ -88,14 +88,21 @@ class FellAppController extends OrderAbstractController {
     public function indexAction(Request $request) {
         //echo "fellapp home <br>";
 
+        $fellappUtil = $this->container->get('fellapp_util');
+
         $user = $this->getUser();
         $route = $request->get('_route');
         //echo "route".$route."<br>";
         //exit();
 
+        $superuser = true;
+        if( $fellappUtil->hasPublicApplicantRole($user) ) {
+            $superuser = false;
+        }
+
         if( $route == "fellapp_home" ) {
             //check if user specifically has role ROLE_FELLAPP_PUBLIC_SUBMITTER
-            if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
+            if( $superuser === false ) {
                 //echo "ROLE_FELLAPP_PUBLIC_SUBMITTER!!! => redirect to fellapp_myapplications <br>";
                 return $this->redirect( $this->generateUrl('fellapp_myapplications') );
             }
@@ -150,7 +157,8 @@ class FellAppController extends OrderAbstractController {
 //                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //            }
 
-            if( false == $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') ) {
+            //if( false == $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') ) {
+            if( $superuser === false ) {
                 //exit('fellapp_myapplications fellapp-nopermission');
                 return $this->redirect( $this->generateUrl('fellapp-nopermission') );
             }
@@ -164,7 +172,6 @@ class FellAppController extends OrderAbstractController {
         //echo "fellapp user ok <br>";
 
         //$user = $this->getUser();
-        $fellappUtil = $this->container->get('fellapp_util');
         $userServiceUtil = $this->container->get('user_service_utility');
 
 
@@ -283,11 +290,17 @@ class FellAppController extends OrderAbstractController {
 //            echo '$globalFellType='.$globalFellType."<br>";
 //        }
 
+        $superuser = true;
+        if( $fellappUtil->hasPublicApplicantRole() ) {
+            $superuser = false;
+        }
+
         //create fellapp filter
         $params = array(
             'fellTypes' => $fellTypes,
             'globalFellTypes' => $globalFellTypes,
-            'defaultStartDates' => $defaultStartDates
+            'defaultStartDates' => $defaultStartDates,
+            'superuser' => $superuser
         );
         $filterform = $this->createForm(FellAppFilterType::class, null,array(
             'method' => 'GET',
@@ -373,6 +386,31 @@ class FellAppController extends OrderAbstractController {
                     'filter[priority]' => 1,
                     'filter[priorityinterviewee]' => 1,
                     'filter[reject]' => 1,
+                    'filter[filter]' => $fellowshipTypeId,
+                )
+            ));
+        }
+
+        //check only minimum when user is applicant if( false == $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') )
+        //if( $route == "fellapp_myapplications" && count($filterParams) == 0 )
+        //if( $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') && count($filterParams) == 0 )
+        if( $superuser === false && count($filterParams) == 0 )
+        {
+            $fellowshipTypeId = null;
+            if( count($fellowshipTypes) == 1 ) {
+                //$firstFellType = reset($fellowshipTypes);
+                $fellowshipTypeId = key($fellowshipTypes);
+            }
+            return $this->redirect( $this->generateUrl($route,
+                array(
+                    'filter[startDates]' => $defaultStartDates, //$currentYear,
+                    //'filter[active]' => 1,
+                    //'filter[complete]' => 1,
+                    //'filter[draft]' => 1,
+                    //'filter[interviewee]' => 1,
+                    //'filter[priority]' => 1,
+                    //'filter[priorityinterviewee]' => 1,
+                    //'filter[reject]' => 1,
                     'filter[filter]' => $fellowshipTypeId,
                 )
             ));
@@ -818,6 +856,7 @@ class FellAppController extends OrderAbstractController {
             'allowPopulateFellApp' => $allowPopulateFellApp,
             'acceptingApplication' => $acceptingApplication,
             'fellappfilter' => $filterform->createView(),
+            'superuser' => $superuser,
             //'startDate' => $startDate,
             'filter' => $fellSubspecId,
             'accessreqs' => $accessreqsCount,
