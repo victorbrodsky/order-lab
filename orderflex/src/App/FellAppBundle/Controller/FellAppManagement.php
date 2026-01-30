@@ -442,6 +442,9 @@ class FellAppManagement extends OrderAbstractController {
             $origInterviewers->add($item);
         }
 
+        $logger = $this->container->get('logger');
+        $logger->notice('fellapp_fellowshiptype_setting_edit: felltype='.$felltype->getNameInstitution());
+
         //$form = $this->createForm(FellowshipSubspecialtyType::class,$felltype);
         $form = $this->getFellappSpecialtyForm($felltype,$cycle);
 
