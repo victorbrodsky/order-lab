@@ -149,7 +149,7 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
-        if( $route == "fellapp_myapplications" ) {
+        //if( $route == "fellapp_myapplications" ) {
 //            if(
 //                false == $this->isGranted("read","FellowshipApplication")
 //            ){
@@ -158,11 +158,11 @@ class FellAppController extends OrderAbstractController {
 //            }
 
             //if( false == $this->isGranted('ROLE_FELLAPP_PUBLIC_SUBMITTER') ) {
-            if( $superuser === false ) {
+            //if( $superuser === false ) {
                 //exit('fellapp_myapplications fellapp-nopermission');
-                return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-            }
-        }
+            //    return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            //}
+        //}
 
         //exit('fellapp indexAction: after all check for permission');
 
@@ -289,11 +289,6 @@ class FellAppController extends OrderAbstractController {
 //        foreach($globalFellTypes as $globalFellType) {
 //            echo '$globalFellType='.$globalFellType."<br>";
 //        }
-
-        $superuser = true;
-        if( $fellappUtil->hasPublicApplicantRole() ) {
-            $superuser = false;
-        }
 
         //create fellapp filter
         $params = array(
