@@ -1424,7 +1424,7 @@ class FellAppUtil {
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
 
-        if( 0 && $institutionAbbreviation ) {
+        if( $institutionAbbreviation ) {
             $dql->where("list.name LIKE :name1 AND list.name LIKE :name2 AND list.name LIKE :name3");
 
             $parameters = array(
