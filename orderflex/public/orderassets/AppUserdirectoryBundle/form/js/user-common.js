@@ -1103,7 +1103,7 @@ function expandTextarea(holder) {
     var targetidHeight = [];
 
     targetid = getElementTargetByHolder(holder,targetid);
-    //console.log("expandTextarea: targetid="+targetid);
+    console.log("expandTextarea: targetid="+targetid);
 
     if( $(targetid).length == 0 ) {
         //console.log('no textarea => return');
