@@ -558,9 +558,71 @@ class FellAppManagement extends OrderAbstractController {
 
 
 
+    //assign ROLE_FELLAPP_WCM_INTERVIEWER corresponding to application
+    public function assignFellAppAccessRoles($fellowshipSpecialty,$users,$roleSubstr) {
 
+//        echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".
+//            $fellowshipSubspecialty->getId().
+//            ")=$fellowshipSubspecialty; roleSubstr=$roleSubstr <br>"; //testing exit
+
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $roleEntity = null;
+        $fellTypeRoles = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSpecialty,$roleSubstr);
+        echo "interviewerFellTypeRoles=".count($fellTypeRoles)."<br>";
+        foreach( $fellTypeRoles as $role ) {
+            echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
+            if( strpos((string)$role,$roleSubstr) !== false ) {
+                $roleEntity = $role;
+                break;
+            }
+        }
+        if( !$roleEntity ) {
+//            exit('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.
+//                $fellowshipSubspecialty.']'); //testing exit
+//            throw new EntityNotFoundException(
+//                'FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.$fellowshipSubspecialty.']'
+//            );
+            //Create role
+            $roleName = 'ROLE_FELLAPP';
+
+            $fellowshipSpecialtyName = $fellowshipSpecialty->getName(); //Pain Medicine
+            $fellowshipSpecialtyName = strtoupper(str_replace(' ', '', $fellowshipSpecialtyName)); //PAINMEDICINE
+
+            //Add Institution abbreaviation
+            $institutionAbbreviation = $fellappUtil->getNameInstitution($fellowshipSpecialty);
+            $roleName = $roleName . '_' . $institutionAbbreviation;
+
+            //role example: ROLE_FELLAPP_DIRECTOR_SPECIALTY1
+            $roleName = 'ROLE_FELLAPP'.'_'.$roleSubstr.'_'.$institutionAbbreviation.'_'.$fellowshipSpecialtyName; //ROLE_FELLAPP_DIRECTOR_
+
+            //ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
+            //ROLE_FELLAPP_DIRECTOR_WASHU_BLOODBANKINGANDTRANSFUSIONMEDICINE
+
+            //exit('$roleName='.$roleName);
+
+            //$subspecialtyType, $roleType, $institution=null, $testing=false
+            $roleEntity = $fellappUtil->createOrEnableFellAppRole($fellowshipSpecialty,$roleSubstr);
+        }
+
+        foreach( $users as $user ) {
+
+            if( $user ) {
+
+                //$user->addRole('ROLE_USERDIRECTORY_OBSERVER');
+                //$user->addRole('ROLE_FELLAPP_USER');
+
+                //add general role
+                //$user->addRole('ROLE_FELLAPP_'.$roleSubstr);
+
+                //add specific interviewer role
+                $user->addRole($roleEntity->getName());
+
+            }
+        }
+    }
     //assign ROLE_FELLAPP_INTERVIEWER corresponding to application
-    public function assignFellAppAccessRoles($fellowshipSubspecialty,$users,$roleSubstr) {
+    public function assignFellAppAccessRoles_ORIG($fellowshipSubspecialty,$users,$roleSubstr) {
 
 //        echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".
 //            $fellowshipSubspecialty->getId().

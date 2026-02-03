@@ -1463,11 +1463,24 @@ class FellAppUtil {
     }
 
     //Get root abbreviation (WCM or WASHU)
-    public function getNameInstitution( $fellowshipSpecialty ) {
+    public function getNameInstitution( $fellowshipSpecialty, $uppercase=true ) {
         $institutionRootAbbreviation = null;
         $institution = $fellowshipSpecialty->getInstitution();
+        return $this->getNameFromInstitution($institution,$uppercase);
+//        if( $institution ) {
+//            $institutionRootAbbreviation = $institution->getRootAbbreviation();
+//            if( $uppercase && $institutionRootAbbreviation ) {
+//                $institutionRootAbbreviation = strtoupper($institutionRootAbbreviation);
+//            }
+//        }
+//        return $institutionRootAbbreviation;
+    }
+    public function getNameFromInstitution( $institution, $uppercase=true ) {
         if( $institution ) {
             $institutionRootAbbreviation = $institution->getRootAbbreviation();
+            if( $uppercase && $institutionRootAbbreviation ) {
+                $institutionRootAbbreviation = strtoupper($institutionRootAbbreviation);
+            }
         }
         return $institutionRootAbbreviation;
     }
@@ -2371,24 +2384,25 @@ class FellAppUtil {
     public function createOrEnableFellAppRoleGroup( $subspecialtyType, $institution=null, $testing=false ) {
         $msg = "";
         $count = 0;
+        $countInt = 1;
 
         $logger = $this->container->get('logger');
         $logger->notice("createOrEnableFellAppRoleGroup: start. subspecialtyType=$subspecialtyType, institution=$institution");
 
-        $countInt = $this->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$institution,$testing);
-        if( $countInt > 0 ) {
+        $role = $this->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$institution,$testing);
+        if( $role ) {
             $msg = $msg . " INTERVIEWER role has been created/enabled.";
             $count = $count + $countInt;
         }
 
-        $countInt = $this->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$institution,$testing);
-        if( $countInt > 0 ) {
+        $role = $this->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$institution,$testing);
+        if( $role ) {
             $msg = $msg . " COORDINATOR role has been created/enabled.";
             $count = $count + $countInt;
         }
 
-        $countInt = $this->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$institution,$testing);
-        if( $countInt > 0 ) {
+        $role = $this->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$institution,$testing);
+        if( $role ) {
             $msg = $msg . " DIRECTOR role has been created/enabled for $subspecialtyType";
             $count = $count + $countInt;
         }
@@ -2424,7 +2438,19 @@ class FellAppUtil {
         //echo "roleNameBase=$roleNameBase<br>";
 
         //create Director role
-        $roleName = "ROLE_FELLAPP_".$roleType."_".$roleNameBase;
+        //$roleName = "ROLE_FELLAPP_".$roleType."_".$roleNameBase; //ROLE_FELLAPP_DIRECTOR_BREASTPATHOLOGY
+
+        if( !$institution ) {
+            $subspecialtyType->getInstitution();
+        }
+        $institutionAbbreviation = $this->getNameInstitution($subspecialtyType);
+        if( !$institutionAbbreviation ) {
+            throw new EntityNotFoundException(
+                'createOrEnableFellAppRole: institutionAbbreviation not found by subspecialtyType=['.$subspecialtyType.']'
+            );
+        }
+
+        $roleName = "ROLE_FELLAPP_".$roleType."_".$institutionAbbreviation.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
         //echo "1 roleName=$roleName<br>";
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
 
@@ -2611,7 +2637,8 @@ class FellAppUtil {
 //        $logger->notice("createOrEnableFellAppRole: testing.".", PermissionActionList=".$permission->getPermissionActionList());
 
         $logger->notice("createOrEnableFellAppRole: finished. count=$count");
-        return $count;
+        //return $count;
+        return $role;
     }
 
     public function getFellowshipTypesStrArr() {
