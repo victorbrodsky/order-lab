@@ -23,6 +23,11 @@ Do we need to have two roles for each institution in case of apply server where 
 It's ok on apply page, but it will not work for configuration - the same director will appear on WCM and WashU
 THEREFORE: ADD WCM or WASHU to the role name
 
+createDefaultFellowshipTypeAction (fellapp_create_default_fellowship_type)->createDefaultFellowshipTypes
+Create or update role name (add WCM or WASHU) when user added as director, coordinator, interviewer
+$fellappUtil->processRemovedUsersByFellowshipSetting
+$this->assignFellAppAccessRoles (used when user added as director, coordinator, interviewer AND used when application is created/updated)
+
 Below will not a solution to get users by role name:
 if( GlobalFellowshipSpecialty ) {
 

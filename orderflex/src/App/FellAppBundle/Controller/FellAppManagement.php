@@ -254,7 +254,7 @@ class FellAppManagement extends OrderAbstractController {
 //                $count = $count + $countInt;
 //            }
 
-            $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType,$institution);
+            $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType,$institution); //fellapp_fellowship_application_type_add
             $msg = $msg . $resArr['msg'];
             $count = $count + $resArr['count'];
 
@@ -1032,7 +1032,7 @@ class FellAppManagement extends OrderAbstractController {
                 }
             }
 
-            $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType);
+            $resArr = $fellappUtil->createOrEnableFellAppRoleGroup($subspecialtyType); //used by fellapp_create_default_fellowship_type
             $msg = $msg . $resArr['msg'];
             $count = $count + $resArr['count'];
             //exit("testing exit. count=$count, msg=$msg"); //testing exit

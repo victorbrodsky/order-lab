@@ -1457,16 +1457,35 @@ class FellAppUtil {
 //            $roles = $query->getResult();
 //        }
 
+//        $institutionAbbreviation = null;
+//        $institution = $fellowshipSpecialty->getInstitution();
+//        if( $institution ) {
+//            $institutionAbbreviation = $institution->getNameInstitution(); //getAbbreviation();
+//        }
+        $institutionAbbreviation = $this->getNameInstitution($fellowshipSpecialty);
+        //echo $fellowshipSpecialty.': $institutionAbbreviation='.$institutionAbbreviation.'<br>';
+
         //FellowshipSubspecialty
         $repository = $this->em->getRepository(Roles::class);
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
-        $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
 
-        $parameters = array(
-            "name1" => '%' . $partialRoleName . '%',
-            "name2" => '%' . $fellowshipSpecialtyName . '%'
-        );
+        if( $institutionAbbreviation ) {
+            $dql->where("list.name LIKE :name1 AND list.name LIKE :name2 AND list.name LIKE :name3");
+
+            $parameters = array(
+                "name1" => '%' . $partialRoleName . '%',
+                "name2" => '%' . $fellowshipSpecialtyName . '%',
+                "name3" => '%' . $institutionAbbreviation . '%'
+            );
+        } else {
+            $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
+
+            $parameters = array(
+                "name1" => '%' . $partialRoleName . '%',
+                "name2" => '%' . $fellowshipSpecialtyName . '%'
+            );
+        }
 
         $query = $dql->getQuery();
         $query->setParameters($parameters);
@@ -1489,7 +1508,15 @@ class FellAppUtil {
         return null;
     }
 
-
+    //Get root abbreviation (WCM or WASHU)
+    public function getNameInstitution( $fellowshipSpecialty ) {
+        $institutionRootAbbreviation = null;
+        $institution = $fellowshipSpecialty->getInstitution();
+        if( $institution ) {
+            $institutionRootAbbreviation = $institution->getRootAbbreviation();
+        }
+        return $institutionRootAbbreviation;
+    }
 
     //Generic fell app user to submit the form without login.
     // This user will be logged in programmatically on the /apply/ page,
@@ -2422,7 +2449,7 @@ class FellAppUtil {
     //alias: Fellowship Program Interviewer WCMC Breast Pathology
     //Description: Access to specific Fellowship Application type as Interviewer
     //site: fellapp
-    //Institution: WCMC
+    //Institution: WCM
     //FellowshipSubspecialty: Breast Pathology
     //Permissions: Create a New Fellowship Application, Modify a Fellowship Application, Submit an interview evaluation
     public function createOrEnableFellAppRole( $subspecialtyType, $roleType, $institution=null, $testing=false ) {

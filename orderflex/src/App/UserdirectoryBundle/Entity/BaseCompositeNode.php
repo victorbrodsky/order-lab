@@ -327,6 +327,19 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         return $name;
     }
 
+    public function getRootAbbreviation() {
+        $institutionRootAbbreviation = null;
+        $breadCrumbs = $this->getEntityBreadcrumbs();
+        $strArr = array();
+        foreach( $breadCrumbs as $breadCrumb ) {
+            if( $breadCrumb->getLevel() == 0 ) {
+                $institutionRootAbbreviation = $breadCrumb->getAbbreviation();
+                break;
+            }
+        }
+        return $institutionRootAbbreviation;
+    }
+
 
     public function printTree( $delimeter=null ) {
 
