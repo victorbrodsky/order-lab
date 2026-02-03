@@ -140,9 +140,9 @@
     {#{{ usermacros.documentsContainer(null,reference.documents,cycle,'noprototype',8,'default') }}#}
     {#</p>#}
 
-    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or
-    is_granted('ROLE_FELLAPP_DIRECTOR') or
-    is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER')
+    {% if   is_granted('ROLE_FELLAPP_COORDINATOR') or
+            is_granted('ROLE_FELLAPP_DIRECTOR') or
+            is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER')
     %}
     {% if route_path != 'fellapp_apply' and route_path != 'fellapp_apply_post' %}
         {% if cycle != "download" %}
