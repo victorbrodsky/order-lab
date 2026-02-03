@@ -1098,7 +1098,7 @@ function customClearDatepickerFunction(inputField) {
 // Window.prototype.initSingleDatepicker  = initSingleDatepicker;
 
 
-function expandTextarea(holder) {
+function expandTextarea(holder, initRows) {
     var targetid = ".textarea";
     var targetidHeight = [];
 
@@ -1116,24 +1116,24 @@ function expandTextarea(holder) {
         //domElement.readOnly = true; //to get correct height make it readonly
 
         //expand if hidden (collapsed)
-        if(0) {
-            var originalHidden = false;
-            var panelEl = $(domElement).closest('.panel-collapse');
-            console.log("panelEl-Class=" + panelEl.attr('class') + "panelEl-ID=" + panelEl.attr('id'));
-            //console.log(panelEl);
-            if (panelEl) {
-                if (panelEl.hasClass("in")) {
-                    //opened
-                    console.log("panelEl has Class in=[" + panelEl.attr('class') + "], panelEl-ID=[" + panelEl.attr('id') + "]");
-                } else {
-                    //hidden
-                    console.log("show originalHidden=" + originalHidden);
-                    originalHidden = true;
-                    panelEl.collapse('show');
-                }
-            }
-            console.log("originalHidden=" + originalHidden);
-        }
+        // if(0) {
+        //     var originalHidden = false;
+        //     var panelEl = $(domElement).closest('.panel-collapse');
+        //     console.log("panelEl-Class=" + panelEl.attr('class') + "panelEl-ID=" + panelEl.attr('id'));
+        //     //console.log(panelEl);
+        //     if (panelEl) {
+        //         if (panelEl.hasClass("in")) {
+        //             //opened
+        //             console.log("panelEl has Class in=[" + panelEl.attr('class') + "], panelEl-ID=[" + panelEl.attr('id') + "]");
+        //         } else {
+        //             //hidden
+        //             console.log("show originalHidden=" + originalHidden);
+        //             originalHidden = true;
+        //             panelEl.collapse('show');
+        //         }
+        //     }
+        //     console.log("originalHidden=" + originalHidden);
+        // }
 
         // if( domElement.id in targetidHeight && targetidHeight[domElement.id] ) {
         //     if( targetidHeight[domElement.id] > 40 ) {
@@ -1142,10 +1142,21 @@ function expandTextarea(holder) {
         //     }
         // }
 
+        // Keep track of the current visual height so we don't shrink below it
+        var minHeight = domElement.clientHeight || 0;
+
         domElement.style.overflow = 'hidden';
         domElement.style.height = 0;
         var newH = domElement.scrollHeight + 10;
-        //console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
+
+        // If initRows was provided to expandTextarea, enforce the current height as a minimum
+        if( typeof initRows !== 'undefined' && initRows != null && initRows !== '' ) {
+            if( minHeight > 0 && newH < minHeight ) {
+                newH = minHeight;
+            }
+        }
+
+        console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
         domElement.style.height = newH + 'px';
         //domElement.readOnly = originalReadonly; //to get correct height make it readonly
 
@@ -1168,6 +1179,15 @@ function expandTextarea(holder) {
     $(targetid).each( function() {
         var element = $(this);
 
+        // If an initial rows value is provided, set it once before autosizing
+        if( typeof initRows !== 'undefined' && initRows != null && initRows !== '' ) {
+            var rowsInt = parseInt(initRows,10);
+            if( !isNaN(rowsInt) && rowsInt > 0 ) {
+                console.log('resize textarea: rowsInt='+rowsInt);
+                element.attr('rows', rowsInt);
+            }
+        }
+
         //resize text area to fit the current text. It cause freeze html to pdf converter when downloading report.
         //exception to resize textarea
         var resize = true;
@@ -1178,15 +1198,19 @@ function expandTextarea(holder) {
         //console.log('resize='+resize);
 
         if( cycle != 'download' && resize ) {
-            //console.log('resize textarea');
+            // On initial load, only auto-resize if no explicit initRows was provided.
+            // If initRows is set, respect the rows-based height until user interaction.
+            if( typeof initRows === 'undefined' || initRows == null || initRows === '' ) {
+                //console.log('resize textarea');
 
-            //ver1
-            //var height = $(element).prop('scrollHeight');
-            //console.log('height='+height);
-            //$(element).height(height);
+                //ver1
+                //var height = $(element).prop('scrollHeight');
+                //console.log('height='+height);
+                //$(element).height(height);
 
-            //ver2
-            onchangeFunction(this);
+                //ver2
+                onchangeFunction(this);
+            }
         }
 
         //this does not work anymore (5 July 2017) => changed to on('input'
