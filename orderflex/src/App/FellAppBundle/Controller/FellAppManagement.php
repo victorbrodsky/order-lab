@@ -478,11 +478,11 @@ class FellAppManagement extends OrderAbstractController {
                 $this->assignFellAppAccessRoles($felltype, $felltype->getInterviewers(), "INTERVIEWER");
             }
 
-            $logger->notice('before flush: '.$felltype->getId().': fellapp_fellowshiptype_setting_edit: felltype='.$felltype->getNameInstitution());
+            $logger->notice('fellapp_fellowshiptype_setting_edit: before flush: felltype Id='.$felltype->getId().', felltype getNameInstitution='.$felltype->getNameInstitution());
 
-            $dataClass = get_class($felltype);
+            //$dataClass = get_class($felltype);
             //echo 'data_class='.$dataClass.'<br>';
-            $logger->notice('$dataClass='.$dataClass);
+            //$logger->notice('$dataClass='.$dataClass);
 
             //$em->persist($felltype);
             $em->flush();
@@ -569,9 +569,9 @@ class FellAppManagement extends OrderAbstractController {
 
         $roleEntity = null;
         $fellTypeRoles = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSpecialty,$roleSubstr);
-        echo "interviewerFellTypeRoles=".count($fellTypeRoles)."<br>";
+        //echo "interviewerFellTypeRoles=".count($fellTypeRoles)."<br>";
         foreach( $fellTypeRoles as $role ) {
-            echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
+            //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos((string)$role,$roleSubstr) !== false ) {
                 $roleEntity = $role;
                 break;
@@ -583,38 +583,13 @@ class FellAppManagement extends OrderAbstractController {
 //            throw new EntityNotFoundException(
 //                'FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.$fellowshipSubspecialty.']'
 //            );
-            //Create role
-            $roleName = 'ROLE_FELLAPP';
-
-            $fellowshipSpecialtyName = $fellowshipSpecialty->getName(); //Pain Medicine
-            $fellowshipSpecialtyName = strtoupper(str_replace(' ', '', $fellowshipSpecialtyName)); //PAINMEDICINE
-
-            //Add Institution abbreaviation
-            $institutionAbbreviation = $fellappUtil->getNameInstitution($fellowshipSpecialty);
-            $roleName = $roleName . '_' . $institutionAbbreviation;
-
-            //role example: ROLE_FELLAPP_DIRECTOR_SPECIALTY1
-            $roleName = 'ROLE_FELLAPP'.'_'.$roleSubstr.'_'.$institutionAbbreviation.'_'.$fellowshipSpecialtyName; //ROLE_FELLAPP_DIRECTOR_
-
-            //ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
-            //ROLE_FELLAPP_DIRECTOR_WASHU_BLOODBANKINGANDTRANSFUSIONMEDICINE
-
-            //exit('$roleName='.$roleName);
 
             //$subspecialtyType, $roleType, $institution=null, $testing=false
             $roleEntity = $fellappUtil->createOrEnableFellAppRole($fellowshipSpecialty,$roleSubstr);
         }
 
         foreach( $users as $user ) {
-
             if( $user ) {
-
-                //$user->addRole('ROLE_USERDIRECTORY_OBSERVER');
-                //$user->addRole('ROLE_FELLAPP_USER');
-
-                //add general role
-                //$user->addRole('ROLE_FELLAPP_'.$roleSubstr);
-
                 //add specific interviewer role
                 $user->addRole($roleEntity->getName());
 

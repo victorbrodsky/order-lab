@@ -2441,10 +2441,11 @@ class FellAppUtil {
         //$roleName = "ROLE_FELLAPP_".$roleType."_".$roleNameBase; //ROLE_FELLAPP_DIRECTOR_BREASTPATHOLOGY
 
         if( !$institution ) {
-            $subspecialtyType->getInstitution();
+            $institution = $subspecialtyType->getInstitution();
         }
         $institutionAbbreviation = $this->getNameInstitution($subspecialtyType);
         if( !$institutionAbbreviation ) {
+            $logger->notice('createOrEnableFellAppRole: institutionAbbreviation not found by subspecialtyType=['.$subspecialtyType.']');
             throw new EntityNotFoundException(
                 'createOrEnableFellAppRole: institutionAbbreviation not found by subspecialtyType=['.$subspecialtyType.']'
             );
@@ -2453,14 +2454,15 @@ class FellAppUtil {
         $roleName = "ROLE_FELLAPP_".$roleType."_".$institutionAbbreviation.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
         //echo "1 roleName=$roleName<br>";
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
+        $logger->notice("createOrEnableFellAppRole: roleName=$roleName, found role=$role");
 
-        if( !$role ) {
-            $roleNameLegacy = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase; //check legacy role name
-            //echo "2 roleName=$roleName<br>";
-            $role = $em->getRepository(Roles::class)->findOneByName($roleNameLegacy);
-        }
-        //echo "##### createOrEnableFellAppRole: role=[".$role."] #####<br>";
-        $logger->notice("createOrEnableFellAppRole: found role=$role");
+//        if( !$role ) {
+//            $roleNameLegacy = "ROLE_FELLAPP_".$roleType."_WCM_".$roleNameBase; //check legacy role name
+//            //echo "2 roleName=$roleName<br>";
+//            $role = $em->getRepository(Roles::class)->findOneByName($roleNameLegacy);
+//        }
+//        //echo "##### createOrEnableFellAppRole: role=[".$role."] #####<br>";
+//        $logger->notice("createOrEnableFellAppRole: found role by _WCM_, role=$role");
 
 //        //////////// 1 testing ////////////////
 //        $role = $em->getRepository(Roles::class)->findOneByName($roleName);
@@ -2493,7 +2495,7 @@ class FellAppUtil {
             $role = new Roles();
             $role = $userSecUtil->setDefaultList($role, null, $user, $roleName);
             //$role->setAlias('Fellowship Program '.$roleTypeStr.' WCM ' . $subspecialtyType->getName());
-            $role->setAlias('Fellowship Program ' . $roleTypeStr . ' ' . $subspecialtyType->getName());
+            $role->setAlias('Fellowship Program ' . $roleTypeStr . ' ' . $institutionAbbreviation . ' ' . $subspecialtyType->getName());
             $role->setDescription('Access to specific Fellowship Application type as '.$roleTypeStr);
             $role->addSite($site);
             if( $institution ) {
