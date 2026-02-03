@@ -1,0 +1,53 @@
+Roles does not have GlobalFellowshipSpecialty => only roles with FellowshipSubspecialty will be found => will not work for GlobalFellowshipSpecialty
+
+GlobalFellowshipSpecialty:
+Find associated roles for GlobalFellowshipSpecialty similar to createOrEnableFellAppRole()
+//create Director role
+$roleName = "ROLE_FELLAPP_".$roleType."_".$roleNameBase;
+//echo "1 roleName=$roleName<br>";
+$role = $em->getRepository(Roles::class)->findOneByName($roleName);
+
+TODO: rewrite getRolesByFellowshipSubspecialtyAndRolename used by fellapp_fellowshiptype_setting_edit
+
+$fellappUtil->processRemovedUsersByFellowshipSetting($felltype, $felltype->getDirectors(), $origDirectors, "_DIRECTOR_");
+processRemovedUsersByFellowshipSetting -> removeRoleFromUsers -> getRoleByFellowshipSubspecialtyAndRolename -> getRolesByFellowshipSubspecialtyAndRolename
+
+GlobalFellowshipSpecialty and FellowshipSubspecialty have institution which is used instead of _WCM_
+Role can have an institution too, but it's not used
+User has Role. Role is linked to fellowship specialty by upper case role name BLOODBANKINGANDTRANSFUSIONMEDICINE.
+Role ROLE_FELLAPP_DIRECTOR_BLOODBANKINGANDTRANSFUSIONMEDICINE is used by both users WCM and WASHU
+Role can have an institution too, but it's not used
+How to find roles such as DIRECTOR, COORDINATOR, INTERVIEWER associated to the user?
+How to remove or assign role to the user (processRemovedUsersByFellowshipSetting, assignFellAppAccessRoles)?
+$fellappUtil->processRemovedUsersByFellowshipSetting($felltype, $felltype->getDirectors(), $origDirectors, "_DIRECTOR_");
+Do we need to have two roles for each institution in case of apply server where multiple institution can be used on apply page?
+It's ok on apply page, but it will not work for configuration - the same director will appear on WCM and WashU
+
+if( GlobalFellowshipSpecialty ) {
+
+    //role=ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
+    //$roleType: DIRECTOR
+    //$roleNameBase: WCM or WashU (GlobalFellowshipSpecialty institution abbreviation)
+    $roleName = "ROLE_FELLAPP_".$roleType."_".$roleNameBase; //ROLE_FELLAPP_DIRECTOR_BLOODBANKINGANDTRANSFUSIONMEDICINE
+    $role = $em->getRepository(Roles::class)->findOneByName($roleName);
+
+} else {
+
+    $repository = $this->em->getRepository(Roles::class);
+    $dql = $repository->createQueryBuilder("list");
+    $dql->select('list');
+    $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
+
+    $parameters = array(
+        "name1" => '%' . $partialRoleName . '%',
+        "name2" => '%' . $fellowshipSubspecialtyName . '%'
+    );
+
+    $query = $dql->getQuery();
+    $query->setParameters($parameters);
+
+    $roles = $query->getResult();
+
+}
+
+

@@ -418,7 +418,6 @@ class FellAppManagement extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
         $cycle = "edit";
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
         //$felltype = $em->getRepository(FellowshipSubspecialty::class)->find($id);
         if( $fellappUtil->isHubServer() ) {
             $felltype = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
@@ -452,7 +451,7 @@ class FellAppManagement extends OrderAbstractController {
         }
 
         $logger = $this->container->get('logger');
-        $logger->notice('fellapp_fellowshiptype_setting_edit: felltype='.$felltype->getNameInstitution());
+        $logger->notice($felltype->getId().': fellapp_fellowshiptype_setting_edit: felltype='.$felltype->getNameInstitution());
 
         //$form = $this->createForm(FellowshipSubspecialtyType::class,$felltype);
         $form = $this->getFellappSpecialtyForm($felltype,$cycle);
@@ -465,20 +464,27 @@ class FellAppManagement extends OrderAbstractController {
 
             //0) Create role if it does not exist
 
+            if(1) {
+                //1) Remove role if a user is removed from default list (Remove,Add Order is important!)
+                //compare original and final users => get removed users => for each removed user, remove the role
+                $fellappUtil->processRemovedUsersByFellowshipSetting($felltype, $felltype->getDirectors(), $origDirectors, "_DIRECTOR_");
+                $fellappUtil->processRemovedUsersByFellowshipSetting($felltype, $felltype->getCoordinators(), $origCoordinators, "_COORDINATOR_");
+                $fellappUtil->processRemovedUsersByFellowshipSetting($felltype, $felltype->getInterviewers(), $origInterviewers, "_INTERVIEWER_");
+                //exit('test');
 
-            //1) Remove role if a user is removed from default list (Remove,Add Order is important!)
-            //compare original and final users => get removed users => for each removed user, remove the role
-            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getDirectors(),$origDirectors,"_DIRECTOR_");
-            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getCoordinators(),$origCoordinators,"_COORDINATOR_");
-            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getInterviewers(),$origInterviewers,"_INTERVIEWER_");
-            //exit('test');
+                //2 Add role (Remove,Add Order is important!)
+                $this->assignFellAppAccessRoles($felltype, $felltype->getDirectors(), "DIRECTOR");
+                $this->assignFellAppAccessRoles($felltype, $felltype->getCoordinators(), "COORDINATOR");
+                $this->assignFellAppAccessRoles($felltype, $felltype->getInterviewers(), "INTERVIEWER");
+            }
 
-            //2 Add role (Remove,Add Order is important!)
-            $this->assignFellAppAccessRoles($felltype,$felltype->getDirectors(),"DIRECTOR");
-            $this->assignFellAppAccessRoles($felltype,$felltype->getCoordinators(),"COORDINATOR");
-            $this->assignFellAppAccessRoles($felltype,$felltype->getInterviewers(),"INTERVIEWER");
+            $logger->notice('before flush: '.$felltype->getId().': fellapp_fellowshiptype_setting_edit: felltype='.$felltype->getNameInstitution());
 
-            $em->persist($felltype);
+            $dataClass = get_class($felltype);
+            //echo 'data_class='.$dataClass.'<br>';
+            $logger->notice('$dataClass='.$dataClass);
+
+            //$em->persist($felltype);
             $em->flush();
             //exit('editAction test');
 
@@ -533,11 +539,13 @@ class FellAppManagement extends OrderAbstractController {
             'isHubServer' => $fellappUtil->isHubServer()
         );
 
+        $dataClass = get_class($felltype);
+        //echo 'data_class='.$dataClass.'<br>';
         $form = $this->createForm(
             FellowshipSubspecialtyType::class,
             $felltype,
             array(
-                'data_class' => get_class($felltype), //$dataClass,
+                'data_class' => $dataClass, //$dataClass,
                 'disabled' => $disabled,
                 'form_custom_value' => $params
                 //'method' => $method,
@@ -564,9 +572,9 @@ class FellAppManagement extends OrderAbstractController {
         $interviewerRoleFellType = null;
         //$interviewerFellTypeRoles = $em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
         $interviewerFellTypeRoles = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleSubstr);
-        //echo "interviewerFellTypeRoles=".count($interviewerFellTypeRoles)."<br>";
+        echo "interviewerFellTypeRoles=".count($interviewerFellTypeRoles)."<br>";
         foreach( $interviewerFellTypeRoles as $role ) {
-            //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
+            echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos((string)$role,$roleSubstr) !== false ) {
                 $interviewerRoleFellType = $role;
                 break;
@@ -576,9 +584,7 @@ class FellAppManagement extends OrderAbstractController {
 //            exit('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.
 //                $fellowshipSubspecialty.']'); //testing exit
             throw new EntityNotFoundException(
-                'FellAppManagement: 
-                assignFellAppAccessRoles: Unable to find role by 
-                FellowshipSubspecialty=['.$fellowshipSubspecialty.']'
+                'FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.$fellowshipSubspecialty.']'
             );
         }
 

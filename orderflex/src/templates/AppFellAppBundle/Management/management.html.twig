@@ -59,10 +59,11 @@
             {#{{ entity.name }}#}
             <a
                 href="{{ path('fellapp_fellowshiptype_setting_edit', { 'id': entity.id}) }}"
-                title="Edit fellowship specialty settings">{{ entity.getNameInstitution }}
+                title="Edit fellowship specialty settings {{ entity.getNameInstitution }}">{{ entity.getNameInstitution }}
             </a>
         </h4>
 
+        {#entity.id={{ entity.id }}<br>#}
         {% if seasonYear %}
             <div>
             {{ seasonYear }} (<a  class="btn btn-sm" style="padding: 0 !important;"

@@ -1373,26 +1373,7 @@ class FellAppUtil {
     //$roleName is a partial role name: _DIRECTOR_
     //$fellowshipSubspecialty - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
     public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
-        //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
-//        $fellowshipSubspecialtyName = $fellowshipSubspecialty->getName(); //Pain Medicine
-//        $fellowshipSubspecialtyName = strtoupper(str_replace(' ', '', $fellowshipSubspecialtyName)); //PAINMEDICINE
-//
-//        $partialRoleName = 'ROLE_FELLAPP'.$roleName; //ROLE_FELLAPP_DIRECTOR_
-//
-//        $repository = $this->em->getRepository(Roles::class);
-//        $dql = $repository->createQueryBuilder("list");
-//        $dql->select('list');
-//        $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
-//        $parameters = array(
-//            "name1" => '%' . $partialRoleName . '%',
-//            "name2" => '%' . $fellowshipSubspecialtyName . '%'
-//        );
-//        $query = $dql->getQuery();
-//        $query->setParameters($parameters);
-//        $roles = $query->getResult();
-
         $roles = $this->getRolesByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName );
-
         //echo "roles=" . count($roles) . "<br>";
 
         if( count($roles) > 0 ) {
@@ -1411,11 +1392,17 @@ class FellAppUtil {
     }
     //$roleName is a partial role name: _DIRECTOR_
     //$fellowshipSubspecialty - list of FellowshipSubspecialty or GlobalFellowshipSpecialty
-    public function getRolesByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
+    //TODO: figure out how to use institution for roles
+    //Roles does not have GlobalFellowshipSpecialty => only roles with FellowshipSubspecialty will be found => will not work for GlobalFellowshipSpecialty
+    //roles are assigned only by name (ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE) =>
+    //to distinguish role by institution on apply server with multiple institution, the role name must contain institution.
+    //$fellowshipSpecialty has institution =>
+    //role can be found by getting institution (WCM) and then use WCM in role search (ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE)
+    public function getRolesByFellowshipSubspecialtyAndRolename( $fellowshipSpecialty, $roleName ) {
         //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
 
-        $fellowshipSubspecialtyName = $fellowshipSubspecialty->getName(); //Pain Medicine
-        $fellowshipSubspecialtyName = strtoupper(str_replace(' ', '', $fellowshipSubspecialtyName)); //PAINMEDICINE
+        $fellowshipSpecialtyName = $fellowshipSpecialty->getName(); //Pain Medicine
+        $fellowshipSpecialtyName = strtoupper(str_replace(' ', '', $fellowshipSpecialtyName)); //PAINMEDICINE
 
         // First, strip any existing underscores at the start/end
         $normalized = trim($roleName, '_');
@@ -1426,6 +1413,51 @@ class FellAppUtil {
         $partialRoleName = 'ROLE_FELLAPP'.$roleName; //ROLE_FELLAPP_DIRECTOR_
         //echo '$fellowshipSubspecialtyName='.$fellowshipSubspecialtyName.', $partialRoleName='.$partialRoleName.'<br>';
 
+        //role=ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
+        //$roleNameBase: WCM or WashU (GlobalFellowshipSpecialty institution abbreviation)
+
+//        $className = null;
+//        if (is_object($fellowshipSpecialty)) {
+//            //$className = get_class($fellowshipSpecialty);
+//            $className = (new \ReflectionClass($fellowshipSpecialty))->getShortName();
+//        }
+//        //echo '$className='.$className.'<br>';
+//
+//        $roles = array();
+//        if( $className == 'GlobalFellowshipSpecialty' ) {
+//            //GlobalFellowshipSpecialty
+//            //role=ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
+//            //$roleType: DIRECTOR
+//            //$roleNameBase: WCM or WashU (GlobalFellowshipSpecialty institution abbreviation)
+//            $roleNameBase = str_replace(" ","",$fellowshipSpecialty->getName()); //BREAST PATHOLOGY -> BREASTPATHOLOGY
+//            $roleNameBase = strtoupper($roleNameBase); //Uppercase BREASTPATHOLOGY
+//            $roleName = $partialRoleName.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_ + $roleNameBase=BLOODBANKINGANDTRANSFUSIONMEDICINE
+//            //$role = $this->em->getRepository(Roles::class)->findOneByName($roleName);
+//            $roles = $this->em->getRepository(Roles::class)->findByName($roleName);
+//            echo '$roleName='.$roleName.'<br>';
+//            echo '$fellowshipSpecialtyName='.$fellowshipSpecialtyName.'<br>';
+//            echo 'roles='.count($roles).'<br>';
+//        }
+//        elseif( $className == 'FellowshipSubspecialty' )
+//        {
+//            //FellowshipSubspecialty
+//            $repository = $this->em->getRepository(Roles::class);
+//            $dql = $repository->createQueryBuilder("list");
+//            $dql->select('list');
+//            $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
+//
+//            $parameters = array(
+//                "name1" => '%' . $partialRoleName . '%',
+//                "name2" => '%' . $fellowshipSpecialtyName . '%'
+//            );
+//
+//            $query = $dql->getQuery();
+//            $query->setParameters($parameters);
+//
+//            $roles = $query->getResult();
+//        }
+
+        //FellowshipSubspecialty
         $repository = $this->em->getRepository(Roles::class);
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
@@ -1433,14 +1465,13 @@ class FellAppUtil {
 
         $parameters = array(
             "name1" => '%' . $partialRoleName . '%',
-            "name2" => '%' . $fellowshipSubspecialtyName . '%'
+            "name2" => '%' . $fellowshipSpecialtyName . '%'
         );
 
         $query = $dql->getQuery();
         $query->setParameters($parameters);
 
         $roles = $query->getResult();
-
         //echo "roles=" . count($roles) . "<br>";
 
         return $roles;
@@ -2713,21 +2744,8 @@ class FellAppUtil {
     //compare original and final users => get removed users => for each removed user, remove the role
     //$roleName is a partial role name: _DIRECTOR_
     public function processRemovedUsersByFellowshipSetting( $fellowshipSubspecialty, $newUsers, $origUsers, $roleName ) {
-        //if( count($newUsers) > 0 && count($origUsers) > 0 ) {
-        //if( count($newUsers) != count($origUsers) ) {
-            //$this->printUsers($origUsers,"$roleName: orig");
-            //$this->printUsers($newUsers,"$roleName: new");
-
-            //get diff
-            $diffUsers = $this->array_diff_assoc_true($newUsers->toArray(), $origUsers->toArray());
-            //$diffUsers = array_diff($newUsers->toArray(),$origUsers->toArray());
-            //$diffUsers = array_diff($origUsers->toArray(),$newUsers->toArray());
-
-            //echo '$roleName='.$roleName.": diffUsers count=".count($diffUsers)."<br>";
-            //$this->printUsers($diffUsers,"$roleName: diff");
-
-            $this->removeRoleFromUsers($diffUsers,$fellowshipSubspecialty,$roleName);
-        //}
+        $diffUsers = $this->array_diff_assoc_true($newUsers->toArray(), $origUsers->toArray());
+        $this->removeRoleFromUsers($diffUsers,$fellowshipSubspecialty,$roleName);
     }
     public function removeRoleFromUsers( $users, $fellowshipSubspecialty, $roleName ) {
         $role = $this->getRoleByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleName );

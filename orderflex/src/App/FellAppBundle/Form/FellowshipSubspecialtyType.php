@@ -44,6 +44,9 @@ class FellowshipSubspecialtyType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        //dump($options['data_class']); // or logger
+        //echo 'buildForm: data_class='.$options['data_class'].'<br>';
+
         $this->selectStr = "employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL";
         if( $this->params['isHubServer'] == true ) {
             $this->selectStr = '';
