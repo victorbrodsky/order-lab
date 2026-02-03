@@ -1416,52 +1416,6 @@ class FellAppUtil {
         //role=ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
         //$roleNameBase: WCM or WashU (GlobalFellowshipSpecialty institution abbreviation)
 
-//        $className = null;
-//        if (is_object($fellowshipSpecialty)) {
-//            //$className = get_class($fellowshipSpecialty);
-//            $className = (new \ReflectionClass($fellowshipSpecialty))->getShortName();
-//        }
-//        //echo '$className='.$className.'<br>';
-//
-//        $roles = array();
-//        if( $className == 'GlobalFellowshipSpecialty' ) {
-//            //GlobalFellowshipSpecialty
-//            //role=ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
-//            //$roleType: DIRECTOR
-//            //$roleNameBase: WCM or WashU (GlobalFellowshipSpecialty institution abbreviation)
-//            $roleNameBase = str_replace(" ","",$fellowshipSpecialty->getName()); //BREAST PATHOLOGY -> BREASTPATHOLOGY
-//            $roleNameBase = strtoupper($roleNameBase); //Uppercase BREASTPATHOLOGY
-//            $roleName = $partialRoleName.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_ + $roleNameBase=BLOODBANKINGANDTRANSFUSIONMEDICINE
-//            //$role = $this->em->getRepository(Roles::class)->findOneByName($roleName);
-//            $roles = $this->em->getRepository(Roles::class)->findByName($roleName);
-//            echo '$roleName='.$roleName.'<br>';
-//            echo '$fellowshipSpecialtyName='.$fellowshipSpecialtyName.'<br>';
-//            echo 'roles='.count($roles).'<br>';
-//        }
-//        elseif( $className == 'FellowshipSubspecialty' )
-//        {
-//            //FellowshipSubspecialty
-//            $repository = $this->em->getRepository(Roles::class);
-//            $dql = $repository->createQueryBuilder("list");
-//            $dql->select('list');
-//            $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
-//
-//            $parameters = array(
-//                "name1" => '%' . $partialRoleName . '%',
-//                "name2" => '%' . $fellowshipSpecialtyName . '%'
-//            );
-//
-//            $query = $dql->getQuery();
-//            $query->setParameters($parameters);
-//
-//            $roles = $query->getResult();
-//        }
-
-//        $institutionAbbreviation = null;
-//        $institution = $fellowshipSpecialty->getInstitution();
-//        if( $institution ) {
-//            $institutionAbbreviation = $institution->getNameInstitution(); //getAbbreviation();
-//        }
         $institutionAbbreviation = $this->getNameInstitution($fellowshipSpecialty);
         //echo $fellowshipSpecialty.': $institutionAbbreviation='.$institutionAbbreviation.'<br>';
 
@@ -1470,7 +1424,7 @@ class FellAppUtil {
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
 
-        if( $institutionAbbreviation ) {
+        if( 0 && $institutionAbbreviation ) {
             $dql->where("list.name LIKE :name1 AND list.name LIKE :name2 AND list.name LIKE :name3");
 
             $parameters = array(
