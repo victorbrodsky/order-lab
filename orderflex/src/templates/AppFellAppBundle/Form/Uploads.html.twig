@@ -132,8 +132,7 @@
         {#</div>#}
 
         {% if   is_granted('ROLE_FELLAPP_COORDINATOR') or
-                is_granted('ROLE_FELLAPP_DIRECTOR') or
-                is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER')
+                is_granted('ROLE_FELLAPP_DIRECTOR')
         %}
         {% if route_path != 'fellapp_apply' and route_path != 'fellapp_apply_post' %}
             <div class="well form-element-holder user-Otherdocuments">
