@@ -1476,6 +1476,7 @@ class FellAppUtil {
 //        return $institutionRootAbbreviation;
     }
     public function getNameFromInstitution( $institution, $uppercase=true ) {
+        $institutionRootAbbreviation = null;
         if( $institution ) {
             $institutionRootAbbreviation = $institution->getRootAbbreviation();
             if( $uppercase && $institutionRootAbbreviation ) {
