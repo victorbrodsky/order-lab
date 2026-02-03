@@ -16,13 +16,14 @@ GlobalFellowshipSpecialty and FellowshipSubspecialty have institution which is u
 Role can have an institution too, but it's not used
 User has Role. Role is linked to fellowship specialty by upper case role name BLOODBANKINGANDTRANSFUSIONMEDICINE.
 Role ROLE_FELLAPP_DIRECTOR_BLOODBANKINGANDTRANSFUSIONMEDICINE is used by both users WCM and WASHU
-Role can have an institution too, but it's not used
 How to find roles such as DIRECTOR, COORDINATOR, INTERVIEWER associated to the user?
 How to remove or assign role to the user (processRemovedUsersByFellowshipSetting, assignFellAppAccessRoles)?
 $fellappUtil->processRemovedUsersByFellowshipSetting($felltype, $felltype->getDirectors(), $origDirectors, "_DIRECTOR_");
 Do we need to have two roles for each institution in case of apply server where multiple institution can be used on apply page?
 It's ok on apply page, but it will not work for configuration - the same director will appear on WCM and WashU
+THEREFORE: ADD WCM or WASHU to the role name
 
+Below will not a solution to get users by role name:
 if( GlobalFellowshipSpecialty ) {
 
     //role=ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
