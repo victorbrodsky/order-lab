@@ -4059,7 +4059,7 @@ class FellAppController extends OrderAbstractController {
                     if ($form->has('recaptcha')) {
                         if (!$form->get('recaptcha')->getData()) {
                             $form->get('recaptcha')->addError(new FormError('Captcha is required'));
-                            $form->addError(new FormError('Captcha is required'));
+                            //$form->addError(new FormError('Captcha is required'));
                         } else {
                             //exit('$form->get(recaptcha)->getData() does not exist');
                         }
