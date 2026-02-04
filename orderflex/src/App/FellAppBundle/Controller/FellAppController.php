@@ -4099,6 +4099,8 @@ class FellAppController extends OrderAbstractController {
                     }
                 }
             }
+            dump($form);
+            exit('g-recaptcha-response');
         }
 
         if( $form->isSubmitted() && $form->isValid() ) {
