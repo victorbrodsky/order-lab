@@ -504,7 +504,7 @@ class ApplyFellowshipApplicationType extends AbstractType
                 'mapped' => false,
                 'error_bubbling' => false,
                 'label' => false,
-                'attr' => array('class' => 'form-control g-recaptcha'),
+                'attr' => array('class' => 'form-control g-recaptcha1'),
             ));
         }
 
