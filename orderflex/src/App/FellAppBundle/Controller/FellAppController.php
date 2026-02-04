@@ -4082,8 +4082,8 @@ class FellAppController extends OrderAbstractController {
             if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
                 $captchaRes = $request->request->get('g-recaptcha-response'); //fellapp_apply_post
                 if (!$userSecUtil->captchaValidate($request, $captchaRes)) {
-                    dump($form);
-                    exit('g-recaptcha-response');
+                    //dump($form);
+                    //exit('g-recaptcha-response');
                     ////echo "Captcha is not valid <br>";
                     ////<input type="hidden" id="oleg_fellappbundle_fellowshipapplication_recaptcha" name="oleg_fellappbundle_fellowshipapplication[recaptcha]" class="form-control g-recaptcha1">
                     //$form->get('recaptcha')->addError(new FormError('Captcha is required'));
