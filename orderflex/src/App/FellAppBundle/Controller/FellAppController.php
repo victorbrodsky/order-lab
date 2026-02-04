@@ -1206,7 +1206,7 @@ class FellAppController extends OrderAbstractController {
             $cycle = 'new';
             $disabled = false;
             $method = "PUT";
-            $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
+            $action = $this->generateUrl('fellapp_edit', array('id' => $entity->getId()));
         }
 
         if( $routeName == "fellapp_edit_default_interviewers" ) {
