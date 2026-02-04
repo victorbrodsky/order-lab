@@ -195,14 +195,14 @@
       var selector = '.ui-dialog';
       if( currentConfig.enableDialog && isDialogOpen() === true ) {
         $(selector).mousemove(function (event) {
-          console.log("mouse movement when dialog");
+          //console.log("mouse movement when dialog");
           destroyWarningDialog();
           stopDialogTimer();
           startIdleTimer();
           $(selector).off('mousemove');
         });
         $(selector).keypress(function (event) {
-          console.log("keypress when dialog");
+          //console.log("keypress when dialog");
           destroyWarningDialog();
           stopDialogTimer();
           startIdleTimer();
