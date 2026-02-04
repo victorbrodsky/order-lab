@@ -3955,27 +3955,43 @@ class FellAppController extends OrderAbstractController {
         //Each record in GlobalFellowshipSubspecialty table will have ManyToOne $institution
         //One institution can have many GlobalFellowshipSubspecialty
 
-//        $institutions = $fellappUtil->getFellowshipInstitutions();
-//        $roles = $user ? $user->getRoles() : [];
-//        $params = array(
-//            'cycle' => 'new',
-//            'em' => $this->getDoctrine()->getManager(),
-//            'user' => $fellowshipApplication->getUser(),
-//            'cloneuser' => null,
-//            'roles' =>  $roles, //$user->getRoles(),
-//            'container' => $this->container,
-//            'fellappTypes' => $fellTypes, //FellowshipSubspecialty::class apply
-//            'globalFellappTypes' => $globalFellTypes,
-//            'institutions' => $institutions,
-//            'fellappVisas' => $fellappVisas,
-//            'routeName' => $routeName
-//            //'security' => $security
-//        );
-//        $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //apply POST
+        $institutions = $fellappUtil->getFellowshipInstitutions();
 
-        $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$institutionId=NULL,$specialtyId=NULL); //apply POST
-        $form = $args['form_pure'];
+        $institutionId = null;
+        $programInstitution = null;
+        if( $institutionId && count($institutions) > 0 ) {
+            //$programInstitution = $institutions[0];
+            $programInstitution = $em->getRepository(Institution::class)->find($institutionId);
+        }
+        $specialtyId = null;
+        $programSpecialty = null;
+        if( $specialtyId ) {
+            //$programInstitution = $institutions[0];
+            $programSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
+        }
+
+        $roles = $user ? $user->getRoles() : [];
+        $params = array(
+            'cycle' => 'new',
+            'em' => $this->getDoctrine()->getManager(),
+            'user' => $fellowshipApplication->getUser(),
+            'cloneuser' => null,
+            'roles' =>  $roles, //$user->getRoles(),
+            'container' => $this->container,
+            'fellappTypes' => $fellTypes, //FellowshipSubspecialty::class apply
+            'globalFellappTypes' => $globalFellTypes,
+            'institutions' => $institutions,
+            'fellappVisas' => $fellappVisas,
+            'routeName' => $routeName,
+            'programInstitution' => $programInstitution,
+            'programSpecialty' => $programSpecialty
+            //'security' => $security
+        );
+        $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //apply POST
+
+//        $routeName = $request->get('_route');
+//        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$institutionId=NULL,$specialtyId=NULL); //apply POST
+//        $form = $args['form_pure'];
 
         $form->handleRequest($request);
         
@@ -4019,7 +4035,7 @@ class FellAppController extends OrderAbstractController {
 
         //Add institution validation check
 
-        if( $form->isSubmitted() ) {
+        if( 0 && $form->isSubmitted() ) {
         //$formData = $request->request->get('oleg_fellappbundle_fellowshipapplication');
         //dump($formData);
         //$data = $request->request->all();
@@ -4057,7 +4073,7 @@ class FellAppController extends OrderAbstractController {
             //exit('g-recaptcha-response');
         } //if submitted
 
-        if( $form->isSubmitted() && $form->isValid() ) {
+        if( 0 && $form->isSubmitted() && $form->isValid() ) {
         //if( $form->isValid() ) {
 
             ////// set status new apply post application //////
@@ -4228,91 +4244,31 @@ class FellAppController extends OrderAbstractController {
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
                 return $this->redirect($this->generateUrl('fellapp_login'));
             }
-        } //if valid
 
-//        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
-//            if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
-//                $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
-//            }
-//        }
+        } //if isSubmitted isValid
+
+        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
+            if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
+                $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+            }
+        }
 
         //echo 'form invalid <br>';
         //exit('form invalid');
 
-//        return array(
-//            'form' => $form->createView(),
-//            'entity' => $fellowshipApplication,
-//            'pathbase' => 'fellapp',
-//            'cycle' => 'new',
-//            'sitename' => $this->getParameter('fellapp.sitename'),
-//            'captchaSiteKey' => $captchaSiteKey,
-//            'route_path' => $routeName,
-//            //'parentFormnodeId' => $parentFormnodeId //apply
-//        );
+        $em = $this->getDoctrine()->getManager();
+        $em->clear();
 
-        if( count($args) == 0 ) {
-            $linkUrl = $this->generateUrl(
-                "fellapp_fellowshiptype_settings",
-                array(),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $warningMsg = "No fellowship types (subspecialties) are found.";
-            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
-
-            $this->addFlash(
-                'warning',
-                $warningMsg
-            );
-            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-            return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
-        }
-
-        //oleg_fellappbundle_googleformconfig[applicationFormNote]
-        //TODO: create GoogleFormConfig auto on demo db reset
-        $configs = $em->getRepository(GoogleFormConfig::class)->findAll();
-        $googleFormConfig = null;
-        if( count($configs) > 0 ) {
-            $googleFormConfig = $configs[0];
-        } else {
-            //$entity = new GoogleFormConfig();
-            //throw $this->createNotFoundException('Unable to find Google Fellowship Application Form Configuration');
-        }
-        if( $googleFormConfig ) {
-            //echo "controller applicationFormNote=".$googleFormConfig->getApplicationFormNote()."<br>";
-            $args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();
-        } else {
-            $args['applicationFormNote'] = '
-            Please gather all relevant information before filling out this form in order to submit it.
-            <br>
-            <h4>        
-            Application Packet Checklist
-            </h4>                 
-             <ul style="display:inline-block; text-align:left;">
-                <li>USMLE Step 1 and/or COMLEX Level 1 Score and Date passed (USMLE/Comlex 2 and 3 if applicable) in PDF format</li>
-                <li>Updated Curriculum Vitae (CV) in PDF format</li>
-                <li>Include cover letter and/or personal statement in PDF format</li>
-                <li>Check with the fellowship director or coordinator whether there are other items that should be included</li>
-                <li>Include photo in JPEG format</li>
-                <li>Please leave field empty (blank) if a question does not apply to you</li>          
-             </ul>
-             <br>
-             <br>
-            ';
-        }
-        if( $googleFormConfig ) {
-            //oleg_fellappbundle_googleformconfig[signatureStatement]
-            $args['signatureStatement'] = $googleFormConfig->getSignatureStatement();
-        } else {
-            $args['signatureStatement'] = "I hereby certify that all of the information 
-            on this application is accurate, complete, and current to the best 
-            of my knowledge, and that this application is being made for serious 
-            consideration of training in the fellowship indicated. 
-            I understand that accepting more than one fellowship position 
-            constitutes a violation of professional ethics and may result 
-            in the forfeiture of all positions.";
-        }
-
-        return $this->render('AppFellAppBundle/Form/apply.html.twig', $args);
+        return array(
+            'form' => $form->createView(),
+            'entity' => $fellowshipApplication,
+            'pathbase' => 'fellapp',
+            'cycle' => 'new',
+            'sitename' => $this->getParameter('fellapp.sitename'),
+            'captchaSiteKey' => $captchaSiteKey,
+            'route_path' => $routeName,
+            //'parentFormnodeId' => $parentFormnodeId //apply
+        );
     }
 
     
