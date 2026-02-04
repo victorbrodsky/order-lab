@@ -3883,7 +3883,7 @@ class FellAppController extends OrderAbstractController {
 //    }
 
     #[Route(path: '/apply', name: 'fellapp_apply_post', methods: ['POST'])]
-    #[Template('AppFellAppBundle/Form/new.html.twig')]
+    #[Template('AppFellAppBundle/Form/apply.html.twig')]
     public function applyApplicantAction( Request $request )
     {
         //exit("applyApplicantAction");
