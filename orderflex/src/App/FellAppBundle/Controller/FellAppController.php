@@ -4090,7 +4090,8 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
-        if( $form->isValid() ) {
+        if( $form->isSubmitted() && $form->isValid() ) {
+        //if( $form->isValid() ) {
 
             ////// set status new apply post application //////
             $btnSubmit = $request->request->get('btnSubmit');
@@ -4260,7 +4261,7 @@ class FellAppController extends OrderAbstractController {
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
                 return $this->redirect($this->generateUrl('fellapp_login'));
             }
-        }
+        } //if valid
 
         if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
             if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {

@@ -565,6 +565,16 @@ sudo certbot certonly --webroot
 domain: view.online
 webroot: /usr/local/bin/order-lab/orderflex/public
 
+For WCM key/certificates:
+1) If key encrypted, decrypt key first:
+# openssl rsa -in view-test.med.cornell.edu_2027.key -out view-test.med.cornell.edu_2027.key.unencrypted
+2) Combine certificate + intermediate + key into one PEM
+# cat server.crt intermediate-ca.crt view-test.med.cornell.edu_2027.key.unencrypted > cert_key.pem
+2a) Optional: If you have fullchain already: # cat fullchain.pem server.key.unencrypted > cert_key.pem
+3) Configure haproxy.cfg, for example:
+    bind *:443 ssl crt /etc/haproxy/certs/cert_key.pem
+4) Test: haproxy -c -f /etc/haproxy/haproxy.cfg
+
 Log php-fpm: /var/log/httpd and /var/log/php-fpm
 The “oom-kill” error in PHP-FPM occurs when the system’s Out-Of-Memory (OOM) killer terminates the PHP-FPM process due to excessive memory usage. Here are some steps to help you fix this issue:
 

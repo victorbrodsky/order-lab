@@ -264,27 +264,6 @@
 
         }
         
-        // Minimal expandTextarea function
-        function expandTextareaApply(holder) {
-            console.log("expandTextareaApply");
-            var targetid = ".textarea";
-            targetid = getElementTargetByHolder(holder,targetid);
-
-            if( $(targetid).length == 0 ) {
-                console.log("expandTextareaApply: return. targetid length ="+$(targetid).length);
-                return;
-            }
-
-            $(targetid).each( function() {
-                var textarea = $(this);
-                console.log("expandTextareaApply: data-autosize="+textarea.attr('data-autosize'));
-//                if( textarea.attr('data-autosize') == 'true' ) {
-//                    textarea.attr('rows', '3');
-//                }
-                textarea.attr('rows', '6');
-            });
-        }
-        
         // Minimal getElementTargetByHolder function
         function getElementTargetByHolder(holder,target) {
             if( holder && typeof holder !== 'undefined' && holder.length > 0 ) {
@@ -304,7 +283,6 @@
 
             initDatepicker();
 
-            //expandTextareaApply();
             expandTextarea(null,6);
 
             initFileUpload();
