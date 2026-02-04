@@ -4099,7 +4099,7 @@ class FellAppController extends OrderAbstractController {
                     }
                 }
             }
-            $form->addError(new FormError('Captcha is required TEST'));
+            //$form->addError(new FormError('Captcha is required TEST'));
             $form->get('recaptcha')->addError(new FormError('Captcha is required'));
             //dump($form);
             //exit('g-recaptcha-response');

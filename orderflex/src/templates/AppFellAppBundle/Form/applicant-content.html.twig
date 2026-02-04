@@ -287,9 +287,11 @@
         {% if captchaSiteKey is defined and captchaSiteKey and form.recaptcha is defined %}
             <div class="col-xs-12 text-center">
                 <p>
-                    {{ form_row(form.recaptcha) }}
+                    {#{{ form_row(form.recaptcha) }}#}
+                    {{ form_widget(form.recaptcha) }}
                     <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
                 </p>
+                {{ form_errors(form.recaptcha) }}
             </div>
         {% endif %}
     {% endif %}
