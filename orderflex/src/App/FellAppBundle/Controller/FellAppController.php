@@ -4035,7 +4035,7 @@ class FellAppController extends OrderAbstractController {
 
         //Add institution validation check
 
-        if( 0 && $form->isSubmitted() ) {
+        if( $form->isSubmitted() ) {
         //$formData = $request->request->get('oleg_fellappbundle_fellowshipapplication');
         //dump($formData);
         //$data = $request->request->all();
@@ -4059,6 +4059,7 @@ class FellAppController extends OrderAbstractController {
                     if ($form->has('recaptcha')) {
                         if (!$form->get('recaptcha')->getData()) {
                             $form->get('recaptcha')->addError(new FormError('Captcha is required'));
+                            $form->addError(new FormError('Captcha is required'));
                         } else {
                             //exit('$form->get(recaptcha)->getData() does not exist');
                         }
@@ -4073,7 +4074,7 @@ class FellAppController extends OrderAbstractController {
             //exit('g-recaptcha-response');
         } //if submitted
 
-        if( 0 && $form->isSubmitted() && $form->isValid() ) {
+        if( $form->isSubmitted() && $form->isValid() ) {
         //if( $form->isValid() ) {
 
             ////// set status new apply post application //////
