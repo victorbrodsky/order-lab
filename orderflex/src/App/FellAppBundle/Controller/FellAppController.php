@@ -4082,10 +4082,15 @@ class FellAppController extends OrderAbstractController {
             if ($userSecUtil->getSiteSettingParameter('captchaEnabled') === true) {
                 $captchaRes = $request->request->get('g-recaptcha-response');
                 if (!$userSecUtil->captchaValidate($request, $captchaRes)) {
-                    //echo "Captcha is not valid <br>";
-                    //<input type="hidden" id="oleg_fellappbundle_fellowshipapplication_recaptcha" name="oleg_fellappbundle_fellowshipapplication[recaptcha]" class="form-control g-recaptcha1">
-                    $form->get('recaptcha')->addError(new FormError('Captcha is required'));
-                    //$form['oleg_fellappbundle_fellowshipapplication']['recaptcha']->addError(new FormError('Captcha is required'));
+                    ////echo "Captcha is not valid <br>";
+                    ////<input type="hidden" id="oleg_fellappbundle_fellowshipapplication_recaptcha" name="oleg_fellappbundle_fellowshipapplication[recaptcha]" class="form-control g-recaptcha1">
+                    //$form->get('recaptcha')->addError(new FormError('Captcha is required'));
+                    ////$form['oleg_fellappbundle_fellowshipapplication']['recaptcha']->addError(new FormError('Captcha is required'));
+                    if ($form->has('recaptcha')) {
+                        if (!$form->get('recaptcha')->getData()) {
+                            $form->get('recaptcha')->addError(new FormError('Captcha is required'));
+                        }
+                    }
                 }
             }
         }
