@@ -2459,7 +2459,12 @@ class FellAppUtil {
             );
         }
 
-        $roleName = "ROLE_FELLAPP_".$roleType."_".$institutionAbbreviation.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
+        if( $institutionAbbreviation ) {
+            $roleName = "ROLE_FELLAPP_".$roleType."_".$institutionAbbreviation.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
+        } else {
+            $roleName = "ROLE_FELLAPP_".$roleType.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_BREASTPATHOLOGY
+        }
+
         //echo "1 roleName=$roleName<br>";
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
         $logger->notice("createOrEnableFellAppRole: roleName=$roleName, found role=$role");
