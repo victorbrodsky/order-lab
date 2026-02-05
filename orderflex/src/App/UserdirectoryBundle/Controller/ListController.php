@@ -337,12 +337,12 @@ class ListController extends OrderAbstractController
         $mapper = $this->classListMapper($pathbase,$request);
         //echo "bundleName=".$mapper['bundleName']."<br>";
         //echo "className=".$mapper['className']."<br>";
-        $logger = $this->container->get('logger');
-        $logger->notice("getList: bundleName=".$mapper['bundleName']);
-        $logger->notice("getList: className=".$mapper['className']);
-        $logger->notice("getList: fullClassName=".$mapper['fullClassName']);
-        $logger->notice("getList: linkToListId=".$mapper['linkToListId']);
-        $logger->notice("getList: displayName=".$mapper['displayName']);
+        //$logger = $this->container->get('logger');
+        //$logger->notice("getList: bundleName=".$mapper['bundleName']);
+        //$logger->notice("getList: className=".$mapper['className']);
+        //$logger->notice("getList: fullClassName=".$mapper['fullClassName']);
+        //$logger->notice("getList: linkToListId=".$mapper['linkToListId']);
+        //$logger->notice("getList: displayName=".$mapper['displayName']);
 
         //$repository = $this->getDoctrine()->getRepository($mapper['bundleName'].':'.$mapper['className']);
         $repository = $this->getDoctrine()->getRepository($mapper['fullClassName']);
