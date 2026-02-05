@@ -1471,16 +1471,9 @@ class FellAppUtil {
             $logger->notice("getNameInstitution: $fellowshipSpecialty does not have institution");
         }
         return $this->getNameFromInstitution($institution,$uppercase);
-//        if( $institution ) {
-//            $institutionRootAbbreviation = $institution->getRootAbbreviation();
-//            if( $uppercase && $institutionRootAbbreviation ) {
-//                $institutionRootAbbreviation = strtoupper($institutionRootAbbreviation);
-//            }
-//        }
-//        return $institutionRootAbbreviation;
     }
     public function getNameFromInstitution( $institution, $uppercase=true ) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $institutionRootAbbreviation = null;
         if( $institution ) {
             $institutionRootAbbreviation = $institution->getRootAbbreviation();
@@ -1488,7 +1481,7 @@ class FellAppUtil {
                 $institutionRootAbbreviation = strtoupper($institutionRootAbbreviation);
             }
         } else {
-            $logger->notice("getNameFromInstitution: institution is NULL");
+            //$logger->notice("getNameFromInstitution: institution is NULL");
         }
         return $institutionRootAbbreviation;
     }
