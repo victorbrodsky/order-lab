@@ -2453,10 +2453,10 @@ class FellAppUtil {
         }
         $institutionAbbreviation = $this->getNameInstitution($subspecialtyType);
         if( !$institutionAbbreviation ) {
-            $logger->notice('createOrEnableFellAppRole: institutionAbbreviation not found by subspecialtyType=['.$subspecialtyType.']');
-            throw new EntityNotFoundException(
-                'createOrEnableFellAppRole: institutionAbbreviation not found by subspecialtyType=['.$subspecialtyType.']'
-            );
+            $logger->notice('createOrEnableFellAppRole: Create role without institution. institutionAbbreviation not found by subspecialtyType=['.$subspecialtyType.']');
+            //throw new EntityNotFoundException(
+            //    'createOrEnableFellAppRole: institutionAbbreviation not found by subspecialtyType=['.$subspecialtyType.']'
+            //);
         }
 
         if( $institutionAbbreviation ) {
