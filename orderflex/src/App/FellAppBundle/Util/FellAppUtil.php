@@ -3313,7 +3313,7 @@ class FellAppUtil {
 
         $applicantFullName = $fellapp->getApplicantFullName();
         $fellappType = $fellapp->getFellowshipSubspecialty()."";
-        $inst = $fellapp->getInstitution()."";
+        $inst = $fellapp->getInstitution();
         $startDate = $fellapp->getStartDate();
         if( $startDate ) {
             $startDateStr = $fellapp->getStartDate()->format('Y');
@@ -3321,9 +3321,22 @@ class FellAppUtil {
             $startDateStr = NULL;
         }
 
-        $userSecUtil = $this->container->get('user_security_utility');
-        $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution',$this->container->getParameter('fellapp.sitename'));
+        //Get institution from fellapp specialty
+        $fullInstName = NULL;
+        $localInstitutionName = NULL;
+        if( $inst ) {
+            $localInstitutionName = $this->getNameFromInstitution($inst);
+        }
         if( !$localInstitutionName ) {
+            $userSecUtil = $this->container->get('user_security_utility');
+            $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution', $this->container->getParameter('fellapp.sitename'));
+            if (!$localInstitutionName) {
+                $localInstitutionName = "Institution";
+            }
+        }
+        if( $localInstitutionName ) {
+            $fullInstName = $localInstitutionName." ".$inst;
+        } else {
             $localInstitutionName = "Institution";
         }
 
@@ -3339,7 +3352,7 @@ class FellAppUtil {
         $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
         $str = str_replace("[[START YEAR]]",$startDateStr,$str);
         $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappType,$str);
-        $str = str_replace("[[INSTITUTION]]",$inst,$str);
+        $str = str_replace("[[INSTITUTION]]",$fullInstName,$str);
         $str = str_replace("[[DIRECTOR]]",$directorsStr,$str);
         $str = str_replace("[[INTERVIEW DATE]]",$interviewDateStr,$str);
 
