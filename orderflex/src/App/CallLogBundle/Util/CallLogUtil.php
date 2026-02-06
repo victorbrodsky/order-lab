@@ -4815,24 +4815,38 @@ class CallLogUtil
         }
 
         //DOB
-        if( $dob && ($where == false || $matchAnd == true) ) {
-            //echo "dob=".$dob."<br>";
-            $searchArr[] = "DOB: " . $dob;
-            //echo "doblen=".strlen((string)$dob);
-            if( strlen((string)$dob) == 10 ) {
-                $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob)->format('Y-m-d');
-                //return $d && $d->format($format) === $date;
-                //echo "dob=".$dob." => ".$dobDateTime."<br>";
-                $dql->andWhere("dob.status = :statusValid OR dob.status = :statusAlias");
-                $dql->andWhere("dob.field = :dob");
-                $parameters['dob'] = $dobDateTime;
-                $parameters['statusValid'] = 'valid';
-                $parameters['statusAlias'] = 'alias';
-                $where = true;
+        if ($dob && ($where === false || $matchAnd === true)) {
+
+            $searchArr[] = "DOB: $dob";
+
+            // Validate expected length mm/dd/YYYY
+            if (strlen($dob) === 10) {
+
+                $dobDateTime = \DateTime::createFromFormat('m/d/Y', $dob);
+
+                if ($dobDateTime !== false) {
+
+                    $dobFormatted = $dobDateTime->format('Y-m-d');
+
+                    $dql->andWhere("(dob.status = :statusValid OR dob.status = :statusAlias)");
+                    $dql->andWhere("dob.field = :dob");
+
+                    $parameters['dob'] = $dobFormatted;
+                    $parameters['statusValid'] = 'valid';
+                    $parameters['statusAlias'] = 'alias';
+
+                    $where = true;
+
+                } else {
+                    $searchArr[] = "DOB '$dob' is not in the valid format (mm/dd/YYYY)";
+                }
+
             } else {
                 $searchArr[] = "DOB '$dob' is not in the valid format (mm/dd/YYYY)";
             }
         }
+
+
 
         //$lastname = null;
         //$firstname = null;
