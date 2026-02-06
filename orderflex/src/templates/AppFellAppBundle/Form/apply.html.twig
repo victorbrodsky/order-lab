@@ -455,7 +455,7 @@
                 filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
                 isSyncing = false;
                 // update Screening Questions visibility based on selected global specialty
-                updateScreeningQuestionsVisibility(globalId); //apply working with this
+                updateScreeningQuestionsVisibility(globalId); //apply working with this (global.on('change')
             });
 
             var initInst = inst.val();
@@ -541,7 +541,7 @@
 
                 //Screening Questions visibility after options and selection are ready
                 console.log('Screening Questions visibility after options and selection are ready');
-                updateScreeningQuestionsVisibility(comboboxEl.val());
+                updateScreeningQuestionsVisibility(comboboxEl.val()); //filterGlobalByInstitution
 
                 if (doneCallback) doneCallback();
             });
