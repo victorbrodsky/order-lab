@@ -558,14 +558,21 @@
         
          var dropzoneDom = dropzone.get(0);
         //console.log('disable/enable dropzone className='+dropzoneDom.className);
-        var myDropzone = dropzoneDom.dropzone;
-        
+        //var myDropzone = dropzoneDom.dropzone;
+        const myDropzone = dropzoneDom?.dropzone;
+
+        //if (myDropzone && Array.isArray(myDropzone.listeners) && myDropzone.listeners[1]) {
+            // safe to use myDropzone.listeners[1]
+
         if( !dateValue ) {
             //console.log('in active dropzone');
             //disable
             dropzone.removeClass('dz-clickable'); // remove cursor
-            if( myDropzone.listeners[1] ) {
-                dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);   
+            if (myDropzone && Array.isArray(myDropzone.listeners) && myDropzone.listeners[1]) {
+                // safe to use myDropzone.listeners[1]
+                if (myDropzone.listeners[1]) {
+                    dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
+                }
             }
             
             dropzone.parent().tooltip({
@@ -579,7 +586,9 @@
             //console.log('active dropzone');
             //enable
             dropzone.addClass('dz-clickable'); // add cursor
-            dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+            if (myDropzone && Array.isArray(myDropzone.listeners) && myDropzone.listeners[1]) {
+                dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
+            }
             dropzone.parent().tooltip('destroy');
         }
         
