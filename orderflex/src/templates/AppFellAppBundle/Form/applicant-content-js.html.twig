@@ -278,12 +278,14 @@
 
         if (hasScreening) {
             //console.log("Show fellowship-screening-questions");
+            //collapseAll();
             panel.show();
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
             }
         } else {
             //console.log("Hide fellowship-screening-questions");
+            //extendAll();
             panel.hide();
         }
     }
@@ -653,7 +655,8 @@
             if (data.length > 0 && data[0]['formNodeId']) { //make sure we have at least one formNode for formNode Holder
 
                 //console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
-
+                console.log("renderScreeningQuestions: collapseAll()");
+                //collapseAll();
                 calllogAppendFormNodes(data);
 
                 //console.log("ajax identifier="+identifier);
@@ -662,6 +665,8 @@
             } else {
                 //_formnode[identifier] = null;
                 //console.log("No data: data.length="+data.length);
+                console.log("renderScreeningQuestions: extendAll()");
+                //extendAll();
             }
 
             //$.bootstrapSortable(true);
