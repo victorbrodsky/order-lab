@@ -207,51 +207,49 @@
             $('#confirmDraftUserExistModal').modal('hide');
         });
 
-        //Testing
-        //renderScreeningQuestions();
-        var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
-        var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
-        //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
-        //console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
-        if( fellowshipSubspecialty.length ) {
-            //console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
-            fellowshipSpecialtyListener(fellowshipSubspecialty);
-            var initFellowshipSub = fellowshipSubspecialty.val();
-            if( initFellowshipSub ) {
-                updateScreeningQuestionsVisibility(initFellowshipSub);
+        //Initiliaze updateScreeningQuestionsVisibility
+        //render ScreeningQuestions();
+        var route_path = $('#route_path').val();
+        console.log("route_path="+route_path);
+        if(1) {
+            if (route_path != 'fellapp_apply' && $('#route_path').val() != 'fellapp_apply_post') {
+                var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
+                var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
+                //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+                //console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+                if (fellowshipSubspecialty.length) {
+                    console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+                    fellowshipSpecialtyListener(fellowshipSubspecialty);
+//            var initFellowshipSub = fellowshipSubspecialty.val();
+//            if( initFellowshipSub ) {
+//                updateScreeningQuestionsVisibility(initFellowshipSub);
+//            }
+                }
+                if (globalFellowshipSpecialty.length) {
+                    console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+                    fellowshipSpecialtyListener(globalFellowshipSpecialty);
+//            var initGlobalFell = globalFellowshipSpecialty.val();
+//            if( initGlobalFell ) {
+//                updateScreeningQuestionsVisibility(initGlobalFell);
+//            }
+                }
             }
         }
-        if( globalFellowshipSpecialty.length ) {
-            //console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
-            fellowshipSpecialtyListener(globalFellowshipSpecialty);
-            var initGlobalFell = globalFellowshipSpecialty.val();
-            if( initGlobalFell ) {
-                updateScreeningQuestionsVisibility(initGlobalFell);
-            }
-        }
-//        var fellowshipSubspecialty = $('select.fellapp-globalFellowshipSpecialty');
-//        var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty');
-//        if( fellowshipSubspecialty && fellowshipSubspecialty.length === 0 ) {
-//            console.log("fellowshipSubspecialty="+fellowshipSubspecialty.select2('val'));
-//        }
-//        if( globalFellowshipSpecialty && globalFellowshipSpecialty.length === 0 ) {
-//            console.log("globalFellowshipSpecialty="+globalFellowshipSpecialty.select2('val'));
-//        }
         //console.log("after fellowshipSubspecialty");
     }); //document ready
 
     function fellowshipSpecialtyListener( specialtySelect ) {
-        //console.log("fellowshipSpecialtyListener: val=", specialtySelect.val());
+        console.log("fellowshipSpecialtyListener: val=", specialtySelect.val());
         specialtySelect.on('change', function(){
             var specialtyId = $(this).val();
-            //console.log('specialty changed:', specialtyId);
+            console.log('fellowshipSpecialtyListener: specialty changed:', specialtyId);
             // update Screening Questions visibility based on selected specialty
             updateScreeningQuestionsVisibility(specialtyId);
         });
     }
     // Show or hide the Screening Questions panel based on selected fellowship specialty (global or subspecialty)
     function updateScreeningQuestionsVisibility(globalId) {
-        //console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
+        console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
         var hasScreening = false;
 
         var panel = $('#fellowship-screening-questions').closest('.panel');
@@ -277,14 +275,30 @@
         }
 
         if (hasScreening) {
-            //console.log("Show fellowship-screening-questions");
+            console.log("Show fellowship-screening-questions");
+
+            // Find the collapsible body that contains the screening questions
+            var screeningCollapse = $('#fellowship-screening-questions').closest('.panel-collapse');
+            if (!screeningCollapse.length) {
+                // Fallback: use the panel itself if no .panel-collapse wrapper is present
+                screeningCollapse = panel;
+            }
+
+            // Collapse all other sections except the screening questions section
+            $('.panel-collapse').not(screeningCollapse).collapse('hide');
             //collapseAll();
-            panel.show();
+
+            // Ensure the screening section itself is expanded and visible
+            if (screeningCollapse.hasClass('collapse')) {
+                screeningCollapse.collapse('show');
+            } else {
+                panel.show();
+            }
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
             }
         } else {
-            //console.log("Hide fellowship-screening-questions");
+            console.log("Hide fellowship-screening-questions");
             //extendAll();
             panel.hide();
         }
@@ -604,10 +618,10 @@
     //Screening Questions
     //http://127.0.0.1/directory/admin/list/form-nodes/285
     function renderScreeningQuestions() {
-        console.log('### renderScreeningQuestions ###');
+        console.log('### render ScreeningQuestions ###');
         var _formcycle = $('#formcycle').val() || 'new';
         if( _formcycle == 'download' ) {
-            console.log('### renderScreeningQuestions ###, _formcycle='+_formcycle);
+            console.log('### render ScreeningQuestions ###, _formcycle='+_formcycle);
             return;
         }
         var _holderNamespace = "App\\UserdirectoryBundle\\Entity";
@@ -618,14 +632,7 @@
         var _entityName = "FellowshipApplication"; //$('#entityName').val();             //"Message";
         //var _entityId = '1684'; //var fellappId = $('#fellapp_id').val();     // existing hidden input    //"Message ID";
         var _entityId = $('#fellapp_id').val();
-        console.log('renderScreeningQuestions: _formcycle='+_formcycle+', holderId='+holderId+', _entityId='+_entityId);
-    //            var dataParam =
-    //            {
-    //                holderNamespace: _holderNamespace,
-    //                holderName: _holderName,
-    //                holderId: holderId, //'291', //'285',
-    //                cycle: 'new'
-    //            };
+        console.log('render ScreeningQuestions: _formcycle='+_formcycle+', holderId='+holderId+', _entityId='+_entityId);
 
         var dataParam =
         {
@@ -642,20 +649,21 @@
         //var url = Routing.generate('employees_formnode_fields');
         _formnodeProcessing = true;
 
+        console.log('render ScreeningQuestions: before ajax');
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             //type: "GET",
-            async: asyncflag,
+            async: false, //asyncflag,
             data: dataParam,
         }).success(function(data) {
-            //console.log("data length="+data.length);
+            console.log("render ScreeningQuestions: data length="+data.length);
             //console.log(data);
 
             if (data.length > 0 && data[0]['formNodeId']) { //make sure we have at least one formNode for formNode Holder
 
-                //console.log("data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
-                console.log("renderScreeningQuestions: collapseAll()");
+                console.log("render ScreeningQuestions: data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
+                //console.log("render ScreeningQuestions: collapseAll()");
                 //collapseAll();
                 calllogAppendFormNodes(data);
 
@@ -664,8 +672,8 @@
 
             } else {
                 //_formnode[identifier] = null;
-                //console.log("No data: data.length="+data.length);
-                console.log("renderScreeningQuestions: extendAll()");
+                console.log("No data: data.length="+data.length);
+                //console.log("render ScreeningQuestions: extendAll()");
                 //extendAll();
             }
 
@@ -678,11 +686,13 @@
             //}
         }).fail(function() {
             //_formnode[identifier] = null;
-            alert("Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
+            console.log("render ScreeningQuestions: Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
+            alert("render ScreeningQuestions: Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
         }).done(function() {
-            //console.log("update patient title done");
+            console.log("render ScreeningQuestions: ajax done");
             _formnodeProcessing = false;
         });
+        console.log('render ScreeningQuestions: after ajax');
     }
 
 </script>

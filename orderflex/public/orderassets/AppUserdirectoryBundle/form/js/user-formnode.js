@@ -194,6 +194,7 @@ function _isFormnodeProcessing() {
 }
 
 function calllogAppendFormNodes( data ) {
+    //console.log("calllogAppendFormNodes: data.length="+data.length);
     for( var index = 0; index < data.length; ++index ) {
 
         var formNodeHolderId = data[index]['formNodeHolderId'];
@@ -201,7 +202,7 @@ function calllogAppendFormNodes( data ) {
         var formNodeId = data[index]['formNodeId'];
         var formNodeHtml = data[index]['formNodeHtml'];
         var arraySectionCount = data[index]['arraySectionCount'];
-
+        //console.log("calllogAppendFormNodes: formNodeHolderId="+formNodeHolderId);
         var appendedEl = calllogAppendElement(formNodeHolderId,parentFormNodeId,formNodeId,formNodeHtml,arraySectionCount);
 
         if(

@@ -448,14 +448,14 @@
                 if (syncingGlobal) return;
                 syncingInst = true;
                 var globalId = $(this).val();
-                console.log('globalId changed:', globalId);
+                console.log('Listener on apply.html.twig: globalId changed:', globalId);
                 // Replace program[] with specialty[] in URL
                 updateUrlParameter('program[]', null);
                 updateUrlParameter('specialty[]', globalId);
                 filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
                 isSyncing = false;
                 // update Screening Questions visibility based on selected global specialty
-                updateScreeningQuestionsVisibility(globalId);
+                updateScreeningQuestionsVisibility(globalId); //apply working with this
             });
 
             var initInst = inst.val();
@@ -539,7 +539,8 @@
                     comboboxEl.val(selectedGlobalId);
                 }
 
-                // Initialize Screening Questions visibility after options and selection are ready
+                //Screening Questions visibility after options and selection are ready
+                console.log('Screening Questions visibility after options and selection are ready');
                 updateScreeningQuestionsVisibility(comboboxEl.val());
 
                 if (doneCallback) doneCallback();
