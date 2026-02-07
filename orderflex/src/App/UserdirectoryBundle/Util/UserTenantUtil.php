@@ -1632,6 +1632,7 @@ class UserTenantUtil
     //Wrapper for $router->generate when run with command and HaProxy, the route does not have base url
     //For example it generates http://localhost/fellowship-applications/download/1507
     // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
+    //some servers prefer: https://path-view-test.wustl.edu/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg
     //$paramArr - array of parameters (i.e. array('id'=>123))
     //Used in generateApplicationPdf
     public function routerGenerateWrapper($routName, $paramArr, $replaceContext=true)
@@ -1651,7 +1652,7 @@ class UserTenantUtil
             $connectionChannel = 'http';
         }
         //$connectionChannel = 'https'; //testing
-        $connectionChannel = 'http'; //testing
+        //$connectionChannel = 'http'; //testing
 
         $context = $this->container->get('router')->getContext();
 

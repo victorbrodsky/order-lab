@@ -130,9 +130,10 @@
                     {#{% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
                     {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(fellapp.avatars|last,"medium") %}
                     {% set altTitle = "Avatar "~fellapp.avatars|last.getOriginalnameClean %}
-                    {#avatarPath={{ avatarPath }}#}
+                    avatarPath={{ avatarPath }}<br>
                     {#altTitle={{ altTitle }}#}
                     {% set avatarPath='https://path-view-test.wustl.edu/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg' %}
+                    avatarPath2={{ avatarPath }}<br>
                     <img src="{{ avatarPath }}"
                          alt="{{ altTitle }}"
                          style="max-width: 250px;"

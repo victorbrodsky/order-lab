@@ -21,7 +21,7 @@ knp_snappy:
             load-media-error-handling: ignore
             enable-local-file-access: true
             #ignore-ssl-errors: true
-            no-stop-slow-scripts: true
+            #no-stop-slow-scripts: true
             #disable-smart-shrinking: true
             #custom-header: 'Host: localhost'
                 #- 'Host: localhost'
