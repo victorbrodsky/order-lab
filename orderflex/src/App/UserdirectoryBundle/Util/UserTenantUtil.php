@@ -1633,6 +1633,8 @@ class UserTenantUtil
     //For example it generates http://localhost/fellowship-applications/download/1507
     // instead of http://localhost/c/wcm/pathology/fellowship-applications/download/1507
     //some servers prefer: https://path-view-test.wustl.edu/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg
+    //not working: avatarPath=https://localhost/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg
+    //working: avatarPath2=https://path-view-test.wustl.edu/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg
     //$paramArr - array of parameters (i.e. array('id'=>123))
     //Used in generateApplicationPdf
     public function routerGenerateWrapper($routName, $paramArr, $replaceContext=true)
