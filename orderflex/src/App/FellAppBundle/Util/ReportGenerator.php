@@ -1023,6 +1023,14 @@ class ReportGenerator {
                 //'javascript-delay' => 60000,
                 // optional: prevent stopping on slow JS
                 //'no-stop-slow-scripts' => true,
+                ////////
+//                'load-error-handling' => 'ignore',
+//                'load-media-error-handling' => 'ignore',
+//                'disable-smart-shrinking' => true,
+//                'no-stop-slow-scripts' => true,
+//                'ssl-protocol' => 'any',
+//                'ignore-load-errors' => true,
+//                'ignore-ssl-errors' => true, // <— important
             ]
         );
 
