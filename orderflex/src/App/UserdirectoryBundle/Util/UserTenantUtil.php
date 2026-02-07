@@ -1663,7 +1663,9 @@ class UserTenantUtil
         if ($replaceContext) {
             //$context = $this->container->get('router')->getContext();
             //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
-            $context->setHost('localhost');
+            //$context->setHost('localhost');
+            $context->setHost('127.0.0.1');
+            $connectionChannel = 'http'; //localhost can serve only http
             $context->setScheme($connectionChannel);
 
             //$context->setHost('localhost');
