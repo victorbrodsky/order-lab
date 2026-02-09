@@ -126,11 +126,11 @@
             {#avatar form modal#}
             {#avatar cycle={{ cycle }}#}
             {% if fellapp.avatars|length > 0 and not is_granted('ROLE_PLATFORM_DEMO') %}
-                {% if cycle == "download" %}
+                {% if 0 and cycle == "download" %}
                     {#{% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
                     {% set lastAvatar = fellapp.avatars|last %}
                     {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,"medium") %}
-                    {% set altTitle = "Avatar "~lastAvatar.getOriginalnameClean %}
+                    {#{% set altTitle = "Avatar "~lastAvatar.getOriginalnameClean %}#}
                     {#avatarPath={{ avatarPath }}<br>#}
                     {#altTitle={{ altTitle }}#}
                     {#not working: avatarPath=https://localhost/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg#}
