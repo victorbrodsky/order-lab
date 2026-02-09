@@ -129,23 +129,31 @@
                 {% if cycle == "download" %}
                     {#{% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
                     {% set lastAvatar = fellapp.avatars|last %}
-                    {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(fellapp.avatars|last,"medium") %}
-                    {% set altTitle = "Avatar "~fellapp.avatars|last.getOriginalnameClean %}
+                    {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,"medium") %}
+                    {% set altTitle = "Avatar "~lastAvatar.getOriginalnameClean %}
                     {#avatarPath={{ avatarPath }}<br>#}
                     {#altTitle={{ altTitle }}#}
                     {#not working: avatarPath=https://localhost/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg#}
                     {#working: {% set avatarPath='http://path-view-test.wustl.edu/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg' %}#}
                     {#{% set avatarPath='http://127.0.0.1/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg' %}#}
                     {#avatarPath2={{ avatarPath }}<br>#}
-                    <img src="{{ avatarPath }}"
-                         alt="{{ altTitle }}"
-                         style="max-width: 250px;"
-                    >
+
+                    {#Original#}
+                    {#<img src="{{ avatarPath }}"#}
+                         {#alt="{{ altTitle }}"#}
+                         {#style="max-width: 250px;"#}
+                    {#>#}
+
                     {#<img#}
                         {#src="{{ url('fellapp_file_view', { id: lastAvatar.id }) }}"#}
                         {#alt="{{ altTitle }}"#}
                         {#style="max-width: 250px;"#}
                     {#>#}
+                    {% set relativeAvatarPath = lastAvatar.getRelativeUploadFullPath() %}
+                    relativeAvatarPath={{ relativeAvatarPath }}
+                    <img
+                        src="{{ asset(relativeAvatarPath) }}" alt="Avatar"
+                    >
                 {% else %}
                     {#showDocumentAsImage#}
                     {#{{ usermacros.showDocumentAsImage(fellapp.avatars|last,'Avatar','') }}#}
