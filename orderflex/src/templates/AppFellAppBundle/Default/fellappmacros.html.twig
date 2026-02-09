@@ -129,8 +129,8 @@
                 {% if cycle == "download" %}
                     {#{% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
                     {% set lastAvatar = fellapp.avatars|last %}
-                    {% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,"medium") %}
-                    {#{% set altTitle = "Avatar "~lastAvatar.getOriginalnameClean %}#}
+                    {#{% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,"medium") %}#}
+                    {% set altTitle = "Avatar "~lastAvatar.getOriginalnameClean %}
                     {#avatarPath={{ avatarPath }}<br>#}
                     {#altTitle={{ altTitle }}#}
                     {#not working: avatarPath=https://localhost/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg#}
@@ -149,12 +149,14 @@
                         {#alt="{{ altTitle }}"#}
                         {#style="max-width: 250px;"#}
                     {#>#}
-                    {% set relativeAvatarPath = lastAvatar.getRelativeUploadFullPath() %}
+                    {% set relativeAvatarPath = lastAvatar.getAssetRelativePath() %}
                     relativeAvatarPath={{ relativeAvatarPath }}
                     {#68dec8e514b6c.jpg#}
-                    {% set relativeAvatarPath = 'Uploaded/fellapp/documents/69867df55f467.jpeg' %}
+                    {#{% set relativeAvatarPath = 'Uploaded/fellapp/documents/69867df55f467.jpeg' %}#}
                     <img
-                        src="{{ asset(relativeAvatarPath) }}" alt="Avatar"
+                        src="{{ asset(relativeAvatarPath) }}"
+                        alt="{{ altTitle }}"
+                        style="max-width: 250px;"
                     >
                 {% else %}
                     {#showDocumentAsImage#}

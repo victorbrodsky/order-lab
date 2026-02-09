@@ -692,6 +692,15 @@ class Document {
         return $this->getPrefixPath().$this->getUploadDirectory().DIRECTORY_SEPARATOR.$this->getUniquename();
     }
 
+    public function getAssetRelativePath()
+    {
+        //return $this->getUploadDirectory().DIRECTORY_SEPARATOR.$this->getUniquename();
+        //- DIRECTORY_SEPARATOR becomes \ on Windows and / on Linux.
+        //- URLs must always use /, never \.
+        //- asset() expects a URL path, not a filesystem path
+        return $this->getUploadDirectory() . '/' . $this->getUniquename();
+    }
+
     protected function getPrefixPath() {
         //return '../../../../order/';
 
