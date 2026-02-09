@@ -5056,15 +5056,21 @@ class TransResRequestUtil
         }
         if( $cycle == 'edit' ) {
             //Show all only for admin/technicians roles
-            if( $this->security->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyPostfix) ||
-                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyPostfix)
-            ) {
-                //echo "User is admin/technician => show all <br>";
-                $showAll = true;
-            } else {
-                //echo "User IS NOT admin/technician => show only latest <br>";
-                $showAll = false;
-            }
+//            if( $this->security->isGranted("ROLE_TRANSRES_ADMIN" . $specialtyPostfix) ||
+//                $this->security->isGranted("ROLE_TRANSRES_TECHNICIAN" . $specialtyPostfix)
+//            ) {
+//                //echo "User is admin/technician => show all <br>";
+//                $showAll = true;
+//            } else {
+//                //echo "User IS NOT admin/technician => show only latest <br>";
+//                $showAll = false;
+//            }
+
+            //As of today, we are all using new Fee Schedule (CTP-****) for pending and new requests.
+            //Old fee schedules (TRP-****) are no longer needed for new requests so you can remove old fee schedules from edit request pages.
+            //OLD FEE SCHEDULES are only needed to show in COMPLETED requests.
+            //Showing only enabled with latest version
+            $showAll = false;
         }
 
         //echo "showAll=$showAll <br>";
