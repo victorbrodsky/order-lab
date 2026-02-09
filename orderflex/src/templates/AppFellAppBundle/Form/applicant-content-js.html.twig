@@ -212,7 +212,7 @@
         var route_path = $('#route_path').val();
         console.log("route_path="+route_path);
         if(1) {
-            if (route_path != 'fellapp_apply' && $('#route_path').val() != 'fellapp_apply_post') {
+//            if (route_path != 'fellapp_apply' && $('#route_path').val() != 'fellapp_apply_post') {
                 var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
                 var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
                 //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
@@ -233,7 +233,7 @@
 //                updateScreeningQuestionsVisibility(initGlobalFell);
 //            }
                 }
-            }
+//            }
         }
         //console.log("after fellowshipSubspecialty");
     }); //document ready
@@ -267,7 +267,7 @@
                 var flag = opt.data('screening-questions');
                 //console.log("Set flag="+flag);
                 hasScreening = flag === 1 || flag === '1' || flag === true;
-                //console.log("Set hasScreening="+hasScreening);
+                console.log("Set hasScreening="+hasScreening);
             }
         } else {
             //console.log("Hide fellowship-screening-questions: globalId is not provided");
@@ -286,7 +286,6 @@
 
             // Collapse all other sections except the screening questions section
             $('.panel-collapse').not(screeningCollapse).collapse('hide');
-            //collapseAll();
 
             // Ensure the screening section itself is expanded and visible
             if (screeningCollapse.hasClass('collapse')) {
@@ -299,7 +298,6 @@
             }
         } else {
             console.log("Hide fellowship-screening-questions");
-            //extendAll();
             panel.hide();
         }
     }
@@ -663,7 +661,7 @@
             url: url,
             timeout: _ajaxTimeout,
             //type: "GET",
-            async: false, //asyncflag,
+            async: asyncflag,
             data: dataParam,
         }).success(function(data) {
             console.log("render ScreeningQuestions: data length="+data.length);
@@ -672,8 +670,6 @@
             if (data.length > 0 && data[0]['formNodeId']) { //make sure we have at least one formNode for formNode Holder
 
                 console.log("render ScreeningQuestions: data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
-                //console.log("render ScreeningQuestions: collapseAll()");
-                //collapseAll();
                 calllogAppendFormNodes(data);
 
                 //console.log("ajax identifier="+identifier);
