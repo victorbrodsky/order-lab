@@ -1639,15 +1639,15 @@ class UserTenantUtil
     //Used in generateApplicationPdf
     public function routerGenerateWrapper($routName, $paramArr, $replaceContext=true)
     {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
-        if (is_array($paramArr) && count($paramArr) > 0) {
-            $logger->notice("routerGenerateWrapper: routName=[" . $routName . "], paramArr=[" . implode(', ', $paramArr) . "]");
-        } else {
-            $logger->notice("routerGenerateWrapper: routName=[" . $routName . "]");
-        }
+//        if (is_array($paramArr) && count($paramArr) > 0) {
+//            $logger->notice("routerGenerateWrapper: routName=[" . $routName . "], paramArr=[" . implode(', ', $paramArr) . "]");
+//        } else {
+//            $logger->notice("routerGenerateWrapper: routName=[" . $routName . "]");
+//        }
 
         $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
         if (!$connectionChannel) {
@@ -1682,12 +1682,12 @@ class UserTenantUtil
             $paramArr,
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
-        $logger->notice("1 routerGenerateWrapper: pageUrl=[" . $pageUrl . "]");
+        //$logger->notice("1 routerGenerateWrapper: pageUrl=[" . $pageUrl . "]");
 
         //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
         //// replace tenant base in $pageUrl //////
         $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
-        $logger->notice("routerGenerateWrapper: tenantUrlBase=[" . $tenantUrlBase . "]");
+        //$logger->notice("routerGenerateWrapper: tenantUrlBase=[" . $tenantUrlBase . "]");
         if (str_contains($pageUrl, $tenantUrlBase) === false) {
             //$pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
             //$logger->notice("1a routerGenerateWrapper: pageUrl=[".$pageUrl."]");
@@ -1703,7 +1703,7 @@ class UserTenantUtil
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
         }
-        $logger->notice("2 routerGenerateWrapper: pageUrl=[" . $pageUrl . "]");
+        //$logger->notice("2 routerGenerateWrapper: pageUrl=[" . $pageUrl . "]");
 
         return $pageUrl;
     }
