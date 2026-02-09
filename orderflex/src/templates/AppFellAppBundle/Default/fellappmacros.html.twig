@@ -129,29 +129,17 @@
                 {% if cycle == "download" %}
                     {#{% set avatarPath = fellapp.avatars|last.getAbsoluteUploadFullPath("medium") %}#}
                     {% set lastAvatar = fellapp.avatars|last %}
-                    {#{% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,"medium") %}#}
                     {% set altTitle = "Avatar "~lastAvatar.getOriginalnameClean %}
-                    {#avatarPath={{ avatarPath }}<br>#}
-                    {#altTitle={{ altTitle }}#}
-                    {#not working: avatarPath=https://localhost/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg#}
-                    {#working: {% set avatarPath='http://path-view-test.wustl.edu/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg' %}#}
-                    {#{% set avatarPath='http://127.0.0.1/c/demo-institution/demo-department/Uploaded/fellapp/documents/69867df55f467.jpeg' %}#}
-                    {#avatarPath2={{ avatarPath }}<br>#}
 
                     {#Original#}
+                    {#{% set avatarPath = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,"medium") %}#}
                     {#<img src="{{ avatarPath }}"#}
                          {#alt="{{ altTitle }}"#}
                          {#style="max-width: 250px;"#}
                     {#>#}
 
-                    {#<img#}
-                        {#src="{{ url('fellapp_file_view', { id: lastAvatar.id }) }}"#}
-                        {#alt="{{ altTitle }}"#}
-                        {#style="max-width: 250px;"#}
-                    {#>#}
                     {% set relativeAvatarPath = lastAvatar.getAssetRelativePath() %}
-                    relativeAvatarPath={{ relativeAvatarPath }}
-                    {#68dec8e514b6c.jpg#}
+                    {#relativeAvatarPath={{ relativeAvatarPath }}#}
                     {#{% set relativeAvatarPath = 'Uploaded/fellapp/documents/69867df55f467.jpeg' %}#}
                     <img
                         src="{{ asset(relativeAvatarPath) }}"
