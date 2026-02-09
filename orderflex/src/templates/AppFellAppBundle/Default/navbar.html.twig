@@ -68,7 +68,8 @@
                         </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}
+                    {#{% if is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') %}#}
+                    {% if fellapp_util.hasPublicApplicantRole() %}
                         <li id="nav-bar-myapplications" class="divider-vertical">
                             <a href="{{ path('fellapp_myapplications') }}">
                                 My Applications

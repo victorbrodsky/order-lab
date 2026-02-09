@@ -1235,7 +1235,7 @@ class FellAppUtil {
         if( !$user ) {
             $user = $this->security->getUser();
         }
-        if (in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
+        if($user && in_array('ROLE_FELLAPP_PUBLIC_SUBMITTER', $user->getRoles(), true)) {
             return true;
         }
         return false;
