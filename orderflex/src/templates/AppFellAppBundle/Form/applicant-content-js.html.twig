@@ -220,18 +220,18 @@
                 if (fellowshipSubspecialty.length) {
                     console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
                     fellowshipSpecialtyListener(fellowshipSubspecialty);
-//            var initFellowshipSub = fellowshipSubspecialty.val();
-//            if( initFellowshipSub ) {
-//                updateScreeningQuestionsVisibility(initFellowshipSub);
-//            }
+                    var initFellowshipSub = fellowshipSubspecialty.val();
+                    if( initFellowshipSub ) {
+                        updateScreeningQuestionsVisibility(initFellowshipSub);
+                    }
                 }
                 if (globalFellowshipSpecialty.length) {
                     console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
                     fellowshipSpecialtyListener(globalFellowshipSpecialty);
-//            var initGlobalFell = globalFellowshipSpecialty.val();
-//            if( initGlobalFell ) {
-//                updateScreeningQuestionsVisibility(initGlobalFell);
-//            }
+                    var initGlobalFell = globalFellowshipSpecialty.val();
+                    if( initGlobalFell ) {
+                        updateScreeningQuestionsVisibility(initGlobalFell);
+                    }
                 }
 //            }
         }
@@ -277,22 +277,24 @@
         if (hasScreening) {
             console.log("Show fellowship-screening-questions");
 
-            // Find the collapsible body that contains the screening questions
-            var screeningCollapse = $('#fellowship-screening-questions').closest('.panel-collapse');
-            if (!screeningCollapse.length) {
-                // Fallback: use the panel itself if no .panel-collapse wrapper is present
-                screeningCollapse = panel;
-            }
+//            // Find the collapsible body that contains the screening questions
+//            var screeningCollapse = $('#fellowship-screening-questions').closest('.panel-collapse');
+//            if (!screeningCollapse.length) {
+//                // Fallback: use the panel itself if no .panel-collapse wrapper is present
+//                screeningCollapse = panel;
+//            }
 
             // Collapse all other sections except the screening questions section
-            $('.panel-collapse').not(screeningCollapse).collapse('hide');
+//            $('.panel-collapse').not(screeningCollapse).collapse('hide');
 
             // Ensure the screening section itself is expanded and visible
-            if (screeningCollapse.hasClass('collapse')) {
-                screeningCollapse.collapse('show');
-            } else {
-                panel.show();
-            }
+//            if (screeningCollapse.hasClass('collapse')) {
+//                screeningCollapse.collapse('show');
+//            } else {
+//                panel.show();
+//            }
+
+            panel.show();
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
             }
@@ -692,12 +694,12 @@
         }).fail(function() {
             //_formnode[identifier] = null;
             console.log("render ScreeningQuestions: Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
-            alert("render ScreeningQuestions: Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
+            //alert("render ScreeningQuestions: Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
         }).done(function() {
             console.log("render ScreeningQuestions: ajax done");
             _formnodeProcessing = false;
         });
-        console.log('render ScreeningQuestions: after ajax');
+//        console.log('render ScreeningQuestions: after ajax');
     }
 
 </script>
