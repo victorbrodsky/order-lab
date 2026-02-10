@@ -3283,7 +3283,12 @@ class FellAppController extends OrderAbstractController {
 //        ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
-        if( false == $this->isGranted("read","FellowshipApplication") ){
+
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        if( false == $this->isGranted("read","FellowshipApplication") &&
+            false == $fellappUtil->hasPublicApplicantRole() //plus check ROLE_FELLAPP_PUBLIC_SUBMITTER
+        ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
        
@@ -3300,8 +3305,6 @@ class FellAppController extends OrderAbstractController {
             $institution = $fellowshipSubspecialty->getInstitution();
             $institutionNameFellappName = $institution." ".$fellowshipSubspecialty." ";
         }
-        
-        $fellappUtil = $this->container->get('fellapp_util');
 
         if(0) {
             //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
