@@ -502,6 +502,7 @@
         //captcha validation
         const captchaResponse = grecaptcha.getResponse();
         if (!captchaResponse) {
+            console.log('invalid captchaResponse');
             e.preventDefault();
 
             $('.invalid-captcha')
