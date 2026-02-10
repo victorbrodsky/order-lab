@@ -503,7 +503,7 @@
         const captchaResponse = grecaptcha.getResponse();
         if (!captchaResponse) {
             console.log('invalid captchaResponse');
-            e.preventDefault();
+            //e.preventDefault();
 
             $('.invalid-captcha')
                     .text('Captcha is required')
@@ -518,7 +518,8 @@
         }
 
 
-        //console.log('error='+error);
+        console.log('error='+error);
+        return false;
 
         if( error ) {
             $('#error-box').html(error);
