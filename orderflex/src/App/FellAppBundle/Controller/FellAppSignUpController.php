@@ -89,7 +89,7 @@ class FellAppSignUpController extends SignUpController
     #[Route(path: '/account-activation', name: 'fellapp_account_activation', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
     {
-        return parent::forgotPasswordAction($request, 'ORDER Account Activation');
+        return parent::forgotPasswordAction($request);
     }
 
     /**

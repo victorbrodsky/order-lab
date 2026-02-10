@@ -1021,7 +1021,7 @@ class SignUpController extends OrderAbstractController
      */
     #[Route(path: '/forgot-password', name: 'employees_forgot_password', methods: ['GET', 'POST'])]
     #[Route(path: '/account-activation', name: 'employees_account_activation', methods: ['GET', 'POST'])]
-    public function forgotPasswordAction(Request $request, $title=NULL)
+    public function forgotPasswordAction(Request $request)
     {
         //exit('Not Implemented Yet');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1187,8 +1187,10 @@ class SignUpController extends OrderAbstractController
             $captchaSiteKey = null;
         }
 
-        if( !$title ) {
-            $title = "ORDER Password Reset";
+        $title = "ORDER Password Reset";
+        $routeName = $request->get('_route');
+        if (strpos($routeName, 'account_activation') !== false) {
+            $title = "ORDER Account Activation";
         }
 
         return $this->render('AppUserdirectoryBundle/SignUp/forgot-password.html.twig', array(
