@@ -3673,7 +3673,7 @@ class FellAppUtil {
 
         if( $sendSignUpEmail ) {
             $resetPasswordUrl = $userTenantUtil->routerGenerateExternalChanelWrapper(
-                'employees_forgot_password'
+                'fellapp_account_activation'
             );
             $resetPasswordLink = '<a href="'.$resetPasswordUrl.'">'.$resetPasswordUrl.'</a>';
             $body = $body."<br><br>".
