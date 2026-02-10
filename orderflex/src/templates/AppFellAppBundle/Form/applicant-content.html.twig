@@ -291,7 +291,9 @@
                     {{ form_widget(form.recaptcha) }}
                     <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
                 </p>
-                {{ form_errors(form.recaptcha) }}
+                <div class="invalid-captcha" style="color: red;">
+                    {{ form_errors(form.recaptcha) }}
+                </div>
             </div>
         {% endif %}
     {% endif %}

@@ -499,6 +499,22 @@
             error = "Please enter today’s date into the ‘Date’ field next to the ‘Signature’ field.";
         }
 
+        //captcha validation
+        const captchaResponse = grecaptcha.getResponse();
+        if (!captchaResponse) {
+            e.preventDefault();
+
+            $('.invalid-captcha')
+                    .text('Captcha is required')
+                    .css('color', 'red')
+                    .show();
+
+            $('html, body').animate({
+                scrollTop: $('.invalid-captcha').offset().top - 150
+            }, 600);
+        }
+
+
         //console.log('error='+error);
 
         if( error ) {
