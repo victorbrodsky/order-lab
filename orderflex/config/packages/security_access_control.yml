@@ -78,6 +78,7 @@ security:
        - { path: ^.*/directory/activate-account, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/forgot-password, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/account-activation, role: PUBLIC_ACCESS }
 
        - { path: ^.*/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
        - { path: ^.*/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
@@ -147,6 +148,7 @@ security:
        - { path: ^.*/fellowship-applications/activate-account, role: PUBLIC_ACCESS }
        - { path: ^.*/fellowship-applications/forgot-password, role: PUBLIC_ACCESS }
        - { path: ^.*/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/account-activation, role: PUBLIC_ACCESS }
   #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
 
        - { path: ^.*/fellowship-applications/apply, role: PUBLIC_ACCESS }

@@ -84,6 +84,7 @@ class FellAppSignUpController extends SignUpController
         return parent::deleteAction($request,$signUp);
     }
 
+    //fellapp_account_activation is to initialize newly created account
     #[Route(path: '/forgot-password', name: 'fellapp_forgot_password', methods: ['GET', 'POST'])]
     #[Route(path: '/account-activation', name: 'fellapp_account_activation', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
