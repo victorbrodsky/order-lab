@@ -462,6 +462,24 @@
             error = "Please fill in your email address before submitting";
         }
 
+        //captcha validation
+        const captchaResponse = grecaptcha.getResponse();
+        if (!captchaResponse) {
+            console.log('invalid captchaResponse');
+            //e.preventDefault();
+
+            $('.invalid-captcha')
+                    .text('Captcha is required')
+                    .css('color', 'red')
+                    .show();
+
+            $('html, body').animate({
+                scrollTop: $('.invalid-captcha').offset().top - 150
+            }, 600);
+
+            error = "Captcha is required";
+        }
+
         //We will have to create a new user for the draft submission,
         //therefore we will need minimum fields:
         //First Name, Last Name, E-Mail address, Phone number, Captcha answer, Fellowship Institution, Fellowship Department, Fellowship Specialty
@@ -499,27 +517,7 @@
             error = "Please enter today’s date into the ‘Date’ field next to the ‘Signature’ field.";
         }
 
-        //captcha validation
-        const captchaResponse = grecaptcha.getResponse();
-        if (!captchaResponse) {
-            console.log('invalid captchaResponse');
-            //e.preventDefault();
-
-            $('.invalid-captcha')
-                    .text('Captcha is required')
-                    .css('color', 'red')
-                    .show();
-
-            $('html, body').animate({
-                scrollTop: $('.invalid-captcha').offset().top - 150
-            }, 600);
-
-            error = "Captcha is required";
-        }
-
-
-        console.log('error='+error);
-        return false;
+        //console.log('error='+error);
 
         if( error ) {
             $('#error-box').html(error);
