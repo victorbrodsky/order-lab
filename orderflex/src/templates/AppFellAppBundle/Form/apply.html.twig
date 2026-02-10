@@ -295,6 +295,7 @@
             //scrolls the page to captcha error triggered by controller
             const $error = $('.invalid-captcha');
             if ($error.length) {
+                console.log('captcha error');
                 $('html, body').animate({
                     scrollTop: $error.offset().top - 150
                 }, 600);
