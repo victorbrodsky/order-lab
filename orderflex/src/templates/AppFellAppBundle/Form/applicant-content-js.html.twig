@@ -198,13 +198,80 @@
         $('#cancelDraftBtn').on('click', function() {
             $('#confirmDraftModal').modal('hide');
         });
-        //Submit draft if user exists
-        $('#submitDrafUserExistBtn').on('click', function() {
-            $('#confirmDraftUserExistModal').modal('hide');
-            $('#fellapp-applicant-form').submit(); // proceed with actual submission
+        // Populate and handle authentication modal for existing user when saving draft
+        $('#confirmDraftUserExistModal').on('show.bs.modal', function () {
+            var email = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
+            $('.submitterEmailDisplay').text(email || '[email not set]');
+            $('#fellapp-auth-email').val(email || '');
+            $('#fellapp-auth-password').val('');
+            $('#fellapp-auth-error').hide().text('');
         });
-        $('#cancelDraftUserExistBtn').on('click', function() {
+
+        // Change email address: close modal and focus email field on main form
+        $('#fellapp-auth-change-email-btn').on('click', function() {
             $('#confirmDraftUserExistModal').modal('hide');
+            var emailField = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email');
+            if (emailField.length) {
+                emailField.focus();
+            }
+        });
+
+        // Send password reset email: redirect to standard forgot-password page
+        $('#fellapp-auth-reset-password-btn').on('click', function() {
+            var email = $('#fellapp-auth-email').val();
+            if (!email) {
+                $('#fellapp-auth-error').text('E-mail address is empty. Please update it in the form above.').show();
+                return;
+            }
+            // Redirect user to the Forgot Password page where they can request a reset
+            var resetUrl = Routing.generate('employees_forgot_password');
+            window.open(resetUrl, '_blank');
+        });
+
+        // Helper to authenticate and then submit as draft or submit
+        function fellappAuthLogin(targetAction) {
+            var username = $('#fellapp-auth-email').val();
+            var token = $('#fellapp-auth-password').val();
+            var error = 'User name / password combination not accepted. Please try again.';
+
+            if (!token) {
+                $('#fellapp-auth-error').text('Please enter your password.').show();
+                return;
+            }
+
+            var url = Routing.generate('employees_authenticate_username');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                type: 'POST',
+                async: asyncflag,
+                data: { username: username, token: token }
+            }).success(function (data) {
+                if (data == 'OK') {
+                    $('#fellapp-auth-error').hide().text('');
+                    $('#confirmDraftUserExistModal').modal('hide');
+
+                    if (targetAction === 'draft') {
+                        $('#btnSubmitHidden').val('fellapp-draft');
+                    } else if (targetAction === 'submit') {
+                        $('#btnSubmitHidden').val('fellapp-submit');
+                    }
+
+                    $('#fellapp-applicant-form').submit();
+                } else {
+                    $('#fellapp-auth-error').text(error).show();
+                }
+            }).fail(function () {
+                $('#fellapp-auth-error').text(error).show();
+            });
+        }
+
+        // Login buttons: authenticate then save as draft or submit
+        $('#fellapp-auth-login-draft-btn').on('click', function() {
+            fellappAuthLogin('draft');
+        });
+        $('#fellapp-auth-login-submit-btn').on('click', function() {
+            fellappAuthLogin('submit');
         });
 
         //Initiliaze updateScreeningQuestionsVisibility
@@ -463,21 +530,25 @@
         }
 
         //captcha validation
-        const captchaResponse = grecaptcha.getResponse();
-        if (!captchaResponse) {
-            console.log('invalid captchaResponse');
-            //e.preventDefault();
+        console.log('before captchaResponse');
+        if( $('#recaptcha').length > 0 ) {
+            console.log('before captchaResponse');
+            const captchaResponse = grecaptcha.getResponse();
+            if (!captchaResponse) {
+                console.log('invalid captchaResponse');
+                //e.preventDefault();
 
-            $('.invalid-captcha')
-                    .text('Captcha is required')
-                    .css('color', 'red')
-                    .show();
+                $('.invalid-captcha')
+                        .text('Captcha is required')
+                        .css('color', 'red')
+                        .show();
 
-            $('html, body').animate({
-                scrollTop: $('.invalid-captcha').offset().top - 150
-            }, 600);
+                $('html, body').animate({
+                    scrollTop: $('.invalid-captcha').offset().top - 150
+                }, 600);
 
-            error = "Captcha is required";
+                error = "Captcha is required";
+            }
         }
 
         //We will have to create a new user for the draft submission,

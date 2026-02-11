@@ -719,13 +719,42 @@
                     >Authentication for an existing user account associated with the provided email address</h4>
                 </div>
                 <div class="modal-body">
-                    The email address <span class="submitterEmailDisplay">[email not set]</span> provided
-                    in the application form above matches the email address of a previously registered user account.
-                    Please enter the password associated with this email address to proceed with submission
-                    or saving a draft application. Alternatively, you can request the password reset
-                    email or enter a different email address.
+                    <p>
+                        The email address <span class="submitterEmailDisplay">[email not set]</span> provided
+                        in the application form above matches the email address of a previously registered user account.
+                        Please enter the password associated with this email address to proceed with submission
+                        or saving a draft application. Alternatively, you can request the password reset
+                        email or enter a different email address.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="fellapp-auth-email">E-Mail Address:</label>
+                        <div class="input-group">
+                            <input type="email" id="fellapp-auth-email" class="form-control" readonly>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" id="fellapp-auth-change-email-btn">Change the email address</button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fellapp-auth-password">Password:</label>
+                        <div class="input-group">
+                            <input type="password" id="fellapp-auth-password" class="form-control">
+                            {#<span class="input-group-btn">#}
+                                {#<button type="button" class="btn btn-default" id="fellapp-auth-reset-password-btn">#}
+                                    {#Send me the password reset email at <span class="submitterEmailDisplay">[email not set]</span>#}
+                                {#</button>#}
+                            {#</span>#}
+                        </div>
+                    </div>
+
+                    <div id="fellapp-auth-error" class="alert alert-danger" style="display:none;"></div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="fellapp-auth-login-draft-btn">Log in and save as draft</button>
+                    {#<button type="button" class="btn btn-warning" id="fellapp-auth-login-submit-btn">Log in and submit</button>#}
+                    <button type="button" class="btn btn-default" id="cancelDraftUserExistBtn" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>

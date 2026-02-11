@@ -736,6 +736,50 @@ class SecurityController extends OrderAbstractController
         return $response;
     }
 
+    #[Route(path: '/authenticate-username', name: 'employees_authenticate_username', methods: ['GET', 'POST'], options: ['expose' => true])]
+    public function authenticateUsernameAction( Request $request ) {
+        $user = $this->getUser();
+
+        $res = "NOTOK";
+
+        $password = $request->get('token');
+        //echo "password=".$password."<br>";
+
+        if( $user && $user instanceof User ) {
+            $username = $user->getUsername();
+        } else {
+            $username = $request->get('username');
+        }
+
+        if( $username && $password ) {
+            //create token
+            $providerKey = 'ldap_employees_firewall'; //'ldap_fellapp_firewall'; //firewall name, or here, anything
+            $usernametype = NULL;
+
+            //$token = new UsernamePasswordToken($username, $password, $providerKey);
+            $token = new CustomUsernamePasswordToken(
+                $username,
+                $password,
+                $usernametype,
+                $providerKey
+            );
+
+            //$authUtil = new AuthUtil($this->container,$em);
+            $authUtil = $this->container->get('authenticator_utility');
+
+            $authUSer = $authUtil->authenticateUserToken($user, $token);
+
+            if ($authUSer) {
+                $res = "OK";
+            }
+        }
+
+        //echo "res=".$res."<br>";
+        $response = new Response();
+        $response->setContent($res);
+        return $response;
+    }
+
     #[Route(path: '/currently-logged-in-users/', name: 'employees_currently_logged_in_users', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/loggedin_users.html.twig')]
     public function currentlyLoggedInUsersAction( Request $request )

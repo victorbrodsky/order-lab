@@ -285,7 +285,7 @@
     {#route_path={{ route_path }}#}
     {% if route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post' %}
         {% if captchaSiteKey is defined and captchaSiteKey and form.recaptcha is defined %}
-            <div class="col-xs-12 text-center">
+            <div id="recaptcha" class="col-xs-12 text-center">
                 <p>
                     {#{{ form_row(form.recaptcha) }}#}
                     {{ form_widget(form.recaptcha) }}

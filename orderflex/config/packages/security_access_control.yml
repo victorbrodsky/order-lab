@@ -79,6 +79,7 @@ security:
        - { path: ^.*/directory/forgot-password, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/reset-password, role: PUBLIC_ACCESS }
        - { path: ^.*/directory/account-activation, role: PUBLIC_ACCESS }
+       - { path: ^.*/directory/authenticate-username, role: PUBLIC_ACCESS }
 
        - { path: ^.*/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
        - { path: ^.*/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
