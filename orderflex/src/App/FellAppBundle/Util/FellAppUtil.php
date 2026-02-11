@@ -1470,8 +1470,23 @@ class FellAppUtil {
             $logger = $this->container->get('logger');
             $logger->notice("getNameInstitution: $fellowshipSpecialty does not have institution");
         }
-        return $this->getNameFromInstitution($institution,$uppercase);
+        return $this->getAbbreviationFromInstitution($institution,$uppercase);
     }
+    //return institution Weill Cornell Medicine
+    public function getAbbreviationFromInstitution( $institution, $uppercase=true ) {
+        //$logger = $this->container->get('logger');
+        $institutionRootAbbreviation = null;
+        if( $institution ) {
+            $institutionRootAbbreviation = $institution->getRootAbbreviation();
+            if( $uppercase && $institutionRootAbbreviation ) {
+                $institutionRootAbbreviation = strtoupper($institutionRootAbbreviation);
+            }
+        } else {
+            //$logger->notice("getNameFromInstitution: institution is NULL");
+        }
+        return $institutionRootAbbreviation;
+    }
+    //return institution Weill Cornell Medicine
     public function getNameFromInstitution( $institution, $uppercase=true ) {
         //$logger = $this->container->get('logger');
         $institutionRootAbbreviation = null;
@@ -1484,6 +1499,17 @@ class FellAppUtil {
             //$logger->notice("getNameFromInstitution: institution is NULL");
         }
         return $institutionRootAbbreviation;
+    }
+    //return department name ('Department of Pathology and Immunology')
+    public function getDepartmentNameFromInstitution( $institution, $uppercase=true ) {
+        $departmentName = null;
+        if( $institution ) {
+            $departmentName = $institution->getName();
+            if( $uppercase && $departmentName ) {
+                $departmentName = strtoupper($departmentName);
+            }
+        }
+        return $departmentName;
     }
 
     //Generic fell app user to submit the form without login.
@@ -3316,9 +3342,18 @@ class FellAppUtil {
 
     public function siteSettingsConstantReplace($str,$fellapp) {
 
+        //[[INSTITUTION]] [[DEPARTMENT]] template variables that would
+        // get populated by the full name of the institution and
+        // department respectively associated with the specific Fellowship Specialty
+        // “Weill Cornell Medicine” “Department of Pathology and Immunology”;
+        //  “Washington University School of Medicine in St. Louis” “Department of Pathology and Laboratory Medicine”)
+
+        //[[LOCAL INSTITUTION NAME]] - local institution name (same as 'Local Institution')
+        //[[INSTITUTION]] - Institution associated with specific Fellowship Specialty (use 'Local Institution' if empty)
+        //[[DEPARTMENT]] - Department associated with specific Fellowship Specialty (use 'Local Institution' if empty)
+
         $applicantFullName = $fellapp->getApplicantFullName();
         $fellappType = $fellapp->getFellowshipSubspecialty()."";
-        $inst = $fellapp->getInstitution();
         $startDate = $fellapp->getStartDate();
         if( $startDate ) {
             $startDateStr = $fellapp->getStartDate()->format('Y');
@@ -3327,23 +3362,41 @@ class FellAppUtil {
         }
 
         //Get institution from fellapp specialty
-        $fullInstName = NULL;
-        $localInstitutionName = NULL;
-        if( $inst ) {
-            $localInstitutionName = $this->getNameFromInstitution($inst);
-        }
-        if( !$localInstitutionName ) {
-            $userSecUtil = $this->container->get('user_security_utility');
-            $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution', $this->container->getParameter('fellapp.sitename'));
-            if (!$localInstitutionName) {
-                $localInstitutionName = "Institution";
-            }
-        }
-        if( $localInstitutionName ) {
-            $fullInstName = $localInstitutionName." ".$inst;
-        } else {
+        $localInstitutionName = NULL;   //[[LOCAL INSTITUTION NAME]]
+        $fellappInstName = NULL;        //[[INSTITUTION]] (Weill Cornell Medicine)
+        $fellappDepartmentName = NULL;  //[[DEPARTMENT]] (Department of Pathology and Immunology)
+
+        //[[LOCAL INSTITUTION NAME]]
+        $userSecUtil = $this->container->get('user_security_utility');
+        $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution', $this->container->getParameter('fellapp.sitename'));
+        if (!$localInstitutionName) {
             $localInstitutionName = "Institution";
         }
+
+        //[[INSTITUTION]] - Institution associated with specific Fellowship Specialty (use 'Local Institution' if empty)
+        $fellappInst = $fellapp->getInstitution();
+        if( $fellappInst ) {
+            $fellappInstName = $this->getNameFromInstitution($fellappInst); //getRootAbbreviation
+        }
+        if( !$fellappInstName ) {
+            $fellappInstName = $localInstitutionName;
+        }
+
+        //[[DEPARTMENT]] - Department associated with specific Fellowship Specialty (use 'Local Institution' if empty)
+        if( $fellappInst ) {
+            $fellappDepartmentName = $this->getDepartmentNameFromInstitution($fellappInst); //department name ('Pathology and Immunology')
+        }
+        if( !$fellappDepartmentName ) {
+            $fellappDepartmentName = "";
+        }
+
+//        if( $localInstitutionName ) {
+//            $fullInstName = $localInstitutionName." ".$fellappInst;
+//        } else {
+//            $localInstitutionName = "Institution";
+//        }
+
+        //$fullDepartmentName
 
         $interviewDateStr = "ENTER-THE-PROPOSED-INTERVIEW-DATE-HERE-MANUALLY-INSTEAD-OF-THIS-TEXT";
         $interviewDate = $fellapp->getInterviewDate();
@@ -3357,7 +3410,8 @@ class FellAppUtil {
         $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
         $str = str_replace("[[START YEAR]]",$startDateStr,$str);
         $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappType,$str);
-        $str = str_replace("[[INSTITUTION]]",$fullInstName,$str);
+        $str = str_replace("[[INSTITUTION]]",$fellappInstName,$str);
+        $str = str_replace("[[DEPARTMENT]]",$fellappDepartmentName,$str);
         $str = str_replace("[[DIRECTOR]]",$directorsStr,$str);
         $str = str_replace("[[INTERVIEW DATE]]",$interviewDateStr,$str);
 

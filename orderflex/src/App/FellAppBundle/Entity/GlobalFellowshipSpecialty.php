@@ -259,8 +259,6 @@ class GlobalFellowshipSpecialty extends ListAbstract
     //Clinical Informatics (WCM => Pathology)" becomes
     //"WCM Department of Pathology and Laboratory Medicine - Clinical Informatics
     public function getNameInstitution() {
-//        $institution = $this->getInstitution()->getNodeNameWithParent();
-        //$institution = $this->getInstitution()->getTreeAbbreviation();
         $name = $this->getName();
         $institution = null;
         if( $this->getInstitution() ) {
