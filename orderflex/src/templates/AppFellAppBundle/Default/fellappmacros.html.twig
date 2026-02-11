@@ -674,9 +674,9 @@
         </div>
     </div>
 {% endmacro %}
-{% macro confirmDraftUserExistModal() %}
+{% macro confirmDraftUserExistModal_orig() %}
     <!-- Confirmation Modal -->
-    <div class="modal fade" id="confirmDraftUserExistModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitLabel">
+    <div class="modal fade" id="confirmDraftUserExistModal_orig" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -709,3 +709,27 @@
         </div>
     </div>
 {% endmacro %}
+{% macro confirmDraftUserExistModal() %}
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmDraftUserExistModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="confirmSubmitLabel"
+                    >Authentication for an existing user account associated with the provided email address</h4>
+                </div>
+                <div class="modal-body">
+                    The email address <span class="submitterEmailDisplay">[email not set]</span> provided
+                    in the application form above matches the email address of a previously registered user account.
+                    Please enter the password associated with this email address to proceed with submission
+                    or saving a draft application. Alternatively, you can request the password reset
+                    email or enter a different email address.
+                </div>
+                <div class="modal-footer">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
