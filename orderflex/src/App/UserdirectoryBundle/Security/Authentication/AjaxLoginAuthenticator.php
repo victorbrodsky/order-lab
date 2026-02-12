@@ -136,6 +136,61 @@ class AjaxLoginAuthenticator extends CustomGuardAuthenticator
         return $credentials;
     }
 
+    //getUser is replaced by checkCredentials: it authenticate the user and set passwordToken if success,
+    // if LDAP user exists in LDAP but not in the system => authenticate and create LDAP user
+    public function getAuthUser($credentials) : mixed
+    {
+        //$logger = $this->container->get('logger');
+        //$logger->notice("getAuthUser: Start");
+
+        //dump($credentials);
+        //exit('getAuthUser');
+        //$logger->notice("getAuthUser: credentials['csrf_token']=".$credentials['csrf_token']);
+        //echo "credentials['csrf_token']=".$credentials['csrf_token']."<br>";
+
+//        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
+//        if (!$this->csrfTokenManager->isTokenValid($token)) {
+//            throw new InvalidCsrfTokenException();
+//        }
+
+        //Request $request, $username, $password, $providerKey
+        $request = null;
+        $username = $credentials['username'];
+        $password = $credentials['password']; //plain password
+        $usernametype = $credentials['usernametype'];
+
+        //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
+        $providerKey = 'ldap_employees_firewall';
+        //public function __construct(UserInterface $user, string $firewallName, array $roles = [])
+    //        $unauthenticatedToken = new UsernamePasswordToken(
+    //            $username,
+    //            $password,
+    //            $providerKey
+    //        );
+
+        //$logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username, usernametype=$usernametype");
+
+        $unauthenticatedToken = new CustomUsernamePasswordToken(
+            $username,      //username
+            $password,
+            $usernametype,
+            $providerKey
+        );
+
+        $usernamePasswordToken = $this->authenticateToken($unauthenticatedToken,$providerKey);
+        if( $usernamePasswordToken ) {
+            $this->passwordToken = $usernamePasswordToken;
+            $user = $usernamePasswordToken->getUser();
+            //$logger->notice("getAuthUser: User=".$user);
+            //exit('return user='.$user);
+            return $user;
+        }
+
+        //$logger->notice("getAuthUser: User not found");
+        $this->passwordToken = NULL;
+        return NULL;
+    }
+
 //    //getUser is replaced by checkCredentials: it authenticate the user and set passwordToken if success,
 //    // if LDAP user exists in LDAP but not in the system => authenticate and create LDAP user
 //    public function getAuthUser($credentials) : mixed
