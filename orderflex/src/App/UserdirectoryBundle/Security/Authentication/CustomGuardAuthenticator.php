@@ -461,7 +461,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            $providerKey
 //        );
 
-        $logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username");
+        $logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username, usernametype=$usernametype");
 
         $unauthenticatedToken = new CustomUsernamePasswordToken(
             $username,      //username

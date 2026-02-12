@@ -752,14 +752,15 @@ class SecurityController extends OrderAbstractController
             $username = $request->get('username');
         }
 
+        $usernametype = 'local-user';
+
         $logger = $this->container->get('logger');
-        $logger->notice("authenticateUsernameAction: username=$username, password=$password");
+        $logger->notice("authenticateUsernameAction: username=$username, password=$password, usernametype=$usernametype");
 
         if( $username && $password ) {
             //create token
             $providerKey = 'ldap_employees_firewall'; //'ldap_fellapp_firewall'; //firewall name, or here, anything
             //$usernametype = NULL; //'local-user'
-            $usernametype = 'local-user';
 
             //$token = new UsernamePasswordToken($username, $password, $providerKey);
             $token = new CustomUsernamePasswordToken(
