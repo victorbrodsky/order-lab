@@ -433,8 +433,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     // if LDAP user exists in LDAP but not in the system => authenticate and create LDAP user
     public function getAuthUser($credentials) : mixed
     {
-        $logger = $this->container->get('logger');
-        $logger->notice("getAuthUser: Start");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("getAuthUser: Start");
 
         //dump($credentials);
         //exit('getAuthUser');
@@ -461,7 +461,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            $providerKey
 //        );
 
-        $logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username, usernametype=$usernametype");
+        //$logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username, usernametype=$usernametype");
 
         $unauthenticatedToken = new CustomUsernamePasswordToken(
             $username,      //username
@@ -474,12 +474,12 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         if( $usernamePasswordToken ) {
             $this->passwordToken = $usernamePasswordToken;
             $user = $usernamePasswordToken->getUser();
-            $logger->notice("getAuthUser: User=".$user);
+            //$logger->notice("getAuthUser: User=".$user);
             //exit('return user='.$user);
             return $user;
         }
 
-        $logger->notice("getAuthUser: User not found");
+        //$logger->notice("getAuthUser: User not found");
         $this->passwordToken = NULL;
         return NULL;
     }
