@@ -6487,7 +6487,7 @@ tracepoint:sched:sched_process_exit
     //http://view.online/c/wcm/pathology/Uploaded/directory/avatars/avatar/20240708194741.jpeg
     //Here in service, we can get the full url prefix 'http://view.online/c/wcm/pathology' using router
     public function getDocumentAbsoluteUrl( $document, $size=null, $onlyResize=false, $useRealScheme=true ) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         $baseUrl = $this->container->get('router')->generate(
             'main_common_home',
@@ -6510,7 +6510,7 @@ tracepoint:sched:sched_process_exit
 
         $url = $baseUrl . '/' . $document->getUploadDirectory() . '/' . $uniquename;
         //echo '$url='.$url."<br>";
-        $logger->notice('getDocumentAbsoluteUrl: url1='.$url);
+        //$logger->notice('getDocumentAbsoluteUrl: url1='.$url);
 
         if( $onlyResize == false ) {
             if ($size) {
@@ -6521,7 +6521,7 @@ tracepoint:sched:sched_process_exit
                     //echo "The file $path does not exists <br>";
                     //exit("The file $src does not exists");
                     $url = $this->getDocumentAbsoluteUrl($document);
-                    $logger->notice('getDocumentAbsoluteUrl: url2='.$url);
+                    //$logger->notice('getDocumentAbsoluteUrl: url2='.$url);
                 }
             } else {
                 //echo "Size is null <br>";
@@ -6531,9 +6531,9 @@ tracepoint:sched:sched_process_exit
         if( $useRealScheme ) {
             $userUtil = $this->container->get('user_utility');
             $url = $userUtil->getRealSchemeUrl($url);
-            $logger->notice('getDocumentAbsoluteUrl: url3='.$url);
+            //$logger->notice('getDocumentAbsoluteUrl: url3='.$url);
         }
-        $logger->notice('getDocumentAbsoluteUrl: url4='.$url);
+        //$logger->notice('getDocumentAbsoluteUrl: url4='.$url);
 
         //echo 'return $url='.$url."<br>";
         //exit('return $url='.$url);
