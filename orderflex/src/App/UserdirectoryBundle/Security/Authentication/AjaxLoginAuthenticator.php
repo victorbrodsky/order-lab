@@ -131,6 +131,7 @@ class AjaxLoginAuthenticator extends CustomGuardAuthenticator
             'csrf_token' => $request->request->get('_csrf_token'),
             'lastRoute' => ''
         ];
+        return $credentials;
     }
 
 //    //getUser is replaced by checkCredentials: it authenticate the user and set passwordToken if success,
