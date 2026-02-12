@@ -29,10 +29,13 @@ class AjaxLoginAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
+        $logger = $this->container->get('logger');
+        $logger->notice('AjaxLoginAuthenticator authenticate: start');
         $data = json_decode($request->getContent(), true);
 
         $username = $data['username'] ?? null;
         $password = $data['password'] ?? null;
+        $logger->notice("AjaxLoginAuthenticator authenticate: username=$username, password=$password");
 
         if (!$username || !$password) {
             throw new AuthenticationException('Missing credentials');
