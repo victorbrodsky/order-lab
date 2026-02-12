@@ -21,6 +21,10 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+
+
 
 //class AjaxLoginAuthenticator extends AbstractAuthenticator
 class AjaxLoginAuthenticator extends CustomGuardAuthenticator
@@ -36,6 +40,32 @@ class AjaxLoginAuthenticator extends CustomGuardAuthenticator
 //        $this->container = $container;
 //        $this->csrfTokenManager = $csrfTokenManager;
 //    }
+
+    //private $encoder;
+    private $container;
+    private $em;
+    private $security;
+    private $csrfTokenManager;
+    private $sitename;
+    private $userProvider;
+    private $passwordToken;
+    //private $credentials;
+    private $usernametype = null;
+
+    public function __construct(
+        ContainerInterface $container,
+        EntityManagerInterface $em,
+        Security $security=null,
+        CsrfTokenManagerInterface $csrfTokenManager=null,
+    )
+    {
+        //$this->encoder = $encoder;
+        $this->container = $container;                //Service Container
+        $this->em = $em;                //Entity Manager
+        $this->security = $security;
+        $this->csrfTokenManager = $csrfTokenManager;
+        $this->passwordToken = NULL;
+    }
 
     //public function supports(Request $request): ?bool
     public function supports(Request $request) : bool
