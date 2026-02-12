@@ -7,6 +7,15 @@ security:
 
     firewalls:
 
+        ajax_login_firewall:
+            #pattern: ^/ajax/login$
+            pattern: ^.*/directory/ajax/login$
+            stateless: false
+            provider: users
+            custom_authenticators:
+                - App\UserdirectoryBundle\Security\Authentication\AjaxLoginAuthenticator
+
+
         #{tenantprefix}/ %tenantprefix%
         #this firewall name must be the same as in the bundle's service.yml.
         external_ldap_firewall:

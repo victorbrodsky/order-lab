@@ -37,6 +37,7 @@ use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 //use Symfony\Component\HttpFoundation\Session\Session;
 //use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
@@ -779,11 +780,11 @@ class SecurityController extends OrderAbstractController
             //$authUtil = new AuthUtil($this->container,$em);
             $authUtil = $this->container->get('authenticator_utility');
 
-            //$authUSer = $authUtil->authenticateUserToken($user, $token);
-            $usernamePasswordToken = $authUtil->authenticateToken($token,$providerKey);
+            $authUser = $authUtil->authenticateUserToken($user, $token);
+            //$usernamePasswordToken = $authUtil->authenticateToken($token,$providerKey);
 
-            if( $usernamePasswordToken ) {
-                $user = $usernamePasswordToken->getUser();
+            if( $authUser ) {
+                $user = $authUser->getUser();
                 $logger->notice("authenticateUsernameAction: User=".$user);
                 $res = "OK";
             }
@@ -793,6 +794,15 @@ class SecurityController extends OrderAbstractController
         $response = new Response();
         $response->setContent($res);
         return $response;
+    }
+
+    //Testing ajax authentication
+    #[Route('/ajax/login', name: 'employees_ajax_login', methods: ['POST'], options: ['expose' => true])]
+    public function ajaxLogin(): JsonResponse
+    {
+        // This controller will never run if authentication succeeds.
+        // It only runs if authentication is NOT triggered.
+        return new JsonResponse(['error' => 'Authenticator not triggered'], 400);
     }
 
     #[Route(path: '/currently-logged-in-users/', name: 'employees_currently_logged_in_users', methods: ['GET'])]

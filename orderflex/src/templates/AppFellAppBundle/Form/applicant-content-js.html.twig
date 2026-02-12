@@ -256,7 +256,7 @@
         });
 
         // Helper to authenticate and then submit as draft or submit
-        function fellappAuthLogin(targetAction) {
+        function fellappAuthLogin_ORIG(targetAction) {
             var username = $('#fellapp-auth-email').val();
             var token = $('#fellapp-auth-password').val();
             var error = 'User name / password combination not accepted. Please try again.';
@@ -291,7 +291,35 @@
             }).fail(function () {
                 $('#fellapp-auth-error').text(error).show();
             });
-        } 
+        } //fellappAuthLogin
+        async function fellappAuthLogin(targetAction) {
+            //const username = document.querySelector('#username').value;
+            //const password = document.querySelector('#password').value;
+            const username = $('#fellapp-auth-email').val();
+            const password = $('#fellapp-auth-password').val();
+
+            var url = Routing.generate('employees_ajax_login');
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+
+            const result = await response.json();
+
+            if (result.authenticated) {
+                // Now submit the real form
+                //document.querySelector('#real-form').submit();
+                if (targetAction === 'draft') {
+                    $('#btnSubmitHidden').val('fellapp-draft');
+                } else if (targetAction === 'submit') {
+                    $('#btnSubmitHidden').val('fellapp-submit');
+                }
+            } else {
+                alert('Invalid credentials');
+            }
+        }
 
         // Login buttons: authenticate then save as draft or submit
         $('#fellapp-auth-login-draft-btn').on('click', function() {
