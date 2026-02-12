@@ -750,6 +750,7 @@ class SecurityController extends OrderAbstractController
             $username = $user->getUsername();
         } else {
             $username = $request->get('username');
+            $username = $username . '_@_local-user';
         }
 
         $usernametype = 'local-user';
