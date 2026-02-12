@@ -1019,7 +1019,7 @@ class SignUpController extends OrderAbstractController
     /**
      * http://localhost/order/directory/forgot-password
      */
-    #[Route(path: '/forgot-password', name: 'employees_forgot_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/forgot-password', name: 'employees_forgot_password', methods: ['GET', 'POST'], options: ['expose' => true])]
     #[Route(path: '/account-activation', name: 'employees_account_activation', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
     {

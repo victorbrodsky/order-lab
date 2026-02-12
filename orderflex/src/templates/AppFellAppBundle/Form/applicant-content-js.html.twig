@@ -204,6 +204,7 @@
             var email = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
             $('.submitterEmailDisplay').text(email || '[email not set]');
             $('#fellapp-auth-email').val(email || '');
+            $('#fellapp-auth-email').attr('readonly', true);
             $('#fellapp-auth-password').val('');
             $('#fellapp-auth-error').hide().text('');
 
@@ -219,10 +220,26 @@
         // Change email address: hide panel and focus email field on main form
         $('#fellapp-auth-change-email-btn').on('click', function() {
             $('#authentication-panel').hide();
+            // Open the Fellowship Applicant Data section if it is collapsible/hidden
+            var applicantPanel = $('#fellowshipApplicantData');
+            if (applicantPanel.length) {
+                // If using Bootstrap collapse, ensure it is shown
+                if (applicantPanel.hasClass('collapse')) {
+                    applicantPanel.collapse('show');
+                } else {
+                    applicantPanel.show();
+                }
+
+                // Scroll to the applicant data section so the user can edit the email
+                $('html, body').animate({
+                    scrollTop: applicantPanel.offset().top - 150
+                }, 600);
+            }
             var emailField = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email');
             if (emailField.length) {
                 emailField.focus();
             }
+            $('#save-submit-panel').show();
         });
 
         // Send password reset email: redirect to standard forgot-password page
@@ -621,12 +638,12 @@
         //You are about to submit your application for review.
         // You will not have access to edit your application after it is submitted.
         // Are you sure you would like to submit your application?
-        if( clickedButtonValue === 'active' ) {
-            // Prevent default submission and show modal
-            event.preventDefault();
-            $('#confirmSubmitModal').modal('show');
-            return false;
-        }
+//        if( clickedButtonValue === 'active' ) {
+//            // Prevent default submission and show modal
+//            event.preventDefault();
+//            $('#confirmSubmitModal').modal('show');
+//            return false;
+//        }
 
         //$('#fellapp-applicant-form').submit();
         return true;
