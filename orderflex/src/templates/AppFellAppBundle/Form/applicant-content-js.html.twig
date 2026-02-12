@@ -115,7 +115,7 @@
                 if( userExists === true ) {
                     //user exists
                     console.log('draft user exists');
-                    //$('#confirmDraftUserExistModal').modal('show');
+                    showAuthenticationPanel('draft');
                 } else if( userExists === false ) {
                     //user does not exist
                     console.log('draft user does not exist');
@@ -146,7 +146,7 @@
                 if( userExists === true ) {
                     //user exists
                     console.log('submit user exists');
-                    //$('#confirmSubmitUserExistModal').modal('show');
+                    showAuthenticationPanel('active');
                 } else if( userExists === false ) {
                     //user does not exist
                     console.log('submit user does not exist');
@@ -198,18 +198,27 @@
         $('#cancelDraftBtn').on('click', function() {
             $('#confirmDraftModal').modal('hide');
         });
-        // Populate and handle authentication modal for existing user when saving draft
-        $('#confirmDraftUserExistModal').on('show.bs.modal', function () {
+
+        // Populate and handle authentication panel for existing user
+        function showAuthenticationPanel() {
             var email = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
             $('.submitterEmailDisplay').text(email || '[email not set]');
             $('#fellapp-auth-email').val(email || '');
             $('#fellapp-auth-password').val('');
             $('#fellapp-auth-error').hide().text('');
-        });
 
-        // Change email address: close modal and focus email field on main form
+            $('#authentication-panel').show();
+            $('#save-submit-panel').hide();
+
+            // Scroll to the authentication panel
+            $('html, body').animate({
+                scrollTop: $('#authentication-panel').offset().top - 150
+            }, 600);
+        }
+
+        // Change email address: hide panel and focus email field on main form
         $('#fellapp-auth-change-email-btn').on('click', function() {
-            $('#confirmDraftUserExistModal').modal('hide');
+            $('#authentication-panel').hide();
             var emailField = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email');
             if (emailField.length) {
                 emailField.focus();
@@ -249,7 +258,7 @@
             }).success(function (data) {
                 if (data == 'OK') {
                     $('#fellapp-auth-error').hide().text('');
-                    $('#confirmDraftUserExistModal').modal('hide');
+                    $('#authentication-panel').hide();
 
                     if (targetAction === 'draft') {
                         $('#btnSubmitHidden').val('fellapp-draft');
@@ -264,14 +273,26 @@
             }).fail(function () {
                 $('#fellapp-auth-error').text(error).show();
             });
-        }
+        } 
 
         // Login buttons: authenticate then save as draft or submit
         $('#fellapp-auth-login-draft-btn').on('click', function() {
             fellappAuthLogin('draft');
         });
         $('#fellapp-auth-login-submit-btn').on('click', function() {
-            fellappAuthLogin('submit');
+            //make a full validation validateFellapp in case of 'Log in and submit' if previously draft
+            var fullyValidated = false;
+            var actionType = $('#btnSubmitHidden').val(); //'fellapp-draft'
+            if( actionType == 'fellapp-active' ) {
+                fullyValidated = true;
+            } else {
+                if( validateFellapp('active') ) {
+                    fullyValidated = true;
+                }
+            }
+            if( fullyValidated ) {
+                fellappAuthLogin('submit');
+            }
         });
 
         //Initiliaze updateScreeningQuestionsVisibility

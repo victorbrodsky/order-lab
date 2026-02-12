@@ -307,6 +307,60 @@
 
 <div id="error-box" class="alert alert-danger" style="display: none"></div>
 
+{# Authentication panel for existing user accounts (replaces confirmDraftUserExistModal) #}
+<div id="authentication-panel" class="panel panel-warning" style="display: none; margin-top: 15px;">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            Authentication for an existing user account associated with the provided email address
+        </h4>
+    </div>
+    <div class="panel-body">
+        <p>
+            The email address <span class="submitterEmailDisplay">[email not set]</span> provided
+            in the application form above matches the email address of a previously registered user account.
+            Please enter the password associated with this email address to proceed with submission
+            or saving a draft application. Alternatively, you can request the password reset
+            email or enter a different email address.
+        </p>
+
+        <div class="form-group">
+            <label>Authentication (“View.Online account is what we are calling the “Local User” account type, as opposed to AD, or SAML):</label>
+            <input type="text" class="form-control" value="View.Online Account" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="fellapp-auth-email">E-Mail Address:</label>
+            <div class="input-group">
+                <input type="email" id="fellapp-auth-email" class="form-control" readonly>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" id="fellapp-auth-change-email-btn">
+                        Change the email address
+                    </button>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="fellapp-auth-password">Password:</label>
+            <div class="input-group">
+                <input type="password" id="fellapp-auth-password" class="form-control">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" id="fellapp-auth-reset-password-btn">
+                        Send me the password reset email at <span class="submitterEmailDisplay">[email not set]</span>
+                    </button>
+                </span>
+            </div>
+        </div>
+
+        <div id="fellapp-auth-error" class="alert alert-danger" style="display:none;"></div>
+
+        <div class="text-center" style="margin-top: 10px;">
+            <button type="button" class="btn btn-primary" id="fellapp-auth-login-draft-btn">Log in and save as draft</button>
+            <button type="button" class="btn btn-warning" id="fellapp-auth-login-submit-btn">Log in and submit</button>
+        </div>
+    </div>
+</div>
+
 {% if cycle == "edit" %}
     <p>
         {#for any status show update#}
@@ -332,14 +386,16 @@
 {% endif %} {#if not testing#}
 
 {% if cycle == "new" %}
+    <div id="save-submit-panel">
     <br>
     <p>
         <button id="triggerDraft" class="btn btn-info" name="btnSubmit" value="fellapp-draft">Save as Draft</button>
         <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="fellapp-submit">Submit Application</button>
     </p>
+    </div>
 {% endif %}
 
-<div id="authentication-panel" type="hidden">
+{#<div id="authentication-panel" type="hidden">#}
 
 </div>
 

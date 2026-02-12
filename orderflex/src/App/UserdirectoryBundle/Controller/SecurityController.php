@@ -736,6 +736,7 @@ class SecurityController extends OrderAbstractController
         return $response;
     }
 
+    //Use for fellapp authentication for /apply page
     #[Route(path: '/authenticate-username', name: 'employees_authenticate_username', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function authenticateUsernameAction( Request $request ) {
         $user = $this->getUser();
