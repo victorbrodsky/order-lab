@@ -17,9 +17,19 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AjaxLoginAuthenticator extends AbstractAuthenticator
 {
+    private $container;
+
+    public function __construct(
+        ContainerInterface $container
+    )
+    {
+        $this->container = $container;
+    }
+
     public function supports(Request $request): ?bool
     {
         // Trigger only for AJAX login endpoint
