@@ -758,7 +758,7 @@ class SecurityController extends OrderAbstractController
         if( $username && $password ) {
             //create token
             $providerKey = 'ldap_employees_firewall'; //'ldap_fellapp_firewall'; //firewall name, or here, anything
-            $usernametype = NULL;
+            $usernametype = NULL; //'local-user'
 
             //$token = new UsernamePasswordToken($username, $password, $providerKey);
             $token = new CustomUsernamePasswordToken(

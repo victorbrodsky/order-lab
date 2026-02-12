@@ -325,7 +325,26 @@
 
         <div class="form-group">
             <label>Authentication (“View.Online account is what we are calling the “Local User” account type, as opposed to AD, or SAML):</label>
-            <input type="text" class="form-control" value="View.Online Account" readonly>
+            <input id="fellapp-usernametypes-field" type="text" class="form-control" value="View.Online Account" readonly="">
+
+            {#$usernametypes = $em->getRepository(UsernameType::class)->findBy(#}
+            {#array(#}
+            {#'type' => array('default', 'user-added'),#}
+            {#//'abbreviation' => array('ldap-user','local-user')#}
+            {#),#}
+            {#array('orderinlist' => 'ASC')#}
+            {#);#}
+            {#userSecurityUtil->getUsernameType#}
+            {#<select id="usernametypeid_show" class="combobox limit-font-size" name="_usernametype">#}
+                {#{% for  usernametype in usernametypes %}#}
+                    {#{% if user_type is defined and usernametype.name == user_type %}#}
+                        {#{% set selected = 'selected="selected"' %}#}
+                    {#{% else %}#}
+                        {#{% set selected = '' %}#}
+                    {#{% endif %}#}
+                    {#<option value="{{ usernametype.abbreviation }}" {{ selected }}>{{ usernametype.name }}</option>#}
+                {#{% endfor %}#}
+            {#</select>#}
         </div>
 
         <div class="form-group">
