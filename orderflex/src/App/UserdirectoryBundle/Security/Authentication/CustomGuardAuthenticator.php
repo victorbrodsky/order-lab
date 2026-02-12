@@ -484,7 +484,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         return NULL;
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey=null) : Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey=null) : ?Response
     {
         $authenticationSuccess = $this->container->get($this->sitename.'_authentication_handler');
         //Set usernametype for SAML authentication and logout to determine is SAML logout required
@@ -493,7 +493,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         return $authenticationSuccess->onAuthenticationSuccess($request,$token);
     }
     
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : ?Response
     {
         $authenticationSuccess = $this->container->get('employees_authentication_handler');
         return $authenticationSuccess->onAuthenticationFailure($request,$exception);
