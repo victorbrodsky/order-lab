@@ -449,7 +449,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         //Request $request, $username, $password, $providerKey
         $request = null;
         $username = $credentials['username'];
-        $password = $credentials['password'];
+        $password = $credentials['password']; //plain password
         $usernametype = $credentials['usernametype'];
 
         //_security.<your providerKey>.target_path (e.g. _security.main.target_path if the name of your firewall is main)
@@ -461,7 +461,7 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
 //            $providerKey
 //        );
 
-        $logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username, usernametype=$usernametype, password=$password");
+        $logger->notice("getAuthUser: before CustomUsernamePasswordToken: username=$username, usernametype=$usernametype");
 
         $unauthenticatedToken = new CustomUsernamePasswordToken(
             $username,      //username
