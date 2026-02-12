@@ -758,7 +758,7 @@ class SecurityController extends OrderAbstractController
 
         //test
         //getAuthUser: before CustomUsernamePasswordToken: username=administrator_@_local-user, usernametype=local-user, password=plainpassword [] []
-        $username = 'cinava@yahoo.com_@_local-user';
+        //$username = 'cinava@yahoo.com_@_local-user';
 
         $logger = $this->container->get('logger');
         $logger->notice("authenticateUsernameAction: username=$username, password=$password, usernametype=$usernametype");
