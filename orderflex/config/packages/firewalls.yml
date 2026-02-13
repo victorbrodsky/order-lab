@@ -7,13 +7,13 @@ security:
 
     firewalls:
 
-        ajax_login_firewall:
-            #pattern: ^/ajax/login$
-            pattern: ^.*/directory/ajax/login$
-            stateless: false
-            provider: users
-            custom_authenticators:
-                - App\UserdirectoryBundle\Security\Authentication\AjaxLoginAuthenticator
+#        ajax_login_firewall:
+#            #pattern: ^/ajax/login$
+#            pattern: ^.*/directory/ajax/login$
+#            stateless: false
+#            provider: users
+#            custom_authenticators:
+#                - App\UserdirectoryBundle\Security\Authentication\AjaxLoginAuthenticator
 
 
         #{tenantprefix}/ %tenantprefix%
