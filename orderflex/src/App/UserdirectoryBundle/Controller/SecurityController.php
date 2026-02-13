@@ -752,6 +752,10 @@ class SecurityController extends OrderAbstractController
         } else {
             $username = $request->get('username');
             $username = $username . '_@_local-user';
+
+            $fellappUtil = $this->container->get('fellapp_util');
+            $email = $request->request->get('email');
+            $user = $fellappUtil->checkUserExistByEmail($email,$getUser=true);
         }
 
         $usernametype = 'local-user';

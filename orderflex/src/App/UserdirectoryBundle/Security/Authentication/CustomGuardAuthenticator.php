@@ -423,20 +423,21 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
         ];
         $this->sitename = $credentials['sitename'];
 
-        $route = $request->attributes->get('_route');
-        if( $route == 'employees_ajax_login' ) {
-            $data = json_decode($request->getContent(), true);
-            $username = $data['username'] ?? null;
-            $password = $data['password'] ?? null;
-            $credentials = [
-                'username' => $username, //$request->request->get('_username'),
-                'password' => $password,
-                'usernametype' => $usernametype, //$request->request->get('_usernametype'),
-                'sitename' => $sitename, //$request->request->get('_sitename'),
-                'csrf_token' => null, //$request->request->get('_csrf_token'),
-                'lastRoute' => $lastRoute
-            ];
-        }
+        //testing ajax authentication
+//        $route = $request->attributes->get('_route');
+//        if( $route == 'employees_ajax_login' ) {
+//            $data = json_decode($request->getContent(), true);
+//            $username = $data['username'] ?? null;
+//            $password = $data['password'] ?? null;
+//            $credentials = [
+//                'username' => $username, //$request->request->get('_username'),
+//                'password' => $password,
+//                'usernametype' => $usernametype, //$request->request->get('_usernametype'),
+//                'sitename' => $sitename, //$request->request->get('_sitename'),
+//                'csrf_token' => null, //$request->request->get('_csrf_token'),
+//                'lastRoute' => $lastRoute
+//            ];
+//        }
 
         //dump($credentials);
         //exit('111');
