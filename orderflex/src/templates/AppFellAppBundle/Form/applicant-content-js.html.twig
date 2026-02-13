@@ -132,12 +132,12 @@
         $('#triggerSubmit').on('click', function(e) {
             //console.log('Click triggerSubmit 1');
             $('#btnSubmitHidden').val('fellapp-submit'); // Optional hidden field
-            console.log('Click triggerSubmit');
+            console.log('triggerSubmit: Click triggerSubmit');
             e.preventDefault(); // prevent default form submission
 
             var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();
             $('.submitterEmailDisplay').text(submitterEmail || '[no email provided]');
-            console.log('submitterEmail='+submitterEmail);
+            console.log('triggerSubmit: submitterEmail='+submitterEmail);
 
             //console.log('Click triggerSubmit 2');
             if (validateFellapp('active')) {
@@ -145,17 +145,17 @@
                 var userExists = userCheckExistUser(submitterEmail);
                 if( userExists === true ) {
                     //user exists
-                    console.log('submit user exists');
+                    console.log('triggerSubmit: submit user exists');
                     showAuthenticationPanel('active');
                 } else if( userExists === false ) {
                     //user does not exist
-                    console.log('submit user does not exist');
+                    console.log('triggerSubmit: submit user does not exist');
                     $('#confirmSubmitModal').modal('show');
                 } else {
                     alert("Unknown error triggerSubmit email="+submitterEmail);
                 }
             } else {
-                console.log('Submit Validation failed.');
+                console.log('triggerSubmit: Submit Validation failed.');
             }
         });
 

@@ -411,23 +411,23 @@
         <button id="triggerDraft" class="btn btn-info" name="btnSubmit" value="fellapp-draft">Save as Draft</button>
         <button id="triggerSubmit" class="btn btn-warning" name="btnSubmit" value="fellapp-submit">Submit Application</button>
     </p>
+    <br>
     </div>
 {% endif %}
 
-{#<div id="authentication-panel" type="hidden">#}
-
 </div>
-
 
 {#{{ form_end(form) }}#}
 {{ form_end(form, {'render_rest': false}) }}
 
 {% if cycle == "show" %}
     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') or entity.user.id == app.user.id %}
-        <br>
+        <div class="text-center">
         <p>
-            <a class="btn_margin_top btn btn-primary btn-success" href="{{ path(fellapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
+            <a class="btn_margin_top btn btn-primary btn-success" style="margin-top: 15px;"
+               href="{{ path(fellapp_sitename~'_edit',{'id':entity.id}) }}">Edit</a>
         </p>
+        </div>
     {% endif %}
 {% endif %}
 

@@ -418,32 +418,32 @@ class AuthUtil {
     //Used by ajax authenticate-user/
     public function authenticateUserToken( $subjectUser, $token ) {
 
-        $this->logger->notice("authenticateUserToken: start");
+        //$this->logger->notice("authenticateUserToken: start");
 
         if( !$subjectUser ) {
-            $this->logger->notice("authenticateUserToken: subjectUser is null => exit");
+            //$this->logger->notice("authenticateUserToken: subjectUser is null => exit");
             return NULL;
         }
 
         $username = $token->getUsername();
-        $this->logger->notice("authenticateUserToken: username=$username");
+        //$this->logger->notice("authenticateUserToken: username=$username");
 
         //oli2002c_@_local-user, oli2002c_@_ldap-user
         $usernameArr = explode("_@_", $username);
         if( count($usernameArr) != 2 ) {
-            $this->logger->warning("Invalid username ".$username);
+            //$this->logger->warning("Invalid username ".$username);
             return NULL;
         }
 
         $identifierUsername = $usernameArr[0];
         $identifierKeytype = $usernameArr[1];
 
-        $this->logger->notice("authenticateUserToken: identifierUsername=$identifierUsername, identifierKeytype=$identifierKeytype");
+        //$this->logger->notice("authenticateUserToken: identifierUsername=$identifierUsername, identifierKeytype=$identifierKeytype");
 
         //Case 1: "Local User"
         if( $identifierKeytype == 'local-user' ) {
             $token->setUser($subjectUser);
-            $this->logger->notice('authenticateUserToken: Trying authenticating the local user with username=' . $identifierUsername);
+            //$this->logger->notice('authenticateUserToken: Trying authenticating the local user with username=' . $identifierUsername);
             $user = $this->LocalAuthentication($token);
 
             return $user;
@@ -453,7 +453,7 @@ class AuthUtil {
         if( $identifierKeytype == 'ldap-user' || $identifierKeytype == 'ldap2-user' ) {
             //Case 2: "NYP CWID"
             $token->setUser($subjectUser);
-            $this->logger->notice('Trying authenticating the LDAP user with username=' . $identifierUsername);
+            //$this->logger->notice('Trying authenticating the LDAP user with username=' . $identifierUsername);
             $user = $this->LdapAuthentication($token);
 
             if( !$user ) {
