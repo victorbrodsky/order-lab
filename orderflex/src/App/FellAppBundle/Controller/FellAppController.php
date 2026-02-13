@@ -4248,21 +4248,22 @@ class FellAppController extends OrderAbstractController {
 
             //$security->logout();
             //$security->logout(false); //This will trigger onLogout event
-            $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->userLogout(null);
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //$userSecUtil->userLogout(null);
 
             if( $initialStatusName == "draft" ) {
                 //Send email with hash:
                 //A draft fellowship application has been submitted specifying your email address as belonging to the applicant.
                 $fellappUtil->applyConfirmationEmail($fellowshipApplication, $applicant,$initialStatusName);
-                return $this->redirect($this->generateUrl('fellapp_login'));
+                //return $this->redirect($this->generateUrl('fellapp_login'));
             }
             if( $initialStatusName == "active" ) {
                 $fellappUtil->applyConfirmationEmail($fellowshipApplication, $applicant,$initialStatusName);
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
-                return $this->redirect($this->generateUrl('fellapp_login'));
+                //return $this->redirect($this->generateUrl('fellapp_login'));
             }
 
+            return $this->redirect($this->generateUrl('fellapp_myapplications'));
         } //if isSubmitted isValid
 
         if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {

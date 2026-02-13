@@ -42,7 +42,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 //use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
 use App\UserdirectoryBundle\Util\UserUtil;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends OrderAbstractController
@@ -739,7 +739,8 @@ class SecurityController extends OrderAbstractController
 
     //Use for fellapp authentication for /apply page
     #[Route(path: '/authenticate-username', name: 'employees_authenticate_username', methods: ['GET', 'POST'], options: ['expose' => true])]
-    public function authenticateUsernameAction( Request $request ) {
+    public function authenticateUsernameAction( Request $request, TokenStorageInterface $tokenStorage ) {
+        $logger = $this->container->get('logger');
         $user = $this->getUser();
 
         $res = "NOTOK";
@@ -751,21 +752,20 @@ class SecurityController extends OrderAbstractController
             $username = $user->getUsername();
         } else {
             $username = $request->get('username');
-            $username = $username . '_@_local-user';
 
             $fellappUtil = $this->container->get('fellapp_util');
-            $email = $request->request->get('email');
-            $user = $fellappUtil->checkUserExistByEmail($email,$getUser=true);
+            $user = $fellappUtil->checkUserExistByEmail($username,$getUser=true);
+            $logger->notice('authenticateUsernameAction: user='.$user);
+
+            $username = $username . '_@_local-user';
         }
 
         $usernametype = 'local-user';
-
 
         //test
         //getAuthUser: before CustomUsernamePasswordToken: username=administrator_@_local-user, usernametype=local-user, password=plainpassword [] []
         //$username = 'cinava@yahoo.com_@_local-user';
 
-        $logger = $this->container->get('logger');
         $logger->notice("authenticateUsernameAction: username=$username, password=$password, usernametype=$usernametype");
 
         if( $username && $password ) {
@@ -787,9 +787,14 @@ class SecurityController extends OrderAbstractController
             $authUser = $authUtil->authenticateUserToken($user, $token);
             //$usernamePasswordToken = $authUtil->authenticateToken($token,$providerKey);
 
+            //Authenticate user
+            $firewall = 'ldap_fellapp_firewall';
+            $token = new UsernamePasswordToken($authUser, $firewall, $authUser->getRoles());
+            //$this->container->get('security.token_storage')->setToken($token);
+            $tokenStorage->setToken($token);
+
             if( $authUser ) {
-                $user = $authUser->getUser();
-                $logger->notice("authenticateUsernameAction: User=".$user);
+                $logger->notice("authenticateUsernameAction: authUser=".$authUser);
                 $res = "OK";
             }
         }
