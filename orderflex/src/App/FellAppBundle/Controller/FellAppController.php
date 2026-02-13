@@ -3637,40 +3637,33 @@ class FellAppController extends OrderAbstractController {
         }
         //echo '$institutionId='.$institutionId.', $specialtyId='.$specialtyId.'<br>';
 
+        $applicant = $this->getUser();
+        //echo "applicant=".$applicant."<br>";
 
-        //$user = $this->getUser();
-        $user = $this->getUser();
-        //echo "user=".$user."<br>";
-//        if( !( $user instanceof User ) ) {
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $user = $userSecUtil->findSystemUser();
-//            //echo "no user object => use system user=[".$user."]<br>";
+//        if( 0 && !($applicant instanceof User) ) {
+//            $firewall = 'ldap_fellapp_firewall';
+//            //$userSecUtil = $this->container->get('user_security_utility');
+//            //$user = $userSecUtil->findSystemUser();
+//            //fellapp_public_submitter
+//            $fellappUtil = $this->container->get('fellapp_util');
+//            $user = $fellappUtil->findFellappDefaultUser();
+//            if( $user ) {
+//                //$token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
+//                $token = new UsernamePasswordToken($user, $firewall, $user->getRoles());
+//                //$this->container->get('security.token_storage')->setToken($token);
+//                $tokenStorage->setToken($token);
+//                $logger->notice("applyAction: Logged in as ldap_fellapp_firewall=".$user);
+//            } else {
+//                $logger->notice("applyAction: ldap_fellapp_firewall not found");
+//                $this->addFlash(
+//                    'warning',
+//                    "Fellowship public submitter not found. Please contact the system administrator."
+//                );
+//                return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
+//            }
+//        } else {
+//            $logger->notice("applyAction: Token user is valid security user=".$user);
 //        }
-
-        if( 0 && !($user instanceof User) ) {
-            $firewall = 'ldap_fellapp_firewall';
-            //$userSecUtil = $this->container->get('user_security_utility');
-            //$user = $userSecUtil->findSystemUser();
-            //fellapp_public_submitter
-            $fellappUtil = $this->container->get('fellapp_util');
-            $user = $fellappUtil->findFellappDefaultUser();
-            if( $user ) {
-                //$token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                $token = new UsernamePasswordToken($user, $firewall, $user->getRoles());
-                //$this->container->get('security.token_storage')->setToken($token);
-                $tokenStorage->setToken($token);
-                $logger->notice("applyAction: Logged in as ldap_fellapp_firewall=".$user);
-            } else {
-                $logger->notice("applyAction: ldap_fellapp_firewall not found");
-                $this->addFlash(
-                    'warning',
-                    "Fellowship public submitter not found. Please contact the system administrator."
-                );
-                return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
-            }
-        } else {
-            $logger->notice("applyAction: Token user is valid security user=".$user);
-        }
         //testing logout
         //$security->logout();
         //$security->logout(false); //This will trigger onLogout event
@@ -3683,21 +3676,24 @@ class FellAppController extends OrderAbstractController {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
-        //$user = new User();
-        $addobjects = true;
-        //TODO: the anonymous user will be this applicant
-        $applicant = new User($addobjects);
-        $applicant->setPassword("");
-        $applicant->setCreatedby('manual');
-        $applicant->setAuthor($user);
+        if( $applicant && $applicant instanceof User ) {
+            // $applicant is the current user
+            $logger->notice("applyAction: already logged applicant=".$applicant);
+        } else {
+            //create new user (applicant)
+            $applicant = new User($addobjects=true);
+            $applicant->setPassword("");
+            $applicant->setCreatedby('manual');
+            $applicant->setAuthor();
+        }
 
-        $fellowshipApplication = new FellowshipApplication($user);
+        $fellowshipApplication = new FellowshipApplication($applicant);
         $fellowshipApplication->setTimestamp(new \DateTime());
 
         $applicant->addFellowshipApplication($fellowshipApplication);
 
         $routeName = $request->get('_route');
-        $args = $this->getShowParameters($routeName,$fellowshipApplication,$user,$institutionId,$specialtyId); //apply GET
+        $args = $this->getShowParameters($routeName,$fellowshipApplication,$applicant,$institutionId,$specialtyId); //apply GET
 
         // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
