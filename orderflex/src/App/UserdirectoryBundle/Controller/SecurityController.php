@@ -761,6 +761,8 @@ class SecurityController extends OrderAbstractController
         }
 
         $usernametype = 'local-user';
+        //$providerKey = 'ldap_employees_firewall'; //'ldap_fellapp_firewall'; //firewall name, or here, anything
+        $providerKey = 'ldap_fellapp_firewall'; //firewall name
 
         //test
         //getAuthUser: before CustomUsernamePasswordToken: username=administrator_@_local-user, usernametype=local-user, password=plainpassword [] []
@@ -770,10 +772,6 @@ class SecurityController extends OrderAbstractController
 
         if( $username && $password ) {
             //create token
-            $providerKey = 'ldap_employees_firewall'; //'ldap_fellapp_firewall'; //firewall name, or here, anything
-            //$usernametype = NULL; //'local-user'
-
-            //$token = new UsernamePasswordToken($username, $password, $providerKey);
             $token = new CustomUsernamePasswordToken(
                 $username,
                 $password,
@@ -781,16 +779,12 @@ class SecurityController extends OrderAbstractController
                 $providerKey
             );
 
-            //$authUtil = new AuthUtil($this->container,$em);
             $authUtil = $this->container->get('authenticator_utility');
 
             $authUser = $authUtil->authenticateUserToken($user, $token);
-            //$usernamePasswordToken = $authUtil->authenticateToken($token,$providerKey);
 
             //Authenticate user
-            $firewall = 'ldap_fellapp_firewall';
-            $token = new UsernamePasswordToken($authUser, $firewall, $authUser->getRoles());
-            //$this->container->get('security.token_storage')->setToken($token);
+            $token = new UsernamePasswordToken($authUser, $providerKey, $authUser->getRoles());
             $tokenStorage->setToken($token);
 
             if( $authUser ) {
