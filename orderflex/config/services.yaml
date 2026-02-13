@@ -94,7 +94,7 @@ services:
 
     App\UserdirectoryBundle\Security\Authentication\:
         resource: '../src/App/UserdirectoryBundle/Security/Authentication'
-        exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php,AjaxLoginAuthenticator.php}'
+        exclude: '../src/App/UserdirectoryBundle/Security/Authentication/{CustomGuardAuthenticator.php,LoginSuccessHandler.php,CustomUsernamePasswordToken.php}'
 
     App\Saml\Security\:
         resource: '../src/App/Saml/Security'
