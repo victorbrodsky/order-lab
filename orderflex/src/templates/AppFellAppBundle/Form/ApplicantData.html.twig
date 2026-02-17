@@ -37,23 +37,24 @@
                 {% if form.user.infos is defined %}
                     {% for info in form.user.infos %}
 
+                        {% set applicantUser = false %}
+                        {% if not is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                            {#entity->getUser()#}
+                            {% if route_path is defined and (route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post') %}
+                                {% set applicantUser = true %}
+                            {% endif %}
+                            {% if not applicantUser %}
+                                {% set applicantUser = fellapp_util.hasPublicApplicantRole() %}
+                            {% endif %}
+                        {% endif %}
+                        {#applicantUser={{ applicantUser }}#}
+
                         <p>
                         <div class="row">
                             <div class="col-xs-4">
                                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                                     Demo
                                 {% else %}
-                                    {% set applicantUser = false %}
-                                    {% if not is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-                                        {#entity->getUser()#}
-                                        {% if route_path is defined and (route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post') %}
-                                            {% set applicantUser = true %}
-                                        {% endif %}
-                                        {% if not applicantUser %}
-                                            {% set applicantUser = fellapp_util.hasPublicApplicantRole() %}
-                                        {% endif %}
-                                    {% endif %}
-                                    {#applicantUser={{ applicantUser }}#}
                                     {#{{ form_row(info.firstName) }}#}
                                     {% if applicantUser %}
                                         {{ form_row(info.firstName, {
