@@ -376,7 +376,7 @@ class User extends UserBase
     /**
      * @param mixed $author
      */
-    public function setAuthor($author): void
+    public function setAuthor($author=null): void
 {
     $this->author = $author;
 }
