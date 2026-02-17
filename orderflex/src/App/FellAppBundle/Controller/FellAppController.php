@@ -3591,7 +3591,13 @@ class FellAppController extends OrderAbstractController {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
+
+        //If user is logged in and does not have an Applicant role => redirect to a /new page
+        if( $this->isGranted('IS_AUTHENTICATED_FULLY') && $fellappUtil->hasPublicApplicantRole() === false ) {
+            return $this->redirect( $this->generateUrl('fellapp_new') );
+        }
 
         $enablePublicFellapp = $userSecUtil->getSiteSettingParameter(
             'enablePublicFellApp',
@@ -3915,6 +3921,13 @@ class FellAppController extends OrderAbstractController {
             //$res = $fellappUtil->checkUserExistByPostRequest($request);
             $applicantExists = $fellappUtil->checkUserExistByEmail($applicantEmail);
             //echo "applyApplicantAction: res=$res <br>";
+
+            //TODO: Note: if user is already logged in (for example as admin)
+            // and create an application for someone else
+            // then if the first, last name are changed then create a new user (?).
+            // Admin should create application for someone else only on /new page not /apply page
+            //If user does not have an Applicant role => redirect to a /new page
+
             $applicant = null;
             if( $applicantExists === true ) {
                 //find $applicant by email
