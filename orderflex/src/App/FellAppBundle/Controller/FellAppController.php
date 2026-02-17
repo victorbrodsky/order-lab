@@ -3684,7 +3684,7 @@ class FellAppController extends OrderAbstractController {
             $applicant = new User($addobjects=true);
             $applicant->setPassword("");
             $applicant->setCreatedby('manual');
-            $applicant->setAuthor();
+            $applicant->setAuthor(null);
         }
 
         $fellowshipApplication = new FellowshipApplication($applicant);

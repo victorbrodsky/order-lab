@@ -43,6 +43,26 @@ class UserInfoType extends AbstractType
 
         $this->formConstructor($options['form_custom_value']);
 
+        //lock on /apply or /edit firstName middleName lastName email if $fellappUtil->hasPublicApplicantRole()
+//        $disabled = false;
+//
+//        if( isset($this->params['routeName']) ) {
+//            echo 'routeName='.$this->params['routeName'].'<br>';
+//        }
+//        //fellapp_edit
+//        if( isset($this->params['routeName']) &&
+//            str_contains($this->params['routeName'], 'fellapp_apply') ||
+//            str_contains($this->params['routeName'], 'fellapp_edit')
+//        )
+//        if( isset($this->params['container']) ) {
+//            $fellappUtil = $this->params['container']->get('fellapp_util');
+//            echo 'before hasPublicApplicantRole<br>';
+//            if( $fellappUtil->hasPublicApplicantRole() ) {
+//                $disabled = true;
+//            }
+//        }
+//        echo '$disabled='.$disabled.'<br>';
+
         $builder->add('suffix', null, array(
             'label' => 'Suffix:',
             'attr' => array('class'=>'form-control')
@@ -50,20 +70,24 @@ class UserInfoType extends AbstractType
         $builder->add('firstName', null, array(
             'label' => 'First Name:',
             'required' => true,
+            //'disabled' => $disabled,
             'attr' => array('class'=>'form-control user-firstName') //'required'=>'required'
         ));
         $builder->add('middleName', null, array(
             'label' => 'Middle Name:',
+            //'disabled' => $disabled,
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('lastName', null, array(
             'label' => 'Last Name:',
             'required' => true,
+            //'disabled' => $disabled,
             'attr' => array('class'=>'form-control user-lastName') //'required'=>'required'
         ));
         $builder->add('email', EmailType::class, array(
             'label' => 'Preferred Email:',
             'required' => true,
+            //'disabled' => $disabled,
             'attr' => array('class'=>'form-control user-email') //email-mask
         ));
         $builder->add('displayName', null, array(

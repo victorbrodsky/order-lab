@@ -43,21 +43,62 @@
                                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                                     Demo
                                 {% else %}
-                                    {{ form_row(info.firstName) }}
+                                    {% set applicantUser = false %}
+                                    {% if not is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                        {#entity->getUser()#}
+                                        {% if route_path is defined and (route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post') %}
+                                            {% set applicantUser = true %}
+                                        {% endif %}
+                                        {% if not applicantUser %}
+                                            {% set applicantUser = fellapp_util.hasPublicApplicantRole() %}
+                                        {% endif %}
+                                    {% endif %}
+                                    {#applicantUser={{ applicantUser }}#}
+                                    {#{{ form_row(info.firstName) }}#}
+                                    {% if applicantUser %}
+                                        {{ form_row(info.firstName, {
+                                            disabled: true
+                                        }) }}
+                                    {% else %}
+                                        {{ form_row(info.firstName) }}
+                                    {% endif %}
+                                    {#{{ form_row(info.firstName) }}#}
+                                    {#{{ form_row(info.firstName, {#}
+                                        {#attr: {#}
+                                            {#readonly: true#}
+                                        {#}#}
+                                    {#}) }}#}
+                                    {#{{ form_row(info.firstName, {#}
+                                        {#disabled: true#}
+                                    {#}) }}#}
                                 {% endif %}
                             </div>
                             <div class="col-xs-4">
                                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                                     Applicant
                                 {% else %}
-                                    {{ form_row(info.lastName) }}
+                                    {#{{ form_row(info.lastName) }}#}
+                                    {% if applicantUser %}
+                                        {{ form_row(info.lastName, {
+                                            disabled: true
+                                        }) }}
+                                    {% else %}
+                                        {{ form_row(info.lastName) }}
+                                    {% endif %}
                                 {% endif %}
                             </div>
                             <div class="col-xs-4">
                                 {% if is_granted('ROLE_PLATFORM_DEMO') %}
                                     The
                                 {% else %}
-                                    {{ form_row(info.middleName) }}
+                                    {#{{ form_row(info.middleName) }}#}
+                                    {% if applicantUser %}
+                                        {{ form_row(info.middleName, {
+                                            disabled: true
+                                        }) }}
+                                    {% else %}
+                                        {{ form_row(info.middleName) }}
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div> <!-- row -->
@@ -69,7 +110,14 @@
                             <p>
                                 {{ form_errors(info.email) }}
                                 {{ form_label(info.email) }}
-                                {{ form_widget(info.email) }}
+                                {#{{ form_widget(info.email) }}#}
+                                {% if applicantUser %}
+                                    {{ form_widget(info.email, {
+                                        disabled: true
+                                    }) }}
+                                {% else %}
+                                    {{ form_widget(info.email) }}
+                                {% endif %}
                             </p>
                         {% endif %}
 

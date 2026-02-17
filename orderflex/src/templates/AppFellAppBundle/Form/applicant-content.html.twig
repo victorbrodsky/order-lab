@@ -104,7 +104,7 @@
 {% endif %}
 
 {#Application Packet Check-list#}
-{% if route_path is defined and route_path == 'fellapp_apply' %}
+{% if route_path is defined and (route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post') %}
     {% if cycle != "download" %}
         {% if applicationFormNote is defined %}
             {{ applicationFormNote|raw }}
@@ -262,7 +262,7 @@
 
 
     <!-- Itinerary -->
-    {% if route_path is not defined or route_path != 'fellapp_apply' %}
+    {% if route_path is not defined or route_path != 'fellapp_apply' or route_path == 'fellapp_apply_post' %}
         <!-- PDF Reports -->
         {#and cycle != "new"#}
         {% if cycle != "download" %}
