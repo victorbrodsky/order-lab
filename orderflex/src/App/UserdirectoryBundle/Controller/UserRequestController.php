@@ -122,8 +122,10 @@ class UserRequestController extends OrderAbstractController
 
         //Use new free text field requestedInstitutionScope. Populate it with the original requestedScanOrderInstitutionScope
         $orgGroupsSelect2 = array();
-        foreach( $params['requestedScanOrderInstitutionScope'] as $orgGroup) {
-            $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
+        if (isset($params['requestedScanOrderInstitutionScope'])) {
+            foreach ($params['requestedScanOrderInstitutionScope'] as $orgGroup) {
+                $orgGroupsSelect2[] = array('id' => $orgGroup->getId(), 'text' => $orgGroup->getNodeNameWithRoot());
+            }
         }
         //$orgGroupsSelect2[] = array('id' => 'test2', 'text' => 'test2');
 
