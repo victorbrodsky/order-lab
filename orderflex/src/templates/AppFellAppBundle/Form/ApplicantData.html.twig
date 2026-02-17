@@ -114,14 +114,14 @@
                             <p>
                                 {{ form_errors(info.email) }}
                                 {{ form_label(info.email) }}
-                                {#{{ form_widget(info.email) }}#}
-                                {% if applicantUser %}
-                                    {{ form_widget(info.email, {
-                                        disabled: true
-                                    }) }}
-                                {% else %}
-                                    {{ form_widget(info.email) }}
-                                {% endif %}
+                                {{ form_widget(info.email) }}
+                                {#{% if applicantUser %}#}
+                                    {#{{ form_widget(info.email, {#}
+                                        {#disabled: true#}
+                                    {#}) }}#}
+                                {#{% else %}#}
+                                    {#{{ form_widget(info.email) }}#}
+                                {#{% endif %}#}
                             </p>
                         {% endif %}
 
