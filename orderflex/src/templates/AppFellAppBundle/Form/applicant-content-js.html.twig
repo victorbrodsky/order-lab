@@ -25,8 +25,9 @@
 //    let clickedButtonValue = null;
 //    let formToSubmit = null;
 
+    const isLoggedIn = {{ is_granted('IS_AUTHENTICATED_FULLY') ? 'true' : 'false' }};
 
-    //open collapsed section if reference clicked
+//open collapsed section if reference clicked
     document.addEventListener("DOMContentLoaded", function () {
         //console.log('addEventListener');
         const hash = window.location.hash;
@@ -110,12 +111,16 @@
             console.log('submitterEmail='+submitterEmail);
 
             if (validateFellapp('draft')) {
-                console.log('Click triggerDraft => show modal for draft');
+                console.log('Click triggerDraft => show modal for draft. isLoggedIn='+isLoggedIn);
                 var userExists = userCheckExistUser(submitterEmail);
                 if( userExists === true ) {
                     //user exists
                     console.log('draft user exists');
-                    showAuthenticationPanel('draft');
+                    if( isLoggedIn === false ) {
+                        showAuthenticationPanel('draft');
+                    } else {
+                        $('#confirmDraftModal').modal('show');
+                    }
                 } else if( userExists === false ) {
                     //user does not exist
                     console.log('draft user does not exist');
@@ -143,10 +148,15 @@
             if (validateFellapp('active')) {
                 console.log('Click triggerSubmit => show modal for submit');
                 var userExists = userCheckExistUser(submitterEmail);
-                if( userExists === true ) {
+                //Add is use is already logged in
+                if( userExists === true && isLoggedIn === false ) {
                     //user exists
                     console.log('triggerSubmit: submit user exists');
-                    showAuthenticationPanel('active');
+                    if( isLoggedIn === false ) {
+                        showAuthenticationPanel('active');
+                    } else {
+                        $('#confirmDraftModal').modal('show');
+                    }
                 } else if( userExists === false ) {
                     //user does not exist
                     console.log('triggerSubmit: submit user does not exist');
