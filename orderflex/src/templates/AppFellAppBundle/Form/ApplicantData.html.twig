@@ -39,17 +39,17 @@
 
                         {#When logged in, use logged in user name and email#}
                         {% set applicantUser = false %}
-                        {#{% if is_granted('IS_AUTHENTICATED_FULLY') and not is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
-                            {#Not ROLE_PLATFORM_DEPUTY_ADMIN!#}
-                            {#{% if route_path is defined and (route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post') %}#}
-                                {#{% set applicantUser = true %}#}
-                            {#{% endif %}#}
-                            {#{% if not applicantUser %}#}
-                                {#{% set applicantUser = fellapp_util.hasPublicApplicantRole() %}#}
-                            {#{% endif %}#}
-                        {#{% else %}#}
-                            {#ROLE_PLATFORM_DEPUTY_ADMIN!#}
-                        {#{% endif %}#}
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and not is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                            Not ROLE_PLATFORM_DEPUTY_ADMIN!
+                            {% if route_path is defined and (route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post') %}
+                                {% set applicantUser = true %}
+                            {% endif %}
+                            {% if not applicantUser %}
+                                {% set applicantUser = fellapp_util.hasPublicApplicantRole() %}
+                            {% endif %}
+                        {% else %}
+                            ROLE_PLATFORM_DEPUTY_ADMIN!
+                        {% endif %}
                         {#applicantUser={{ applicantUser }}#}
 
                         <p>
