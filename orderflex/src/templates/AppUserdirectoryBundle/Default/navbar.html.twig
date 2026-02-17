@@ -80,6 +80,7 @@
                             </a>
                         </li>
 
+                        {% if not fellapp_util.hasPublicApplicantRole() %}
                         <li id="nav-bar-userlist" class="dropdown">
                             {% if pendingadminreview is defined and pendingadminreview > 0 %}
                                 <a id="incoming-orders-menu-title" href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a><!--
@@ -95,6 +96,7 @@
                             {% endif %}
                             {{ usernavbar.listUsers(employees_sitename~'_listusers',employees_sitename~'_list_common_locations',hasRoleSimpleView) }}
                         </li>
+                        {% endif %}
 
                         {% if is_granted('ROLE_USERDIRECTORY_EDITOR') and not hasRoleSimpleView %}
                             <li id="nav-bar-userlist-previous" class="dropdown">
@@ -118,6 +120,7 @@
 
                         {% endif %}
 
+                        {% if not fellapp_util.hasPublicApplicantRole() %}
                         <li id="nav-bar-add" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Download<b class="caret"></b></a>
                             <ul class="dropdown-menu">
@@ -129,6 +132,7 @@
                                 </li>
                             </ul>
                         </li>
+                        {% endif %}
 
 
                     {% endif %}
