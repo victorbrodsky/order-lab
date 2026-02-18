@@ -171,6 +171,7 @@
     <input type="hidden" id="fellapp_id" value="{{ entity.id }}" />
     <input type="hidden" id="user_id" value="{{ form.vars.value.user.id }}" />
     <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />
+    <input type="hidden" id="user_email" value="{{ app.user ? app.user.emailCanonical : '' }}" />
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
     <input type="hidden" id="route_path" value="{{ route_path }}" />

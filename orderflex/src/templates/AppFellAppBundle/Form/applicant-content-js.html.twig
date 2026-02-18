@@ -25,7 +25,7 @@
 //    let clickedButtonValue = null;
 //    let formToSubmit = null;
 
-    const isLoggedIn = {{ is_granted('IS_AUTHENTICATED_FULLY') ? 'true' : 'false' }};
+    const _isLoggedIn = {{ is_granted('IS_AUTHENTICATED_FULLY') ? 'true' : 'false' }};
 
 //open collapsed section if reference clicked
     document.addEventListener("DOMContentLoaded", function () {
@@ -101,6 +101,17 @@
         
         setUploadItineraryAndListener();
 
+        //If the user is logged into account A, but is entering a
+        // known user account B’s email address on the Apply page
+        // (not on the Add Application page), then DO show the
+        // new accordion described in #3 below and if the user
+        // enters correct user name + password combination
+        // in the accordion, log user out of account A and log them into account B.
+
+        console.log('before userEmail');
+        const userEmail = $('#user_email').val();
+        console.log('userEmail='+userEmail);
+
         $('#triggerDraft').on('click', function(e) {
             $('#btnSubmitHidden').val('fellapp-draft'); // Optional hidden field
             console.log('Click triggerDraft');
@@ -111,12 +122,13 @@
             console.log('submitterEmail='+submitterEmail);
 
             if (validateFellapp('draft')) {
-                console.log('Click triggerDraft => show modal for draft. isLoggedIn='+isLoggedIn);
+                console.log('Click triggerDraft => show modal for draft. _isLoggedIn='+_isLoggedIn);
                 var userExists = userCheckExistUser(submitterEmail);
                 if( userExists === true ) {
                     //user exists
                     console.log('draft user exists');
-                    if( isLoggedIn === false ) {
+                    //Show showAuthenticationPanel if user is not logged in OR if user is logged AND user's email is not the same as entered email.
+                    if( requireAuthentication(submitterEmail) === true ) {
                         showAuthenticationPanel('draft');
                     } else {
                         $('#confirmDraftModal').modal('show');
@@ -152,7 +164,7 @@
                 if( userExists === true ) {
                     //user exists
                     console.log('triggerSubmit: submit user exists');
-                    if( isLoggedIn === false ) {
+                    if( requireAuthentication(submitterEmail) === true ) {
                         showAuthenticationPanel('active');
                     } else {
                         $('#confirmDraftModal').modal('show');
@@ -264,6 +276,20 @@
             var resetUrl = Routing.generate('employees_forgot_password');
             window.open(resetUrl, '_blank');
         });
+
+        //Show showAuthenticationPanel if user is not logged in OR if user is logged AND user's email is not the same as entered email.
+        function requireAuthentication( submitterEmail ) {
+            const loggedinUserEmail = $('#user_email').val();
+            console.log('userEmail='+userEmail);
+            if( !_isLoggedIn ||
+                _isLoggedIn &&
+                (submitterEmail || '').toLowerCase() !== (loggedinUserEmail || '').toLowerCase()
+            ) {
+                console.log('require auth');
+                return true;
+            }
+            return false;
+        }
 
         // Helper to authenticate and then submit as draft or submit
         function fellappAuthLogin(targetAction) {
