@@ -273,17 +273,24 @@
             window.open(resetUrl, '_blank');
         });
 
-        //Show showAuthenticationPanel if user is not logged in OR if user is logged AND user's email is not the same as entered email.
+        //Require auth only on apply page!
+        //Show showAuthenticationPanel if user is not logged in
+        // OR if user is logged AND user's email is not the same as entered email.
+        //Require auth check only on apply page, on new page (for admin) auth is not required
         function requireAuthentication( submitterEmail ) {
             const loggedinUserEmail = $('#user_email').val();
-            console.log('loggedinUserEmail='+loggedinUserEmail);
-            if( !_isLoggedIn ||
-                _isLoggedIn &&
-                (submitterEmail || '').toLowerCase() !== (loggedinUserEmail || '').toLowerCase()
-            ) {
-                console.log('require auth');
-                return true;
+            const route_path = $('#route_path').val();
+            console.log('requireAuthentication: loggedinUserEmail='+loggedinUserEmail+', route_path='+route_path);
+            if( route_path === 'fellapp_apply' || route_path === 'fellapp_apply_post' ) {
+                if (!_isLoggedIn ||
+                        _isLoggedIn &&
+                        (submitterEmail || '').toLowerCase() !== (loggedinUserEmail || '').toLowerCase()
+                ) {
+                    console.log('requireAuthentication: require auth');
+                    return true;
+                }
             }
+            console.log('requireAuthentication: not require auth');
             return false;
         }
 
@@ -291,6 +298,9 @@
         function fellappAuthLogin(targetAction) {
             var username = $('#fellapp-auth-email').val();
             var token = $('#fellapp-auth-password').val();
+            console.log('fellappAuthLogin: username='+username+', token='+token);
+            alert('fellappAuthLogin start');
+
             var error = 'User name / password combination not accepted. Please try again.';
 
             if (!token) {
@@ -316,7 +326,9 @@
                         $('#btnSubmitHidden').val('fellapp-submit');
                     }
 
-                    $('#fellapp-applicant-form').submit();
+                    //testing: disable submit
+                    alert('Submit form');
+                    //$('#fellapp-applicant-form').submit();
                 } else {
                     $('#fellapp-auth-error').text(error).show();
                 }

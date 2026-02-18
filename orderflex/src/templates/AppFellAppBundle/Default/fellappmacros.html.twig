@@ -582,7 +582,7 @@
 
 {% endmacro %}
 
-{% macro submitConfirmationModal() %}
+{% macro submitConfirmationModal( route_path ) %}
     <!-- Confirmation Modal -->
     <div class="modal fade" id="confirmSubmitModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitLabel">
         <div class="modal-dialog" role="document">
@@ -646,7 +646,7 @@
         </div>
     </div>
 {% endmacro %}
-{% macro draftConfirmationModal() %}
+{% macro draftConfirmationModal( route_path ) %}
     {#var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();#}
     <!-- Confirmation Modal -->
     <div class="modal fade" id="confirmDraftModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitLabel">
@@ -656,11 +656,15 @@
                     <h4 class="modal-title" id="confirmSubmitLabel">Confirm Submission</h4>
                 </div>
                 <div class="modal-body">
-                    An email with a confirmation link will be sent to the following email address you have provided:
-                    <span class="submitterEmailDisplay">[email not set]</span>.
-                    Please confirm this email address is correct and you will be able to review the email message.
-                    Once you visit the confirmation link provided via email,
-                    you will select your password to activate your account and gain access to your saved application form draft.
+                    {% if route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post' %}
+                        An email with a confirmation link will be sent to the following email address you have provided:
+                        <span class="submitterEmailDisplay">[email not set]</span>.
+                        Please confirm this email address is correct and you will be able to review the email message.
+                        Once you visit the confirmation link provided via email,
+                        you will select your password to activate your account and gain access to your saved application form draft.
+                    {% else %}
+                        Are you sure you would like to save your application as draft?
+                    {% endif %}
                 </div>
                 <div class="modal-footer">
                     {#<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>#}
