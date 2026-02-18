@@ -454,7 +454,9 @@ class AuthUtil {
             //Case 2: "NYP CWID"
             $token->setUser($subjectUser);
             //$this->logger->notice('Trying authenticating the LDAP user with username=' . $identifierUsername);
-            $user = $this->LdapAuthentication($token);
+            //$user = $this->LdapAuthentication($token);
+            $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
+            $user = $ldapAuthUtil->LdapAuthentication($token);
 
             if( !$user ) {
                 //Try to use user's credential authentication under Credentials->Identifiers-> identifier type "Local User"
