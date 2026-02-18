@@ -276,7 +276,7 @@
         //Show showAuthenticationPanel if user is not logged in OR if user is logged AND user's email is not the same as entered email.
         function requireAuthentication( submitterEmail ) {
             const loggedinUserEmail = $('#user_email').val();
-            console.log('userEmail='+userEmail);
+            console.log('loggedinUserEmail='+loggedinUserEmail);
             if( !_isLoggedIn ||
                 _isLoggedIn &&
                 (submitterEmail || '').toLowerCase() !== (loggedinUserEmail || '').toLowerCase()
