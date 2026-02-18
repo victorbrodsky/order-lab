@@ -163,7 +163,7 @@
                     if( requireAuthentication(submitterEmail) === true ) {
                         showAuthenticationPanel('active');
                     } else {
-                        $('#confirmDraftModal').modal('show');
+                        $('#confirmSubmitModal').modal('show');
                     }
                 } else if( userExists === false ) {
                     //user does not exist
