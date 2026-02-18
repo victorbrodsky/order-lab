@@ -149,7 +149,7 @@
                 console.log('Click triggerSubmit => show modal for submit');
                 var userExists = userCheckExistUser(submitterEmail);
                 //Add is use is already logged in
-                if( userExists === true && isLoggedIn === false ) {
+                if( userExists === true ) {
                     //user exists
                     console.log('triggerSubmit: submit user exists');
                     if( isLoggedIn === false ) {
