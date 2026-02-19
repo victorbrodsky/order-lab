@@ -285,6 +285,11 @@
                         _isLoggedIn &&
                         (submitterEmail || '').toLowerCase() !== (loggedinUserEmail || '').toLowerCase()
                 ) {
+                    if( _isLoggedIn &&
+                    (submitterEmail || '').toLowerCase() !== (loggedinUserEmail || '').toLowerCase() ) {
+                        alert("You are about to submit the fellowship application on behalf of " + submitterEmail);
+
+                    }
                     console.log('requireAuthentication: require auth');
                     return true;
                 }
