@@ -3983,7 +3983,7 @@ class FormNodeUtil
         $formParams = array(
             'parent' => $fellappScreeningQuestionsForm,
             'name' => "Will you have completed an MD or PhD or both,".
-                " and either residency or postdoctoral training by July 1, [[Start Year]]?",
+                " and either residency or postdoctoral training by July 1 of the fellowship's starting year?",
             //'placeholder' => "Additional communication",
             'objectType' => $objectTypeRadioButton,
             'showLabel' => true,

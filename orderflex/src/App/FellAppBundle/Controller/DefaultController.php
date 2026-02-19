@@ -19,11 +19,13 @@ namespace App\FellAppBundle\Controller;
 
 
 
+use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\Roles;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -464,6 +466,119 @@ class DefaultController extends OrderAbstractController
         }
 
         exit("end of fellapp thumbnails, counter=$counter");
+    }
+
+    #[Route(path: '/update-fellowship-types', name: 'fellapp_update_fellowship_types')]
+    public function updateGlobalFellowshipTypesAction( Request $request )
+    {
+        //exit("not allowed: updateGlobalFellowshipTypesAction");
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $fellowshipSubspecialtyArr = [
+            "Breast Pathology",
+            "Gastrointestinal Pathology",
+            "Genitourinary Pathology",
+            "Gynecologic Pathology",
+            "Renal Pathology",
+            "Clinical Informatics",
+        ];
+
+        ////// get WashU pathology //////
+        $washU = $em->getRepository(Institution::class)->findOneByAbbreviation("WashU");
+        if( !$washU ) {
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU"');
+        }
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+        );
+        $washUPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+            "Pathology and Immunology",
+            $washU,
+            $mapper
+        );
+        if( !$washUPathology ) {
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "Pathology and Immunology"');
+        }
+        ////// EOF get WashU pathology //////
+
+        $cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Cytopathology");
+        if( !$cytopathology ) {
+            exit("FellowshipSubspecialty not found with name Cytopathology");
+        }
+        $globalCytopathology = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName("Cytopathology");
+        if( !$globalCytopathology ) {
+            exit("GlobalFellowshipSpecialty not found with name Cytopathology");
+        }
+
+        $testing = true;
+        $counter = 0;
+        $counterGlobal = 0;
+
+        foreach( $fellowshipSubspecialtyArr as $fellappSpecialtyStr ) {
+            //1) Find all fellowship applications with deleted fellappSpecialty
+            //2) Find and replace deleted fellappSpecialty with other (i.e. Cytopathology)
+            //3) Remove deleted fellappSpecialty
+
+            //Remove FellowshipSubspecialty
+            //1)
+            $fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->findOneByName(trim($fellappSpecialtyStr));
+
+            if( $fellappSubspecialty ) {
+                //2) Find fellowship applications FellowshipApplication
+                //$fellappSubspecialty = $em->getRepository(FellowshipApplication::class)->find('find by fellowshipSubspecialty = $fellappSubspecialty');
+                $fellapps = $em->getRepository(FellowshipApplication::class)
+                    ->findBy([
+                        'fellowshipSubspecialty' => $fellappSubspecialty,
+                        'institution'            => $washUPathology,
+                    ]);
+                echo "fellappSubspecialty=$fellappSubspecialty: fellapps=".count($fellapps)."<br>";
+                foreach( $fellapps as $fellapp ) {
+                    $fellapp->setFellowshipSubspecialty($cytopathology);
+                    echo "Update fellapp $fellapp <br>";
+                }
+                //3) Remove deleted fellappSpecialty
+                if( !$testing ) {
+                    $em->remove($fellappSubspecialty);
+                }
+                $counter++;
+            } else {
+                exit("FellowshipSubspecialty not found with name $fellappSpecialtyStr");
+            }
+
+            //Remove GlobalFellowshipSpecialty
+            //1)
+            $globalFellappSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellappSpecialtyStr);
+            if( $globalFellappSpecialty ) {
+                //2)
+                $globalFellapps = $em->getRepository(FellowshipApplication::class)
+                    ->findBy([
+                        'globalFellowshipSpecialty' => $globalFellappSpecialty,
+                        'institution'               => $washUPathology,
+                    ]);
+                echo "globalFellappSpecialty=$globalFellappSpecialty: fellapps=".count($globalFellapps)."<br>";
+                foreach ($globalFellapps as $globalFellapp) {
+                    $globalFellapp->setFellowshipSubspecialty($globalCytopathology);
+                    echo "Update globalFellapp $globalFellapp <br>";
+                }
+                //3) Remove deleted $globalFellappSpecialty
+                if( !$testing ) {
+                    $em->remove($globalFellappSpecialty);
+                }
+                $counterGlobal++;
+            } else {
+                exit("GlobalFellowshipSpecialty not found with name $fellappSpecialtyStr");
+            }
+        }
+
+        exit("end of updateGlobalFellowshipTypesAction, counter=$counter, counterGlobal=$counterGlobal");
     }
 
 }

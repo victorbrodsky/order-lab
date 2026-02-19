@@ -2675,20 +2675,49 @@ class FellAppUtil {
         return $role;
     }
 
+    //WCM fellowship specialties
     public function getFellowshipTypesStrArr() {
+        $fellowshipSubspecialtyArr = [
+            //"Blood Banking and Transfusion Medicine",
+            "Clinical Chemistry",                       //ok
+            "Clinical Informatics",                     //ok
+            "Cytopathology",                            //ok
+            "Gastrointestinal Pathology",               //ok
+            //"Dermatopathology",
+            //"Genitourinary and Renal Pathology",
+            "Genitourinary Pathology",                  //ok
+            "Renal Pathology",                          //ok
+            //"Gynecologic and Breast Pathology",
+            "Breast Pathology",                         //ok
+            "Gynecologic Pathology",                    //ok
+            //"Head and Neck Pathology",
+            "Hematopathology",                          //ok
+            //"Histocompatibility and Immunogenetics",
+            //"Laboratory Genetics and Genomics",
+            //"Liver and GI Pathology",
+            //"Medical and Public Health Microbiology",
+            "Molecular Genetic Pathology",              //ok
+            //"Neuropathology",
+            //"Pediatric Pathology",
+            //"Surgical Pathology"
+        ];
+        return $fellowshipSubspecialtyArr;
+    }
+    //Washu has separated name list
+    public function getFellowshipTypesWahsuStrArr() {
         $fellowshipSubspecialtyArr = [
             "Blood Banking and Transfusion Medicine",
             "Clinical Chemistry",
-            "Clinical Informatics",
+            //"Clinical Informatics",
             "Cytopathology",
-            "Gastrointestinal Pathology",
+            //"Gastrointestinal Pathology",
             "Dermatopathology",
-            //"Genitourinary and Renal Pathology",
-            "Genitourinary Pathology",
-            "Renal Pathology",
-            //"Gynecologic and Breast Pathology",
-            "Breast Pathology",
-            "Gynecologic Pathology",
+            "Genitourinary and Renal Pathology",
+            //"Genitourinary Pathology",
+            //"Renal Pathology",
+            "Gynecologic and Breast Pathology",
+            //"Breast Pathology",
+            //"Gynecologic Pathology",
             "Head and Neck Pathology",
             "Hematopathology",
             "Histocompatibility and Immunogenetics",

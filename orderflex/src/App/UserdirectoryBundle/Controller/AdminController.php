@@ -5996,7 +5996,8 @@ class AdminController extends OrderAbstractController
         ////// EOF 1) get WashU pathology //////
 
         $fellappUtil = $this->container->get('fellapp_util');
-        $washuFellowshipSpecialties = $fellappUtil->getFellowshipTypesStrArr(); //generateGlobalFellowshipSpecialtiesWahsu
+        //$washuFellowshipSpecialties = $fellappUtil->getFellowshipTypesStrArr(); //generateGlobalFellowshipSpecialtiesWahsu
+        $washuFellowshipSpecialties = $fellappUtil->getFellowshipTypesWahsuStrArr(); //generateGlobalFellowshipSpecialtiesWahsu
 
         foreach( $washuFellowshipSpecialties as $washuFellowshipSpecialty ) {
                 //$listEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellowshipSpecialty);
