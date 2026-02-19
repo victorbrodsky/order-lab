@@ -61,7 +61,7 @@
                                     {#{{ form_row(info.firstName) }}#}
                                     {% if applicantUser %}
                                         {{ form_row(info.firstName, {
-                                            disabled: true
+                                            readonly: true
                                         }) }}
                                     {% else %}
                                         {{ form_row(info.firstName) }}
@@ -73,7 +73,7 @@
                                         {#}#}
                                     {#}) }}#}
                                     {#{{ form_row(info.firstName, {#}
-                                        {#disabled: true#}
+                                        {#readonly: true#}
                                     {#}) }}#}
                                 {% endif %}
                             </div>
@@ -84,7 +84,7 @@
                                     {#{{ form_row(info.lastName) }}#}
                                     {% if applicantUser %}
                                         {{ form_row(info.lastName, {
-                                            disabled: true
+                                            readonly: true
                                         }) }}
                                     {% else %}
                                         {{ form_row(info.lastName) }}
@@ -98,7 +98,7 @@
                                     {#{{ form_row(info.middleName) }}#}
                                     {% if applicantUser %}
                                         {{ form_row(info.middleName, {
-                                            disabled: true
+                                            readonly: true
                                         }) }}
                                     {% else %}
                                         {{ form_row(info.middleName) }}
@@ -117,7 +117,7 @@
                                 {{ form_widget(info.email) }}
                                 {#{% if applicantUser %}#}
                                     {#{{ form_widget(info.email, {#}
-                                        {#disabled: true#}
+                                        {#readonly: true#}
                                     {#}) }}#}
                                 {#{% else %}#}
                                     {#{{ form_widget(info.email) }}#}
