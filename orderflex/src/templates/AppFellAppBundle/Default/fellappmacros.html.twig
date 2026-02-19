@@ -582,7 +582,7 @@
 
 {% endmacro %}
 
-{% macro submitConfirmationModal( route_path ) %}
+{% macro submitConfirmationModal( route_path, user_id ) %}
     <!-- Confirmation Modal -->
     <div class="modal fade" id="confirmSubmitModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitLabel">
         <div class="modal-dialog" role="document">
@@ -646,7 +646,7 @@
         </div>
     </div>
 {% endmacro %}
-{% macro draftConfirmationModal( route_path ) %}
+{% macro draftConfirmationModal( route_path, user_id ) %}
     {#var submitterEmail = $('#oleg_fellappbundle_fellowshipapplication_user_infos_0_email').val();#}
     <!-- Confirmation Modal -->
     <div class="modal fade" id="confirmDraftModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitLabel">
@@ -659,9 +659,11 @@
                     {% if route_path == 'fellapp_apply' or route_path == 'fellapp_apply_post' %}
                         An email with a confirmation link will be sent to the following email address you have provided:
                         <span class="submitterEmailDisplay">[email not set]</span>.
+                        {% if not user_id %}
                         Please confirm this email address is correct and you will be able to review the email message.
                         Once you visit the confirmation link provided via email,
                         you will select your password to activate your account and gain access to your saved application form draft.
+                        {% endif %}
                     {% else %}
                         Are you sure you would like to save your application as draft?
                     {% endif %}
