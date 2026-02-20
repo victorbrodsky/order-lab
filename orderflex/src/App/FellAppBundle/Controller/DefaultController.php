@@ -468,6 +468,7 @@ class DefaultController extends OrderAbstractController
         exit("end of fellapp thumbnails, counter=$counter");
     }
 
+    //http://127.0.0.1/fellowship-applications/update-fellowship-types
     #[Route(path: '/update-fellowship-types', name: 'fellapp_update_fellowship_types')]
     public function updateGlobalFellowshipTypesAction( Request $request )
     {
@@ -507,6 +508,7 @@ class DefaultController extends OrderAbstractController
         if( !$washUPathology ) {
             exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "Pathology and Immunology"');
         }
+        echo "washUPathology=$washUPathology, ID=".$washUPathology->getId()." <br>";
         ////// EOF get WashU pathology //////
 
         $cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Cytopathology");
@@ -526,10 +528,23 @@ class DefaultController extends OrderAbstractController
             //1) Find all fellowship applications with deleted fellappSpecialty
             //2) Find and replace deleted fellappSpecialty with other (i.e. Cytopathology)
             //3) Remove deleted fellappSpecialty
+            $fellappSpecialtyStr = trim($fellappSpecialtyStr);
+            echo "<br>### [$fellappSpecialtyStr] ###<br>";
 
             //Remove FellowshipSubspecialty
             //1)
-            $fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->findOneByName(trim($fellappSpecialtyStr));
+            //$fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->findOneByName(trim($fellappSpecialtyStr));
+            $fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)
+                ->findBy([
+                    'institution' => $washUPathology,
+                    'name'        => $fellappSpecialtyStr,
+                ]);
+            $globalFellappSpecialty = null;
+            if( count($fellappSubspecialty) == 1 ) {
+                $fellappSubspecialty = $fellappSubspecialty[0];
+            } else {
+                echo "<br>!!! Not found FellowshipSubspecialty by name=$fellappSpecialtyStr <br>";
+            }
 
             if( $fellappSubspecialty ) {
                 //2) Find fellowship applications FellowshipApplication
@@ -539,10 +554,10 @@ class DefaultController extends OrderAbstractController
                         'fellowshipSubspecialty' => $fellappSubspecialty,
                         'institution'            => $washUPathology,
                     ]);
-                echo "fellappSubspecialty=$fellappSubspecialty: fellapps=".count($fellapps)."<br>";
+                echo "fellapps=".count($fellapps).": fellappSubspecialty=$fellappSubspecialty"."<br>";
                 foreach( $fellapps as $fellapp ) {
                     $fellapp->setFellowshipSubspecialty($cytopathology);
-                    echo "Update fellapp $fellapp <br>";
+                    echo "Update fellapp ID=".$fellapp->getId()."<br>";
                 }
                 //3) Remove deleted fellappSpecialty
                 if( !$testing ) {
@@ -550,23 +565,35 @@ class DefaultController extends OrderAbstractController
                 }
                 $counter++;
             } else {
-                exit("FellowshipSubspecialty not found with name $fellappSpecialtyStr");
+                //exit("FellowshipSubspecialty not found with name $fellappSpecialtyStr");
+                echo "FellowshipSubspecialty not found with name $fellappSpecialtyStr"."<br>";
             }
 
             //Remove GlobalFellowshipSpecialty
             //1)
-            $globalFellappSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellappSpecialtyStr);
+            //$globalFellappSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellappSpecialtyStr);
+            $globalFellappSpecialties = $em->getRepository(GlobalFellowshipSpecialty::class)
+                ->findBy([
+                    'institution' => $washUPathology,
+                    'name'        => $fellappSpecialtyStr,
+                ]);
+            $globalFellappSpecialty = null;
+            if( count($globalFellappSpecialties) == 1 ) {
+                $globalFellappSpecialty = $globalFellappSpecialties[0];
+            } else {
+                echo "<br>!!! Not found GlobalFellowshipSpecialty by name=$fellappSpecialtyStr <br>";
+            }
             if( $globalFellappSpecialty ) {
                 //2)
                 $globalFellapps = $em->getRepository(FellowshipApplication::class)
                     ->findBy([
                         'globalFellowshipSpecialty' => $globalFellappSpecialty,
-                        'institution'               => $washUPathology,
+                        //'institution'               => $washUPathology,
                     ]);
-                echo "globalFellappSpecialty=$globalFellappSpecialty: fellapps=".count($globalFellapps)."<br>";
+                echo "fellapps=".count($globalFellapps).": globalFellappSpecialty=$globalFellappSpecialty"."<br>";
                 foreach ($globalFellapps as $globalFellapp) {
                     $globalFellapp->setFellowshipSubspecialty($globalCytopathology);
-                    echo "Update globalFellapp $globalFellapp <br>";
+                    echo "Update globalFellapp ID=".$globalFellapp->getId()."<br>";
                 }
                 //3) Remove deleted $globalFellappSpecialty
                 if( !$testing ) {
@@ -574,11 +601,12 @@ class DefaultController extends OrderAbstractController
                 }
                 $counterGlobal++;
             } else {
-                exit("GlobalFellowshipSpecialty not found with name $fellappSpecialtyStr");
+                //exit("GlobalFellowshipSpecialty not found with name $fellappSpecialtyStr");
+                echo "GlobalFellowshipSpecialty not found with name $fellappSpecialtyStr"."<br>";
             }
         }
 
-        exit("end of updateGlobalFellowshipTypesAction, counter=$counter, counterGlobal=$counterGlobal");
+        exit("<br><br>end of updateGlobalFellowshipTypesAction, counter=$counter, counterGlobal=$counterGlobal");
     }
 
 }
