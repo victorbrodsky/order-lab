@@ -547,7 +547,7 @@ class DefaultController extends OrderAbstractController
                 //->andWhere('LOWER(s.institution) = LOWER(:institution)')
                 ->setParameter('name', $fellappSpecialtyStr);
             $fellappSubspecialties = $qb->getQuery()->getResult();
-            echo "Found local count=".count($fellappSubspecialties)."<br>";
+            echo "<br>Found local count=".count($fellappSubspecialties)."<br>";
 
 //            $globalFellappSpecialty = null;
 //            if( count($fellappSubspecialties) == 1 ) {
