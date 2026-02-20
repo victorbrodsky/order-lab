@@ -520,9 +520,11 @@ class DefaultController extends OrderAbstractController
             exit("GlobalFellowshipSpecialty not found with name Cytopathology");
         }
 
-        $testing = true;
         $counter = 0;
         $counterGlobal = 0;
+
+        $testing = true;
+        $testing = false;
 
         foreach( $fellowshipSubspecialtyArr as $fellappSpecialtyStr ) {
             //1) Find all fellowship applications with deleted fellappSpecialty
@@ -595,7 +597,7 @@ class DefaultController extends OrderAbstractController
                     ]);
                 echo "fellapps=".count($globalFellapps).": globalFellappSpecialty=$globalFellappSpecialty"."<br>";
                 foreach ($globalFellapps as $globalFellapp) {
-                    $globalFellapp->setFellowshipSubspecialty($globalCytopathology);
+                    $globalFellapp->setGlobalFellowshipSpecialty($globalCytopathology);
                     echo "Update globalFellapp ID=".$globalFellapp->getId()."<br>";
                 }
                 //3) Remove deleted $globalFellappSpecialty
