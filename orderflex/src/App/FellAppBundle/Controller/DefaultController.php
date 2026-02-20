@@ -588,7 +588,7 @@ class DefaultController extends OrderAbstractController
             //$globalFellappSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellappSpecialtyStr);
             $globalFellappSpecialties = $em->getRepository(GlobalFellowshipSpecialty::class)
                 ->findBy([
-                    'institution' => $washUPathology,
+                    //'institution' => $washUPathology,
                     'name'        => $fellappSpecialtyStr,
                 ]);
             $globalFellappSpecialty = null;
