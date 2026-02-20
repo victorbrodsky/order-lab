@@ -549,45 +549,47 @@ class DefaultController extends OrderAbstractController
             $fellappSubspecialties = $qb->getQuery()->getResult();
             echo "Found local count=".count($fellappSubspecialties)."<br>";
 
-            $globalFellappSpecialty = null;
-            if( count($fellappSubspecialties) == 1 ) {
-                $fellappSubspecialty = $fellappSubspecialties[0];
-            } else {
-                echo "<br>!!! Not found FellowshipSubspecialty by name=[$fellappSpecialtyStr] <br>";
-            }
+//            $globalFellappSpecialty = null;
+//            if( count($fellappSubspecialties) == 1 ) {
+//                $fellappSubspecialty = $fellappSubspecialties[0];
+//            } else {
+//                echo "<br>!!! Not found FellowshipSubspecialty by name=[$fellappSpecialtyStr] <br>";
+//            }
 
-            if( $fellappSubspecialty ) {
-                echo "*** Found FellowshipSubspecialty [$fellappSubspecialty]<br>";
-                //2) Find fellowship applications FellowshipApplication
-                $fellapps = $em->getRepository(FellowshipApplication::class)
-                    ->findBy([
-                        'fellowshipSubspecialty' => $fellappSubspecialty->getId(),
-                        //'institution'            => $washUPathology,
+            foreach($fellappSubspecialties as $fellappSubspecialty) {
+                if ($fellappSubspecialty) {
+                    echo "*** Found FellowshipSubspecialty [$fellappSubspecialty]<br>";
+                    //2) Find fellowship applications FellowshipApplication
+                    $fellapps = $em->getRepository(FellowshipApplication::class)
+                        ->findBy([
+                            'fellowshipSubspecialty' => $fellappSubspecialty->getId(),
+                            //'institution'            => $washUPathology,
+                        ]);
+                    echo "fellapps=" . count($fellapps) . ": fellappSubspecialty=[$fellappSubspecialty]" . "<br>";
+                    foreach ($fellapps as $fellapp) {
+                        $fellapp->setFellowshipSubspecialty($cytopathology);
+                        echo "Update fellapp ID=" . $fellapp->getId() . "<br>";
+                    }
+                    //Remove from Roles
+                    $roles = $em->getRepository(Roles::class)->findBy([
+                        'fellowshipSubspecialty' => $fellappSubspecialty,
                     ]);
-                echo "fellapps=".count($fellapps).": fellappSubspecialty=[$fellappSubspecialty]"."<br>";
-                foreach( $fellapps as $fellapp ) {
-                    $fellapp->setFellowshipSubspecialty($cytopathology);
-                    echo "Update fellapp ID=".$fellapp->getId()."<br>";
+                    echo "$fellappSpecialtyStr roles=" . count($roles) . "<br>";
+                    foreach ($roles as $role) {
+                        echo "Update role $fellappSpecialtyStr from role $role<br>";
+                        $role->setFellowshipSubspecialty($cytopathology);
+                    }
+                    //3) Remove deleted fellappSpecialty
+                    echo "***Remove FellowshipSubspecialty " . $fellappSubspecialty->getNameInstitution() . ",ID=" . $fellappSubspecialty->getId() . "<br>";
+                    if (!$testing) {
+                        //$em->remove($fellappSubspecialty);
+                        //$em->flush();
+                    }
+                    $counter++;
+                } else {
+                    //exit("FellowshipSubspecialty not found with name $fellappSpecialtyStr");
+                    echo "FellowshipSubspecialty not found with name [$fellappSpecialtyStr]" . "<br>";
                 }
-                //Remove from Roles
-                $roles = $em->getRepository(Roles::class)->findBy([
-                    'fellowshipSubspecialty' => $fellappSubspecialty,
-                ]);
-                echo "$fellappSpecialtyStr roles=".count($roles)."<br>";
-                foreach($roles as $role) {
-                    echo "Update role $fellappSpecialtyStr from role $role<br>";
-                    $role->setFellowshipSubspecialty($cytopathology);
-                }
-                //3) Remove deleted fellappSpecialty
-                echo "***Remove FellowshipSubspecialty ".$fellappSubspecialty->getNameInstitution().",ID=".$fellappSubspecialty->getId()."<br>";
-                if( !$testing ) {
-                    //$em->remove($fellappSubspecialty);
-                    //$em->flush();
-                }
-                $counter++;
-            } else {
-                //exit("FellowshipSubspecialty not found with name $fellappSpecialtyStr");
-                echo "FellowshipSubspecialty not found with name [$fellappSpecialtyStr]"."<br>";
             }
 
             //////////// Remove GlobalFellowshipSpecialty //////////////
@@ -605,35 +607,37 @@ class DefaultController extends OrderAbstractController
 //                //->andWhere('LOWER(s.institution) = LOWER(:institution)')
 //                ->setParameter('name', $fellappSpecialtyStr);
 //            $globalFellappSpecialties = $qb->getQuery()->getResult();
-            $globalFellappSpecialty = null;
-            if( count($globalFellappSpecialties) == 1 ) {
-                $globalFellappSpecialty = $globalFellappSpecialties[0];
-            } else {
-                echo "<br>!!! Not found GlobalFellowshipSpecialty by name=[$fellappSpecialtyStr] <br>";
-            }
-            if( $globalFellappSpecialty ) {
-                echo "*** Found GlobalFellowshipSpecialty $globalFellappSpecialty<br>";
-                //2)
-                $globalFellapps = $em->getRepository(FellowshipApplication::class)
-                    ->findBy([
-                        'globalFellowshipSpecialty' => $globalFellappSpecialty,
-                        //'institution'               => $washUPathology,
-                    ]);
-                echo "fellapps=".count($globalFellapps).": globalFellappSpecialty=$globalFellappSpecialty"."<br>";
-                foreach ($globalFellapps as $globalFellapp) {
-                    $globalFellapp->setGlobalFellowshipSpecialty($globalCytopathology);
-                    echo "Update globalFellapp ID=".$globalFellapp->getId()."<br>";
+//            $globalFellappSpecialty = null;
+//            if( count($globalFellappSpecialties) == 1 ) {
+//                $globalFellappSpecialty = $globalFellappSpecialties[0];
+//            } else {
+//                echo "<br>!!! Not found GlobalFellowshipSpecialty by name=[$fellappSpecialtyStr] <br>";
+//            }
+            foreach($globalFellappSpecialties as $globalFellappSpecialty) {
+                if ($globalFellappSpecialty) {
+                    echo "*** Found GlobalFellowshipSpecialty $globalFellappSpecialty<br>";
+                    //2)
+                    $globalFellapps = $em->getRepository(FellowshipApplication::class)
+                        ->findBy([
+                            'globalFellowshipSpecialty' => $globalFellappSpecialty,
+                            //'institution'               => $washUPathology,
+                        ]);
+                    echo "fellapps=" . count($globalFellapps) . ": globalFellappSpecialty=$globalFellappSpecialty" . "<br>";
+                    foreach ($globalFellapps as $globalFellapp) {
+                        $globalFellapp->setGlobalFellowshipSpecialty($globalCytopathology);
+                        echo "Update globalFellapp ID=" . $globalFellapp->getId() . "<br>";
+                    }
+                    //3) Remove deleted $globalFellappSpecialty
+                    echo "***Remove GlobalFellowshipSpecialty " . $globalFellappSpecialty->getNameInstitution() . ",ID=" . $globalFellappSpecialty->getId() . "<br>";
+                    if (!$testing) {
+                        //$em->remove($globalFellappSpecialty);
+                        //$em->flush();
+                    }
+                    $counterGlobal++;
+                } else {
+                    //exit("GlobalFellowshipSpecialty not found with name $fellappSpecialtyStr");
+                    echo "GlobalFellowshipSpecialty not found with name $fellappSpecialtyStr" . "<br>";
                 }
-                //3) Remove deleted $globalFellappSpecialty
-                echo "***Remove GlobalFellowshipSpecialty ".$globalFellappSpecialty->getNameInstitution().",ID=".$globalFellappSpecialty->getId()."<br>";
-                if( !$testing ) {
-                    //$em->remove($globalFellappSpecialty);
-                    //$em->flush();
-                }
-                $counterGlobal++;
-            } else {
-                //exit("GlobalFellowshipSpecialty not found with name $fellappSpecialtyStr");
-                echo "GlobalFellowshipSpecialty not found with name $fellappSpecialtyStr"."<br>";
             }
         }
 
