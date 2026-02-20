@@ -533,7 +533,7 @@ class DefaultController extends OrderAbstractController
             $fellappSpecialtyStr = trim($fellappSpecialtyStr);
             echo "<br>### [$fellappSpecialtyStr] ###";
 
-            //Remove FellowshipSubspecialty
+            /////////// Remove FellowshipSubspecialty ///////////////
             //1)
             //$fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->findOneByName(trim($fellappSpecialtyStr));
             $fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)
@@ -562,6 +562,13 @@ class DefaultController extends OrderAbstractController
                     $fellapp->setFellowshipSubspecialty($cytopathology);
                     echo "Update fellapp ID=".$fellapp->getId()."<br>";
                 }
+                //Remove from Roles
+                $roles = $em->getRepository(Roles::class)->findBy([
+                    'fellowshipSubspecialty' => $fellappSubspecialty,
+                ]);
+                foreach($roles as $role) {
+                    $role->setFellowshipSubspecialty(null);
+                }
                 //3) Remove deleted fellappSpecialty
                 echo "***Remove FellowshipSubspecialty ".$fellappSubspecialty->getNameInstitution().",ID=".$fellappSubspecialty->getId()."<br>";
                 if( !$testing ) {
@@ -574,7 +581,7 @@ class DefaultController extends OrderAbstractController
                 echo "FellowshipSubspecialty not found with name $fellappSpecialtyStr"."<br>";
             }
 
-            //Remove GlobalFellowshipSpecialty
+            //////////// Remove GlobalFellowshipSpecialty //////////////
             //1)
             //$globalFellappSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellappSpecialtyStr);
             $globalFellappSpecialties = $em->getRepository(GlobalFellowshipSpecialty::class)
