@@ -566,6 +566,7 @@ class DefaultController extends OrderAbstractController
                 echo "***Remove FellowshipSubspecialty ".$fellappSubspecialty->getNameInstitution().",ID=".$fellappSubspecialty->getId()."<br>";
                 if( !$testing ) {
                     $em->remove($fellappSubspecialty);
+                    $em->flush();
                 }
                 $counter++;
             } else {
