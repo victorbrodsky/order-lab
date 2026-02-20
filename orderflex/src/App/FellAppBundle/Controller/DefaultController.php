@@ -546,11 +546,12 @@ class DefaultController extends OrderAbstractController
                 ->where('LOWER(s.name) = LOWER(:name)')
                 //->andWhere('LOWER(s.institution) = LOWER(:institution)')
                 ->setParameter('name', $fellappSpecialtyStr);
-            $fellappSubspecialty = $qb->getQuery()->getResult();
+            $fellappSubspecialties = $qb->getQuery()->getResult();
+            echo "Found local count=".count($fellappSubspecialties)."<br>";
 
             $globalFellappSpecialty = null;
-            if( count($fellappSubspecialty) == 1 ) {
-                $fellappSubspecialty = $fellappSubspecialty[0];
+            if( count($fellappSubspecialties) == 1 ) {
+                $fellappSubspecialty = $fellappSubspecialties[0];
             } else {
                 echo "<br>!!! Not found FellowshipSubspecialty by name=[$fellappSpecialtyStr] <br>";
             }
@@ -597,6 +598,7 @@ class DefaultController extends OrderAbstractController
                     //'institution' => $washUPathology,
                     'name'        => $fellappSpecialtyStr,
                 ]);
+            echo "Found global count=".count($globalFellappSpecialties)."<br>";
 //            $repo = $em->getRepository(GlobalFellowshipSpecialty::class);
 //            $qb = $repo->createQueryBuilder('s')
 //                ->where('LOWER(s.name) = LOWER(:name)')
