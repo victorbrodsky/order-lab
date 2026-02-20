@@ -536,11 +536,18 @@ class DefaultController extends OrderAbstractController
             /////////// Remove FellowshipSubspecialty ///////////////
             //1)
             //$fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->findOneByName(trim($fellappSpecialtyStr));
-            $fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)
-                ->findBy([
-                    //'institution' => $washUPathology,
-                    'name'        => $fellappSpecialtyStr,
-                ]);
+//            $fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)
+//                ->findBy([
+//                    //'institution' => $washUPathology,
+//                    'name'        => $fellappSpecialtyStr,
+//                ]);
+            $repo = $em->getRepository(FellowshipSubspecialty::class);
+            $qb = $repo->createQueryBuilder('s')
+                ->where('LOWER(s.name) = LOWER(:name)')
+                //->andWhere('LOWER(s.institution) = LOWER(:institution)')
+                ->setParameter('name', $fellappSpecialtyStr);
+            $fellappSubspecialty = $qb->getQuery()->getResult();
+
             $globalFellappSpecialty = null;
             if( count($fellappSubspecialty) == 1 ) {
                 $fellappSubspecialty = $fellappSubspecialty[0];
@@ -586,11 +593,17 @@ class DefaultController extends OrderAbstractController
             //////////// Remove GlobalFellowshipSpecialty //////////////
             //1)
             //$globalFellappSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellappSpecialtyStr);
-            $globalFellappSpecialties = $em->getRepository(GlobalFellowshipSpecialty::class)
-                ->findBy([
-                    //'institution' => $washUPathology,
-                    'name'        => $fellappSpecialtyStr,
-                ]);
+//            $globalFellappSpecialties = $em->getRepository(GlobalFellowshipSpecialty::class)
+//                ->findBy([
+//                    //'institution' => $washUPathology,
+//                    'name'        => $fellappSpecialtyStr,
+//                ]);
+            $repo = $em->getRepository(GlobalFellowshipSpecialty::class);
+            $qb = $repo->createQueryBuilder('s')
+                ->where('LOWER(s.name) = LOWER(:name)')
+                //->andWhere('LOWER(s.institution) = LOWER(:institution)')
+                ->setParameter('name', $fellappSpecialtyStr);
+            $globalFellappSpecialties = $qb->getQuery()->getResult();
             $globalFellappSpecialty = null;
             if( count($globalFellappSpecialties) == 1 ) {
                 $globalFellappSpecialty = $globalFellappSpecialties[0];
