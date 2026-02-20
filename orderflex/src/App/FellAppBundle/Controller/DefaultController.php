@@ -547,7 +547,7 @@ class DefaultController extends OrderAbstractController
             }
 
             if( $fellappSubspecialty ) {
-                echo "Found FellowshipSubspecialty $fellappSubspecialty<br>";
+                echo "*** Found FellowshipSubspecialty $fellappSubspecialty<br>";
                 //2) Find fellowship applications FellowshipApplication
                 //$fellappSubspecialty = $em->getRepository(FellowshipApplication::class)->find('find by fellowshipSubspecialty = $fellappSubspecialty');
                 $fellapps = $em->getRepository(FellowshipApplication::class)
@@ -585,7 +585,7 @@ class DefaultController extends OrderAbstractController
                 echo "<br>!!! Not found GlobalFellowshipSpecialty by name=$fellappSpecialtyStr <br>";
             }
             if( $globalFellappSpecialty ) {
-                echo "Found GlobalFellowshipSpecialty $globalFellappSpecialty<br>";
+                echo "*** Found GlobalFellowshipSpecialty $globalFellappSpecialty<br>";
                 //2)
                 $globalFellapps = $em->getRepository(FellowshipApplication::class)
                     ->findBy([
