@@ -468,6 +468,7 @@ class DefaultController extends OrderAbstractController
         exit("end of fellapp thumbnails, counter=$counter");
     }
 
+    //Keep only list of specialties according to getFellowshipTypesStrArr (WCM) and getFellowshipTypesWahsuStrArr (Washu)
     //http://127.0.0.1/fellowship-applications/update-fellowship-types
     #[Route(path: '/update-fellowship-types', name: 'fellapp_update_fellowship_types')]
     public function updateGlobalFellowshipTypesAction( Request $request )
