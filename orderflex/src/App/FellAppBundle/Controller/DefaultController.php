@@ -568,8 +568,8 @@ class DefaultController extends OrderAbstractController
                 ]);
                 echo "$fellappSpecialtyStr roles=".count($roles)."<br>";
                 foreach($roles as $role) {
-                    echo "Remove $fellappSpecialtyStr from role $role<br>";
-                    $role->setFellowshipSubspecialty(null);
+                    echo "Update role $fellappSpecialtyStr from role $role<br>";
+                    $role->setFellowshipSubspecialty($cytopathology);
                 }
                 //3) Remove deleted fellappSpecialty
                 echo "***Remove FellowshipSubspecialty ".$fellappSubspecialty->getNameInstitution().",ID=".$fellappSubspecialty->getId()."<br>";
