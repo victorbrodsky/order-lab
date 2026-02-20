@@ -567,6 +567,7 @@ class DefaultController extends OrderAbstractController
                     'fellowshipSubspecialty' => $fellappSubspecialty,
                 ]);
                 foreach($roles as $role) {
+                    echo "Remove $fellappSpecialtyStr from role $role<br>";
                     $role->setFellowshipSubspecialty(null);
                 }
                 //3) Remove deleted fellappSpecialty
