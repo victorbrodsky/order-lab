@@ -561,6 +561,7 @@ class DefaultController extends OrderAbstractController
                     echo "Update fellapp ID=".$fellapp->getId()."<br>";
                 }
                 //3) Remove deleted fellappSpecialty
+                echo "Remove FellowshipSubspecialty ".$fellappSubspecialty->getName().",ID=".$fellappSubspecialty->getId()."<br>";
                 if( !$testing ) {
                     $em->remove($fellappSubspecialty);
                 }
@@ -598,7 +599,7 @@ class DefaultController extends OrderAbstractController
                     echo "Update globalFellapp ID=".$globalFellapp->getId()."<br>";
                 }
                 //3) Remove deleted $globalFellappSpecialty
-                echo "Remove GlobalFellowshipSpecialty ID=".$globalFellappSpecialty->getId()."<br>";
+                echo "Remove GlobalFellowshipSpecialty ".$globalFellappSpecialty->getName().",ID=".$globalFellappSpecialty->getId()."<br>";
                 if( !$testing ) {
                     $em->remove($globalFellappSpecialty);
                 }
