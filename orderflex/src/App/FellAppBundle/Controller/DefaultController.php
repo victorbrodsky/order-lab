@@ -545,11 +545,11 @@ class DefaultController extends OrderAbstractController
             if( count($fellappSubspecialty) == 1 ) {
                 $fellappSubspecialty = $fellappSubspecialty[0];
             } else {
-                echo "<br>!!! Not found FellowshipSubspecialty by name=$fellappSpecialtyStr <br>";
+                echo "<br>!!! Not found FellowshipSubspecialty by name=[$fellappSpecialtyStr] <br>";
             }
 
             if( $fellappSubspecialty ) {
-                echo "*** Found FellowshipSubspecialty $fellappSubspecialty<br>";
+                echo "*** Found FellowshipSubspecialty [$fellappSubspecialty]<br>";
                 //2) Find fellowship applications FellowshipApplication
                 //$fellappSubspecialty = $em->getRepository(FellowshipApplication::class)->find('find by fellowshipSubspecialty = $fellappSubspecialty');
                 $fellapps = $em->getRepository(FellowshipApplication::class)
@@ -557,7 +557,7 @@ class DefaultController extends OrderAbstractController
                         'fellowshipSubspecialty' => $fellappSubspecialty,
                         //'institution'            => $washUPathology,
                     ]);
-                echo "fellapps=".count($fellapps).": fellappSubspecialty=$fellappSubspecialty"."<br>";
+                echo "fellapps=".count($fellapps).": fellappSubspecialty=[$fellappSubspecialty]"."<br>";
                 foreach( $fellapps as $fellapp ) {
                     $fellapp->setFellowshipSubspecialty($cytopathology);
                     echo "Update fellapp ID=".$fellapp->getId()."<br>";
@@ -580,7 +580,7 @@ class DefaultController extends OrderAbstractController
                 $counter++;
             } else {
                 //exit("FellowshipSubspecialty not found with name $fellappSpecialtyStr");
-                echo "FellowshipSubspecialty not found with name $fellappSpecialtyStr"."<br>";
+                echo "FellowshipSubspecialty not found with name [$fellappSpecialtyStr]"."<br>";
             }
 
             //////////// Remove GlobalFellowshipSpecialty //////////////
@@ -595,7 +595,7 @@ class DefaultController extends OrderAbstractController
             if( count($globalFellappSpecialties) == 1 ) {
                 $globalFellappSpecialty = $globalFellappSpecialties[0];
             } else {
-                echo "<br>!!! Not found GlobalFellowshipSpecialty by name=$fellappSpecialtyStr <br>";
+                echo "<br>!!! Not found GlobalFellowshipSpecialty by name=[$fellappSpecialtyStr] <br>";
             }
             if( $globalFellappSpecialty ) {
                 echo "*** Found GlobalFellowshipSpecialty $globalFellappSpecialty<br>";
