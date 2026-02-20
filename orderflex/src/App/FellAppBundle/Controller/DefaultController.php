@@ -614,7 +614,7 @@ class DefaultController extends OrderAbstractController
                 //2)
                 $globalFellapps = $em->getRepository(FellowshipApplication::class)
                     ->findBy([
-                        //'globalFellowshipSpecialty' => $globalFellappSpecialty,
+                        'globalFellowshipSpecialty' => $globalFellappSpecialty,
                         //'institution'               => $washUPathology,
                     ]);
                 echo "fellapps=".count($globalFellapps).": globalFellappSpecialty=$globalFellappSpecialty"."<br>";
