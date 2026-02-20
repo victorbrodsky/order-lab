@@ -538,7 +538,7 @@ class DefaultController extends OrderAbstractController
             //$fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->findOneByName(trim($fellappSpecialtyStr));
             $fellappSubspecialty = $em->getRepository(FellowshipSubspecialty::class)
                 ->findBy([
-                    'institution' => $washUPathology,
+                    //'institution' => $washUPathology,
                     'name'        => $fellappSpecialtyStr,
                 ]);
             $globalFellappSpecialty = null;
@@ -555,7 +555,7 @@ class DefaultController extends OrderAbstractController
                 $fellapps = $em->getRepository(FellowshipApplication::class)
                     ->findBy([
                         'fellowshipSubspecialty' => $fellappSubspecialty,
-                        'institution'            => $washUPathology,
+                        //'institution'            => $washUPathology,
                     ]);
                 echo "fellapps=".count($fellapps).": fellappSubspecialty=$fellappSubspecialty"."<br>";
                 foreach( $fellapps as $fellapp ) {
