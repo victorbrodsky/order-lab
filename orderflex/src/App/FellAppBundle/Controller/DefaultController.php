@@ -566,6 +566,7 @@ class DefaultController extends OrderAbstractController
                 $roles = $em->getRepository(Roles::class)->findBy([
                     'fellowshipSubspecialty' => $fellappSubspecialty,
                 ]);
+                echo "$fellappSpecialtyStr roles=".count($roles)."<br>";
                 foreach($roles as $role) {
                     echo "Remove $fellappSpecialtyStr from role $role<br>";
                     $role->setFellowshipSubspecialty(null);
