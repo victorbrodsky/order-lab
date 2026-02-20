@@ -524,7 +524,7 @@ class DefaultController extends OrderAbstractController
         $counterGlobal = 0;
 
         $testing = true;
-        $testing = false;
+        //$testing = false;
 
         foreach( $fellowshipSubspecialtyArr as $fellappSpecialtyStr ) {
             //1) Find all fellowship applications with deleted fellappSpecialty
@@ -558,10 +558,9 @@ class DefaultController extends OrderAbstractController
             if( $fellappSubspecialty ) {
                 echo "*** Found FellowshipSubspecialty [$fellappSubspecialty]<br>";
                 //2) Find fellowship applications FellowshipApplication
-                //$fellappSubspecialty = $em->getRepository(FellowshipApplication::class)->find('find by fellowshipSubspecialty = $fellappSubspecialty');
                 $fellapps = $em->getRepository(FellowshipApplication::class)
                     ->findBy([
-                        'fellowshipSubspecialty' => $fellappSubspecialty,
+                        'fellowshipSubspecialty' => $fellappSubspecialty->getId(),
                         //'institution'            => $washUPathology,
                     ]);
                 echo "fellapps=".count($fellapps).": fellappSubspecialty=[$fellappSubspecialty]"."<br>";
@@ -581,8 +580,8 @@ class DefaultController extends OrderAbstractController
                 //3) Remove deleted fellappSpecialty
                 echo "***Remove FellowshipSubspecialty ".$fellappSubspecialty->getNameInstitution().",ID=".$fellappSubspecialty->getId()."<br>";
                 if( !$testing ) {
-                    $em->remove($fellappSubspecialty);
-                    $em->flush();
+                    //$em->remove($fellappSubspecialty);
+                    //$em->flush();
                 }
                 $counter++;
             } else {
@@ -593,17 +592,17 @@ class DefaultController extends OrderAbstractController
             //////////// Remove GlobalFellowshipSpecialty //////////////
             //1)
             //$globalFellappSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName($fellappSpecialtyStr);
-//            $globalFellappSpecialties = $em->getRepository(GlobalFellowshipSpecialty::class)
-//                ->findBy([
-//                    //'institution' => $washUPathology,
-//                    'name'        => $fellappSpecialtyStr,
-//                ]);
-            $repo = $em->getRepository(GlobalFellowshipSpecialty::class);
-            $qb = $repo->createQueryBuilder('s')
-                ->where('LOWER(s.name) = LOWER(:name)')
-                //->andWhere('LOWER(s.institution) = LOWER(:institution)')
-                ->setParameter('name', $fellappSpecialtyStr);
-            $globalFellappSpecialties = $qb->getQuery()->getResult();
+            $globalFellappSpecialties = $em->getRepository(GlobalFellowshipSpecialty::class)
+                ->findBy([
+                    //'institution' => $washUPathology,
+                    'name'        => $fellappSpecialtyStr,
+                ]);
+//            $repo = $em->getRepository(GlobalFellowshipSpecialty::class);
+//            $qb = $repo->createQueryBuilder('s')
+//                ->where('LOWER(s.name) = LOWER(:name)')
+//                //->andWhere('LOWER(s.institution) = LOWER(:institution)')
+//                ->setParameter('name', $fellappSpecialtyStr);
+//            $globalFellappSpecialties = $qb->getQuery()->getResult();
             $globalFellappSpecialty = null;
             if( count($globalFellappSpecialties) == 1 ) {
                 $globalFellappSpecialty = $globalFellappSpecialties[0];
@@ -626,8 +625,8 @@ class DefaultController extends OrderAbstractController
                 //3) Remove deleted $globalFellappSpecialty
                 echo "***Remove GlobalFellowshipSpecialty ".$globalFellappSpecialty->getNameInstitution().",ID=".$globalFellappSpecialty->getId()."<br>";
                 if( !$testing ) {
-                    $em->remove($globalFellappSpecialty);
-                    $em->flush();
+                    //$em->remove($globalFellappSpecialty);
+                    //$em->flush();
                 }
                 $counterGlobal++;
             } else {
