@@ -563,7 +563,7 @@ class DefaultController extends OrderAbstractController
                     //2) Find fellowship applications FellowshipApplication
                     $fellapps = $em->getRepository(FellowshipApplication::class)
                         ->findBy([
-                            'fellowshipSubspecialty' => $fellappSubspecialty->getId(),
+                            'fellowshipSubspecialty' => $fellappSubspecialty(),
                             //'institution'            => $washUPathology,
                         ]);
                     echo "fellapps=" . count($fellapps) . ": fellappSubspecialty=[$fellappSubspecialty]" . "<br>";
@@ -644,5 +644,87 @@ class DefaultController extends OrderAbstractController
 
         exit("<br><br>end of updateGlobalFellowshipTypesAction, counter=$counter, counterGlobal=$counterGlobal");
     }
+
+    //Keep only list of specialties according to getFellowshipTypesStrArr (WCM) and getFellowshipTypesWahsuStrArr (Washu)
+    //http://127.0.0.1/fellowship-applications/update-wcm-fellowship-types
+    #[Route(path: '/update-wcm-fellowship-types', name: 'fellapp_update_wcm_fellowship_types')]
+    public function updateWCMGlobalFellowshipTypesAction( Request $request ) {
+        //exit("not allowed: updateWCMGlobalFellowshipTypesAction");
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
+        }
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $em = $this->getDoctrine()->getManager();
+
+        //Keep only specialties defined in getFellowshipTypesStrArr for WCM
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+        );
+
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
+        $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
+        $wcmPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+
+        $globalCytopathology = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName("Cytopathology");
+        if( !$globalCytopathology ) {
+            exit("GlobalFellowshipSpecialty not found with name Cytopathology");
+        }
+
+        //1) Get WCM types
+        $wcmFellTypes = $fellappUtil->getFellowshipTypesStrArr();
+        echo "wcmFellTypes=".count($wcmFellTypes)."<br>";
+
+        //1) Get all existing specialties for WCM
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($wcmPathology,$asArray=false);
+        echo "globalFellTypes=".count($globalFellTypes)."<br>";
+
+        $testing = true;
+        $counter = 0;
+
+        foreach($globalFellTypes as $globalFellType) {
+            $name = $globalFellType->getName();
+            echo "<br>globalFellType=".$globalFellType->getNameInstitution().", name=".$name."<br>";
+
+            if( in_array(strtolower($name), array_map('strtolower', $wcmFellTypes)) ) {
+                //in array
+                continue;
+            }
+
+            //not in wcm array => remove
+            echo "### [$name] - not in wcm array => remove <br>";
+
+
+            $globalFellapps = $em->getRepository(FellowshipApplication::class)
+                ->findBy([
+                    'globalFellowshipSpecialty' => $globalFellType,
+                    'institution'               => $wcmPathology,
+                ]);
+            echo "fellapps=" . count($globalFellapps) . ": globalFellType=$globalFellType" . "<br>";
+            foreach ($globalFellapps as $globalFellapp) {
+                $globalFellapp->setGlobalFellowshipSpecialty($globalCytopathology);
+                echo "Update globalFellapp ID=" . $globalFellapp->getId() . "<br>";
+            }
+            //3) Remove deleted $globalFellappSpecialty
+            echo "***Remove GlobalFellowshipSpecialty " . $globalFellType->getNameInstitution() . ",ID=" . $globalFellType->getId() . "<br>";
+            if (!$testing) {
+                $em->remove($globalFellType);
+                //$em->flush();
+            }
+            $counter++;
+        }
+
+        exit("<br><br>end of updateWCMGlobalFellowshipTypesAction, removed counter=$counter");
+    }
+
+
 
 }

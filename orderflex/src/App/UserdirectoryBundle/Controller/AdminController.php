@@ -5865,6 +5865,7 @@ class AdminController extends OrderAbstractController
         return $count;
     }
 
+    //Generate local FellowshipSubspecialty based on WCM list
     public function generateAllFellowshipSubspecialties() {
         $username = $this->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -5898,6 +5899,7 @@ class AdminController extends OrderAbstractController
         return round($count/10);
     }
 
+    //Generate WCM
     public function generateGlobalFellowshipSpecialties() {
         $em = $this->getDoctrine()->getManager();
         $username = $this->getUser();
@@ -5964,8 +5966,7 @@ class AdminController extends OrderAbstractController
 
         return round($count/10);
     }
-
-
+    //Generate Washu
     public function generateGlobalFellowshipSpecialtiesWahsu() {
         $em = $this->getDoctrine()->getManager();
         $username = $this->getUser();
