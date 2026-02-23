@@ -666,7 +666,6 @@ class DefaultController extends OrderAbstractController
             'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
         );
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
         $wcmc = $em->getRepository(Institution::class)->findOneByAbbreviation("WCM");
         $wcmPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
             "Pathology and Laboratory Medicine",
@@ -688,6 +687,7 @@ class DefaultController extends OrderAbstractController
         echo "globalFellTypes=".count($globalFellTypes)."<br>";
 
         $testing = true;
+        $testing = false;
         $counter = 0;
 
         foreach($globalFellTypes as $globalFellType) {
@@ -708,7 +708,7 @@ class DefaultController extends OrderAbstractController
                     'globalFellowshipSpecialty' => $globalFellType,
                     'institution'               => $wcmPathology,
                 ]);
-            echo "fellapps=" . count($globalFellapps) . ": globalFellType=$globalFellType" . "<br>";
+            echo "fellapps=" . count($globalFellapps) . ": globalFellType=".$globalFellType->getName()."<br>";
             foreach ($globalFellapps as $globalFellapp) {
                 $globalFellapp->setGlobalFellowshipSpecialty($globalCytopathology);
                 echo "Update globalFellapp ID=" . $globalFellapp->getId() . "<br>";
@@ -717,7 +717,7 @@ class DefaultController extends OrderAbstractController
             echo "***Remove GlobalFellowshipSpecialty " . $globalFellType->getNameInstitution() . ",ID=" . $globalFellType->getId() . "<br>";
             if (!$testing) {
                 $em->remove($globalFellType);
-                //$em->flush();
+                $em->flush();
             }
             $counter++;
         }
