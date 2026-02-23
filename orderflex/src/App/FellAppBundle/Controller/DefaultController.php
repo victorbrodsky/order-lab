@@ -645,11 +645,11 @@ class DefaultController extends OrderAbstractController
         exit("<br><br>end of updateGlobalFellowshipTypesAction, counter=$counter, counterGlobal=$counterGlobal");
     }
 
-    //Keep only list of specialties according to getFellowshipTypesStrArr (WCM) and getFellowshipTypesWahsuStrArr (Washu)
+    //Keep only list of specialties according to getFellowshipTypesStrArr (WCM)
     //http://127.0.0.1/fellowship-applications/update-wcm-fellowship-types
     #[Route(path: '/update-wcm-fellowship-types', name: 'fellapp_update_wcm_fellowship_types')]
     public function updateWCMGlobalFellowshipTypesAction( Request $request ) {
-        //exit("not allowed: updateWCMGlobalFellowshipTypesAction");
+        exit("not allowed: updateWCMGlobalFellowshipTypesAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }
@@ -722,11 +722,11 @@ class DefaultController extends OrderAbstractController
         exit("<br><br>end of updateWCMGlobalFellowshipTypesAction, removed counter=$counter");
     }
 
-    //Keep only list of specialties according to getFellowshipTypesStrArr (Washu) and getFellowshipTypesWahsuStrArr (Washu)
+    //Keep only list of specialties according to getFellowshipTypesWahsuStrArr (Washu)
     //http://127.0.0.1/fellowship-applications/update-washu-fellowship-types
     #[Route(path: '/update-washu-fellowship-types', name: 'fellapp_update_washu_fellowship_types')]
     public function updateWashuGlobalFellowshipTypesAction( Request $request ) {
-        //exit("not allowed: updateWashuGlobalFellowshipTypesAction");
+        exit("not allowed: updateWashuGlobalFellowshipTypesAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }
