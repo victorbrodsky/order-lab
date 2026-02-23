@@ -473,7 +473,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/update-fellowship-types', name: 'fellapp_update_fellowship_types')]
     public function updateGlobalFellowshipTypesAction( Request $request )
     {
-        //exit("not allowed: updateGlobalFellowshipTypesAction");
+        exit("not allowed: updateGlobalFellowshipTypesAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }
@@ -687,7 +687,7 @@ class DefaultController extends OrderAbstractController
         echo "globalFellTypes=".count($globalFellTypes)."<br>";
 
         $testing = true;
-        $testing = false;
+        //$testing = false;
         $counter = 0;
 
         foreach($globalFellTypes as $globalFellType) {
@@ -717,7 +717,7 @@ class DefaultController extends OrderAbstractController
             echo "***Remove GlobalFellowshipSpecialty " . $globalFellType->getNameInstitution() . ",ID=" . $globalFellType->getId() . "<br>";
             if (!$testing) {
                 $em->remove($globalFellType);
-                $em->flush();
+                //$em->flush();
             }
             $counter++;
         }
