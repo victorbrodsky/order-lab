@@ -2123,6 +2123,9 @@ class UserGenerator {
 
             //Roles
             $rolesObjects = $this->processMultipleListObjects($roles,$systemuser,"Roles");
+            foreach($rolesObjects as $rolesObject) {
+                echo "rolesObject=$rolesObject <br>";
+            }
             $user->setRoles($rolesObjects);
 
             //$user->getPreferences()->setTimezone($timeZone);
@@ -2259,10 +2262,10 @@ class UserGenerator {
             return $res;
         }
 
-        echo "header=".$header."<br>";
+        //echo "header=".$header."<br>";
         //print_r($headers);
         //print_r($row[0]);
-        dump($row[0]);
+        //dump($row[0]);
 
         //echo "cwid=(".$headers[0][39].")<br>";
 
@@ -2274,7 +2277,7 @@ class UserGenerator {
             //exit('getValueByHeaderName: key is false');
             return $res;
         }
-        echo "getValueByHeaderName: key=".$key."<br>";
+        //echo "getValueByHeaderName: key=".$key."<br>";
 
         if( array_key_exists($key, $row[0]) ) {
             $res = $row[0][$key];
