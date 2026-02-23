@@ -685,9 +685,7 @@ class DefaultController extends OrderAbstractController
         //1) Get all existing specialties for WCM
         $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($wcmPathology,$asArray=false);
         echo "globalFellTypes=".count($globalFellTypes)."<br>";
-
-        $testing = true;
-        //$testing = false;
+        
         $counter = 0;
 
         foreach($globalFellTypes as $globalFellType) {
@@ -702,7 +700,6 @@ class DefaultController extends OrderAbstractController
             //not in wcm array => remove
             echo "### [$name] - not in wcm array => remove <br>";
 
-
             $globalFellapps = $em->getRepository(FellowshipApplication::class)
                 ->findBy([
                     'globalFellowshipSpecialty' => $globalFellType,
@@ -715,9 +712,9 @@ class DefaultController extends OrderAbstractController
             }
             //3) Remove deleted $globalFellappSpecialty
             echo "***Remove GlobalFellowshipSpecialty " . $globalFellType->getNameInstitution() . ",ID=" . $globalFellType->getId() . "<br>";
-            if (!$testing) {
+            if( 1 ) {
                 $em->remove($globalFellType);
-                //$em->flush();
+                $em->flush();
             }
             $counter++;
         }
