@@ -685,7 +685,7 @@ class DefaultController extends OrderAbstractController
         //1) Get all existing specialties for WCM
         $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($wcmPathology,$asArray=false);
         echo "globalFellTypes=".count($globalFellTypes)."<br>";
-        
+
         $counter = 0;
 
         foreach($globalFellTypes as $globalFellType) {
