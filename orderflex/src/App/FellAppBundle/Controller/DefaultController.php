@@ -722,6 +722,87 @@ class DefaultController extends OrderAbstractController
         exit("<br><br>end of updateWCMGlobalFellowshipTypesAction, removed counter=$counter");
     }
 
+    //Keep only list of specialties according to getFellowshipTypesStrArr (Washu) and getFellowshipTypesWahsuStrArr (Washu)
+    //http://127.0.0.1/fellowship-applications/update-washu-fellowship-types
+    #[Route(path: '/update-washu-fellowship-types', name: 'fellapp_update_washu_fellowship_types')]
+    public function updateWashuGlobalFellowshipTypesAction( Request $request ) {
+        //exit("not allowed: updateWashuGlobalFellowshipTypesAction");
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
+        }
 
+        $fellappUtil = $this->container->get('fellapp_util');
+        $em = $this->getDoctrine()->getManager();
+
+        //Keep only specialties defined in getFellowshipTypesStrArr for WCM
+        $washU = $em->getRepository(Institution::class)->findOneByAbbreviation("WashU");
+        if( !$washU ) {
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU"');
+        }
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+        );
+        $washUPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+            "Pathology and Immunology",
+            $washU,
+            $mapper
+        );
+        if( !$washUPathology ) {
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "Pathology and Immunology"');
+        }
+        echo "washUPathology=$washUPathology, ID=".$washUPathology->getId()." <br>";
+
+        $globalCytopathology = $em->getRepository(GlobalFellowshipSpecialty::class)->findOneByName("Cytopathology");
+        if( !$globalCytopathology ) {
+            exit("GlobalFellowshipSpecialty not found with name Cytopathology");
+        }
+
+        //1) Get WCM types
+        $washuFellTypes = $fellappUtil->getFellowshipTypesWahsuStrArr();
+        echo "washuFellTypes=".count($washuFellTypes)."<br>";
+
+        //1) Get all existing specialties for WCM
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($washUPathology,$asArray=false);
+        echo "globalFellTypes=".count($globalFellTypes)."<br>";
+
+        $counter = 0;
+
+        foreach($globalFellTypes as $globalFellType) {
+            $name = $globalFellType->getName();
+            echo "<br>globalFellType=".$globalFellType->getNameInstitution().", name=".$name."<br>";
+
+            if( in_array(strtolower($name), array_map('strtolower', $washuFellTypes)) ) {
+                //in array
+                continue;
+            }
+
+            //not in wcm array => remove
+            echo "### [$name] - not in wcm array => remove <br>";
+
+            $globalFellapps = $em->getRepository(FellowshipApplication::class)
+                ->findBy([
+                    'globalFellowshipSpecialty' => $globalFellType,
+                    'institution'               => $washUPathology,
+                ]);
+            echo "fellapps=" . count($globalFellapps) . ": globalFellType=".$globalFellType->getName()."<br>";
+            foreach ($globalFellapps as $globalFellapp) {
+                $globalFellapp->setGlobalFellowshipSpecialty($globalCytopathology);
+                echo "Update globalFellapp ID=" . $globalFellapp->getId() . "<br>";
+            }
+            //3) Remove deleted $globalFellappSpecialty
+            echo "***Remove GlobalFellowshipSpecialty " . $globalFellType->getNameInstitution() . ",ID=" . $globalFellType->getId() . "<br>";
+            if( 1 ) {
+                $em->remove($globalFellType);
+                $em->flush();
+            }
+            $counter++;
+        }
+
+        exit("<br><br>end of updateWCMGlobalFellowshipTypesAction, removed counter=$counter");
+    }
 
 }
