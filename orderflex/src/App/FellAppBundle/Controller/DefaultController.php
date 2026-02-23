@@ -805,4 +805,26 @@ class DefaultController extends OrderAbstractController
         exit("<br><br>end of updateWCMGlobalFellowshipTypesAction, removed counter=$counter");
     }
 
+    //http://127.0.0.1/fellowship-applications/populate-fellapp-users
+    #[Route(path: '/populate-fellapp-users', name: 'fellapp_fellapp_users')]
+    public function populateFellappUsersAction( Request $request )
+    {
+        //exit("not allowed: populateFellappUsersAction");
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
+        }
+
+//        Coordinators
+//        Naomi Rattler, burr@wustl.edu
+//        Molly Newport, nmolly@wustl.edu
+//        Kim Green, greenkd@wustl.edu
+
+        $inputFileName = 'C:\Users\cinav\Documents\WCMC\Users\ImportFellappUsers.xlsx';
+
+        $userGenerator = $this->container->get('user_generator');
+        $res = $userGenerator->generateSimpleUsersExcel($inputFileName);
+
+        exit($res);
+    }
+
 }

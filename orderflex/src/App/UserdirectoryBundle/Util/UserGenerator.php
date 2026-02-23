@@ -1943,7 +1943,221 @@ class UserGenerator {
         return $count;
     }
 
+    //http://127.0.0.1/fellowship-applications/populate-fellapp-users
+    //create simple users
+    public function generateSimpleUsersExcel($inputFileName) {
 
+//        $users = $this->em->getRepository(User::class)->findAll();
+//        if( count($users) > 0 ) {
+//            return ' 0 users. No new users have been imported.'.count($users).' are already exist in the system.';
+//        }
+
+        ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
+
+        if (file_exists($inputFileName)) {
+            //echo "The file $inputFileName exists";
+        } else {
+            //echo "The file $inputFileName does not exist";
+            return "The file $inputFileName does not exist";
+        }
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( \Exception $e ) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $count = 0;
+
+        $em = $this->em;
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userkeytype = $userSecUtil->getUsernameType('local-user');
+        if( !$userkeytype ) {
+            exit('generateSimpleUsersExcel: Username Type not found by local');
+        }
+
+        ////////////// add system user /////////////////
+        $systemuser = null;
+        $systemusers = $this->em->getRepository(User::class)->findBy(
+            array(
+                'primaryPublicUserId' => 'administrator'
+            )
+        );
+        if( count($systemusers) == 1 ) {
+            $systemuser = $systemusers[0];
+        }
+        if( !$systemuser ) {
+            exit('system user not found');
+        }
+        ////////////// end of add system user /////////////////
+
+        $institution = $em->getRepository(Institution::class)->findOneByAbbreviation("WashU");
+        if( !$institution ) {
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU"');
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $sections = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+        $headers = $sheet->rangeToArray('A' . 2 . ':' . $highestColumn . 2,
+            NULL,
+            TRUE,
+            FALSE);
+
+        //echo 'Start Foreach highestRow='.$highestRow."; highestColumn=".$highestColumn."<br>";
+
+        $sectionNameContactInfo = "Name and Preferred Contact Info";
+        $sectionNameContactInfoRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
+        //echo "<br>sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
+
+        if( !$sectionNameContactInfoRange ) {
+            return "Invalid source spreadsheet file: no 'Name and Preferred Contact Info' section has been found in the source file. ";
+        }
+
+        //for each user in excel (start at row 2)
+        for( $row = 3; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            $usernamePrefix = 'local';
+
+            $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers);
+            echo "email=".$email."<br>";
+            if( !$email ) {
+                exit('Preferred Email not found');
+            }
+
+            $username = strstr($email, '@', true);   // "username"
+            echo "username=".$username."<br>";
+
+            //username: oli2002_@_ldap-user
+            $fillUsername = $username."_@_". $usernamePrefix;
+            //echo "fillUsername=".$fillUsername."<br>";
+
+            $user = $this->em->getRepository(User::class)->findOneByUsername($fillUsername);
+            //echo "DB user=".$user."<br>";
+
+            if( $user ) {
+                exit('ignore existing users to prevent overwrite');
+                continue; //ignore existing users to prevent overwrite
+            }
+
+            //create user
+            echo "create a new user ".$fillUsername."<br>";
+
+            //create a new user from excel
+            $user = new User();
+            $user->setKeytype($userkeytype);
+            $user->setPrimaryPublicUserId($username);
+
+            //set unique username
+            $usernameUnique = $user->createUniqueUsername();
+            $user->setUsername($usernameUnique);
+            //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
+            $user->setUsernameCanonical($usernameUnique);
+
+            $user->setEnabled(true);
+            //$user->setLocked(false);
+
+            ////////////// Section: Name and Preferred Contact Info ////////////////
+            $user->setEmail($email);
+            $user->setEmailCanonical($email);
+
+            $preferredName = $this->getValueBySectionHeaderName("Preferred Full Name for Display",$rowData,$headers);
+//            $firstName = $this->getValueBySectionHeaderName("First Name",$rowData,$headers,$sectionNameContactInfoRange);
+//            $middleName = $this->getValueBySectionHeaderName("Middle Name",$rowData,$headers,$sectionNameContactInfoRange);
+//            $lastName = $this->getValueBySectionHeaderName("Last Name",$rowData,$headers,$sectionNameContactInfoRange);
+//            $salutation = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers,$sectionNameContactInfoRange);
+//            $suffix = $this->getValueBySectionHeaderName("Suffix",$rowData,$headers,$sectionNameContactInfoRange);
+//            $prefferedPhone = $this->getValueBySectionHeaderName("Preferred Phone Number",$rowData,$headers,$sectionNameContactInfoRange);
+//            $abbreviationName = $this->getValueBySectionHeaderName("Abbreviated name",$rowData,$headers,$sectionNameContactInfoRange);
+
+            $parts = preg_split('/\s+/', trim($preferredName));
+
+            $firstName = $parts[0];
+            $lastName  = $parts[count($parts) - 1];
+
+            $user->setDisplayName($preferredName);
+            $user->setFirstName($firstName);
+            //$user->setMiddleName($middleName);
+            $user->setLastName($lastName);
+            //$user->setSalutation($salutation);
+            //$user->setSuffix($suffix);
+            //$user->setPreferredPhone($prefferedPhone);
+            //$user->setInitials($abbreviationName);
+
+            $user->setPassword("");
+            $user->setCreatedby('excel');
+            $user->getPreferences()->setTimezone($default_time_zone);
+
+            echo "new user=".$user."<br>";
+            ////////////// EOF Section: Name and Preferred Contact Info ////////////////
+
+            ////////////// Section: Global User Preferences ////////////////
+            $sectionGlobal = "Global User Preferences";
+            $sectionGlobalRange = $this->getMergedRangeBySectionName($sectionGlobal,$sections,$sheet);
+            echo "<br>sectionGlobalRange=".$sectionGlobalRange."<br>";
+
+            $roles = $this->getValueBySectionHeaderName("Role",$rowData,$headers);
+            //$timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
+
+            //$language = $this->getValueBySectionHeaderName("Language",$rowData,$headers,$sectionGlobalRange);
+            //$languageObject = $this->getObjectByNameTransformerWithoutCreating("LanguageList",$language,$systemuser);
+
+            //$locale = $this->getValueBySectionHeaderName("Locale",$rowData,$headers,$sectionGlobalRange);
+            //$localeObject = $this->getObjectByNameTransformerWithoutCreating("LocaleList",$locale,$systemuser);
+
+            //Roles
+            $rolesObjects = $this->processMultipleListObjects($roles,$systemuser,"Roles");
+            $user->setRoles($rolesObjects);
+
+            //$user->getPreferences()->setTimezone($timeZone);
+            //$user->getPreferences()->addLanguage($languageObject);
+            //$user->getPreferences()->setLocale($localeObject);
+            ////////////// EOF Section: Global User Preferences ////////////////
+
+            //exit('1'); //testing
+
+            echo "user=".$user."<br>";
+            //$this->em->persist($user);
+            //$this->em->flush();
+            $count++;
+
+            echo $count.": added new user $user <br>";
+
+            //record user log create
+            $event = "User ".$user." has been created by ".$systemuser."<br>";
+            //$userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
+
+            //exit('eof user');
+
+        }//for each user
+
+        //exit('exit import users V2');
+        //return $count;
+
+        if( $count > 0 ) {
+            $resmsg = 'Imported ' . $count . ' new users from spreadsheet.';
+        } else {
+            $resmsg = 'No new users have been imported.';
+        }
+
+        return $resmsg;
+    }
 
     public function getMergedRangeBySectionName($sectionName,$sections,$sheet) {
         $mergeRange = null;
@@ -1974,7 +2188,6 @@ class UserGenerator {
         return false;
     }
 
-
     //$sectionName - "Name and Preferred Contact Info"
     //$header - "Primary Public User ID"
     public function getValueBySectionHeaderName( $header, $row, $headers, $range=null ) {
@@ -1990,15 +2203,16 @@ class UserGenerator {
         }
 
         $rangeColumnArr = $columnIndex = \PHPExcel_Cell::rangeBoundaries($range);
+        //$rangeColumnArr = $columnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::rangeBoundaries($range);
         $startColumn = $rangeColumnArr[0][0]; //52
         $endColumn = $rangeColumnArr[1][0];   //79
         //echo "<br>".$header.": startColumn=".$startColumn."; endColumn=".$endColumn."<br>";
 
-        //echo "header=".$header."<br>";
-        //echo "<pre>";
-        //print_r($headers);
-        //echo "</pre>";
-        //print_r($row[0]);
+//        echo "header=".$header."<br>";
+//        echo "<pre>";
+//        print_r($headers);
+//        echo "</pre>";
+//        print_r($row[0]);
 
         //1) find section cell range
         //$sectionKey = array_search($header, $headers[0]);
@@ -2041,12 +2255,14 @@ class UserGenerator {
         $res = null;
 
         if( !$header ) {
+            //exit('getValueByHeaderName: no header');
             return $res;
         }
 
-        //echo "header=".$header."<br>";
+        echo "header=".$header."<br>";
         //print_r($headers);
         //print_r($row[0]);
+        dump($row[0]);
 
         //echo "cwid=(".$headers[0][39].")<br>";
 
@@ -2055,8 +2271,10 @@ class UserGenerator {
 
         if( $key === false ) {
             //echo "key is false !!!!!!!!!!<br>";
+            //exit('getValueByHeaderName: key is false');
             return $res;
         }
+        echo "getValueByHeaderName: key=".$key."<br>";
 
         if( array_key_exists($key, $row[0]) ) {
             $res = $row[0][$key];
