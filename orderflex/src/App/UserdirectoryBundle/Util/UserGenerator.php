@@ -2110,7 +2110,7 @@ class UserGenerator {
                     $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
                     foreach($fellowshipRoles as $thisFellowshipRole) {
                         echo "thisFellowshipRole=$thisFellowshipRole <br>";
-                        if( str_contains($thisFellowshipRole, $institutionName) ) {
+                        if( str_contains($thisFellowshipRole, 'WCM') === false ) {
                             // it contains the institution name
                             $fellowshipRole = $thisFellowshipRole;
                             break;
