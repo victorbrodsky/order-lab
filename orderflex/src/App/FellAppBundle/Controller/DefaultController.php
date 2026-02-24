@@ -821,6 +821,7 @@ class DefaultController extends OrderAbstractController
 
         //$inputFileName = 'C:\Users\cinav\Documents\WCMC\Users\ImportFellappUsers.csv';
         $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
+        echo '$projectRoot='.$projectRoot.'<br>';
         $inputFileName = $projectRoot . '/src/App/FellAppBundle/Util/ImportFellappUsers.csv';
 
         $userGenerator = $this->container->get('user_generator');
