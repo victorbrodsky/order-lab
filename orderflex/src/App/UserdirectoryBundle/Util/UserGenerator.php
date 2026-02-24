@@ -2193,7 +2193,7 @@ class UserGenerator {
 
             echo "new user=".$user."<br>";
 
-            if(1) {
+            if(0) {
                 $this->em->persist($user);
                 $this->em->flush();
                 $count++;
