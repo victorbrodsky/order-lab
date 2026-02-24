@@ -2106,6 +2106,7 @@ class UserGenerator {
                             $washuFellType,
                             $systemuser
                         );
+                        echo "Assign as $fellowshipTypeStr for $fellowshipSubspecialtyObject <br>";
                         if( $fellowshipSubspecialtyObject ) {
                             $fellappUtil->assignFellAppAccessRoles(
                                 $fellowshipSubspecialtyObject,
