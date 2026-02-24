@@ -2107,13 +2107,13 @@ class UserGenerator {
                     //$roleName = _DIRECTOR_
                     //$institutionName
                     $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
-                    foreach($fellowshipRoles as $fellowshipRole) {
-                        echo "fellowshipRole=$fellowshipRole <br>";
-                    }
-                    if( count($fellowshipRoles) == 1 ) {
-                        $fellowshipRole = $fellowshipRoles[0];
-                    } else {
-                        exit('Multiple roles found count='.count($fellowshipRoles));
+                    foreach($fellowshipRoles as $thisFellowshipRole) {
+                        echo "thisFellowshipRole=$thisFellowshipRole <br>";
+                        if( str_contains($thisFellowshipRole, $institutionName) ) {
+                            // it contains the institution name
+                            $fellowshipRole = $thisFellowshipRole;
+                            break;
+                        }
                     }
                     echo "Assign as $fellowshipTypeStr for $fellowshipRole <br>";
                     if( $fellowshipRole ) {
