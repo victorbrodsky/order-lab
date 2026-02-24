@@ -2002,6 +2002,8 @@ class UserGenerator {
             exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU"');
         }
 
+        $washuFellTypes = $fellappUtil->getFellowshipTypesWahsuStrArr();
+
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
@@ -2092,9 +2094,27 @@ class UserGenerator {
             echo "fellowshipTypeStr=".$fellowshipTypeStr."<br>";
             echo "fellowshipSubspecialtyObjects=".$fellowshipSubspecialtyObjects."<br>";
             if( $fellowshipTypeStr && $fellowshipSubspecialtyObjects ) {
-                $fellowshipSubspecialtyObjects->addDirector($user);
+                //$fellowshipSubspecialtyObjects->addDirector($user);
                 //add fellapp to user (similar to FellAppManagement.php -> editAction)
-                $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObjects, $fellowshipSubspecialtyObjects->getDirectors(), "DIRECTOR");
+                $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObjects, array($user), "DIRECTOR");
+            } else {
+                //if Fellowship Subspecialty is not defined and equal to Coordinator => assign to all fellowship specialties
+                if( $fellowshipTypeStr && $fellowshipTypeStr == 'Coordinator' ) {
+                    foreach($washuFellTypes as $washuFellType) {
+                        $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
+                            "FellowshipSubspecialty",
+                            $washuFellType,
+                            $systemuser
+                        );
+                        if( $fellowshipSubspecialtyObject ) {
+                            $fellappUtil->assignFellAppAccessRoles(
+                                $fellowshipSubspecialtyObject,
+                                array($user),
+                                "COORDINATOR"
+                            );
+                        }
+                    }
+                }
             }
 
             //Salutation
