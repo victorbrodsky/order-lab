@@ -2003,6 +2003,9 @@ class UserGenerator {
         }
 
         $washuFellTypes = $fellappUtil->getFellowshipTypesWahsuStrArr();
+        foreach($washuFellTypes as $washuFellType) {
+            echo '$washuFellType='.$washuFellType.'<br>';
+        }
 
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
@@ -2029,7 +2032,7 @@ class UserGenerator {
                 TRUE,
                 FALSE);
 
-            $usernamePrefix = 'local';
+            $usernamePrefix = 'ldap-user'; //'local';
 
             //dump($headers);
             //dump($rowData);
@@ -2090,31 +2093,31 @@ class UserGenerator {
 
             //Fellowship Subspecialty
             $fellowshipTypeStr = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers);
-            $fellowshipSubspecialtyObjects = $this->getObjectByNameTransformer("FellowshipSubspecialty",$fellowshipTypeStr,$systemuser);
-            echo "fellowshipTypeStr=".$fellowshipTypeStr."<br>";
-            echo "fellowshipSubspecialtyObjects=".$fellowshipSubspecialtyObjects."<br>";
-            if( $fellowshipTypeStr && $fellowshipSubspecialtyObjects ) {
-                //$fellowshipSubspecialtyObjects->addDirector($user);
-                //add fellapp to user (similar to FellAppManagement.php -> editAction)
-                $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObjects, array($user), "DIRECTOR");
-            } else {
-                //if Fellowship Subspecialty is not defined and equal to Coordinator => assign to all fellowship specialties
-                if( $fellowshipTypeStr && $fellowshipTypeStr == 'Coordinator' ) {
-                    foreach($washuFellTypes as $washuFellType) {
-                        $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
-                            "FellowshipSubspecialty",
-                            $washuFellType,
-                            $systemuser
+            if( $fellowshipTypeStr == 'Coordinator' ) {
+                //echo "Assign as $fellowshipTypeStr<br>";
+                foreach($washuFellTypes as $washuFellType) {
+                    $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
+                        "FellowshipSubspecialty",
+                        $washuFellType,
+                        $systemuser
+                    );
+                    echo "Assign as $fellowshipTypeStr for $fellowshipSubspecialtyObject <br>";
+                    if( $fellowshipSubspecialtyObject ) {
+                        $fellappUtil->assignFellAppAccessRoles(
+                            $fellowshipSubspecialtyObject,
+                            array($user),
+                            "COORDINATOR"
                         );
-                        echo "Assign as $fellowshipTypeStr for $fellowshipSubspecialtyObject <br>";
-                        if( $fellowshipSubspecialtyObject ) {
-                            $fellappUtil->assignFellAppAccessRoles(
-                                $fellowshipSubspecialtyObject,
-                                array($user),
-                                "COORDINATOR"
-                            );
-                        }
                     }
+                }
+            } else {
+                $fellowshipSubspecialtyObjects = $this->getObjectByNameTransformer("FellowshipSubspecialty",$fellowshipTypeStr,$systemuser);
+                echo "fellowshipTypeStr=".$fellowshipTypeStr."<br>";
+                echo "fellowshipSubspecialtyObjects=".$fellowshipSubspecialtyObjects."<br>";
+                if( $fellowshipTypeStr && $fellowshipSubspecialtyObjects ) {
+                    //$fellowshipSubspecialtyObjects->addDirector($user);
+                    //add fellapp to user (similar to FellAppManagement.php -> editAction)
+                    $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObjects, array($user), "DIRECTOR");
                 }
             }
 
