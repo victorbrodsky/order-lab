@@ -819,7 +819,7 @@ class DefaultController extends OrderAbstractController
 //        Molly Newport, nmolly@wustl.edu
 //        Kim Green, greenkd@wustl.edu
 
-        $inputFileName = 'C:\Users\cinav\Documents\WCMC\Users\ImportFellappUsers.xlsx';
+        $inputFileName = 'C:\Users\cinav\Documents\WCMC\Users\ImportFellappUsers.csv';
 
         $userGenerator = $this->container->get('user_generator');
         $res = $userGenerator->generateSimpleUsersExcel($inputFileName);

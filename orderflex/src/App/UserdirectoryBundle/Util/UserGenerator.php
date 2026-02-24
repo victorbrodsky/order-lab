@@ -2004,28 +2004,20 @@ class UserGenerator {
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
-        $sections = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+//        $sections = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+//            NULL,
+//            TRUE,
+//            FALSE);
+
+        $headers = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
             NULL,
             TRUE,
             FALSE);
-
-        $headers = $sheet->rangeToArray('A' . 2 . ':' . $highestColumn . 2,
-            NULL,
-            TRUE,
-            FALSE);
-
-        //echo 'Start Foreach highestRow='.$highestRow."; highestColumn=".$highestColumn."<br>";
-
-        $sectionNameContactInfo = "Name and Preferred Contact Info";
-        $sectionNameContactInfoRange = $this->getMergedRangeBySectionName($sectionNameContactInfo,$sections,$sheet);
-        //echo "<br>sectionNameContactInfoRange=".$sectionNameContactInfoRange."<br>";
-
-        if( !$sectionNameContactInfoRange ) {
-            return "Invalid source spreadsheet file: no 'Name and Preferred Contact Info' section has been found in the source file. ";
-        }
+        //dump($headers);
+        //exit('111');
 
         //for each user in excel (start at row 2)
-        for( $row = 3; $row <= $highestRow; $row++ ) {
+        for( $row = 2; $row <= $highestRow; $row++ ) {
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -2035,8 +2027,10 @@ class UserGenerator {
 
             $usernamePrefix = 'local';
 
+            //dump($headers);
+            //dump($rowData);
             $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers);
-            echo "email=".$email."<br>";
+            echo "<br>email=".$email."<br>";
             if( !$email ) {
                 exit('Preferred Email not found');
             }
@@ -2077,6 +2071,40 @@ class UserGenerator {
             $user->setEmail($email);
             $user->setEmailCanonical($email);
 
+            //Fellowship Subspecialty
+            $fellowshipTypeStr = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers);
+            $fellowshipSubspecialtyObjects = $this->getObjectByNameTransformer("FellowshipSubspecialty",$fellowshipTypeStr,$systemuser);
+            echo "fellowshipTypeStr=".$fellowshipTypeStr."<br>";
+            echo "fellowshipSubspecialtyObjects=".$fellowshipSubspecialtyObjects."<br>";
+
+            //TODO: add fellapp to user (FellAppManagement.php)
+            $this->assignFellAppAccessRoles($fellowshipSubspecialtyObjects, $fellowshipSubspecialtyObjects->getDirectors(), "DIRECTOR");
+
+            //Salutation
+            $salutations = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers);
+            echo "salutations=".$salutations."<br>";
+            //Trainings (Education) -> degree MD with status 'Verified by Administrator'
+            if( $salutations ) {
+                $salutationsArr = array_map('trim', explode(',', $salutations));
+                $orderinlist = 0;
+                foreach($salutationsArr as $salutation) {
+                    $training = new Training($systemuser);
+                    $training->setOrderinlist($orderinlist);
+                    $degreeObjects = $this->getObjectByNameTransformer("TrainingDegreeList",$salutation,$systemuser);
+                    if( !$degreeObjects ) {
+                        exit("TrainingDegreeList not found by $salutation");
+                    }
+                    $training->setDegree($degreeObjects);
+                    $training->setAppendDegreeToName(true);
+                    $training->setStatus($training::STATUS_VERIFIED);
+                    $user->addTraining($training);
+                    $training->setFellowshipSubspecialty($fellowshipSubspecialtyObjects);
+                    echo "degreeObjects=".$degreeObjects."<br>";
+                    echo "status=".$training->getStatus()."<br>";
+                    $orderinlist++;
+                }
+            }
+
             $preferredName = $this->getValueBySectionHeaderName("Preferred Full Name for Display",$rowData,$headers);
 //            $firstName = $this->getValueBySectionHeaderName("First Name",$rowData,$headers,$sectionNameContactInfoRange);
 //            $middleName = $this->getValueBySectionHeaderName("Middle Name",$rowData,$headers,$sectionNameContactInfoRange);
@@ -2108,9 +2136,9 @@ class UserGenerator {
             ////////////// EOF Section: Name and Preferred Contact Info ////////////////
 
             ////////////// Section: Global User Preferences ////////////////
-            $sectionGlobal = "Global User Preferences";
-            $sectionGlobalRange = $this->getMergedRangeBySectionName($sectionGlobal,$sections,$sheet);
-            echo "<br>sectionGlobalRange=".$sectionGlobalRange."<br>";
+            //$sectionGlobal = "Global User Preferences";
+            //$sectionGlobalRange = $this->getMergedRangeBySectionName($sectionGlobal,$sections,$sheet);
+            //echo "<br>sectionGlobalRange=".$sectionGlobalRange."<br>";
 
             $roles = $this->getValueBySectionHeaderName("Role",$rowData,$headers);
             //$timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
