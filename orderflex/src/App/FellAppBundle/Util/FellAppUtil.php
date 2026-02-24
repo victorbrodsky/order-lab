@@ -2735,9 +2735,9 @@ class FellAppUtil {
     //assign ROLE_FELLAPP_WCM_INTERVIEWER corresponding to application
     public function assignFellAppAccessRoles($fellowshipSpecialty,$users,$roleSubstr) {
 
-        echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".
-            $fellowshipSpecialty->getId().
-            ")=$fellowshipSpecialty; roleSubstr=$roleSubstr <br>"; //testing exit
+//        echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".
+//            $fellowshipSpecialty->getId().
+//            ")=$fellowshipSpecialty; roleSubstr=$roleSubstr <br>"; //testing exit
 
         $fellappUtil = $this->container->get('fellapp_util');
 
