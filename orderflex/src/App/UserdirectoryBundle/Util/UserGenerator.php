@@ -2055,7 +2055,7 @@ class UserGenerator {
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
-                exit('ignore existing users to prevent overwrite');
+                //exit('ignore existing users to prevent overwrite');
                 continue; //ignore existing users to prevent overwrite
             }
 
