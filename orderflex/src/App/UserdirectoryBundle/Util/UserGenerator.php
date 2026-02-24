@@ -1952,6 +1952,8 @@ class UserGenerator {
 //            return ' 0 users. No new users have been imported.'.count($users).' are already exist in the system.';
 //        }
 
+        $fellappUtil = $this->container->get('fellapp_util');
+
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
 
         if (file_exists($inputFileName)) {
@@ -2071,14 +2073,29 @@ class UserGenerator {
             $user->setEmail($email);
             $user->setEmailCanonical($email);
 
+            $roles = $this->getValueBySectionHeaderName("Role",$rowData,$headers);
+            //$timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
+            //$language = $this->getValueBySectionHeaderName("Language",$rowData,$headers,$sectionGlobalRange);
+            //$languageObject = $this->getObjectByNameTransformerWithoutCreating("LanguageList",$language,$systemuser);
+            //$locale = $this->getValueBySectionHeaderName("Locale",$rowData,$headers,$sectionGlobalRange);
+            //$localeObject = $this->getObjectByNameTransformerWithoutCreating("LocaleList",$locale,$systemuser);
+            //Roles
+            $rolesObjects = $this->processMultipleListObjects($roles,$systemuser,"Roles");
+            foreach($rolesObjects as $rolesObject) {
+                echo "rolesObject=$rolesObject <br>";
+            }
+            $user->setRoles($rolesObjects);
+
             //Fellowship Subspecialty
             $fellowshipTypeStr = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers);
             $fellowshipSubspecialtyObjects = $this->getObjectByNameTransformer("FellowshipSubspecialty",$fellowshipTypeStr,$systemuser);
             echo "fellowshipTypeStr=".$fellowshipTypeStr."<br>";
             echo "fellowshipSubspecialtyObjects=".$fellowshipSubspecialtyObjects."<br>";
-
-            //TODO: add fellapp to user (FellAppManagement.php)
-            $this->assignFellAppAccessRoles($fellowshipSubspecialtyObjects, $fellowshipSubspecialtyObjects->getDirectors(), "DIRECTOR");
+            if( $fellowshipTypeStr && $fellowshipSubspecialtyObjects ) {
+                $fellowshipSubspecialtyObjects->addDirector($user);
+                //add fellapp to user (similar to FellAppManagement.php -> editAction)
+                $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObjects, $fellowshipSubspecialtyObjects->getDirectors(), "DIRECTOR");
+            }
 
             //Salutation
             $salutations = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers);
@@ -2132,29 +2149,16 @@ class UserGenerator {
             $user->setCreatedby('excel');
             $user->getPreferences()->setTimezone($default_time_zone);
 
-            echo "new user=".$user."<br>";
+            $roles = $user->getRoles();
+            foreach($roles as $role) {
+                echo "user role=" . $role . "<br>";
+            }
             ////////////// EOF Section: Name and Preferred Contact Info ////////////////
 
             ////////////// Section: Global User Preferences ////////////////
             //$sectionGlobal = "Global User Preferences";
             //$sectionGlobalRange = $this->getMergedRangeBySectionName($sectionGlobal,$sections,$sheet);
             //echo "<br>sectionGlobalRange=".$sectionGlobalRange."<br>";
-
-            $roles = $this->getValueBySectionHeaderName("Role",$rowData,$headers);
-            //$timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
-
-            //$language = $this->getValueBySectionHeaderName("Language",$rowData,$headers,$sectionGlobalRange);
-            //$languageObject = $this->getObjectByNameTransformerWithoutCreating("LanguageList",$language,$systemuser);
-
-            //$locale = $this->getValueBySectionHeaderName("Locale",$rowData,$headers,$sectionGlobalRange);
-            //$localeObject = $this->getObjectByNameTransformerWithoutCreating("LocaleList",$locale,$systemuser);
-
-            //Roles
-            $rolesObjects = $this->processMultipleListObjects($roles,$systemuser,"Roles");
-            foreach($rolesObjects as $rolesObject) {
-                echo "rolesObject=$rolesObject <br>";
-            }
-            $user->setRoles($rolesObjects);
 
             //$user->getPreferences()->setTimezone($timeZone);
             //$user->getPreferences()->addLanguage($languageObject);
@@ -2163,7 +2167,7 @@ class UserGenerator {
 
             //exit('1'); //testing
 
-            echo "user=".$user."<br>";
+            echo "new user=".$user."<br>";
             //$this->em->persist($user);
             //$this->em->flush();
             $count++;

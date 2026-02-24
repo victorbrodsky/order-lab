@@ -2732,6 +2732,46 @@ class FellAppUtil {
         return $fellowshipSubspecialtyArr;
     }
 
+    //assign ROLE_FELLAPP_WCM_INTERVIEWER corresponding to application
+    public function assignFellAppAccessRoles($fellowshipSpecialty,$users,$roleSubstr) {
+
+        echo "assignFellAppAccessRoles: fellowshipSubspecialty (ID=".
+            $fellowshipSpecialty->getId().
+            ")=$fellowshipSpecialty; roleSubstr=$roleSubstr <br>"; //testing exit
+
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $roleEntity = null;
+        $fellTypeRoles = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSpecialty,$roleSubstr);
+        //echo "interviewerFellTypeRoles=".count($fellTypeRoles)."<br>";
+        foreach( $fellTypeRoles as $role ) {
+            //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
+            if( strpos((string)$role,$roleSubstr) !== false ) {
+                $roleEntity = $role;
+                break;
+            }
+        }
+        if( !$roleEntity ) {
+//            exit('FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.
+//                $fellowshipSubspecialty.']'); //testing exit
+//            throw new EntityNotFoundException(
+//                'FellAppManagement: assignFellAppAccessRoles: Unable to find role by FellowshipSubspecialty=['.$fellowshipSubspecialty.']'
+//            );
+
+            //$subspecialtyType, $roleType, $institution=null, $testing=false
+            $roleEntity = $fellappUtil->createOrEnableFellAppRole($fellowshipSpecialty,$roleSubstr);
+            //exit('$roleEntity='.$roleEntity);
+        }
+
+        foreach( $users as $user ) {
+            if( $user ) {
+                //add specific interviewer role
+                $user->addRole($roleEntity->getName());
+
+            }
+        }
+    }
+
     //TODO: add this function to user's profile create/update. Maybe, find a more efficient way to sync (if user's role with fellapp changed).
     //When the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
     //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles:
