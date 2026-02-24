@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Util;
 
 
 use App\OrderformBundle\Security\Util\PacsvendorUtil;
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use App\UserdirectoryBundle\Entity\UsernameType; //process.py script: replaced namespace by ::class: added use line for classname=UsernameType
 use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
 use App\UserdirectoryBundle\Entity\InstitutionType; //process.py script: replaced namespace by ::class: added use line for classname=InstitutionType
@@ -1997,9 +1998,10 @@ class UserGenerator {
         }
         ////////////// end of add system user /////////////////
 
-        $institution = $em->getRepository(Institution::class)->findOneByAbbreviation("WashU");
+        $institutionName = "WashU";
+        $institution = $em->getRepository(Institution::class)->findOneByAbbreviation($institutionName);
         if( !$institution ) {
-            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU"');
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: '.$institutionName);
         }
 
         $washuFellTypes = $fellappUtil->getFellowshipTypesWahsuStrArr();
@@ -2101,23 +2103,41 @@ class UserGenerator {
                         $washuFellType,
                         $systemuser
                     );
-                    //echo "Assign as $fellowshipTypeStr for $fellowshipSubspecialtyObject <br>";
-                    if( $fellowshipSubspecialtyObject ) {
+                    //$fellowshipSubspecialtyObject = $this->getFellowshipSubspecialty($washuFellType,$fellowshipTypeStr,'COORDINATOR');
+                    //$roleName = _DIRECTOR_
+                    //$institutionName
+                    $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
+                    foreach($fellowshipRoles as $fellowshipRole) {
+                        echo "fellowshipRole=$fellowshipRole <br>";
+                    }
+                    if( count($fellowshipRoles) == 1 ) {
+                        $fellowshipRole = $fellowshipRoles[0];
+                    } else {
+                        exit('Multiple roles found count='.count($fellowshipRoles));
+                    }
+                    echo "Assign as $fellowshipTypeStr for $fellowshipRole <br>";
+                    if( $fellowshipRole ) {
                         $fellappUtil->assignFellAppAccessRoles(
                             $fellowshipSubspecialtyObject,
                             array($user),
-                            "COORDINATOR"
+                            $fellowshipRole
                         );
                     }
                 }
             } else {
-                $fellowshipSubspecialtyObjects = $this->getObjectByNameTransformer("FellowshipSubspecialty",$fellowshipTypeStr,$systemuser);
+                $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
+                    "FellowshipSubspecialty",
+                    $fellowshipTypeStr,
+                    $systemuser
+                );
+//                $fellowshipSubspecialtyObjects = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialtyObject,'COORDINATOR');
+                //$fellowshipSubspecialtyObject = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
                 echo "fellowshipTypeStr=".$fellowshipTypeStr."<br>";
-                echo "fellowshipSubspecialtyObjects=".$fellowshipSubspecialtyObjects."<br>";
-                if( $fellowshipTypeStr && $fellowshipSubspecialtyObjects ) {
+                echo "fellowshipSubspecialtyObject=".$fellowshipSubspecialtyObject."<br>";
+                if( $fellowshipTypeStr && $fellowshipSubspecialtyObject ) {
                     //$fellowshipSubspecialtyObjects->addDirector($user);
                     //add fellapp to user (similar to FellAppManagement.php -> editAction)
-                    $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObjects, array($user), "DIRECTOR");
+                    $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObject, array($user), "DIRECTOR");
                 }
             }
 
@@ -2139,7 +2159,7 @@ class UserGenerator {
                     $training->setAppendDegreeToName(true);
                     $training->setStatus($training::STATUS_VERIFIED);
                     $user->addTraining($training);
-                    $training->setFellowshipSubspecialty($fellowshipSubspecialtyObjects);
+                    //$training->setFellowshipSubspecialty($fellowshipSubspecialtyObjects);
                     echo "degreeObjects=".$degreeObjects."<br>";
                     echo "status=".$training->getStatus()."<br>";
                     $orderinlist++;
@@ -2218,6 +2238,17 @@ class UserGenerator {
         }
 
         return $resmsg;
+    }
+    public function getFellowshipSubspecialty($subspecialtyType,$roleType) {
+        //ROLE_FELLAPP_COORDINATOR_BLOODBANKINGANDTRANSFUSIONMEDICINE
+        //$institution = $em->getRepository(FellowshipSubspecialty::class)->findOneByAbbreviation("WashU");
+
+        $roleNameBase = str_replace(" ","",$subspecialtyType->getName()); //BREAST PATHOLOGY -> BREASTPATHOLOGY
+        $roleNameBase = strtoupper($roleNameBase); //Uppercase BREASTPATHOLOGY
+
+        //$roleName = "ROLE_FELLAPP_".$roleType.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_BREASTPATHOLOGY
+        //$roleName = _DIRECTOR_
+        getRolesByFellowshipSubspecialtyAndRolename($subspecialtyType,$roleName);
     }
 
     public function getMergedRangeBySectionName($sectionName,$sections,$sheet) {

@@ -1449,6 +1449,57 @@ class FellAppUtil {
 
         return $roles;
     }
+    public function getRolesByFellowshipSubspecialtyNameAndRolename( $fellowshipSpecialtyName, $roleName, $institutionAbbreviation=null ) {
+        //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
+
+        //$fellowshipSpecialtyName = $fellowshipSpecialty->getName(); //Pain Medicine
+        $fellowshipSpecialtyName = strtoupper(str_replace(' ', '', $fellowshipSpecialtyName)); //PAINMEDICINE
+
+        // First, strip any existing underscores at the start/end
+        $normalized = trim($roleName, '_');
+        // Then wrap with underscores
+        $roleName = '_' . $normalized . '_';
+
+        //role example: ROLE_FELLAPP_DIRECTOR_SPECIALTY1
+        $partialRoleName = 'ROLE_FELLAPP'.$roleName; //ROLE_FELLAPP_DIRECTOR_
+        //echo '$fellowshipSubspecialtyName='.$fellowshipSubspecialtyName.', $partialRoleName='.$partialRoleName.'<br>';
+
+        //role=ROLE_FELLAPP_DIRECTOR_WCM_BLOODBANKINGANDTRANSFUSIONMEDICINE
+        //$roleNameBase: WCM or WashU (GlobalFellowshipSpecialty institution abbreviation)
+
+        //$institutionAbbreviation = $this->getNameInstitution($fellowshipSpecialty);
+        //echo $fellowshipSpecialty.': $institutionAbbreviation='.$institutionAbbreviation.'<br>';
+
+        //FellowshipSubspecialty
+        $repository = $this->em->getRepository(Roles::class);
+        $dql = $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        if( $institutionAbbreviation ) {
+            $dql->where("list.name LIKE :name1 AND list.name LIKE :name2 AND list.name LIKE :name3");
+
+            $parameters = array(
+                "name1" => '%' . $partialRoleName . '%',
+                "name2" => '%' . $fellowshipSpecialtyName . '%',
+                "name3" => '%' . $institutionAbbreviation . '%'
+            );
+        } else {
+            $dql->where("list.name LIKE :name1 AND list.name LIKE :name2");
+
+            $parameters = array(
+                "name1" => '%' . $partialRoleName . '%',
+                "name2" => '%' . $fellowshipSpecialtyName . '%'
+            );
+        }
+
+        $query = $dql->getQuery();
+        $query->setParameters($parameters);
+
+        $roles = $query->getResult();
+        //echo "roles=" . count($roles) . "<br>";
+
+        return $roles;
+    }
     public function getRoleByFellowshipSubspecialtyAndRolename_ORIG( $fellowshipSubspecialty, $roleName ) {
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
         $roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
