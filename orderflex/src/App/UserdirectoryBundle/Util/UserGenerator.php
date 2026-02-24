@@ -2168,15 +2168,15 @@ class UserGenerator {
             //exit('1'); //testing
 
             echo "new user=".$user."<br>";
-            $this->em->persist($user);
-            $this->em->flush();
+            //$this->em->persist($user);
+            //$this->em->flush();
             $count++;
 
             echo $count.": added new user $user <br>";
 
             //record user log create
             $event = "User ".$user." has been created by ".$systemuser."<br>";
-            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
+            //$userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$systemuser,$user,null,'New user record added');
 
             exit('eof user '.$user);
 
