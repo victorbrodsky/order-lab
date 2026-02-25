@@ -2120,13 +2120,21 @@ class UserGenerator {
                     } elseif( count($fellowshipRoles) > 1 ) {
                         foreach($fellowshipRoles as $thisFellowshipRole) {
                             echo "thisFellowshipRole=$thisFellowshipRole <br>";
+                            //Use role without WCM
+                            if( str_contains($thisFellowshipRole, 'WCM') ) {
+                                //skip
+                                continue;
+                            } else {
+                                $fellowshipRole = $thisFellowshipRole;
+                            }
                         }
-                        exit("Multiple COORDINATOR roles found count=".count($fellowshipRoles));
-                    } elseif( count($fellowshipRoles) == 0 ) {
-                        //echo "No roles found for $washuFellType ($institutionName) count=".count($fellowshipRoles)."<br>";
-                    } else {
-                        //echo "Warning roles for $institutionName count = ".count($fellowshipRoles)." <br>";
+                        //exit("Multiple COORDINATOR roles found count=".count($fellowshipRoles));
                     }
+//                    elseif( count($fellowshipRoles) == 0 ) {
+//                        //echo "No roles found for $washuFellType ($institutionName) count=".count($fellowshipRoles)."<br>";
+//                    } else {
+//                        //echo "Warning roles for $institutionName count = ".count($fellowshipRoles)." <br>";
+//                    }
                     if( $fellowshipRole ) {
                         echo "Assign as $fellowshipTypeStr for role=$fellowshipRole <br>";
 //                        $fellappUtil->assignFellAppAccessRoles(
