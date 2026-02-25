@@ -2146,6 +2146,9 @@ class UserGenerator {
                 if( count($fellowshipSubspecialtyObjects) == 1 ) {
                     $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
                 } else {
+                    foreach($fellowshipSubspecialtyObjects as $fellowshipSubspecialtyObject) {
+                        echo "fellowshipSubspecialtyObject=".$fellowshipSubspecialtyObject->getNameInstitution()."<br>";
+                    }
                     exit('None or Multiple fellapp specialties found for '.$fellowshipTypeStr);
                 }
 //                $fellowshipSubspecialtyObjects = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialtyObject,'COORDINATOR');
