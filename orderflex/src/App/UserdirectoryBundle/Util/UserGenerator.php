@@ -2259,6 +2259,7 @@ class UserGenerator {
             $roles = $user->getRoles();
             foreach($roles as $role) {
                 echo "user role=" . $role . "<br>";
+                //testing check: WASHU role should not have _WCM_
                 if( str_contains($role, 'WCM') ) {
                     exit('Role has WCM');
                 }
@@ -2279,7 +2280,7 @@ class UserGenerator {
 
             echo "new user=".$user."<br>";
 
-            if(0) {
+            if(1) {
                 $this->em->persist($user);
                 $this->em->flush();
                 $count++;
