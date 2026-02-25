@@ -2001,7 +2001,7 @@ class UserGenerator {
 
         //$institutionName = "WashU";
         $institutionName = $institution->getRootAbbreviation();
-        echo 'institutionName='.$institutionName.'<br>';
+        //echo 'institutionName='.$institutionName.'<br>';
         //$institution = $em->getRepository(Institution::class)->findOneByAbbreviation($institutionName);
         //if( !$institution ) {
         //    exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: '.$institutionName);
@@ -2042,13 +2042,13 @@ class UserGenerator {
             $fellowshipTypeStr = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers);
 
             $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers);
-            echo "<br>email=".$email."<br>";
+            //echo "<br>email=".$email."<br>";
             if( !$email ) {
                 exit('Preferred Email not found');
             }
 
             $username = strstr($email, '@', true);   // "username"
-            echo "username=".$username."<br>";
+            //echo "username=".$username."<br>";
 
             //username: oli2002_@_ldap-user
             //$fillUsername = $username."_@_". $usernamePrefix;
@@ -2061,7 +2061,7 @@ class UserGenerator {
             if( $user ) {
                 //exit('ignore existing users to prevent overwrite');
                 $keyTypeStr = $user->getKeytype()->getAbbreviation()."";
-                echo "keyTypeStr=".$keyTypeStr."<br>";
+                //echo "keyTypeStr=".$keyTypeStr."<br>";
                 if( $keyTypeStr == 'local-user' ) {
                     echo "Update user userkeytype=".$userkeytype."<br>";
                     $user->setKeytype($userkeytype);
