@@ -5871,7 +5871,16 @@ class AdminController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $fellappUtil = $this->container->get('fellapp_util');
-        $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr(); //generateAllFellowshipSubspecialties
+
+        //get oleg_fellappbundle_fellappsiteparameter_localInstitution
+        $userSecUtil = $this->container->get('user_security_utility');
+        $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution', $this->container->getParameter('fellapp.sitename'));
+        if( strtoupper($localInstitutionName) == 'WCM' ) {
+            $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr(); //WCM generateAllFellowshipSubspecialties
+        }
+        if( strtoupper($localInstitutionName) == 'WASHU' ) {
+            $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesWahsuStrArr(); //WASHU generateAllFellowshipSubspecialties
+        }
 
         $count = 0;
         foreach($fellowshipSubspecialtyArr as $fellowshipSubspecialtyName) {
