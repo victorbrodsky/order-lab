@@ -2119,7 +2119,7 @@ class UserGenerator {
                         $fellowshipRole = $fellowshipRoles[0];
                     } elseif( count($fellowshipRoles) > 1 ) {
                         foreach($fellowshipRoles as $thisFellowshipRole) {
-                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
+                            //echo "thisFellowshipRole=$thisFellowshipRole <br>";
                             //Use role without WCM
                             if( str_contains($thisFellowshipRole, 'WCM') ) {
                                 //skip
