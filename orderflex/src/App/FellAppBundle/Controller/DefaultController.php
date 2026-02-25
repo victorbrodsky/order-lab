@@ -726,7 +726,7 @@ class DefaultController extends OrderAbstractController
     //http://127.0.0.1/fellowship-applications/update-washu-fellowship-types
     #[Route(path: '/update-washu-fellowship-types', name: 'fellapp_update_washu_fellowship_types')]
     public function updateWashuGlobalFellowshipTypesAction( Request $request ) {
-        //exit("not allowed: updateWashuGlobalFellowshipTypesAction");
+        exit("not allowed: updateWashuGlobalFellowshipTypesAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }

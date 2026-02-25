@@ -984,7 +984,20 @@ class FellAppManagement extends OrderAbstractController {
         $count = 0;
         $msg = '';
 
-        $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr();
+        //$fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr();
+        //get oleg_fellappbundle_fellappsiteparameter_localInstitution
+        $userSecUtil = $this->container->get('user_security_utility');
+        $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution', $this->getParameter('fellapp.sitename'));
+        if( !$localInstitutionName ) {
+            echo "localInstitution is not set => skip generation of the FellowshipSubspecialty <br>";
+            return 0;
+        }
+        if( strtoupper($localInstitutionName) == 'WCM' ) {
+            $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr(); //WCM generateAllFellowshipSubspecialties
+        }
+        if( strtoupper($localInstitutionName) == 'WASHU' ) {
+            $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesWahsuStrArr(); //WASHU generateAllFellowshipSubspecialties
+        }
 
 //        if( 0 && !$institution ) {
 //            //////// 2) link default subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
