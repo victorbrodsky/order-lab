@@ -728,7 +728,7 @@ class DefaultController extends OrderAbstractController
                 }
                 //3) Remove deleted fellappSpecialty
                 echo "***Remove FellowshipSubspecialty " . $fellappSubspecialty->getNameInstitution() . ",ID=" . $fellappSubspecialty->getId() . "<br>";
-                if( 0 ) {
+                if( 1 ) {
                     $em->remove($fellappSubspecialty);
                     $em->flush();
                 }
