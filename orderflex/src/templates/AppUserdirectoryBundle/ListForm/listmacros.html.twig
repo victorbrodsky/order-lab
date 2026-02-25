@@ -207,14 +207,18 @@
 
                 {% if entity.institution is defined %}
                     <td>
-                        {{ entity.institution }}
+                        {% if entity.institution %}
+                            {{ entity.institution.getNodeNameWithRoot() }}
+                        {% endif %}
                     </td>
                 {% endif %}
 
                 {% if entity.institutions is defined %}
                     <td>
                         {% for institution in entity.institutions %}
-                            {{ institution }}
+                            {% if institution %}
+                                {{ institution.getNodeNameWithRoot() }}
+                            {% endif %}
                         {% endfor %}
                     </td>
                 {% endif %}

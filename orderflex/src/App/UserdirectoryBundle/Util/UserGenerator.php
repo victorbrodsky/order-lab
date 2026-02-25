@@ -1945,8 +1945,8 @@ class UserGenerator {
     }
 
     //http://127.0.0.1/fellowship-applications/populate-fellapp-users
-    //create simple users
-    public function generateSimpleUsersExcel($inputFileName) {
+    //create simple users for WASHU with assign roles for fellowship specialties
+    public function generateSimpleUsersExcel($inputFileName,$institution=null) {
 
 //        $users = $this->em->getRepository(User::class)->findAll();
 //        if( count($users) > 0 ) {
@@ -2093,7 +2093,7 @@ class UserGenerator {
             }
             $user->setRoles($rolesObjects);
 
-            //Fellowship Subspecialty
+            ///////////// Fellowship Subspecialty /////////////
             $fellowshipTypeStr = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers);
             if( $fellowshipTypeStr == 'Coordinator' ) {
                 //echo "Assign as $fellowshipTypeStr<br>";
@@ -2138,8 +2138,9 @@ class UserGenerator {
 //                    $fellowshipTypeStr,
 //                    $systemuser
 //                );
+                //Problem: washu added role ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY
                 $fellowshipSubspecialtyObject = null;
-                $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
+                $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr,$institution);
                 if( count($fellowshipSubspecialtyObjects) == 1 ) {
                     $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
                 } else {
@@ -2157,6 +2158,7 @@ class UserGenerator {
                     exit('$fellowshipSubspecialtyObject not found by ['.$fellowshipTypeStr.']');
                 }
             }
+            ///////////// EOF Fellowship Subspecialty /////////////
 
             //Salutation
             $salutations = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers);

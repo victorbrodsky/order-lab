@@ -819,13 +819,37 @@ class DefaultController extends OrderAbstractController
 //        Molly Newport, nmolly@wustl.edu
 //        Kim Green, greenkd@wustl.edu
 
+        ////// get WashU pathology //////
+        $em = $this->getDoctrine()->getManager();
+        $washU = $em->getRepository(Institution::class)->findOneByAbbreviation("WashU");
+        if( !$washU ) {
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "WashU"');
+        }
+        $mapper = array(
+            'prefix' => 'App',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution',
+            'fullClassName' => "App\\UserdirectoryBundle\\Entity\\Institution",
+            'entityNamespace' => "App\\UserdirectoryBundle\\Entity"
+        );
+        $washUPathology = $em->getRepository(Institution::class)->findByChildnameAndParent(
+            "Pathology and Immunology",
+            $washU,
+            $mapper
+        );
+        if( !$washUPathology ) {
+            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: "Pathology and Immunology"');
+        }
+        echo "washUPathology=$washUPathology, ID=".$washUPathology->getId()." <br>";
+        ////// EOF get WashU pathology //////
+
         //$inputFileName = 'C:\Users\cinav\Documents\WCMC\Users\ImportFellappUsers.csv';
         $projectRoot = $this->container->get('kernel')->getProjectDir(); // /srv/order-lab-tenantappdemo/orderflex
         echo '$projectRoot='.$projectRoot.'<br>';
         $inputFileName = $projectRoot . '/src/App/FellAppBundle/Util/ImportFellappUsers.csv';
 
         $userGenerator = $this->container->get('user_generator');
-        $res = $userGenerator->generateSimpleUsersExcel($inputFileName);
+        $res = $userGenerator->generateSimpleUsersExcel($inputFileName,$washUPathology);
 
         exit($res);
     }
