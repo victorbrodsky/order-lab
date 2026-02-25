@@ -2118,10 +2118,10 @@ class UserGenerator {
                     if( count($fellowshipRoles) == 1 ) {
                         $fellowshipRole = $fellowshipRoles[0];
                     } elseif( count($fellowshipRoles) > 1 ) {
-//                        foreach($fellowshipRoles as $thisFellowshipRole) {
-//                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
-//                        }
-                        exit("Multiple roles found count=".count($fellowshipRoles));
+                        foreach($fellowshipRoles as $thisFellowshipRole) {
+                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
+                        }
+                        exit("Multiple COORDINATOR roles found count=".count($fellowshipRoles));
                     } elseif( count($fellowshipRoles) == 0 ) {
                         //echo "No roles found for $washuFellType ($institutionName) count=".count($fellowshipRoles)."<br>";
                     } else {
@@ -2188,7 +2188,7 @@ class UserGenerator {
 //                        foreach($fellowshipRoles as $thisFellowshipRole) {
 //                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
 //                        }
-                    exit("Multiple roles found count=".count($fellowshipRoles));
+                    exit("Multiple DIRECTOR roles found count=".count($fellowshipRoles));
                 } elseif( count($fellowshipRoles) == 0 ) {
                     //echo "No roles found for $washuFellType ($institutionName) count=".count($fellowshipRoles)."<br>";
                 } else {
