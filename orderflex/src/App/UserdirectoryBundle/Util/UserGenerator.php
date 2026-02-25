@@ -1977,10 +1977,11 @@ class UserGenerator {
         $em = $this->em;
         $default_time_zone = $this->container->getParameter('default_time_zone');
 
+        $usernamePrefix = 'ldap-user'; //'local';
         $userSecUtil = $this->container->get('user_security_utility');
-        $userkeytype = $userSecUtil->getUsernameType('local-user');
+        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
         if( !$userkeytype ) {
-            exit('generateSimpleUsersExcel: Username Type not found by local');
+            exit('generateSimpleUsersExcel: Username Type not found by '.$usernamePrefix);
         }
 
         ////////////// add system user /////////////////
@@ -2036,8 +2037,6 @@ class UserGenerator {
                 TRUE,
                 FALSE);
 
-            $usernamePrefix = 'ldap-user'; //'local';
-
             //dump($headers);
             //dump($rowData);
             $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers);
@@ -2050,19 +2049,27 @@ class UserGenerator {
             echo "username=".$username."<br>";
 
             //username: oli2002_@_ldap-user
-            $fillUsername = $username."_@_". $usernamePrefix;
+            //$fillUsername = $username."_@_". $usernamePrefix;
             //echo "fillUsername=".$fillUsername."<br>";
 
-            $user = $this->em->getRepository(User::class)->findOneByUsername($fillUsername);
+            //$user = $this->em->getRepository(User::class)->findOneByUsername($fillUsername);
+            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
             //echo "DB user=".$user."<br>";
 
             if( $user ) {
                 //exit('ignore existing users to prevent overwrite');
+                if( $user->getKeytype() == 'local-user' ) {
+                    echo "Update user userkeytype=".$userkeytype."<br>";
+                    $user->setKeytype($userkeytype);
+                    //$this->em->persist($user);
+                    //$this->em->flush();
+                }
+                echo "Skip user=".$user."<br>";
                 continue; //ignore existing users to prevent overwrite
             }
 
             //create user
-            echo "create a new user ".$fillUsername."<br>";
+            echo "create a new user ".$username."<br>";
 
             //create a new user from excel
             $user = new User();
@@ -2136,13 +2143,16 @@ class UserGenerator {
 //                        //echo "Warning roles for $institutionName count = ".count($fellowshipRoles)." <br>";
 //                    }
                     if( $fellowshipRole ) {
-                        echo "Assign as $fellowshipTypeStr for role=$fellowshipRole <br>";
+                        $fellowshipRoleName = $fellowshipRole->getName();
+                        echo "Assign COORDINATOR as $fellowshipTypeStr for fellowshipRoleName=$fellowshipRoleName <br>";
 //                        $fellappUtil->assignFellAppAccessRoles(
 //                            $fellowshipSubspecialtyObject,
 //                            array($user),
 //                            $fellowshipRole
 //                        );
-                        $user->addRole($fellowshipRole->getName());
+                        if (!in_array($fellowshipRoleName, $user->getRoles(), true)) {
+                            $user->addRole($fellowshipRoleName);
+                        }
                     } else {
                         exit("No COORDINATOR role added [$institutionName] for =".$washuFellType);
                     }
@@ -2153,42 +2163,42 @@ class UserGenerator {
 //                    $fellowshipTypeStr,
 //                    $systemuser
 //                );
-                //Problem: washu added role ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY
-                if(0) {
-                    //Get Fellowship Object -> get roles
-                    $fellowshipSubspecialtyObject = null;
-                    $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr, $institution);
-                    if (!$fellowshipSubspecialtyObjects || count($fellowshipSubspecialtyObjects) == 0) {
-                        $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
-                    }
-                    if (count($fellowshipSubspecialtyObjects) == 1) {
-                        $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
-                    } else {
-                        echo "fellowshipSubspecialtyObjects count==" . count($fellowshipSubspecialtyObjects) . "<br>";
-                        foreach ($fellowshipSubspecialtyObjects as $fellowshipSubspecialtyObject) {
-                            echo "fellowshipSubspecialtyObject=" . $fellowshipSubspecialtyObject->getNameInstitution() . "<br>";
-                        }
-                        exit('None or Multiple fellapp specialties found for ' . $fellowshipTypeStr);
-                    }
-//                $fellowshipSubspecialtyObjects = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialtyObject,'COORDINATOR');
-                    //$fellowshipSubspecialtyObject = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
-                    echo "fellowshipTypeStr=" . $fellowshipTypeStr . "<br>";
-                    echo "fellowshipSubspecialtyObject=" . $fellowshipSubspecialtyObject . "<br>";
-                    if ($fellowshipTypeStr && $fellowshipSubspecialtyObject) {
-                        //$fellowshipSubspecialtyObjects->addDirector($user);
-                        //add fellapp to user (similar to FellAppManagement.php -> editAction)
-                        $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObject, array($user), "DIRECTOR");
-                    } else {
-                        exit('$fellowshipSubspecialtyObject not found by [' . $fellowshipTypeStr . ']');
-                    }
-                }
+//                //Problem: washu added role ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY
+//                if(0) {
+//                    //Get Fellowship Object -> get roles
+//                    $fellowshipSubspecialtyObject = null;
+//                    $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr, $institution);
+//                    if (!$fellowshipSubspecialtyObjects || count($fellowshipSubspecialtyObjects) == 0) {
+//                        $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
+//                    }
+//                    if (count($fellowshipSubspecialtyObjects) == 1) {
+//                        $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
+//                    } else {
+//                        echo "fellowshipSubspecialtyObjects count==" . count($fellowshipSubspecialtyObjects) . "<br>";
+//                        foreach ($fellowshipSubspecialtyObjects as $fellowshipSubspecialtyObject) {
+//                            echo "fellowshipSubspecialtyObject=" . $fellowshipSubspecialtyObject->getNameInstitution() . "<br>";
+//                        }
+//                        exit('None or Multiple fellapp specialties found for ' . $fellowshipTypeStr);
+//                    }
+////                $fellowshipSubspecialtyObjects = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialtyObject,'COORDINATOR');
+//                    //$fellowshipSubspecialtyObject = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
+//                    echo "fellowshipTypeStr=" . $fellowshipTypeStr . "<br>";
+//                    echo "fellowshipSubspecialtyObject=" . $fellowshipSubspecialtyObject . "<br>";
+//                    if ($fellowshipTypeStr && $fellowshipSubspecialtyObject) {
+//                        //$fellowshipSubspecialtyObjects->addDirector($user);
+//                        //add fellapp to user (similar to FellAppManagement.php -> editAction)
+//                        $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObject, array($user), "DIRECTOR");
+//                    } else {
+//                        exit('$fellowshipSubspecialtyObject not found by [' . $fellowshipTypeStr . ']');
+//                    }
+//                }
 
                 //////////// Find existing Roles and add to user /////////////
                 $fellowshipRole = null;
                 $institutionName = strtoupper($institutionName); //'WASHU'
-                $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'DIRECTOR',$institutionName);
+                $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($fellowshipTypeStr,'DIRECTOR',$institutionName);
                 if( count($fellowshipRoles) == 0 ) {
-                    $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'DIRECTOR');
+                    $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($fellowshipTypeStr,'DIRECTOR');
                 }
                 if( count($fellowshipRoles) == 1 ) {
                     $fellowshipRole = $fellowshipRoles[0];
@@ -2203,15 +2213,13 @@ class UserGenerator {
                     //echo "Warning roles for $institutionName count = ".count($fellowshipRoles)." <br>";
                 }
                 if( $fellowshipRole ) {
-                    echo "Assign as $fellowshipTypeStr for role=$fellowshipRole <br>";
-//                        $fellappUtil->assignFellAppAccessRoles(
-//                            $fellowshipSubspecialtyObject,
-//                            array($user),
-//                            $fellowshipRole
-//                        );
-                    $user->addRole($fellowshipRole->getName());
+                    $fellowshipRoleName = $fellowshipRole->getName();
+                    echo "Assign DIRECTOR as $fellowshipTypeStr for fellowshipRoleName=$fellowshipRoleName <br>";
+                    if (!in_array($fellowshipRoleName, $user->getRoles(), true)) {
+                        $user->addRole($fellowshipRoleName);
+                    }
                 } else {
-                    exit("No DIRECTOR role added [$institutionName] for =".$washuFellType);
+                    exit("No DIRECTOR role added [$institutionName] for =".$fellowshipTypeStr);
                 }
 
             }
@@ -2293,7 +2301,7 @@ class UserGenerator {
 
             echo "new user=".$user."<br>";
 
-            if(1) {
+            if(0) {
                 $this->em->persist($user);
                 $this->em->flush();
                 $count++;
