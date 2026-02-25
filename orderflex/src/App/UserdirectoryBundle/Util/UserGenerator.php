@@ -2142,8 +2142,10 @@ class UserGenerator {
 //                );
                 //Problem: washu added role ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY
                 $fellowshipSubspecialtyObject = null;
-                //$fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr,$institution);
-                $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
+                $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr,$institution);
+                if( !$fellowshipSubspecialtyObjects || count($fellowshipSubspecialtyObjects) == 0 ) {
+                    $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
+                }
                 if( count($fellowshipSubspecialtyObjects) == 1 ) {
                     $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
                 } else {
