@@ -2141,31 +2141,61 @@ class UserGenerator {
 //                    $systemuser
 //                );
                 //Problem: washu added role ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY
-                $fellowshipSubspecialtyObject = null;
-                $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr,$institution);
-                if( !$fellowshipSubspecialtyObjects || count($fellowshipSubspecialtyObjects) == 0 ) {
-                    $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
-                }
-                if( count($fellowshipSubspecialtyObjects) == 1 ) {
-                    $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
-                } else {
-                    echo "fellowshipSubspecialtyObjects count==".count($fellowshipSubspecialtyObjects)."<br>";
-                    foreach($fellowshipSubspecialtyObjects as $fellowshipSubspecialtyObject) {
-                        echo "fellowshipSubspecialtyObject=".$fellowshipSubspecialtyObject->getNameInstitution()."<br>";
+                if(0) {
+                    //Get Fellowship Object -> get roles
+                    $fellowshipSubspecialtyObject = null;
+                    $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr, $institution);
+                    if (!$fellowshipSubspecialtyObjects || count($fellowshipSubspecialtyObjects) == 0) {
+                        $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
                     }
-                    exit('None or Multiple fellapp specialties found for '.$fellowshipTypeStr);
-                }
+                    if (count($fellowshipSubspecialtyObjects) == 1) {
+                        $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
+                    } else {
+                        echo "fellowshipSubspecialtyObjects count==" . count($fellowshipSubspecialtyObjects) . "<br>";
+                        foreach ($fellowshipSubspecialtyObjects as $fellowshipSubspecialtyObject) {
+                            echo "fellowshipSubspecialtyObject=" . $fellowshipSubspecialtyObject->getNameInstitution() . "<br>";
+                        }
+                        exit('None or Multiple fellapp specialties found for ' . $fellowshipTypeStr);
+                    }
 //                $fellowshipSubspecialtyObjects = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialtyObject,'COORDINATOR');
-                //$fellowshipSubspecialtyObject = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
-                echo "fellowshipTypeStr=".$fellowshipTypeStr."<br>";
-                echo "fellowshipSubspecialtyObject=".$fellowshipSubspecialtyObject."<br>";
-                if( $fellowshipTypeStr && $fellowshipSubspecialtyObject ) {
-                    //$fellowshipSubspecialtyObjects->addDirector($user);
-                    //add fellapp to user (similar to FellAppManagement.php -> editAction)
-                    $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObject, array($user), "DIRECTOR");
-                } else {
-                    exit('$fellowshipSubspecialtyObject not found by ['.$fellowshipTypeStr.']');
+                    //$fellowshipSubspecialtyObject = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
+                    echo "fellowshipTypeStr=" . $fellowshipTypeStr . "<br>";
+                    echo "fellowshipSubspecialtyObject=" . $fellowshipSubspecialtyObject . "<br>";
+                    if ($fellowshipTypeStr && $fellowshipSubspecialtyObject) {
+                        //$fellowshipSubspecialtyObjects->addDirector($user);
+                        //add fellapp to user (similar to FellAppManagement.php -> editAction)
+                        $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObject, array($user), "DIRECTOR");
+                    } else {
+                        exit('$fellowshipSubspecialtyObject not found by [' . $fellowshipTypeStr . ']');
+                    }
                 }
+
+                //////////// Find existing Roles and add to user /////////////
+                $fellowshipRole = null;
+                $institutionName = strtoupper($institutionName); //'WASHU'
+                $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'DIRECTOR',$institutionName);
+                if( count($fellowshipRoles) == 1 ) {
+                    $fellowshipRole = $fellowshipRoles[0];
+                } elseif( count($fellowshipRoles) > 1 ) {
+//                        foreach($fellowshipRoles as $thisFellowshipRole) {
+//                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
+//                        }
+                    exit("Multiple roles found count=".count($fellowshipRoles));
+                } elseif( count($fellowshipRoles) == 0 ) {
+                    //echo "No roles found for $washuFellType ($institutionName) count=".count($fellowshipRoles)."<br>";
+                } else {
+                    //echo "Warning roles for $institutionName count = ".count($fellowshipRoles)." <br>";
+                }
+                if( $fellowshipRole ) {
+                    echo "Assign as $fellowshipTypeStr for role=$fellowshipRole <br>";
+//                        $fellappUtil->assignFellAppAccessRoles(
+//                            $fellowshipSubspecialtyObject,
+//                            array($user),
+//                            $fellowshipRole
+//                        );
+                    $user->addRole($fellowshipRole->getName());
+                }
+
             }
             ///////////// EOF Fellowship Subspecialty /////////////
 
