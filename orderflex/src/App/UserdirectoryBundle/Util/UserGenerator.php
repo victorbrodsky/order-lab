@@ -2269,6 +2269,7 @@ class UserGenerator {
                 $institutionName = strtoupper($institutionName); //'WASHU'
                 $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($fellowshipTypeStr,'DIRECTOR',$institutionName);
                 if( count($fellowshipRoles) == 0 ) {
+                    echo "Second attempt to get fellowshipRoles for $fellowshipTypeStr <br>";
                     $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($fellowshipTypeStr,'DIRECTOR');
                 }
                 if( count($fellowshipRoles) == 1 ) {
