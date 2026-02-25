@@ -563,7 +563,7 @@ class DefaultController extends OrderAbstractController
                     //2) Find fellowship applications FellowshipApplication
                     $fellapps = $em->getRepository(FellowshipApplication::class)
                         ->findBy([
-                            'fellowshipSubspecialty' => $fellappSubspecialty(),
+                            'fellowshipSubspecialty' => $fellappSubspecialty,
                             //'institution'            => $washUPathology,
                         ]);
                     echo "fellapps=" . count($fellapps) . ": fellappSubspecialty=[$fellappSubspecialty]" . "<br>";
