@@ -2087,11 +2087,10 @@ class UserGenerator {
                 }
             }
 
-            //create user
-            echo "create a new user ".$username."<br>";
-
             //create a new user from excel
             if( !$user ) {
+                //create user
+                echo "create a new user ".$username."<br>";
                 $user = new User();
                 $user->setKeytype($userkeytype);
                 $user->setPrimaryPublicUserId($username);
@@ -2275,9 +2274,9 @@ class UserGenerator {
                 if( count($fellowshipRoles) == 1 ) {
                     $fellowshipRole = $fellowshipRoles[0];
                 } elseif( count($fellowshipRoles) > 1 ) {
-//                        foreach($fellowshipRoles as $thisFellowshipRole) {
-//                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
-//                        }
+                        foreach($fellowshipRoles as $thisFellowshipRole) {
+                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
+                        }
                     exit("Multiple DIRECTOR roles found count=".count($fellowshipRoles));
                 } elseif( count($fellowshipRoles) == 0 ) {
                     //echo "No roles found for $washuFellType ($institutionName) count=".count($fellowshipRoles)."<br>";
