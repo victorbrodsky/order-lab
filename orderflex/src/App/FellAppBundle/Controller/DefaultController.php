@@ -802,7 +802,7 @@ class DefaultController extends OrderAbstractController
             $counter++;
         }
 
-        exit("<br><br>end of updateWCMGlobalFellowshipTypesAction, removed counter=$counter");
+        exit("<br><br>end of updateWashuGlobalFellowshipTypesAction, removed counter=$counter");
     }
 
     //http://127.0.0.1/fellowship-applications/populate-fellapp-users
