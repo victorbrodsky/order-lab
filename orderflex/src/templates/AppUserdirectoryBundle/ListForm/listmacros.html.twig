@@ -1043,6 +1043,10 @@
         {{ formmacros.field(form.fellowshipSubspecialty) }}
     {% endif %}
 
+    {% if form.globalFellowshipSpecialty is defined %}
+        {{ formmacros.field(form.globalFellowshipSpecialty) }}
+    {% endif %}
+
     {% if form.residencySubspecialty is defined %}
         {{ formmacros.field(form.residencySubspecialty) }}
     {% endif %}

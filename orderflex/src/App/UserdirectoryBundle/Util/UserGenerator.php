@@ -2229,41 +2229,6 @@ class UserGenerator {
                     }
                 }
             } else {
-//                $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
-//                    "FellowshipSubspecialty",
-//                    $fellowshipTypeStr,
-//                    $systemuser
-//                );
-//                //Problem: washu added role ROLE_FELLAPP_DIRECTOR_WCM_MOLECULARGENETICPATHOLOGY
-//                if(0) {
-//                    //Get Fellowship Object -> get roles
-//                    $fellowshipSubspecialtyObject = null;
-//                    $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr, $institution);
-//                    if (!$fellowshipSubspecialtyObjects || count($fellowshipSubspecialtyObjects) == 0) {
-//                        $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
-//                    }
-//                    if (count($fellowshipSubspecialtyObjects) == 1) {
-//                        $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
-//                    } else {
-//                        echo "fellowshipSubspecialtyObjects count==" . count($fellowshipSubspecialtyObjects) . "<br>";
-//                        foreach ($fellowshipSubspecialtyObjects as $fellowshipSubspecialtyObject) {
-//                            echo "fellowshipSubspecialtyObject=" . $fellowshipSubspecialtyObject->getNameInstitution() . "<br>";
-//                        }
-//                        exit('None or Multiple fellapp specialties found for ' . $fellowshipTypeStr);
-//                    }
-////                $fellowshipSubspecialtyObjects = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialtyObject,'COORDINATOR');
-//                    //$fellowshipSubspecialtyObject = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
-//                    echo "fellowshipTypeStr=" . $fellowshipTypeStr . "<br>";
-//                    echo "fellowshipSubspecialtyObject=" . $fellowshipSubspecialtyObject . "<br>";
-//                    if ($fellowshipTypeStr && $fellowshipSubspecialtyObject) {
-//                        //$fellowshipSubspecialtyObjects->addDirector($user);
-//                        //add fellapp to user (similar to FellAppManagement.php -> editAction)
-//                        $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObject, array($user), "DIRECTOR");
-//                    } else {
-//                        exit('$fellowshipSubspecialtyObject not found by [' . $fellowshipTypeStr . ']');
-//                    }
-//                }
-
                 //////////// Find existing Roles and add to user /////////////
                 $fellowshipRole = null;
                 $institutionName = strtoupper($institutionName); //'WASHU'
@@ -2312,21 +2277,11 @@ class UserGenerator {
             }
             ////////////// EOF Section: Name and Preferred Contact Info ////////////////
 
-            ////////////// Section: Global User Preferences ////////////////
-            //$sectionGlobal = "Global User Preferences";
-            //$sectionGlobalRange = $this->getMergedRangeBySectionName($sectionGlobal,$sections,$sheet);
-            //echo "<br>sectionGlobalRange=".$sectionGlobalRange."<br>";
-
-            //$user->getPreferences()->setTimezone($timeZone);
-            //$user->getPreferences()->addLanguage($languageObject);
-            //$user->getPreferences()->setLocale($localeObject);
-            ////////////// EOF Section: Global User Preferences ////////////////
-
             //exit('1'); //testing
 
             echo "new user=".$user."<br>";
 
-            if(1) {
+            if(0) {
                 $this->em->persist($user);
                 $this->em->flush();
                 $count++;

@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Form;
 
 
 
+use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
 use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
@@ -554,9 +555,16 @@ class GenericListType extends AbstractType
             ));
 
             $builder->add('fellowshipSubspecialty',EntityType::class,array(
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
                 'class' => FellowshipSubspecialty::class,
-                'label' => "Fellowship Subspecialty:",
+                'label' => "Local Fellowship Subspecialty:",
+                'multiple' => false,
+                'required' => false,
+                'attr' => array('class'=>'combobox combobox-width')
+            ));
+
+            $builder->add('globalFellowshipSpecialty',EntityType::class,array(
+                'class' => GlobalFellowshipSpecialty::class,
+                'label' => "Global Fellowship Specialty:",
                 'multiple' => false,
                 'required' => false,
                 'attr' => array('class'=>'combobox combobox-width')

@@ -47,9 +47,13 @@ class Roles extends ListAbstract {
     #[ORM\ManyToOne(targetEntity: 'Institution')]
     private $institution;
 
-    //fellowship type
+    //local fellowship type
     #[ORM\ManyToOne(targetEntity: 'FellowshipSubspecialty')]
     private $fellowshipSubspecialty;
+
+    //global fellowship type
+    #[ORM\ManyToOne(targetEntity: 'App\FellAppBundle\Entity\GlobalFellowshipSpecialty')]
+    private $globalFellowshipSpecialty;
 
     /**
      * Keep "Subspecialty" to be compatible with fellapp source code
@@ -155,6 +159,22 @@ class Roles extends ListAbstract {
     public function getFellowshipSubspecialty()
     {
         return $this->fellowshipSubspecialty;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGlobalFellowshipSpecialty()
+    {
+        return $this->globalFellowshipSpecialty;
+    }
+
+    /**
+     * @param mixed $globalFellowshipSpecialty
+     */
+    public function setGlobalFellowshipSpecialty($globalFellowshipSpecialty)
+    {
+        $this->globalFellowshipSpecialty = $globalFellowshipSpecialty;
     }
 
     /**
