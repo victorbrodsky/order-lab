@@ -777,11 +777,12 @@ class DefaultController extends OrderAbstractController
 
             if( in_array(strtolower($name), array_map('strtolower', $washuFellTypes)) ) {
                 //in array
+                echo "Skip ".strtolower($name)."<br>";
                 continue;
             }
 
             //not in wcm array => remove
-            echo "### [$name] - not in wcm array => remove <br>";
+            echo "### [$name] - not in washu array => remove <br>";
 
             $globalFellapps = $em->getRepository(FellowshipApplication::class)
                 ->findBy([
