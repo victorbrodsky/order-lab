@@ -2146,6 +2146,7 @@ class UserGenerator {
                 if( count($fellowshipSubspecialtyObjects) == 1 ) {
                     $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
                 } else {
+                    echo "fellowshipSubspecialtyObjects count==".count($fellowshipSubspecialtyObjects)."<br>";
                     foreach($fellowshipSubspecialtyObjects as $fellowshipSubspecialtyObject) {
                         echo "fellowshipSubspecialtyObject=".$fellowshipSubspecialtyObject->getNameInstitution()."<br>";
                     }
