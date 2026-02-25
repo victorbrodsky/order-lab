@@ -5874,7 +5874,7 @@ class AdminController extends OrderAbstractController
 
         //get oleg_fellappbundle_fellappsiteparameter_localInstitution
         $userSecUtil = $this->container->get('user_security_utility');
-        $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution', $this->container->getParameter('fellapp.sitename'));
+        $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution', $this->getParameter('fellapp.sitename'));
         if( strtoupper($localInstitutionName) == 'WCM' ) {
             $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr(); //WCM generateAllFellowshipSubspecialties
         }
