@@ -1998,11 +1998,13 @@ class UserGenerator {
         }
         ////////////// end of add system user /////////////////
 
-        $institutionName = "WashU";
-        $institution = $em->getRepository(Institution::class)->findOneByAbbreviation($institutionName);
-        if( !$institution ) {
-            exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: '.$institutionName);
-        }
+        //$institutionName = "WashU";
+        $institutionName = $institution->getRootAbbreviation();
+        echo 'institutionName='.$institutionName.'<br>';
+        //$institution = $em->getRepository(Institution::class)->findOneByAbbreviation($institutionName);
+        //if( !$institution ) {
+        //    exit('generateGlobalFellowshipSpecialtiesWahsu: No Institution: '.$institutionName);
+        //}
 
         $washuFellTypes = $fellappUtil->getFellowshipTypesWahsuStrArr();
         foreach($washuFellTypes as $washuFellType) {
