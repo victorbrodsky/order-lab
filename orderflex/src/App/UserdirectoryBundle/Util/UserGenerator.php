@@ -2063,8 +2063,8 @@ class UserGenerator {
                 if( $keyTypeStr == 'local-user' ) {
                     echo "Update user userkeytype=".$userkeytype."<br>";
                     $user->setKeytype($userkeytype);
-                    $this->em->persist($user);
-                    $this->em->flush();
+                    //$this->em->persist($user);
+                    $this->em->flush($user);
                 }
                 echo "Skip user=".$user."<br>";
                 continue; //ignore existing users to prevent overwrite
