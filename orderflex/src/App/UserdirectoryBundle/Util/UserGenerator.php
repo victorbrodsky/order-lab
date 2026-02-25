@@ -2039,6 +2039,8 @@ class UserGenerator {
 
             //dump($headers);
             //dump($rowData);
+            $fellowshipTypeStr = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers);
+
             $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers);
             echo "<br>email=".$email."<br>";
             if( !$email ) {
@@ -2066,46 +2068,114 @@ class UserGenerator {
                     //$this->em->persist($user);
                     $this->em->flush($user);
                 }
-                echo "Skip user=".$user."<br>";
-                continue; //ignore existing users to prevent overwrite
+
+                //$fellowshipTypeStr: Surgical Pathology -> SURGICALPATHOLOGY"
+                $hasRole = false;
+                $partialRoleStr = $result = strtoupper(str_replace(' ', '', $fellowshipTypeStr));
+                foreach($user->getRoles() as $role) {
+                    if( str_contains($role, $partialRoleStr) ) {
+                        $hasRole = true;
+                        break;
+                    }
+                }
+
+                if( $hasRole ) {
+                    echo "Skip user=" . $user . "<br>";
+                    continue; //ignore existing users to prevent overwrite
+                } else {
+                    echo 'Update user role fellappTypeStr='.$fellowshipTypeStr.'<br>';
+                }
             }
 
             //create user
             echo "create a new user ".$username."<br>";
 
             //create a new user from excel
-            $user = new User();
-            $user->setKeytype($userkeytype);
-            $user->setPrimaryPublicUserId($username);
+            if( !$user ) {
+                $user = new User();
+                $user->setKeytype($userkeytype);
+                $user->setPrimaryPublicUserId($username);
 
-            //set unique username
-            $usernameUnique = $user->createUniqueUsername();
-            $user->setUsername($usernameUnique);
-            //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
-            $user->setUsernameCanonical($usernameUnique);
+                //set unique username
+                $usernameUnique = $user->createUniqueUsername();
+                $user->setUsername($usernameUnique);
+                //echo "before set username canonical usernameUnique=".$usernameUnique."<br>";
+                $user->setUsernameCanonical($usernameUnique);
 
-            $user->setEnabled(true);
-            //$user->setLocked(false);
+                $user->setEnabled(true);
+                //$user->setLocked(false);
 
-            ////////////// Section: Name and Preferred Contact Info ////////////////
-            $user->setEmail($email);
-            $user->setEmailCanonical($email);
+                ////////////// Section: Name and Preferred Contact Info ////////////////
+                $user->setEmail($email);
+                $user->setEmailCanonical($email);
 
-            $roles = $this->getValueBySectionHeaderName("Role",$rowData,$headers);
-            //$timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
-            //$language = $this->getValueBySectionHeaderName("Language",$rowData,$headers,$sectionGlobalRange);
-            //$languageObject = $this->getObjectByNameTransformerWithoutCreating("LanguageList",$language,$systemuser);
-            //$locale = $this->getValueBySectionHeaderName("Locale",$rowData,$headers,$sectionGlobalRange);
-            //$localeObject = $this->getObjectByNameTransformerWithoutCreating("LocaleList",$locale,$systemuser);
-            //Roles
-            $rolesObjects = $this->processMultipleListObjects($roles,$systemuser,"Roles");
-            foreach($rolesObjects as $rolesObject) {
-                echo "rolesObject=$rolesObject <br>";
+                $roles = $this->getValueBySectionHeaderName("Role", $rowData, $headers);
+                //$timeZone = $this->getValueBySectionHeaderName("Time Zone",$rowData,$headers,$sectionGlobalRange);
+                //$language = $this->getValueBySectionHeaderName("Language",$rowData,$headers,$sectionGlobalRange);
+                //$languageObject = $this->getObjectByNameTransformerWithoutCreating("LanguageList",$language,$systemuser);
+                //$locale = $this->getValueBySectionHeaderName("Locale",$rowData,$headers,$sectionGlobalRange);
+                //$localeObject = $this->getObjectByNameTransformerWithoutCreating("LocaleList",$locale,$systemuser);
+                //Roles
+                $rolesObjects = $this->processMultipleListObjects($roles, $systemuser, "Roles");
+                foreach ($rolesObjects as $rolesObject) {
+                    echo "rolesObject=$rolesObject <br>";
+                }
+                $user->setRoles($rolesObjects);
+
+                //Salutation
+                $salutations = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers);
+                echo "salutations=".$salutations."<br>";
+                //Trainings (Education) -> degree MD with status 'Verified by Administrator'
+                if( $salutations ) {
+                    $salutationsArr = array_map('trim', explode(',', $salutations));
+                    $orderinlist = 0;
+                    foreach($salutationsArr as $salutation) {
+                        $training = new Training($systemuser);
+                        $training->setOrderinlist($orderinlist);
+                        $degreeObjects = $this->getObjectByNameTransformer("TrainingDegreeList",$salutation,$systemuser);
+                        if( !$degreeObjects ) {
+                            exit("TrainingDegreeList not found by $salutation");
+                        }
+                        $training->setDegree($degreeObjects);
+                        $training->setAppendDegreeToName(true);
+                        $training->setStatus($training::STATUS_VERIFIED);
+                        $user->addTraining($training);
+                        //$training->setFellowshipSubspecialty($fellowshipSubspecialtyObjects);
+                        echo "degreeObjects=".$degreeObjects."<br>";
+                        echo "status=".$training->getStatus()."<br>";
+                        $orderinlist++;
+                    }
+                }
+
+                $preferredName = $this->getValueBySectionHeaderName("Preferred Full Name for Display",$rowData,$headers);
+//            $firstName = $this->getValueBySectionHeaderName("First Name",$rowData,$headers,$sectionNameContactInfoRange);
+//            $middleName = $this->getValueBySectionHeaderName("Middle Name",$rowData,$headers,$sectionNameContactInfoRange);
+//            $lastName = $this->getValueBySectionHeaderName("Last Name",$rowData,$headers,$sectionNameContactInfoRange);
+//            $salutation = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers,$sectionNameContactInfoRange);
+//            $suffix = $this->getValueBySectionHeaderName("Suffix",$rowData,$headers,$sectionNameContactInfoRange);
+//            $prefferedPhone = $this->getValueBySectionHeaderName("Preferred Phone Number",$rowData,$headers,$sectionNameContactInfoRange);
+//            $abbreviationName = $this->getValueBySectionHeaderName("Abbreviated name",$rowData,$headers,$sectionNameContactInfoRange);
+
+                $parts = preg_split('/\s+/', trim($preferredName));
+
+                $firstName = $parts[0];
+                $lastName  = $parts[count($parts) - 1];
+
+                $user->setDisplayName($preferredName);
+                $user->setFirstName($firstName);
+                //$user->setMiddleName($middleName);
+                $user->setLastName($lastName);
+                //$user->setSalutation($salutation);
+                //$user->setSuffix($suffix);
+                //$user->setPreferredPhone($prefferedPhone);
+                //$user->setInitials($abbreviationName);
+
+                $user->setPassword("");
+                $user->setCreatedby('excel');
+                $user->getPreferences()->setTimezone($default_time_zone);
             }
-            $user->setRoles($rolesObjects);
 
             ///////////// Fellowship Subspecialty /////////////
-            $fellowshipTypeStr = $this->getValueBySectionHeaderName("Fellowship Subspecialty",$rowData,$headers);
             if( $fellowshipTypeStr == 'Coordinator' ) {
                 //echo "Assign as $fellowshipTypeStr<br>";
                 foreach($washuFellTypes as $washuFellType) {
@@ -2226,58 +2296,6 @@ class UserGenerator {
 
             }
             ///////////// EOF Fellowship Subspecialty /////////////
-
-            //Salutation
-            $salutations = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers);
-            echo "salutations=".$salutations."<br>";
-            //Trainings (Education) -> degree MD with status 'Verified by Administrator'
-            if( $salutations ) {
-                $salutationsArr = array_map('trim', explode(',', $salutations));
-                $orderinlist = 0;
-                foreach($salutationsArr as $salutation) {
-                    $training = new Training($systemuser);
-                    $training->setOrderinlist($orderinlist);
-                    $degreeObjects = $this->getObjectByNameTransformer("TrainingDegreeList",$salutation,$systemuser);
-                    if( !$degreeObjects ) {
-                        exit("TrainingDegreeList not found by $salutation");
-                    }
-                    $training->setDegree($degreeObjects);
-                    $training->setAppendDegreeToName(true);
-                    $training->setStatus($training::STATUS_VERIFIED);
-                    $user->addTraining($training);
-                    //$training->setFellowshipSubspecialty($fellowshipSubspecialtyObjects);
-                    echo "degreeObjects=".$degreeObjects."<br>";
-                    echo "status=".$training->getStatus()."<br>";
-                    $orderinlist++;
-                }
-            }
-
-            $preferredName = $this->getValueBySectionHeaderName("Preferred Full Name for Display",$rowData,$headers);
-//            $firstName = $this->getValueBySectionHeaderName("First Name",$rowData,$headers,$sectionNameContactInfoRange);
-//            $middleName = $this->getValueBySectionHeaderName("Middle Name",$rowData,$headers,$sectionNameContactInfoRange);
-//            $lastName = $this->getValueBySectionHeaderName("Last Name",$rowData,$headers,$sectionNameContactInfoRange);
-//            $salutation = $this->getValueBySectionHeaderName("Salutation",$rowData,$headers,$sectionNameContactInfoRange);
-//            $suffix = $this->getValueBySectionHeaderName("Suffix",$rowData,$headers,$sectionNameContactInfoRange);
-//            $prefferedPhone = $this->getValueBySectionHeaderName("Preferred Phone Number",$rowData,$headers,$sectionNameContactInfoRange);
-//            $abbreviationName = $this->getValueBySectionHeaderName("Abbreviated name",$rowData,$headers,$sectionNameContactInfoRange);
-
-            $parts = preg_split('/\s+/', trim($preferredName));
-
-            $firstName = $parts[0];
-            $lastName  = $parts[count($parts) - 1];
-
-            $user->setDisplayName($preferredName);
-            $user->setFirstName($firstName);
-            //$user->setMiddleName($middleName);
-            $user->setLastName($lastName);
-            //$user->setSalutation($salutation);
-            //$user->setSuffix($suffix);
-            //$user->setPreferredPhone($prefferedPhone);
-            //$user->setInitials($abbreviationName);
-
-            $user->setPassword("");
-            $user->setCreatedby('excel');
-            $user->getPreferences()->setTimezone($default_time_zone);
 
             $roles = $user->getRoles();
             foreach($roles as $role) {
