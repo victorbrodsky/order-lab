@@ -500,6 +500,33 @@ class FellAppUtil {
 
         return $filterType;
     }
+    //get all fellowship application types with given institution name i.e. WCM and fellowship type name
+    //$institution - WCM or WASHU
+    //$fellowshipName - Genitourinary pathology
+    public function getFellowshipTypesByFellowshipNameInstitutionName( $fellowshipName, $institution=null ) {
+        $em = $this->em;
+
+        //get list of fellowship type with extra "ALL"
+        $repository = $em->getRepository(FellowshipSubspecialty::class);
+        $dql = $repository->createQueryBuilder('list');
+        $dql->where("list.name = :fellowshipName");
+        if( $institution ) {
+            $dql->leftJoin("list.institution","institution");
+            $dql->andWhere("institution.id = " . $institution->getId());
+        }
+        $dql->orderBy("list.orderinlist","ASC");
+
+        $query = $dql->getQuery();
+
+        $query->setParameters( array(
+            'fellowshipName' => trim($fellowshipName),
+        ));
+
+        $fellTypes = $query->getResult();
+        //echo "fellTypes count=".count($fellTypes)."<br>";
+
+        return $fellTypes;
+    }
     //get all fellowship application types (default, user-added)
     public function getValidFellowshipTypes( $asEntities=false ) {
         $em = $this->em;
@@ -1449,6 +1476,8 @@ class FellAppUtil {
 
         return $roles;
     }
+    //$roleName is a partial role name: _DIRECTOR_
+    //$institutionAbbreviation - WCM
     public function getRolesByFellowshipSubspecialtyNameAndRolename( $fellowshipSpecialtyName, $roleName, $institutionAbbreviation=null ) {
         //$roles = $this->em->getRepository(Roles::class)->findByFellowshipSubspecialty($fellowshipSubspecialty);
 

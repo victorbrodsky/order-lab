@@ -2098,39 +2098,53 @@ class UserGenerator {
             if( $fellowshipTypeStr == 'Coordinator' ) {
                 //echo "Assign as $fellowshipTypeStr<br>";
                 foreach($washuFellTypes as $washuFellType) {
-                    $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
-                        "FellowshipSubspecialty",
-                        $washuFellType,
-                        $systemuser
-                    );
+//                    $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
+//                        "FellowshipSubspecialty",
+//                        $washuFellType,
+//                        $systemuser
+//                    );
+                    //echo '$fellowshipSubspecialtyObject='.$fellowshipSubspecialtyObject.'<br>';
                     //$fellowshipSubspecialtyObject = $this->getFellowshipSubspecialty($washuFellType,$fellowshipTypeStr,'COORDINATOR');
                     //$roleName = _DIRECTOR_
                     //$institutionName
                     $fellowshipRole = null;
-                    $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
-                    foreach($fellowshipRoles as $thisFellowshipRole) {
-                        echo "thisFellowshipRole=$thisFellowshipRole <br>";
-                        if( str_contains($thisFellowshipRole, 'WCM') === false ) {
-                            // it contains the institution name
-                            $fellowshipRole = $thisFellowshipRole;
-                            break;
-                        }
+                    $institutionName = strtoupper($institutionName); //'WASHU'
+                    $fellowshipRoles = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR',$institutionName);
+                    if( count($fellowshipRoles) == 1 ) {
+                        $fellowshipRole = $fellowshipRoles[0];
+                    } elseif( count($fellowshipRoles) > 1 ) {
+//                        foreach($fellowshipRoles as $thisFellowshipRole) {
+//                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
+//                        }
+                        exit("Multiple roles found count=".count($fellowshipRoles));
+                    } elseif( count($fellowshipRoles) == 0 ) {
+                        //echo "No roles found for $washuFellType ($institutionName) count=".count($fellowshipRoles)."<br>";
+                    } else {
+                        //echo "Warning roles for $institutionName count = ".count($fellowshipRoles)." <br>";
                     }
-                    echo "Assign as $fellowshipTypeStr for $fellowshipRole <br>";
                     if( $fellowshipRole ) {
-                        $fellappUtil->assignFellAppAccessRoles(
-                            $fellowshipSubspecialtyObject,
-                            array($user),
-                            $fellowshipRole
-                        );
+                        echo "Assign as $fellowshipTypeStr for role=$fellowshipRole <br>";
+//                        $fellappUtil->assignFellAppAccessRoles(
+//                            $fellowshipSubspecialtyObject,
+//                            array($user),
+//                            $fellowshipRole
+//                        );
+                        $user->addRole($fellowshipRole->getName());
                     }
                 }
             } else {
-                $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
-                    "FellowshipSubspecialty",
-                    $fellowshipTypeStr,
-                    $systemuser
-                );
+//                $fellowshipSubspecialtyObject = $this->getObjectByNameTransformer(
+//                    "FellowshipSubspecialty",
+//                    $fellowshipTypeStr,
+//                    $systemuser
+//                );
+                $fellowshipSubspecialtyObject = null;
+                $fellowshipSubspecialtyObjects = $fellappUtil->getFellowshipTypesByFellowshipNameInstitutionName($fellowshipTypeStr);
+                if( count($fellowshipSubspecialtyObjects) == 1 ) {
+                    $fellowshipSubspecialtyObject = $fellowshipSubspecialtyObjects[0];
+                } else {
+                    exit('None or Multiple fellapp specialties found for '.$fellowshipTypeStr);
+                }
 //                $fellowshipSubspecialtyObjects = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSubspecialtyObject,'COORDINATOR');
                 //$fellowshipSubspecialtyObject = $fellappUtil->getRolesByFellowshipSubspecialtyNameAndRolename($washuFellType,'COORDINATOR');
                 echo "fellowshipTypeStr=".$fellowshipTypeStr."<br>";
@@ -2139,6 +2153,8 @@ class UserGenerator {
                     //$fellowshipSubspecialtyObjects->addDirector($user);
                     //add fellapp to user (similar to FellAppManagement.php -> editAction)
                     $fellappUtil->assignFellAppAccessRoles($fellowshipSubspecialtyObject, array($user), "DIRECTOR");
+                } else {
+                    exit('$fellowshipSubspecialtyObject not found by ['.$fellowshipTypeStr.']');
                 }
             }
 
@@ -2225,7 +2241,7 @@ class UserGenerator {
                 $event = "User " . $user . " has been created by " . $systemuser . "<br>";
                 $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'), $event, $systemuser, $user, null, 'New user record added');
             }
-            exit('eof user '.$user);
+            //exit('eof user '.$user);
 
         }//for each user
 
