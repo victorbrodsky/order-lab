@@ -2194,6 +2194,8 @@ class UserGenerator {
 //                            $fellowshipRole
 //                        );
                     $user->addRole($fellowshipRole->getName());
+                } else {
+                    exit("No role added [$institutionName] for =".$washuFellType);
                 }
 
             }
