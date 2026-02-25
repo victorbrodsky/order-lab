@@ -2058,7 +2058,7 @@ class UserGenerator {
 
             if( $user ) {
                 //exit('ignore existing users to prevent overwrite');
-                if( $user->getKeytype() == 'local-user' ) {
+                if( $user->getKeytype()."" == 'local-user' ) {
                     echo "Update user userkeytype=".$userkeytype."<br>";
                     $user->setKeytype($userkeytype);
                     //$this->em->persist($user);
