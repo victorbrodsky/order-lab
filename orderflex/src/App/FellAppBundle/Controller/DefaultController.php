@@ -468,6 +468,10 @@ class DefaultController extends OrderAbstractController
         exit("end of fellapp thumbnails, counter=$counter");
     }
 
+
+
+
+
     //Keep only list of specialties according to getFellowshipTypesStrArr (WCM) and getFellowshipTypesWahsuStrArr (Washu)
     //http://127.0.0.1/fellowship-applications/update-fellowship-types
     #[Route(path: '/update-fellowship-types', name: 'fellapp_update_fellowship_types')]
@@ -643,6 +647,99 @@ class DefaultController extends OrderAbstractController
         }
 
         exit("<br><br>end of updateGlobalFellowshipTypesAction, counter=$counter, counterGlobal=$counterGlobal");
+    }
+    //Keep only list of specialties according to getFellowshipTypesStrArr (WCM) or getFellowshipTypesWahsuStrArr (Washu)
+    //http://127.0.0.1/fellowship-applications/filter-fellowship-types
+    #[Route(path: '/filter-fellowship-types', name: 'fellapp_filter_fellowship_types')]
+    public function filterFellowshipTypesAction( Request $request )
+    {
+        //exit("not allowed: filterFellowshipTypesAction");
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
+        }
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $em = $this->getDoctrine()->getManager();
+
+        //get oleg_fellappbundle_fellappsiteparameter_localInstitution
+        $userSecUtil = $this->container->get('user_security_utility');
+        $localInstitutionName = $userSecUtil->getSiteSettingParameter('localInstitution', $this->getParameter('fellapp.sitename'));
+        if( !$localInstitutionName ) {
+            echo "localInstitution is not set => skip generation of the FellowshipSubspecialty <br>";
+            return 0;
+        }
+        if( strtoupper($localInstitutionName) == 'WCM' ) {
+            $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesStrArr(); //WCM generateAllFellowshipSubspecialties
+        }
+        if( strtoupper($localInstitutionName) == 'WASHU' ) {
+            $fellowshipSubspecialtyArr = $fellappUtil->getFellowshipTypesWahsuStrArr(); //WASHU generateAllFellowshipSubspecialties
+        }
+
+
+        $cytopathology = $em->getRepository(FellowshipSubspecialty::class)->findOneByName("Cytopathology");
+        if( !$cytopathology ) {
+            exit("FellowshipSubspecialty not found with name Cytopathology");
+        }
+
+        //1) Find all fellowship fellappSpecialty
+        $fellowshipSubspecialties = $em->getRepository(FellowshipSubspecialty::class)->findAll();
+
+        $counter = 0;
+
+        $testing = true;
+        //$testing = false;
+
+        foreach( $fellowshipSubspecialties as $fellappSubspecialty ) {
+
+            //if not in $fellowshipSubspecialtyArr => remove $fellowshipSubspecialty
+            $fellappSubspecialtyName = $fellappSubspecialty->getName();
+            $fellappSpecialtyStr = trim($fellappSubspecialtyName);
+            echo "<br>### [$fellappSpecialtyStr] ###";
+            if( in_array($fellappSpecialtyStr, $fellowshipSubspecialtyArr, true) ) {
+                // it's in the array -> skip
+                continue;
+            }
+
+            //1) find all FellowshipApplication with $fellowshipSubspecialty
+            //2) Find and replace deleted $fellowshipSubspecialty with other (i.e. Cytopathology)
+            //3) Remove deleted $fellowshipSubspecialty
+
+            if ($fellappSubspecialty) {
+                echo "*** Found FellowshipSubspecialty [$fellappSubspecialty]<br>";
+                //2) Find fellowship applications FellowshipApplication
+                $fellapps = $em->getRepository(FellowshipApplication::class)
+                    ->findBy([
+                        'fellowshipSubspecialty' => $fellappSubspecialty,
+                        //'institution'            => $washUPathology,
+                    ]);
+                echo "fellapps=" . count($fellapps) . ": fellappSubspecialty=[$fellappSubspecialty]" . "<br>";
+                foreach ($fellapps as $fellapp) {
+                    $fellapp->setFellowshipSubspecialty($cytopathology);
+                    echo "Update fellapp ID=" . $fellapp->getId() . "<br>";
+                }
+                //Remove from Roles
+                $roles = $em->getRepository(Roles::class)->findBy([
+                    'fellowshipSubspecialty' => $fellappSubspecialty,
+                ]);
+                echo "$fellappSpecialtyStr roles=" . count($roles) . "<br>";
+                foreach ($roles as $role) {
+                    echo "Update role $fellappSpecialtyStr from role $role<br>";
+                    $role->setFellowshipSubspecialty($cytopathology);
+                }
+                //3) Remove deleted fellappSpecialty
+                echo "***Remove FellowshipSubspecialty " . $fellappSubspecialty->getNameInstitution() . ",ID=" . $fellappSubspecialty->getId() . "<br>";
+                if( 0 ) {
+                    $em->remove($fellappSubspecialty);
+                    $em->flush();
+                }
+                $counter++;
+            } else {
+                //exit("FellowshipSubspecialty not found with name $fellappSpecialtyStr");
+                echo "FellowshipSubspecialty not found with name [$fellappSpecialtyStr]" . "<br>";
+            }
+        }//foreach
+
+        exit("<br><br>end of filterFellowshipTypesAction, counter=$counter");
     }
 
     //Keep only list of specialties according to getFellowshipTypesStrArr (WCM)
