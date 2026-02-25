@@ -2225,6 +2225,7 @@ class UserGenerator {
                             $user->addRole($fellowshipRoleName);
                         }
                     } else {
+                        //No COORDINATOR role added [WASHU] for =Genitourinary and Renal Pathology
                         exit("No COORDINATOR role added [$institutionName] for =".$washuFellType);
                     }
                 }

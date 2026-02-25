@@ -473,7 +473,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/update-fellowship-types', name: 'fellapp_update_fellowship_types')]
     public function updateGlobalFellowshipTypesAction( Request $request )
     {
-        //exit("not allowed: updateGlobalFellowshipTypesAction");
+        exit("not allowed: updateGlobalFellowshipTypesAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }
@@ -726,7 +726,7 @@ class DefaultController extends OrderAbstractController
     //http://127.0.0.1/fellowship-applications/update-washu-fellowship-types
     #[Route(path: '/update-washu-fellowship-types', name: 'fellapp_update_washu_fellowship_types')]
     public function updateWashuGlobalFellowshipTypesAction( Request $request ) {
-        exit("not allowed: updateWashuGlobalFellowshipTypesAction");
+        //exit("not allowed: updateWashuGlobalFellowshipTypesAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }
@@ -765,7 +765,7 @@ class DefaultController extends OrderAbstractController
         $washuFellTypes = $fellappUtil->getFellowshipTypesWahsuStrArr();
         echo "washuFellTypes=".count($washuFellTypes)."<br>";
 
-        //1) Get all existing specialties for WCM
+        //1) Get all existing specialties for WashU
         $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($washUPathology,$asArray=false);
         echo "globalFellTypes=".count($globalFellTypes)."<br>";
 
