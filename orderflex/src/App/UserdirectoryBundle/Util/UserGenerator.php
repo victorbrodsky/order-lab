@@ -2132,6 +2132,8 @@ class UserGenerator {
 //                            $fellowshipRole
 //                        );
                         $user->addRole($fellowshipRole->getName());
+                    } else {
+                        exit("No COORDINATOR role added [$institutionName] for =".$washuFellType);
                     }
                 }
             } else {
@@ -2198,7 +2200,7 @@ class UserGenerator {
 //                        );
                     $user->addRole($fellowshipRole->getName());
                 } else {
-                    exit("No role added [$institutionName] for =".$washuFellType);
+                    exit("No DIRECTOR role added [$institutionName] for =".$washuFellType);
                 }
 
             }
@@ -2280,7 +2282,7 @@ class UserGenerator {
 
             echo "new user=".$user."<br>";
 
-            if(1) {
+            if(0) {
                 $this->em->persist($user);
                 $this->em->flush();
                 $count++;
