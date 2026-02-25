@@ -2058,7 +2058,7 @@ class UserGenerator {
 
             if( $user ) {
                 //exit('ignore existing users to prevent overwrite');
-                $keyTypeStr = $user->getKeytype()."";
+                $keyTypeStr = $user->getKeytype()->getAbbreviation()."";
                 echo "keyTypeStr=".$keyTypeStr."<br>";
                 if( $keyTypeStr == 'local-user' ) {
                     echo "Update user userkeytype=".$userkeytype."<br>";
