@@ -2275,10 +2275,16 @@ class UserGenerator {
                 if( count($fellowshipRoles) == 1 ) {
                     $fellowshipRole = $fellowshipRoles[0];
                 } elseif( count($fellowshipRoles) > 1 ) {
-                        foreach($fellowshipRoles as $thisFellowshipRole) {
-                            echo "thisFellowshipRole=$thisFellowshipRole <br>";
+                    foreach($fellowshipRoles as $thisFellowshipRole) {
+                        echo "thisFellowshipRole=$thisFellowshipRole <br>";
+                        if( str_contains($thisFellowshipRole, 'WCM') ) {
+                            //skip
+                            continue;
+                        } else {
+                            $fellowshipRole = $thisFellowshipRole;
                         }
-                    exit("Multiple DIRECTOR roles found count=".count($fellowshipRoles));
+                    }
+                    //exit("Multiple DIRECTOR roles found count=".count($fellowshipRoles));
                 } elseif( count($fellowshipRoles) == 0 ) {
                     //echo "No roles found for $washuFellType ($institutionName) count=".count($fellowshipRoles)."<br>";
                 } else {
