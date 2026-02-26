@@ -2223,6 +2223,9 @@ class UserGenerator {
 //                        );
                         if (!in_array($fellowshipRoleName, $user->getRoles(), true)) {
                             $user->addRole($fellowshipRoleName);
+                            //TODO: addCoordinator done by synchroniseFellowshipSubspecialtyAndProfileRoles
+                            //TODO: addDirector
+                            //TODO: check synchroniseSingleFellowshipSubspecialtyAndProfileRoles
                         }
                     } else {
                         //No COORDINATOR role added [WASHU] for =Genitourinary and Renal Pathology

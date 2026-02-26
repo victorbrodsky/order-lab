@@ -2556,9 +2556,12 @@ class FellAppUtil {
             //throw new EntityNotFoundException(
             //    'createOrEnableFellAppRole: institutionAbbreviation not found by subspecialtyType=['.$subspecialtyType.']'
             //);
+        } else {
+            $logger->notice('createOrEnableFellAppRole: Create role with institutionAbbreviation=['.$institutionAbbreviation.'], $subspecialtyType='.$subspecialtyType);
         }
 
         if( $institutionAbbreviation ) {
+            exit('createOrEnableFellAppRole: Add institution $institutionAbbreviation='.$institutionAbbreviation);
             $roleName = "ROLE_FELLAPP_".$roleType."_".$institutionAbbreviation.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
         } else {
             $roleName = "ROLE_FELLAPP_".$roleType.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_BREASTPATHOLOGY

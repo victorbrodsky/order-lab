@@ -59,6 +59,7 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class FellAppManagement extends OrderAbstractController {
 
+    //To edit each use fellapp_fellowshiptype_setting_edit
     #[Route(path: '/fellowship-types-settings', name: 'fellapp_fellowshiptype_settings', methods: ['GET'])]
     #[Template('AppFellAppBundle/Management/management.html.twig')]
     public function felltypeSettingsAction(Request $request) {
