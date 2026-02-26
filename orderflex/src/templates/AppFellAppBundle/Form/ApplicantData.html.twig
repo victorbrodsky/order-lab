@@ -132,7 +132,7 @@
 
 
             {% if form.locations is defined %}
-                form.locations={{ form.locations|length }}
+                {#form.locations={{ form.locations|length }}#}
             {% for location in form.locations %}
 
                 {#location.name.vars.value=({{ location.vars.value.name }})<br>#}
