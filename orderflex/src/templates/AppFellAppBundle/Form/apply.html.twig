@@ -536,8 +536,9 @@
                         if (thisEncounterText) {
                             var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
                             // store screeningquestions flag on option for later lookup
-                            $(newOption).attr('data-screening-questions', hasScreening ? '1' : '0');
-                            $(newOption).attr('data-expected-degree', hasExpectedDegree ? '1' : '0');
+                            //$(newOption).attr('data-screening-questions', hasScreening ? '1' : '0');
+                            $(newOption).attr('data-screening-questions', hasScreening ? '1' : '0').attr('data-expected-degree', hasExpectedDegree ? '1' : '0');
+                            //$(newOption).attr('data-expected-degree', hasExpectedDegree ? '1' : '0');
                             comboboxEl.append(newOption);//.trigger('change');
                         }
                     });
