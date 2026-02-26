@@ -566,12 +566,14 @@ class FellAppManagement extends OrderAbstractController {
 //            $fellowshipSubspecialty->getId().
 //            ")=$fellowshipSubspecialty; roleSubstr=$roleSubstr <br>"; //testing exit
 
+        $logger = $this->container->get('logger');
         $fellappUtil = $this->container->get('fellapp_util');
 
         $roleEntity = null;
         $fellTypeRoles = $fellappUtil->getRolesByFellowshipSubspecialtyAndRolename($fellowshipSpecialty,$roleSubstr);
         //echo "interviewerFellTypeRoles=".count($fellTypeRoles)."<br>";
         foreach( $fellTypeRoles as $role ) {
+            $logger->notice("assignFellAppAccessRoles: found role=".$role);
             //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos((string)$role,$roleSubstr) !== false ) {
                 $roleEntity = $role;
@@ -586,6 +588,7 @@ class FellAppManagement extends OrderAbstractController {
 //            );
 
             //$subspecialtyType, $roleType, $institution=null, $testing=false
+            $logger->notice("assignFellAppAccessRoles: role not found fellowshipSpecialty=$fellowshipSpecialty, roleSubstr=$roleSubstr");
             $roleEntity = $fellappUtil->createOrEnableFellAppRole($fellowshipSpecialty,$roleSubstr);
         }
 

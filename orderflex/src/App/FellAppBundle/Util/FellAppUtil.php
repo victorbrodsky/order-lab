@@ -2561,11 +2561,12 @@ class FellAppUtil {
         }
 
         if( $institutionAbbreviation ) {
-            exit('createOrEnableFellAppRole: Add institution $institutionAbbreviation='.$institutionAbbreviation);
+            //exit('createOrEnableFellAppRole: Add institution $institutionAbbreviation='.$institutionAbbreviation);
             $roleName = "ROLE_FELLAPP_".$roleType."_".$institutionAbbreviation.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_WCM_BREASTPATHOLOGY
         } else {
             $roleName = "ROLE_FELLAPP_".$roleType.'_'.$roleNameBase; //ROLE_FELLAPP_DIRECTOR_BREASTPATHOLOGY
         }
+        $logger->notice('createOrEnableFellAppRole: Create roleName=['.$roleName.'] for $subspecialtyType='.$subspecialtyType);
 
         //echo "1 roleName=$roleName<br>";
         $role = $em->getRepository(Roles::class)->findOneByName($roleName);
