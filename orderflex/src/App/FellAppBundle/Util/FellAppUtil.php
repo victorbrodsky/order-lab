@@ -562,7 +562,7 @@ class FellAppUtil {
     }
     //get all global fellowship application types.
     // Original - $asEntities=false (default as array) -> default as select2, if entity set $asArray=false
-    public function getGlobalFellowshipTypesByInstitution( $institution=null, $asArray='select2' ) {
+    public function getGlobalFellowshipTypesByInstitution( $institution=null, $asArray='select2', $filtered=true ) {
         $em = $this->em;
         //get list of fellowship type with extra "ALL"
         $repository = $em->getRepository(GlobalFellowshipSpecialty::class);
@@ -571,14 +571,22 @@ class FellAppUtil {
         //$dql->orderBy("list.orderinlist","ASC");
         $dql->orderBy("list.name","ASC");
 
-        $parameters = null;
+        $parameters = [];
+
+        if( $filtered ) {
+            $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+            $parameters['typedef'] = 'default';
+            $parameters['typeadd'] = 'user-added';
+        }
+
         if( $institution ) {
             //echo "institution=$institution, ID=".$institution->getId()."<br>";
             //$dql->where("institution.id = ".$pathology->getId());
-            $dql->where("institution.id = :institution");
-            $parameters = array(
-                'institution' => $institution,
-            );
+            $dql->andWhere("institution.id = :institution");
+//            $parameters = array(
+//                'institution' => $institution,
+//            );
+            $parameters['institution'] = $institution;
         }
 
         $query = $dql->getQuery();
@@ -630,20 +638,28 @@ class FellAppUtil {
 
     //Get all global fellowship types (getGlobalFellowshipTypesByInstitution) =>
     //get all associated institution
-    public function getFellowshipInstitutions( $institutionId=null ) {
+    public function getFellowshipInstitutions( $institutionId=null, $filtered=true ) {
         $repository = $this->em->getRepository(GlobalFellowshipSpecialty::class);
         $dql = $repository->createQueryBuilder('list')
             ->select('institution.id') // fetch only institution
             ->leftJoin('list.institution', 'institution')
             //->orderBy('list.orderinlist', 'ASC')
             //->distinct()
+            //->where("list.type = :typedef OR list.type = :typeadd")
             ->groupBy('institution')
         ;
 
         $parameters = [];
+
+        if( $filtered ) {
+            $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
+            $parameters['typedef'] = 'default';
+            $parameters['typeadd'] = 'user-added';
+        }
+
         if( $institutionId ) {
-            $dql->where('institution.id = :institutionId');
-            $parameters[] = array('institutionId' => $institutionId);
+            $dql->andWhere('institution.id = :institutionId');
+            $parameters['institutionId'] = $institutionId;
         }
 
         //$dql->select('DISTINCT list, institution');
