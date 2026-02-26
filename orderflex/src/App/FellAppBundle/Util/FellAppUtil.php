@@ -603,11 +603,17 @@ class FellAppUtil {
         foreach( $fellTypes as $type ) {
             //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
             //$filterType[$type->getId()] = $type->getName();
+            $expectedDegree = $type->getExpectedDegree();
+            $expectedDegreeFlag = false;
+            if( $expectedDegree && $expectedDegree == 'PhD' ) {
+                $expectedDegreeFlag = true;
+            }
             if( $asArray && $asArray === 'select2' ) {
                 $resultfilterTypes[] = array(
                     'id' => $type->getId(),
                     'text' => $type->getNameInstitution() . "",
-                    'screeningquestions' => $type->getScreeningQuestions()
+                    'screeningquestions' => $type->getScreeningQuestions(),
+                    'expecteddegree' => $expectedDegreeFlag,
                 );
                 //echo "111111 <br>";
             } elseif ( $asArray && $asArray === 'id-text' ) {

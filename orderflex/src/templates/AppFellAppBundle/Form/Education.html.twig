@@ -80,8 +80,11 @@
             {% endif %}
         {% endif %}
 
+        {#{% set showAllExpectedDegree = true %}#}
+        {% set trainingLabelSlug = trainingLabel|lower|replace({' ': '_', ',': '', ':': ''}) %}
+
         {% if showTraining %}
-        <div class="well">
+        <div class="well {{ trainingLabelSlug }}">
             <label class="col-xs-12 control-label">{{ trainingLabel }}</label>
             <div class="row withpaddingtop">
                 <div class="col-xs-6">
@@ -114,41 +117,39 @@
                 </div>
             </div>
 
-                {#residencyArea => ResidencySpecialty#}
-                {% if trainingLabel == "Residency:" %}
+            {#residencyArea => ResidencySpecialty#}
+            {% if trainingLabel == "Residency:" %}
 
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ form_row(training.residencySpecialty,{'label':'Area of Training (AP, CP, AP/CP, other)'}) }}
+                    </div>
+                </div>
+
+            {% else %}
+
+                {% if degreeLabel %}
                     <div class="row withpaddingtop">
-                        <div class="col-xs-12">
-                            {{ form_row(training.residencySpecialty,{'label':'Area of Training (AP, CP, AP/CP, other)'}) }}
+                        <div class="col-xs-6">
+                            {#<label for="undergraduateSchoolMajor" class="control-label">Major</label>#}
+                            {#<input type="text" class="form-control" id="undergraduateSchoolMajor" name="undergraduateSchoolMajor" placeholder="Major">#}
+                            {{ form_row(training.majors,{'label':majorLabel}) }}
+                        </div>
+                        <div class="col-xs-6">
+                            {#<label for="undergraduateSchoolDegree" class="control-label">Degree</label>#}
+                            {#<input type="text" class="form-control" id="undergraduateSchoolDegree" name="undergraduateSchoolDegree" placeholder="Degree">#}
+                            {{ form_row(training.degree) }}
                         </div>
                     </div>
-
                 {% else %}
-
-                    {% if degreeLabel %}
-                        <div class="row withpaddingtop">
-                            <div class="col-xs-6">
-                                {#<label for="undergraduateSchoolMajor" class="control-label">Major</label>#}
-                                {#<input type="text" class="form-control" id="undergraduateSchoolMajor" name="undergraduateSchoolMajor" placeholder="Major">#}
-                                {{ form_row(training.majors,{'label':majorLabel}) }}
-                            </div>
-                            <div class="col-xs-6">
-                                {#<label for="undergraduateSchoolDegree" class="control-label">Degree</label>#}
-                                {#<input type="text" class="form-control" id="undergraduateSchoolDegree" name="undergraduateSchoolDegree" placeholder="Degree">#}
-                                {{ form_row(training.degree) }}
-                            </div>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
+                            {{ form_row(training.majors,{'label':majorLabel}) }}
                         </div>
-                    {% else %}
-                        <div class="row withpaddingtop">
-                            <div class="col-xs-12">
-                                {{ form_row(training.majors,{'label':majorLabel}) }}
-                            </div>
-                        </div>
-                    {% endif %}
-
+                    </div>
                 {% endif %}
 
-
+            {% endif %}
 
             {#</div>#}
         </div>
