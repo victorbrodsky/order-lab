@@ -653,7 +653,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/filter-fellowship-types', name: 'fellapp_filter_fellowship_types')]
     public function filterFellowshipTypesAction( Request $request )
     {
-        //exit("not allowed: filterFellowshipTypesAction");
+        exit("not allowed: filterFellowshipTypesAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }
@@ -907,7 +907,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/populate-fellapp-users', name: 'fellapp_fellapp_users')]
     public function populateFellappUsersAction( Request $request )
     {
-        //exit("not allowed: populateFellappUsersAction");
+        exit("not allowed: populateFellappUsersAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }
