@@ -3282,6 +3282,11 @@ class ListController extends OrderAbstractController
                 $bundleName = "FellAppBundle";
                 break;
             case "fellappranks":
+                $className = "ExpectedDegreeList";
+                $displayName = "Expected Degree";
+                $bundleName = "FellAppBundle";
+                break;
+            case "expecteddegree":
                 $className = "FellAppRank";
                 $displayName = "Fellowship Application Score";
                 $bundleName = "FellAppBundle";

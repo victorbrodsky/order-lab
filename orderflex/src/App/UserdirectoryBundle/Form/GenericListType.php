@@ -19,6 +19,7 @@ namespace App\UserdirectoryBundle\Form;
 
 
 
+use App\FellAppBundle\Entity\ExpectedDegreeList;
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
@@ -600,10 +601,23 @@ class GenericListType extends AbstractType
         }
 
         //Role Attributes
-        if( strtolower($this->mapper['className']) == strtolower("RoleAttributeList") || strtolower($this->mapper['className']) == strtolower("FellAppRank") ) {
+        if( strtolower($this->mapper['className']) == strtolower("RoleAttributeList") ||
+            strtolower($this->mapper['className']) == strtolower("FellAppRank")
+        ) {
             $builder->add('value',null,array(
                 'label'=>'Value:',
                 'attr' => array('class' => 'form-control')
+            ));
+        }
+
+        if( strtolower($this->mapper['className']) == strtolower("GlobalFellowshipSpecialty") ||
+            strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty")
+        ) {
+            $builder->add('expectedDegree',EntityType::class,array(
+                'class' => ExpectedDegreeList::class,
+                'label' => "Expected Degree for Applicants:",
+                'required' => false,
+                'attr' => array('class'=>'combobox combobox-width')
             ));
         }
 

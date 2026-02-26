@@ -20,6 +20,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\FellAppBundle\Entity\DutiesCapabilityList;
+use App\FellAppBundle\Entity\ExpectedDegreeList;
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\FellAppBundle\Entity\PhdFieldList;
 use App\FellAppBundle\Entity\TrainingEligibilityList;
@@ -1017,6 +1018,7 @@ class AdminController extends OrderAbstractController
         $count_FellAppRank = $this->generateFellAppRank();
         $count_FellAppVisaStatus = $this->generateFellAppVisaStatus();
         $count_LanguageProficiency = $this->generateLanguageProficiency();
+        $count_generateFellAppExpectedDegree = $this->generateFellAppExpectedDegree();
 
         $count_ResAppStatus = $this->generateResAppStatus();
         $count_ResAppRank = $this->generateResAppRank();
@@ -1198,6 +1200,7 @@ class AdminController extends OrderAbstractController
             'FellApp Score='.$count_FellAppRank.', '.
             'FellAppVisaStatus='.$count_FellAppVisaStatus.', '.
             'FellApp Language Proficiency='.$count_LanguageProficiency.', '.
+            'generateFellAppExpectedDegree='.$count_generateFellAppExpectedDegree.', '.
 
             'ResApp Statuses='.$count_ResAppStatus.', '.
             'ResApp Score='.$count_ResAppRank.', '.
@@ -6773,6 +6776,41 @@ class AdminController extends OrderAbstractController
 
     }
 
+    public function generateFellAppExpectedDegree() {
+
+        $em = $this->getDoctrine()->getManager();
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:LanguageProficiency'] by [LanguageProficiency::class]
+        $entities = $em->getRepository(ExpectedDegreeList::class)->findAll();
+
+        if( $entities ) {
+            return -1;
+        }
+
+        $elements = array(
+            "MD",
+            "PhD",
+            "MD or PhD"
+        );
+
+        $user = $this->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = new ExpectedDegreeList();
+            $this->setDefaultList($entity,$count,$user,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
     ///////////////////// ResApp ///////////////////////////////
     public function generateResAppStatus() {
 
@@ -8126,6 +8164,7 @@ class AdminController extends OrderAbstractController
 
             "600" => array('FellAppStatus','fellappstatuses-list','Fellowship Application Status'),
             "610" => array('FellAppRank','fellappranks-list','Fellowship Application Score'),
+            "615" => array('ExpectedDegreeList','expecteddegree-list','Expected Degree'),
             "620" => array('LanguageProficiency','fellapplanguageproficiency-list'),
             "630" => array('CollaborationTypeList','collaborationtypes-list'),
             "640" => array('PermissionList','permission-list'),

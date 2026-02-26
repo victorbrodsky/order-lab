@@ -99,6 +99,11 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $screeningQuestions;
 
+    #[ORM\ManyToOne(targetEntity: 'ExpectedDegreeList')]
+    #[ORM\JoinColumn(name: 'expecteddegree_id', referencedColumnName: 'id', nullable: true)]
+    protected $expectedDegree;
+
+
 
 
     public function __construct()
@@ -252,6 +257,22 @@ class GlobalFellowshipSpecialty extends ListAbstract
     public function setScreeningQuestions($screeningQuestions)
     {
         $this->screeningQuestions = $screeningQuestions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpectedDegree()
+    {
+        return $this->expectedDegree;
+    }
+
+    /**
+     * @param mixed $expectedDegree
+     */
+    public function setExpectedDegree($expectedDegree)
+    {
+        $this->expectedDegree = $expectedDegree;
     }
 
     

@@ -1483,6 +1483,10 @@
         {{ formmacros.field(form.attributeMapping) }}
     {% endif %}
 
+    {% if form.expectedDegree is defined %}
+        {{ formmacros.field(form.expectedDegree) }}
+    {% endif %}
+
     {% if form.screeningQuestions is defined %}
         {{ formmacros.field(form.screeningQuestions) }}
     {% endif %}
