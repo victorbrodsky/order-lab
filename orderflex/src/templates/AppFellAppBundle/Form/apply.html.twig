@@ -498,9 +498,9 @@
             //make sure changing the institution from WCM and back to WashU updates
             // the filtering in the Fellowship Specialty drop down to correspond
             // to the currrently selected institution
-            var comboboxEl = $('select.fellapp-globalFellowshipSpecialty');
+            //var comboboxEl = $('select.fellapp-globalFellowshipSpecialty');
             //comboboxEl.empty();//.trigger("change");
-            comboboxEl.empty().trigger("change");
+            //comboboxEl.empty().trigger("change");
 
             //const select = $('.fellapp-globalFellowshipSpecialty');
 
@@ -513,7 +513,7 @@
                 //console.log('Fetched data:', data);
 
                 var comboboxEl = $('select.fellapp-globalFellowshipSpecialty');
-                comboboxEl.empty();//.trigger("change");
+                comboboxEl.empty().trigger("change");
 
                 //first empty element
                 var newOption = new Option('', '', false, false);
