@@ -462,7 +462,7 @@
         }
 
         //hide the following sections and fields: with id trainingLabel|lower|replace({' ': '_', ',': '', ':': ''}) (Other GME, if applicable:)
-        var fellowshipPanelByDegree = $('.residency,.post_residency_fellow,.other_gme_if_applicable');
+        var fellowshipPanelByDegree = $('.residency,.post_residency_fellow,.other_gme_if_applicable,.hide-by-expected-degree');
         if( hasExpectedDegree ) {
             fellowshipPanelByDegree.hide();
         } else {

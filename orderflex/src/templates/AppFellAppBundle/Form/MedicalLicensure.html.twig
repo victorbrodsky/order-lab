@@ -33,7 +33,7 @@
 
     <div id="medicalLicensure" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
-
+            <div class="hide-by-expected-degree">
 
             <p>
                 Please list any states in which you hold a license to practice medicine. Please provide a license number. If an application is pending in a state, please write “pending.”
@@ -41,7 +41,6 @@
 
 
             {% for stateLicense in form.stateLicenses %}
-
 
             <div class="well">
 
@@ -85,13 +84,9 @@
                     {{ form_row(stateLicense.active) }}
                 </div>
 
-            </div>
+            </div>{#well#}
 
-        {% endfor %}
-
-
-
-
+            {% endfor %}
 
             <div class="form-element-holder">
                 <div class="well">
@@ -109,6 +104,7 @@
 
                 </div>
             </div>
+            </div> {#hide-by-expected-degree#}
 
             <div class="form-element-holder">
                 <div class="well">
