@@ -526,7 +526,8 @@
                         var thisEncounterText = item['text'];
                         var hasScreening = false;
                         var hasExpectedDegree = false;
-                        var hasNoticeAttachment = false;
+                        //var hasNoticeAttachment = false;
+                        var noticeAttachmentText = false;
                         if (typeof item['screeningquestions'] !== 'undefined') {
                             hasScreening = item['screeningquestions'] === 1 || item['screeningquestions'] === '1' || item['screeningquestions'] === true;
                         }
@@ -534,7 +535,8 @@
                             hasExpectedDegree = item['expecteddegree'] === 1 || item['expecteddegree'] === '1' || item['expecteddegree'] === true;
                         }
                         if (typeof item['noticeattachment'] !== 'undefined') {
-                            hasNoticeAttachment = item['noticeattachment'] === 1 || item['noticeattachment'] === '1' || item['noticeattachment'] === true;
+                            //hasNoticeAttachment = item['noticeattachment'] === 1 || item['noticeattachment'] === '1' || item['noticeattachment'] === true;
+                            noticeAttachmentText = item['noticeattachment'];
                         }
                         //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
                         //text += thisEncounterText;
@@ -544,7 +546,8 @@
                             //$(newOption).attr('data-screening-questions', hasScreening ? '1' : '0');
                             $(newOption).attr('data-screening-questions', hasScreening ? '1' : '0').
                             attr('data-expected-degree', hasExpectedDegree ? '1' : '0').
-                            attr('data-noticeattachment', hasNoticeAttachment ? '1' : '0')
+                            //attr('data-noticeattachment', hasNoticeAttachment ? '1' : '0')
+                            attr('data-noticeattachment', noticeAttachmentText)
                             ;
                             //$(newOption).attr('data-expected-degree', hasExpectedDegree ? '1' : '0');
                             comboboxEl.append(newOption);//.trigger('change');

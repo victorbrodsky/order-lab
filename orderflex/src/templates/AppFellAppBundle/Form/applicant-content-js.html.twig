@@ -435,6 +435,7 @@
         var hasScreening = false;
         var hasExpectedDegree = false;
         var hasNoticeAttachment = false;
+        var noticeAttachmentText = null;
 
         var panel = $('#fellowship-screening-questions').closest('.panel');
         if (!panel.length) {
@@ -458,8 +459,8 @@
                 hasExpectedDegree = expectedDegreeFlag === 1 || expectedDegreeFlag === '1' || expectedDegreeFlag === true;
                 console.log("After set hasExpectedDegree="+hasExpectedDegree);
 
-                var noticeAttachmentFlag = opt.data('noticeattachment');
-                console.log("Set noticeAttachmentFlag="+noticeAttachmentFlag);
+                var noticeAttachmentText = opt.data('noticeattachment');
+                console.log("Set noticeAttachmentText="+noticeAttachmentText);
                 //hasNoticeAttachment = noticeAttachmentFlag === 1 || noticeAttachmentFlag === '1' || noticeAttachmentFlag === true;
             }
         } else {
@@ -476,10 +477,10 @@
         }
 
         var noticeAttachmentSection = $('#noticeAttachmentSection');
-        if( noticeAttachmentFlag ) {
-            noticeAttachmentSection.text(noticeAttachmentFlag);
+        if( noticeAttachmentText ) {
+            noticeAttachmentSection.text(noticeAttachmentText);
             noticeAttachmentSection.show();
-            console.log("Set text for #noticeAttachmentFlag="+noticeAttachmentFlag);
+            console.log("Set text for #noticeAttachmentText="+noticeAttachmentText);
         } else {
             noticeAttachmentSection.text(null);
             noticeAttachmentSection.hide();
