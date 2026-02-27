@@ -434,7 +434,6 @@
         console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
         var hasScreening = false;
         var hasExpectedDegree = false;
-        var hasNoticeAttachment = false;
         var noticeAttachmentText = null;
 
         var panel = $('#fellowship-screening-questions').closest('.panel');
@@ -461,7 +460,6 @@
 
                 var noticeAttachmentText = opt.data('noticeattachment');
                 console.log("Set noticeAttachmentText="+noticeAttachmentText);
-                //hasNoticeAttachment = noticeAttachmentFlag === 1 || noticeAttachmentFlag === '1' || noticeAttachmentFlag === true;
             }
         } else {
             //console.log("Hide fellowship-screening-questions: globalId is not provided");

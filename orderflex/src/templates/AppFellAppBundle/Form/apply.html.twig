@@ -526,8 +526,7 @@
                         var thisEncounterText = item['text'];
                         var hasScreening = false;
                         var hasExpectedDegree = false;
-                        //var hasNoticeAttachment = false;
-                        var noticeAttachmentText = false;
+                        var noticeAttachmentText = null;
                         if (typeof item['screeningquestions'] !== 'undefined') {
                             hasScreening = item['screeningquestions'] === 1 || item['screeningquestions'] === '1' || item['screeningquestions'] === true;
                         }

@@ -91,7 +91,7 @@ class FellowshipSubspecialty extends ListAbstract
     private $expectedDegree;
 
     //Notice to display at the top of Additional Text Attachment Section (leave blank for none):
-    #[ORM\Column(type: 'boolean', nullable: true)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private $noticeAttachment;
 
 
