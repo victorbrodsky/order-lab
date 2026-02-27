@@ -460,7 +460,7 @@
 
                 var noticeAttachmentFlag = opt.data('noticeattachment');
                 console.log("Set noticeAttachmentFlag="+noticeAttachmentFlag);
-                hasNoticeAttachment = noticeAttachmentFlag === 1 || noticeAttachmentFlag === '1' || noticeAttachmentFlag === true;
+                //hasNoticeAttachment = noticeAttachmentFlag === 1 || noticeAttachmentFlag === '1' || noticeAttachmentFlag === true;
             }
         } else {
             //console.log("Hide fellowship-screening-questions: globalId is not provided");
@@ -477,8 +477,10 @@
 
         var noticeAttachmentSection = $('#noticeAttachmentSection');
         if( hasNoticeAttachment ) {
+            noticeAttachmentSection.text(noticeAttachmentFlag);
             noticeAttachmentSection.show();
         } else {
+            noticeAttachmentSection.text(null);
             noticeAttachmentSection.hide();
         }
 
