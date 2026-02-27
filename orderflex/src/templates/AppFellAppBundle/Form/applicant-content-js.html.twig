@@ -476,9 +476,10 @@
         }
 
         var noticeAttachmentSection = $('#noticeAttachmentSection');
-        if( hasNoticeAttachment ) {
+        if( noticeAttachmentFlag ) {
             noticeAttachmentSection.text(noticeAttachmentFlag);
             noticeAttachmentSection.show();
+            console.log("Set text for #noticeAttachmentFlag="+noticeAttachmentFlag);
         } else {
             noticeAttachmentSection.text(null);
             noticeAttachmentSection.hide();
