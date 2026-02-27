@@ -623,7 +623,7 @@ class GenericListType extends AbstractType
             $builder->add('noticeAttachment', null, array(
                 'label'=>'Notice to display at the top of Additional Text Attachment Section (leave blank for none):',
                 'required' => false,
-                //'attr' => array('class' => 'form-control')
+                'attr' => array('class' => 'textarea form-control')
             ));
         }
 
