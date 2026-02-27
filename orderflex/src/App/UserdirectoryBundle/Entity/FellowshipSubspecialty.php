@@ -88,11 +88,13 @@ class FellowshipSubspecialty extends ListAbstract
 
     #[ORM\ManyToOne(targetEntity: 'App\FellAppBundle\Entity\ExpectedDegreeList')]
     #[ORM\JoinColumn(name: 'expecteddegree_id', referencedColumnName: 'id', nullable: true)]
-    protected $expectedDegree;
+    private $expectedDegree;
 
     //Notice to display at the top of Additional Text Attachment Section (leave blank for none):
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $noticeAttachment;
+
+
 
 
     public function __construct($author=null) {
