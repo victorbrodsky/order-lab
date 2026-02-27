@@ -86,6 +86,9 @@
             |lower
             |replace({',': '', ':': ''})
             |replace({' ': '_'})
+            |replace({'-': '_'})
+            |replace({'--': '_'})
+            |replace({'--': '_'})
         %}
         trainingLabelSlug={{ trainingLabelSlug }}<br>
 
