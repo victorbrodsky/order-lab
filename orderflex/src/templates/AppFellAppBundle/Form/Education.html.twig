@@ -82,6 +82,7 @@
 
         {#{% set showAllExpectedDegree = true %}#}
         {% set trainingLabelSlug = trainingLabel|lower|replace({' ': '_', ',': '', ':': ''}) %}
+        trainingLabelSlug={{ trainingLabelSlug }}<br>
 
         {% if showTraining %}
         <div class="well {{ trainingLabelSlug }}">
