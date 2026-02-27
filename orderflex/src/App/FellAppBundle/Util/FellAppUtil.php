@@ -622,6 +622,7 @@ class FellAppUtil {
                     'text' => $type->getNameInstitution() . "",
                     'screeningquestions' => $type->getScreeningQuestions(),
                     'expecteddegree' => $expectedDegreeFlag,
+                    'noticeattachment' => $type->getNoticeAttachment(),
                 );
                 //echo "111111 <br>";
             } elseif ( $asArray && $asArray === 'id-text' ) {

@@ -434,6 +434,7 @@
         console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
         var hasScreening = false;
         var hasExpectedDegree = false;
+        var hasNoticeAttachment = false;
 
         var panel = $('#fellowship-screening-questions').closest('.panel');
         if (!panel.length) {
@@ -456,6 +457,10 @@
                 console.log("Set hasExpectedDegree="+hasExpectedDegree);
                 hasExpectedDegree = expectedDegreeFlag === 1 || expectedDegreeFlag === '1' || expectedDegreeFlag === true;
                 console.log("After set hasExpectedDegree="+hasExpectedDegree);
+
+                var noticeAttachmentFlag = opt.data('noticeattachment');
+                console.log("Set noticeAttachmentFlag="+noticeAttachmentFlag);
+                hasNoticeAttachment = noticeAttachmentFlag === 1 || noticeAttachmentFlag === '1' || noticeAttachmentFlag === true;
             }
         } else {
             //console.log("Hide fellowship-screening-questions: globalId is not provided");
@@ -463,11 +468,18 @@
         }
 
         //hide the following sections and fields: with id trainingLabel|lower|replace({' ': '_', ',': '', ':': ''}) (Other GME, if applicable:)
-        var fellowshipPanelByDegree = $('.residency,.post_residency_fellow,.other_gme_if_applicable,.hide-by-expected-degree');
+        var fellowshipPanelByDegree = $('.residency,.post_residency_fellowship,.other_gme_if_applicable,.hide-by-expected-degree');
         if( hasExpectedDegree ) {
             fellowshipPanelByDegree.hide();
         } else {
             fellowshipPanelByDegree.show();
+        }
+
+        var noticeAttachmentSection = $('#noticeAttachmentSection');
+        if( hasNoticeAttachment ) {
+            noticeAttachmentSection.show();
+        } else {
+            noticeAttachmentSection.hide();
         }
 
         if (hasScreening) {

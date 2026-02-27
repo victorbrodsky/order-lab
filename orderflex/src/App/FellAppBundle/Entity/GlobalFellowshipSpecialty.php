@@ -101,7 +101,11 @@ class GlobalFellowshipSpecialty extends ListAbstract
 
     #[ORM\ManyToOne(targetEntity: 'ExpectedDegreeList')]
     #[ORM\JoinColumn(name: 'expecteddegree_id', referencedColumnName: 'id', nullable: true)]
-    protected $expectedDegree;
+    private $expectedDegree;
+
+    //Notice to display at the top of Additional Text Attachment Section (leave blank for none):
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $noticeAttachment;
 
 
 
@@ -274,6 +278,23 @@ class GlobalFellowshipSpecialty extends ListAbstract
     {
         $this->expectedDegree = $expectedDegree;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNoticeAttachment()
+    {
+        return $this->noticeAttachment;
+    }
+
+    /**
+     * @param mixed $noticeAttachment
+     */
+    public function setNoticeAttachment($noticeAttachment)
+    {
+        $this->noticeAttachment = $noticeAttachment;
+    }
+
 
     
 

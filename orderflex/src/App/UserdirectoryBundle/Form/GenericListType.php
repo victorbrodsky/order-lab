@@ -619,6 +619,12 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'combobox combobox-width')
             ));
+
+            $builder->add('noticeAttachment', null, array(
+                'label'=>'Notice to display at the top of Additional Text Attachment Section (leave blank for none):',
+                'required' => false,
+                //'attr' => array('class' => 'form-control')
+            ));
         }
 
         //nativeName for Language List

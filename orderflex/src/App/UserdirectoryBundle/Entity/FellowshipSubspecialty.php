@@ -90,6 +90,10 @@ class FellowshipSubspecialty extends ListAbstract
     #[ORM\JoinColumn(name: 'expecteddegree_id', referencedColumnName: 'id', nullable: true)]
     protected $expectedDegree;
 
+    //Notice to display at the top of Additional Text Attachment Section (leave blank for none):
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $noticeAttachment;
+
 
     public function __construct($author=null) {
 
@@ -262,6 +266,22 @@ class FellowshipSubspecialty extends ListAbstract
     public function setExpectedDegree($expectedDegree)
     {
         $this->expectedDegree = $expectedDegree;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNoticeAttachment()
+    {
+        return $this->noticeAttachment;
+    }
+
+    /**
+     * @param mixed $noticeAttachment
+     */
+    public function setNoticeAttachment($noticeAttachment)
+    {
+        $this->noticeAttachment = $noticeAttachment;
     }
 
     

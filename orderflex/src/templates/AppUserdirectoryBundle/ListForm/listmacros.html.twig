@@ -1487,6 +1487,10 @@
         {{ formmacros.field(form.expectedDegree) }}
     {% endif %}
 
+    {% if form.noticeAttachment is defined %}
+        {{ formmacros.field(form.noticeAttachment) }}
+    {% endif %}
+
     {% if form.screeningQuestions is defined %}
         {{ formmacros.field(form.screeningQuestions) }}
     {% endif %}
