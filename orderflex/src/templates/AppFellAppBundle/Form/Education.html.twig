@@ -81,7 +81,7 @@
         {% endif %}
 
         {#{% set showAllExpectedDegree = true %}#}
-        {% set trainingLabelSlug = trainingLabel|lower|replace({' ': '-',''_', ',': '', ':': ''}) %}
+        {% set trainingLabelSlug = trainingLabel|lower|replace({' ': '-', '_', ',': '', ':': ''}) %}
         trainingLabelSlug={{ trainingLabelSlug }}<br>
 
         {% if showTraining %}
