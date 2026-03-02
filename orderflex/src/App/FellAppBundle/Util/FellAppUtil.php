@@ -3670,10 +3670,13 @@ class FellAppUtil {
         }
         $userSecUtil = $this->container->get('user_security_utility');
         $subject = $userSecUtil->getSiteSettingParameter('subjectInvitedInterview',$this->container->getParameter('fellapp.sitename'));
+        echo "subject=$subject <br>";
 
         $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
+        echo "fellapp=$fellapp <br>";
 
         $subject = $this->siteSettingsConstantReplace($subject,$fellapp); //$str,$fellapp
+        echo "subject=$subject <br>";
         
         return $subject;
     }
