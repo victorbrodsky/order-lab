@@ -3663,7 +3663,9 @@ class FellAppUtil {
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
         return $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipTypeId);
     }
-
+    public function getInterviewInvitationSubjectTest() {
+        return "test!!!";
+    }
     public function getInterviewInvitationSubject( $fellappId ) {
         if( !$fellappId ) {
             echo "###getInterviewInvitationSubject return null###<br>";
