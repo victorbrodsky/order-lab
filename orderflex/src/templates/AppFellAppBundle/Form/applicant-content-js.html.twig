@@ -421,10 +421,10 @@
     }); //document ready
 
     function fellowshipSpecialtyListener( specialtySelect ) {
-        console.log("fellowshipSpecialtyListener: val=", specialtySelect.val());
+        console.log("applicant-content-js: fellowshipSpecialtyListener: val=", specialtySelect.val());
         specialtySelect.on('change', function(){
             var specialtyId = $(this).val();
-            console.log('fellowshipSpecialtyListener: specialty changed:', specialtyId);
+            console.log('applicant-content-js: fellowshipSpecialtyListener: specialty changed:', specialtyId);
             // update Screening Questions visibility based on selected specialty
             updateScreeningQuestionsVisibility(specialtyId);
         });

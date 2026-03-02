@@ -426,7 +426,7 @@
                 if (syncingInst) return;
                 syncingGlobal = true;
                 var instId = $(this).val();
-                console.log('Institution changed:', instId);
+                console.log('apply: Institution changed:', instId);
                 
                 // Update URL with program parameter only if specialty[] is NOT present
                 try {
@@ -457,7 +457,7 @@
                 if (syncingGlobal) return;
                 syncingInst = true;
                 var globalId = $(this).val();
-                console.log('Listener on apply.html.twig: globalId changed:', globalId);
+                console.log('apply: Listener on apply.html.twig: globalId changed:', globalId);
                 // Replace program[] with specialty[] in URL
                 updateUrlParameter('program[]', null);
                 updateUrlParameter('specialty[]', globalId);

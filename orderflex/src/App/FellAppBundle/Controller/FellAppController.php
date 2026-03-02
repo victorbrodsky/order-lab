@@ -3595,7 +3595,10 @@ class FellAppController extends OrderAbstractController {
         $em = $this->getDoctrine()->getManager();
 
         //If user is logged in and does not have an Applicant role => redirect to a /new page
-        if( $this->isGranted('IS_AUTHENTICATED_FULLY') && $fellappUtil->hasPublicApplicantRole() === false ) {
+        if( $this->isGranted('IS_AUTHENTICATED_FULLY') &&
+            $fellappUtil->hasPublicApplicantRole() === false &&
+            $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') === false
+        ) {
             return $this->redirect( $this->generateUrl('fellapp_new') );
         }
 
