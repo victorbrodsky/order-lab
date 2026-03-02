@@ -3666,6 +3666,7 @@ class FellAppUtil {
 
     public function getInterviewInvitationSubject( $fellappId ) {
         if( !$fellappId ) {
+            echo "getInterviewInvitationSubject return null<br>";
             return null;
         }
         $userSecUtil = $this->container->get('user_security_utility');
