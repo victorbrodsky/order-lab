@@ -1134,7 +1134,8 @@
                                             {#testing#}
                                             entity.id={{ entity.id }}
                                             {#{{ dump(fellapp_util.getInterviewInvitationSubject(entity.id)) }}#}
-                                            {% set subject = fellapp_util.getInterviewInvitationSubject(entity.getId()) %}
+                                            {#{% set subject = fellapp_util.getInterviewInvitationSubject(entity.getId()) %}#}
+                                            {% set subject = fellapp_util.getInterviewInvitationSubject(entity.id) %}
                                             {#{% set subject = fellapp_util.getInterviewInvitationSubjectTest() %}#}
                                             subject:{{ subject }}
                                             <li>
