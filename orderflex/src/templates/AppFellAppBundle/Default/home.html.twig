@@ -1130,12 +1130,12 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'interviewee' %}
+                                        {% if entity and entity.id and entity.appStatus.name != 'interviewee' %}
                                             {#testing#}
                                             entity.id={{ entity.id }}
                                             {#{{ dump(fellapp_util.getInterviewInvitationSubject(entity.id)) }}#}
-                                            {#{% set subject = fellapp_util.getInterviewInvitationSubject(entity.id) %}#}
-                                            {% set subject = fellapp_util.getInterviewInvitationSubjectTest() %}
+                                            {% set subject = fellapp_util.getInterviewInvitationSubject(entity.getId()) %}
+                                            {#{% set subject = fellapp_util.getInterviewInvitationSubjectTest() %}#}
                                             subject:{{ subject }}
                                             <li>
                                                 {% if entity.appStatus.name == 'priority' %}
