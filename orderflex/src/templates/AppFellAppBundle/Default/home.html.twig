@@ -1133,7 +1133,8 @@
                                         {% if entity.appStatus.name != 'interviewee' %}
                                             {#testing#}
                                             entity.id={{ entity.id }}
-                                            {% set subject = fellapp_util.getInterviewInvitationSubject(entity.id) %}
+                                            {{ dump(fellapp_util.getInterviewInvitationSubject(entity.id)) }}
+                                            {#{% set subject = fellapp_util.getInterviewInvitationSubject(entity.id) %}#}
                                             subject:{{ subject }}
                                             <li>
                                                 {% if entity.appStatus.name == 'priority' %}
