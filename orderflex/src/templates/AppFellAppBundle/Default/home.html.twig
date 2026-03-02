@@ -1130,6 +1130,11 @@
                                             </li>
                                         {% endif %}
 
+                                        {#testing#}
+                                        entity.id={{ entity.id }}
+                                        {% set subject = fellapp_util.getInterviewInvitationSubject(entity.id) %}
+                                        subject:{{ subject }}
+
                                         {% if entity.appStatus.name != 'interviewee' %}
                                             <li>
                                                 {% if entity.appStatus.name == 'priority' %}
