@@ -3521,7 +3521,11 @@ class FellAppUtil {
         return $warningStr;
     }
 
-    public function siteSettingsConstantReplace($str,$fellapp) {
+    public function siteSettingsConstantReplace( $str, $fellapp ) {
+
+        if( !$str || !$fellapp ) {
+            return null;
+        }
 
         //[[INSTITUTION]] [[DEPARTMENT]] template variables that would
         // get populated by the full name of the institution and
@@ -3661,6 +3665,9 @@ class FellAppUtil {
     }
 
     public function getInterviewInvitationSubject( $fellappId ) {
+        if( !$fellappId ) {
+            return null;
+        }
         $userSecUtil = $this->container->get('user_security_utility');
         $subject = $userSecUtil->getSiteSettingParameter('subjectInvitedInterview',$this->container->getParameter('fellapp.sitename'));
 
