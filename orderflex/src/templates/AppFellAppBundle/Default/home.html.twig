@@ -1130,12 +1130,11 @@
                                             </li>
                                         {% endif %}
 
-                                        {#testing#}
-                                        entity.id={{ entity.id }}
-                                        {% set subject = fellapp_util.getInterviewInvitationSubject(entity.id) %}
-                                        subject:{{ subject }}
-
                                         {% if entity.appStatus.name != 'interviewee' %}
+                                            {#testing#}
+                                            entity.id={{ entity.id }}
+                                            {#{% set subject = fellapp_util.getInterviewInvitationSubject(entity.id) %}#}
+                                            subject:{{ subject }}
                                             <li>
                                                 {% if entity.appStatus.name == 'priority' %}
                                                     {#When user clicks "Action > Mark as an Interviewee" AND current status is "Priority", show a confirmation modal#}
@@ -1164,17 +1163,17 @@
                                             </li>
 
                                             {#Mark as an Interviewee and send the invitation - path=fellapp_send_interview_invitation#}
-                                            <li>
-                                                <a
-                                                    href="#"
-                                                    class="fellapp-interview-invitation-link"
-                                                    data-fellapp-id="{{ entity.id }}"
-                                                    data-interview-subject="{{ fellapp_util.getInterviewInvitationSubject(entity.id) }}"
-                                                    data-interview-body="{{ fellapp_util.getInterviewInvitationBody(entity.id) }}"
-                                                    data-href-interviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}"
-                                                >Mark as an Interviewee and send the invitation
-                                                </a>
-                                            </li>
+                                            {#<li>#}
+                                                {#<a#}
+                                                    {#href="#"#}
+                                                    {#class="fellapp-interview-invitation-link"#}
+                                                    {#data-fellapp-id="{{ entity.id }}"#}
+                                                    {#data-interview-subject="{{ fellapp_util.getInterviewInvitationSubject(entity.id) }}"#}
+                                                    {#data-interview-body="{{ fellapp_util.getInterviewInvitationBody(entity.id) }}"#}
+                                                    {#data-href-interviewee="{{ path('fellapp_status', { 'id': entity.id, 'status': 'interviewee' }, true) }}"#}
+                                                {#>Mark as an Interviewee and send the invitation#}
+                                                {#</a>#}
+                                            {#</li>#}
                                         {% endif %}
 
                                         {% if entity.appStatus.name != 'priorityinterviewee' %}
