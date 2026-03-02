@@ -1134,7 +1134,7 @@
                                             {#testing#}
                                             entity.id={{ entity.id }}
                                             {#{% set subject = fellapp_util.getInterviewInvitationSubject(entity.id) %}#}
-                                            subject:{{ subject }}
+                                            {#subject:{{ subject }}#}
                                             <li>
                                                 {% if entity.appStatus.name == 'priority' %}
                                                     {#When user clicks "Action > Mark as an Interviewee" AND current status is "Priority", show a confirmation modal#}
