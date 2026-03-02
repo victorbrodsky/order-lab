@@ -393,8 +393,10 @@
         //render ScreeningQuestions();
         var route_path = $('#route_path').val();
         console.log("route_path="+route_path);
+        //TODO: the listeners are executed in here and also on apply page
+        //optimize them in one place (here)
         if(1) {
-//            if (route_path != 'fellapp_apply' && $('#route_path').val() != 'fellapp_apply_post') {
+            if( route_path != 'fellapp_apply' && route_path != 'fellapp_apply_post' ) {
                 var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
                 var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
                 //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
@@ -415,16 +417,16 @@
                         updateScreeningQuestionsVisibility(initGlobalFell);
                     }
                 }
-//            }
+            }//route_path != 'fellapp_apply'
         }
         //console.log("after fellowshipSubspecialty");
     }); //document ready
 
     function fellowshipSpecialtyListener( specialtySelect ) {
-        console.log("applicant-content-js: fellowshipSpecialtyListener: val=", specialtySelect.val());
+        console.log("applicant-content-js: fellowship SpecialtyListener: val=", specialtySelect.val());
         specialtySelect.on('change', function(){
             var specialtyId = $(this).val();
-            console.log('applicant-content-js: fellowshipSpecialtyListener: specialty changed:', specialtyId);
+            console.log('applicant-content-js: fellowship SpecialtyListener: specialty changed:', specialtyId);
             // update Screening Questions visibility based on selected specialty
             updateScreeningQuestionsVisibility(specialtyId);
         });
