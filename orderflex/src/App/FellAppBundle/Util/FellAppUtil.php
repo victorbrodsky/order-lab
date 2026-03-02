@@ -3663,24 +3663,22 @@ class FellAppUtil {
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
         return $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipTypeId);
     }
-    public function getInterviewInvitationSubjectTest() {
-        return "test!!!";
-    }
+
     public function getInterviewInvitationSubject( $fellappId ) {
         if( !$fellappId ) {
-            echo "###getInterviewInvitationSubject return null###<br>";
+            //echo "###getInterviewInvitationSubject return null###<br>";
             return null;
         }
         $userSecUtil = $this->container->get('user_security_utility');
         $subject = $userSecUtil->getSiteSettingParameter('subjectInvitedInterview',$this->container->getParameter('fellapp.sitename'));
-        echo "subject=$subject <br>";
+        //echo "subject=$subject <br>";
 
         $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
-        echo "fellapp=$fellapp <br>";
+        //echo "fellapp=$fellapp <br>";
 
         $subject = $this->siteSettingsConstantReplace($subject,$fellapp); //$str,$fellapp
-        echo "subject=$subject <br>";
-        $subject='test';
+        //echo "subject=$subject <br>";
+        //$subject='test';
         return $subject;
     }
     public function getInterviewInvitationBody( $fellappId ) {
