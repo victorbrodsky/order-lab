@@ -399,8 +399,8 @@
             if( route_path != 'fellapp_apply' && route_path != 'fellapp_apply_post' ) {
                 var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
                 var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
-                //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
-                //console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+                console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+                console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
                 if (fellowshipSubspecialty.length) {
                     console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
                     fellowshipSpecialtyListener(fellowshipSubspecialty);
@@ -506,13 +506,25 @@
 //                panel.show();
 //            }
 
-            panel.show();
+            //panel.show();
+            panel.fadeIn();
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
             }
+            //Hide the rest of the form if screening question
+            //$('#form-second-part').hide();
+            //$('#save-submit-panel').hide();
+            $('#form-second-part').fadeOut();
+            $('#save-submit-panel').fadeOut();
         } else {
             console.log("Hide fellowship-screening-questions");
-            panel.hide();
+            //panel.hide();
+            panel.fadeOut();
+            //Hide the rest of the form if screening question
+            //$('#form-second-part').show();
+            //$('#save-submit-panel').show();
+            $('#form-second-part').fadeIn();
+            $('#save-submit-panel').fadeIn();
         }
     }
 
@@ -910,7 +922,6 @@
 
                 //console.log("ajax identifier="+identifier);
                 //_formnode[identifier] = data;   //data[0]['formNodeHolderId'];
-
             } else {
                 //_formnode[identifier] = null;
                 console.log("No data: data.length="+data.length);
