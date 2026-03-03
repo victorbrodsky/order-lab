@@ -469,28 +469,28 @@
                 
                 // Update URL with program parameter only if specialty[] is NOT present
                 if (!initializingFromUrl) {
-                try {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const hasSpecialty = urlParams.get('specialty[]');
-                    if (!hasSpecialty) {
-                        // No specialty in URL; maintain program[]
-                        updateUrlParameter('program[]', instId);
-                    } else {
-                        console.log('specialty[] present in URL; skipping program[] update');
+                    try {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const hasSpecialty = urlParams.get('specialty[]');
+                        if (!hasSpecialty) {
+                            // No specialty in URL; maintain program[]
+                            updateUrlParameter('program[]', instId);
+                        } else {
+                            console.log('specialty[] present in URL; skipping program[] update');
+                        }
+                    } catch (e) {
+                        // Fallback: regex check
+                        const hasSpecialty = /[?&]specialty\[]=/i.test(window.location.search);
+                        if (!hasSpecialty) {
+                            updateUrlParameter('program[]', instId);
+                        } else {
+                            console.log('specialty[] present in URL (fallback); skipping program[] update');
+                        }
                     }
-                } catch (e) {
-                    // Fallback: regex check
-                    const hasSpecialty = /[?&]specialty\[]=/i.test(window.location.search);
-                    if (!hasSpecialty) {
-                        updateUrlParameter('program[]', instId);
-                    } else {
-                        console.log('specialty[] present in URL (fallback); skipping program[] update');
-                    }
-                }
                 }
                 
                 filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
-                isSyncing = false;
+                //isSyncing = false;
             });
 
             //console.log('global=',global);
@@ -505,7 +505,7 @@
                     updateUrlParameter('specialty[]', globalId);
                 }
                 filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
-                isSyncing = false;
+                //isSyncing = false;
                 // update Screening Questions visibility based on selected global specialty
                 updateScreeningQuestionsVisibility(globalId); //apply working with this (global.on('change')
             });
