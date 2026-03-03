@@ -358,13 +358,33 @@
                 console.log('URL updated (manual):', paramName, '=', paramValue, 'New URL:', newUrl);
             }
 
+            var initializingFromUrl = false;
+
             // Function to initialize URL parameters from existing URL on page load
             function initializeUrlParameters() {
                 try {
                     const urlParams = new URLSearchParams(window.location.search);
                     const programParam = urlParams.get('program[]');
                     const specialtyParam = urlParams.get('specialty[]');
-                    
+
+                    if (specialtyParam) {
+                        console.log('Found specialty parameter in URL:', specialtyParam);
+                        initializingFromUrl = true;
+                        // 1) Select institution corresponding to specialty
+                        filterInstitutionByGlobal(specialtyParam, function() {
+                            // 2) Re-filter specialty list by the selected institution
+                            var instId = inst.val();
+                            filterGlobalByInstitution(instId, function() {
+                                // 3) Re-select specialty (now that options are loaded)
+                                syncingGlobal = true;
+                                global.val(specialtyParam).trigger('change');
+                                syncingGlobal = false;
+                                initializingFromUrl = false;
+                            });
+                        });
+                        return;
+                    }
+
                     if (programParam) {
                         console.log('Found program parameter in URL:', programParam);
                         // Pre-select the institution if program parameter exists
@@ -372,16 +392,26 @@
                             inst.val(programParam).trigger('change');
                         }
                     }
-
-                    if (specialtyParam) {
-                        console.log('Found specialty parameter in URL:', specialtyParam);
-                        // Pre-select the global specialty if exists
-                        if (global.length && !global.val()) {
-                            global.val(specialtyParam).trigger('change');
-                        }
-                    }
                 } catch (error) {
                     // Fallback for older browsers
+                    const regexSpec = new RegExp('[?&]specialty\[]=([^&#]*)', 'i');
+                    const resultsSpec = regexSpec.exec(window.location.search);
+                    if (resultsSpec && resultsSpec[1]) {
+                        const specialtyParam = decodeURIComponent(resultsSpec[1].replace(/\+/g, " "));
+                        console.log('Found specialty parameter in URL (fallback):', specialtyParam);
+                        initializingFromUrl = true;
+                        filterInstitutionByGlobal(specialtyParam, function() {
+                            var instId = inst.val();
+                            filterGlobalByInstitution(instId, function() {
+                                syncingGlobal = true;
+                                global.val(specialtyParam).trigger('change');
+                                syncingGlobal = false;
+                                initializingFromUrl = false;
+                            });
+                        });
+                        return;
+                    }
+
                     const regexProg = new RegExp('[?&]program\[]=([^&#]*)', 'i');
                     const resultsProg = regexProg.exec(window.location.search);
                     if (resultsProg && resultsProg[1]) {
@@ -389,16 +419,6 @@
                         console.log('Found program parameter in URL (fallback):', programParam);
                         if (inst.length && !inst.val()) {
                             inst.val(programParam).trigger('change');
-                        }
-                    }
-
-                    const regexSpec = new RegExp('[?&]specialty\[]=([^&#]*)', 'i');
-                    const resultsSpec = regexSpec.exec(window.location.search);
-                    if (resultsSpec && resultsSpec[1]) {
-                        const specialtyParam = decodeURIComponent(resultsSpec[1].replace(/\+/g, " "));
-                        console.log('Found specialty parameter in URL (fallback):', specialtyParam);
-                        if (global.length && !global.val()) {
-                            global.val(specialtyParam).trigger('change');
                         }
                     }
                 }
@@ -422,13 +442,33 @@
                 }
             });
 
+            var filteringGlobal = false;
+
             inst.on('change', function(){
                 if (syncingInst) return;
                 syncingGlobal = true;
                 var instId = $(this).val();
                 console.log('apply: Institution changed:', instId);
+
+                if( !instId ) {
+                    // Institution cleared: clear specialty and remove URL params
+                    try {
+                        global.val('').trigger('change.select2');
+                    } catch (e) {
+                        global.val('');
+                    }
+
+                    if (!initializingFromUrl) {
+                        updateUrlParameter('program[]', null);
+                        updateUrlParameter('specialty[]', null);
+                    }
+
+                    syncingGlobal = false;
+                    return;
+                }
                 
                 // Update URL with program parameter only if specialty[] is NOT present
+                if (!initializingFromUrl) {
                 try {
                     const urlParams = new URLSearchParams(window.location.search);
                     const hasSpecialty = urlParams.get('specialty[]');
@@ -447,6 +487,7 @@
                         console.log('specialty[] present in URL (fallback); skipping program[] update');
                     }
                 }
+                }
                 
                 filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
                 isSyncing = false;
@@ -459,8 +500,10 @@
                 var globalId = $(this).val();
                 console.log('apply: Listener on apply.html.twig: globalId changed:', globalId);
                 // Replace program[] with specialty[] in URL
-                updateUrlParameter('program[]', null);
-                updateUrlParameter('specialty[]', globalId);
+                if (!initializingFromUrl) {
+                    updateUrlParameter('program[]', null);
+                    updateUrlParameter('specialty[]', globalId);
+                }
                 filterInstitutionByGlobal(globalId, ()=>{syncingInst=false;});
                 isSyncing = false;
                 // update Screening Questions visibility based on selected global specialty
@@ -513,12 +556,12 @@
                 //console.log('Fetched data:', data);
 
                 var comboboxEl = $('select.fellapp-globalFellowshipSpecialty');
-                //comboboxEl.empty().trigger("change");
-                //comboboxEl.empty();
+                // Remove all existing options before adding new ones
+                comboboxEl.empty();
 
                 //first empty element
                 var newOption = new Option('', '', false, false);
-                comboboxEl.append(newOption);//.trigger('change');
+                comboboxEl.append(newOption);
                 
                 //console.log('Fetched data.length=', data.length);
                 if( data.length > 0 ) {
@@ -538,22 +581,26 @@
                             //hasNoticeAttachment = item['noticeattachment'] === 1 || item['noticeattachment'] === '1' || item['noticeattachment'] === true;
                             noticeAttachmentText = item['noticeattachment'];
                         }
-                        //console.log('thisEncounterText='+thisEncounterText+", thisEncounterId="+thisEncounterId);
-                        //text += thisEncounterText;
                         if (thisEncounterText) {
-                            var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
-                            // store screeningquestions flag on option for later lookup
-                            //$(newOption).attr('data-screening-questions', hasScreening ? '1' : '0');
-                            $(newOption).attr('data-screening-questions', hasScreening ? '1' : '0').
-                            attr('data-expected-degree', hasExpectedDegree ? '1' : '0').
-                            //attr('data-noticeattachment', hasNoticeAttachment ? '1' : '0')
-                            attr('data-noticeattachment', noticeAttachmentText)
-                            ;
-                            //$(newOption).attr('data-expected-degree', hasExpectedDegree ? '1' : '0');
-                            comboboxEl.append(newOption);//.trigger('change');
+                            // Check if option already exists
+                            if (comboboxEl.find('option[value="' + thisEncounterId + '"]').length === 0) {
+                                var newOption = new Option(thisEncounterText, thisEncounterId, false, false);
+                                // store screeningquestions flag on option for later lookup
+                                //$(newOption).attr('data-screening-questions', hasScreening ? '1' : '0');
+                                $(newOption).attr('data-screening-questions', hasScreening ? '1' : '0').
+                                attr('data-expected-degree', hasExpectedDegree ? '1' : '0').
+                                //attr('data-noticeattachment', hasNoticeAttachment ? '1' : '0')
+                                attr('data-noticeattachment', noticeAttachmentText)
+                                ;
+                                //$(newOption).attr('data-expected-degree', hasExpectedDegree ? '1' : '0');
+                                comboboxEl.append(newOption);//.trigger('change');
+                            }
                         }
                     });
-                    comboboxEl.trigger('change');
+                    // refresh select2 UI without invoking global change handler logic
+                    syncingGlobal = true;
+                    comboboxEl.trigger('change.select2');
+                    syncingGlobal = false;
                 }
 
                 // Set initial selection from URL specialty[] parameter if present
