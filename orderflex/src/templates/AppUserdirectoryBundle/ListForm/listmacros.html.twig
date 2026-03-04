@@ -1491,6 +1491,10 @@
         {{ formmacros.field(form.noticeAttachment) }}
     {% endif %}
 
+    {% if form.screeningMessage is defined %}
+        {{ formmacros.field(form.screeningMessage) }}
+    {% endif %}
+
     {% if form.screeningQuestions is defined %}
         {{ formmacros.field(form.screeningQuestions) }}
     {% endif %}

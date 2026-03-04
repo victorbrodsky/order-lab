@@ -107,6 +107,10 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'text', nullable: true)]
     private $noticeAttachment;
 
+    //Message to the submitter who did not supply expected answers to the screening questions:
+    // "Based on your answers you are not eligible to apply to the selected program."
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $screeningMessage;
 
 
 
@@ -293,6 +297,22 @@ class GlobalFellowshipSpecialty extends ListAbstract
     public function setNoticeAttachment($noticeAttachment)
     {
         $this->noticeAttachment = $noticeAttachment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getScreeningMessage()
+    {
+        return $this->screeningMessage;
+    }
+
+    /**
+     * @param mixed $screeningMessage
+     */
+    public function setScreeningMessage($screeningMessage)
+    {
+        $this->screeningMessage = $screeningMessage;
     }
 
 

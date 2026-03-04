@@ -625,6 +625,12 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control')
             ));
+
+            $builder->add('screeningMessage', null, array(
+                'label'=>'Message to the submitter who did not supply expected answers to the screening questions:',
+                'required' => false,
+                'attr' => array('class' => 'textarea form-control')
+            ));
         }
 
         //nativeName for Language List

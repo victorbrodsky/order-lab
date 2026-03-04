@@ -616,10 +616,17 @@ class FellAppUtil {
             if( $expectedDegree && $expectedDegree == 'PhD' ) {
                 $expectedDegreeFlag = true;
             }
+
             $noticeAttachmentText = $type->getNoticeAttachment();
             if( $noticeAttachmentText ) {
-                $noticeAttachmentText = htmlspecialchars($type->getNoticeAttachment(), ENT_QUOTES, 'UTF-8');
+                $noticeAttachmentText = htmlspecialchars($noticeAttachmentText, ENT_QUOTES, 'UTF-8');
             }
+
+            $screeningMessage = $type->getScreeningMessage();
+            if( $screeningMessage ) {
+                $screeningMessage = htmlspecialchars($screeningMessage, ENT_QUOTES, 'UTF-8');
+            }
+
             if( $asArray && $asArray === 'select2' ) {
                 $resultfilterTypes[] = array(
                     'id' => $type->getId(),
@@ -628,6 +635,7 @@ class FellAppUtil {
                     'expecteddegree' => $expectedDegreeFlag,
                     'noticeattachment' => $noticeAttachmentText,
                     //'noticeattachment' => "Completing this section is optional and should not affect your application. It can help us select appropriate interviewers and focus discussions on the accomplishments you highlight here.",
+                    'screeningmessage' => $screeningMessage,
                 );
                 //echo "111111 <br>";
             } elseif ( $asArray && $asArray === 'id-text' ) {

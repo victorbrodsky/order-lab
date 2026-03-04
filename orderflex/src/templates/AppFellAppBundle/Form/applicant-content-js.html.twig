@@ -462,6 +462,9 @@
 
                 var noticeAttachmentText = opt.data('noticeattachment');
                 console.log("Set noticeAttachmentText="+noticeAttachmentText);
+
+                //var screeningMessage = opt.data('screeningmessage');
+                //console.log("Set screeningMessage="+screeningMessage);
             }
         } else {
             //console.log("Hide fellowship-screening-questions: globalId is not provided");
@@ -1036,8 +1039,21 @@
 
         if( passCount == totalCount ) {
             console.log("Screening Pass");
+            $('#form-second-part').fadeIn();
+            $('#save-submit-panel').fadeIn();
             return true;
         }
+
+        //display the following text in a red well above the "Complete Screening" button:
+        // "Based on your answers you are not eligible to apply to the selected program."
+        // add this sentence for the well as a new attribute field for each
+        // WUSTL fellowship specialty in the GLOBAL fellowship specialty list
+        // with this title (this way each fellowship specialty ID can have
+        // its own "screening failed" message):
+        // Message to the submitter who did not supply expected answers to the screening questions:
+        // "Based on your answers you are not eligible to apply to the selected program."
+
+
         console.log("Screening Failed");
         return false;
     }

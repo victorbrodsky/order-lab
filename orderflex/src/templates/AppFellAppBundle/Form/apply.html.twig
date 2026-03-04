@@ -571,6 +571,7 @@
                         var hasScreening = false;
                         var hasExpectedDegree = false;
                         var noticeAttachmentText = null;
+                        var screeningMessage = null;
                         if (typeof item['screeningquestions'] !== 'undefined') {
                             hasScreening = item['screeningquestions'] === 1 || item['screeningquestions'] === '1' || item['screeningquestions'] === true;
                         }
@@ -581,6 +582,9 @@
                             //hasNoticeAttachment = item['noticeattachment'] === 1 || item['noticeattachment'] === '1' || item['noticeattachment'] === true;
                             noticeAttachmentText = item['noticeattachment'];
                         }
+                        if (typeof item['screeningmessage'] !== 'undefined') {
+                            screeningMessage = item['screeningmessage'];
+                        }
                         if (thisEncounterText) {
                             // Check if option already exists
                             if (comboboxEl.find('option[value="' + thisEncounterId + '"]').length === 0) {
@@ -590,7 +594,8 @@
                                 $(newOption).attr('data-screening-questions', hasScreening ? '1' : '0').
                                 attr('data-expected-degree', hasExpectedDegree ? '1' : '0').
                                 //attr('data-noticeattachment', hasNoticeAttachment ? '1' : '0')
-                                attr('data-noticeattachment', noticeAttachmentText)
+                                attr('data-noticeattachment', noticeAttachmentText).
+                                attr('data-screeningmessage', screeningMessage)
                                 ;
                                 //$(newOption).attr('data-expected-degree', hasExpectedDegree ? '1' : '0');
                                 comboboxEl.append(newOption);//.trigger('change');
