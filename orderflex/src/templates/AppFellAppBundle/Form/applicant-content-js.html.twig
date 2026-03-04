@@ -952,6 +952,11 @@
     }
 
     function fellappCompleteScreening() {
+
+        //Init
+        $('#complete-screening-failed').val(null);
+        $('#complete-screening-failed').fadeOut();
+
         var expectedAnswers = $('#expected_answers').val();
         if( !expectedAnswers ) {
             console.log("expectedAnswers are not set: screening pass by default");
@@ -1061,9 +1066,9 @@
         // Message to the submitter who did not supply expected answers to the screening questions:
         // "Based on your answers you are not eligible to apply to the selected program."
 
-
         console.log("Screening Failed");
-        $('#complete-screening-failed').val("Test: Based on your answers you are not eligible to apply to the selected program.");
+        $('#complete-screening-failed').html("Test: Based on your answers you are not eligible to apply to the selected program.");
+        $('#complete-screening-failed').fadeIn();
         return false;
     }
 
