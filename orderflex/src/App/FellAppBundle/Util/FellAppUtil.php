@@ -626,6 +626,10 @@ class FellAppUtil {
             if( $screeningMessage ) {
                 $screeningMessage = htmlspecialchars($screeningMessage, ENT_QUOTES, 'UTF-8');
             }
+            if( !$screeningMessage ) {
+                //$screeningMessage = "Based on your answers you are not eligible to apply to the selected program";
+                $screeningMessage = "Based on your answers you are not eligible to apply to the ".$type->getNameInstitution()." program";
+            }
 
             if( $asArray && $asArray === 'select2' ) {
                 $resultfilterTypes[] = array(

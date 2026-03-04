@@ -431,7 +431,9 @@
             updateScreeningQuestionsVisibility(specialtyId);
         });
     }
+
     // Show or hide the Screening Questions panel based on selected fellowship specialty (global or subspecialty)
+    var _screeningMessage = null;
     function updateScreeningQuestionsVisibility(globalId) {
         console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
         var hasScreening = false;
@@ -463,8 +465,8 @@
                 var noticeAttachmentText = opt.data('noticeattachment');
                 console.log("Set noticeAttachmentText="+noticeAttachmentText);
 
-                //var screeningMessage = opt.data('screeningmessage');
-                //console.log("Set screeningMessage="+screeningMessage);
+                _screeningMessage = opt.data('screeningmessage');
+                console.log("Set _screeningMessage="+_screeningMessage);
             }
         } else {
             //console.log("Hide fellowship-screening-questions: globalId is not provided");
@@ -953,9 +955,9 @@
 
     function fellappCompleteScreening() {
 
-        //Init
-        $('#complete-screening-failed').val(null);
-        $('#complete-screening-failed').fadeOut();
+        //Init fadeOut
+        $('#complete-screening-message').hide().removeClass('alert alert-danger').removeClass('alert alert-success');
+        $('#complete-screening-message').html("");
 
         var expectedAnswers = $('#expected_answers').val();
         if( !expectedAnswers ) {
@@ -1052,6 +1054,7 @@
 
         if( passCount == totalCount ) {
             console.log("Screening Pass");
+            $('#complete-screening-message').addClass('alert alert-success').html("Screening passed").show();
             $('#form-second-part').fadeIn();
             $('#save-submit-panel').fadeIn();
             return true;
@@ -1067,8 +1070,9 @@
         // "Based on your answers you are not eligible to apply to the selected program."
 
         console.log("Screening Failed");
-        $('#complete-screening-failed').html("Test: Based on your answers you are not eligible to apply to the selected program.");
-        $('#complete-screening-failed').fadeIn();
+        $('#complete-screening-message').addClass('alert alert-danger').html(_screeningMessage).show();
+        $('#form-second-part').fadeOut();
+        $('#save-submit-panel').fadeOut();
         return false;
     }
 
