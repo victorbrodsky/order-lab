@@ -99,6 +99,16 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $screeningQuestions;
 
+    /*
+    {
+        "Expected answer": {
+            "1": "Yes",
+            "2": "[[Any except]]: No",
+            "3": "[[Any]]",
+            "4": "[[Checked]]"
+        }
+    }
+    */
     #[ORM\ManyToOne(targetEntity: 'ExpectedDegreeList')]
     #[ORM\JoinColumn(name: 'expecteddegree_id', referencedColumnName: 'id', nullable: true)]
     private $expectedDegree;
