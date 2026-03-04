@@ -176,6 +176,7 @@
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
     <input type="hidden" id="route_path" value="{{ route_path }}" />
     <input type="hidden" id="parent_formnode_id" value="{{ parentFormnodeId }}" />
+    <input type="hidden" id="expected_answers" value="{{ fellapp_util.getParentFormNodeByExpectedAnswers() }}" />
 
     <input type="hidden" name="btnSubmit" id="btnSubmitHidden" value="" />
 

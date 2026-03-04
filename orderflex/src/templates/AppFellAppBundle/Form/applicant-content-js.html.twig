@@ -904,7 +904,7 @@
         //var url = Routing.generate('employees_formnode_fields');
         _formnodeProcessing = true;
 
-        console.log('render ScreeningQuestions: before ajax');
+        //console.log('render ScreeningQuestions: before ajax');
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
@@ -912,19 +912,20 @@
             async: asyncflag,
             data: dataParam,
         }).success(function(data) {
-            console.log("render ScreeningQuestions: data length="+data.length);
+            //console.log("render ScreeningQuestions: data length="+data.length);
             //console.log(data);
 
             if (data.length > 0 && data[0]['formNodeId']) { //make sure we have at least one formNode for formNode Holder
 
-                console.log("render ScreeningQuestions: data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
+                //console.log("render ScreeningQuestions: data[0]['formNodeHolderId']="+data[0]['formNodeHolderId']);
                 calllogAppendFormNodes(data);
 
                 //console.log("ajax identifier="+identifier);
                 //_formnode[identifier] = data;   //data[0]['formNodeHolderId'];
+                $('#fellowship-screening-questions').collapse('show');
             } else {
                 //_formnode[identifier] = null;
-                console.log("No data: data.length="+data.length);
+                //console.log("No data: data.length="+data.length);
                 //console.log("render ScreeningQuestions: extendAll()");
                 //extendAll();
             }
@@ -938,13 +939,107 @@
             //}
         }).fail(function() {
             //_formnode[identifier] = null;
-            console.log("render ScreeningQuestions: Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
+            //console.log("render ScreeningQuestions: Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
             //alert("render ScreeningQuestions: Error getting field(s) for _holderName="+_holderName+" holderId="+holderId);
         }).done(function() {
-            console.log("render ScreeningQuestions: ajax done");
+            //console.log("render ScreeningQuestions: ajax done");
             _formnodeProcessing = false;
         });
 //        console.log('render ScreeningQuestions: after ajax');
+    }
+
+    function fellappCompleteScreening() {
+        var expectedAnswers = JSON.parse($('#expected_answers').val());
+        console.log("expectedAnswers=",expectedAnswers);
+        var passCount=0;
+        var totalCount=0;
+        $('#form-node-holder').find('.formnode-holder').each(function(index) {
+//            // Example: "formnode-286"
+//            var id = $(this).attr('id');
+//            console.log("id="+id);
+//
+//            // find the checked radio inside this formnode
+//            var checked = $(this).find('input[type="radio"]:checked');
+//
+//            // get its label text
+//            var label = checked.next('label').text().trim();
+//
+//            console.log("Label:", label);
+
+            //var name = $(this).find('input[type="radio"]').attr('name');
+            //console.log("name="+name);
+
+            totalCount = totalCount + 1;
+            var count = index + 1;   // 1,2,3,4...
+            var expectedAnswer = expectedAnswers["Expected answers"][count];
+            console.log("expectedAnswer="+expectedAnswer);
+
+            var id = $(this).attr('id');
+            //console.log("id="+id);
+
+            // find any checked input inside this formnode
+            var input = $(this).find('input:checked');
+            var isCorrect = false;
+
+            if (input.length === 0) {
+                console.log(count+": Nothing selected in", $(this).attr('id'));
+                return;
+            }
+
+            var type = input.attr('type');
+
+            if (type === 'radio') {
+                // radio → get label text
+                var label = input.next('label').text().trim();
+                console.log(count+": Radio label:", label);
+
+                // --- RADIO VALIDATION ---
+                if (expectedAnswer === "[[Any]]") {
+                    isCorrect = true;
+
+                } else if (expectedAnswer.startsWith("[[Any except]]")) {
+                    // extract forbidden value after colon
+                    var forbidden = expectedAnswer.split(":")[1].trim();
+                    isCorrect = (label !== forbidden);
+
+                } else {
+                    // exact match
+                    isCorrect = (label === expectedAnswer);
+                }
+
+            } else if (type === 'checkbox') {
+                // checkbox → true/false
+                var isChecked = input.is(':checked');
+                console.log(count+": Checkbox checked:", isChecked);
+
+                // --- CHECKBOX VALIDATION ---
+                if (expectedAnswer === "[[Checked]]") {
+                    isCorrect = isChecked;
+                } else if (expectedAnswer === "[[Any]]") {
+                    isCorrect = true;
+                } else {
+                    // exact match for checkbox values (rare)
+                    isCorrect = (isChecked.toString() === expectedAnswer);
+                }
+
+            } else {
+                // fallback for unexpected input types
+                console.log(count+": Unhandled input type:", type);
+            }
+
+            console.log("Result for question " + count + ": " + (isCorrect ? "PASS" : "FAIL"));
+
+            if( isCorrect ) {
+                passCount = passCount + 1;
+            }
+        });
+
+        if( passCount == totalCount ) {
+            console.log("Screening Pass");
+            return true;
+        }
+        console.log("Screening Failed");
+        return false;
     }
 
 </script>

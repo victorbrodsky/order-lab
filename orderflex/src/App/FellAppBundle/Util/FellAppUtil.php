@@ -744,6 +744,15 @@ class FellAppUtil {
         }
         return $parentFormNodeId;
     }
+    public function getParentFormNodeByExpectedAnswers() {
+        $expectedAnswers = null;
+        //$parentFormNode = $this->getParentFormNodeBySpecialty($fellapp);
+        $parentFormNode = $this->getFellappParentFormNode();
+        if( $parentFormNode ) {
+            $expectedAnswers = $parentFormNode->getTextAttribute();
+        }
+        return $expectedAnswers;
+    }
 
     // Central place to render Screening Questions HTML for a FellowshipApplication.
     // $request is used when called from controllers (to read cycle), and
