@@ -94,6 +94,16 @@ class FellowshipSubspecialty extends ListAbstract
     #[ORM\Column(type: 'text', nullable: true)]
     private $noticeAttachment;
 
+    /* Added to json field to the FormNode with name="Fellowship Screening Questions Form"
+    {
+        "Expected answer": {
+            "1": "Yes",
+            "2": "[[Any except]]: No",
+            "3": "[[Any]]",
+            "4": "[[Checked]]"
+        }
+    }
+    */
     //Message to the submitter who did not supply expected answers to the screening questions:
     // "Based on your answers you are not eligible to apply to the selected program."
     #[ORM\Column(type: 'text', nullable: true)]

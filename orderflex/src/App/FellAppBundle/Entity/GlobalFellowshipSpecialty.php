@@ -99,7 +99,15 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $screeningQuestions;
 
-    /*
+    #[ORM\ManyToOne(targetEntity: 'ExpectedDegreeList')]
+    #[ORM\JoinColumn(name: 'expecteddegree_id', referencedColumnName: 'id', nullable: true)]
+    private $expectedDegree;
+
+    //Notice to display at the top of Additional Text Attachment Section (leave blank for none):
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $noticeAttachment;
+
+    /* Added to json field to the FormNode with name="Fellowship Screening Questions Form"
     {
         "Expected answer": {
             "1": "Yes",
@@ -109,14 +117,6 @@ class GlobalFellowshipSpecialty extends ListAbstract
         }
     }
     */
-    #[ORM\ManyToOne(targetEntity: 'ExpectedDegreeList')]
-    #[ORM\JoinColumn(name: 'expecteddegree_id', referencedColumnName: 'id', nullable: true)]
-    private $expectedDegree;
-
-    //Notice to display at the top of Additional Text Attachment Section (leave blank for none):
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $noticeAttachment;
-
     //Message to the submitter who did not supply expected answers to the screening questions:
     // "Based on your answers you are not eligible to apply to the selected program."
     #[ORM\Column(type: 'text', nullable: true)]
