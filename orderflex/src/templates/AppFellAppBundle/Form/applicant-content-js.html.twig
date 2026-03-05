@@ -961,13 +961,15 @@
         $('#complete-screening-message').html("");
 
         var expectedAnswers = $('#expected_answers').val();
-//        if( !expectedAnswers ) {
-//            console.log("expectedAnswers are not set: screening pass by default");
-//            $('#form-second-part').fadeIn();
-//            $('#save-submit-panel').fadeIn();
-//            return true;
-//        }
+        if( !expectedAnswers ) {
+            console.log("expectedAnswers are not set: screening pass by default");
+            $('#form-second-part').fadeIn();
+            $('#save-submit-panel').fadeIn();
+            return true;
+        }
 
+        expectedAnswers = JSON.parse(expectedAnswers);
+        console.log("expectedAnswers=",expectedAnswers);
         if (
                 expectedAnswers &&
                 expectedAnswers["Expected answers"]
@@ -980,8 +982,6 @@
             return true;
         }
 
-        expectedAnswers = JSON.parse(expectedAnswers);
-        console.log("expectedAnswers=",expectedAnswers);
         var passCount=0;
         var totalCount=0;
         $('#form-node-holder').find('.formnode-holder').each(function(index) {
