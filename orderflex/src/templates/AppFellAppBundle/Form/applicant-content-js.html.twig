@@ -1090,6 +1090,10 @@
         // Message to the submitter who did not supply expected answers to the screening questions:
         // "Based on your answers you are not eligible to apply to the selected program."
 
+        if( !_screeningMessage ) {
+            _screeningMessage = 'Screening Failed'
+        }
+
         console.log("Screening Failed");
         $('#complete-screening-message').addClass('alert alert-danger').html(_screeningMessage).show();
         $('#form-second-part').fadeOut(); //hide
