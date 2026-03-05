@@ -968,6 +968,18 @@
             return true;
         }
 
+        if (
+                expectedAnswers &&
+                expectedAnswers["Expected answers"]
+        ) {
+            //OK
+        } else {
+            console.log("'Expected answers' undefined: screening pass by default");
+            $('#form-second-part').fadeIn();
+            $('#save-submit-panel').fadeIn();
+            return true;
+        }
+
         expectedAnswers = JSON.parse(expectedAnswers);
         console.log("expectedAnswers=",expectedAnswers);
         var passCount=0;
@@ -990,20 +1002,7 @@
 
             totalCount = totalCount + 1;
             var count = index + 1;   // 1,2,3,4...
-            var expectedAnswer = null;
-            if (
-                    expectedAnswers &&
-                    expectedAnswers["Expected answers"] &&
-                    expectedAnswers["Expected answers"][count] != null
-            ) {
-                expectedAnswer = expectedAnswers["Expected answers"][count];
-                console.log("expectedAnswer="+expectedAnswer);
-            } else {
-                console.log("'Expected answers' undefined: screening pass by default");
-                $('#form-second-part').fadeIn();
-                $('#save-submit-panel').fadeIn();
-                return true;
-            }
+            var expectedAnswer = expectedAnswers["Expected answers"][count];
 
             var id = $(this).attr('id');
             //console.log("id="+id);
@@ -1014,7 +1013,7 @@
 
             if (input.length === 0) {
                 console.log(count+": Nothing selected in", $(this).attr('id'));
-                return;
+                return false;
             }
 
             var type = input.attr('type');
