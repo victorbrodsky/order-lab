@@ -66,6 +66,7 @@ class FellAppTrainingType extends AbstractType
         ));
 
         if( $this->params['cycle'] != "download" && $this->params['cycle'] != "show" ) {
+            //new, edit pages
 
             $builder->add('degree', null, array(
                 'label' => 'Degree:',
@@ -78,6 +79,10 @@ class FellAppTrainingType extends AbstractType
                 'required' => false,
                 'classtype' => 'trainingmajors'
             ));
+
+            if( $this->params['cycle'] == 'new' ) {
+
+            }
 
             $builder->add('institution', CustomSelectorType::class, array(
                 'label' => 'Educational Institution:',

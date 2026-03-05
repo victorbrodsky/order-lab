@@ -516,12 +516,19 @@
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
             }
-            //Hide the rest of the form if screening question
-            console.log("Hide fellowship-screening-questions");
-            //$('#form-second-part').hide();
-            //$('#save-submit-panel').hide();
-            $('#form-second-part').fadeOut();
-            $('#save-submit-panel').fadeOut();
+            //Hide the rest of the form if screening question if new form
+            if( cycle == 'new' ) {
+                console.log("Hide fellowship-screening-questions");
+                //$('#form-second-part').hide();
+                //$('#save-submit-panel').hide();
+                $('#form-second-part').fadeOut();
+                $('#save-submit-panel').fadeOut();
+            } else {
+                console.log("Show fellowship-screening-questions and all section on new page");
+                $('#complete-screening').hide();
+                $('#form-second-part').fadeIn();
+                $('#save-submit-panel').fadeIn();
+            }
         } else {
             console.log("Show fellowship-screening-questions");
             //panel.hide();
