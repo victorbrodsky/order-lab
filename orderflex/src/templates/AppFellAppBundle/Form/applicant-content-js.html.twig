@@ -517,12 +517,13 @@
                 renderScreeningQuestions();
             }
             //Hide the rest of the form if screening question
+            console.log("Hide fellowship-screening-questions");
             //$('#form-second-part').hide();
             //$('#save-submit-panel').hide();
             $('#form-second-part').fadeOut();
             $('#save-submit-panel').fadeOut();
         } else {
-            console.log("Hide fellowship-screening-questions");
+            console.log("Show fellowship-screening-questions");
             //panel.hide();
             panel.fadeOut();
             //Hide the rest of the form if screening question
@@ -1004,7 +1005,6 @@
                 return true;
             }
 
-
             var id = $(this).attr('id');
             //console.log("id="+id);
 
@@ -1068,8 +1068,8 @@
         if( passCount == totalCount ) {
             console.log("Screening Pass");
             $('#complete-screening-message').addClass('alert alert-success').html("Screening passed").show();
-            $('#form-second-part').fadeIn();
-            $('#save-submit-panel').fadeIn();
+            $('#form-second-part').fadeIn(); //show
+            $('#save-submit-panel').fadeIn(); //show
             return true;
         }
 
@@ -1084,8 +1084,8 @@
 
         console.log("Screening Failed");
         $('#complete-screening-message').addClass('alert alert-danger').html(_screeningMessage).show();
-        $('#form-second-part').fadeOut();
-        $('#save-submit-panel').fadeOut();
+        $('#form-second-part').fadeOut(); //hide
+        $('#save-submit-panel').fadeOut(); //hide
         return false;
     }
 
