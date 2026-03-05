@@ -761,7 +761,7 @@ class FellAppUtil {
         //$parentFormNode = $this->getParentFormNodeBySpecialty($fellapp);
         $parentFormNode = $this->getFellappParentFormNode();
         if( $parentFormNode ) {
-            echo "parentFormNode ID=".$parentFormNode->getId()."<br>";
+            //echo "parentFormNode ID=".$parentFormNode->getId()."<br>";
             $expectedAnswers = $parentFormNode->getTextAttribute();
         }
         return $expectedAnswers;
