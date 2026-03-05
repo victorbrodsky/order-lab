@@ -989,8 +989,21 @@
 
             totalCount = totalCount + 1;
             var count = index + 1;   // 1,2,3,4...
-            var expectedAnswer = expectedAnswers["Expected answers"][count];
-            console.log("expectedAnswer="+expectedAnswer);
+            var expectedAnswer = null;
+            if (
+                    expectedAnswers &&
+                    expectedAnswers["Expected answers"] &&
+                    expectedAnswers["Expected answers"][count] != null
+            ) {
+                expectedAnswer = expectedAnswers["Expected answers"][count];
+                console.log("expectedAnswer="+expectedAnswer);
+            } else {
+                console.log("'Expected answers' undefined: screening pass by default");
+                $('#form-second-part').fadeIn();
+                $('#save-submit-panel').fadeIn();
+                return true;
+            }
+
 
             var id = $(this).attr('id');
             //console.log("id="+id);

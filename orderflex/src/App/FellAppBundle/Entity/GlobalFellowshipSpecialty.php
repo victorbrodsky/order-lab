@@ -109,7 +109,7 @@ class GlobalFellowshipSpecialty extends ListAbstract
 
     /* Added to json field to the FormNode with name="Fellowship Screening Questions Form"
     {
-        "Expected answer": {
+        "Expected answers": {
             "1": "Yes",
             "2": "[[Any except]]: No",
             "3": "[[Any]]",
