@@ -1786,6 +1786,10 @@ Pathology and Laboratory Medicine",
         $dbName = $this->em->getConnection()->getDatabase();
         $res = $res . "<br>" . "DB Name: ".$dbName;
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        $res = $res . "<br>" . "Server role: $serverRole";
+
         $tenant_role = null;
         if( $this->container->hasParameter('tenant_role') ) {
             $tenant_role = $this->container->getParameter('tenant_role');
