@@ -440,6 +440,9 @@
         var hasExpectedDegree = false;
         var noticeAttachmentText = null;
 
+        //clear screaning message
+        $('#complete-screening-message').html("");
+
         var panel = $('#fellowship-screening-questions').closest('.panel');
         if (!panel.length) {
             panel = $('#fellowship-screening-questions');
