@@ -432,6 +432,7 @@
         });
     }
 
+    //getFellowshipTypesByInstitution construct opt for fellowshipSubspecialty
     // Show or hide the Screening Questions panel based on selected fellowship specialty (global or subspecialty)
     var _screeningMessage = null;
     function updateScreeningQuestionsVisibility(globalId) {
@@ -452,6 +453,7 @@
             var opt = $('select.fellapp-globalFellowshipSpecialty option[value="' + globalId + '"]');
             if (!opt.length) {
                 opt = $('select.fellapp-fellowshipSubspecialty option[value="' + globalId + '"]');
+                console.log("use opt for fellowshipSubspecialty");
             }
             //console.log("Set opt=",opt);
             if (opt.length) {
@@ -479,8 +481,10 @@
         //hide the following sections and fields: with id trainingLabel|lower|replace({' ': '_', ',': '', ':': ''}) (Other GME, if applicable:)
         var fellowshipPanelByDegree = $('.residency,.post_residency_fellowship,.other_gme_if_applicable,.hide-by-expected-degree');
         if( hasExpectedDegree ) {
+            console.log("Hide fellapp panel by expected degree");
             fellowshipPanelByDegree.hide();
         } else {
+            console.log("Show fellapp panel by expected degree");
             fellowshipPanelByDegree.show();
         }
 
