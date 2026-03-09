@@ -2654,6 +2654,7 @@ class User extends UserBase
         return $res;
     }
 
+    //Run http://127.0.0.1/directory/employment-dates/view to setActiveAD according to checkUsersAD vis LDAP
     public function getAdStatusStr() {
         $res = "";
         //get AD status
