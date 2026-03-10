@@ -1411,6 +1411,7 @@ class AuthUtil {
      */
     public function connectToLdap($LDAPHost, $LDAPPort = 389)
     {
+        $this->logger->warning('connectToLdap: empty LDAPHost='.$LDAPHost.', LDAPPort='.$LDAPPort);
         if (empty($LDAPHost)) {
             $this->logger->warning('connectToLdap: empty LDAPHost');
             return null;
