@@ -1356,24 +1356,29 @@ class AuthUtil {
 
                 //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
                 //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-                if( $withWarning ) {
-                    $sr = ldap_search(
-                        $cnx,               //ldap
-                        $ldapBindDN,        //base
-                        $filter,            //filter
-                        $LDAPFieldsToFind,  //attributes
-                        0,                  //attributes_only
-                        0                   //sizelimit
-                    );
+
+                if (str_contains((string)$ldapBindDN, 'dc=wcmc-ad')) {
+                    if ($withWarning) {
+                        $sr = ldap_search(
+                            $cnx,               //ldap
+                            $ldapBindDN,        //base
+                            $filter,            //filter
+                            $LDAPFieldsToFind,  //attributes
+                            0,                  //attributes_only
+                            0                   //sizelimit
+                        );
+                    } else {
+                        $sr = @ldap_search(
+                            $cnx,               //ldap
+                            $ldapBindDN,        //base
+                            $filter,            //filter
+                            $LDAPFieldsToFind,  //attributes
+                            0,                  //attributes_only
+                            0                   //sizelimit
+                        );
+                    }
                 } else {
-                    $sr = @ldap_search(
-                        $cnx,               //ldap
-                        $ldapBindDN,        //base
-                        $filter,            //filter
-                        $LDAPFieldsToFind,  //attributes
-                        0,                  //attributes_only
-                        0                   //sizelimit
-                    );
+                    $sr = $this->searchLdapV2((string)$ldapBindDN, $ldapType);
                 }
 
                 if( $sr ) {
