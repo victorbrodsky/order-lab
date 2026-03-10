@@ -606,6 +606,7 @@ class LdapAuthUtil
             }
 
             $filter = "(sAMAccountName={$username})";
+            $filter = "(|(CN=$username)(sAMAccountName=$username))";
             $attributes = []; // fetch all
             //$search = @ldap_search($ldapConn, $baseDn, $filter, $attributes); //searchLdapV2
             $search = ldap_search($ldapConn, $baseDn, $filter, $attributes); //searchLdapV2
@@ -614,7 +615,7 @@ class LdapAuthUtil
                 return null;
             }
 
-            dump($search);
+            //dump($search);
             $info = ldap_get_entries($ldapConn, $search);
             dump($info);
             if (empty($info) || !isset($info['count']) || $info['count'] === 0) {
