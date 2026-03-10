@@ -1406,17 +1406,17 @@ class AuthUtil {
                     //dump($info);
                     $count = $info['count'];
                     //exit('111 $count='.$count);
-                    //echo 'count='.$count;
+                    echo 'count='.$count;
 
                     if( $count == 1 ) {
                         $user->setActiveAD(true);
                         //echo " ".$ldapBindDN." AD: user=$user, username=".$user->getUsername()." <br>";
-                        //echo "AD: user=$user (".$ldapBindDN.")<br>";
+                        echo "Active in AD: user=$user (".$ldapBindDN.")<br>";
                         $adCount++;
                         break; //break this "foreach( $ldapBindDNArr as $ldapBindDN)"
                     } else {
                         //echo " ".$ldapBindDN." NOT in AD: user=$user, key=".$user->getKeytype()." <br>";
-                        //echo "NOT in AD: user=$user (".$ldapBindDN.")<br>";
+                        echo "NOT in AD: user=$user (".$ldapBindDN.")<br>";
                     }
                 } else {
                     $this->logger->error("checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
