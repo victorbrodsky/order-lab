@@ -1404,7 +1404,7 @@ class AuthUtil {
                     //echo 'count='.$count."<br>";
 
                     if( $count == 1 ) {
-                        $this->logger->error("checkUsersAD: Active in AD: user=$user");
+                        $this->logger->notice("checkUsersAD: Active in AD: user=$user");
                         $user->setActiveAD(true);
                         //echo " ".$ldapBindDN." AD: user=$user, username=".$user->getUsername()." <br>";
                         //echo "Active in AD: user=$user (".$ldapBindDN.")<br>";
@@ -1413,10 +1413,10 @@ class AuthUtil {
                     } else {
                         //echo " ".$ldapBindDN." NOT in AD: user=$user, key=".$user->getKeytype()." <br>";
                         //echo "NOT in AD: user=$user (".$ldapBindDN.")<br>";
-                        $this->logger->error("checkUsersAD: NOT in AD: user=$user");
+                        $this->logger->notice("checkUsersAD: NOT in AD: user=$user");
                     }
                 } else {
-                    $this->logger->error("checkUsersAD: ldap_search NOTOK with user=$user, filter=" . $filter . "; bindDn=".$ldapBindDN);
+                    $this->logger->notice("checkUsersAD: ldap_search NOTOK with user=$user, filter=" . $filter . "; bindDn=".$ldapBindDN);
                     //echo "checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN."<br>";
                     //$user->setActiveAD(false);
                 }
