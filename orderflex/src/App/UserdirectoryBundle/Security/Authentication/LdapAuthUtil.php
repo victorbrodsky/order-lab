@@ -95,6 +95,7 @@ class LdapAuthUtil
             }
         } catch (\Throwable $e) {
             $this->logger->error('LDAP auth flow exception: ' . $e->getMessage());
+            echo 'LDAP auth flow exception: ' . $e->getMessage()."<br>";
             $ldapRes = null;
         }
 
@@ -111,6 +112,7 @@ class LdapAuthUtil
         if ($user) {
             $this->logger->notice("Authenticated successfully, existing user found in DB by username={$username}");
             if ($authUtil->canLogin($user) === false) {
+                echo "Ldap Authentication: canLogin false<br>";
                 return null;
             }
             return $user;
