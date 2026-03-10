@@ -1419,8 +1419,8 @@ class AuthUtil {
             return null;
         }
 
-        //$cnx = ldap_connect($LDAPHost, $LDAPPort);
-        $cnx = ldap_connect("ldap://{$LDAPHost}:{$LDAPPort}");
+        $cnx = ldap_connect($LDAPHost, $LDAPPort);
+        //$cnx = ldap_connect("ldap://{$LDAPHost}:{$LDAPPort}");
         if (!$cnx) {
             $this->logger->error("connectToLdap: Ldap: Failed to connect to {$LDAPHost}:{$LDAPPort}");
             return null;
