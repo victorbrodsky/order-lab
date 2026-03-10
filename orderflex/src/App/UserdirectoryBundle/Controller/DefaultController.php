@@ -1082,7 +1082,7 @@ class DefaultController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        //exit("checkUsersADAction disabled");
+        exit("checkUsersADAction disabled");
 
         $authUtil = $this->container->get('authenticator_utility');
         $adCount = $authUtil->checkUsersAD(1,true,0);
