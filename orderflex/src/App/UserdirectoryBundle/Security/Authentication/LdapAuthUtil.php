@@ -618,7 +618,7 @@ class LdapAuthUtil
 
             //dump($search);
             $info = ldap_get_entries($ldapConn, $search);
-            dump($info);
+            //dump($info);
             if (empty($info) || !isset($info['count']) || $info['count'] === 0) {
                 $this->logger->notice("searchLdapV2: user not found by filter={$filter}");
                 return null;

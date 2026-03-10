@@ -1353,9 +1353,16 @@ class AuthUtil {
                 continue; //bad cwid
             }
 
-            $filter="(cn=".$cwid.")";
+            //$filter="(cn=".$cwid.")";
             //$filter="cn=".$cwid."";
             //$filter = "(|(CN=$cwid)(sAMAccountName=$cwid))";
+
+            if (str_contains((string)$origLdapBindDN, 'dc=wcmc-ad')) {
+                $filter="(cn=".$cwid.")";
+            } else {
+                $filter = "(sAMAccountName={$cwid})";
+            }
+
             //echo "filter=$filter <br>";
 
             $ldapBindDNArr = explode(";",$origLdapBindDN);
@@ -1366,7 +1373,7 @@ class AuthUtil {
                 //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
                 //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
-                if (str_contains((string)$ldapBindDN, 'dc=wcmc-ad')) {
+                if( 1 || str_contains((string)$ldapBindDN, 'dc=wcmc-ad')) {
                     if ($withWarning) {
                         $sr = ldap_search(
                             $cnx,               //ldap
