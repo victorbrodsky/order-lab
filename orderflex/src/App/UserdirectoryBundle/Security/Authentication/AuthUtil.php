@@ -1321,7 +1321,7 @@ class AuthUtil {
         //$yesterday = new \DateTime('yesterday');
 
         foreach($users as $user) {
-            //$this->logger->notice("checkUsersAD: check user $user");
+            $this->logger->notice("checkUsersAD: check user $user");
 
 //            $lastCheck = $user->getLastAdCheck();
 //            if( $lastCheck ) {
