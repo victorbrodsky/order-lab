@@ -613,6 +613,7 @@ class LdapAuthUtil
                 return null;
             }
 
+            dump($search);
             $info = ldap_get_entries($ldapConn, $search);
             dump($info);
             if (empty($info) || !isset($info['count']) || $info['count'] === 0) {
