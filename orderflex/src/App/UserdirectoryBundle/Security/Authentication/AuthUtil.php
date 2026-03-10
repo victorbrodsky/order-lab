@@ -1225,22 +1225,25 @@ class AuthUtil {
         ////$dql->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL");
 
         $params = array();
-        $keytypeStr = "";
-        if( $ldapKeyType1Id ) {
-            $keytypeStr = "user.keytype = :keytype1";
-            $params['keytype1'] = $ldapKeyType1Id;
-        }
-        if( $ldapKeyType2Id ) {
-            if( $keytypeStr ) {
-                $keytypeStr = $keytypeStr . " OR " . "user.keytype = :keytype2";
-            } else {
-                $keytypeStr = "user.keytype = :keytype2";
-            }
-            $params['keytype2'] = $ldapKeyType2Id;
-        }
 
-        if( $keytypeStr ) {
-            $dql->andWhere($keytypeStr);
+        if(0) {
+            $keytypeStr = "";
+            if ($ldapKeyType1Id) {
+                $keytypeStr = "user.keytype = :keytype1";
+                $params['keytype1'] = $ldapKeyType1Id;
+            }
+            if ($ldapKeyType2Id) {
+                if ($keytypeStr) {
+                    $keytypeStr = $keytypeStr . " OR " . "user.keytype = :keytype2";
+                } else {
+                    $keytypeStr = "user.keytype = :keytype2";
+                }
+                $params['keytype2'] = $ldapKeyType2Id;
+            }
+
+            if ($keytypeStr) {
+                $dql->andWhere($keytypeStr);
+            }
         }
 
         //get only users with lastAdCheck < $yesterday
