@@ -123,6 +123,9 @@ class FellappSiteParameter {
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $allowPopulateFellApp;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $hideWarning;
+
     /**
      * Automatically send invitation emails to upload recommendation letters
      */
@@ -208,6 +211,7 @@ class FellappSiteParameter {
 
     public function __construct() {
         $this->setAllowPopulateFellApp(false);
+        $this->setHideWarning(false);
         $this->setSendEmailUploadLetterFellApp(false);
         $this->setDeleteImportedAplicationsFellApp(false);
         $this->setDeleteOldAplicationsFellApp(false);
@@ -471,6 +475,23 @@ class FellappSiteParameter {
     {
         $this->allowPopulateFellApp = $allowPopulateFellApp;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getHideWarning()
+    {
+        return $this->hideWarning;
+    }
+
+    /**
+     * @param mixed $hideWarning
+     */
+    public function setHideWarning($hideWarning)
+    {
+        $this->hideWarning = $hideWarning;
+    }
+
 
     /**
      * @return mixed

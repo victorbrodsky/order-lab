@@ -806,7 +806,8 @@ class FellAppController extends OrderAbstractController {
                 }
             } else {
                 $environment = $userSecUtil->getSiteSettingParameter('environment');
-                if( $environment != 'demo' ) {
+                $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning',$this->getParameter('fellapp.sitename'));
+                if( $environment != 'demo' && $hideWarning != true ) {
                     $this->addFlash(
                         'warning',
                         "Google configuration file can not be retrieved from Google Drive." .

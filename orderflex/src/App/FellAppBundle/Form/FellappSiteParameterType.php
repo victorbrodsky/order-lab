@@ -139,6 +139,11 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
         ));
 
+        $builder->add('hideWarning',null,array(
+            'label' => 'Hide warnings about downloading applications from the Fellowship Applications homepage:',
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+        ));
+
         $builder->add('sendEmailUploadLetterFellApp', null, array(
             'label'=>'Automatically send invitation emails to upload recommendation letters:',
             'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
