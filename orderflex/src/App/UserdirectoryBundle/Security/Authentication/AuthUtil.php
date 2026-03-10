@@ -1420,7 +1420,7 @@ class AuthUtil {
                     }
                 } else {
                     $this->logger->error("checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-                    //echo "checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN."<br>";
+                    echo "checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN."<br>";
                     //$user->setActiveAD(false);
                 }
 
