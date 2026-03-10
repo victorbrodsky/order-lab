@@ -1268,7 +1268,7 @@ class AuthUtil {
 
         $users = $query->getResult();
         $this->logger->notice("checkUsersAD: users count=".count($users));
-        //echo "users ".count($users)."<br>";
+        echo "users ".count($users)."<br>";
         //exit('111');
 
         //////////// connect to LDAP/AD ////////////

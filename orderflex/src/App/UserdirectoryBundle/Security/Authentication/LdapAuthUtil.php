@@ -102,6 +102,7 @@ class LdapAuthUtil
             $this->logger->error("Ldap Authentication: can not ldap bind user by usernameClean=[{$usernameClean}]");
             $user = $authUtil->findUserByUsername($username);
             $authUtil->validateFailedAttempts($user);
+            echo "Ldap Authentication: can not ldap bind user by usernameClean=[{$usernameClean}] <br>";
             return null;
         }
 
