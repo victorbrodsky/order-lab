@@ -95,7 +95,7 @@ class LdapAuthUtil
             }
         } catch (\Throwable $e) {
             $this->logger->error('LDAP auth flow exception: ' . $e->getMessage());
-            echo 'LDAP auth flow exception: ' . $e->getMessage()."<br>";
+            //echo 'LDAP auth flow exception: ' . $e->getMessage()."<br>";
             $ldapRes = null;
         }
 
@@ -103,7 +103,7 @@ class LdapAuthUtil
             $this->logger->error("Ldap Authentication: can not ldap bind user by usernameClean=[{$usernameClean}]");
             $user = $authUtil->findUserByUsername($username);
             $authUtil->validateFailedAttempts($user);
-            echo "Ldap Authentication: can not ldap bind user by usernameClean=[{$usernameClean}] <br>";
+            //echo "Ldap Authentication: can not ldap bind user by usernameClean=[{$usernameClean}] <br>";
             return null;
         }
 
@@ -111,8 +111,9 @@ class LdapAuthUtil
         $user = $authUtil->findUserByUsername($username);
         if ($user) {
             $this->logger->notice("Authenticated successfully, existing user found in DB by username={$username}");
+            //echo "Authenticated successfully, existing user found in DB by username={$username}<br>";
             if ($authUtil->canLogin($user) === false) {
-                echo "Ldap Authentication: canLogin false<br>";
+                //echo "Ldap Authentication: canLogin false<br>";
                 return null;
             }
             return $user;
@@ -464,7 +465,7 @@ class LdapAuthUtil
             $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
             //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
             if( $withWarning ) {
-                $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+                $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind); //searchLdap
             } else {
                 $sr = @ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
             }
@@ -606,13 +607,14 @@ class LdapAuthUtil
 
             $filter = "(sAMAccountName={$username})";
             $attributes = []; // fetch all
-            $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes);
+            $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes); //searchLdapV2
             if (!$search) {
                 $this->logger->error("searchLdapV2: ldap_search failed with filter={$filter}, baseDn={$baseDn}");
                 return null;
             }
 
             $info = ldap_get_entries($ldapConn, $search);
+            dump($info);
             if (empty($info) || !isset($info['count']) || $info['count'] === 0) {
                 $this->logger->notice("searchLdapV2: user not found by filter={$filter}");
                 return null;
