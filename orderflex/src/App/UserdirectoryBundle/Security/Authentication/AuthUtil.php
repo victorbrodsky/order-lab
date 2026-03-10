@@ -1317,7 +1317,7 @@ class AuthUtil {
         $LDAPFieldsToFind = ["cn"];
         //////////// EOF connect to LDAP/AD ////////////
 
-        $count = 0;
+        //$count = 0;
         $adCount = 0;
         $lastAdCheckDateTime = new \DateTime();
         //$yesterday = new \DateTime('yesterday');
@@ -1327,10 +1327,10 @@ class AuthUtil {
             echo "checkUsersAD: check user $user <br>";
 
             //Testing
-            $count++;
-            if( $count > 3 ) {
-                break;
-            }
+            //$count++;
+            //if( $count > 3 ) {
+            //    break;
+            //}
 
 //            $lastCheck = $user->getLastAdCheck();
 //            if( $lastCheck ) {
