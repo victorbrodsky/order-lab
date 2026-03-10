@@ -638,29 +638,29 @@ class LdapAuthUtil
             ldap_unbind($ldapConn);
         }
     }
-    public function searchLdapV3($username, $ldapType = 1) {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $postfix = $this->getPostfix($ldapType);
-
-        $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress' . $postfix);
-        $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort' . $postfix);
-        $baseDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu' . $postfix);
-
-        $serviceDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName' . $postfix);
-        $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword' . $postfix);
-
-        if (empty($username) || empty($serviceDn) || empty($servicePass)) {
-            $this->logger->warning('searchLdapV2: missing username or service account');
-            return null;
-        }
-
-        $ldapConn = $this->connectToLdap($ldapHost, (int)$ldapPort);
-        if (!$ldapConn) {
-            $this->logger->error("searchLdapV2: no ldap connection");
-            return null;
-        }
-
-    }
+//    public function searchLdapV3($username, $ldapType = 1) {
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $postfix = $this->getPostfix($ldapType);
+//
+//        $ldapHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress' . $postfix);
+//        $ldapPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort' . $postfix);
+//        $baseDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu' . $postfix);
+//
+//        $serviceDn = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName' . $postfix);
+//        $servicePass = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword' . $postfix);
+//
+//        if (empty($username) || empty($serviceDn) || empty($servicePass)) {
+//            $this->logger->warning('searchLdapV2: missing username or service account');
+//            return null;
+//        }
+//
+//        $ldapConn = $this->connectToLdap($ldapHost, (int)$ldapPort);
+//        if (!$ldapConn) {
+//            $this->logger->error("searchLdapV2: no ldap connection");
+//            return null;
+//        }
+//
+//    }
 
     /**
      * Extract first attribute value from LDAP normalized result (array with lowercase keys).

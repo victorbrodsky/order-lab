@@ -1294,10 +1294,10 @@ class AuthUtil {
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $cnx = $this->connectToLdap($LDAPHost);
 
-        if(0) {
+        if(1) {
             //Check if admin can bind via ldap
-            //$res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
-            $res = ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
+            $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
+            //$res = ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
             //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
             if (!$res) {
                 $this->logger->error("checkUsersAD: ldap_bind failed with admin authentication username=" . "[" . $LDAPUserAdmin . "]" . "; LDAPUserPasswordAdmin=" . "[" . $LDAPUserPasswordAdmin . "]");
