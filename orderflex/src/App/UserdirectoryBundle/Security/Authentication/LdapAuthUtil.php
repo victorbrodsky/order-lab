@@ -606,8 +606,8 @@ class LdapAuthUtil
             }
 
             $filter = "(sAMAccountName={$username})";
-            echo "searchLdapV2: filter=$filter <br>";
-            echo "searchLdapV2: baseDn=$baseDn <br>";
+            //echo "searchLdapV2: filter=$filter <br>";
+            //echo "searchLdapV2: baseDn=$baseDn <br>";
             $attributes = []; // fetch all
             //$search = @ldap_search($ldapConn, $baseDn, $filter, $attributes); //searchLdapV2
             $search = ldap_search($ldapConn, $baseDn, $filter, $attributes); //searchLdapV2

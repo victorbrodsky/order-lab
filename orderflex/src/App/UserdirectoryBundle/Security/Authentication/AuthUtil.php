@@ -1268,7 +1268,7 @@ class AuthUtil {
 
         $users = $query->getResult();
         $this->logger->notice("checkUsersAD: users count=".count($users));
-        echo "users ".count($users)."<br>";
+        //echo "users ".count($users)."<br>";
         //exit('111');
 
         //////////// connect to LDAP/AD ////////////
@@ -1326,7 +1326,7 @@ class AuthUtil {
 
         foreach($users as $user) {
             $this->logger->notice("checkUsersAD: check user $user");
-            echo "checkUsersAD: check user $user <br>";
+            //echo "checkUsersAD: check user $user <br>";
 
             //Testing
             $count++;
@@ -1363,7 +1363,7 @@ class AuthUtil {
                 $filter = "(sAMAccountName={$cwid})";
                 $LDAPFieldsToFind = [];
             }
-            echo "filter=$filter <br>";
+            //echo "filter=$filter <br>";
 
             $ldapBindDNArr = explode(";",$origLdapBindDN);
             //echo "count=".count($ldapBindDNArr)."<br>";
@@ -1373,7 +1373,7 @@ class AuthUtil {
                 //$this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
                 //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
-                if( 1 || str_contains((string)$ldapBindDN, 'dc=wcmc-ad')) {
+                //if( 1 || str_contains((string)$ldapBindDN, 'dc=wcmc-ad')) {
                     if ($withWarning) {
                         $sr = ldap_search(
                             $cnx,               //ldap
@@ -1393,10 +1393,10 @@ class AuthUtil {
                             0                   //sizelimit
                         );
                     }
-                } else {
-                    $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
-                    $sr = $ldapAuthUtil->searchLdapV2($cwid, $ldapType);
-                }
+                //} else {
+                //    $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
+                //    $sr = $ldapAuthUtil->searchLdapV2($cwid, $ldapType);
+                //}
 
                 if( $sr ) {
                     //searched ldap_search AD ok
@@ -1406,21 +1406,21 @@ class AuthUtil {
                     //dump($info);
                     $count = $info['count'];
                     //exit('111 $count='.$count);
-                    echo 'count='.$count;
+                    //echo 'count='.$count."<br>";
 
                     if( $count == 1 ) {
                         $user->setActiveAD(true);
                         //echo " ".$ldapBindDN." AD: user=$user, username=".$user->getUsername()." <br>";
-                        echo "Active in AD: user=$user (".$ldapBindDN.")<br>";
+                        //echo "Active in AD: user=$user (".$ldapBindDN.")<br>";
                         $adCount++;
                         break; //break this "foreach( $ldapBindDNArr as $ldapBindDN)"
                     } else {
                         //echo " ".$ldapBindDN." NOT in AD: user=$user, key=".$user->getKeytype()." <br>";
-                        echo "NOT in AD: user=$user (".$ldapBindDN.")<br>";
+                        //echo "NOT in AD: user=$user (".$ldapBindDN.")<br>";
                     }
                 } else {
                     $this->logger->error("checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-                    echo "checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN."<br>";
+                    //echo "checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN."<br>";
                     //$user->setActiveAD(false);
                 }
 
