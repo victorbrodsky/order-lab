@@ -2666,7 +2666,7 @@ class User extends UserBase
         $keyTypeStr = $this->getUsernamePrefix();
         //echo "keyTypeStr=$keyTypeStr <br>";
         if( $keyTypeStr == 'local-user' ) {
-            $res = "LLL";
+            $res = "";
             return $res;
         }
 
