@@ -1597,8 +1597,8 @@ class FellAppUtil {
         $institutionRootAbbreviation = null;
         $institution = $fellowshipSpecialty->getInstitution();
         if( !$institution ) {
-            $logger = $this->container->get('logger');
-            $logger->notice("getNameInstitution: $fellowshipSpecialty does not have institution");
+            //$logger = $this->container->get('logger');
+            //$logger->notice("getNameInstitution: $fellowshipSpecialty does not have institution");
         }
         return $this->getAbbreviationFromInstitution($institution,$uppercase);
     }

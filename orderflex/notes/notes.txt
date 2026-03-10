@@ -1891,22 +1891,6 @@ host  all   all  127.0.0.1/32  trust
 \list
 DROP DATABASE dbname;
 
-Backup server:
-Network folder: \\brbpathologyfs.med.cornell.edu\pathology\order-backups\xits-po-order-dev1-backup
-sudo mount -t cifs //SERVER_IP_OR_NAME/SHARE_NAME \
-  /mnt/xits-po-order-dev1-backup \
-  -o credentials=/root/credentials.txt,iocharset=utf8,vers=3.0
-
-sudo mount -t cifs //brbpathologyfs.med.cornell.edu/pathology/order-backups/xits-po-order-dev1-backup \
-  /mnt/xits-po-order-dev1-backup \
-  -o credentials=/mnt/credentials.txt,iocharset=utf8,vers=3.0
-
-Check mount folders: findmnt
-
-ReaR config: vim /etc/rear/local.conf
-use /mnt/xits-po-order-dev1-backup as a BACKUP_URL=file:///mnt/xits-po-order-dev1-backup in /etc/rear/local.conf
-Test backup configuration: sudo rear dump
-Run the ISO backup: sudo rear -v mkbackup
 
 
 

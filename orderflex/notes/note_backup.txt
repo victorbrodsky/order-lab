@@ -87,3 +87,19 @@ Demo DB config (here, set at everyday at 11 am):
 ]
 }
 
+
+Backup server:
+Network folder: \\brbpathologyfs.med.cornell.edu\pathology\order-backups\xits-po-order-dev1-backup
+Mount (use cifs-utils) and create backup folder, for example: /mnt/xits-po-order-dev1-backup
+Check mount folders: findmnt
+sudo mount -t cifs //brbpathologyfs.med.cornell.edu/pathology/order-backups/xits-po-order-dev1-backup \
+  /mnt/xits-po-order-dev1-backup \
+  -o credentials=/mnt/credentials.txt,iocharset=utf8,vers=3.0
+
+Check mount folders: findmnt
+
+ReaR config: vim /etc/rear/local.conf
+use /mnt/xits-po-order-dev1-backup as a BACKUP_URL=file:///mnt/xits-po-order-dev1-backup in /etc/rear/local.conf
+Test backup configuration: sudo rear dump
+Run the ISO backup: sudo rear -v mkbackup
+
