@@ -1362,8 +1362,7 @@ class AuthUtil {
             } else {
                 $filter = "(sAMAccountName={$cwid})";
             }
-
-            //echo "filter=$filter <br>";
+            echo "filter=$filter <br>";
 
             $ldapBindDNArr = explode(";",$origLdapBindDN);
             //echo "count=".count($ldapBindDNArr)."<br>";
