@@ -1388,7 +1388,7 @@ class AuthUtil {
                     }
                 } else {
                     $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
-                    $sr = $ldapAuthUtil->searchLdapV2((string)$ldapBindDN, $ldapType);
+                    $sr = $ldapAuthUtil->searchLdapV2($cwid, $ldapType);
                 }
 
                 if( $sr ) {
