@@ -1200,12 +1200,10 @@ class AuthUtil {
         $ldapKeyType1Id = null;
         $ldapKeyType2Id = null;
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
         $ldapKeyType1 = $this->em->getRepository(UsernameType::class)->findOneBy(array('abbreviation'=>'ldap-user'));
         if( $ldapKeyType1 ) {
             $ldapKeyType1Id = $ldapKeyType1->getId();
         }
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UsernameType'] by [UsernameType::class]
         $ldapKeyType2 = $this->em->getRepository(UsernameType::class)->findOneBy(array('abbreviation'=>'ldap2-user'));
         if( $ldapKeyType2 ) {
             $ldapKeyType2Id = $ldapKeyType2->getId();
@@ -1223,8 +1221,8 @@ class AuthUtil {
 
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
-        //$dql->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL");
+        //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        ////$dql->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL");
 
         $params = array();
         $keytypeStr = "";
