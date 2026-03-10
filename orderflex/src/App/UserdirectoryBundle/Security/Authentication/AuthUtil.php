@@ -1281,6 +1281,7 @@ class AuthUtil {
             //ok
         } else {
             //no search
+            $this->logger->notice("checkUsersAD: return NULL: LDAPUserAdmin=$LDAPUserAdmin, DAPUserPasswordAdmin=$LDAPUserPasswordAdmin");
             return NULL;
         }
 
