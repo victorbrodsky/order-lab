@@ -1378,7 +1378,8 @@ class AuthUtil {
                         );
                     }
                 } else {
-                    $sr = $this->searchLdapV2((string)$ldapBindDN, $ldapType);
+                    $ldapAuthUtil = $this->container->get('ldap_authenticator_utility');
+                    $sr = $ldapAuthUtil->searchLdapV2((string)$ldapBindDN, $ldapType);
                 }
 
                 if( $sr ) {
