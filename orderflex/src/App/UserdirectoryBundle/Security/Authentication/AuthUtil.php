@@ -1288,7 +1288,8 @@ class AuthUtil {
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $cnx = $this->connectToLdap($LDAPHost);
 
-        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
+        //$res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
+        $res = ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
         //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
         if (!$res) {
             $this->logger->error("checkUsersAD: ldap_bind failed with admin authentication username=" . "[" . $LDAPUserAdmin . "]" . "; LDAPUserPasswordAdmin=" . "[" . $LDAPUserPasswordAdmin . "]");
@@ -1418,8 +1419,8 @@ class AuthUtil {
             return null;
         }
 
-        $cnx = ldap_connect($LDAPHost, $LDAPPort);
-        //$cnx = ldap_connect("ldap://{$LDAPHost}:{$LDAPPort}");
+        //$cnx = ldap_connect($LDAPHost, $LDAPPort);
+        $cnx = ldap_connect("ldap://{$LDAPHost}:{$LDAPPort}");
         if (!$cnx) {
             $this->logger->error("connectToLdap: Ldap: Failed to connect to {$LDAPHost}:{$LDAPPort}");
             return null;
