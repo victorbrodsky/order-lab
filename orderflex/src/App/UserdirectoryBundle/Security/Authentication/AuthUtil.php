@@ -1222,35 +1222,36 @@ class AuthUtil {
 
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+
         //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         ////$dql->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL");
 
         $params = array();
 
-        if(1) { //testing were
-            $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
 
-            $keytypeStr = "";
-            if ($ldapKeyType1Id) {
-                $keytypeStr = "user.keytype = :keytype1";
-                $params['keytype1'] = $ldapKeyType1Id;
-            }
-            if ($ldapKeyType2Id) {
-                if ($keytypeStr) {
-                    $keytypeStr = $keytypeStr . " OR " . "user.keytype = :keytype2";
-                } else {
-                    $keytypeStr = "user.keytype = :keytype2";
-                }
-                $params['keytype2'] = $ldapKeyType2Id;
-            }
-
+        $keytypeStr = "";
+        if ($ldapKeyType1Id) {
+            $keytypeStr = "user.keytype = :keytype1";
+            $params['keytype1'] = $ldapKeyType1Id;
+        }
+        if ($ldapKeyType2Id) {
             if ($keytypeStr) {
-                $dql->andWhere($keytypeStr);
+                $keytypeStr = $keytypeStr . " OR " . "user.keytype = :keytype2";
+            } else {
+                $keytypeStr = "user.keytype = :keytype2";
             }
+            $params['keytype2'] = $ldapKeyType2Id;
+        }
 
+        if ($keytypeStr) {
+            $dql->andWhere($keytypeStr);
+        }
+
+        if(0) {
             //get only users with lastAdCheck < $yesterday
-            //$dql->andWhere("user.lastAdCheck IS NULL OR user.lastAdCheck < :yesterday");
-            //$params['yesterday'] = $yesterday;
+            $dql->andWhere("user.lastAdCheck IS NULL OR user.lastAdCheck < :yesterday");
+            $params['yesterday'] = $yesterday;
         }
 
         $dql->orderBy("infos.lastName","ASC");
