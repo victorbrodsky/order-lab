@@ -1227,7 +1227,9 @@ class AuthUtil {
 
         $params = array();
 
-        if(0) { //testing
+        if(0) { //testing were
+            $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+
             $keytypeStr = "";
             if ($ldapKeyType1Id) {
                 $keytypeStr = "user.keytype = :keytype1";
@@ -1245,11 +1247,11 @@ class AuthUtil {
             if ($keytypeStr) {
                 $dql->andWhere($keytypeStr);
             }
-        }
 
-        //get only users with lastAdCheck < $yesterday
-        $dql->andWhere("user.lastAdCheck IS NULL OR user.lastAdCheck < :yesterday");
-        $params['yesterday'] = $yesterday;
+            //get only users with lastAdCheck < $yesterday
+            $dql->andWhere("user.lastAdCheck IS NULL OR user.lastAdCheck < :yesterday");
+            $params['yesterday'] = $yesterday;
+        }
 
         $dql->orderBy("infos.lastName","ASC");
 
