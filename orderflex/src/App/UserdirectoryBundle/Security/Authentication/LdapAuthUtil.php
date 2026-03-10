@@ -607,7 +607,8 @@ class LdapAuthUtil
 
             $filter = "(sAMAccountName={$username})";
             $attributes = []; // fetch all
-            $search = @ldap_search($ldapConn, $baseDn, $filter, $attributes); //searchLdapV2
+            //$search = @ldap_search($ldapConn, $baseDn, $filter, $attributes); //searchLdapV2
+            $search = ldap_search($ldapConn, $baseDn, $filter, $attributes); //searchLdapV2
             if (!$search) {
                 $this->logger->error("searchLdapV2: ldap_search failed with filter={$filter}, baseDn={$baseDn}");
                 return null;
