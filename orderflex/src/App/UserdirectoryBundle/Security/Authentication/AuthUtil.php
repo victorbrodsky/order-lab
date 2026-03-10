@@ -1412,8 +1412,8 @@ class AuthUtil {
      */
     public function connectToLdap($LDAPHost, $LDAPPort = 389)
     {
-        $this->logger->warning('connectToLdap: empty LDAPHost='.$LDAPHost.', LDAPPort='.$LDAPPort);
-        if (empty($LDAPHost)) {
+        $this->logger->warning('connectToLdap: LDAPHost='.$LDAPHost.', LDAPPort='.$LDAPPort);
+        if( empty($LDAPHost) ) {
             $this->logger->warning('connectToLdap: empty LDAPHost');
             return null;
         }
@@ -1421,7 +1421,7 @@ class AuthUtil {
         //$cnx = @ldap_connect($LDAPHost, $LDAPPort);
         $cnx = ldap_connect("ldap://{$LDAPHost}:{$LDAPPort}");
         if (!$cnx) {
-            $this->logger->error("Ldap: Failed to connect to {$LDAPHost}:{$LDAPPort}");
+            $this->logger->error("connectToLdap: Ldap: Failed to connect to {$LDAPHost}:{$LDAPPort}");
             return null;
         }
 
