@@ -1361,6 +1361,7 @@ class AuthUtil {
                 $filter="(cn=".$cwid.")";
             } else {
                 $filter = "(sAMAccountName={$cwid})";
+                $LDAPFieldsToFind = "[]";
             }
             echo "filter=$filter <br>";
 
