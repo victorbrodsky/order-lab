@@ -569,7 +569,7 @@ class LdapAuthUtil
     /**
      * Search LDAP and return a simple associative array of attributes (case-insensitive keys).
      */
-    public function searchLdapV2($username, $ldapType = 1, $ldapConn=null)
+    public function searchLdapV2($username, $ldapType = 1)
     {
         $userSecUtil = $this->container->get('user_security_utility');
         $postfix = $this->getPostfix($ldapType);
@@ -586,9 +586,7 @@ class LdapAuthUtil
             return null;
         }
 
-        if( !$ldapConn ) {
-            $ldapConn = $this->connectToLdap($ldapHost, (int)$ldapPort);
-        }
+        $ldapConn = $this->connectToLdap($ldapHost, (int)$ldapPort);
         if (!$ldapConn) {
             $this->logger->error("searchLdapV2: no ldap connection");
             return null;
