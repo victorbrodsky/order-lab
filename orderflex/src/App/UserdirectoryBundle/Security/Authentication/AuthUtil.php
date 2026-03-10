@@ -1262,6 +1262,7 @@ class AuthUtil {
         }
 
         $users = $query->getResult();
+        $this->logger->notice("checkUsersAD: users count=".count($users));
         //echo "users ".count($users)."<br>";
         //exit('111');
 
@@ -1288,23 +1289,26 @@ class AuthUtil {
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $cnx = $this->connectToLdap($LDAPHost);
 
-        //$res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
-        $res = ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
-        //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
-        if (!$res) {
-            $this->logger->error("checkUsersAD: ldap_bind failed with admin authentication username=" . "[" . $LDAPUserAdmin . "]" . "; LDAPUserPasswordAdmin=" . "[" . $LDAPUserPasswordAdmin . "]");
-            //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            //testing!!!: allow to login without LDAP admin bind
-            $adminLdapBindRequired = true;
-            //$adminLdapBindRequired = false; //testing. For live, use $adminLdapBindRequired = true
-            if ($adminLdapBindRequired) {
-                ldap_error($cnx);
-                ldap_unbind($cnx);
-                //exit("error ldap_bind");
-                return NULL;
+        if(0) {
+            //Check if admin can bind via ldap
+            //$res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
+            $res = ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
+            //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
+            if (!$res) {
+                $this->logger->error("checkUsersAD: ldap_bind failed with admin authentication username=" . "[" . $LDAPUserAdmin . "]" . "; LDAPUserPasswordAdmin=" . "[" . $LDAPUserPasswordAdmin . "]");
+                //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
+                //testing!!!: allow to login without LDAP admin bind
+                $adminLdapBindRequired = true;
+                //$adminLdapBindRequired = false; //testing. For live, use $adminLdapBindRequired = true
+                if ($adminLdapBindRequired) {
+                    ldap_error($cnx);
+                    ldap_unbind($cnx);
+                    //exit("error ldap_bind");
+                    return NULL;
+                }
+            } else {
+                //$this->logger->notice("checkUsersAD: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
             }
-        } else {
-            //$this->logger->notice("checkUsersAD: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
         }
 
         $LDAPFieldsToFind = ["cn"];

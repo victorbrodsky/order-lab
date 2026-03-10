@@ -86,7 +86,7 @@ class LdapAuthUtil
                 $this->logger->notice("Using ldapBindV1 for host with wcmc-ad in OU");
                 $ldapRes = $this->ldapBindV1($usernameClean, $password, $ldapType);
             } else {
-                // Generic flow: first search, then bind by userPrincipalName if available
+                // Generic flow: first search, then bind by userPrincipalName if available (i.e WashU Wustl case)
                 $this->logger->notice("Searching LDAP for usernameClean={$usernameClean}");
                 $ldapUserData = $this->searchLdapV2($usernameClean, $ldapType);
                 $upn = $this->extractAttributeValue($ldapUserData, 'userPrincipalName') ?? $usernameClean;
