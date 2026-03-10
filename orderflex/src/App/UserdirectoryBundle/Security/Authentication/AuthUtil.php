@@ -1325,6 +1325,7 @@ class AuthUtil {
 
         foreach($users as $user) {
             $this->logger->notice("checkUsersAD: check user $user");
+            echo "checkUsersAD: check user $user <br>";
 
 //            $lastCheck = $user->getLastAdCheck();
 //            if( $lastCheck ) {
