@@ -1248,7 +1248,7 @@ class AuthUtil {
             $dql->andWhere($keytypeStr);
         }
 
-        if(0) {
+        if(1) {
             //get only users with lastAdCheck < $yesterday
             $dql->andWhere("user.lastAdCheck IS NULL OR user.lastAdCheck < :yesterday");
             $params['yesterday'] = $yesterday;
@@ -1324,7 +1324,7 @@ class AuthUtil {
 
         foreach($users as $user) {
             $this->logger->notice("checkUsersAD: check user $user");
-            echo "checkUsersAD: check user $user <br>";
+            //echo "checkUsersAD: check user $user <br>";
 
             //Testing
             //$count++;
@@ -1407,17 +1407,17 @@ class AuthUtil {
                         $this->logger->notice("checkUsersAD: Active in AD: user=$user");
                         $user->setActiveAD(true);
                         //echo " ".$ldapBindDN." AD: user=$user, username=".$user->getUsername()." <br>";
-                        echo "Active in AD: user=$user (".$ldapBindDN.")<br>";
+                        //echo "Active in AD: user=$user (".$ldapBindDN.")<br>";
                         $adCount++;
                         break; //break this "foreach( $ldapBindDNArr as $ldapBindDN)"
                     } else {
                         //echo " ".$ldapBindDN." NOT in AD: user=$user, key=".$user->getKeytype()." <br>";
-                        echo "NOT in AD: user=$user (".$ldapBindDN.")<br>";
+                        //echo "NOT in AD: user=$user (".$ldapBindDN.")<br>";
                         $this->logger->notice("checkUsersAD: NOT in AD: user=$user");
                     }
                 } else {
                     $this->logger->notice("checkUsersAD: ldap_search NOTOK with user=$user, filter=" . $filter . "; bindDn=".$ldapBindDN);
-                    echo "checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN."<br>";
+                    //echo "checkUsersAD: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN."<br>";
                     //$user->setActiveAD(false);
                 }
 
