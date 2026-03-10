@@ -1248,7 +1248,7 @@ class AuthUtil {
             $dql->andWhere($keytypeStr);
         }
 
-        if(1) {
+        if(0) {
             //get only users with lastAdCheck < $yesterday
             $dql->andWhere("user.lastAdCheck IS NULL OR user.lastAdCheck < :yesterday");
             $params['yesterday'] = $yesterday;
