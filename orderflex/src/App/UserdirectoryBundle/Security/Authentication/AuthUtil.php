@@ -1208,6 +1208,7 @@ class AuthUtil {
         if( $ldapKeyType2 ) {
             $ldapKeyType2Id = $ldapKeyType2->getId();
         }
+        $this->logger->notice("checkUsersAD: ldapKeyType1Id=$ldapKeyType1Id, ldapKeyType2Id=$ldapKeyType2Id");
 
         //$yesterday = new \DateTime('yesterday');
         $yesterday = date('Y-m-d H:i:s',strtotime("-1 days")); //2021-10-28 14:56:34
@@ -1221,12 +1222,12 @@ class AuthUtil {
 
         $dql->leftJoin("user.employmentStatus", "employmentStatus");
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
-        //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         ////$dql->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL");
 
         $params = array();
 
-        if(0) {
+        if(0) { //testing
             $keytypeStr = "";
             if ($ldapKeyType1Id) {
                 $keytypeStr = "user.keytype = :keytype1";
