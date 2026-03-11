@@ -37,8 +37,7 @@
          data-formnodeholderid="{{ formNodeHolder.id }}"
          data-formnodeid="{{ formNodeId }}"
          data-sectionid="{{ count }}"
-         data-expectedanswer='{{ expectedanswer }}'
-         data-expectedanswer2='test'
+         data-expectedanswer="{{ expectedanswer|json_encode|e('html_attr') }}"
     >
         {{ formnodemacros.addFormNodeByType(formNodeHolder,formNode,formNodeId,cycle,prototype,count,"single",formNodeValue,receivingEntity) }}
     </div>
