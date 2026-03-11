@@ -631,6 +631,11 @@ class FellAppUtil {
                 $screeningMessage = "Based on your answers you are not eligible to apply to the ".$type->getNameInstitution()." program";
             }
 
+            $expectedanswer = $type->getTextAttribute();
+            if( !$expectedanswer ) {
+                $expectedanswer = null;
+            }
+
             if( $asArray && $asArray === 'select2' ) {
                 $resultfilterTypes[] = array(
                     'id' => $type->getId(),
@@ -640,6 +645,7 @@ class FellAppUtil {
                     'noticeattachment' => $noticeAttachmentText,
                     //'noticeattachment' => "Completing this section is optional and should not affect your application. It can help us select appropriate interviewers and focus discussions on the accomplishments you highlight here.",
                     'screeningmessage' => $screeningMessage,
+                    'expectedanswer' => $expectedanswer,
                 );
                 //echo "111111 <br>";
             } elseif ( $asArray && $asArray === 'id-text' ) {

@@ -440,6 +440,7 @@
         var hasScreening = false;
         var hasExpectedDegree = false;
         var noticeAttachmentText = null;
+        //var expectedanswer = null;
 
         //clear screaning message
         $('#complete-screening-message').html("");
@@ -470,6 +471,9 @@
 
                 var noticeAttachmentText = opt.data('noticeattachment');
                 console.log("Set noticeAttachmentText="+noticeAttachmentText);
+
+                var expectedanswer = opt.data('expectedanswer');
+                console.log("Set expectedanswer="+expectedanswer);
 
                 _screeningMessage = opt.data('screeningmessage');
                 console.log("Set _screeningMessage="+_screeningMessage);
@@ -1024,7 +1028,7 @@
             var expectedAnswer = expectedAnswers["Expected answers"][count];
 
             var id = $(this).attr('id');
-            //console.log("id="+id);
+            console.log("fellappCompleteScreening: id="+id);
 
             // find any checked input inside this formnode
             var input = $(this).find('input:checked');

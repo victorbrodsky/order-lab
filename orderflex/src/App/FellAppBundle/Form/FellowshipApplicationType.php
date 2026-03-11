@@ -113,27 +113,35 @@ class FellowshipApplicationType extends AbstractType
 //                ],
                 'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
                 'choice_attr' => function ($specialty) {
-                    if (!$specialty || !method_exists($specialty, 'getScreeningQuestions')) {
-                        return [
-                            'data-screening-questions' => '0',
-                            'data-expected-degree' => '0',
-                        ];
-                    }
-                    $questions = $specialty->getScreeningQuestions();
-                    $hasQuestions = !empty($questions) ? '1' : '0';
-
-                    $expectedDegree = $specialty->getExpectedDegree();
-                    $expectedDegreeFlag = '0';
-                    if( $expectedDegree && $expectedDegree == 'PhD' ) {
-                        $expectedDegreeFlag = '1';
-                    }
-
-                    return [
-                        'data-screening-questions' => $hasQuestions,
-                        'data-expected-degree' => $expectedDegreeFlag,
-
-                    ];
+                    return $this->getSpecialtyAttributes($specialty);
                 },
+//                'choice_attr' => function ($specialty) {
+//                    if (!$specialty || !method_exists($specialty, 'getScreeningQuestions')) {
+//                        return [
+//                            'data-screening-questions' => '0',
+//                            'data-expected-degree' => '0',
+//                        ];
+//                    }
+//                    $questions = $specialty->getScreeningQuestions();
+//                    $hasQuestions = !empty($questions) ? '1' : '0';
+//
+//                    $expectedDegree = $specialty->getExpectedDegree();
+//                    $expectedDegreeFlag = '0';
+//                    if( $expectedDegree && $expectedDegree == 'PhD' ) {
+//                        $expectedDegreeFlag = '1';
+//                    }
+//
+//                    $expectedanswer = $specialty->getTextAttribute();
+//                    if( !$expectedanswer ) {
+//                        $expectedanswer = null;
+//                    }
+//
+//                    return [
+//                        'data-screening-questions' => $hasQuestions,
+//                        'data-expected-degree' => $expectedDegreeFlag,
+//                        'data-expectedanswer' => $expectedanswer,
+//                    ];
+//                },
             ));
         }
 //        dump($this->params['institutions']);
@@ -161,26 +169,35 @@ class FellowshipApplicationType extends AbstractType
                     'class' => 'combobox combobox-width fellapp-globalFellowshipSpecialty',
                 ),
                 'choice_attr' => function ($specialty) {
-                    if (!$specialty || !method_exists($specialty, 'getScreeningQuestions')) {
-                        return [
-                            'data-screening-questions' => '0',
-                            'data-expected-degree' => '0',
-                        ];
-                    }
-                    $questions = $specialty->getScreeningQuestions();
-                    $hasQuestions = !empty($questions) ? '1' : '0';
-
-                    $expectedDegree = $specialty->getExpectedDegree();
-                    $expectedDegreeFlag = '0';
-                    if( $expectedDegree && $expectedDegree == 'PhD' ) {
-                        $expectedDegreeFlag = '1';
-                    }
-
-                    return [
-                        'data-screening-questions' => $hasQuestions,
-                        'data-expected-degree' => $expectedDegreeFlag,
-                    ];
+                    return $this->getSpecialtyAttributes($specialty);
                 },
+//                'choice_attr' => function ($specialty) {
+//                    if (!$specialty || !method_exists($specialty, 'getScreeningQuestions')) {
+//                        return [
+//                            'data-screening-questions' => '0',
+//                            'data-expected-degree' => '0',
+//                        ];
+//                    }
+//                    $questions = $specialty->getScreeningQuestions();
+//                    $hasQuestions = !empty($questions) ? '1' : '0';
+//
+//                    $expectedDegree = $specialty->getExpectedDegree();
+//                    $expectedDegreeFlag = '0';
+//                    if( $expectedDegree && $expectedDegree == 'PhD' ) {
+//                        $expectedDegreeFlag = '1';
+//                    }
+//
+//                    $expectedanswer = $specialty->getTextAttribute();
+//                    if( !$expectedanswer ) {
+//                        $expectedanswer = null;
+//                    }
+//
+//                    return [
+//                        'data-screening-questions' => $hasQuestions,
+//                        'data-expected-degree' => $expectedDegreeFlag,
+//                        'data-expectedanswer' => $expectedanswer,
+//                    ];
+//                },
 
 
 
@@ -638,6 +655,35 @@ class FellowshipApplicationType extends AbstractType
             ));
         }
 
+    }
+
+    public function getSpecialtyAttributes( $specialty ) {
+        if (!$specialty || !method_exists($specialty, 'getScreeningQuestions')) {
+            return [
+                'data-screening-questions' => '0',
+                'data-expected-degree' => '0',
+                'data-expectedanswer' => '0',
+            ];
+        }
+        $questions = $specialty->getScreeningQuestions();
+        $hasQuestions = !empty($questions) ? '1' : '0';
+
+        $expectedDegree = $specialty->getExpectedDegree();
+        $expectedDegreeFlag = '0';
+        if( $expectedDegree && $expectedDegree == 'PhD' ) {
+            $expectedDegreeFlag = '1';
+        }
+
+        $expectedanswer = $specialty->getTextAttribute();
+        if( !$expectedanswer ) {
+            $expectedanswer = null;
+        }
+
+        return [
+            'data-screening-questions' => $hasQuestions,
+            'data-expected-degree' => $expectedDegreeFlag,
+            'data-expectedanswer' => $expectedanswer,
+        ];
     }
 
     public function configureOptions(OptionsResolver $resolver) : void
