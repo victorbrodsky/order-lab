@@ -662,7 +662,7 @@ class FellowshipApplicationType extends AbstractType
             return [
                 'data-screening-questions' => '0',
                 'data-expected-degree' => '0',
-                'data-expectedanswer' => '0',
+                //'data-expectedanswer' => '0',
             ];
         }
         $questions = $specialty->getScreeningQuestions();
@@ -674,15 +674,15 @@ class FellowshipApplicationType extends AbstractType
             $expectedDegreeFlag = '1';
         }
 
-        $expectedanswer = $specialty->getTextAttribute();
-        if( !$expectedanswer ) {
-            $expectedanswer = null;
-        }
+        //$expectedanswer = $specialty->getTextAttribute();
+        //if( !$expectedanswer ) {
+        //    $expectedanswer = null;
+        //}
 
         return [
             'data-screening-questions' => $hasQuestions,
             'data-expected-degree' => $expectedDegreeFlag,
-            'data-expectedanswer' => $expectedanswer,
+            //'data-expectedanswer' => $expectedanswer,
         ];
     }
 

@@ -1152,7 +1152,7 @@ class FellAppImportPopulateUtil {
                     $emails = $ccs;
                     $ccs = null;
                 }
-                $emails = $ccs = 'oli2002@med.cornell.edu'; //testing
+                //$emails = $ccs = 'oli2002@med.cornell.edu'; //testing
                 $emailUtil = $this->container->get('user_mailer_utility');
                 $emailUtil->sendEmail($emails, $subject, $body, $ccs);
 

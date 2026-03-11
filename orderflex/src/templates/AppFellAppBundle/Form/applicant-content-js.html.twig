@@ -472,8 +472,8 @@
                 var noticeAttachmentText = opt.data('noticeattachment');
                 console.log("Set noticeAttachmentText="+noticeAttachmentText);
 
-                var expectedanswer = opt.data('expectedanswer');
-                console.log("Set expectedanswer="+expectedanswer);
+                //var expectedanswer = opt.data('expectedanswer');
+                //console.log("Set expectedanswer="+expectedanswer);
 
                 _screeningMessage = opt.data('screeningmessage');
                 console.log("Set _screeningMessage="+_screeningMessage);
@@ -1028,7 +1028,9 @@
             var expectedAnswer = expectedAnswers["Expected answers"][count];
 
             var id = $(this).attr('id');
-            console.log("fellappCompleteScreening: id="+id); //id=formnode-286
+            console.log("fellappCompleteScreening: id="+id); //id=formnode-4
+            //Get textAttribute "Additional attributes in JSON format:" field from FormNode with ID=4
+            //Use Ajax or data- in form node
 
             // find any checked input inside this formnode
             var input = $(this).find('input:checked');
