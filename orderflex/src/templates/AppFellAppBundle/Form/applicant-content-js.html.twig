@@ -991,6 +991,17 @@
             return true;
         }
 
+        //Add individual answer for each form node question from data attribute:
+//    <div id="formnode-4" class="formnode-holder formnode-4 formnode-holder-3"
+//      data-formnodeholderid="3"
+//      data-formnodeid="4"
+//      data-sectionid=""
+//      data-expectedanswer="{
+//                &quot;Expected answer&quot;: {
+//        &quot;[[Any]]&quot;
+//        }
+//    }">
+
         expectedAnswers = JSON.parse(expectedAnswers);
         console.log("expectedAnswers=",expectedAnswers);
         if (
@@ -1027,10 +1038,25 @@
             var count = index + 1;   // 1,2,3,4...
             var expectedAnswer = expectedAnswers["Expected answers"][count];
 
-            var id = $(this).attr('id');
+            var id = $(this).attr('data');
             console.log("fellappCompleteScreening: id="+id); //id=formnode-4
+
             //Get textAttribute "Additional attributes in JSON format:" field from FormNode with ID=4
             //Use Ajax or data- in form node
+            var thisExpectedanswer = $(this).data('expectedanswer');
+            console.log("fellappCompleteScreening: thisExpectedanswer="+thisExpectedanswer);
+            thisExpectedanswer = JSON.parse(thisExpectedanswer);
+            if (
+                    thisExpectedanswer &&
+                    thisExpectedanswer["Expected answer"]
+            ) {
+                //OK
+                expectedAnswer = thisExpectedanswer;
+            } else {
+                console.log("thisExpectedanswer is empty => ignore");
+                return true; // continue
+            }
+            console.log("fellappCompleteScreening: expectedAnswer="+expectedAnswer);
 
             // find any checked input inside this formnode
             var input = $(this).find('input:checked');
