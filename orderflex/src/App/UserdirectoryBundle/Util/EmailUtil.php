@@ -73,14 +73,15 @@ class EmailUtil {
     //$fromEmail: site's email or system email will be used if null (optional)
     //$replyToEmail: single email
     public function sendEmail(
-        $emails,
-        $subject,
-        $body,
-        $ccs=null,
-        $fromEmail=null,
-        $attachmentData=null,
-        $attachmentFilename=null,
-        $replyToEmail=null
+        $emails,                    //1
+        $subject,                   //2
+        $body,                      //3
+        $ccs=null,                  //4
+        $fromEmail=null,            //5
+        $attachmentData=null,       //6
+        $attachmentFilename=null,   //7
+        $replyToEmail=null         //8
+        //$fromEmailDisplayName=null  //9
     ) {
 
         //testing
