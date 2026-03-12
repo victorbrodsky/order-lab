@@ -985,6 +985,7 @@
 
         var expectedAnswers = $('#expected_answers').val();
         if( !expectedAnswers ) {
+            //console.log("expectedAnswers are not set: use individual screening question answer");
             console.log("expectedAnswers are not set: screening pass by default");
             $('#form-second-part').fadeIn();
             $('#save-submit-panel').fadeIn();
@@ -992,15 +993,9 @@
         }
 
         //Add individual answer for each form node question from data attribute:
-//    <div id="formnode-4" class="formnode-holder formnode-4 formnode-holder-3"
-//      data-formnodeholderid="3"
-//      data-formnodeid="4"
-//      data-sectionid=""
-//      data-expectedanswer="{
-//                &quot;Expected answer&quot;: {
-//        &quot;[[Any]]&quot;
-//        }
-//    }">
+        //{
+        //    "Expected answer": "[[Any]]"
+        //}
 
         expectedAnswers = JSON.parse(expectedAnswers);
         console.log("expectedAnswers=",expectedAnswers);
@@ -1019,21 +1014,6 @@
         var passCount=0;
         var totalCount=0;
         $('#form-node-holder').find('.formnode-holder').each(function(index) {
-//            // Example: "formnode-286"
-//            var id = $(this).attr('id');
-//            console.log("id="+id);
-//
-//            // find the checked radio inside this formnode
-//            var checked = $(this).find('input[type="radio"]:checked');
-//
-//            // get its label text
-//            var label = checked.next('label').text().trim();
-//
-//            console.log("Label:", label);
-
-            //var name = $(this).find('input[type="radio"]').attr('name');
-            //console.log("name="+name);
-
             totalCount = totalCount + 1;
             var count = index + 1;   // 1,2,3,4...
             var expectedAnswer = expectedAnswers["Expected answers"][count];
@@ -1045,22 +1025,44 @@
             //Use Ajax or data- in form node
             if(1) {
                 var thisExpectedanswer = $(this).data('expectedanswer');
-                console.log("fellappCompleteScreening: thisExpectedanswer=", thisExpectedanswer);
-                thisExpectedanswer = JSON.parse(thisExpectedanswer);
-                console.log("fellappCompleteScreening: json thisExpectedanswer=");
-                console.log(thisExpectedanswer);
-                if (
-                        thisExpectedanswer &&
-                        thisExpectedanswer["Expected answer"]
-                ) {
-                    //OK
-                    var thisExpectedanswerValue = thisExpectedanswer["Expected answer"];
-                    console.log("After extract thisExpectedanswerValue="+thisExpectedanswerValue);
-                    //expectedAnswer = thisExpectedanswer["Expected answer"];
-                } else {
-                    console.log("thisExpectedanswer is empty => ignore");
-                    //return true; // continue
+                if( thisExpectedanswer ) {
+//                    //console.log("fellappCompleteScreening: thisExpectedanswer=", thisExpectedanswer);
+//                    if (typeof thisExpectedanswer === "string") {
+//                        console.log("fellappCompleteScreening: thisExpectedanswer is string");
+//                        thisExpectedanswer = JSON.parse(thisExpectedanswer);
+//                        $(this).data('expectedanswer', thisExpectedanswer); // overwrite cache
+//                        //console.log("typeof thisExpectedanswer=",typeof thisExpectedanswer)
+//                    }
+//                    console.log("fellappCompleteScreening: json thisExpectedanswer=");
+//                    console.log(thisExpectedanswer);
+//                    console.log("typeof thisExpectedanswer=",typeof thisExpectedanswer);
+//
+//                    const expected = thisExpectedanswer["Expected answer"];
+//                    console.log("expected=", expected);
+
+                    /////////////
+                    //double‑encoded JSON: thisExpectedanswer= "{\r\n  "Expected answer": "[[Any]]"\r\n}"
+                    let thisExpectedanswer = $(this).attr("data-expectedanswer");
+                    if ( thisExpectedanswer ) {
+                        try {
+                            thisExpectedanswer = JSON.parse(thisExpectedanswer); // First parse
+                            thisExpectedanswer = JSON.parse(thisExpectedanswer); // second parse always needed for your case
+                        } catch (e) {
+                            console.log("Parse error:", e);
+                        }
+
+                        var thisExpectedanswerString = thisExpectedanswer["Expected answer"];
+                        if( thisExpectedanswerString ) {
+                            expectedAnswer = thisExpectedanswerString;
+                            console.log("Overwrite by thisExpectedanswerString=", thisExpectedanswerString);
+                        }
+                        console.log("This expectedAnswer=", expectedAnswer);
+                    }
+                    /////////////
                 }
+                //else {
+                //    return true; //testing break
+                //}
             }
             console.log("fellappCompleteScreening: expectedAnswer=" + expectedAnswer);
 
@@ -1091,6 +1093,8 @@
 
                 } else {
                     // exact match
+                    expectedAnswer = fellappUnwrap(expectedAnswer);
+                    console.log("compare label="+label+" ?= expectedAnswer="+expectedAnswer);
                     isCorrect = (label === expectedAnswer);
                 }
 
@@ -1119,7 +1123,7 @@
             if( isCorrect ) {
                 passCount = passCount + 1;
             }
-        });
+        }); //.each
 
         if( passCount == totalCount ) {
             console.log("Thank you! Please fill out the rest of the application in order to submit it.");
@@ -1139,15 +1143,23 @@
         // "Based on your answers you are not eligible to apply to the selected program."
 
         if( !_screeningMessage ) {
-            _screeningMessage = 'Screening Failed'
+            _screeningMessage = 'Based on your answers you are not eligible to apply to the selected program.'
         }
 
-        console.log("Screening Failed");
+        console.log("Screening Failed: Based on your answers you are not eligible to apply to the selected program.");
         $('#complete-screening-message').addClass('alert alert-danger').html(_screeningMessage).show();
         $('#form-second-part').fadeOut(); //hide
         $('#save-submit-panel').fadeOut(); //hide
         return false;
     }
+
+    function fellappUnwrap(value) {
+        if (!value || typeof value !== "string") {
+            return null;
+        }
+        return value.replace(/^\[\[|\]\]$/g, "");
+    }
+
 
 </script>
 
