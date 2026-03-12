@@ -86,6 +86,12 @@ class SiteList extends ListAbstract
     private $fromEmail;
 
     /**
+     * Emails sent by this site will appear to come from the following display name associated with the email address below
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $fromEmailName;
+
+    /**
      * Require and Verify Mobile Number during Access Requests and Account Requests
      */
     #[ORM\Column(type: 'boolean', nullable: true)]
@@ -275,6 +281,22 @@ class SiteList extends ListAbstract
     public function setFromEmail($fromEmail)
     {
         $this->fromEmail = $fromEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFromEmailName()
+    {
+        return $this->fromEmailName;
+    }
+
+    /**
+     * @param mixed $fromEmailName
+     */
+    public function setFromEmailName($fromEmailName)
+    {
+        $this->fromEmailName = $fromEmailName;
     }
 
     /**

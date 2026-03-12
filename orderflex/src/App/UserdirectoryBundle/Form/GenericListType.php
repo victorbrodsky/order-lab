@@ -947,6 +947,11 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
+            $builder->add('fromEmailName',null,array(
+                'label' => "Emails sent by this site will appear to come from the following display name associated with the email address below:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
 
             $builder->add('requireVerifyMobilePhone',null,array(
                 'label' => "Require and Verify Mobile Number during Access Requests and Account Requests:",

@@ -1183,6 +1183,9 @@
     {% if form.lowestRoles is defined %}
         {{ formmacros.field(form.lowestRoles) }}
     {% endif %}
+    {% if form.fromEmailName is defined %}
+        {{ formmacros.field(form.fromEmailName) }}
+    {% endif %}
     {% if form.fromEmail is defined %}
         {{ formmacros.field(form.fromEmail) }}
     {% endif %}

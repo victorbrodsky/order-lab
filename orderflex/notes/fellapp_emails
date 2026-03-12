@@ -1,0 +1,46 @@
+Rejection email:
+Subject:
+Thank you for applying to the [[FELLOWSHIP TYPE]] [[START YEAR]] fellowship at Weill Cornell Medicine, we have selected a [[START YEAR]] candidates
+
+Body:
+Dear [[APPLICANT NAME]],
+
+Thank you for your interest in the [[FELLOWSHIP TYPE]] Fellowship ([[START YEAR]]) in our Department.
+
+We deeply regret to inform you that we will be not be able to offer you the Fellowship. We had several excellent applicants, including yourself, for the solitary position, and we made this difficult decision after a comprehensive review of all applications and interviews of some candidates.
+We have chosen a [[START YEAR]] candidate for this position.
+
+We wish you every success in your career.
+
+Sincerely,
+[[DIRECTOR]]
+
+
+
+
+
+Just to be clear, I am talking about moving the clinical chemistry candidates ONLY.
+I need to send rejection letters to the 22 clinical chemistry candidates that applied for the 2027 fellowship,
+but it should be a 2026 start year. The chosen candidate is xxx xxxxxx.
+
+I want them to get this automated email:
+
+Subject: Thank you for applying to the Clinical Chemistry 2026-2028 fellowship at Weill Cornell Medicine.
+
+Body: Dear
+[[APPLICANT NAME]],
+
+Thank you for your interest in the Clinical Chemistry Fellowship (2026) in our Department.
+
+We deeply regret to inform you that we will be not be able to offer you the Fellowship.
+We had several excellent applicants, including yourself, for the solitary position,
+and we made this difficult decision after a comprehensive review of all applications and interviews of some candidates.
+We have chosen a 2026 candidate for this position.
+
+We wish you every success in your career.
+
+Sincerely,
+[[DIRECTOR]]
+
+
+
