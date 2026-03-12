@@ -3077,8 +3077,6 @@ class FellAppUtil {
         $applicantFullName = $fellapp->getApplicantFullName();
         //$fellappType = $fellapp->getFellowshipSubspecialty()."";
 
-        $fromEmail =
-
         //get CCs: coordinators and directors
         $directorEmails = $this->getDirectorsOfFellAppEmails($fellapp);
         $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellapp);
