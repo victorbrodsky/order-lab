@@ -1043,7 +1043,7 @@
 
             //Get textAttribute "Additional attributes in JSON format:" field from FormNode with ID=4
             //Use Ajax or data- in form node
-            if(0) {
+            if(1) {
                 var thisExpectedanswer = $(this).data('expectedanswer');
                 console.log("fellappCompleteScreening: thisExpectedanswer=", thisExpectedanswer);
                 thisExpectedanswer = JSON.parse(thisExpectedanswer);
@@ -1053,13 +1053,13 @@
                         thisExpectedanswer["Expected answer"]
                 ) {
                     //OK
-                    expectedAnswer = thisExpectedanswer["Expected answer"];
+                    //expectedAnswer = thisExpectedanswer["Expected answer"];
                 } else {
                     console.log("thisExpectedanswer is empty => ignore");
-                    return true; // continue
+                    //return true; // continue
                 }
-                console.log("fellappCompleteScreening: expectedAnswer=" + expectedAnswer);
             }
+            console.log("fellappCompleteScreening: expectedAnswer=" + expectedAnswer);
 
             // find any checked input inside this formnode
             var input = $(this).find('input:checked');
@@ -1119,7 +1119,7 @@
         });
 
         if( passCount == totalCount ) {
-            console.log("Screening Pass");
+            console.log("Thank you! Please fill out the rest of the application in order to submit it");
             $('#complete-screening-message').addClass('alert alert-success').html("Screening passed").show();
             $('#form-second-part').fadeIn(); //show
             $('#save-submit-panel').fadeIn(); //show
