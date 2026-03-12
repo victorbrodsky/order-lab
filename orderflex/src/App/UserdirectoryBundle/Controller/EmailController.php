@@ -158,7 +158,13 @@ class EmailController extends OrderAbstractController
                     " Receiver users: ".$usersStr. $newline .
                     " emails: " . implode(', ',$usersEmails) . $newline .
                     " css: ".$ccs;
-                $emailRes1 = $emailUtil->sendEmail($usersEmails, $msg, $thisMsg, $ccs);
+                $emailRes1 = $emailUtil->sendEmail(
+                    $usersEmails,
+                    $msg,
+                    $thisMsg,
+                    $ccs
+                    //$fromEmail
+                );
                 $this->addFlash(
                     'notice',
                     $thisMsg
@@ -168,12 +174,23 @@ class EmailController extends OrderAbstractController
                 return $this->redirectToRoute('employees_home');
             }
 
+            //$user = $this->getUser();
+            //$fromEmail = "Test User "."<".$user->getSingleEmail().">";
+            //$fromEmail = 'Test User1 <cinava@yahoo.com>';
+            //exit('$fromEmail='.$fromEmail);
+
             $thisMsg =
                 "### Please ignore this testing email ###" . $newline . $newline.
                 $msg . $newline .
                 " Receiver emails: " . $emails . $newline .
                 ' css: '.$ccs;;
-            $emailRes = $emailUtil->sendEmail($emails, $thisMsg, $msg, $ccs);
+            $emailRes = $emailUtil->sendEmail(
+                $emails,
+                $thisMsg,
+                $msg,
+                $ccs
+                //$fromEmail
+            );
             //exit("email res=".$emailRes);
 
             $confirmation = 'Test email sent to: '.$emails.'; ccs to:'.$ccs. "<br> Status: ".$emailRes;
