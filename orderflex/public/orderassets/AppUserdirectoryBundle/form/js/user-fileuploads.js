@@ -73,11 +73,11 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
     //var url = dataElement.dataset.uploadurl;
     var url = dataElement.getAttribute('data-uploadurl');
-    console.log('data-uploadurl url='+url);
+    //console.log('data-uploadurl url='+url);
 
     //var userid = dataElement.dataset.userid;
     var userid = dataElement.getAttribute('data-userid');
-    console.log('userid='+userid);
+    //console.log('userid='+userid);
 
     //show upload success confirmation alert
     // var dropzoneConfirmationDisable = dataElement.getAttribute('data-dropzoneconfirmation-disable');
@@ -101,7 +101,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
         }
     }
 
-    console.log('dropzone: clickable='+clickable);
+    //console.log('dropzone: clickable='+clickable);
     //console.log('addRemoveLinks='+addRemoveLinks);
 
     //overwrite maxfiles

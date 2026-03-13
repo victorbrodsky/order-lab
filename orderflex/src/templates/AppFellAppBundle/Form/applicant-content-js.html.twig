@@ -392,17 +392,17 @@
         //Initiliaze updateScreeningQuestionsVisibility
         //render ScreeningQuestions();
         var route_path = $('#route_path').val();
-        console.log("route_path="+route_path);
+        //console.log("route_path="+route_path);
         //TODO: the listeners are executed in here and also on apply page
         //optimize them in one place (here)
         if(1) {
             if( route_path != 'fellapp_apply' && route_path != 'fellapp_apply_post' ) {
                 var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
                 var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
-                console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
-                console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+                //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+                //console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
                 if (fellowshipSubspecialty.length) {
-                    console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+                    //console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
                     fellowshipSpecialtyListener(fellowshipSubspecialty);
                     var initFellowshipSub = fellowshipSubspecialty.val();
                     if( initFellowshipSub ) {
@@ -410,7 +410,7 @@
                     }
                 }
                 if (globalFellowshipSpecialty.length) {
-                    console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+                    //console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
                     fellowshipSpecialtyListener(globalFellowshipSpecialty);
                     var initGlobalFell = globalFellowshipSpecialty.val();
                     if( initGlobalFell ) {
@@ -436,7 +436,7 @@
     // Show or hide the Screening Questions panel based on selected fellowship specialty (global or subspecialty)
     var _screeningMessage = null;
     function updateScreeningQuestionsVisibility(globalId) {
-        console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
+        //console.log("updateScreeningQuestionsVisibility: globalId="+globalId);
         var hasScreening = false;
         var hasExpectedDegree = false;
         var noticeAttachmentText = null;
@@ -455,28 +455,28 @@
             var opt = $('select.fellapp-globalFellowshipSpecialty option[value="' + globalId + '"]');
             if (!opt.length) {
                 opt = $('select.fellapp-fellowshipSubspecialty option[value="' + globalId + '"]');
-                console.log("use opt for fellowshipSubspecialty");
+                //console.log("use opt for fellowshipSubspecialty");
             }
             //console.log("Set opt=",opt);
             if (opt.length) {
                 var flag = opt.data('screening-questions');
                 //console.log("Set flag="+flag);
                 hasScreening = flag === 1 || flag === '1' || flag === true;
-                console.log("Set hasScreening="+hasScreening);
+                //console.log("Set hasScreening="+hasScreening);
 
                 var expectedDegreeFlag = opt.data('expected-degree');
-                console.log("Set hasExpectedDegree="+hasExpectedDegree);
+                //console.log("Set hasExpectedDegree="+hasExpectedDegree);
                 hasExpectedDegree = expectedDegreeFlag === 1 || expectedDegreeFlag === '1' || expectedDegreeFlag === true;
-                console.log("After set hasExpectedDegree="+hasExpectedDegree);
+                //console.log("After set hasExpectedDegree="+hasExpectedDegree);
 
                 var noticeAttachmentText = opt.data('noticeattachment');
-                console.log("Set noticeAttachmentText="+noticeAttachmentText);
+                //console.log("Set noticeAttachmentText="+noticeAttachmentText);
 
                 //var expectedanswer = opt.data('expectedanswer');
                 //console.log("Set expectedanswer="+expectedanswer);
 
                 _screeningMessage = opt.data('screeningmessage');
-                console.log("Set _screeningMessage="+_screeningMessage);
+                //console.log("Set _screeningMessage="+_screeningMessage);
             }
         } else {
             //console.log("Hide fellowship-screening-questions: globalId is not provided");
@@ -486,10 +486,10 @@
         //hide the following sections and fields: with id trainingLabel|lower|replace({' ': '_', ',': '', ':': ''}) (Other GME, if applicable:)
         var fellowshipPanelByDegree = $('.residency,.post_residency_fellowship,.other_gme_if_applicable,.hide-by-expected-degree');
         if( hasExpectedDegree ) {
-            console.log("Hide fellapp panel by expected degree");
+            //console.log("Hide fellapp panel by expected degree");
             fellowshipPanelByDegree.hide();
         } else {
-            console.log("Show fellapp panel by expected degree");
+            //console.log("Show fellapp panel by expected degree");
             fellowshipPanelByDegree.show();
         }
 
@@ -497,14 +497,14 @@
         if( noticeAttachmentText ) {
             noticeAttachmentSection.text(noticeAttachmentText);
             noticeAttachmentSection.show();
-            console.log("Set text for #noticeAttachmentText="+noticeAttachmentText);
+            //console.log("Set text for #noticeAttachmentText="+noticeAttachmentText);
         } else {
             noticeAttachmentSection.text(null);
             noticeAttachmentSection.hide();
         }
 
         if (hasScreening) {
-            console.log("Show fellowship-screening-questions");
+            //console.log("Show fellowship-screening-questions");
 
 //            // Find the collapsible body that contains the screening questions
 //            var screeningCollapse = $('#fellowship-screening-questions').closest('.panel-collapse');
@@ -532,19 +532,19 @@
             }
             //Hide the rest of the form if screening question if new form
             if( cycle == 'new' ) {
-                console.log("Show fellowship-screening-questions => hide form-second-part");
+                //console.log("Show fellowship-screening-questions => hide form-second-part");
                 //$('#form-second-part').hide();
                 //$('#save-submit-panel').hide();
                 $('#form-second-part').fadeOut();
                 $('#save-submit-panel').fadeOut();
             } else {
-                console.log("Hide complete-screening button and show all section on new page");
+                //console.log("Hide complete-screening button and show all section on new page");
                 $('#complete-screening').hide();
                 $('#form-second-part').fadeIn();
                 $('#save-submit-panel').fadeIn();
             }
         } else {
-            console.log("Hide fellowship-screening-questions section");
+            //console.log("Hide fellowship-screening-questions section");
             //panel.hide();
             panel.fadeOut();
             //Hide the rest of the form if screening question
@@ -566,12 +566,12 @@
             async: false,
             success: function(response) {
                 if (response === 'EXIST') {
-                    console.log('User exists!');
+                    //console.log('User exists!');
                     // You can trigger any logic here
                     userExists = true;
                 }
                 if (response === 'DOESNOTEXIST') {
-                    console.log('User does not exist.');
+                    //console.log('User does not exist.');
                     userExists = false;
                 }
             },
@@ -714,9 +714,9 @@
         }
 
         //captcha validation
-        console.log('before captchaResponse');
+        //console.log('before captchaResponse');
         if( $('#recaptcha').length > 0 ) {
-            console.log('before captchaResponse');
+            //console.log('before captchaResponse');
             const captchaResponse = grecaptcha.getResponse();
             if (!captchaResponse) {
                 console.log('invalid captchaResponse');
@@ -798,7 +798,7 @@
 
     //disable upload itinerary if interview date is not set
     function setUploadItineraryAndListener() {
-        console.log('setUploadItineraryAndListener, cycle='+cycle);
+        //console.log('setUploadItineraryAndListener, cycle='+cycle);
         if( cycle == 'show' ) {
             return;
         }
@@ -807,7 +807,7 @@
         var dropzone = itineraryPanel.find('.file-upload-dropzone');
 
         if( !dropzone || dropzone.length == 0 ) {
-            console.log('setUploadItineraryAndListener, dropzone.length='+dropzone.length);
+            //console.log('setUploadItineraryAndListener, dropzone.length='+dropzone.length);
             return;
         }
         
@@ -827,7 +827,7 @@
     }
     
     function setItineraryUploadFile( dropzone, dateValue ) {
-        console.log('set itinerary: dateValue='+dateValue);
+        //console.log('set itinerary: dateValue='+dateValue);
         
          var dropzoneDom = dropzone.get(0);
         //console.log('disable/enable dropzone className='+dropzoneDom.className);
@@ -900,10 +900,10 @@
     //Screening Questions
     //http://127.0.0.1/directory/admin/list/form-nodes/285
     function renderScreeningQuestions() {
-        console.log('### render ScreeningQuestions ###');
+        //console.log('### render ScreeningQuestions ###');
         var _formcycle = $('#formcycle').val() || 'new';
         if( _formcycle == 'download' ) {
-            console.log('### render ScreeningQuestions ###, _formcycle='+_formcycle);
+            //console.log('### render ScreeningQuestions ###, _formcycle='+_formcycle);
             return;
         }
         var _holderNamespace = "App\\UserdirectoryBundle\\Entity";
@@ -914,7 +914,7 @@
         var _entityName = "FellowshipApplication"; //$('#entityName').val();             //"Message";
         //var _entityId = '1684'; //var fellappId = $('#fellapp_id').val();     // existing hidden input    //"Message ID";
         var _entityId = $('#fellapp_id').val();
-        console.log('render ScreeningQuestions: _formcycle='+_formcycle+', holderId='+holderId+', _entityId='+_entityId);
+        console.log('### render ScreeningQuestions: _formcycle='+_formcycle+', holderId='+holderId+', _entityId='+_entityId);
 
         var dataParam =
         {
@@ -1019,7 +1019,7 @@
             var expectedAnswer = expectedAnswers["Expected answers"][count];
 
             var id = $(this).attr('data');
-            console.log("fellappCompleteScreening: id="+id); //id=formnode-4
+            //console.log("fellappCompleteScreening: id="+id); //id=formnode-4
 
             //Get textAttribute "Additional attributes in JSON format:" field from FormNode with ID=4
             //Use Ajax or data- in form node

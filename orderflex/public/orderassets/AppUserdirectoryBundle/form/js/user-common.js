@@ -297,11 +297,11 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
             //     cycle: cycle,
             //     sitename: sitenameStr
             // });
-            console.log('getComboboxGeneric: employees urlprefix='+urlprefix);
+            //console.log('getComboboxGeneric: employees urlprefix='+urlprefix);
         }
     } else if( sitename == "scan" ) {
         url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
-        console.log('getComboboxGeneric: scan urlprefix='+urlprefix+', sitenameStr='+sitenameStr+', sitename='+sitename);
+        //console.log('getComboboxGeneric: scan urlprefix='+urlprefix+', sitenameStr='+sitenameStr+', sitename='+sitename);
     } else {
         console.log('Invalid sitename='+url);
     }
@@ -611,7 +611,7 @@ function initConvertEnterToTab() {
 
 //TODO: replace by Routing.generate('my-route-name');
 function getCommonBaseUrl(link,sitename) {
-    console.log('getCommonBaseUrl: sitename='+sitename);
+    //console.log('getCommonBaseUrl: sitename='+sitename);
 
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
@@ -634,7 +634,7 @@ function getCommonBaseUrl(link,sitename) {
 
     var scheme = "http:";
     var url = window.location.href;
-    console.log('getCommonBaseUrl: window.location.href url='+url);
+    //console.log('getCommonBaseUrl: window.location.href url='+url);
 
     // var base_url = window.location.origin;
     // console.log('window.location.origin='+base_url); //window.location.origin=https://view-test.med.cornell.edu
@@ -671,7 +671,7 @@ function getCommonBaseUrl(link,sitename) {
     //urlBase=/order/index_dev.php/c/wcm/pathology/directory/util/common/generic/residencytracks
 
     //http://127.0.0.1:80/directory/util/common/specificindividuals?cycle=show&sitename=residency-applications
-    console.log("getCommonBaseUrl: urlBase="+urlBase);
+    //console.log("getCommonBaseUrl: urlBase="+urlBase);
     //alert("urlBase="+urlBase);
     return urlBase;
 }
@@ -769,7 +769,7 @@ function collapseThis(link) {
 }
 
 function collapseAll(holder) {
-    console.log('collapse All');
+    //console.log('collapse All');
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('hide');
     } else {
@@ -782,7 +782,7 @@ function collapseAll(holder) {
 }
 
 function extendAll(holder) {
-    console.log('extend All');
+    //console.log('extend All');
     if( typeof holder === 'undefined' ) {
         $('.panel-collapse').collapse('show');
     } else {
@@ -1103,7 +1103,7 @@ function expandTextarea(holder, initRows) {
     var targetidHeight = [];
 
     targetid = getElementTargetByHolder(holder,targetid);
-    console.log("expandTextarea: targetid="+targetid);
+    //console.log("expandTextarea: targetid="+targetid);
 
     if( $(targetid).length == 0 ) {
         //console.log('no textarea => return');
@@ -1183,7 +1183,7 @@ function expandTextarea(holder, initRows) {
         if( typeof initRows !== 'undefined' && initRows != null && initRows !== '' ) {
             var rowsInt = parseInt(initRows,10);
             if( !isNaN(rowsInt) && rowsInt > 0 ) {
-                console.log('resize textarea: rowsInt='+rowsInt);
+                //console.log('resize textarea: rowsInt='+rowsInt);
                 element.attr('rows', rowsInt);
             }
         }

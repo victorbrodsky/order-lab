@@ -535,7 +535,8 @@ class FellAppUtil {
         $repository = $em->getRepository(FellowshipSubspecialty::class);
         $dql = $repository->createQueryBuilder('list');
         $dql->where("list.type = :typedef OR list.type = :typeadd");
-        $dql->orderBy("list.orderinlist","ASC");
+        //$dql->orderBy("list.orderinlist","ASC"); //order by orderinlist
+        $dql->orderBy("list.name","ASC"); //order alphabetically
 
         $query = $dql->getQuery();
 
