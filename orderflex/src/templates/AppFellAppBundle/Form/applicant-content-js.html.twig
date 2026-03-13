@@ -1024,47 +1024,31 @@
             //Get textAttribute "Additional attributes in JSON format:" field from FormNode with ID=4
             //Use Ajax or data- in form node
             if(1) {
-                //var thisExpectedanswer = $(this).data('expectedanswer');
-                //if( thisExpectedanswer ) {
-//                    //console.log("fellappCompleteScreening: thisExpectedanswer=", thisExpectedanswer);
-//                    if (typeof thisExpectedanswer === "string") {
-//                        console.log("fellappCompleteScreening: thisExpectedanswer is string");
-//                        thisExpectedanswer = JSON.parse(thisExpectedanswer);
-//                        $(this).data('expectedanswer', thisExpectedanswer); // overwrite cache
-//                        //console.log("typeof thisExpectedanswer=",typeof thisExpectedanswer)
-//                    }
-//                    console.log("fellappCompleteScreening: json thisExpectedanswer=");
-//                    console.log(thisExpectedanswer);
-//                    console.log("typeof thisExpectedanswer=",typeof thisExpectedanswer);
-//
-//                    const expected = thisExpectedanswer["Expected answer"];
-//                    console.log("expected=", expected);
-
-                    /////////////
-                    //double‑encoded JSON: thisExpectedanswer= "{\r\n  "Expected answer": "[[Any]]"\r\n}"
-                    var thisExpectedanswer = $(this).data('expectedanswer');
-                    //var thisExpectedanswer = $(this).attr("data-expectedanswer");
-                    console.log("fellappCompleteScreening: thisExpectedanswer=",thisExpectedanswer);
-                    if ( thisExpectedanswer ) {
-                        try {
-                            thisExpectedanswer = JSON.parse(thisExpectedanswer); // First parse
-                            thisExpectedanswer = JSON.parse(thisExpectedanswer); // second parse always needed for your case
-                        } catch (e) {
-                            console.log("Parse error:", e);
-                        }
-
-                        var thisExpectedanswerString = thisExpectedanswer["Expected answer"];
-                        if( thisExpectedanswerString ) {
-                            expectedAnswer = thisExpectedanswerString;
-                            console.log("Overwrite by thisExpectedanswerString=", thisExpectedanswerString);
-                        }
-                        console.log("This expectedAnswer=", expectedAnswer);
+                /////////////
+                //double‑encoded JSON: thisExpectedanswer= "{\r\n  "Expected answer": "[[Any]]"\r\n}"
+                var thisExpectedanswer = $(this).data('expectedanswer');
+                //var thisExpectedanswer = $(this).attr("data-expectedanswer");
+                console.log("fellappCompleteScreening: thisExpectedanswer=",thisExpectedanswer);
+                if ( thisExpectedanswer ) {
+                    try {
+                        thisExpectedanswer = JSON.parse(thisExpectedanswer); // First parse
+                        thisExpectedanswer = JSON.parse(thisExpectedanswer); // second parse always needed for your case
+                    } catch (e) {
+                        console.log("Parse error:", e);
                     }
-                    /////////////
+
+                    var thisExpectedanswerString = thisExpectedanswer["Expected answer"];
+                    if( thisExpectedanswerString ) {
+                        expectedAnswer = thisExpectedanswerString;
+                        console.log("Overwrite by thisExpectedanswerString=", thisExpectedanswerString);
+                    }
+                    console.log("This expectedAnswer=", expectedAnswer);
+                }
                 //}
                 //else {
                 //    return true; //testing break
                 //}
+                /////////////
             }
             console.log("fellappCompleteScreening: expectedAnswer=" + expectedAnswer);
 
@@ -1072,7 +1056,12 @@
             var input = $(this).find('input:checked');
             var isCorrect = false;
 
-            if (input.length === 0) {
+//            if( expectedAnswer === "[[Any]]" ) {
+//                passCount = passCount + 1;
+//                return true; //Skips to the next iteration
+//            }
+
+            if( input.length === 0 ) {
                 console.log(count+": Nothing selected in", $(this).attr('id'));
                 return false;
             }
