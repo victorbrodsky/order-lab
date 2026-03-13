@@ -21,6 +21,11 @@
     {% set collapsein = "in" %}
 {% endif %}
 
+{#On new/ (for all servers/sites/tenants) open (un-collapse) the accordion titled "Fellowship Specialty"#}
+{% if route_path == 'fellapp_new' %}
+    {% set collapsein = "in" %}
+{% endif %}
+
 <!-- Fellowship Type -->
 <div class="panel panel-info">
     <div class="panel-heading">
