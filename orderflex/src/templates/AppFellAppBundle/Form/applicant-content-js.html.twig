@@ -998,7 +998,7 @@
         //}
 
         expectedAnswers = JSON.parse(expectedAnswers);
-        console.log("expectedAnswers=",expectedAnswers);
+        //console.log("expectedAnswers=",expectedAnswers);
         if (
                 expectedAnswers &&
                 expectedAnswers["Expected answers"]
@@ -1028,7 +1028,7 @@
                 //double‑encoded JSON: thisExpectedanswer= "{\r\n  "Expected answer": "[[Any]]"\r\n}"
                 var thisExpectedanswer = $(this).data('expectedanswer');
                 //var thisExpectedanswer = $(this).attr("data-expectedanswer");
-                console.log("fellappCompleteScreening: thisExpectedanswer=",thisExpectedanswer);
+                //console.log("fellappCompleteScreening: thisExpectedanswer=",thisExpectedanswer);
                 if ( thisExpectedanswer ) {
                     try {
                         thisExpectedanswer = JSON.parse(thisExpectedanswer); // First parse
@@ -1042,7 +1042,7 @@
                         expectedAnswer = thisExpectedanswerString;
                         console.log("Overwrite by thisExpectedanswerString=", thisExpectedanswerString);
                     }
-                    console.log("This expectedAnswer=", expectedAnswer);
+                    //console.log("This expectedAnswer=", expectedAnswer);
                 }
                 //}
                 //else {
@@ -1085,7 +1085,7 @@
                 } else {
                     // exact match
                     expectedAnswer = fellappUnwrap(expectedAnswer);
-                    console.log("compare label="+label+" ?= expectedAnswer="+expectedAnswer);
+                    //console.log("compare label="+label+" ?= expectedAnswer="+expectedAnswer);
                     isCorrect = (label === expectedAnswer);
                 }
 
