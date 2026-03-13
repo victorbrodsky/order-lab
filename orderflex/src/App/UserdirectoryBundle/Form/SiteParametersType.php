@@ -1299,6 +1299,13 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'instanceTimeZone' ) {
+            $builder->add('instanceTimeZone', null, array(
+                'label' => 'Instance Time Zone:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+
         //////// fields for Server Instance connection ////////
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'authUserGroup' ) {
             $builder->add('authUserGroup', EntityType::class, array(
