@@ -6162,6 +6162,9 @@ tracepoint:sched:sched_process_exit
             return NULL;
         }
 
+        //dump($listEntity);
+        //exit('111');
+
         $linkToListId = $listEntity->getLinkToListId();
 
         if( !$linkToListId ) {
