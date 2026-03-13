@@ -1024,8 +1024,8 @@
             //Get textAttribute "Additional attributes in JSON format:" field from FormNode with ID=4
             //Use Ajax or data- in form node
             if(1) {
-                var thisExpectedanswer = $(this).data('expectedanswer');
-                if( thisExpectedanswer ) {
+                //var thisExpectedanswer = $(this).data('expectedanswer');
+                //if( thisExpectedanswer ) {
 //                    //console.log("fellappCompleteScreening: thisExpectedanswer=", thisExpectedanswer);
 //                    if (typeof thisExpectedanswer === "string") {
 //                        console.log("fellappCompleteScreening: thisExpectedanswer is string");
@@ -1042,7 +1042,8 @@
 
                     /////////////
                     //double‑encoded JSON: thisExpectedanswer= "{\r\n  "Expected answer": "[[Any]]"\r\n}"
-                    let thisExpectedanswer = $(this).attr("data-expectedanswer");
+                    var thisExpectedanswer = $(this).attr("data-expectedanswer");
+                    console.log("fellappCompleteScreening: thisExpectedanswer=",thisExpectedanswer);
                     if ( thisExpectedanswer ) {
                         try {
                             thisExpectedanswer = JSON.parse(thisExpectedanswer); // First parse
@@ -1059,7 +1060,7 @@
                         console.log("This expectedAnswer=", expectedAnswer);
                     }
                     /////////////
-                }
+                //}
                 //else {
                 //    return true; //testing break
                 //}
