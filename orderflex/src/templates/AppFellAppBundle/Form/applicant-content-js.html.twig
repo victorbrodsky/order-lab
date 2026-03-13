@@ -1134,7 +1134,12 @@
         // "Based on your answers you are not eligible to apply to the selected program."
 
         if( !_screeningMessage ) {
-            _screeningMessage = 'Based on your answers you are not eligible to apply to the selected program.'
+            const route_path = $('#route_path').val();
+            if( route_path == 'fellapp_new' ) {
+                _screeningMessage = 'Based on the answers the applicant is not eligible to apply to the selected program.'
+            } else {
+                _screeningMessage = 'Based on your answers you are not eligible to apply to the selected program.'
+            }
         }
 
         console.log("Screening Failed: Based on your answers you are not eligible to apply to the selected program.");
