@@ -6155,7 +6155,7 @@ tracepoint:sched:sched_process_exit
     //Get link to the list manager for specific site
     //$listName - name of the list name (i.e. 'SiteList')
     //$specificListName - name of the specific name on the list name (i.e. 'fellowship-applications')
-    public function getLinkToListIdByClassNameAndSpecificName( $listName='SiteList', $specificListName ) {
+    public function getLinkToListIdByClassNameAndSpecificName( $listName='SiteList', $specificListName=null ) {
         //PlatformListManagerRootList find by ListObjectName and get LinkToListID
         $listEntity = $this->em->getRepository(PlatformListManagerRootList::class)->findOneByListName($listName);
         if( !$listEntity ) {

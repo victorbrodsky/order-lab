@@ -358,6 +358,10 @@ class DefaultController extends OrderAbstractController
 //        //echo "inst=".$institution = $fellapp->getInstitution()."<br>";
 //        exit('fellapp default controller');
 
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        //$url = $userServiceUtil->getLinkToListIdByClassNameAndSpecificName('SiteList','fellowship-applications');
+        //echo "url=$url <br>";
+
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
 
