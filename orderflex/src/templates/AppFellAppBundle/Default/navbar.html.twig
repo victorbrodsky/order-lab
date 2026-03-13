@@ -107,6 +107,31 @@
                                         Fellowship Types, Directors, and Default Interviewers
                                     </a>
                                 </li>
+
+                                <li>
+                                    <a href="{{ path('fellapp_siteparameters_edit_specific_site_parameters') }}">
+                                        Edit email notification templates, and other settings
+                                    </a>
+                                </li>
+                                <li>
+                                    {#<a href="{{ path('sites-list') }}">#}
+                                        {#Site attributes and source email address for notifications#}
+                                    {#</a>#}
+                                    <a target="_blank"
+                                       href="{{ user_service_utility.getSiteParamListUrl('SiteList')|raw }}"
+                                    >Sites</a>
+                                    <a
+                                        general-data-confirm="Are you sure you would like to disable this entry?"
+                                        href="{{ user_service_utility.getLinkToListIdByClassNameAndSpecificName('SiteList','fellowship-applications')|raw }}"
+                                        >Site attributes and source email address for notifications
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('employees_tree_formnode_list') }}">
+                                        Modify Application Form's Screening Questions
+                                    </a>
+                                </li>
+
                                 <li>
                                     <a href="{{ path('fellapp_google_form_config_edit') }}">
                                         Application Form Status and Appearance

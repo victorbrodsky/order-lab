@@ -6152,6 +6152,35 @@ tracepoint:sched:sched_process_exit
         return $url;
     }
 
+    //Get link to the list manager for specific site
+    //$listName - name of the list name (i.e. 'SiteList')
+    //$specificListName - name of the specific name on the list name (i.e. 'fellowship-applications')
+    public function getLinkToListIdByClassNameAndSpecificName( $listName='SiteList', $specificListName ) {
+        //PlatformListManagerRootList find by ListObjectName and get LinkToListID
+        $listEntity = $this->em->getRepository(PlatformListManagerRootList::class)->findOneByListName($listName);
+        if( !$listEntity ) {
+            return NULL;
+        }
+
+        $linkToListId = $listEntity->getLinkToListId();
+
+        if( !$linkToListId ) {
+            return NULL;
+        }
+
+        $url = $this->container->get('router')->generate(
+            //'platformlistmanager_edit',
+            'platform_list_manager',
+            array(
+                'listId' => $linkToListId,
+            )
+        //,
+        //UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $url;
+    }
+
     //Used for list Excel generation 
     public function createtListExcelSpout( $repository, $entityClass, $search, $fileName ) {
         //echo "userIds=".count($userIds)."<br>";
