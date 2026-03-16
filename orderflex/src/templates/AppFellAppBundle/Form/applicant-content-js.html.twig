@@ -446,10 +446,10 @@
         $('#complete-screening-message').html("");
         $('#complete-screening-message').hide();
 
-        var panel = $('#fellowship-screening-questions').closest('.panel');
-        if (!panel.length) {
-            panel = $('#fellowship-screening-questions');
-        }
+//        var panel = $('#fellowship-screening-questions').closest('.panel');
+//        if (!panel.length) {
+//            panel = $('#fellowship-screening-questions');
+//        }
 
         if (globalId) {
             var opt = $('select.fellapp-globalFellowshipSpecialty option[value="' + globalId + '"]');
@@ -524,8 +524,9 @@
 //            }
 
             //panel.show();
-            panel.fadeIn();
+            //panel.fadeIn();
             //make sure panel is open
+            $('#fellowship-screening-questions-panel').fadeIn();
             $('#fellowship-screening-questions').collapse('show');
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
@@ -546,7 +547,8 @@
         } else {
             //console.log("Hide fellowship-screening-questions section");
             //panel.hide();
-            panel.fadeOut();
+            //panel.fadeOut();
+            $('#fellowship-screening-questions-panel').fadeOut();
             //Hide the rest of the form if screening question
             //$('#form-second-part').show();
             //$('#save-submit-panel').show();
@@ -949,6 +951,8 @@
 
                 //console.log("ajax identifier="+identifier);
                 //_formnode[identifier] = data;   //data[0]['formNodeHolderId'];
+                //$('#fellowship-screening-questions-panel').show();
+                $('#fellowship-screening-questions-panel').fadeIn();
                 $('#fellowship-screening-questions').collapse('show');
             } else {
                 //_formnode[identifier] = null;
