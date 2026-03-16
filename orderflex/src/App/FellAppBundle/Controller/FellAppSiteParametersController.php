@@ -454,7 +454,7 @@ class FellAppSiteParametersController extends SiteParametersController
      * FellAppSiteParameter Download/Hub Integration Show
      */
     #[Route(path: '/hub-config/show/', name: 'fellapp_hub_config_show', methods: ['GET'])]
-    #[Template('AppFellAppBundle/SiteParameter/download-show.html.twig')]
+    #[Template('AppFellAppBundle/SiteParameter/hubconfig-show.html.twig')]
     public function fellappHubConfigAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
@@ -478,8 +478,8 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * FellAppSiteParameter Download/Hub Integration Edit
      */
-    #[Route(path: '/hub-config/edit/', name: 'fellapp_hub_config_edit', methods: ['GET', 'POST'])]
-    #[Template('AppFellAppBundle/SiteParameter/download-edit.html.twig')]
+    #[Route(path: '/hub-config/edit', name: 'fellapp_hub_config_edit', methods: ['GET', 'POST'])]
+    #[Template('AppFellAppBundle/SiteParameter/hubconfig-edit.html.twig')]
     public function fellappHubConfigEditAction( Request $request ) {
 
         if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
@@ -555,10 +555,15 @@ class FellAppSiteParametersController extends SiteParametersController
     public function getOrCreateHubConfig() {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository(HubConfig::class)->findAll();
-        if( count($entities) != 1 ) {
+
+        if( count($entities) > 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }
-        $hubConfig = $entities[0];
+
+        $hubConfig = null;
+        if( count($entities) == 1 ) {
+            $hubConfig = $entities[0];
+        }
 
         //create one FellAppSiteParameter
         if( !$hubConfig ) {

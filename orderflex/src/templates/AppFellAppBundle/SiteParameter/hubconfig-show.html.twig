@@ -21,10 +21,10 @@
 
 <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
-{{ fellappsettingsmacros.siteSettingsDownloadForm(entity,form,cycle) }}
+{{ fellappsettingsmacros.hubConfigForm(entity,form,cycle) }}
 
 {% if cycle == "show" %}
     <p>
-        <a class="btn btn-primary" href="{{ path('fellapp_siteparameters_edit_site_parameters_download') }}">Edit</a>
+        <a class="btn btn-primary" href="{{ path('fellapp_hub_config_edit') }}">Edit</a>
     </p>
 {% endif %}
