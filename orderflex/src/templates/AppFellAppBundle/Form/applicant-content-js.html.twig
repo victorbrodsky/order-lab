@@ -526,7 +526,7 @@
             //panel.show();
             //panel.fadeIn();
             //make sure panel is open
-            $('#fellowship-screening-questions-panel').fadeIn();
+            $('#fellowship-screening-questions-panel').show();
             $('#fellowship-screening-questions').collapse('show');
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
@@ -548,7 +548,7 @@
             //console.log("Hide fellowship-screening-questions section");
             //panel.hide();
             //panel.fadeOut();
-            $('#fellowship-screening-questions-panel').fadeOut();
+            $('#fellowship-screening-questions-panel').hide();
             //Hide the rest of the form if screening question
             //$('#form-second-part').show();
             //$('#save-submit-panel').show();
@@ -952,7 +952,7 @@
                 //console.log("ajax identifier="+identifier);
                 //_formnode[identifier] = data;   //data[0]['formNodeHolderId'];
                 //$('#fellowship-screening-questions-panel').show();
-                $('#fellowship-screening-questions-panel').fadeIn();
+                $('#fellowship-screening-questions-panel').show();
                 $('#fellowship-screening-questions').collapse('show');
             } else {
                 //_formnode[identifier] = null;
