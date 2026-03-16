@@ -21,6 +21,9 @@
     {% set collapsein = "in" %}
 {% endif %}
 
+{#Always show screening-questions panel#}
+{% set thiscollapsein = "in" %}
+
 {#{% if showScreeningQuestions %}#}
     {#{% set collapsein = "in" %}#}
 {#{% endif %}#}
@@ -34,7 +37,7 @@
             </a>
         </h4>
     </div>
-    <div id="fellowship-screening-questions" class="panel-collapse collapse {{ collapsein }}">
+    <div id="fellowship-screening-questions" class="panel-collapse collapse {{ thiscollapsein }}">
         <div class="panel-body">
 
             <div class="well">

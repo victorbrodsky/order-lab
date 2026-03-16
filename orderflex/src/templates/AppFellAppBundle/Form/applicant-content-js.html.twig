@@ -527,9 +527,10 @@
             //panel.fadeIn();
             //make sure panel is open
             //$('#fellowship-screening-questions-panel').show();
-            $('#fellowship-screening-questions-panel').fadeIn();
+            //$('#fellowship-screening-questions-panel').fadeIn();
             //$('#fellowship-screening-questions').collapse('show');
-            $('#fellowship-screening-questions').show();
+            //$('#fellowship-screening-questions').show();
+            showScreeningQuestionPanel();
             console.log("updateScreeningQuestionsVisibility: after show fellowship-screening-questions-panel");
             if (typeof renderScreeningQuestions === 'function') {
                 renderScreeningQuestions();
@@ -551,13 +552,25 @@
             console.log("updateScreeningQuestionsVisibility: Hide fellowship-screening-questions section");
             //panel.hide();
             //panel.fadeOut();
-            $('#fellowship-screening-questions-panel').fadeOut();
+            //$('#fellowship-screening-questions-panel').fadeOut();
+            hideScreeningQuestionPanel();
+
             //Hide the rest of the form if screening question
             //$('#form-second-part').show();
             //$('#save-submit-panel').show();
             $('#form-second-part').fadeIn();
             $('#save-submit-panel').fadeIn();
         }
+    }
+    function showScreeningQuestionPanel() {
+        $('#fellowship-screening-questions-panel').fadeIn();
+        //$('#fellowship-screening-questions').collapse('show');
+        //$('#fellowship-screening-questions').show();
+    }
+    function hideScreeningQuestionPanel() {
+        $('#fellowship-screening-questions-panel').fadeOut();
+        //$('#fellowship-screening-questions').collapse('show');
+        //$('#fellowship-screening-questions').show();
     }
 
     function userCheckExistUser( submitterEmail ) {
@@ -955,9 +968,11 @@
                 //console.log("ajax identifier="+identifier);
                 //_formnode[identifier] = data;   //data[0]['formNodeHolderId'];
                 //$('#fellowship-screening-questions-panel').show();
-                $('#fellowship-screening-questions-panel').fadeIn();
+                //$('#fellowship-screening-questions-panel').fadeIn();
                 //$('#fellowship-screening-questions').collapse('show');
-                $('#fellowship-screening-questions').show();
+                //$('#fellowship-screening-questions').show();
+                showScreeningQuestionPanel();
+
             } else {
                 //_formnode[identifier] = null;
                 //console.log("No data: data.length="+data.length);
