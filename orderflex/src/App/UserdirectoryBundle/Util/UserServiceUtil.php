@@ -6155,7 +6155,7 @@ tracepoint:sched:sched_process_exit
     //Get link to the list manager for specific site
     //$listName - name of the list name (i.e. 'SiteList')
     //$specificListName - name of the specific name on the list name (i.e. 'fellowship-applications')
-    public function getLinkToListIdByClassNameAndSpecificName( $listName='SiteList', $specificListName=null ) {
+    public function getLinkToListIdByClassNameAndSpecificName( $listName='SiteList', $specificListName=null, $entityNamespace=null ) {
         //PlatformListManagerRootList find by ListObjectName and get LinkToListID
         $listEntity = $this->em->getRepository(PlatformListManagerRootList::class)->findOneByListName($listName);
         if( !$listEntity ) {
@@ -6171,14 +6171,28 @@ tracepoint:sched:sched_process_exit
             return NULL;
         }
 
+        //SiteList
+        if( !$entityNamespace ) {
+            $entityNameSpace = "App\\UserdirectoryBundle\\Entity";
+        }
+        $entityClass = $entityNameSpace . "\\" . $listName;
+        $siteListId = null;
+        //$siteList = $this->em->getRepository(SiteList::class)->findOneByName($specificListName);
+        $siteList = $this->em->getRepository($entityClass)->findOneByName($specificListName);
+        if( $siteList ) {
+            $siteListId = $siteList->getId();
+        }
+
+        if( !$siteListId ) {
+            return NULL;
+        }
+
         $url = $this->container->get('router')->generate(
-            //'platformlistmanager_edit',
-            'platform_list_manager',
+            'platform_list_manager_element',
             array(
-                'listId' => $linkToListId,
+                'linkToListId' => $linkToListId,
+                'entityId' => $siteListId
             )
-        //,
-        //UrlGeneratorInterface::ABSOLUTE_URL
         );
 
         return $url;
