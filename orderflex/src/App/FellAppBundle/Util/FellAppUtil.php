@@ -3573,6 +3573,17 @@ class FellAppUtil {
             $startDateStr = NULL;
         }
 
+        //Temporary Exception for Clinical Chemistry
+        //$logger = $this->container->get('logger');
+        //$logger->notice("siteSettingsConstantReplace: fellappType=[$fellappType]");
+        //echo "fellappType=$fellappType <br>";
+        if( $startDate && $fellappType."" == "Clinical Chemistry" ) {
+            //$startDate = $fellapp->getStartDate();   // DateTime
+            $secondStartDate = (clone $startDate)->modify('+2 years');
+            $secondStartDateStr = $secondStartDate->format('Y');
+            $startDateStr = $startDateStr."-".$secondStartDateStr;
+        }
+
         //Get institution from fellapp specialty
         $localInstitutionName = NULL;   //[[LOCAL INSTITUTION NAME]]
         $fellappInstName = NULL;        //[[INSTITUTION]] (Weill Cornell Medicine)

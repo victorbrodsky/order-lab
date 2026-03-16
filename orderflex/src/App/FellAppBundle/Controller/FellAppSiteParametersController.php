@@ -18,7 +18,10 @@
 namespace App\FellAppBundle\Controller;
 
 use App\FellAppBundle\Entity\FellappSiteParameter;
+use App\FellAppBundle\Entity\HubConfig;
+use App\FellAppBundle\Form\FellappSiteParameterDownloadType;
 use App\FellAppBundle\Form\FellappSiteParameterType;
+use App\FellAppBundle\Form\HubConfigType;
 use App\UserdirectoryBundle\Controller\SiteParametersController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -443,5 +446,130 @@ class FellAppSiteParametersController extends SiteParametersController
 
         return $fellappSiteParameter;
     }
+
+
+
+
+    /**
+     * FellAppSiteParameter Download/Hub Integration Show
+     */
+    #[Route(path: '/hub-config/show/', name: 'fellapp_hub_config_show', methods: ['GET'])]
+    #[Template('AppFellAppBundle/SiteParameter/download-show.html.twig')]
+    public function fellappHubConfigAction( Request $request ) {
+
+        if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $cycle = "show";
+
+        $fellappSiteParameter = $this->getOrCreateHubConfig($cycle);
+
+        $form = $this->createFellAppHubConfigForm($fellappSiteParameter,$cycle);
+
+        return array(
+            'entity' => $fellappSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Fellowship Specific Site Parameters"
+        );
+    }
+
+    /**
+     * FellAppSiteParameter Download/Hub Integration Edit
+     */
+    #[Route(path: '/hub-config/edit/', name: 'fellapp_hub_config_edit', methods: ['GET', 'POST'])]
+    #[Template('AppFellAppBundle/SiteParameter/download-edit.html.twig')]
+    public function fellappHubConfigEditAction( Request $request ) {
+
+        if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $cycle = "edit";
+
+        $fellappSiteParameter = $this->getOrCreateHubConfig($cycle);
+
+        $form = $this->createFellAppHubConfigForm($fellappSiteParameter,$cycle);
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+            $em = $this->getDoctrine()->getManager();
+
+            //set end default date as "Start" date - 1 day
+            //exit('end date');
+            if( $fellappSiteParameter->getFellappAcademicYearEnd() === NULL ) {
+                $startDate = $fellappSiteParameter->getFellappAcademicYearStart();
+                if( $startDate ) {
+                    //"Start" date - 1 day
+                    $thisEndDate = clone $startDate;
+                    $thisEndDate->modify('-1 day');
+                    $fellappSiteParameter->setFellappAcademicYearEnd($thisEndDate);
+                }
+//                else {
+//                    $currentYear = intval(date("Y"));
+//                    $june30 = new \DateTime($currentYear."-06-30");
+//                    //echo "set start date=".$june30->format('yyyy-mm-dd')."<br>";
+//                    $fellappSiteParameter->setFellappAcademicYearEnd($june30);
+//                }
+            }
+
+            //exit('submit');
+            $em->persist($fellappSiteParameter);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('fellapp_siteparameters'));
+        }
+
+        return array(
+            'entity' => $fellappSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Update Fellowship Specific Site Parameters"
+        );
+    }
+    public function createFellAppHubConfigForm($entity, $cycle) {
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $disabled = false;
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        $params = array(
+            'cycle' => $cycle,
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+        );
+
+        $form = $this->createForm(HubConfigType::class, $entity, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled
+        ));
+
+        return $form;
+    }
+    //Get or Create a new HubConfig
+    public function getOrCreateHubConfig() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository(HubConfig::class)->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+        $hubConfig = $entities[0];
+
+        //create one FellAppSiteParameter
+        if( !$hubConfig ) {
+            //echo "FellAppSiteParameter null <br>";
+            $hubConfig = new HubConfig();
+            $em->flush();
+        }
+
+        return $hubConfig;
+    }
+
+
     
 }

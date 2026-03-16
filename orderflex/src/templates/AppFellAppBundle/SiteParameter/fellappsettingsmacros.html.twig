@@ -141,3 +141,33 @@
 
 {% endmacro %}
 
+{% macro hubConfigForm( entity, form, cycle ) %}
+
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+    {{ form_start(form) }}
+
+    {{ form_errors(form) }}
+
+    {#Fellowship Installation#}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#fellapp-download">
+                    Felllowship application download URL & Base recommendation letter upload URL
+                </a>
+            </h4>
+        </div>
+        <div id="fellapp-download" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                {{ formmacros.field(form.hubFellappFormUrl) }}
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-primary -->
+
+    {{ form_end(form) }}
+
+{% endmacro %}
+

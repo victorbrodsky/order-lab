@@ -21,15 +21,10 @@
 
 <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
-{#<div class="well">#}
-{#show#}
-
-{{ fellappsettingsmacros.siteSettingsForm(entity,form,cycle) }}
+{{ fellappsettingsmacros.siteSettingsDownloadForm(entity,form,cycle) }}
 
 {% if cycle == "show" %}
     <p>
-        <a class="btn btn-primary" href="{{ path('fellapp_siteparameters_edit_specific_site_parameters') }}">Edit</a>
+        <a class="btn btn-primary" href="{{ path('fellapp_siteparameters_edit_site_parameters_download') }}">Edit</a>
     </p>
 {% endif %}
-
-{#</div>#}
