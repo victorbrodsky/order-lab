@@ -41,24 +41,20 @@ class HubConfigType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         $builder->add('hubFellappFormUrl', null, array(
-            'label' => 'URL of the fellowship application page hosted by the public tandem hub server tenant instance:',
+            'label' => 'URL of the fellowship application page hosted by the public tandem hub server tenant instance (i.e. https://view.online/fellowship-applications/apply):',
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('hubFellappFormUrl', null, array(
-            'label' => 'URL of the fellowship application page hosted by the public tandem hub server tenant instance:',
+        $builder->add('hubServerApiUrl', null, array(
+            'label' => 'URL of the API endpoint hosted by the public tandem hub server tenant instance (i.e. https://view.online/fellowship-applications/download-application-data):',
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('hubFellappFormUrl', null, array(
-            'label' => 'URL of the fellowship application page hosted by the public tandem hub server tenant instance:',
+        $builder->add('hubRecletterFormUrl', null, array(
+            'label' => 'URL of the recommendation letter upload page hosted by the public tandem hub server tenant instance (to append hash ID) (i.e. https://view.online/fellowship-applications/submit-a-letter-of-recommendation):',
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('hubFellappFormUrl', null, array(
-            'label' => 'URL of the fellowship application page hosted by the public tandem hub server tenant instance:',
-            'attr' => array('class' => 'form-control')
-        ));
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(

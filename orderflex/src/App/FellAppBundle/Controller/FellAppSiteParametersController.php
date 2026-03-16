@@ -453,7 +453,7 @@ class FellAppSiteParametersController extends SiteParametersController
     /**
      * FellAppSiteParameter Download/Hub Integration Show
      */
-    #[Route(path: '/hub-config/show/', name: 'fellapp_hub_config_show', methods: ['GET'])]
+    #[Route(path: '/hubconfig/show/', name: 'fellapp_hubconfig_show', methods: ['GET'])]
     #[Template('AppFellAppBundle/SiteParameter/hubconfig-show.html.twig')]
     public function fellappHubConfigAction( Request $request ) {
 
@@ -463,69 +463,53 @@ class FellAppSiteParametersController extends SiteParametersController
 
         $cycle = "show";
 
-        $fellappSiteParameter = $this->getOrCreateHubConfig($cycle);
+        $hubConfig = $this->getOrCreateHubConfig();
 
-        $form = $this->createFellAppHubConfigForm($fellappSiteParameter,$cycle);
+        $form = $this->createFellAppHubConfigForm($hubConfig,$cycle);
 
         return array(
-            'entity' => $fellappSiteParameter,
+            'entity' => $hubConfig,
             'form'   => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Fellowship Specific Site Parameters"
+            'title' => "Hub Config Parameters"
         );
     }
 
     /**
      * FellAppSiteParameter Download/Hub Integration Edit
      */
-    #[Route(path: '/hub-config/edit', name: 'fellapp_hub_config_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/hubconfig/edit-page', name: 'fellapp_hubconfig_edit', methods: ['GET', 'POST'])]
     #[Template('AppFellAppBundle/SiteParameter/hubconfig-edit.html.twig')]
     public function fellappHubConfigEditAction( Request $request ) {
-
+        //exit('fellappHubConfigEditAction');
         if( false === $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
         $cycle = "edit";
 
-        $fellappSiteParameter = $this->getOrCreateHubConfig($cycle);
+        $hubConfig = $this->getOrCreateHubConfig();
+        //echo "hubConfig=$hubConfig <br>";
 
-        $form = $this->createFellAppHubConfigForm($fellappSiteParameter,$cycle);
+
+        $form = $this->createFellAppHubConfigForm($hubConfig,$cycle);
         $form->handleRequest($request);
 
         if( $form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
 
-            //set end default date as "Start" date - 1 day
-            //exit('end date');
-            if( $fellappSiteParameter->getFellappAcademicYearEnd() === NULL ) {
-                $startDate = $fellappSiteParameter->getFellappAcademicYearStart();
-                if( $startDate ) {
-                    //"Start" date - 1 day
-                    $thisEndDate = clone $startDate;
-                    $thisEndDate->modify('-1 day');
-                    $fellappSiteParameter->setFellappAcademicYearEnd($thisEndDate);
-                }
-//                else {
-//                    $currentYear = intval(date("Y"));
-//                    $june30 = new \DateTime($currentYear."-06-30");
-//                    //echo "set start date=".$june30->format('yyyy-mm-dd')."<br>";
-//                    $fellappSiteParameter->setFellappAcademicYearEnd($june30);
-//                }
-            }
 
-            //exit('submit');
-            $em->persist($fellappSiteParameter);
+            $em->persist($hubConfig);
             $em->flush();
 
             return $this->redirect($this->generateUrl('fellapp_siteparameters'));
         }
 
         return array(
-            'entity' => $fellappSiteParameter,
+            'entity' => $hubConfig,
             'form'   => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Update Fellowship Specific Site Parameters"
+            'title' => "Update Hub Config Parameters"
         );
     }
     public function createFellAppHubConfigForm($entity, $cycle) {
@@ -553,6 +537,7 @@ class FellAppSiteParametersController extends SiteParametersController
     }
     //Get or Create a new HubConfig
     public function getOrCreateHubConfig() {
+        //exit('getOrCreateHubConfig');
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository(HubConfig::class)->findAll();
 

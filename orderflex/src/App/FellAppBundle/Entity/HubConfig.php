@@ -43,11 +43,6 @@ class HubConfig {
     //#[ORM\Column(type: 'boolean', nullable: true)]
     //private $acceptingSubmission;
 
-
-    //#[ORM\Column(type: 'string', nullable: true)]
-    //private $boardCertificationNote;
-
-
     //(1) "URL of the fellowship application page hosted by Google" -
     // set it by default to the value "https://wcmc.pathologysystems.org/fellowship-application"
 
@@ -179,6 +174,7 @@ class HubConfig {
 
     public function __toString() {
         return "Hub Config getHubFellappFormUrl=".$this->getHubFellappFormUrl()."<br>";
+        //return "Hub Config";
     }
     
     
