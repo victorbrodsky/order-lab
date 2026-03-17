@@ -6,6 +6,9 @@
 
     {{ form_errors(form) }}
 
+    {#Retrieval method for fellowship applications#}
+    {{ formmacros.field(form.retrievalMethod) }}
+
     {# Defaults #}
     <div class="panel panel-primary">
         <div class="panel-heading">

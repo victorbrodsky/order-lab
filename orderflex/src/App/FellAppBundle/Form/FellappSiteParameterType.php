@@ -19,6 +19,7 @@ namespace App\FellAppBundle\Form;
 
 
 
+use App\FellAppBundle\Entity\RetrievalMethodList;
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
 use Doctrine\ORM\EntityRepository;
@@ -259,6 +260,23 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control textarea')
         ));
 
+        $builder->add( 'retrievalMethod', EntityType::class, array(
+            'class' => RetrievalMethodList::class,
+            //'choice_label' => 'getTreeName',
+            'label' => 'Retrieval method for fellowship applications:',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
 
 
         if( $this->params['cycle'] != 'show' ) {

@@ -14,6 +14,7 @@
     limitations under the License.
 #}
 
+{#Separate: general config, google config, hub config#}
 
 <div class="panel panel-primary">
     <div class="panel-heading">
@@ -40,24 +41,29 @@
                 {#</thead>#}
                 {#<tbody data-link="row" class="rowlink">#}
                     {#<tr>#}
-                        {#<td>Email address for confirmation of application submission</td>#}
+                        {#<td>Retrieval method for fellowship applications</td>#}
                         {#<td>{{ entity.confirmationEmailFellApp }}</td>#}
                         {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'confirmationEmailFellApp'}) }}">Edit</a></td>#}
                     {#</tr>#}
                 {#</tbody>#}
             {#</table>#}
 
-            <p>
-                {{ render(controller('App\\FellAppBundle\\Controller\\FellAppSiteParametersController::fellappHubConfigAction')) }}
-            </p>
 
-            <p>
-                {{ render(controller('App\\FellAppBundle\\Controller\\FellAppSiteParametersController::fellappIntegrationShowAction')) }}
-            </p>
+            <div class="well">
+                <p>
+                    {{ render(controller('App\\FellAppBundle\\Controller\\FellAppSiteParametersController::fellappHubConfigAction')) }}
+                </p>
+            </div>
 
-            <p>
-                {{ render(controller('App\\FellAppBundle\\Controller\\FellAppSiteParametersController::fellappSiteParameterShowAction')) }}
-            </p>
+            <div class="well">
+                <p>
+                    {{ render(controller('App\\FellAppBundle\\Controller\\FellAppSiteParametersController::fellappSiteParameterShowAction')) }}
+                </p>
+
+                <p>
+                    {{ render(controller('App\\FellAppBundle\\Controller\\FellAppSiteParametersController::fellappIntegrationShowAction')) }}
+                </p>
+            </div>
 
         </div>
     </div>

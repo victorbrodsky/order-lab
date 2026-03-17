@@ -205,10 +205,14 @@ class FellappSiteParameter {
     #[ORM\Column(type: 'text', nullable: true)]
     private $bodyInvitedInterview;
 
+    //Retrieval method
+    #[ORM\ManyToOne(targetEntity: 'RetrievalMethodList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
+    private $retrievalMethod;
 
 
 
-
+    
     public function __construct() {
         $this->setAllowPopulateFellApp(false);
         $this->setHideWarning(false);
@@ -731,6 +735,22 @@ class FellappSiteParameter {
     public function setBodyInvitedInterview($bodyInvitedInterview)
     {
         $this->bodyInvitedInterview = $bodyInvitedInterview;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRetrievalMethod()
+    {
+        return $this->retrievalMethod;
+    }
+
+    /**
+     * @param mixed $retrievalMethod
+     */
+    public function setRetrievalMethod($retrievalMethod)
+    {
+        $this->retrievalMethod = $retrievalMethod;
     }
 
 }
