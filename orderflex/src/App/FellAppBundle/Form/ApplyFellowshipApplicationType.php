@@ -19,6 +19,7 @@ namespace App\FellAppBundle\Form;
 
 
 
+use App\FellAppBundle\Entity\RetrievalMethodList;
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty; //process.py script: replaced namespace by ::class: added use line for classname=FellowshipSubspecialty
 
 use App\UserdirectoryBundle\Entity\User;
@@ -101,6 +102,31 @@ class ApplyFellowshipApplicationType extends AbstractType
                     'label' => "Google Form Id (Do not modify this value! New application will be generated if googleFormId will be different from the one in the spreadsheet.):",
                     'attr' => array('class' => 'form-control')
                 ));
+            }
+        }
+
+        //retrievalMethod: show only to "platform administrator" and only on the "EDIT", "Add New" and "Show" pages
+        if( $this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( $this->params['cycle'] == "new" || $this->params['cycle'] == "show" || $this->params['cycle'] == "edit" ) {
+                if( $this->params['routeName'] != 'fellapp_apply' ) {
+                    $builder->add( 'retrievalMethod', EntityType::class, array(
+                        'class' => RetrievalMethodList::class,
+                        //'choice_label' => 'getTreeName',
+                        'label' => 'Application automatically received via:',
+                        'required'=> false,
+                        'multiple' => false,
+                        'attr' => array('class' => 'combobox combobox-width'),
+                        'query_builder' => function(EntityRepository $er) {
+                            return $er->createQueryBuilder('list')
+                                ->where("list.type = :typedef OR list.type = :typeadd")
+                                ->orderBy("list.orderinlist","ASC")
+                                ->setParameters( array(
+                                    'typedef' => 'default',
+                                    'typeadd' => 'user-added',
+                                ));
+                        },
+                    ));
+                }
             }
         }
 

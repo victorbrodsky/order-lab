@@ -272,6 +272,10 @@ class FellowshipApplication extends BaseUserAttributes {
 
     /////////// EOF user objects /////////////
 
+    #[ORM\ManyToOne(targetEntity: 'RetrievalMethodList')]
+    #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
+    private $retrievalMethod;
+
     //Form node:
     //This will require to have $calllogEntryMessage in Message entity
     //#[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'calllogEntryMessage')]
@@ -442,11 +446,23 @@ class FellowshipApplication extends BaseUserAttributes {
     {
         $this->boardCertifications->removeElement($item);
     }
-
     //////////////// EOF user object //////////////////////
 
+    /**
+     * @return mixed
+     */
+    public function getRetrievalMethod()
+    {
+        return $this->retrievalMethod;
+    }
 
-
+    /**
+     * @param mixed $retrievalMethod
+     */
+    public function setRetrievalMethod($retrievalMethod)
+    {
+        $this->retrievalMethod = $retrievalMethod;
+    }
 
     /**
      * @param mixed $googleFormId
@@ -487,9 +503,6 @@ class FellowshipApplication extends BaseUserAttributes {
     public function setFellowshipSubspecialty($fellowshipSubspecialty)
     {
         $this->fellowshipSubspecialty = $fellowshipSubspecialty;
-//        if( !$fellowshipSubspecialty ) {
-//            $this->fellowshipSubspecialty = $fellowshipSubspecialty;
-//        }
     }
 
     /**
@@ -498,12 +511,6 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getFellowshipSubspecialty()
     {
         return $this->fellowshipSubspecialty;
-
-//        $fellappType = $this->fellowshipSubspecialty;
-//        if( !$fellappType ) {
-//            $fellappType = $this->getGlobalFellowshipSpecialty();
-//        }
-//        return $fellappType;
     }
 
     /**
@@ -520,9 +527,6 @@ class FellowshipApplication extends BaseUserAttributes {
     public function setGlobalFellowshipSpecialty($globalFellowshipSpecialty)
     {
         $this->globalFellowshipSpecialty = $globalFellowshipSpecialty;
-//        if( !$globalFellowshipSpecialty ) {
-//            $this->globalFellowshipSpecialty = $globalFellowshipSpecialty;
-//        }
     }
 
     public function getAllFellowshipSpecialty() {
