@@ -463,7 +463,8 @@ class FellAppSiteParametersController extends SiteParametersController
 
         $cycle = "show";
 
-        $hubConfig = $this->getOrCreateHubConfig();
+        $fellappUtil = $this->container->get('fellapp_util');
+        $hubConfig = $fellappUtil->getOrCreateHubConfig();
 
         $form = $this->createFellAppHubConfigForm($hubConfig,$cycle);
 
@@ -488,7 +489,8 @@ class FellAppSiteParametersController extends SiteParametersController
 
         $cycle = "edit";
 
-        $hubConfig = $this->getOrCreateHubConfig();
+        $fellappUtil = $this->container->get('fellapp_util');
+        $hubConfig = $fellappUtil->getOrCreateHubConfig();
         //echo "hubConfig=$hubConfig <br>";
 
 
@@ -535,30 +537,30 @@ class FellAppSiteParametersController extends SiteParametersController
 
         return $form;
     }
-    //Get or Create a new HubConfig
-    public function getOrCreateHubConfig() {
-        //exit('getOrCreateHubConfig');
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository(HubConfig::class)->findAll();
-
-        if( count($entities) > 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
-        }
-
-        $hubConfig = null;
-        if( count($entities) == 1 ) {
-            $hubConfig = $entities[0];
-        }
-
-        //create one FellAppSiteParameter
-        if( !$hubConfig ) {
-            //echo "FellAppSiteParameter null <br>";
-            $hubConfig = new HubConfig();
-            $em->flush();
-        }
-
-        return $hubConfig;
-    }
+//    //Get or Create a new HubConfig
+//    public function getOrCreateHubConfig() {
+//        //exit('getOrCreateHubConfig');
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository(HubConfig::class)->findAll();
+//
+//        if( count($entities) > 1 ) {
+//            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+//        }
+//
+//        $hubConfig = null;
+//        if( count($entities) == 1 ) {
+//            $hubConfig = $entities[0];
+//        }
+//
+//        //create one FellAppSiteParameter
+//        if( !$hubConfig ) {
+//            //echo "FellAppSiteParameter null <br>";
+//            $hubConfig = new HubConfig();
+//            $em->flush();
+//        }
+//
+//        return $hubConfig;
+//    }
 
 
     

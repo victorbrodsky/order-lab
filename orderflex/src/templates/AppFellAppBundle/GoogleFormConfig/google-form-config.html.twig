@@ -217,12 +217,15 @@
 
     {% endif %}
 
-    <br>
-    <p>
-        {% set applicationPageLinkFellApp = user_security_utility.getSiteSettingParameter('applicationPageLinkFellApp',fellapp_sitename) %}
-        <a href="{{ applicationPageLinkFellApp }}" target="_blank">Link to the Application Page</a>
-    </p>
-
+    {% set fellappFormLink = fellapp_util.getFellappFormLink("Link to the Application Page") %}
+    {% if fellappFormLink %}
+        <br>
+        <p>
+            {#{% set applicationPageLinkFellApp = user_security_utility.getSiteSettingParameter('applicationPageLinkFellApp',fellapp_sitename) %}#}
+            {#<a href="{{ applicationPageLinkFellApp }}" target="_blank">Link to the Application Page</a>#}
+            {{ fellappFormLink|raw }}
+        </p>
+    {% endif %}
 
 {% endblock %}
 

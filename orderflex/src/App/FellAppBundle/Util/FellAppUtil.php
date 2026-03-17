@@ -27,6 +27,7 @@ namespace App\FellAppBundle\Util;
 
 
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
+use App\FellAppBundle\Entity\HubConfig;
 use App\FellAppBundle\Entity\VisaStatus; //process.py script: replaced namespace by ::class: added use line for classname=VisaStatus
 
 
@@ -4074,5 +4075,111 @@ class FellAppUtil {
             : mb_convert_case($string, MB_CASE_LOWER);
 
         return $result;
+    }
+
+    public function getHubConfigParameter( $parameter ) {
+        $hubConfig = $this->getOrCreateHubConfig();
+
+        if( $hubConfig === null ) {
+            return null;
+        }
+
+        if( $parameter == null ) {
+            return $hubConfig;
+        }
+
+        $getSettingMethod = "get".$parameter;
+
+        $res = NULL;
+        if( method_exists($hubConfig, $getSettingMethod) ) {
+            $res = $hubConfig->$getSettingMethod();
+        } else {
+            throw new \Exception("Global site setting parameter does not exist: ".$parameter);
+            //return null;
+        }
+
+        $em = $this->em;
+        $em->detach($hubConfig);
+
+        return $res;
+    }
+    public function getOrCreateHubConfig() {
+        //exit('getOrCreateHubConfig');
+        $em = $this->em;
+        $entities = $em->getRepository(HubConfig::class)->findAll();
+
+        if( count($entities) > 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+
+        $hubConfig = null;
+        if( count($entities) == 1 ) {
+            $hubConfig = $entities[0];
+        }
+
+        //create one FellAppSiteParameter
+        if( !$hubConfig ) {
+            //echo "FellAppSiteParameter null <br>";
+            $hubConfig = new HubConfig();
+            $em->flush($hubConfig);
+        }
+
+        return $hubConfig;
+    }
+
+    //Get the link to the fellowship application form based on "Retrieval method for fellowship applications"
+    public function getFellappFormLink( $linkName=null ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $retrievalMethod = $userSecUtil->getSiteSettingParameter('retrievalMethod',$this->container->getParameter('fellapp.sitename'));
+        //echo "retrievalMethod=[$retrievalMethod] <br>";
+        $fellappFormLink = "";
+        switch (trim($retrievalMethod)) {
+            case "None (Manually uploaded)":
+                break;
+            case "Google Drive":
+                $fellappFormUrl = $userSecUtil->getSiteSettingParameter('applicationPageLinkFellApp',$this->container->getParameter('fellapp.sitename'));
+                if( !$linkName ) {
+                    $linkName = $fellappFormUrl;
+                }
+                $fellappFormLink = '<a href="'.$fellappFormUrl.'">'.$linkName.'</a>';
+                break;
+            case "Dedicated public tandem hub server tenant instance":
+                //echo "Case: Dedicated public tandem hub server tenant instance <br>";
+                $fellappFormHubUrl = $this->getHubConfigParameter('hubFellappFormUrl');
+                if( !$linkName ) {
+                    $linkName = $fellappFormHubUrl;
+                }
+                //echo "fellappFormHubUrl=$fellappFormHubUrl <br>";
+                $fellappFormLink = '<a href="'.$fellappFormHubUrl.'">'.$linkName." on the Hub server".'</a>';
+                break;
+            case "Both Google Drive and a dedicated public tandem hub server tenant instance":
+                $fellappFormGoogleUrl = $userSecUtil->getSiteSettingParameter('applicationPageLinkFellApp',$this->container->getParameter('fellapp.sitename'));
+                //echo "fellappFormGoogleUrl=$fellappFormGoogleUrl <br>";
+                //$fellappFormHubUrl = $userSecUtil->getSiteSettingParameter('hubFellappFormUrl',$this->container->getParameter('fellapp.sitename'));
+                $fellappFormHubUrl = $this->getHubConfigParameter('hubFellappFormUrl');
+                //echo "fellappFormHubUrl=$fellappFormHubUrl <br>";
+                if( $fellappFormGoogleUrl ) {
+                    if( !$linkName ) {
+                        $linkName = $fellappFormGoogleUrl;
+                    }
+                    $fellappFormLink = $fellappFormLink . '<a href="' . $fellappFormGoogleUrl . '">' . $linkName." on the Google server" . '</a>';
+                }
+                if( $fellappFormHubUrl ) {
+                    if( $fellappFormLink ) {
+                        $fellappFormLink = $fellappFormLink . "<br>";
+                    }
+                    if( !$linkName ) {
+                        $linkName = $fellappFormHubUrl;
+                    }
+                    $fellappFormLink = $fellappFormLink . '<a href="' . $fellappFormHubUrl . '">' . $linkName." on the Hub server" . '</a>';
+                }
+                break;
+            default:
+                $fellappFormUrl = $userSecUtil->getSiteSettingParameter('applicationPageLinkFellApp',$this->container->getParameter('fellapp.sitename'));
+                $fellappFormLink = '<a href="'.$fellappFormUrl.'">'.$fellappFormUrl.'</a>';
+        }
+        //echo "fellappFormLink=[$fellappFormLink] <br>";
+
+        return $fellappFormLink;
     }
 } 
