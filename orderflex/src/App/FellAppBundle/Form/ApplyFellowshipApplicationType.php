@@ -105,31 +105,6 @@ class ApplyFellowshipApplicationType extends AbstractType
             }
         }
 
-        //retrievalMethod: show only to "platform administrator" and only on the "EDIT", "Add New" and "Show" pages
-        if( $this->params['container']->get('user_utility')->isLoggedinUserGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            if( $this->params['cycle'] == "new" || $this->params['cycle'] == "show" || $this->params['cycle'] == "edit" ) {
-                if( $this->params['routeName'] != 'fellapp_apply' ) {
-                    $builder->add( 'retrievalMethod', EntityType::class, array(
-                        'class' => RetrievalMethodList::class,
-                        //'choice_label' => 'getTreeName',
-                        'label' => 'Application automatically received via:',
-                        'required'=> false,
-                        'multiple' => false,
-                        'attr' => array('class' => 'combobox combobox-width'),
-                        'query_builder' => function(EntityRepository $er) {
-                            return $er->createQueryBuilder('list')
-                                ->where("list.type = :typedef OR list.type = :typeadd")
-                                ->orderBy("list.orderinlist","ASC")
-                                ->setParameters( array(
-                                    'typedef' => 'default',
-                                    'typeadd' => 'user-added',
-                                ));
-                        },
-                    ));
-                }
-            }
-        }
-
         //Don't show timestamp for fellapp apply user
         if( $this->params && $this->params['routeName'] != 'fellapp_apply' ) {
             if ($this->params['cycle'] == "new") {

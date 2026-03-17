@@ -966,7 +966,7 @@ class FellAppUtil {
                 echo "<br>###################### ".$formNode->getId()." ################<br>";
                 echo "############# formNode: holder=" . $formNodeHolderEntity->getName() . "; formnode=" . $formNode->getName() . "; objecttype=" . $formNode->getObjectTypeName() . ":". $formNode->getObjectTypeId() . "<br>";
             }
-            $logger->notice("getFormNodeFieldsAction: formNode->getName()=".$formNode->getName().", formNode->getId()=".$formNode->getId().", formNode->getObjectTypeId()=".$formNode->getObjectTypeId());
+            //$logger->notice("getFormNodeFieldsAction: formNode->getName()=".$formNode->getName().", formNode->getId()=".$formNode->getId().", formNode->getObjectTypeId()=".$formNode->getObjectTypeId());
 
             if( $formNode && $formNode->getId() ) {
                 $formNodeId = $formNode->getId();
