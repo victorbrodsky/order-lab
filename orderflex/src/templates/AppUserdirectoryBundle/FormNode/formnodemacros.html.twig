@@ -29,7 +29,7 @@
         {% set sectionClass = "formnode-formtype-section" %}
     {% endif %}
 
-    addSingleFormNode: formNodeValue={{ formNodeValue }}<br>
+    addSingleFormNode: formNodeValue={{ formNodeValue }}, formType={{ formType }}<br>
 
     {#{% set expectedanswer = fellapp_util(formNodeId) %}#}
     {% set expectedanswer = formNode.getTextAttribute() %}
