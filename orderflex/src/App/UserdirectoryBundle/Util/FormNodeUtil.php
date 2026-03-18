@@ -2638,6 +2638,7 @@ class FormNodeUtil
 
         if( count($results) == 1 ) {
             echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
+            echo "<br>###getValue()=".$results[0]->getValue()."###<br><br>";
             //return $results[0]->getValue();
             //$formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
             $formNodeValue = $this->processFormNodeValue($formNode,$results[0],$results[0]->getValue(),true);
