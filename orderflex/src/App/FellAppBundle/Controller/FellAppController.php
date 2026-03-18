@@ -1393,6 +1393,7 @@ class FellAppController extends OrderAbstractController {
     #[Template('AppFellAppBundle/Form/edit.html.twig')]
     public function editAction(Request $request, FellowshipApplication $entity)
     {
+        $logger = $this->container->get('logger');
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application');
         }
@@ -1564,8 +1565,10 @@ class FellAppController extends OrderAbstractController {
             ////// Form Nodes /////////
             $globalFellowshipSpecialty = $entity->getGlobalFellowshipSpecialty();
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
+                $logger->notice("Before processFormNodes edit post");
                 $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeSource = $fellappUtil->getParentFormNodeBySpecialty($entity); //the same as $holderEntity
+                $logger->notice("Before processFormNodes edit post: formNodeSource=$formNodeSource");
                 //TODO: do not create formnode duplicate for fellapp
                 $formNodeUtil->processFormNodes( //edit post
                     $request,

@@ -71,13 +71,16 @@ class FormNodeUtil
         $testing=false      //testing flag
     )
     {
+        $logger = $this->container->get('logger');
         if( !$formNodeSource ) {
-            exit('processFormNodes: $formNodeSource is empty => exit');
+            //exit('processFormNodes: $formNodeSource is empty => exit');
+            $logger->notice('processFormNodes: $formNodeSource is empty => exit');
             return;
         }
 
         if( !$holderEntity ) {
-            exit('processFormNodes: $holderEntity is empty => exit');
+            //exit('processFormNodes: $holderEntity is empty => exit');
+            $logger->notice("processFormNodes: $holderEntity is empty => exit");
             return;
         }
 
@@ -109,6 +112,7 @@ class FormNodeUtil
         }
 
         if( !$formNodes ) {
+            $logger->notice('processFormNodes: $formNodes is empty => exit');
             return;
         }
 
@@ -167,7 +171,9 @@ class FormNodeUtil
 
     //process by data partial key name" "formnode-4" => "formnode-"
     public function processFormNodesFromDataKeys( $data, $holderEntity, $testing=false ) {
-        if( !array_key_exists('formnode', $data) ) {
+        $logger = $this->container->get('logger');
+        if( !array_key_exists('processFormNodesFromDataKeys: formnode', $data) ) {
+            $logger->notice('no formnode data exists');
             //exit('no formnode data exists');
             return;
         }
@@ -195,14 +201,15 @@ class FormNodeUtil
     }
 
     public function processFormNodeByType( $formNode, $formValue, $holderEntity, $testing=false ) {
-
+        $logger = $this->container->get('logger');
         $formNodeObjectName = $formNode->getObjectTypeName();
 //        if( $formNode->getObjectType() ) {
 //            $formNodeObjectName = $formNode->getObjectType()->getName()."";
 //        }
 
         if( !$this->hasValue($formNode) && $formNodeObjectName != "Form Section Array" ) {
-            exit("No Value of the node=".$formNode."<br>");
+            //exit("No Value of the node=".$formNode."<br>");
+            $logger->notice("processFormNodeByType: No Value of the node=".$formNode);
             return;
         }
 
@@ -222,6 +229,7 @@ class FormNodeUtil
             //return;
         }
         //echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
+        $logger->notice("processFormNodeByType: ".$formNode. ": " .$formNode->getId().": formValue=" . $formValue);
         //exit("Value=[".$formValue."]<br>");
 
         //All others
