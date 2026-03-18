@@ -29,6 +29,8 @@
         {% set sectionClass = "formnode-formtype-section" %}
     {% endif %}
 
+    addSingleFormNode: formNodeValue={{ formNodeValue }}<br>
+
     {#{% set expectedanswer = fellapp_util(formNodeId) %}#}
     {% set expectedanswer = formNode.getTextAttribute() %}
 
@@ -782,8 +784,9 @@
     {% import "AppUserdirectoryBundle/FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
+    checkboxField: formNodeValue={{ formNodeValue }}<br>
     {% if formNodeValue %}
-        checked!!!<br>
+        checkboxField: checked!!!<br>
         {% set fieldValue = "checked" %}
     {% else %}
         {% set fieldValue = null %}
