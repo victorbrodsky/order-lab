@@ -2615,19 +2615,21 @@ class FormNodeUtil
                 'formNodeId' => $formNode->getId()
             )
         );
-
-        $formNodeType = $formNode->getObjectType();
-        $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace();
-        $receivedValueEntityName = $formNodeType->getReceivedValueEntityName();
-        $repoNameStr = $receivedValueEntityNamespace.'\\'.$receivedValueEntityName;
-        //echo "repoNameStr=".$repoNameStr."<br>";
         $results = $query->getResult();
-        echo "!!! formNodeId=".$formNode->getId().
-            ": repoNameStr=".$repoNameStr.
-            ": entityName=".$mapper['entityName'].
-            ": entityNamespace=".$mapper['entityNamespace'].
-            ": entityId=".$mapper['entityId'].
-            ": count=".count($results)."<br>"; //testing
+
+        if(0) {
+            $formNodeType = $formNode->getObjectType();
+            $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace();
+            $receivedValueEntityName = $formNodeType->getReceivedValueEntityName();
+            $repoNameStr = $receivedValueEntityNamespace.'\\'.$receivedValueEntityName;
+            //echo "repoNameStr=".$repoNameStr."<br>";
+            echo "!!! formNodeId=".$formNode->getId().
+                ": repoNameStr=".$repoNameStr.
+                ": entityName=".$mapper['entityName'].
+                ": entityNamespace=".$mapper['entityNamespace'].
+                ": entityId=".$mapper['entityId'].
+                ": count=".count($results)."<br>"; //testing
+        }
 
         if( $asObject ) {
             //echo "return as object<br>";
@@ -2647,9 +2649,9 @@ class FormNodeUtil
         }
 
         if( count($results) == 1 ) {
-            echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
-            echo "<br>###getValue()=".$results[0]->getValue()."###<br><br>";
-            if( $receivedValueEntityName == 'ObjectTypeCheckbox' ) exit('single result exit');
+            //echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
+            //echo "<br>###getValue()=".$results[0]->getValue()."###<br><br>";
+            //if( $receivedValueEntityName == 'ObjectTypeCheckbox' ) exit('single result exit');
             //return $results[0]->getValue();
             //$formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
             $formNodeValue = $this->processFormNodeValue($formNode,$results[0],$results[0]->getValue(),true);
@@ -2667,7 +2669,7 @@ class FormNodeUtil
         }
 
         if( count($results) > 1 ) {
-            echo "multiple results(".count($results)."): ".$formNode->getName()."<br>";
+            //echo "multiple results(".count($results)."): ".$formNode->getName()."<br>";
             $resArr = array();
             foreach( $results as $result ) {
                 //$formNodeValue = $this->getFormNodeValueByType($formNode,$result);
