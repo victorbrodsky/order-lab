@@ -1004,6 +1004,7 @@ class FellAppUtil {
                 if( $complexRes ) {
                     $formNodeValue = $complexRes['formNodeValue'];
                     $receivingEntity = $complexRes['receivingEntity'];
+                    echo "complexRes: formNodeValue=$formNodeValue, receivingEntity=$receivingEntity <br>";
                 }
             }
             //echo "formNode=".$formNode->getId()."<br>";
@@ -1098,7 +1099,7 @@ class FellAppUtil {
             } else {
 
                 //////////////// Regular form node /////////////////////
-                echo "formNodeValue is regular formNodeValue=" . $formNodeValue . "<br>";
+                //echo "formNodeValue is regular formNodeValue=" . $formNodeValue . "<br>";
                 if( $testing ) {
                     echo "formNodeValue is regular formNodeValue=" . $formNodeValue . "<br>";
                 }
