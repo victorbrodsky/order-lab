@@ -449,7 +449,7 @@ class FellAppSiteParametersController extends SiteParametersController
 
 
 
-
+    //NOT USED
     /**
      * FellAppSiteParameter Download/Hub Integration Show
      */
@@ -476,6 +476,7 @@ class FellAppSiteParametersController extends SiteParametersController
         );
     }
 
+    //NOT USED
     /**
      * FellAppSiteParameter Download/Hub Integration Edit
      */
@@ -514,6 +515,7 @@ class FellAppSiteParametersController extends SiteParametersController
             'title' => "Update Hub Config Parameters"
         );
     }
+    //NOT USED
     public function createFellAppHubConfigForm($entity, $cycle) {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -537,31 +539,6 @@ class FellAppSiteParametersController extends SiteParametersController
 
         return $form;
     }
-//    //Get or Create a new HubConfig
-//    public function getOrCreateHubConfig() {
-//        //exit('getOrCreateHubConfig');
-//        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository(HubConfig::class)->findAll();
-//
-//        if( count($entities) > 1 ) {
-//            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
-//        }
-//
-//        $hubConfig = null;
-//        if( count($entities) == 1 ) {
-//            $hubConfig = $entities[0];
-//        }
-//
-//        //create one FellAppSiteParameter
-//        if( !$hubConfig ) {
-//            //echo "FellAppSiteParameter null <br>";
-//            $hubConfig = new HubConfig();
-//            $em->flush();
-//        }
-//
-//        return $hubConfig;
-//    }
-
 
     
 }

@@ -79,12 +79,6 @@ class FellappSiteParameter {
     private $confirmationEmailFellApp;
 
     /**
-     * Link to the Application Page (so the users can click and see how it looks)
-     */
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $applicationPageLinkFellApp;
-
-    /**
      * Rename $p12KeyPathFellApp to $authPathFellApp
      * Full path to the credential authentication JSON file for Google
      * C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\src\App\FellAppBundle\Util\quickstart-FellowshipAuth.json
@@ -205,11 +199,44 @@ class FellappSiteParameter {
     #[ORM\Column(type: 'text', nullable: true)]
     private $bodyInvitedInterview;
 
+
+    ////////////// Retrieval //////////////
     //Retrieval method
     #[ORM\ManyToOne(targetEntity: 'RetrievalMethodList')]
     #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $retrievalMethod;
 
+    //(1) "URL of the fellowship application page hosted by Google" -
+    // set it by default to the value "https://wcmc.pathologysystems.org/fellowship-application"
+    /**
+     * Link to the Application Page (so the users can click and see how it looks)
+     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $applicationPageLinkFellApp;
+
+    //(2) "URL of the fellowship application page hosted by the public tandem hub server tenant instance" -
+    // set it by default to the value "https://view.online/fellowship-applications/apply"
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $hubFellappFormUrl;
+
+    //(3) "URL of the API endpoint hosted by Google to download fellowship applications" -
+    // set it by default to the value "[]" (whatever is the URL site uses to reach out to Google API to send the request to download the fellowship applications)
+    //The url is encoded in the Google API package used by fellowship population
+
+    //(4) "URL of the API endpoint hosted by the public tandem hub server tenant instance" -
+    // set it by default to the value "https://view.online/fellowship-applications/download-application-data"
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $hubServerApiUrl;
+
+    //(5) "URL of the recommendation letter upload page hosted by Google (to append hash ID)" -
+    // set it by default to the value "[]" (whatever is the URL the WCM site uses to first append the unique HASH value + Applicant data and then email to the recommendation letter writers)
+    //The url is encoded in the Google API package used by fellowship population
+
+    //(6) "URL of the recommendation letter upload page hosted by the public tandem hub server tenant instance (to append hash ID)" -
+    // set it by default to the value "https://view.online/fellowship-applications/submit-a-letter-of-recommendation"
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $hubRecletterFormUrl;
+    ////////////// EOF Retrieval //////////////
 
 
     
@@ -752,6 +779,56 @@ class FellappSiteParameter {
     {
         $this->retrievalMethod = $retrievalMethod;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getHubFellappFormUrl()
+    {
+        return $this->hubFellappFormUrl;
+    }
+
+    /**
+     * @param mixed $hubFellappFormUrl
+     */
+    public function setHubFellappFormUrl($hubFellappFormUrl)
+    {
+        $this->hubFellappFormUrl = $hubFellappFormUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHubServerApiUrl()
+    {
+        return $this->hubServerApiUrl;
+    }
+
+    /**
+     * @param mixed $hubServerApiUrl
+     */
+    public function setHubServerApiUrl($hubServerApiUrl)
+    {
+        $this->hubServerApiUrl = $hubServerApiUrl;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHubRecletterFormUrl()
+    {
+        return $this->hubRecletterFormUrl;
+    }
+
+    /**
+     * @param mixed $hubRecletterFormUrl
+     */
+    public function setHubRecletterFormUrl($hubRecletterFormUrl)
+    {
+        $this->hubRecletterFormUrl = $hubRecletterFormUrl;
+    }
+
+
 
 }
 

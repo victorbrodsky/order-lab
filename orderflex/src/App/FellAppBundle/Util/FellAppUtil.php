@@ -903,8 +903,8 @@ class FellAppUtil {
             return null;
         }
 
-        $logger = $this->container->get('logger');
-        $logger->notice("getFormNodesFieldsFromParentsAction: holderNamespace=$holderNamespace, holderName=$holderName, holderId=$holderId");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("getFormNodesFieldsFromParentsAction: holderNamespace=$holderNamespace, holderName=$holderName, holderId=$holderId");
 
         //echo "entityNamespace=".$entityNamespace."<br>";
         //echo "entityName=".$entityName."<br>";
@@ -920,8 +920,8 @@ class FellAppUtil {
         if( !$formNodeHolderEntity ) {
             throw new \Exception( 'Entity not found: holderFullName='.$holderFullName.'; holderId='.$holderId );
         }
-        $logger->notice("getFormNodesFieldsFromParentsAction: holderFullName=$holderFullName: formNodeHolderEntity ID=".$formNodeHolderEntity->getId());
-        $logger->notice("getFormNodesFieldsFromParentsAction: formNodeHolderEntity->getName()=".$formNodeHolderEntity->getName().", formNodeHolderEntity->getId()=".$formNodeHolderEntity->getId());
+        //$logger->notice("getFormNodesFieldsFromParentsAction: holderFullName=$holderFullName: formNodeHolderEntity ID=".$formNodeHolderEntity->getId());
+        //$logger->notice("getFormNodesFieldsFromParentsAction: formNodeHolderEntity->getName()=".$formNodeHolderEntity->getName().", formNodeHolderEntity->getId()=".$formNodeHolderEntity->getId());
 
         $formNodeHolderId = $formNodeHolderEntity->getId();
         $resArr = array();
@@ -4077,6 +4077,7 @@ class FellAppUtil {
         return $result;
     }
 
+    //NOT USED
     public function getHubConfigParameter( $parameter ) {
         $hubConfig = $this->getOrCreateHubConfig();
 
@@ -4103,6 +4104,7 @@ class FellAppUtil {
 
         return $res;
     }
+    //NOT USED
     public function getOrCreateHubConfig() {
         //exit('getOrCreateHubConfig');
         $em = $this->em;
@@ -4137,7 +4139,10 @@ class FellAppUtil {
             case "None (Manually uploaded)":
                 break;
             case "Google Drive":
-                $fellappFormUrl = $userSecUtil->getSiteSettingParameter('applicationPageLinkFellApp',$this->container->getParameter('fellapp.sitename'));
+                $fellappFormUrl = $userSecUtil->getSiteSettingParameter(
+                    'applicationPageLinkFellApp',
+                    $this->container->getParameter('fellapp.sitename')
+                );
                 if( !$linkName ) {
                     $linkName = $fellappFormUrl;
                 }
@@ -4145,7 +4150,11 @@ class FellAppUtil {
                 break;
             case "Dedicated public tandem hub server tenant instance":
                 //echo "Case: Dedicated public tandem hub server tenant instance <br>";
-                $fellappFormHubUrl = $this->getHubConfigParameter('hubFellappFormUrl');
+                //$fellappFormHubUrl = $this->getHubConfigParameter('hubFellappFormUrl');
+                $fellappFormHubUrl = $userSecUtil->getSiteSettingParameter(
+                    'hubFellappFormUrl',
+                    $this->container->getParameter('fellapp.sitename')
+                );
                 if( !$linkName ) {
                     $linkName = $fellappFormHubUrl;
                 }
@@ -4153,10 +4162,17 @@ class FellAppUtil {
                 $fellappFormLink = '<a href="'.$fellappFormHubUrl.'">'.$linkName." on the Hub server".'</a>';
                 break;
             case "Both Google Drive and a dedicated public tandem hub server tenant instance":
-                $fellappFormGoogleUrl = $userSecUtil->getSiteSettingParameter('applicationPageLinkFellApp',$this->container->getParameter('fellapp.sitename'));
+                $fellappFormGoogleUrl = $userSecUtil->getSiteSettingParameter(
+                    'applicationPageLinkFellApp',
+                    $this->container->getParameter('fellapp.sitename')
+                );
                 //echo "fellappFormGoogleUrl=$fellappFormGoogleUrl <br>";
                 //$fellappFormHubUrl = $userSecUtil->getSiteSettingParameter('hubFellappFormUrl',$this->container->getParameter('fellapp.sitename'));
-                $fellappFormHubUrl = $this->getHubConfigParameter('hubFellappFormUrl');
+                //$fellappFormHubUrl = $this->getHubConfigParameter('hubFellappFormUrl');
+                $fellappFormHubUrl = $userSecUtil->getSiteSettingParameter(
+                    'hubFellappFormUrl',
+                    $this->container->getParameter('fellapp.sitename')
+                );
                 //echo "fellappFormHubUrl=$fellappFormHubUrl <br>";
                 if( $fellappFormGoogleUrl ) {
                     if( !$linkName ) {
