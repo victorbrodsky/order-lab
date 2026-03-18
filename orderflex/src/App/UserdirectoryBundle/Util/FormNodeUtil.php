@@ -2617,7 +2617,7 @@ class FormNodeUtil
         );
 
         $results = $query->getResult();
-        //echo "!!! formNode ID=".$formNode->getId().": entityName=".$mapper['entityName'].": entityNamespace=".$mapper['entityNamespace'].": count=".count($results)."<br>"; //testing
+        echo "!!! formNode ID=".$formNode->getId().": entityName=".$mapper['entityName'].": entityNamespace=".$mapper['entityNamespace'].": count=".count($results)."<br>"; //testing
 
         if( $asObject ) {
             //echo "return as object<br>";
