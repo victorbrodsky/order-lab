@@ -1122,7 +1122,7 @@ class FellAppUtil {
 
                 //process userWrapper case
                 $formNodeValue = $formNodeUtil->processFormNodeValue($formNode,$receivingEntity,$formNodeValue);
-                echo "formNodeValue=$formNodeValue<br>";
+                //echo "formNodeValue=$formNodeValue<br>";
 
                 $formNodeArr = array(
                     'formNode' => $formNode,
