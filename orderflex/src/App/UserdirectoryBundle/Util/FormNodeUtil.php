@@ -247,6 +247,7 @@ class FormNodeUtil
                 }
             }
         } else {
+            //$logger->notice("processFormNodeByType: ".$formNodeObjectName. ": " .": formValue is single formValue=" . $formValue);
             //echo $formNodeObjectName.": formValue is single formValue=" . $formValue . "<br>";
             $this->createFormNodeListRecord($formNode,$formValue,$holderEntity,$testing);
         }
@@ -275,10 +276,13 @@ class FormNodeUtil
     }
 
     public function createFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
+        $logger = $this->container->get('logger');
+
         //if( !$formValue ) { //testing: prevent creating a new empty records in DB
         //TODO: if updated value is null
         if( !isset($formValue) || $formValue == null ) {
             echo "1 Return: No Value=".$formValue."<br>";
+            $logger->notice("createFormNodeListRecord: $formNode has no Value");
             //return;
         }
 
@@ -520,6 +524,7 @@ class FormNodeUtil
             }
             $formValueStr = implode(", ",$formValueArr);
             $noflush = true; //don't flush because setValues must be set after
+            $logger->notice("createFormNodeListRecord: $formNodeObjectName: formValueStr=$formValueStr");
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$noflush);
 
             if( count($formValueArr) > 0 ) {
@@ -540,6 +545,7 @@ class FormNodeUtil
     }
     //$holderEntity - Message, for generic fellapp it should be FellowshipApplication
     public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $noflush=false, $params=null ) {
+        $logger = $this->container->get('logger');
 
         //echo "createSingleFormNodeListRecord: formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
 //        if( $params ) {
@@ -557,6 +563,7 @@ class FormNodeUtil
 
             $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
             if( $newListElement ) {
+                $logger->notice("createSingleFormNodeListRecord: set formValue=$formValue");
                 //echo $formNode.": (isEditable) formValue=".$formValue."<br>";
                 //if value is null => still update this value
                 //if( isset($formValue) ) {
@@ -576,6 +583,7 @@ class FormNodeUtil
         }
 
         //echo "object is not editable => create a new amend only<br>";
+        $logger->notice("createSingleFormNodeListRecord: createNewList for formNode=$formNode");
         $newListElement = $this->createNewList($formNode);
 
         //echo "newListElement=".$newListElement."<br>";
