@@ -172,8 +172,8 @@ class FormNodeUtil
     //process by data partial key name" "formnode-4" => "formnode-"
     public function processFormNodesFromDataKeys( $data, $holderEntity, $testing=false ) {
         $logger = $this->container->get('logger');
-        if( !array_key_exists('processFormNodesFromDataKeys: formnode', $data) ) {
-            $logger->notice('no formnode data exists');
+        if( !array_key_exists('formnode', $data) ) {
+            $logger->notice('processFormNodesFromDataKeys: no formnode data exists');
             //exit('no formnode data exists');
             return;
         }
@@ -193,6 +193,7 @@ class FormNodeUtil
                 $thisFormNode = $this->em->getRepository(FormNode::class)->find($formNodeId);
                 if( !$thisFormNode ) {
                     //exit("No Root of the node id=".$formNodeId."<br>");
+                    $logger->notice('processFormNodesFromDataKeys: $thisFormNode not found by id='.$formNodeId);
                     continue;
                 }
                 $this->processFormNodeByType($thisFormNode,$formValue,$holderEntity,$testing);
