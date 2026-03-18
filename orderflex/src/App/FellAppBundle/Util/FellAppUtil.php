@@ -1004,7 +1004,7 @@ class FellAppUtil {
                 if( $complexRes ) {
                     $formNodeValue = $complexRes['formNodeValue'];
                     $receivingEntity = $complexRes['receivingEntity'];
-                    echo "complexRes: formNodeValue=$formNodeValue, receivingEntity=$receivingEntity <br>";
+                    //echo "complexRes: formNodeValue=$formNodeValue, receivingEntity=$receivingEntity <br>";
                 }
             }
             //echo "formNode=".$formNode->getId()."<br>";
