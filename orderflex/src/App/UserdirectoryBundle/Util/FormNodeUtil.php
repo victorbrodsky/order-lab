@@ -2552,7 +2552,7 @@ class FormNodeUtil
         //$bundleName = $receivedValueEntityNamespaceArr[0] . $receivedValueEntityNamespaceArr[1];
         //$repoNameStr = $bundleName.':'.$receivedValueEntityName;
         $repoNameStr = $receivedValueEntityNamespace.'\\'.$receivedValueEntityName;
-        echo "repoNameStr=".$repoNameStr."<br>";
+        //echo "repoNameStr=".$repoNameStr."<br>";
         //exit('111');
         $repo = $this->em->getRepository($repoNameStr);
 
@@ -2616,8 +2616,14 @@ class FormNodeUtil
             )
         );
 
+        $formNodeType = $formNode->getObjectType();
+        $receivedValueEntityNamespace = $formNodeType->getReceivedValueEntityNamespace();
+        $receivedValueEntityName = $formNodeType->getReceivedValueEntityName();
+        $repoNameStr = $receivedValueEntityNamespace.'\\'.$receivedValueEntityName;
+        //echo "repoNameStr=".$repoNameStr."<br>";
         $results = $query->getResult();
         echo "!!! formNodeId=".$formNode->getId().
+            ": repoNameStr=".$repoNameStr.
             ": entityName=".$mapper['entityName'].
             ": entityNamespace=".$mapper['entityNamespace'].
             ": entityId=".$mapper['entityId'].
@@ -2643,6 +2649,7 @@ class FormNodeUtil
         if( count($results) == 1 ) {
             echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
             echo "<br>###getValue()=".$results[0]->getValue()."###<br><br>";
+            if( $receivedValueEntityName == 'ObjectTypeCheckbox' ) exit('single result exit');
             //return $results[0]->getValue();
             //$formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
             $formNodeValue = $this->processFormNodeValue($formNode,$results[0],$results[0]->getValue(),true);
