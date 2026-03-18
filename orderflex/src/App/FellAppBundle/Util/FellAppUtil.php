@@ -898,6 +898,7 @@ class FellAppUtil {
         if ($testing) {
             $testing = true;
         }
+        //$testing = true;//testing
 
         if (false === $this->security->isGranted('ROLE_USER') && $cycle != 'new') {
             return null;
@@ -1097,6 +1098,7 @@ class FellAppUtil {
             } else {
 
                 //////////////// Regular form node /////////////////////
+                echo "formNodeValue is regular formNodeValue=" . $formNodeValue . "<br>";
                 if( $testing ) {
                     echo "formNodeValue is regular formNodeValue=" . $formNodeValue . "<br>";
                 }
