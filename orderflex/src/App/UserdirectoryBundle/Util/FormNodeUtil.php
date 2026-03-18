@@ -287,6 +287,7 @@ class FormNodeUtil
         }
 
         $formNodeObjectName = $formNode->getObjectTypeName();
+        $logger->notice("createFormNodeListRecord: formNodeObjectName=$formNodeObjectName");
 
         if( $testing ) {
             echo $formNode->getId().": formNodeObjectName:".$formNodeObjectName."<br>";
@@ -524,7 +525,7 @@ class FormNodeUtil
             }
             $formValueStr = implode(", ",$formValueArr);
             $noflush = true; //don't flush because setValues must be set after
-            $logger->notice("createFormNodeListRecord: $formNodeObjectName: formValueStr=$formValueStr");
+            $logger->notice("createFormNodeListRecord: before createFormNodeListRecord: $formNodeObjectName: formValueStr=$formValueStr");
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$noflush);
 
             if( count($formValueArr) > 0 ) {
@@ -535,17 +536,20 @@ class FormNodeUtil
                 $this->em->persist($newListElement);
                 //$this->em->flush($newListElement);
                 $this->em->flush();
+                $logger->notice("createFormNodeListRecord: newListElement created with ID=".$newListElement->getId());
             }
 
             return;
         }
 
         //all other cases
+        $logger->notice("createFormNodeListRecord: all other cases formNodeObjectName=$formNodeObjectName");
         $this->createSingleFormNodeListRecord($formNode, $formValue, $holderEntity, $testing, $params);
     }
     //$holderEntity - Message, for generic fellapp it should be FellowshipApplication
     public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $noflush=false, $params=null ) {
         $logger = $this->container->get('logger');
+        $logger->notice("createSingleFormNodeListRecord: holderEntity=$holderEntity, holderEntity ID=".$holderEntity->getId());
 
         //echo "createSingleFormNodeListRecord: formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
 //        if( $params ) {
@@ -583,14 +587,16 @@ class FormNodeUtil
         }
 
         //echo "object is not editable => create a new amend only<br>";
-        $logger->notice("createSingleFormNodeListRecord: createNewList for formNode=$formNode");
+        $logger->notice("createSingleFormNodeListRecord: noflush=$noflush, createNewList for formNode=$formNode");
         $newListElement = $this->createNewList($formNode);
 
         //echo "newListElement=".$newListElement."<br>";
         if( !$newListElement ) {
             //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
+            $logger->notice("createSingleFormNodeListRecord: No newListElement created: formNode=$formNode; formValue=$formValue");
             return null;
         } else {
+            $logger->notice("createSingleFormNodeListRecord: newListElement is created");
             echo "newListElement is created<br>";
         }
 
@@ -626,7 +632,7 @@ class FormNodeUtil
         }
 
         //testing
-        if( 1 ) {
+        if( 0 ) {
             $class = new \ReflectionClass($newListElement);
             $className = $class->getShortName();
             $classNamespace = $class->getNamespaceName();
@@ -649,6 +655,7 @@ class FormNodeUtil
         return $newListElement;
     }
 
+    //$holderEntity - i.e. FellowshipApplication entity
     public function isHolderEntityEditable($holderEntity,$params) {
         if( method_exists($holderEntity, 'isEditable') && $holderEntity->isEditable() ){
             if( $params ) {
@@ -668,6 +675,9 @@ class FormNodeUtil
     //TODO: this probably will not work without MessageCategory->formNode for fellowship application
     //get unique list object for recording the form's value
     public function getUniqueFormNodeListRecord( $formNode, $holderEntity ) {
+        $logger = $this->container->get('logger');
+        $logger->notice("getUniqueFormNodeListRecord: holderEntity=$holderEntity, formNode=$formNode");
+
         $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////App\UserdirectoryBundle\Entity:ObjectTypeDropdown
 
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -676,6 +686,11 @@ class FormNodeUtil
         $dql->andWhere('list.formNode = :formNodeId');
         $dql->orderBy('list.arraySectionIndex','DESC');
         $dql->addOrderBy('list.orderinlist', 'ASC');
+        //$dql->addOrderBy('list.createdate', 'DESC'); //get latest first
+
+        if( $single=true ) {
+            $dql->setMaxResults(1); //return a single result: prevent multiple identical results
+        }
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
@@ -704,7 +719,14 @@ class FormNodeUtil
         }
 
         if( count($listElements) > 1 ) {
-            throw new \Exception( "Found multiple recording list: formNode ID=".$formNode->getId()."; holderEntity ID=".$holderEntity->getId() );
+            //get the latest one
+//            foreach($listElements as $listElement) {
+//                echo "listElements created date=".$listElement->getCreateDate()->format('Y-m-d H:i:s')."<br>";
+//            }
+//            exit('111');
+            $logger->notice("getUniqueFormNodeListRecord: Found multiple recording list: formNode ID=".$formNode->getId()."; holderEntity ID=".$holderEntity->getId()." count=".count($listElements));
+            return $listElements[0];
+            //throw new \Exception( "Found multiple recording list: formNode ID=".$formNode->getId()."; holderEntity ID=".$holderEntity->getId()." count=".count($listElements) );
         }
 
         return null;
@@ -959,6 +981,7 @@ class FormNodeUtil
     }
 
     public function createNewList( $formNode ) {
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $formNodeObjectType = $formNode->getObjectType();
         //$entityNamespace = $formNodeObjectType->getEntityNamespace();
@@ -983,6 +1006,7 @@ class FormNodeUtil
 
         $listClassName = $receivedValueEntityNamespace."\\".$receivedValueEntityName;
         //echo "create new list=[$listClassName] <br>";
+        $logger->notice("createNewList: listClassName=$listClassName");
         $newListElement = new $listClassName();
         //$newListElement = new ObjectTypeText();
         $creator = $this->security->getUser();

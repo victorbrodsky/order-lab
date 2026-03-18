@@ -1717,6 +1717,11 @@ class FellowshipApplication extends BaseUserAttributes {
         return false;
     }
 
+    //Required for formnode in order to overwrite existing value without creating a new one
+    public function isEditable() {
+        return true;
+    }
+
     public function __toString() {
         return "FellowshipApplication";
     }

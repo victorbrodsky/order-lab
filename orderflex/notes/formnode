@@ -38,18 +38,6 @@ Build form: calllogAppendFormNodes(data);
 
 
 
-OK:
-!! formNodeId=290: entityName=FellowshipApplication: entityNamespace=App\FellAppBundle\Entity: entityId=1695: count=1<br>
-single result: Washington University (WU) sponsors J‑1 visas for trainees in this program.
-Existing H‑1B visas may be transferred to WU, but WU does not sponsor new H‑1B applications;
-entityName=FellowshipApplication; ReceivingEntityId=36<br><br>###getValue()=1###
-
-!!! formNodeId=7: entityName=FellowshipApplication: entityNamespace=App\FellAppBundle\Entity: entityId=23: count=1<br>
-single result: Washington University (WU) sponsors J‑1 visas for trainees in this program.
-I understand existing H‑1B visas may be transferred to WU, but WU does not sponsor new H‑1B applications;
-entityName=FellowshipApplication; ReceivingEntityId=15<br><br>###getValue()=###
-
-
 
 
 
