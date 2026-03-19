@@ -568,7 +568,7 @@ class FellAppRetrievalController extends OrderAbstractController
         // Process board certifications
         $certIndex = 0;
         foreach ($boardCerts as $cert) {
-            $board = $cert->getBoard() ? $cert->getBoard()->getName() : '';
+            $board = $cert->getCertifyingBoardOrganization() ? $cert->getCertifyingBoardOrganization()->getName() : '';
             $area = $cert->getSpecialty() ? $cert->getSpecialty()->getName() : '';
             $date = $cert->getIssueDate() ? $cert->getIssueDate()->format('Y-m-d') : '';
 
@@ -612,21 +612,25 @@ class FellAppRetrievalController extends OrderAbstractController
             if ($refNum > 4) break;
 
             $data['recommendation' . $refNum . 'FirstName'] = $ref->getFirstName() ?? '';
-            $data['recommendation' . $refNum . 'LastName'] = $ref->getLastName() ?? '';
+            $data['recommendation' . $refNum . 'LastName'] = $ref->getName() ?? '';
             $data['recommendation' . $refNum . 'Degree'] = $ref->getDegree() ?? '';
             $data['recommendation' . $refNum . 'Phone'] = $ref->getPhone() ?? '';
             $data['recommendation' . $refNum . 'Title'] = $ref->getTitle() ?? '';
-            $data['recommendation' . $refNum . 'Institution'] = $ref->getInstitution() ?? '';
+            $institution = $ref->getInstitution();
+            $data['recommendation' . $refNum . 'Institution'] = $institution ? $institution->getName() : '';
             $data['recommendation' . $refNum . 'Email'] = $ref->getEmail() ?? '';
 
-            $refLoc = $ref->getLocation();
+            $refLoc = $ref->getGeoLocation();
             if ($refLoc) {
                 $data['recommendation' . $refNum . 'AddressStreet1'] = $refLoc->getStreet1() ?? '';
                 $data['recommendation' . $refNum . 'AddressStreet2'] = $refLoc->getStreet2() ?? '';
-                $data['recommendation' . $refNum . 'AddressCity'] = $refLoc->getCity() ?? '';
-                $data['recommendation' . $refNum . 'AddressState'] = $refLoc->getState() ? $refLoc->getState()->getName() : '';
+                $city = $refLoc->getCity();
+                $data['recommendation' . $refNum . 'AddressCity'] = $city ? $city->getName() : '';
+                $state = $refLoc->getState();
+                $data['recommendation' . $refNum . 'AddressState'] = $state ? $state->getName() : '';
                 $data['recommendation' . $refNum . 'AddressZip'] = $refLoc->getZip() ?? '';
-                $data['recommendation' . $refNum . 'AddressCountry'] = $refLoc->getCountry() ? $refLoc->getCountry()->getName() : '';
+                $country = $refLoc->getCountry();
+                $data['recommendation' . $refNum . 'AddressCountry'] = $country ? $country->getName() : '';
             }
 
             $refIndex++;
