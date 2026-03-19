@@ -50,8 +50,9 @@ class FellAppRetrievalController extends OrderAbstractController
         
         // Find FellowshipApplication by hashkey
         $em = $this->getDoctrine()->getManager();
-        $fellapp = $em->getRepository(FellowshipApplication::class)->findOneBy(['googleFormId' => $hashkey]);
-        
+        //$fellapp = $em->getRepository(FellowshipApplication::class)->findOneBy(['googleFormId' => $hashkey]);
+        $fellapp = $em->getRepository(FellowshipApplication::class)->find(30);
+
         if( !$fellapp ) {
             return new JsonResponse([
                 'success' => false,
@@ -160,7 +161,10 @@ class FellAppRetrievalController extends OrderAbstractController
     private function generateXlsxData( FellowshipApplication $fellapp, $hashkey ) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
+
         // Set headers
         $sheet->setCellValue('A1', 'Field');
         $sheet->setCellValue('B1', 'Value');
@@ -174,7 +178,7 @@ class FellAppRetrievalController extends OrderAbstractController
         
         // FellowshipApplication fields
         $sheet->setCellValue('A' . $row, 'ID');
-        $sheet->setCellValue('B' . $row, $fellapp->getId());
+        $sheet->setCellValue('B' . $row, $fellapp->getId()."_".$instanceId);
         $row++;
         
         $sheet->setCellValue('A' . $row, 'Google Form ID');
