@@ -285,30 +285,30 @@ class FellAppImportPopulateUtil {
         return $result;
     }
 
-    //Return array of not existed fellowship applications on DB
-    public function getNotExistedApplicationByGoogleIdV1($filesGoogleDrive) {
-        //$logger = $this->container->get('logger');
-
-        $notExistedArr = array();
-
-        foreach($filesGoogleDrive as $file) {
-            $fileTitle = $file->getTitle();
-            //$logger->notice("Checking fellapp by title: ".$fileTitle);
-            if( $fileTitle ) {
-        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
-                $fellowshipApplicationDb = $this->em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($fileTitle);
-                if( !$fellowshipApplicationDb ) {
-                    $notExistedArr[] = $file->getTitle();
-                }
-            }
-        }
-
-        //$notExistedArr[] = "Test Application"; //testing
-
-        //$logger->notice("Count on not existed fellapp: ".count($notExistedArr)); //testing
-
-        return $notExistedArr;
-    }
+//    //Return array of not existed fellowship applications on DB
+//    public function getNotExistedApplicationByGoogleIdV1($filesGoogleDrive) {
+//        //$logger = $this->container->get('logger');
+//
+//        $notExistedArr = array();
+//
+//        foreach($filesGoogleDrive as $file) {
+//            $fileTitle = $file->getTitle();
+//            //$logger->notice("Checking fellapp by title: ".$fileTitle);
+//            if( $fileTitle ) {
+//        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+//                $fellowshipApplicationDb = $this->em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($fileTitle);
+//                if( !$fellowshipApplicationDb ) {
+//                    $notExistedArr[] = $file->getTitle();
+//                }
+//            }
+//        }
+//
+//        //$notExistedArr[] = "Test Application"; //testing
+//
+//        //$logger->notice("Count on not existed fellapp: ".count($notExistedArr)); //testing
+//
+//        return $notExistedArr;
+//    }
     //Return array of not existed fellowship applications on DB
     public function getNotExistedApplicationByGoogleId($filesGoogleDrive) {
         //$logger = $this->container->get('logger');
@@ -1454,7 +1454,14 @@ class FellAppImportPopulateUtil {
                 //}
 
                 $fellowshipApplication->setAppStatus($activeStatus);
+                //For HUB server, $googleFormId can be used to store unique application ID submitted via HUB server,
+                // maybe in the same format 'dpino_dhs_lacounty_gov_Pino_Devon_2024-12-16_04_56_45'
+                //Therefore, we can treat $googleFormId as remote form ID $remoteFormId
                 $fellowshipApplication->setGoogleFormId($googleFormId);
+
+                //Upon retreval form, set the retrievalMethod according to the site setting
+                //$retrievalMethod = $userSecUtil->getSiteSettingParameter('retrievalMethod',$this->container->getParameter('fellapp.sitename'));
+                //$fellowshipApplication->setRetrievalMethod($retrievalMethod);
 
                 $user->addFellowshipApplication($fellowshipApplication);
                 //if( $fellowshipApplication && !$user->getFellowshipApplications()->contains($fellowshipApplication) ) {

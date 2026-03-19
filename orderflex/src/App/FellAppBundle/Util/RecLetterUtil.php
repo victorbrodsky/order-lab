@@ -326,7 +326,8 @@ class RecLetterUtil {
         //$uploadFormLink = "http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?";
 
         //$fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter('fellappRecLetterUrl',$this->container->getParameter('fellapp.sitename'));
-        $fellappRecLetterUrl = $fellappUtil->getFellappRecommendationFormLink();
+        //Get $fellappRecLetterUrl via felapp's retrievalMethod
+        $fellappRecLetterUrl = $fellappUtil->getFellappRecommendationFormLink($fellapp);
 
         if( !$fellappRecLetterUrl ) {
             $msg = "Can not send invitation email to the references.";

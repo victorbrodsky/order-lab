@@ -57,3 +57,30 @@ if( GlobalFellowshipSpecialty ) {
 }
 
 
+
+Fellapp population
+
+CronCommand ->
+
+//Main function to import sheets from Google Drive Folder
+processFellAppFromGoogleDrive($testing=false, $limit=false )
+    //1) Import sheets from Google Drive Folder and add new sheets to DataFile DB
+    $filesGoogleDrive = $this->importSheetsFromGoogleDriveFolder($testing,$limit);
+
+    //2) Populate applications from DataFile DB object
+    $populatedCount = $this->populateApplicationsFromDataFile($testing,$limit);
+
+populateApplicationsFromDataFile($testing=false, $limit=false)
+    foreach( $datafiles as $datafile ) {
+        populateSingleFellApp($datafile->getDocument() ...
+        ...
+    }
+
+populateSingleFellApp($document ...
+    populateSpreadsheet($document ...
+
+populateSpreadsheet($document ...)
+    //$document - xlsx file
+    ...
+    $fellowshipApplication = new FellowshipApplication($systemUser);
+

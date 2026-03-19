@@ -4203,9 +4203,22 @@ class FellAppUtil {
         return $fellappFormLink;
     }
 
-    public function getFellappRecommendationFormLink() {
+    public function getFellappRecommendationFormLink( $fellapp ) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $retrievalMethod = $userSecUtil->getSiteSettingParameter('retrievalMethod',$this->container->getParameter('fellapp.sitename'));
+
+        //Using Google: $googleFormId = dpino_dhs_lacounty_gov_Pino_Devon_2024-12-16_04_56_45
+        //But, $googleFormId can be used by hub server too to store the received fellowship application ID on the hub server
+//        $googleFormId = $fellapp->getGoogleFormId();
+//        if( $googleFormId && $googleFormId != null ) {
+//            $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter(
+//                'fellappRecLetterUrl',
+//                $this->container->getParameter('fellapp.sitename')
+//            );
+//            return $fellappRecLetterUrl;
+//        }
+
+        //$retrievalMethod = $userSecUtil->getSiteSettingParameter('retrievalMethod',$this->container->getParameter('fellapp.sitename'));
+        $retrievalMethod = $fellapp->getRetrievalMethod();
         //echo "retrievalMethod=[$retrievalMethod] <br>";
         $fellappRecLetterUrl = null;
         switch (trim($retrievalMethod)) {
@@ -4230,7 +4243,12 @@ class FellAppUtil {
                 );
                 break;
             default:
-                //TODO: later on change default to: hubRecletterFormUrl
+                //default to: hubRecletterFormUrl
+//                $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter(
+//                    'hubRecletterFormUrl',
+//                    $this->container->getParameter('fellapp.sitename')
+//                );
+                //As legacy for previous fellowship application when retrievalMethod was not set, use the Google Drive URL
                 $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter(
                     'fellappRecLetterUrl',
                     $this->container->getParameter('fellapp.sitename')
