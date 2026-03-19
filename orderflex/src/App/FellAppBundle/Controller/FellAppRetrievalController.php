@@ -533,7 +533,8 @@ class FellAppRetrievalController extends OrderAbstractController
             $state = $license->getState() ? $license->getState()->getName() : '';
             $dateIssued = $license->getLicenseIssuedDate() ? $license->getLicenseIssuedDate()->format('Y-m-d') : '';
             $number = $license->getLicenseNumber() ?? '';
-            $active = $license->getLicenseActive() ? 'Yes' : 'No';
+            $activeStatus = $license->getActive();
+            $active = $activeStatus ? $activeStatus->getName() : '';
 
             if ($licenseIndex == 0) {
                 $data['medicalLicensure1Country'] = $country;
