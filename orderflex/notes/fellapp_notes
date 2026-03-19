@@ -84,3 +84,20 @@ populateSpreadsheet($document ...)
     ...
     $fellowshipApplication = new FellowshipApplication($systemUser);
 
+
+Prompt
+Create retrieval mechanism fot fellowship applications (entity order-lab\orderflex\src\App\FellAppBundle\Entity\FellowshipApplication.php)
+via API using a hash key $hashkey="jshdjhds".
+Caller server send request to Remote server and the remote server send back JSON response.
+Use only order-lab\orderflex\src\App\FellAppBundle\Controller\FellAppRetrievalController.php to implement Caller and Remote server API controllers,
+do not change other files.
+1) Caller server makes an API call to remote server via url https://view.online/fellowship-applications/download-application-data/$hashkey
+2) Remote server receives this API call
+3) Remote server create a xlsx file containing all fields in FellowshipApplication and $hashkey and send it back via JSON response
+4) Remote server send back JSON data to the caller server
+5) Caller server receive JSON from the remote server
+6) Caller server authenticate $hashkey
+7) Caller server receive xlsx file and store it locally in order-lab\orderflex\public\Uploaded\fellapp\Spreadsheets
+
+
+
