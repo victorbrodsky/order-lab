@@ -148,11 +148,14 @@ class FellAppRetrievalController extends OrderAbstractController
         // Generate xlsx file
         $xlsxData = $this->generateXlsxData($fellapp, $hashkey);
 
+        $filename = 'fellowship_application_' . $this->getFormId($fellapp) . '.xlsx'; //$this->getFormId($fellapp);
+
         // Return JSON response with xlsx data as base64
         return new JsonResponse([
             'success' => true,
             'hashkey' => $hashkey,
-            'filename' => 'fellowship_application_' . $hashkey . '.xlsx',
+            //'filename' => 'fellowship_application_' . $hashkey . '.xlsx',
+            'filename' => $filename,
             'xlsx_base64' => base64_encode($xlsxData)
         ]);
     }
@@ -258,8 +261,11 @@ class FellAppRetrievalController extends OrderAbstractController
         $data = [];
 
         // Basic fields
-        $currentDateTime = new \DateTime();
-        $data['ID'] = $fellapp->getId() . ($instanceId ? "_" . $instanceId : "") . "_" . $currentDateTime->format('Y-m-d-H-i-s');
+        //$currentDateTime = new \DateTime();
+        //$data['ID'] = $fellapp->getId() . ($instanceId ? "_" . $instanceId : "") . "_" . $currentDateTime->format('Y-m-d-H-i-s');
+
+        $formId = $this->getFormId($fellapp);
+        $data['ID'] = $formId;
         $data['timestamp'] = $fellapp->getTimestamp() ? $fellapp->getTimestamp()->format('Y-m-d H:i:s') : '';
         $data['lastName'] = $user ? $user->getLastName() : '';
         $data['firstName'] = $user ? $user->getFirstName() : '';
@@ -678,7 +684,14 @@ class FellAppRetrievalController extends OrderAbstractController
         }
         return '';
     }
-    
+
+    //googleFormId
+    private function getFormId( $fellapp ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $instanceId = $userSecUtil->getSiteSettingParameter('instanceId');
+        $currentDateTime = new \DateTime();
+        return $fellapp->getId() . ($instanceId ? "_" . $instanceId : "") . "_" . $currentDateTime->format('Y-m-d-H-i-s');
+    }
     
     //(6) "URL of the recommendation letter upload page hosted by the public tandem hub server tenant instance (to append hash ID)" -
     // set it by default to the value "https://view.online/fellowship-applications/submit-a-letter-of-recommendation"
