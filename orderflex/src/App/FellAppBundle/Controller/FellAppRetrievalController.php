@@ -33,46 +33,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 #[Route(path: '/')]
 class FellAppRetrievalController extends OrderAbstractController
 {
-
-    // Remote Server API Endpoint
-    // (4) "URL of the API endpoint hosted by the public tandem hub server tenant instance" -
-    // set it by default to the value "https://view.online/fellowship-applications/download-application-data"
-    #[Route(path: '/download-application-data/{hashkey}', name: 'fellapp_download_application_data', methods: ['GET'])]
-    public function downloadApplicationDataAction( Request $request, $hashkey = null ) {
-        // Remote Server: Receive API call and generate xlsx
-        
-        if( !$hashkey ) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Hashkey is required'
-            ], 400);
-        }
-        
-        // Find FellowshipApplication by hashkey
-        $em = $this->getDoctrine()->getManager();
-        //$fellapp = $em->getRepository(FellowshipApplication::class)->findOneBy(['googleFormId' => $hashkey]);
-        $fellapp = $em->getRepository(FellowshipApplication::class)->find(30);
-
-        if( !$fellapp ) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'FellowshipApplication not found for hashkey: ' . $hashkey
-            ], 404);
-        }
-        
-        // Generate xlsx file
-        $xlsxData = $this->generateXlsxData($fellapp, $hashkey);
-        
-        // Return JSON response with xlsx data as base64
-        return new JsonResponse([
-            'success' => true,
-            'hashkey' => $hashkey,
-            'filename' => 'fellowship_application_' . $hashkey . '.xlsx',
-            'xlsx_base64' => base64_encode($xlsxData)
-        ]);
-    }
-    
-
     //http://127.0.0.1/fellowship-applications/retrieve-application-data/abc
     // Caller Server: Make API call to Remote Server
     #[Route(path: '/retrieve-application-data/{hashkey}', name: 'fellapp_retrieve_application_data', methods: ['GET'])]
@@ -158,8 +118,45 @@ class FellAppRetrievalController extends OrderAbstractController
             ], 500);
         }
     }
-    
-    
+
+    // Remote Server API Endpoint
+    // (4) "URL of the API endpoint hosted by the public tandem hub server tenant instance" -
+    // set it by default to the value "https://view.online/fellowship-applications/download-application-data"
+    #[Route(path: '/download-application-data/{hashkey}', name: 'fellapp_download_application_data', methods: ['GET'])]
+    public function downloadApplicationDataAction( Request $request, $hashkey = null ) {
+        // Remote Server: Receive API call and generate xlsx
+
+        if( !$hashkey ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Hashkey is required'
+            ], 400);
+        }
+
+        // Find FellowshipApplication by hashkey
+        $em = $this->getDoctrine()->getManager();
+        //$fellapp = $em->getRepository(FellowshipApplication::class)->findOneBy(['googleFormId' => $hashkey]);
+        $fellapp = $em->getRepository(FellowshipApplication::class)->find(30);
+
+        if( !$fellapp ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'FellowshipApplication not found for hashkey: ' . $hashkey
+            ], 404);
+        }
+
+        // Generate xlsx file
+        $xlsxData = $this->generateXlsxData($fellapp, $hashkey);
+
+        // Return JSON response with xlsx data as base64
+        return new JsonResponse([
+            'success' => true,
+            'hashkey' => $hashkey,
+            'filename' => 'fellowship_application_' . $hashkey . '.xlsx',
+            'xlsx_base64' => base64_encode($xlsxData)
+        ]);
+    }
+
     /**
      * Generate xlsx file from FellowshipApplication data - HORIZONTAL LAYOUT
      */
@@ -315,9 +312,10 @@ class FellAppRetrievalController extends OrderAbstractController
         $data['email'] = $user ? $user->getEmail() : '';
 
         $data['dateOfBirth'] = '';
-        if ($user && $user->getDob()) {
-            $data['dateOfBirth'] = $user->getDob()->format('Y-m-d');
-        }
+        //TODO: currently we don't have DOB in our application form
+//        if ($user && $user->getDob()) {
+//            $data['dateOfBirth'] = $user->getDob()->format('Y-m-d');
+//        }
 
         $citizenship = $citizenships->first();
         $data['citizenshipCountry'] = $citizenship && $citizenship->getCountry() ? $citizenship->getCountry()->getName() : '';
