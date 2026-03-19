@@ -70,12 +70,6 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control textarea')
         ));
 
-        $builder->add('fellappRecLetterUrl', null, array(
-            'label' => 'Web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter'.
-                ' (i.e. https://script.google.com/macros/s/fellapp_recletters_script_deployment_id/exec):',
-            'attr' => array('class' => 'form-control')
-        ));
-
         $builder->add('confirmationEmailFellApp', null, array(
             'label' => 'Email address for confirmation of application submission:',
             'attr' => array('class' => 'form-control')
@@ -274,17 +268,23 @@ class FellappSiteParameterType extends AbstractType
         ));
 
         ////////////// Retrieval //////////////
+        //(1) "URL of the fellowship application page hosted by Google"
         $builder->add('applicationPageLinkFellApp', null, array(
             'label' => 'Link to the Fellowship Application Page:',
             'attr' => array('class' => 'form-control')
         ));
 
+        //(2) "URL of the fellowship application page hosted by the public tandem hub server tenant instance"
         $builder->add('hubFellappFormUrl', null, array(
             'label' => 'URL of the fellowship application page hosted by the public'.
             ' tandem hub server tenant instance (i.e. https://view.online/fellowship-applications/apply):',
             'attr' => array('class' => 'form-control')
         ));
 
+        //(3) "URL of the API endpoint hosted by Google to download fellowship applications"
+        //The url is encoded in the Google API package used by fellowship population
+
+        //(4) "URL of the API endpoint hosted by the public tandem hub server tenant instance"
         $builder->add('hubServerApiUrl', null, array(
             'label' => 'URL of the API endpoint hosted by the public'.
                 ' tandem hub server tenant instance'.
@@ -292,6 +292,16 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        //(5) "URL of the recommendation letter upload page hosted by Google (to append hash ID)"
+        $builder->add('fellappRecLetterUrl', null, array(
+            //'label' => 'Web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter'.
+            //    ' (i.e. https://script.google.com/macros/s/fellapp_recletters_script_deployment_id/exec):',
+            'label' => 'URL of the recommendation letter upload page hosted by Google (to append hash ID)'.
+                ' (i.e. https://script.google.com/macros/s/fellapp_recletters_script_deployment_id/exec):',
+            'attr' => array('class' => 'form-control')
+        ));
+
+        //(6) "URL of the recommendation letter upload page hosted by the public tandem hub server tenant instance (to append hash ID)"
         $builder->add('hubRecletterFormUrl', null, array(
             'label' => 'URL of the recommendation letter upload page hosted by the public'.
                 ' tandem hub server tenant instance (to append hash ID)'.

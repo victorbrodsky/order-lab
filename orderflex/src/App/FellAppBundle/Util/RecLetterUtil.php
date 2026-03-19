@@ -157,6 +157,7 @@ class RecLetterUtil {
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
+        $fellappUtil = $this->container->get('fellapp_util');
         $logger = $this->container->get('logger');
 
         $forceSend = false;
@@ -324,10 +325,12 @@ class RecLetterUtil {
 
         //$uploadFormLink = "http://wcmc.pathologysystems.org/fellowship-application-reference-letter-upload/?";
 
-        $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter('fellappRecLetterUrl',$this->container->getParameter('fellapp.sitename'));
+        //$fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter('fellappRecLetterUrl',$this->container->getParameter('fellapp.sitename'));
+        $fellappRecLetterUrl = $fellappUtil->getFellappRecommendationFormLink();
+
         if( !$fellappRecLetterUrl ) {
             $msg = "Can not send invitation email to the references.";
-            $msg = $msg . " The web app url from deployment GAS not found in the Fellowship Site Settings";
+            $msg = $msg . " The URL of the recommendation letter upload page in the Fellowship Site Settings";
             $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
             $res = array(
                 "res" => false,

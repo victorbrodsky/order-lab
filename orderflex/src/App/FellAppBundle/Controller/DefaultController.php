@@ -362,6 +362,19 @@ class DefaultController extends OrderAbstractController
         //$url = $userServiceUtil->getLinkToListIdByClassNameAndSpecificName('SiteList','fellowship-applications');
         //echo "url=$url <br>";
 
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $fellappRecLetterUrl1 = $userSecUtil->getSiteSettingParameter('fellappRecLetterUrl',$this->getParameter('fellapp.sitename'));
+//        echo '$fellappRecLetterUrl1='.$fellappRecLetterUrl1."<br>";
+//        $fellappUtil = $this->container->get('fellapp_util');
+//        $fellappRecLetterUrl2 = $fellappUtil->getFellappRecommendationFormLink();
+//        echo '$fellappRecLetterUrl2='.$fellappRecLetterUrl2."<br>";
+//        if( $fellappRecLetterUrl1 === $fellappRecLetterUrl2 ) {
+//            echo "match ok <br>";
+//        } else {
+//            echo "match notok <br>";
+//        }
+//        exit('$fellappRecLetterUrl1');
+
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
 

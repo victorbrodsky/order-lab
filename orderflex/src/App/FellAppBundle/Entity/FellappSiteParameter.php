@@ -65,12 +65,6 @@ class FellappSiteParameter {
      */
     #[ORM\Column(type: 'date', nullable: true)]
     private $fellappAcademicYearEnd;
-    
-    /**
-     * the web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter
-     */
-    #[ORM\Column(type: 'text', nullable: true)]
-    private $fellappRecLetterUrl;
 
     /**
      * Email address for confirmation of application submission
@@ -231,6 +225,11 @@ class FellappSiteParameter {
     //(5) "URL of the recommendation letter upload page hosted by Google (to append hash ID)" -
     // set it by default to the value "[]" (whatever is the URL the WCM site uses to first append the unique HASH value + Applicant data and then email to the recommendation letter writers)
     //The url is encoded in the Google API package used by fellowship population
+    /**
+     * the web app url from deployment GAS, send by email in inviteSingleReferenceToSubmitLetter
+     */
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $fellappRecLetterUrl;
 
     //(6) "URL of the recommendation letter upload page hosted by the public tandem hub server tenant instance (to append hash ID)" -
     // set it by default to the value "https://view.online/fellowship-applications/submit-a-letter-of-recommendation"

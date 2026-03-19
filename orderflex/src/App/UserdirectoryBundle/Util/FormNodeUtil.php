@@ -71,16 +71,16 @@ class FormNodeUtil
         $testing=false      //testing flag
     )
     {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         if( !$formNodeSource ) {
             //exit('processFormNodes: $formNodeSource is empty => exit');
-            $logger->notice('processFormNodes: $formNodeSource is empty => exit');
+            //$logger->notice('processFormNodes: $formNodeSource is empty => exit');
             return;
         }
 
         if( !$holderEntity ) {
             //exit('processFormNodes: $holderEntity is empty => exit');
-            $logger->notice("processFormNodes: $holderEntity is empty => exit");
+            //$logger->notice("processFormNodes: $holderEntity is empty => exit");
             return;
         }
 
@@ -112,7 +112,7 @@ class FormNodeUtil
         }
 
         if( !$formNodes ) {
-            $logger->notice('processFormNodes: $formNodes is empty => exit');
+            //$logger->notice('processFormNodes: $formNodes is empty => exit');
             return;
         }
 
@@ -171,9 +171,9 @@ class FormNodeUtil
 
     //process by data partial key name" "formnode-4" => "formnode-"
     public function processFormNodesFromDataKeys( $data, $holderEntity, $testing=false ) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         if( !array_key_exists('formnode', $data) ) {
-            $logger->notice('processFormNodesFromDataKeys: no formnode data exists');
+            //$logger->notice('processFormNodesFromDataKeys: no formnode data exists');
             //exit('no formnode data exists');
             return;
         }
@@ -193,7 +193,7 @@ class FormNodeUtil
                 $thisFormNode = $this->em->getRepository(FormNode::class)->find($formNodeId);
                 if( !$thisFormNode ) {
                     //exit("No Root of the node id=".$formNodeId."<br>");
-                    $logger->notice('processFormNodesFromDataKeys: $thisFormNode not found by id='.$formNodeId);
+                    //$logger->notice('processFormNodesFromDataKeys: $thisFormNode not found by id='.$formNodeId);
                     continue;
                 }
                 $this->processFormNodeByType($thisFormNode,$formValue,$holderEntity,$testing);
@@ -202,7 +202,7 @@ class FormNodeUtil
     }
 
     public function processFormNodeByType( $formNode, $formValue, $holderEntity, $testing=false ) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $formNodeObjectName = $formNode->getObjectTypeName();
 //        if( $formNode->getObjectType() ) {
 //            $formNodeObjectName = $formNode->getObjectType()->getName()."";
@@ -210,7 +210,7 @@ class FormNodeUtil
 
         if( !$this->hasValue($formNode) && $formNodeObjectName != "Form Section Array" ) {
             //exit("No Value of the node=".$formNode."<br>");
-            $logger->notice("processFormNodeByType: No Value of the node=".$formNode);
+            //$logger->notice("processFormNodeByType: No Value of the node=".$formNode);
             return;
         }
 
@@ -230,7 +230,7 @@ class FormNodeUtil
             //return;
         }
         //echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
-        $logger->notice("processFormNodeByType: ".$formNode. ": " .$formNode->getId().": formValue=" . $formValue);
+        //$logger->notice("processFormNodeByType: ".$formNode. ": " .$formNode->getId().": formValue=" . $formValue);
         //exit("Value=[".$formValue."]<br>");
 
         //All others
@@ -276,18 +276,18 @@ class FormNodeUtil
     }
 
     public function createFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         //if( !$formValue ) { //testing: prevent creating a new empty records in DB
         //TODO: if updated value is null
         if( !isset($formValue) || $formValue == null ) {
             echo "1 Return: No Value=".$formValue."<br>";
-            $logger->notice("createFormNodeListRecord: $formNode has no Value");
+            //$logger->notice("createFormNodeListRecord: $formNode has no Value");
             //return;
         }
 
         $formNodeObjectName = $formNode->getObjectTypeName();
-        $logger->notice("createFormNodeListRecord: formNodeObjectName=$formNodeObjectName");
+        //$logger->notice("createFormNodeListRecord: formNodeObjectName=$formNodeObjectName");
 
         if( $testing ) {
             echo $formNode->getId().": formNodeObjectName:".$formNodeObjectName."<br>";
@@ -525,7 +525,7 @@ class FormNodeUtil
             }
             $formValueStr = implode(", ",$formValueArr);
             $noflush = true; //don't flush because setValues must be set after
-            $logger->notice("createFormNodeListRecord: before createFormNodeListRecord: $formNodeObjectName: formValueStr=$formValueStr");
+            //$logger->notice("createFormNodeListRecord: before createFormNodeListRecord: $formNodeObjectName: formValueStr=$formValueStr");
             $newListElement = $this->createSingleFormNodeListRecord($formNode,$formValueStr,$holderEntity,$noflush);
 
             if( count($formValueArr) > 0 ) {
@@ -536,20 +536,20 @@ class FormNodeUtil
                 $this->em->persist($newListElement);
                 //$this->em->flush($newListElement);
                 $this->em->flush();
-                $logger->notice("createFormNodeListRecord: newListElement created with ID=".$newListElement->getId());
+                //$logger->notice("createFormNodeListRecord: newListElement created with ID=".$newListElement->getId());
             }
 
             return;
         }
 
         //all other cases
-        $logger->notice("createFormNodeListRecord: all other cases formNodeObjectName=$formNodeObjectName");
+        //$logger->notice("createFormNodeListRecord: all other cases formNodeObjectName=$formNodeObjectName");
         $this->createSingleFormNodeListRecord($formNode, $formValue, $holderEntity, $testing, $params);
     }
     //$holderEntity - Message, for generic fellapp it should be FellowshipApplication
     public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $noflush=false, $params=null ) {
-        $logger = $this->container->get('logger');
-        $logger->notice("createSingleFormNodeListRecord: holderEntity=$holderEntity, holderEntity ID=".$holderEntity->getId());
+        //$logger = $this->container->get('logger');
+        //$logger->notice("createSingleFormNodeListRecord: holderEntity=$holderEntity, holderEntity ID=".$holderEntity->getId());
 
         //echo "createSingleFormNodeListRecord: formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
 //        if( $params ) {
@@ -567,7 +567,7 @@ class FormNodeUtil
 
             $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
             if( $newListElement ) {
-                $logger->notice("createSingleFormNodeListRecord: set formValue=$formValue");
+                //$logger->notice("createSingleFormNodeListRecord: set formValue=$formValue");
                 //echo $formNode.": (isEditable) formValue=".$formValue."<br>";
                 //if value is null => still update this value
                 //if( isset($formValue) ) {
@@ -587,16 +587,16 @@ class FormNodeUtil
         }
 
         //echo "object is not editable => create a new amend only<br>";
-        $logger->notice("createSingleFormNodeListRecord: noflush=$noflush, createNewList for formNode=$formNode");
+        //$logger->notice("createSingleFormNodeListRecord: noflush=$noflush, createNewList for formNode=$formNode");
         $newListElement = $this->createNewList($formNode);
 
         //echo "newListElement=".$newListElement."<br>";
         if( !$newListElement ) {
             //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
-            $logger->notice("createSingleFormNodeListRecord: No newListElement created: formNode=$formNode; formValue=$formValue");
+            //$logger->notice("createSingleFormNodeListRecord: No newListElement created: formNode=$formNode; formValue=$formValue");
             return null;
         } else {
-            $logger->notice("createSingleFormNodeListRecord: newListElement is created");
+            //$logger->notice("createSingleFormNodeListRecord: newListElement is created");
             echo "newListElement is created<br>";
         }
 
@@ -675,8 +675,8 @@ class FormNodeUtil
     //TODO: this probably will not work without MessageCategory->formNode for fellowship application
     //get unique list object for recording the form's value
     public function getUniqueFormNodeListRecord( $formNode, $holderEntity ) {
-        $logger = $this->container->get('logger');
-        $logger->notice("getUniqueFormNodeListRecord: holderEntity=$holderEntity, formNode=$formNode");
+        //$logger = $this->container->get('logger');
+        //$logger->notice("getUniqueFormNodeListRecord: holderEntity=$holderEntity, formNode=$formNode");
 
         $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////App\UserdirectoryBundle\Entity:ObjectTypeDropdown
 
@@ -724,7 +724,7 @@ class FormNodeUtil
 //                echo "listElements created date=".$listElement->getCreateDate()->format('Y-m-d H:i:s')."<br>";
 //            }
 //            exit('111');
-            $logger->notice("getUniqueFormNodeListRecord: Found multiple recording list: formNode ID=".$formNode->getId()."; holderEntity ID=".$holderEntity->getId()." count=".count($listElements));
+            //$logger->notice("getUniqueFormNodeListRecord: Found multiple recording list: formNode ID=".$formNode->getId()."; holderEntity ID=".$holderEntity->getId()." count=".count($listElements));
             return $listElements[0];
             //throw new \Exception( "Found multiple recording list: formNode ID=".$formNode->getId()."; holderEntity ID=".$holderEntity->getId()." count=".count($listElements) );
         }

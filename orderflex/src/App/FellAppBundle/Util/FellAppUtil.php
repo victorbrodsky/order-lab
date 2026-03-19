@@ -4202,4 +4202,42 @@ class FellAppUtil {
 
         return $fellappFormLink;
     }
+
+    public function getFellappRecommendationFormLink() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $retrievalMethod = $userSecUtil->getSiteSettingParameter('retrievalMethod',$this->container->getParameter('fellapp.sitename'));
+        //echo "retrievalMethod=[$retrievalMethod] <br>";
+        $fellappRecLetterUrl = null;
+        switch (trim($retrievalMethod)) {
+            case "None (Manually uploaded)":
+                break;
+            case "Google Drive":
+                $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter(
+                    'fellappRecLetterUrl',
+                    $this->container->getParameter('fellapp.sitename')
+                );
+                break;
+            case "Dedicated public tandem hub server tenant instance":
+                $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter(
+                    'hubRecletterFormUrl',
+                    $this->container->getParameter('fellapp.sitename')
+                );
+                break;
+            case "Both Google Drive and a dedicated public tandem hub server tenant instance":
+                $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter(
+                    'hubRecletterFormUrl',
+                    $this->container->getParameter('fellapp.sitename')
+                );
+                break;
+            default:
+                //TODO: later on change default to: hubRecletterFormUrl
+                $fellappRecLetterUrl = $userSecUtil->getSiteSettingParameter(
+                    'fellappRecLetterUrl',
+                    $this->container->getParameter('fellapp.sitename')
+                );
+        }
+        //echo "fellappFormLink=[$fellappFormLink] <br>";
+
+        return $fellappRecLetterUrl;
+    }
 } 
