@@ -463,38 +463,56 @@ class FellAppRetrievalController extends OrderAbstractController
             $data[$field] = '';
         }
 
-        // Process examinations
-        foreach ($examinations as $exam) {
-            $examType = $exam->getExaminationType() ? $exam->getExaminationType()->getName() : '';
-            $datePassed = $exam->getCompletionDate() ? $exam->getCompletionDate()->format('Y-m-d') : '';
-            $score = $exam->getScore() ?? '';
+        // Process examinations - get first exam and use specific getters
+        $exam = $examinations->first();
+        if ($exam) {
+            // USMLE Step 1
+            $usmleStep1Date = $exam->getUSMLEStep1DatePassed();
+            $data['USMLEStep1DatePassed'] = $usmleStep1Date ? $usmleStep1Date->format('Y-m-d') : '';
+            $data['USMLEStep1Score'] = $exam->getUSMLEStep1Score() ?? '';
+            $data['USMLEStep1Percentile'] = $exam->getUSMLEStep1Percentile() ?? '';
 
-            if (stripos($examType, 'USMLE Step 1') !== false) {
-                $data['USMLEStep1DatePassed'] = $datePassed;
-                $data['USMLEStep1Score'] = $score;
-            } elseif (stripos($examType, 'USMLE Step 2 CK') !== false) {
-                $data['USMLEStep2CKDatePassed'] = $datePassed;
-                $data['USMLEStep2CKScore'] = $score;
-            } elseif (stripos($examType, 'USMLE Step 2 CS') !== false) {
-                $data['USMLEStep2CSDatePassed'] = $datePassed;
-                $data['USMLEStep2CSScore'] = $score;
-            } elseif (stripos($examType, 'USMLE Step 3') !== false) {
-                $data['USMLEStep3DatePassed'] = $datePassed;
-                $data['USMLEStep3Score'] = $score;
-            } elseif (stripos($examType, 'ECFMG') !== false) {
-                $data['ECFMGCertificate'] = 'Yes';
-                $data['ECFMGCertificateNumber'] = $exam->getCertificateNum() ?? '';
-                $data['ECFMGCertificateDate'] = $datePassed;
-            } elseif (stripos($examType, 'COMLEX Level 1') !== false) {
-                $data['COMLEXLevel1DatePassed'] = $datePassed;
-                $data['COMLEXLevel1Score'] = $score;
-            } elseif (stripos($examType, 'COMLEX Level 2') !== false) {
-                $data['COMLEXLevel2DatePassed'] = $datePassed;
-                $data['COMLEXLevel2Score'] = $score;
-            } elseif (stripos($examType, 'COMLEX Level 3') !== false) {
-                $data['COMLEXLevel3DatePassed'] = $datePassed;
-                $data['COMLEXLevel3Score'] = $score;
-            }
+            // USMLE Step 2 CK
+            $usmleStep2CKDate = $exam->getUSMLEStep2CKDatePassed();
+            $data['USMLEStep2CKDatePassed'] = $usmleStep2CKDate ? $usmleStep2CKDate->format('Y-m-d') : '';
+            $data['USMLEStep2CKScore'] = $exam->getUSMLEStep2CKScore() ?? '';
+            $data['USMLEStep2CKPercentile'] = $exam->getUSMLEStep2CKPercentile() ?? '';
+
+            // USMLE Step 2 CS
+            $usmleStep2CSDate = $exam->getUSMLEStep2CSDatePassed();
+            $data['USMLEStep2CSDatePassed'] = $usmleStep2CSDate ? $usmleStep2CSDate->format('Y-m-d') : '';
+            $data['USMLEStep2CSScore'] = $exam->getUSMLEStep2CSScore() ?? '';
+            $data['USMLEStep2CSPercentile'] = $exam->getUSMLEStep2CSPercentile() ?? '';
+
+            // USMLE Step 3
+            $usmleStep3Date = $exam->getUSMLEStep3DatePassed();
+            $data['USMLEStep3DatePassed'] = $usmleStep3Date ? $usmleStep3Date->format('Y-m-d') : '';
+            $data['USMLEStep3Score'] = $exam->getUSMLEStep3Score() ?? '';
+            $data['USMLEStep3Percentile'] = $exam->getUSMLEStep3Percentile() ?? '';
+
+            // ECFMG
+            $data['ECFMGCertificate'] = $exam->getECFMGCertificate() ? 'Yes' : '';
+            $data['ECFMGCertificateNumber'] = $exam->getECFMGCertificateNumber() ?? '';
+            $ecfmgDate = $exam->getECFMGCertificateDate();
+            $data['ECFMGCertificateDate'] = $ecfmgDate ? $ecfmgDate->format('Y-m-d') : '';
+
+            // COMLEX Level 1
+            $comlexLevel1Date = $exam->getCOMLEXLevel1DatePassed();
+            $data['COMLEXLevel1DatePassed'] = $comlexLevel1Date ? $comlexLevel1Date->format('Y-m-d') : '';
+            $data['COMLEXLevel1Score'] = $exam->getCOMLEXLevel1Score() ?? '';
+            $data['COMLEXLevel1Percentile'] = $exam->getCOMLEXLevel1Percentile() ?? '';
+
+            // COMLEX Level 2
+            $comlexLevel2Date = $exam->getCOMLEXLevel2DatePassed();
+            $data['COMLEXLevel2DatePassed'] = $comlexLevel2Date ? $comlexLevel2Date->format('Y-m-d') : '';
+            $data['COMLEXLevel2Score'] = $exam->getCOMLEXLevel2Score() ?? '';
+            $data['COMLEXLevel2Percentile'] = $exam->getCOMLEXLevel2Percentile() ?? '';
+
+            // COMLEX Level 3
+            $comlexLevel3Date = $exam->getCOMLEXLevel3DatePassed();
+            $data['COMLEXLevel3DatePassed'] = $comlexLevel3Date ? $comlexLevel3Date->format('Y-m-d') : '';
+            $data['COMLEXLevel3Score'] = $exam->getCOMLEXLevel3Score() ?? '';
+            $data['COMLEXLevel3Percentile'] = $exam->getCOMLEXLevel3Percentile() ?? '';
         }
 
         // Initialize licensure fields
