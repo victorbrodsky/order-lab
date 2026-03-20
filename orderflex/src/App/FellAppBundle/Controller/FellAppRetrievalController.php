@@ -63,7 +63,9 @@ class FellAppRetrievalController extends OrderAbstractController
         $logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
 
         // (1) Make API call to Remote Server
-        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data';
+        // Get min_id from request or use 0 as default (get all new applications)
+        $minId = $request->query->get('min_id', 0);
+        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data?min_id=' . $minId;
 
         try {
             //$client = HttpClient::create();
@@ -187,22 +189,28 @@ class FellAppRetrievalController extends OrderAbstractController
             ], 401);
         }
 
-        // Find FellowshipApplication
+        // Find FellowshipApplications with ID > min_id
         $em = $this->getDoctrine()->getManager();
-        //$fellapp = $em->getRepository(FellowshipApplication::class)->findOneBy(['googleFormId' => $hashkey]);
-        $fellapp = $em->getRepository(FellowshipApplication::class)->find(30);
-
-        if( !$fellapp ) {
+        $minId = $request->query->get('min_id', 0);
+        
+        $fellapps = $em->getRepository(FellowshipApplication::class)->createQueryBuilder('f')
+            ->where('f.id > :minId')
+            ->setParameter('minId', $minId)
+            ->orderBy('f.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+        
+        if( empty($fellapps) ) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'FellowshipApplication not found'
+                'message' => 'No new FellowshipApplications found with ID > ' . $minId
             ], 404);
         }
 
-        // Generate xlsx file
-        $xlsxData = $this->generateXlsxData($fellapp);
+        // Generate xlsx file with all new applications
+        $xlsxData = $this->generateXlsxData($fellapps);
 
-        $filename = 'fellowship_application_' . $this->getFormId($fellapp) . '.xlsx'; //$this->getFormId($fellapp);
+        $filename = 'fellowship_applications_min_id_' . $minId . '_' . date('Y-m-d-H-i-s') . '.xlsx';
 
         // Return JSON response with xlsx data as base64
         return new JsonResponse([
@@ -214,8 +222,9 @@ class FellAppRetrievalController extends OrderAbstractController
 
     /**
      * Generate xlsx file from FellowshipApplication data - HORIZONTAL LAYOUT
+     * @param FellowshipApplication[] $fellapps
      */
-    private function generateXlsxData( FellowshipApplication $fellapp ) {
+    private function generateXlsxData( array $fellapps ) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -309,13 +318,53 @@ class FellAppRetrievalController extends OrderAbstractController
             $col++;
         }
 
+        // Process each application as a new row
+        $row = 2;
+        foreach ($fellapps as $fellapp) {
+            $this->populateRow($sheet, $fellapp, $headers, $row);
+            $row++;
+        }
+
+        // Auto-size columns
+        foreach (range('A', $sheet->getHighestColumn()) as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Write to string
+        $writer = new Xlsx($spreadsheet);
+        ob_start();
+        $writer->save('php://output');
+        $xlsxData = ob_get_clean();
+
+        return $xlsxData;
+    }
+
+    /**
+     * Populate a single row with FellowshipApplication data
+     */
+    private function populateRow( $sheet, FellowshipApplication $fellapp, array $headers, int $row ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $instanceId = $userSecUtil->getSiteSettingParameter('instanceId');
+
+        // Get related entities
+        $user = $fellapp->getUser();
+        $trainings = $fellapp->getTrainings();
+        $references = $fellapp->getReferences();
+        $locations = $fellapp->getLocations();
+        $examinations = $fellapp->getExaminations();
+        $stateLicenses = $fellapp->getStateLicenses();
+        $boardCerts = $fellapp->getBoardCertifications();
+        $citizenships = $fellapp->getCitizenships();
+        $avatars = $fellapp->getAvatars();
+        $cvs = $fellapp->getCvs();
+        $coverLetters = $fellapp->getCoverLetters();
+        $reprimandDocs = $fellapp->getReprimandDocuments();
+        $lawsuitDocs = $fellapp->getLawsuitDocuments();
+
         // Prepare data array
         $data = [];
 
         // Basic fields
-        //$currentDateTime = new \DateTime();
-        //$data['ID'] = $fellapp->getId() . ($instanceId ? "_" . $instanceId : "") . "_" . $currentDateTime->format('Y-m-d-H-i-s');
-
         $formId = $this->getFormId($fellapp);
         $data['ID'] = $formId;
         $data['originalAppId'] = $fellapp->getId(); //original fellowship application ID
@@ -704,25 +753,12 @@ class FellAppRetrievalController extends OrderAbstractController
         $data['signatureName'] = $fellapp->getSignatureName() ?? '';
         $data['signatureDate'] = $fellapp->getSignatureDate() ? $fellapp->getSignatureDate()->format('Y-m-d H:i:s') : '';
 
-        // Set data in row 2 (horizontal layout)
+        // Set data in the specified row (horizontal layout)
         $col = 1;
         foreach ($headers as $header) {
-            $sheet->setCellValueByColumnAndRow($col, 2, $data[$header] ?? '');
+            $sheet->setCellValueByColumnAndRow($col, $row, $data[$header] ?? '');
             $col++;
         }
-
-        // Auto-size columns
-        foreach (range('A', $sheet->getHighestColumn()) as $col) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
-        }
-
-        // Write to string
-        $writer = new Xlsx($spreadsheet);
-        ob_start();
-        $writer->save('php://output');
-        $xlsxData = ob_get_clean();
-
-        return $xlsxData;
     }
 
 
