@@ -231,21 +231,6 @@ class FellAppRetrievalController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $instanceId = $userSecUtil->getSiteSettingParameter('instanceId');
 
-        // Get related entities
-        $user = $fellapp->getUser();
-        $trainings = $fellapp->getTrainings();
-        $references = $fellapp->getReferences();
-        $locations = $fellapp->getLocations();
-        $examinations = $fellapp->getExaminations();
-        $stateLicenses = $fellapp->getStateLicenses();
-        $boardCerts = $fellapp->getBoardCertifications();
-        $citizenships = $fellapp->getCitizenships();
-        $avatars = $fellapp->getAvatars();
-        $cvs = $fellapp->getCvs();
-        $coverLetters = $fellapp->getCoverLetters();
-        $reprimandDocs = $fellapp->getReprimandDocuments();
-        $lawsuitDocs = $fellapp->getLawsuitDocuments();
-
         // Define all headers in the exact order requested
         $headers = [
             'ID', 'originalAppId', 'instanceId', 'timestamp', 'lastName', 'firstName', 'middleName',
