@@ -454,10 +454,10 @@ class FellAppRetrievalController extends OrderAbstractController
             $state = '';
             $country = '';
 
-            if ($training->getLocation()) {
-                $city = $training->getLocation()->getCity();
-                $state = $training->getLocation()->getState() ? $training->getLocation()->getState()->getName() : '';
-                $country = $training->getLocation()->getCountry() ? $training->getLocation()->getCountry()->getName() : '';
+            if ($training->getGeoLocation()) {
+                $city = $training->getGeoLocation()->getCity();
+                $state = $training->getGeoLocation()->getState() ? $training->getGeoLocation()->getState()->getName() : '';
+                $country = $training->getGeoLocation()->getCountry() ? $training->getGeoLocation()->getCountry()->getName() : '';
             }
 
             if (stripos($trainingType, 'undergraduate') !== false && $data['undergraduateSchoolName'] == '') {
