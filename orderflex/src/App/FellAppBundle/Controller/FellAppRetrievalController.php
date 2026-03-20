@@ -45,6 +45,7 @@ class FellAppRetrievalController extends OrderAbstractController
     public function retrieveApplicationDataAction( Request $request ) {
         
         // Get secret key for HMAC authentication
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
         
@@ -58,7 +59,9 @@ class FellAppRetrievalController extends OrderAbstractController
         // Generate HMAC for authentication (include timestamp to prevent replay attacks)
         $timestamp = time();
         $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $secretKey);
-        
+        $logger->notice('retrieveApplicationDataAction: $hmac='.$hmac);
+        $logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
+
         // (1) Make API call to Remote Server
         $remoteUrl = 'https://view.online/fellowship-applications/download-application-data';
 
@@ -135,11 +138,14 @@ class FellAppRetrievalController extends OrderAbstractController
     // set it by default to the value "https://view.online/fellowship-applications/download-application-data"
     #[Route(path: '/download-application-data', name: 'fellapp_download_application_data', methods: ['GET'])]
     public function downloadApplicationDataAction( Request $request ) {
+        $logger = $this->container->get('logger');
         // Remote Server: Receive API call and generate xlsx
 
         // Verify HMAC authentication from headers
         $hmacHeader = $request->headers->get('X-HMAC');
         $timestampHeader = $request->headers->get('X-Timestamp');
+        $logger->notice('downloadApplicationDataAction: $hmacHeader='.$hmacHeader);
+        $logger->notice('downloadApplicationDataAction: $timestampHeader='.$timestampHeader);
 
         if( !$hmacHeader || !$timestampHeader ) {
             return new JsonResponse([
