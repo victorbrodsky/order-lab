@@ -29,35 +29,38 @@ use Symfony\Component\HttpClient\HttpClient;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+//API key $hashkey is generated on Caller and Remote servers must be the same in order for Remote server data back.
+//Use Hash-based message authentication code (or HMAC)
+//HMAC is used to authenticate API calls between Caller and Remote servers using a shared secret key
+//$userSecUtil = $this->container->get('user_security_utility');
+//$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+//$hash = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
 
 #[Route(path: '/')]
 class FellAppRetrievalController extends OrderAbstractController
 {
     //http://127.0.0.1/fellowship-applications/retrieve-application-data/abc
     // Caller Server: Make API call to Remote Server
-    #[Route(path: '/retrieve-application-data/{hashkey}', name: 'fellapp_retrieve_application_data', methods: ['GET'])]
-    public function retrieveApplicationDataAction( Request $request, $hashkey = null ) {
+    #[Route(path: '/retrieve-application-data', name: 'fellapp_retrieve_application_data', methods: ['GET'])]
+    public function retrieveApplicationDataAction( Request $request ) {
         
-        if( !$hashkey ) {
+        // Get secret key for HMAC authentication
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        
+        if( !$secretKey ) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Hashkey is required'
-            ], 400);
+                'message' => 'Secret key not configured'
+            ], 500);
         }
         
-        $expectedHashkey = "abc";
-        
-        // (6) Authenticate hashkey
-        if( $hashkey !== $expectedHashkey ) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Invalid hashkey authentication'
-            ], 401);
-        }
+        // Generate HMAC for authentication (include timestamp to prevent replay attacks)
+        $timestamp = time();
+        $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $secretKey);
         
         // (1) Make API call to Remote Server
-        //$remoteUrl = 'https://view.online/fellowship-applications/download-application-data/' . $hashkey;
-        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data/' . $hashkey;
+        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data';
 
         try {
             //$client = HttpClient::create();
@@ -65,7 +68,14 @@ class FellAppRetrievalController extends OrderAbstractController
                 'verify_peer' => false,
                 'verify_host' => false
             ]);
-            $response = $client->request('GET', $remoteUrl);
+            
+            // Send HMAC authentication headers
+            $response = $client->request('GET', $remoteUrl, [
+                'headers' => [
+                    'X-HMAC' => $hmac,
+                    'X-Timestamp' => $timestamp
+                ]
+            ]);
             $statusCode = $response->getStatusCode();
             
             if( $statusCode !== 200 ) {
@@ -101,11 +111,12 @@ class FellAppRetrievalController extends OrderAbstractController
             
             // Save file locally
             file_put_contents($filepath, $xlsxData);
+
+            //use the HASH values for each specialty on Caller and Remote servers
             
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Application data retrieved and stored successfully',
-                'hashkey' => $hashkey,
                 'filename' => $filename,
                 'filepath' => $filepath,
                 'remote_response' => $data
@@ -122,18 +133,55 @@ class FellAppRetrievalController extends OrderAbstractController
     // Remote Server API Endpoint
     // (4) "URL of the API endpoint hosted by the public tandem hub server tenant instance" -
     // set it by default to the value "https://view.online/fellowship-applications/download-application-data"
-    #[Route(path: '/download-application-data/{hashkey}', name: 'fellapp_download_application_data', methods: ['GET'])]
-    public function downloadApplicationDataAction( Request $request, $hashkey = null ) {
+    #[Route(path: '/download-application-data', name: 'fellapp_download_application_data', methods: ['GET'])]
+    public function downloadApplicationDataAction( Request $request ) {
         // Remote Server: Receive API call and generate xlsx
 
-        if( !$hashkey ) {
+        // Verify HMAC authentication from headers
+        $hmacHeader = $request->headers->get('X-HMAC');
+        $timestampHeader = $request->headers->get('X-Timestamp');
+
+        if( !$hmacHeader || !$timestampHeader ) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Hashkey is required'
-            ], 400);
+                'message' => 'HMAC authentication headers required'
+            ], 401);
         }
 
-        // Find FellowshipApplication by hashkey
+        // Get secret key for HMAC verification
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+
+        if( !$secretKey ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Secret key not configured'
+            ], 500);
+        }
+
+        // Verify HMAC (use hash_equals for constant-time comparison)
+        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $secretKey);
+
+        if( !hash_equals($expectedHmac, $hmacHeader) ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Invalid HMAC authentication'
+            ], 401);
+        }
+
+        // Optional: Check timestamp to prevent replay attacks (e.g., allow 5 minute window)
+        $currentTime = time();
+        $requestTime = intval($timestampHeader);
+        $timeWindow = 300; // 5 minutes
+
+        if( abs($currentTime - $requestTime) > $timeWindow ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Request timestamp expired'
+            ], 401);
+        }
+
+        // Find FellowshipApplication
         $em = $this->getDoctrine()->getManager();
         //$fellapp = $em->getRepository(FellowshipApplication::class)->findOneBy(['googleFormId' => $hashkey]);
         $fellapp = $em->getRepository(FellowshipApplication::class)->find(30);
@@ -141,19 +189,18 @@ class FellAppRetrievalController extends OrderAbstractController
         if( !$fellapp ) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'FellowshipApplication not found for hashkey: ' . $hashkey
+                'message' => 'FellowshipApplication not found'
             ], 404);
         }
 
         // Generate xlsx file
-        $xlsxData = $this->generateXlsxData($fellapp, $hashkey);
+        $xlsxData = $this->generateXlsxData($fellapp);
 
         $filename = 'fellowship_application_' . $this->getFormId($fellapp) . '.xlsx'; //$this->getFormId($fellapp);
 
         // Return JSON response with xlsx data as base64
         return new JsonResponse([
             'success' => true,
-            'hashkey' => $hashkey,
             //'filename' => 'fellowship_application_' . $hashkey . '.xlsx',
             'filename' => $filename,
             'xlsx_base64' => base64_encode($xlsxData)
@@ -163,7 +210,7 @@ class FellAppRetrievalController extends OrderAbstractController
     /**
      * Generate xlsx file from FellowshipApplication data - HORIZONTAL LAYOUT
      */
-    private function generateXlsxData( FellowshipApplication $fellapp, $hashkey ) {
+    private function generateXlsxData( FellowshipApplication $fellapp ) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
