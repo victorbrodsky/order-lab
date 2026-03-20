@@ -380,12 +380,13 @@ class FellAppRetrievalController extends OrderAbstractController
 
         // Present Address
         $presentLocation = $locations->first();
-        $data['presentAddressStreet1'] = $presentLocation ? $presentLocation->getStreet1() : '';
-        $data['presentAddressStreet2'] = $presentLocation ? $presentLocation->getStreet2() : '';
-        $data['presentAddressCity'] = $presentLocation ? $presentLocation->getCity() : '';
-        $data['presentAddressState'] = $presentLocation && $presentLocation->getState() ? $presentLocation->getState()->getName() : '';
-        $data['presentAddressZip'] = $presentLocation ? $presentLocation->getZip() : '';
-        $data['presentAddressCountry'] = $presentLocation && $presentLocation->getCountry() ? $presentLocation->getCountry()->getName() : '';
+        $presentGeoLocation = $presentLocation ? $presentLocation->getGeoLocation() : null;
+        $data['presentAddressStreet1'] = $presentGeoLocation ? $presentGeoLocation->getStreet1() : '';
+        $data['presentAddressStreet2'] = $presentGeoLocation ? $presentGeoLocation->getStreet2() : '';
+        $data['presentAddressCity'] = $presentGeoLocation ? $presentGeoLocation->getCity() : '';
+        $data['presentAddressState'] = $presentGeoLocation && $presentGeoLocation->getState() ? $presentGeoLocation->getState()->getName() : '';
+        $data['presentAddressZip'] = $presentGeoLocation ? $presentGeoLocation->getZip() : '';
+        $data['presentAddressCountry'] = $presentGeoLocation && $presentGeoLocation->getCountry() ? $presentGeoLocation->getCountry()->getName() : '';
         $data['samePAddress'] = '';
 
         // Permanent Address
@@ -393,12 +394,13 @@ class FellAppRetrievalController extends OrderAbstractController
         if ($locations->count() > 1) {
             $permLocation = $locations->get(1);
         }
-        $data['permanentAddressStreet1'] = $permLocation ? $permLocation->getStreet1() : '';
-        $data['permanentAddressStreet2'] = $permLocation ? $permLocation->getStreet2() : '';
-        $data['permanentAddressCity'] = $permLocation ? $permLocation->getCity() : '';
-        $data['permanentAddressState'] = $permLocation && $permLocation->getState() ? $permLocation->getState()->getName() : '';
-        $data['permanentAddressZip'] = $permLocation ? $permLocation->getZip() : '';
-        $data['permanentAddressCountry'] = $permLocation && $permLocation->getCountry() ? $permLocation->getCountry()->getName() : '';
+        $permGeoLocation = $permLocation ? $permLocation->getGeoLocation() : null;
+        $data['permanentAddressStreet1'] = $permGeoLocation ? $permGeoLocation->getStreet1() : '';
+        $data['permanentAddressStreet2'] = $permGeoLocation ? $permGeoLocation->getStreet2() : '';
+        $data['permanentAddressCity'] = $permGeoLocation ? $permGeoLocation->getCity() : '';
+        $data['permanentAddressState'] = $permGeoLocation && $permGeoLocation->getState() ? $permGeoLocation->getState()->getName() : '';
+        $data['permanentAddressZip'] = $permGeoLocation ? $permGeoLocation->getZip() : '';
+        $data['permanentAddressCountry'] = $permGeoLocation && $permGeoLocation->getCountry() ? $permGeoLocation->getCountry()->getName() : '';
 
         $data['telephoneHome'] = '';
         $data['telephoneWork'] = '';
