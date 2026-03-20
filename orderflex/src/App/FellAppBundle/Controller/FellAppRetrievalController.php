@@ -467,7 +467,8 @@ class FellAppRetrievalController extends OrderAbstractController
                 $data['undergraduateSchoolCity'] = $city;
                 $data['undergraduateSchoolState'] = $state;
                 $data['undergraduateSchoolCountry'] = $country;
-                $data['undergraduateSchoolMajor'] = $training->getDepartment() ?? '';
+                $majors = $training->getMajors();
+                $data['undergraduateSchoolMajor'] = $majors->count() > 0 ? $majors->first()->getName() : '';
                 $data['undergraduateSchoolDegree'] = $training->getDegree() ? $training->getDegree()->getName() : '';
             } elseif (stripos($trainingType, 'graduate') !== false && $data['graduateSchoolName'] == '') {
                 $data['graduateSchoolStart'] = $startDate;
@@ -476,7 +477,8 @@ class FellAppRetrievalController extends OrderAbstractController
                 $data['graduateSchoolCity'] = $city;
                 $data['graduateSchoolState'] = $state;
                 $data['graduateSchoolCountry'] = $country;
-                $data['graduateSchoolMajor'] = $training->getDepartment() ?? '';
+                $majors = $training->getMajors();
+                $data['graduateSchoolMajor'] = $majors->count() > 0 ? $majors->first()->getName() : '';
                 $data['graduateSchoolDegree'] = $training->getDegree() ? $training->getDegree()->getName() : '';
             } elseif (stripos($trainingType, 'medical') !== false && $data['medicalSchoolName'] == '') {
                 $data['medicalSchoolStart'] = $startDate;
@@ -485,7 +487,8 @@ class FellAppRetrievalController extends OrderAbstractController
                 $data['medicalSchoolCity'] = $city;
                 $data['medicalSchoolState'] = $state;
                 $data['medicalSchoolCountry'] = $country;
-                $data['medicalSchoolMajor'] = $training->getDepartment() ?? '';
+                $majors = $training->getMajors();
+                $data['medicalSchoolMajor'] = $majors->count() > 0 ? $majors->first()->getName() : '';
                 $data['medicalSchoolDegree'] = $training->getDegree() ? $training->getDegree()->getName() : '';
             } elseif (stripos($trainingType, 'residency') !== false && $data['residencyName'] == '') {
                 $data['residencyStart'] = $startDate;
@@ -494,7 +497,8 @@ class FellAppRetrievalController extends OrderAbstractController
                 $data['residencyCity'] = $city;
                 $data['residencyState'] = $state;
                 $data['residencyCountry'] = $country;
-                $data['residencyArea'] = $training->getDepartment() ?? '';
+                $residencySpecialty = $training->getResidencySpecialty();
+                $data['residencyArea'] = $residencySpecialty ? $residencySpecialty->getName() : '';
             } elseif (stripos($trainingType, 'gme') !== false || stripos($trainingType, 'fellowship') !== false) {
                 if ($data['gme1Name'] == '') {
                     $data['gme1Start'] = $startDate;
@@ -503,7 +507,8 @@ class FellAppRetrievalController extends OrderAbstractController
                     $data['gme1City'] = $city;
                     $data['gme1State'] = $state;
                     $data['gme1Country'] = $country;
-                    $data['gme1Area'] = $training->getDepartment() ?? '';
+                    $fellowshipSubspecialty = $training->getFellowshipSubspecialty();
+                    $data['gme1Area'] = $fellowshipSubspecialty ? $fellowshipSubspecialty->getName() : '';
                 } elseif ($data['gme2Name'] == '') {
                     $data['gme2Start'] = $startDate;
                     $data['gme2End'] = $endDate;
@@ -511,9 +516,12 @@ class FellAppRetrievalController extends OrderAbstractController
                     $data['gme2City'] = $city;
                     $data['gme2State'] = $state;
                     $data['gme2Country'] = $country;
-                    $data['gme2Area'] = $training->getDepartment() ?? '';
+                    $fellowshipSubspecialty = $training->getFellowshipSubspecialty();
+                    $data['gme2Area'] = $fellowshipSubspecialty ? $fellowshipSubspecialty->getName() : '';
                 }
             } else {
+                $majors = $training->getMajors();
+                $area = $majors->count() > 0 ? $majors->first()->getName() : '';
                 if ($data['otherExperience1Name'] == '') {
                     $data['otherExperience1Start'] = $startDate;
                     $data['otherExperience1End'] = $endDate;
