@@ -151,6 +151,7 @@ security:
        - { path: ^.*/fellowship-applications/reset-password, role: PUBLIC_ACCESS }
        - { path: ^.*/fellowship-applications/account-activation, role: PUBLIC_ACCESS }
        - { path: ^.*/fellowship-applications/download-application-data, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/retrieve-application-data, role: PUBLIC_ACCESS }
 
   #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
 

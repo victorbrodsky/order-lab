@@ -39,7 +39,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 #[Route(path: '/')]
 class FellAppRetrievalController extends OrderAbstractController
 {
-    //http://127.0.0.1/fellowship-applications/retrieve-application-data/abc
+    //http://127.0.0.1/fellowship-applications/retrieve-application-data
     // Caller Server: Make API call to Remote Server
     #[Route(path: '/retrieve-application-data', name: 'fellapp_retrieve_application_data', methods: ['GET'])]
     public function retrieveApplicationDataAction( Request $request ) {
@@ -207,7 +207,6 @@ class FellAppRetrievalController extends OrderAbstractController
         // Return JSON response with xlsx data as base64
         return new JsonResponse([
             'success' => true,
-            //'filename' => 'fellowship_application_' . $hashkey . '.xlsx',
             'filename' => $filename,
             'xlsx_base64' => base64_encode($xlsxData)
         ]);
@@ -240,7 +239,7 @@ class FellAppRetrievalController extends OrderAbstractController
 
         // Define all headers in the exact order requested
         $headers = [
-            'ID', 'timestamp', 'lastName', 'firstName', 'middleName',
+            'ID', 'originalAppId', 'instanceId', 'timestamp', 'lastName', 'firstName', 'middleName',
             'uploadedPhotoUrl', 'uploadedCVUrl', 'uploadedCoverLetterUrl', 'uploadedUSMLEScoresUrl',
             'fellowshipType', 'trainingPeriodStart', 'trainingPeriodEnd',
             'otherNames', 'presentAddressStreet1', 'presentAddressStreet2', 'presentAddressCity',
@@ -319,6 +318,9 @@ class FellAppRetrievalController extends OrderAbstractController
 
         $formId = $this->getFormId($fellapp);
         $data['ID'] = $formId;
+        $data['originalAppId'] = $fellapp->getId(); //original fellowship application ID
+        $data['instanceId'] = $instanceId;
+
         $data['timestamp'] = $fellapp->getTimestamp() ? $fellapp->getTimestamp()->format('Y-m-d H:i:s') : '';
         $data['lastName'] = $user ? $user->getLastName() : '';
         $data['firstName'] = $user ? $user->getFirstName() : '';

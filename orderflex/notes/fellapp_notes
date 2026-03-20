@@ -102,5 +102,10 @@ do not change other files.
 6) Caller server authenticate $hashkey
 7) Caller server receive xlsx file and store it locally in order-lab\orderflex\public\Uploaded\fellapp\Spreadsheets
 
+I want to download only new applications without transferring already downloaded applications.
+Each application has unique sequential ID. I want to use last_downloaded_id approach.
+1) Send min_id to the Remote server.
+2) On Remote server get all fellowship applications with IDs greater than this last_downloaded_id.
+3) Add all these new application's metadata to the $xlsxData as new row.
 
 
