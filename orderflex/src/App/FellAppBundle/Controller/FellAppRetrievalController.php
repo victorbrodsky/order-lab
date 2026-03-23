@@ -20,6 +20,7 @@ namespace App\FellAppBundle\Controller;
 use App\FellAppBundle\Entity\FellowshipApplication;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
+use App\UserdirectoryBundle\Entity\Document;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpClient\HttpClient;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 
 //API key $hashkey is generated on Caller and Remote servers must be the same in order for Remote server data back.
 //Use Hash-based message authentication code (or HMAC)
@@ -114,8 +118,50 @@ class FellAppRetrievalController extends OrderAbstractController
             
             $filepath = $storagePath . '/' . $filename;
             
-            // Save file locally
+            // Save file locally - COMMENTED OUT: Do not save file locally, just show records
             file_put_contents($filepath, $xlsxData);
+
+            if(1) {
+                //dump($response['remote_response']);
+                //dump($xlsxData);
+
+                //Use populateSpreadsheet
+                //$this->populateSpreadsheetFromFilename($filepath);
+                $this->xlsxFileParser($filepath);
+
+                exit('retrieveApplicationDataAction');
+
+                //$xlsxBase64 = $response['remote_response']['xlsx_base64'];
+                $xlsxBase64 = $xlsxData;//['remote_response'];//['xlsx_base64'];
+                $this->previewXlsx($response);
+
+// 1. Decode Base64 → binary XLSX content
+                $binaryXlsx = base64_decode($xlsxBase64);
+// 2. Load spreadsheet from string (no temp file needed)
+                // Load from memory stream
+                $temp = fopen('php://memory', 'r+');
+                fwrite($temp, $binaryXlsx);
+                rewind($temp);
+                $reader = new XlsxReader();
+                $spreadsheet = $reader->load($temp);
+                $data = $spreadsheet->getActiveSheet()->toArray();
+                //dump($data);
+                //exit('retrieveApplicationDataAction');
+// 3. Get active sheet
+                //$sheet = $spreadsheet->getActiveSheet();
+// 4. Convert to array
+                //$data = $sheet->toArray();
+                foreach ($data as $row) {
+                    echo "<tr>";
+                    foreach ($row as $cell) {
+                        echo "<td>" . htmlspecialchars($cell) . "</td>";
+                    }
+                    echo "</tr>";
+                }
+
+                echo "</table>";
+                exit('retrieveApplicationDataAction');
+            }
 
             //use the HASH values for each specialty on Caller and Remote servers
             
@@ -134,6 +180,93 @@ class FellAppRetrievalController extends OrderAbstractController
             ], 500);
         }
     }
+    public function populateSpreadsheetFromFilename( $filepath ) {
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+
+        //$document = new Document(); //dummy document
+        //$document->getServerPath(); //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
+
+        //populateSpreadsheet( $document, $datafile=null, $deleteSourceRow=false, $testing=false )
+        //$fellappImportPopulateUtil->populateSpreadsheet($document,$datafile=null,$deleteSourceRow=false,$testing=false);
+    }
+    public function xlsxFileParser( $xlsxFile ) {
+        // Load spreadsheet
+        $reader = new XlsxReader();
+        $spreadsheet = $reader->load($xlsxFile);
+
+        // Remove temp file
+        //unlink($xlsxFile);
+
+        // Convert to array
+        $rows = $spreadsheet->getActiveSheet()->toArray();
+        // Dump or loop
+        //dump($rows);
+
+        $header = $rows[0];
+        $headerLen = count($header);
+        echo "header count=".$headerLen."<br>";
+        array_shift($rows);   // removes row 0
+
+        foreach($rows as $row) {
+            //dump($row);
+            //for( $i = 1; $i <= $headerLen; $i++ ) {
+                //echo "The number is: " . $i . "<br>";
+                //$key = array_search("ID", $header);
+                //$value = $row[$key];
+                //$keyName = $headerLen[$i];
+                //$value = $row[$i];
+                //echo $keyName.": value=$value <br>";
+
+            $value = $this->getRowValue('ID',$row,$header);
+            //echo "ID value=$value <br>";
+
+            $originalAppId = $this->getRowValue('originalAppId',$row,$header);
+            //echo "originalAppId=$originalAppId <br>";
+            //}
+        }
+        die;
+    }
+    public function getRowValue( $keyName, $row, $header ) {
+        $key = array_search($keyName, $header);
+        $value = $row[$key];
+        echo "$keyName=$value <br>";
+        return $value;
+    }
+    public function previewXlsx($response)
+    {
+        $data = $response->toArray();
+        $xlsxBase64 = $data['remote_response']['xlsx_base64'];
+        $binaryXlsx = base64_decode($xlsxBase64);
+
+        // Load from memory stream
+        $temp = fopen('php://memory', 'r+');
+        fwrite($temp, $binaryXlsx);
+        rewind($temp);
+
+        $reader = new XlsxReader();
+        $spreadsheet = $reader->load($temp);
+
+        $data = $spreadsheet->getActiveSheet()->toArray();
+
+        // Build HTML manually
+        $html = "<html><body><table border='1' cellpadding='5'>";
+
+        foreach ($data as $row) {
+            $html .= "<tr>";
+            foreach ($row as $cell) {
+                $html .= "<td>" . htmlspecialchars($cell) . "</td>";
+            }
+            $html .= "</tr>";
+        }
+
+        $html .= "</table></body></html>";
+        dump($html);
+        exit('111');
+
+        return new Response($html);
+
+    }
+
 
     // Remote Server API Endpoint
     // (4) "URL of the API endpoint hosted by the public tandem hub server tenant instance" -

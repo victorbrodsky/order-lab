@@ -954,6 +954,7 @@ class FellAppImportPopulateUtil {
             return false;
         }
 
+        ////////// process $inputFileName ///////////
         //$logger->notice("Getting source sheet with filename=".$inputFileName);
         //echo "Getting source sheet with filename=".$inputFileName."<br>";
         //$inputFileName = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded/fellapp/Spreadsheets\1647382888ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18";
@@ -1042,10 +1043,14 @@ class FellAppImportPopulateUtil {
         //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
 
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
-        $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp',$this->container->getParameter('fellapp.sitename'));
+        $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter(
+            'applicantsUploadPathFellApp',
+            $this->container->getParameter('fellapp.sitename')
+        );
         if( !$applicantsUploadPathFellApp ) {
             $applicantsUploadPathFellApp = "FellowshipApplicantUploads";
-            $logger->warning('applicantsUploadPathFellApp is not defined in Fellowship Site Parameters. Use default "'.$applicantsUploadPathFellApp.'" folder.');
+            $logger->warning('applicantsUploadPathFellApp is not defined in Fellowship Site Parameters. Use default "'.
+                $applicantsUploadPathFellApp.'" folder.');
         }
         $uploadPath = $this->uploadDir.'/'.$applicantsUploadPathFellApp;
 
