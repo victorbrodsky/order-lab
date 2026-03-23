@@ -88,3 +88,16 @@ sudo rm /boot/symvers-5.14.0-570.60.1.el9_6.x86_64.gz
 sudo dnf remove kernel-5.14.0-611.11.1.el9_7.x86_64
 sudo rm -f /boot/*611.11.1*
 
+23 March 2026:
+dnf remove kernel-5.14.0-611.16.1.el9_7.x86_64
+
+cd /boot
+rm -f config-5.14.0-611.16.1.el9_7.x86_64
+rm -f initramfs-5.14.0-611.16.1.el9_7.x86_64.img
+rm -f initramfs-5.14.0-611.16.1.el9_7.x86_64kdump.img
+rm -f System.map-5.14.0-611.16.1.el9_7.x86_64
+rm -f vmlinuz-5.14.0-611.16.1.el9_7.x86_64
+rm -f symvers-5.14.0-611.16.1.el9_7.x86_64.gz
+
+
+
