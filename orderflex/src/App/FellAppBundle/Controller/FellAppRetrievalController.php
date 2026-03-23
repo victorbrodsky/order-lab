@@ -126,42 +126,19 @@ class FellAppRetrievalController extends OrderAbstractController
                 //dump($xlsxData);
 
                 //Use populateSpreadsheet
-                //$this->populateSpreadsheetFromFilename($filepath);
-                $this->xlsxFileParser($filepath);
+                $this->populateSpreadsheetFromFilename($filepath);
+                //$this->xlsxFileParser($filepath);
 
-                exit('retrieveApplicationDataAction');
-
-                //$xlsxBase64 = $response['remote_response']['xlsx_base64'];
-                $xlsxBase64 = $xlsxData;//['remote_response'];//['xlsx_base64'];
-                $this->previewXlsx($response);
-
-// 1. Decode Base64 → binary XLSX content
-                $binaryXlsx = base64_decode($xlsxBase64);
-// 2. Load spreadsheet from string (no temp file needed)
-                // Load from memory stream
-                $temp = fopen('php://memory', 'r+');
-                fwrite($temp, $binaryXlsx);
-                rewind($temp);
-                $reader = new XlsxReader();
-                $spreadsheet = $reader->load($temp);
-                $data = $spreadsheet->getActiveSheet()->toArray();
-                //dump($data);
                 //exit('retrieveApplicationDataAction');
-// 3. Get active sheet
-                //$sheet = $spreadsheet->getActiveSheet();
-// 4. Convert to array
-                //$data = $sheet->toArray();
-                foreach ($data as $row) {
-                    echo "<tr>";
-                    foreach ($row as $cell) {
-                        echo "<td>" . htmlspecialchars($cell) . "</td>";
-                    }
-                    echo "</tr>";
-                }
-
-                echo "</table>";
-                exit('retrieveApplicationDataAction');
             }
+
+            if ($filepath && file_exists($filepath)) {
+                unlink($filepath);
+                dump("Deleted: " . $filepath);
+            } else {
+                dump("File not found: " . $filepath);
+            }
+            exit('retrieveApplicationDataAction');
 
             //use the HASH values for each specialty on Caller and Remote servers
             
@@ -183,13 +160,18 @@ class FellAppRetrievalController extends OrderAbstractController
     public function populateSpreadsheetFromFilename( $filepath ) {
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
-        //$document = new Document(); //dummy document
+        $document = new Document(); //dummy document
         //$document->getServerPath(); //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
+        $document->setUniquename($uniquename);
+        $document->setUploadDirectory();
 
-        //populateSpreadsheet( $document, $datafile=null, $deleteSourceRow=false, $testing=false )
-        //$fellappImportPopulateUtil->populateSpreadsheet($document,$datafile=null,$deleteSourceRow=false,$testing=false);
+
+        //// populateSpreadsheet( $document, $datafile=null, $deleteSourceRow=false, $testing=false )
+        $fellappImportPopulateUtil->populateSpreadsheet($document,$datafile=null,$deleteSourceRow=false,$testing=false);
     }
     public function xlsxFileParser( $xlsxFile ) {
+        $em = $this->getDoctrine()->getManager();
+
         // Load spreadsheet
         $reader = new XlsxReader();
         $spreadsheet = $reader->load($xlsxFile);
@@ -209,28 +191,40 @@ class FellAppRetrievalController extends OrderAbstractController
 
         foreach($rows as $row) {
             //dump($row);
-            //for( $i = 1; $i <= $headerLen; $i++ ) {
-                //echo "The number is: " . $i . "<br>";
-                //$key = array_search("ID", $header);
-                //$value = $row[$key];
-                //$keyName = $headerLen[$i];
-                //$value = $row[$i];
-                //echo $keyName.": value=$value <br>";
 
-            $value = $this->getRowValue('ID',$row,$header);
-            //echo "ID value=$value <br>";
+            $googleFormId = $this->getValueByHeaderName('ID',$row,$header);
+            //echo "ID value=$googleFormId <br>";
+            $fellowshipApplicationDb = $em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($googleFormId);
+            if( $fellowshipApplicationDb ) {
+                //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
+                continue; //skip this fell application, because it already exists in DB
+            }
 
-            $originalAppId = $this->getRowValue('originalAppId',$row,$header);
-            //echo "originalAppId=$originalAppId <br>";
-            //}
+            $originalAppId = $this->getValueByHeaderName('originalAppId',$row,$header);
+            $instanceId = $this->getValueByHeaderName('instanceId',$row,$header);
+            $timestamp = $this->getValueByHeaderName('timestamp',$row,$header);
+            $lastName = $this->getValueByHeaderName('lastName',$row,$header);
+            $firstName = $this->getValueByHeaderName('firstName',$row,$header);
+
+            echo "#### $googleFormId #### <br>";
         }
-        die;
+        //die;
     }
-    public function getRowValue( $keyName, $row, $header ) {
+    public function getValueByHeaderName( $keyName, $row, $header ) {
+        $res = null;
+        if( !$header ) {
+            return $res;
+        }
         $key = array_search($keyName, $header);
-        $value = $row[$key];
-        echo "$keyName=$value <br>";
-        return $value;
+        if( $key === false ) {
+            //echo "key is false !!!!!!!!!!<br>";
+            return $res;
+        }
+        if( array_key_exists($key, $row) ) {
+            $res = $row[$key];
+        }
+        //echo "$keyName=$res <br>";
+        return $res;
     }
     public function previewXlsx($response)
     {
@@ -483,7 +477,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $data = [];
 
         // Basic fields
-        $formId = $this->getFormId($fellapp);
+        $formId = $this->getFormId($fellapp); //2_VIEWONLINEHUB_2026-03-23-20-07-59
         $data['ID'] = $formId;
         $data['originalAppId'] = $fellapp->getId(); //original fellowship application ID
         $data['instanceId'] = $instanceId;

@@ -1992,6 +1992,1163 @@ class FellAppImportPopulateUtil {
         return $populatedFellowshipApplications;
     }
 
+    public function populateSpreadsheet_TEST( $document, $datafile=null, $deleteSourceRow=false, $testing=false ) {
+
+        //echo "inputFileName=".$inputFileName."<br>";
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userUtil = $this->container->get('user_utility');
+        $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+
+        ini_set('max_execution_time', 3000); //30000 seconds = 50 minutes
+        //ini_set('memory_limit', '512M');
+
+        $service = $googlesheetmanagement->getGoogleService();
+        if( !$service ) {
+            $event = "Google API service failed!";
+            $logger->error($event);
+            $this->sendEmailToSystemEmail($event, $event);
+            $logger->error($event. " while processing ".$document->getServerPath());
+            return false;
+        }
+
+        $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
+        $logger->notice("Population a single application sheet (document ID=".$document->getId().") with filename=".$inputFileName);
+
+        //if ruuning from cron path must be: $path = getcwd() . "/web";
+        //$inputFileName = $path . "/" . $inputFileName;
+        //$inputFileName = realpath($this->container->get('kernel')->getRootDir() . "/../public/" . $inputFileName);
+        $inputFileName = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $inputFileName;
+        //echo "inputFileName=".$inputFileName."<br>";
+        if( !file_exists($inputFileName) ) {
+            $logger->error("Source sheet does not exists with filename=".$inputFileName);
+            return false;
+        }
+
+        ////////// process $inputFileName ///////////
+        //$logger->notice("Getting source sheet with filename=".$inputFileName);
+        //echo "Getting source sheet with filename=".$inputFileName."<br>";
+        //$inputFileName = "C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex\public\Uploaded/fellapp/Spreadsheets\1647382888ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18";
+
+        try {
+            //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+            //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
+            //All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            //$inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            //$objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            //$objPHPExcel = $objReader->load($inputFileName);
+
+            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+            //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+
+            //tesring
+            //1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4
+            //$inputFileName = "/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736222ID1hPlhzbLA_YEsosPrw3uKgL0fe1IgyAUt1rxCg3R3dF4";
+
+            //$inputFileNameOrig = NULL;
+            //inputFileName=/opt/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648736219ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_First_Lastname_2021-05-23_20_21_18
+            $extension = pathinfo($inputFileName,PATHINFO_EXTENSION);
+            //echo "extension=[".$extension."]<br>";
+            //TODO: why '/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1657771205ID1Kd9HLl0fymlfO0UlICArHeB4xAHHxvJKShiTReHFx-Q'
+            // cannot read by PhpSpreadsheet?
+            //$forceCreateCopy = true;
+            $forceCreateCopy = false;
+            if( $forceCreateCopy || !$extension || ($extension && strlen($extension) > 9) ) {
+                //$inputFileType = 'Xlsx'; //'Csv'; //'Xlsx';
+
+                //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+                //$objReader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+                //$objReader->setReadDataOnly(true);
+                //$objPHPExcel = $objReader->load($inputFileType);
+                //return false; //testing: skip
+                //$inputFileNameOrig = $inputFileName;
+
+                $inputFileNameNew = $this->createTempSpreadsheetCopy($inputFileName,$forceCreateCopy);
+                if( !$inputFileNameNew ) {
+                    $errorSubject = "Can not create temp file for the source spreadsheet";
+                    $errorEvent = $errorSubject . ". Filename=" .
+                        $inputFileName . ", extension=" . $extension .
+                        ", documentId=" . $document->getId();
+                    //exit($errorEvent); //testing
+                    $logger->error($errorEvent);
+                    $this->sendEmailToSystemEmail($errorSubject, $errorEvent);
+                    return false;
+                    //exit('$inputFileNameNew is NULL');
+                }
+
+                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileNameNew); //Google spreadsheet: identify $inputFileType='Csv'
+                $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+                $objPHPExcel = $objReader->load($inputFileNameNew);
+
+                //remove temp file $inputFileNameNew
+                unlink($inputFileNameNew);
+
+            } else {
+                $logger->warning("Before identify input file type: inputFileName=[".$inputFileName."]");
+                //IOFactory::identify filename='1657771205ID1Kd9HLl0fymlfO0UlICArHeB4xAHHxvJKShiTReHFx-Q':
+                //Error: Unable to identify a reader for this file with code0
+                //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
+                ////$inputFileType = 'Csv';
+                //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+                $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($inputFileName);
+                $objPHPExcel = $objReader->load($inputFileName);
+            }
+
+            //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName); //Google spreadsheet: identify $inputFileType='Csv'
+            //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            //$objPHPExcel = $objReader->load($inputFileName);
+
+            //exit('111');
+
+        } catch(\Exception $e) {
+            $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($event);
+            $this->sendEmailToSystemEmail($event, $event);
+            throw new IOException($event);
+        }
+
+        //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
+
+        //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
+        $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter(
+            'applicantsUploadPathFellApp',
+            $this->container->getParameter('fellapp.sitename')
+        );
+        if( !$applicantsUploadPathFellApp ) {
+            $applicantsUploadPathFellApp = "FellowshipApplicantUploads";
+            $logger->warning('applicantsUploadPathFellApp is not defined in Fellowship Site Parameters. Use default "'.
+                $applicantsUploadPathFellApp.'" folder.');
+        }
+        $uploadPath = $this->uploadDir.'/'.$applicantsUploadPathFellApp;
+
+        //$logger->notice("Destination upload path=".$uploadPath);
+        //$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+        //var_dump($sheetData);
+
+        $em = $this->em;
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $userkeytype = $userSecUtil->getUsernameType('local-user');
+        if( !$userkeytype ) {
+            throw new EntityNotFoundException('Unable to find local user keytype');
+        }
+
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Fellowship Applicant");
+        if( !$employmentType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
+        }
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $presentLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Present Address");
+        if( !$presentLocationType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Present Address");
+        }
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $permanentLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Permanent Address");
+        if( !$permanentLocationType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Permanent Address");
+        }
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $workLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Work Address");
+        if( !$workLocationType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Work Address");
+        }
+
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppStatus'] by [FellAppStatus::class]
+        $activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
+        if( !$activeStatus ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."active");
+        }
+
+
+        ////////////// add system user /////////////////
+        $systemUser = $userSecUtil->findSystemUser();
+        ////////////// end of add system user /////////////////
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        //echo "rows=$highestRow columns=$highestColumn <br>";
+        //$logger->notice("rows=$highestRow columns=$highestColumn");
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+        //print_r($headers);
+
+        $populatedFellowshipApplications = new ArrayCollection();
+
+        ////////////////// Potential ERROR //////////////////
+        //$logger->notice("Fellapp populate Spreadsheet: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
+        //TODO: Invalid number of rows in Fellowship Application Spreadsheet.
+        // The applicant data is located in row number 3.
+        // The applicant data might be missing. Number of rows: 2., document ID=39765,
+        // title=, originalName=BackupSpreadsheet,
+        // createDate=30-03-2022 22:23:21, size=8.943359375,
+        // filename=/srv/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/1648679001ID19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo
+        //$useWarning = false;
+        $useWarning = true;
+        if( $useWarning ) {
+            if (!$highestRow || $highestRow < 3) {
+
+                $createDateStr = NULL;
+                $createDate = $document->getCreateDate();
+                if ($createDate) {
+                    $createDateStr = $createDate->format('d-m-Y H:i:s');
+                }
+
+                //Create error notification email [ORDER]
+                $subject = "Error: Invalid number of rows in Fellowship Application Spreadsheet";
+                $body = "Invalid number of rows in Fellowship Application Spreadsheet." .
+                    " The applicant data is located in row number 3. The applicant data might be missing." .
+                    " Number of rows: $highestRow." . ", document ID=" . $document->getId() .
+                    ", title=" . $document->getTitle() .
+                    ", originalName=" . $document->getOriginalname() .
+                    ", createDate=" . $createDateStr .
+                    ", size=" . $document->getSize() .
+                    ", filename=" . $inputFileName;
+
+                $logger->error($body);
+
+                $userSecUtil = $this->container->get('user_security_utility');
+                $systemUser = $userSecUtil->findSystemUser();
+
+                $userSecUtil->sendEmailToSystemEmail($subject, $body);
+
+                //Send email to admins
+                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                if (!$emails) {
+                    $emails = $ccs;
+                    $ccs = null;
+                }
+                //$emails = $ccs = 'oli2002@med.cornell.edu'; //testing
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $emailUtil->sendEmail($emails, $subject, $body, $ccs);
+
+                if ($testing == false) {
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Fellowship Application Creation Failed');
+                }
+
+                ///////////// Delete erroneous spreadsheet $datafile and associated document /////////////
+                $removeErrorFile = true;
+                $removeErrorFile = false;
+                if( $removeErrorFile ) {
+                    $datafileId = NULL;
+                    if ($datafile) {
+                        $datafileId = $datafile->getId();
+                    }
+                    $logger->error("Removing erroneous spreadsheet ($inputFileName): datafileId=" . $datafileId . " and associated documentId=" . $document->getId());
+                    unlink($inputFileName);
+                    $em->remove($document);
+                    if ($datafile) {
+                        $em->remove($datafile);
+                    }
+
+                    if ($testing == false) {
+                        $em->flush();
+                    }
+                }
+
+                //testing
+                throw new IOException("Testing: ".$subject);
+
+                return false;
+            }
+        }
+        ////////////////// EOF Potential ERROR //////////////////
+
+        //for each user in excel
+        if(1) { //if test
+            for ($row = 3; $row <= $highestRow; $row++) {
+
+                //  Read a row of data into an array
+                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                    NULL,
+                    TRUE,
+                    FALSE);
+
+                ///////////////// parse field parseFields ///////////////////
+                //need $inputFileName, $document=null, $datafile=null, $testing=false
+                $parseRes = $this->parseFields_TEST($rowData,$headers,$inputFileName, $document=null, $datafile=null, $testing=false);
+                if( !$parseRes ) {
+                    continue;
+                }
+                //dump($rowData);
+                //exit("EXIT: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
+                ///////////////// parse field ///////////////////
+
+            } //for
+        }//if(1 //if test
+
+
+        //echo "count=".$count."<br>";
+        //exit('end populate');
+
+        return $populatedFellowshipApplications;
+    }
+    public function validateSpreadsheet_TEST( $rowData, $headers, $inputFileName, $document=null, $datafile=null, $testing=false ) {
+        $em = $this->em;
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
+        $subjectError = "Failed to import a received fellowship application - will automatically attempt to re-import (ID=$googleFormId)";
+
+        $systemUser = $userSecUtil->findSystemUser();
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        $userkeytype = $userSecUtil->getUsernameType('local-user');
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
+        $email = $this->getValueByHeaderName('email', $rowData, $headers);
+        $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+        $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+
+        $errorMsgArr = array();
+        $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
+        if (!$fellowshipType) {
+            $errorMsgArr[] = "Fellowship Type is null";
+        }
+        $ref1 = $this->createFellAppReference($em, $systemUser, 'recommendation1', $rowData, $headers, true);
+        if (!$ref1) {
+            $errorMsgArr[] = "Reference1 is null";
+        }
+        $ref2 = $this->createFellAppReference($em, $systemUser, 'recommendation2', $rowData, $headers, true);
+        if (!$ref2) {
+            $errorMsgArr[] = "Reference2 is null";
+        }
+        $ref3 = $this->createFellAppReference($em, $systemUser, 'recommendation3', $rowData, $headers, true);
+        if (!$ref3) {
+            $errorMsgArr[] = "Reference3 is null";
+        }
+
+        if (!$lastName) {
+            $errorMsgArr[] = "Applicant last name is null";
+        }
+        if (!$firstName) {
+            $errorMsgArr[] = "Applicant first name is null";
+        }
+
+        if (!$email) {
+            $errorMsgArr[] = "Applicant email is null";
+        }
+
+        $signatureName = $this->getValueByHeaderName('signatureName', $rowData, $headers);
+        if (!$signatureName) {
+            $errorMsgArr[] = "Signature is null";
+        }
+        $signatureDate = $this->getValueByHeaderName('signatureDate', $rowData, $headers);
+        if (!$signatureDate) {
+            $errorMsgArr[] = "Signature Date is null";
+        }
+        $trainingPeriodStart = $this->getValueByHeaderName('trainingPeriodStart', $rowData, $headers);
+        if (!$trainingPeriodStart) {
+            $errorMsgArr[] = "Start Date is null";
+        }
+        $trainingPeriodEnd = $this->getValueByHeaderName('trainingPeriodEnd', $rowData, $headers);
+        if (!$trainingPeriodEnd) {
+            $errorMsgArr[] = "End Date is null";
+        }
+
+
+        if ($environment == 'live') {
+            //getFellowshipSubspecialty
+            //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+            if ($errorMsgArr && count($errorMsgArr) > 0) {
+
+                //delete erroneous spreadsheet from filesystem and $document from DB
+                if (file_exists($inputFileName)) {
+                    //$logger->error("Source sheet does not exists with filename=".$inputFileName);
+                    //remove from DB
+                    $em->remove($document);
+                    if ($datafile) {
+                        $em->remove($datafile);
+                    }
+
+                    if ($testing == false) {
+                        $em->flush();
+                    }
+                    //delete file
+                    unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
+                    $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=" . $inputFileName);
+                }
+
+                $event = "First spreadsheet validation error:" .
+                    " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
+                    ": " . implode("; ", $errorMsgArr);
+
+                if ($testing == false) {
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
+                }
+
+                $logger->error($event);
+
+                //send email
+                $sendErrorEmail = true;
+                //$sendErrorEmail = false;
+                if ($sendErrorEmail) {
+                    $userSecUtil = $this->container->get('user_security_utility');
+                    $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                    $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                    if (!$emails) {
+                        $emails = $ccs;
+                        $ccs = null;
+                    }
+                    $emailUtil->sendEmail($emails, $subjectError, $event, $ccs);
+                    $this->sendEmailToSystemEmail($subjectError, $event);
+                }
+
+                //continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
+                return false;
+            }
+        } else {
+            $logger->error("Not live server: No deleted erroneous spreadsheet from filesystem and $document from DB");
+        }
+        return true;
+    }
+    //need $document=null, $datafile=null, $testing=false
+    public function parseFields_TEST( $rowData, $headers, $inputFileName, $document=null, $datafile=null, $testing=false ) {
+        $em = $this->em;
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $systemUser = $userSecUtil->findSystemUser();
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        $userkeytype = $userSecUtil->getUsernameType('local-user');
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EmploymentType'] by [EmploymentType::class]
+        $employmentType = $em->getRepository(EmploymentType::class)->findOneByName("Pathology Fellowship Applicant");
+        if( !$employmentType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
+        }
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $presentLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Present Address");
+        if( !$presentLocationType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Present Address");
+        }
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $permanentLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Permanent Address");
+        if( !$permanentLocationType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Permanent Address");
+        }
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
+        $workLocationType = $em->getRepository(LocationTypeList::class)->findOneByName("Work Address");
+        if( !$workLocationType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Work Address");
+        }
+
+        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellAppStatus'] by [FellAppStatus::class]
+        $activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
+        if( !$activeStatus ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."active");
+        }
+
+
+        ///////////////// parse field ///////////////////
+        //dump($rowData);
+        //exit("EXIT: document ID=".$document->getId().", filename=".$inputFileName.", highestRow=$highestRow");
+
+        //$logger->notice(print_r($rowData[0]));
+        //print_r($rowData[0]);
+        //echo "<pre>";
+        //print_r($headers[0]);
+        //echo "</pre>";
+
+        //echo "<pre>";
+        //print_r($rowData[0]);
+        //echo "</pre>";
+        //exit('exit');
+
+        //$googleFormId = $rowData[0][0];
+        $googleFormId = $this->getValueByHeaderName('ID', $rowData, $headers);
+        $email = $this->getValueByHeaderName('email', $rowData, $headers);
+        $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+        $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+
+        //echo "document ID=".$document->getId().", filename=".$inputFileName.", firstName=$firstName, lastName=$lastName <br>";
+
+        //testing
+        //echo "googleFormId=$googleFormId <br>";
+        //if( $googleFormId == 'aullah_augusta_edu_Ullah_Asad_2020-07-12_23_50_26' ) {
+        //dump($rowData[0]);
+        //exit($row . ": " . $googleFormId);
+        //}
+
+        if (!$googleFormId) {
+            //echo $row.": skip ID is null <br>";
+            //$logger->warning($row.': Skip this fell application, because googleFormId does not exists. rowData='.$rowData.'; headers='.implode(";",$headers[0]));
+            //$logger->warning('Skip this fell application, because googleFormId does not exists');
+            //$logger->warning(implode("; ", $rowData[0]));
+            //continue; //skip this fell application, because googleFormId does not exists
+            return null;
+        }
+
+        //ID=".$googleFormId
+        //subject for error email
+        //Failed to import a received fellowship application - will automatically attempt to re-import in X hours
+        $subjectError = "Failed to import a received fellowship application - will automatically attempt to re-import (ID=$googleFormId)";
+
+        ////////////////// validate spreadsheet /////////////////////////
+        // validateSpreadsheet_TEST( $rowData, $headers, $inputFileName, $document=null, $datafile=null, $testing=false )
+        $valRes = $this->validateSpreadsheet_TEST( $rowData, $headers, $inputFileName );
+        if( $valRes === false ) {
+            //continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
+            return null;
+        }
+        ////////////////// EOF validate spreadsheet ////////////////////////
+
+
+        //exit('exit');
+
+        try {
+
+            //            //reopen em after DBALException
+            //            if( !$em->isOpen() ) {
+            //                echo 'em is closed; ID=' . $googleFormId."<br>";
+            //                $em = $em->create(
+            //                $em->getConnection(), $em->getConfiguration());
+            //                $this->em = $em;
+            //                // reset the EM and all aias
+            ////                $container = $this->container;
+            ////                $container->set('doctrine.orm.entity_manager', null);
+            ////                $container->set('doctrine.orm.default_entity_manager', null);
+            ////                // get a fresh EM
+            ////                $em = $this->container->getDoctrine()->getManager();
+            ////                $this->em = $em;
+            //            }
+
+
+            //            if( !$em->isOpen() ) {
+            //                exit('em is still closed; ID=' . $googleFormId);
+            //            }
+
+            //echo "row=".$row.": id=".$googleFormId."<br>";
+
+            //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
+            $fellowshipApplicationDb = $em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($googleFormId);
+            if ($fellowshipApplicationDb) {
+                //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
+                //continue; //skip this fell application, because it already exists in DB
+                return null;
+            }
+
+            //$email = $this->getValueByHeaderName('email', $rowData, $headers);
+            //$lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+            //$firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+            $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
+
+//                $logger->notice('Start populating fell application (googleFormId=['.$googleFormId.']'.' with email='.$email.', firstName='.$firstName.', lastname='.$lastName);
+//                if( !$email ) {
+//                    $logger->warning("Error populating fellapp googleFormId=$googleFormId: email is null");
+//                    $logger->warning(implode("; ", $rowData[0]));
+//                }
+
+            $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
+            $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
+            //$middleNameCap = $this->capitalizeIfNotAllCapital($middleName);
+
+            $lastNameCap = preg_replace('/\s+/', '_', $lastNameCap);
+            $firstNameCap = preg_replace('/\s+/', '_', $firstNameCap);
+
+            //Last Name + First Name + Email
+            $username = $lastNameCap . "_" . $firstNameCap . "_" . $email;
+
+            $displayName = $firstName . " " . $lastName;
+            if ($middleName) {
+                $displayName = $firstName . " " . $middleName . " " . $lastName;
+            }
+
+            //testing !!! TODO: remove it!!!
+            //echo "email=$email, googleFormId=$googleFormId <br>";
+            //exit('111');
+            //continue;
+
+            //create logger which must be deleted on successefull creation of application
+            $eventAttempt = "Attempt of creating Fellowship Applicant " . $displayName . " with unique Google Applicant ID=" . $googleFormId;
+
+            if ($testing == false) {
+                $eventLogAttempt = $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $eventAttempt, $systemUser, null, null, 'Fellowship Application Creation Failed');
+            }
+
+            //check if the user already exists in DB by $googleFormId
+            $user = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
+
+            if (!$user) {
+                //create excel user
+                $addobjects = false;
+                $user = new User($addobjects);
+                $user->setKeytype($userkeytype);
+                $user->setPrimaryPublicUserId($username);
+
+                //set unique username
+                $usernameUnique = $user->createUniqueUsername();
+                $user->setUsername($usernameUnique);
+                $user->setUsernameCanonical($usernameUnique);
+
+
+                $user->setEmail($email);
+                $user->setEmailCanonical($email);
+
+                $user->setFirstName($firstName);
+                $user->setLastName($lastName);
+                $user->setMiddleName($middleName);
+                $user->setDisplayName($displayName);
+                $user->setPassword("");
+                $user->setCreatedby('googleapi');
+                $user->getPreferences()->setTimezone($default_time_zone);
+                $user->setLocked(true);
+
+                //Pathology Fellowship Applicant in EmploymentStatus
+                $employmentStatus = new EmploymentStatus($systemUser);
+                $employmentStatus->setEmploymentType($employmentType);
+                $user->addEmploymentStatus($employmentStatus);
+            }
+
+            //create new Fellowship Applicantion
+            $fellowshipApplication = new FellowshipApplication($systemUser);
+            //if( !$fellowshipApplication ) {
+            //    $fellowshipApplication = new FellowshipApplication($systemUser);
+            //}
+
+            $fellowshipApplication->setAppStatus($activeStatus);
+            //For HUB server, $googleFormId can be used to store unique application ID submitted via HUB server,
+            // maybe in the same format 'dpino_dhs_lacounty_gov_Pino_Devon_2024-12-16_04_56_45'
+            //Therefore, we can treat $googleFormId as remote form ID $remoteFormId
+            $fellowshipApplication->setGoogleFormId($googleFormId);
+
+            //Upon retreval form, set the retrievalMethod according to the site setting
+            //$retrievalMethod = $userSecUtil->getSiteSettingParameter('retrievalMethod',$this->container->getParameter('fellapp.sitename'));
+            //$fellowshipApplication->setRetrievalMethod($retrievalMethod);
+
+            $user->addFellowshipApplication($fellowshipApplication);
+            //if( $fellowshipApplication && !$user->getFellowshipApplications()->contains($fellowshipApplication) ) {
+            //    $user->addFellowshipApplication($fellowshipApplication);
+            //}
+
+            //timestamp
+            $fellowshipApplication->setTimestamp($this->transformDatestrToDate($this->getValueByHeaderName('timestamp', $rowData, $headers)));
+
+            //fellowshipType
+            $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
+            if ($fellowshipType) {
+                //$logger->notice("fellowshipType=[".$fellowshipType."]");
+                $fellowshipType = trim((string)$fellowshipType);
+                $fellowshipType = $this->capitalizeIfNotAllCapital($fellowshipType);
+                $transformer = new GenericTreeTransformer($em, $systemUser, 'FellowshipSubspecialty');
+                $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
+                $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
+            }
+
+            //////////////////////// assign local institution from SiteParameters ////////////////////////
+            //$instPathologyFellowshipProgram = null;
+            //$localInstitutionFellApp = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp');
+            $instPathologyFellowshipProgram = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp', $this->container->getParameter('fellapp.sitename'));
+
+            if ($instPathologyFellowshipProgram) {
+                $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
+            } else {
+                $logger->warning('Local institution for import fellowship application is not set or invalid; instPathologyFellowshipProgram=' . $instPathologyFellowshipProgram);
+            }
+            //////////////////////// EOF assign local institution from SiteParameters ////////////////////////
+
+
+            //trainingPeriodStart
+            $fellowshipApplication->setStartDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodStart', $rowData, $headers)));
+
+            //trainingPeriodEnd
+            $fellowshipApplication->setEndDate($this->transformDatestrToDate($this->getValueByHeaderName('trainingPeriodEnd', $rowData, $headers)));
+
+            //uploadedPhotoUrl
+            $uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl', $rowData, $headers);
+            $uploadedPhotoId = $this->getFileIdByUrl($uploadedPhotoUrl);
+            if ($uploadedPhotoId) {
+                $uploadedPhotoDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedPhotoId, 'Fellowship Photo', $uploadPath);
+                if (!$uploadedPhotoDb) {
+                    throw new IOException('Unable to download file to server: uploadedPhotoUrl=' . $uploadedPhotoUrl . ', fileDB=' . $uploadedPhotoDb);
+                }
+                //$user->setAvatar($uploadedPhotoDb); //set this file as Avatar
+                $fellowshipApplication->addAvatar($uploadedPhotoDb);
+            }
+
+            //uploadedCVUrl
+            $uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl', $rowData, $headers);
+            $uploadedCVUrlId = $this->getFileIdByUrl($uploadedCVUrl);
+            if ($uploadedCVUrlId) {
+                $uploadedCVUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedCVUrlId, 'Fellowship CV', $uploadPath);
+                if (!$uploadedCVUrlDb) {
+                    throw new IOException('Unable to download file to server: uploadedCVUrl=' . $uploadedCVUrl . ', fileDB=' . $uploadedCVUrlDb);
+                }
+                $fellowshipApplication->addCv($uploadedCVUrlDb);
+            }
+
+            //uploadedCoverLetterUrl
+            $uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl', $rowData, $headers);
+            $uploadedCoverLetterUrlId = $this->getFileIdByUrl($uploadedCoverLetterUrl);
+            if ($uploadedCoverLetterUrlId) {
+                $uploadedCoverLetterUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedCoverLetterUrlId, 'Fellowship Cover Letter', $uploadPath);
+                if (!$uploadedCoverLetterUrlDb) {
+                    throw new IOException('Unable to download file to server: uploadedCoverLetterUrl=' . $uploadedCoverLetterUrl . ', fileDB=' . $uploadedCoverLetterUrlDb);
+                }
+                $fellowshipApplication->addCoverLetter($uploadedCoverLetterUrlDb);
+            }
+
+            $examination = new Examination($systemUser);
+            //$user->getCredentials()->addExamination($examination);
+            $fellowshipApplication->addExamination($examination);
+            //uploadedUSMLEScoresUrl
+            $uploadedUSMLEScoresUrl = $this->getValueByHeaderName('uploadedUSMLEScoresUrl', $rowData, $headers);
+            $uploadedUSMLEScoresUrlId = $this->getFileIdByUrl($uploadedUSMLEScoresUrl);
+            if ($uploadedUSMLEScoresUrlId) {
+                $uploadedUSMLEScoresUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedUSMLEScoresUrlId, 'Fellowship USMLE Scores', $uploadPath);
+                if (!$uploadedUSMLEScoresUrlDb) {
+                    throw new IOException('Unable to download file to server: uploadedUSMLEScoresUrl=' . $uploadedUSMLEScoresUrl . ', fileDB=' . $uploadedUSMLEScoresUrlDb);
+                }
+                $examination->addScore($uploadedUSMLEScoresUrlDb);
+            }
+
+            //presentAddress
+            $presentLocation = new Location($systemUser);
+            $presentLocation->setName('Fellowship Applicant Present Address');
+            $presentLocation->addLocationType($presentLocationType);
+            $geoLocation = $this->createGeoLocation($em, $systemUser, 'presentAddress', $rowData, $headers);
+            if ($geoLocation) {
+                $presentLocation->setGeoLocation($geoLocation);
+            }
+            $user->addLocation($presentLocation);
+            $fellowshipApplication->addLocation($presentLocation);
+
+            //telephoneHome
+            //telephoneMobile
+            //telephoneFax
+            $presentLocation->setPhone($this->getValueByHeaderName('telephoneHome', $rowData, $headers) . "");
+            $presentLocation->setMobile($this->getValueByHeaderName('telephoneMobile', $rowData, $headers) . "");
+            $presentLocation->setFax($this->getValueByHeaderName('telephoneFax', $rowData, $headers) . "");
+
+            //permanentAddress
+            $permanentLocation = new Location($systemUser);
+            $permanentLocation->setName('Fellowship Applicant Permanent Address');
+            $permanentLocation->addLocationType($permanentLocationType);
+            $geoLocation = $this->createGeoLocation($em, $systemUser, 'permanentAddress', $rowData, $headers);
+            if ($geoLocation) {
+                $permanentLocation->setGeoLocation($geoLocation);
+            }
+            $user->addLocation($permanentLocation);
+            $fellowshipApplication->addLocation($permanentLocation);
+
+            //telephoneWork
+            $telephoneWork = $this->getValueByHeaderName('telephoneWork', $rowData, $headers);
+            if ($telephoneWork) {
+                $workLocation = new Location($systemUser);
+                $workLocation->setName('Fellowship Applicant Work Address');
+                $workLocation->addLocationType($workLocationType);
+                $workLocation->setPhone($telephoneWork . "");
+                $user->addLocation($workLocation);
+                $fellowshipApplication->addLocation($workLocation);
+            }
+
+
+            $citizenship = new Citizenship($systemUser);
+            //$user->getCredentials()->addCitizenship($citizenship);
+            $fellowshipApplication->addCitizenship($citizenship);
+            //visaStatus
+            $citizenship->setVisa($this->getValueByHeaderName('visaStatus', $rowData, $headers));
+            //citizenshipCountry
+            $citizenshipCountry = $this->getValueByHeaderName('citizenshipCountry', $rowData, $headers);
+            if ($citizenshipCountry) {
+                $citizenshipCountry = trim((string)$citizenshipCountry);
+                $transformer = new GenericTreeTransformer($em, $systemUser, 'Countries');
+                $citizenshipCountryEntity = $transformer->reverseTransform($citizenshipCountry);
+                $citizenship->setCountry($citizenshipCountryEntity);
+            }
+
+            //DOB: oleg_userdirectorybundle_user_credentials_dob
+            $dobDate = $this->transformDatestrToDate($this->getValueByHeaderName('dateOfBirth', $rowData, $headers));
+            $fellowshipApplication->getUser()->getCredentials()->setDob($dobDate);
+
+            //undergraduate
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "undergraduateSchool", $rowData, $headers, 1);
+
+            //graduate
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "graduateSchool", $rowData, $headers, 2);
+
+            //medical
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "medicalSchool", $rowData, $headers, 3);
+
+            //residency: residencyStart	residencyEnd	residencyName	residencyArea
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "residency", $rowData, $headers, 4);
+
+            //gme1: gme1Start, gme1End, gme1Name, gme1Area => Major
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "gme1", $rowData, $headers, 5);
+
+            //gme2: gme2Start, gme2End, gme2Name, gme2Area => Major
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "gme2", $rowData, $headers, 6);
+
+            //otherExperience1Start	otherExperience1End	otherExperience1Name=>Major
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "otherExperience1", $rowData, $headers, 7);
+
+            //otherExperience2Start	otherExperience2End	otherExperience2Name=>Major
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "otherExperience2", $rowData, $headers, 8);
+
+            //otherExperience3Start	otherExperience3End	otherExperience3Name=>Major
+            $this->createFellAppTraining($em, $fellowshipApplication, $systemUser, "otherExperience3", $rowData, $headers, 9);
+
+            //USMLEStep1DatePassed	USMLEStep1Score
+            $examination->setUSMLEStep1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep1DatePassed', $rowData, $headers)));
+            $examination->setUSMLEStep1Score($this->getValueByHeaderName('USMLEStep1Score', $rowData, $headers));
+            $examination->setUSMLEStep1Percentile($this->getValueByHeaderName('USMLEStep1Percentile', $rowData, $headers));
+
+            //USMLEStep2CKDatePassed	USMLEStep2CKScore	USMLEStep2CSDatePassed	USMLEStep2CSScore
+            $examination->setUSMLEStep2CKDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CKDatePassed', $rowData, $headers)));
+            $examination->setUSMLEStep2CKScore($this->getValueByHeaderName('USMLEStep2CKScore', $rowData, $headers));
+            $examination->setUSMLEStep2CKPercentile($this->getValueByHeaderName('USMLEStep2CKPercentile', $rowData, $headers));
+            $examination->setUSMLEStep2CSDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CSDatePassed', $rowData, $headers)));
+            $examination->setUSMLEStep2CSScore($this->getValueByHeaderName('USMLEStep2CSScore', $rowData, $headers));
+            $examination->setUSMLEStep2CSPercentile($this->getValueByHeaderName('USMLEStep2CSPercentile', $rowData, $headers));
+
+            //USMLEStep3DatePassed	USMLEStep3Score
+            $examination->setUSMLEStep3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep3DatePassed', $rowData, $headers)));
+            $examination->setUSMLEStep3Score($this->getValueByHeaderName('USMLEStep3Score', $rowData, $headers));
+            $examination->setUSMLEStep3Percentile($this->getValueByHeaderName('USMLEStep3Percentile', $rowData, $headers));
+
+            //ECFMGCertificate
+            $ECFMGCertificateStr = $this->getValueByHeaderName('ECFMGCertificate', $rowData, $headers);
+            $ECFMGCertificate = false;
+            if ($ECFMGCertificateStr == 'Yes') {
+                $ECFMGCertificate = true;
+            }
+            $examination->setECFMGCertificate($ECFMGCertificate);
+
+            //ECFMGCertificateNumber	ECFMGCertificateDate
+            $examination->setECFMGCertificateNumber($this->getValueByHeaderName('ECFMGCertificateNumber', $rowData, $headers));
+            $examination->setECFMGCertificateDate($this->transformDatestrToDate($this->getValueByHeaderName('ECFMGCertificateDate', $rowData, $headers)));
+
+            //COMLEXLevel1DatePassed	COMLEXLevel1Score	COMLEXLevel2DatePassed	COMLEXLevel2Score	COMLEXLevel3DatePassed	COMLEXLevel3Score
+            $examination->setCOMLEXLevel1Score($this->getValueByHeaderName('COMLEXLevel1Score', $rowData, $headers));
+            $examination->setCOMLEXLevel1Percentile($this->getValueByHeaderName('COMLEXLevel1Percentile', $rowData, $headers));
+            $examination->setCOMLEXLevel1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel1DatePassed', $rowData, $headers)));
+            $examination->setCOMLEXLevel2Score($this->getValueByHeaderName('COMLEXLevel2Score', $rowData, $headers));
+            $examination->setCOMLEXLevel2Percentile($this->getValueByHeaderName('COMLEXLevel2Percentile', $rowData, $headers));
+            $examination->setCOMLEXLevel2DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel2DatePassed', $rowData, $headers)));
+            $examination->setCOMLEXLevel3Score($this->getValueByHeaderName('COMLEXLevel3Score', $rowData, $headers));
+            $examination->setCOMLEXLevel3Percentile($this->getValueByHeaderName('COMLEXLevel3Percentile', $rowData, $headers));
+            $examination->setCOMLEXLevel3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel3DatePassed', $rowData, $headers)));
+
+            //medicalLicensure1Country	medicalLicensure1State	medicalLicensure1DateIssued	medicalLicensure1Number	medicalLicensure1Active
+            $this->createFellAppMedicalLicense($em, $fellowshipApplication, $systemUser, "medicalLicensure1", $rowData, $headers);
+
+            //medicalLicensure2
+            $this->createFellAppMedicalLicense($em, $fellowshipApplication, $systemUser, "medicalLicensure2", $rowData, $headers);
+
+            //suspendedLicensure
+            $fellowshipApplication->setReprimand($this->getValueByHeaderName('suspendedLicensure', $rowData, $headers));
+            //uploadedReprimandExplanationUrl
+            $uploadedReprimandExplanationUrl = $this->getValueByHeaderName('uploadedReprimandExplanationUrl', $rowData, $headers);
+            $uploadedReprimandExplanationUrlId = $this->getFileIdByUrl($uploadedReprimandExplanationUrl);
+            if ($uploadedReprimandExplanationUrlId) {
+                $uploadedReprimandExplanationUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedReprimandExplanationUrlId, 'Fellowship Reprimand', $uploadPath);
+                if (!$uploadedReprimandExplanationUrlDb) {
+                    throw new IOException('Unable to download file to server: uploadedReprimandExplanationUrl=' . $uploadedReprimandExplanationUrl . ', fileID=' . $uploadedReprimandExplanationUrlDb->getId());
+                }
+                $fellowshipApplication->addReprimandDocument($uploadedReprimandExplanationUrlDb);
+            }
+
+            //legalSuit
+            $fellowshipApplication->setLawsuit($this->getValueByHeaderName('legalSuit', $rowData, $headers));
+            //uploadedLegalExplanationUrl
+            $uploadedLegalExplanationUrl = $this->getValueByHeaderName('uploadedLegalExplanationUrl', $rowData, $headers);
+            $uploadedLegalExplanationUrlId = $this->getFileIdByUrl($uploadedLegalExplanationUrl);
+            if ($uploadedLegalExplanationUrlId) {
+                $uploadedLegalExplanationUrlDb = $googlesheetmanagement->downloadFileToServer($systemUser, $service, $uploadedLegalExplanationUrlId, 'Fellowship Legal Suit', $uploadPath);
+                if (!$uploadedLegalExplanationUrlDb) {
+                    throw new IOException('Unable to download file to server: uploadedLegalExplanationUrl=' . $uploadedLegalExplanationUrl . ', fileID=' . $uploadedLegalExplanationUrlDb->getId());
+                }
+                $fellowshipApplication->addReprimandDocument($uploadedLegalExplanationUrlDb);
+            }
+
+            //boardCertification1Board	boardCertification1Area	boardCertification1Date
+            $this->createFellAppBoardCertification($em, $fellowshipApplication, $systemUser, "boardCertification1", $rowData, $headers);
+            //boardCertification2
+            $this->createFellAppBoardCertification($em, $fellowshipApplication, $systemUser, "boardCertification2", $rowData, $headers);
+            //boardCertification3
+            $this->createFellAppBoardCertification($em, $fellowshipApplication, $systemUser, "boardCertification3", $rowData, $headers);
+
+            //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1	recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
+            $ref1 = $this->createFellAppReference($em, $systemUser, 'recommendation1', $rowData, $headers);
+            if ($ref1) {
+                $fellowshipApplication->addReference($ref1);
+            }
+            $ref2 = $this->createFellAppReference($em, $systemUser, 'recommendation2', $rowData, $headers);
+            if ($ref2) {
+                $fellowshipApplication->addReference($ref2);
+            }
+            $ref3 = $this->createFellAppReference($em, $systemUser, 'recommendation3', $rowData, $headers);
+            if ($ref3) {
+                $fellowshipApplication->addReference($ref3);
+            }
+            $ref4 = $this->createFellAppReference($em, $systemUser, 'recommendation4', $rowData, $headers);
+            if ($ref4) {
+                $fellowshipApplication->addReference($ref4);
+            }
+
+            //honors
+            $fellowshipApplication->setHonors($this->getValueByHeaderName('honors', $rowData, $headers));
+            //publications
+            $fellowshipApplication->setPublications($this->getValueByHeaderName('publications', $rowData, $headers));
+            //memberships
+            $fellowshipApplication->setMemberships($this->getValueByHeaderName('memberships', $rowData, $headers));
+
+            //signatureName
+            $fellowshipApplication->setSignatureName($this->getValueByHeaderName('signatureName', $rowData, $headers));
+            //signatureDate
+            $signatureDate = $this->transformDatestrToDate($this->getValueByHeaderName('signatureDate', $rowData, $headers));
+            $fellowshipApplication->setSignatureDate($signatureDate);
+
+            //////////////////// second validate the application //////////////////////
+            $errorMsgArr = array();
+            if (!$fellowshipApplication->getFellowshipSubspecialty()) {
+                $errorMsgArr[] = "Fellowship Type is null";
+            }
+            if (count($fellowshipApplication->getReferences()) == 0) {
+                $errorMsgArr[] = "References are null";
+            }
+            if (!$displayName) {
+                $errorMsgArr[] = "Applicant name is null";
+            }
+            if (!$fellowshipApplication->getSignatureName()) {
+                $errorMsgArr[] = "Signature is null";
+            }
+            if (!$fellowshipApplication->getSignatureDate()) {
+                $errorMsgArr[] = "Signature Date is null";
+            }
+            if (!$fellowshipApplication->getStartDate()) {
+                $errorMsgArr[] = "Start Date is null";
+            }
+            if (!$fellowshipApplication->getEndDate()) {
+                $errorMsgArr[] = "End Date is null";
+            }
+
+            if ($environment == 'live') {
+                //This condition (count($errorMsgArr) > 0) should never happen theoretically, because the first validation should catch the erroneous spreadsheet
+                //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
+                if ($errorMsgArr && count($errorMsgArr) > 0) {
+
+                    //delete erroneous spreadsheet from filesystem and $document from DB
+                    if (file_exists($inputFileName)) {
+                        //$logger->error("Source sheet does not exists with filename=".$inputFileName);
+                        //remove from DB
+                        $em->remove($document);
+                        if ($datafile) {
+                            $em->remove($datafile);
+                        }
+                        //$em->flush($document);
+
+                        if ($testing == false) {
+                            $em->flush();
+                        }
+                        //delete file
+                        unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
+                        $logger->error("Erroneous spreadsheet deleted from server: inputFileName=" . $inputFileName);
+                    }
+
+                    $event = "Second spreadsheet validation error:" .
+                        " (Applicant=[" . $displayName . "], Application ID=[" . $fellowshipApplication->getId() . "])" .
+                        " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
+                        ": " . implode("; ", $errorMsgArr);
+
+                    if ($testing == false) {
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
+                    }
+
+                    $logger->error($event);
+
+                    //send email
+                    //$sendErrorEmail = true;
+                    $sendErrorEmail = false;
+                    if ($sendErrorEmail) {
+                        $userSecUtil = $this->container->get('user_security_utility');
+                        $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                        $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                        if (!$emails) {
+                            $emails = $ccs;
+                            $ccs = null;
+                        }
+                        $emailUtil->sendEmail($emails, $subjectError, $event, $ccs);
+                        $this->sendEmailToSystemEmail($subjectError, $event);
+                    }
+
+                    continue; //skip this fell application, because getFellowshipSubspecialty is null => something is wrong
+                }
+            } else {
+                $logger->error("Not live server:" . "No Erroneous spreadsheet deleted from server: inputFileName=" . $inputFileName);
+            }
+            //////////////////// EOF second validate the application //////////////////////
+
+            //exit('end applicant');
+
+            if ($testing == false) {
+                $em->persist($user);
+                $em->flush();
+            }
+
+            //everything looks fine => remove creation attempt log
+            $em->remove($eventLogAttempt);
+            if ($testing == false) {
+                $em->flush();
+            }
+
+            $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
+            if ($testing == false) {
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, $fellowshipApplication, null, 'Fellowship Application Created');
+            }
+
+            //add application pdf generation to queue
+            $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+            $fellappRepGen->addFellAppReportToQueue($fellowshipApplication->getId());
+
+            $logger->notice($event);
+
+            //send confirmation email to this applicant for prod server
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            if ($environment == 'live') {
+                //send confirmation email to this applicant
+                //$confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+                $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp', $this->container->getParameter('fellapp.sitename'));
+                $confirmationSubjectFellApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectFellApp', $this->container->getParameter('fellapp.sitename'));
+                $confirmationBodyFellApp = $userSecUtil->getSiteSettingParameter('confirmationBodyFellApp', $this->container->getParameter('fellapp.sitename'));
+                //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
+                if ($email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp) {
+                    $logger->notice("Send confirmation email (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
+                    $emailUtil->sendEmail($email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp);
+                } else {
+                    $logger->error("ERROR: confirmation email has not been sent (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
+
+                }
+
+            }//if live
+
+            if ($environment == 'live') {
+                //send confirmation email to the corresponding Fellowship director and coordinator
+                $fellappUtil = $this->container->get('fellapp_util');
+                $fellappUtil->sendConfirmationEmailsOnApplicationPopulation($fellowshipApplication, $user);
+            }
+
+            //create reference hash ID. Must run after fellowship is in DB and has IDs
+            $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication, true);
+            if ($environment == 'live') {
+                // send invitation email to upload recommendation letter to references
+                $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication, true);
+            }
+
+            //delete: imported rows from the sheet on Google Drive and associated uploaded files from the Google Drive.
+            if ($deleteSourceRow) {
+
+                $userSecUtil = $this->container->get('user_security_utility');
+                $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp', $this->container->getParameter('fellapp.sitename'));
+                if ($deleteImportedAplicationsFellApp) {
+
+                    //$backupFileIdFellApp = $userSecUtil->getSiteSettingParameter('backupFileIdFellApp');
+                    $backupFileIdFellApp = $googlesheetmanagement->getGoogleConfigParameter('felBackupTemplateFileId');
+                    if ($backupFileIdFellApp) {
+                        $googleSheetManagement = $this->container->get('fellapp_googlesheetmanagement');
+                        $rowId = $fellowshipApplication->getGoogleFormId();
+
+                        $worksheet = $googleSheetManagement->getSheetByFileId($backupFileIdFellApp);
+
+                        $deletedRows = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive($worksheet, $rowId);
+
+                        if ($deletedRows) {
+                            $event = "Fellowship Application (and all uploaded files) with Google Applicant ID=" . $googleFormId . " Application ID " . $fellowshipApplication->getId() . " has been successful deleted from Google Drive";
+                            $eventTypeStr = "Deleted Fellowship Application Backup From Google Drive";
+                        } else {
+                            $event = "Error: Fellowship Application with Google Applicant ID=" . $googleFormId . " Application ID " . $fellowshipApplication->getId() . "failed to delete from Google Drive";
+                            $eventTypeStr = "Failed Deleted Fellowship Application Backup From Google Drive";
+                        }
+
+                        if ($testing == false) {
+                            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, $fellowshipApplication, null, $eventTypeStr);
+                        }
+                        $logger->notice($event);
+
+                    }//if
+
+                }
+
+            }
+//                $deleteImportedAplicationsFellApp = $userUtil->getSiteSetting($this->em,'deleteImportedAplicationsFellApp');
+//                if( $deleteImportedAplicationsFellApp ) {
+//                    $googleSheetManagement = $this->container->get('fellapp_googlesheetmanagement');
+//                    $res = $googleSheetManagement->deleteImportedApplicationAndUploadsFromGoogleDrive($fellowshipApplication->getGoogleFormId());
+//                    if( $res ) {
+//                        $event = "Fellowship Application (and all uploaded files) with Google Applicant ID=".$googleFormId." Application ID " . $fellowshipApplication->getId() . " has been successful deleted from Google Drive";
+//                        $eventTypeStr = "Deleted Fellowship Application From Google Drive";
+//                    } else {
+//                        $event = "Error: Fellowship Application with Google Applicant ID=".$googleFormId." Application ID " . $fellowshipApplication->getId() . "failed to delete from Google Drive";
+//                        $eventTypeStr = "Failed Deleted Fellowship Application From Google Drive";
+//                    }
+//                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$fellowshipApplication,null,$eventTypeStr);
+//                    $logger->error($event);
+//                }
+
+            //$count++;
+            if ($fellowshipApplication && !$populatedFellowshipApplications->contains($fellowshipApplication)) {
+                $populatedFellowshipApplications->add($fellowshipApplication);
+            }
+
+            //exit( 'Test: end of fellowship applicant id='.$fellowshipApplication->getId() );
+
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            //} catch( \Exception $e ) {
+
+            //        //reopen em after DBALException
+            //        if( !$em->isOpen() ) {
+            //            echo 'em is closed; ID=' . $googleFormId."<br>";
+            //            $em = $em->create( $em->getConnection(), $em->getConfiguration() );
+            //            $this->em = $em;
+            //            // reset the EM and all aias
+            ////                $container = $this->container;
+            ////                $container->set('doctrine.orm.entity_manager', null);
+            ////                $container->set('doctrine.orm.default_entity_manager', null);
+            ////                // get a fresh EM
+            ////                $em = $this->container->getDoctrine()->getManager();
+            ////                $this->em = $em;
+            //        }
+
+            //email
+            //$emails = "oli2002@med.cornell.edu";
+            //$userutil = new UserUtil();
+            //$emails = $userutil->getSiteSetting($this->em,'siteEmail');
+            $event = "Error creating fellowship applicant with unique Google Applicant ID=" . $googleFormId . "; Exception=" . $e->getMessage();
+            //$emailUtil->sendEmail( $emails, $subjectError, $event );
+            $this->sendEmailToSystemEmail($subjectError, $event);
+
+            //logger
+            $logger->error($event);
+
+            //flash
+            //TODO: fix it!
+            if ($userUtil->getSession()) {
+                $userUtil->getSession()->getFlashBag()->add(
+                    'warning',
+                    $event
+                );
+            }
+        } //try/catch
+
+        ///////////////// parse field ///////////////////
+
+        return true;
+    }//parseFields
+
     public function createFellAppReference($em,$author,$typeStr,$rowData,$headers,$testOnly=false) {
 
         //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1
