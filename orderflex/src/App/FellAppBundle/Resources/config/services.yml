@@ -44,6 +44,8 @@ services:
     fellapp_rec_letter_util:
         class: App\FellAppBundle\Util\RecLetterUtil
 
+    fellapp_importpopulate_hub_util:
+        class: App\FellAppBundle\Util\FellAppImportPopulateHubUtil
 
     fellapp_role_voter:
         class: App\FellAppBundle\Security\Voter\FellAppRoleVoter

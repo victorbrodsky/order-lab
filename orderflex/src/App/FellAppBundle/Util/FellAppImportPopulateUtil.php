@@ -2296,19 +2296,20 @@ class FellAppImportPopulateUtil {
 
         return $populatedFellowshipApplications;
     }
-    public function validateSpreadsheet_TEST( $rowData, $headers, $inputFileName, $document=null, $datafile=null, $testing=false ) {
+
+    public function validateSpreadsheet( $rowData, $headers, $fellowshipApplication=null, $testing=false ) {
         $em = $this->em;
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
-        $subjectError = "Failed to import a received fellowship application - will automatically attempt to re-import (ID=$googleFormId)";
+        //$subjectError = "Failed to import a received fellowship application - will automatically attempt to re-import (ID=$googleFormId)";
 
         $systemUser = $userSecUtil->findSystemUser();
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        $userkeytype = $userSecUtil->getUsernameType('local-user');
-        $default_time_zone = $this->container->getParameter('default_time_zone');
+        //$userkeytype = $userSecUtil->getUsernameType('local-user');
+        //$default_time_zone = $this->container->getParameter('default_time_zone');
 
         $email = $this->getValueByHeaderName('email', $rowData, $headers);
         $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
@@ -2360,42 +2361,40 @@ class FellAppImportPopulateUtil {
             $errorMsgArr[] = "End Date is null";
         }
 
-
-        if ($environment == 'live') {
-            //getFellowshipSubspecialty
+        if( $environment == 'live' ) {
+            $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
+            $displayName = $firstName . " " . $lastName;
+            if ($middleName) {
+                $displayName = $firstName . " " . $middleName . " " . $lastName;
+            }
+            //This condition (count($errorMsgArr) > 0) should never happen theoretically, because the first validation should catch the erroneous spreadsheet
             //if( !$fellowshipApplication->getFellowshipSubspecialty() ) { //getSignatureName() - not reliable - some applicants managed to submit the form without signature
             if ($errorMsgArr && count($errorMsgArr) > 0) {
-
-                //delete erroneous spreadsheet from filesystem and $document from DB
-                if (file_exists($inputFileName)) {
-                    //$logger->error("Source sheet does not exists with filename=".$inputFileName);
-                    //remove from DB
-                    $em->remove($document);
-                    if ($datafile) {
-                        $em->remove($datafile);
-                    }
-
-                    if ($testing == false) {
-                        $em->flush();
-                    }
-                    //delete file
-                    unlink($inputFileName); // or die("Couldn't delete erroneous spreadsheet inputFileName=[".$inputFileName."]");
-                    $logger->error("Erroneous spreadsheet deleted from server: $inputFileName=" . $inputFileName);
+                $fellowshipApplicationId = 'None';
+                if( $fellowshipApplication ) {
+                    $fellowshipApplicationId = $fellowshipApplication->getId();
                 }
-
-                $event = "First spreadsheet validation error:" .
+                $event = "Second spreadsheet validation error:" .
+                    " (Applicant=[" . $displayName . "], Application ID=[" . $fellowshipApplicationId . "])" .
                     " Empty required fields after trying to populate the Fellowship Application with Google Applicant ID=[" . $googleFormId . "]" .
                     ": " . implode("; ", $errorMsgArr);
 
                 if ($testing == false) {
-                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, null, null, 'Fellowship Application Creation Failed');
+                    $userSecUtil->createUserEditEvent(
+                        $this->container->getParameter('fellapp.sitename'),
+                        $event,
+                        $systemUser,
+                        null,
+                        null,
+                        'Fellowship Application Creation Failed'
+                    );
                 }
 
                 $logger->error($event);
 
                 //send email
-                $sendErrorEmail = true;
-                //$sendErrorEmail = false;
+                //$sendErrorEmail = true;
+                $sendErrorEmail = false;
                 if ($sendErrorEmail) {
                     $userSecUtil = $this->container->get('user_security_utility');
                     $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
@@ -2404,6 +2403,7 @@ class FellAppImportPopulateUtil {
                         $emails = $ccs;
                         $ccs = null;
                     }
+                    $subjectError = "Failed to import a received fellowship application - will automatically attempt to re-import (ID=$googleFormId)";
                     $emailUtil->sendEmail($emails, $subjectError, $event, $ccs);
                     $this->sendEmailToSystemEmail($subjectError, $event);
                 }
@@ -2412,10 +2412,94 @@ class FellAppImportPopulateUtil {
                 return false;
             }
         } else {
-            $logger->error("Not live server: No deleted erroneous spreadsheet from filesystem and $document from DB");
+            //$logger->error("Not live server:"."No Erroneous spreadsheet deleted from server: inputFileName=" . $inputFileName);
+            $logger->error("Not live server:"."No Erroneous spreadsheet deleted from server");
         }
+
         return true;
     }
+
+    public function createFellappUser( $rowData, $headers ) {
+        //check if the user already exists in DB by $googleFormId
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $username = $this->createUserName($rowData,$headers);
+
+        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
+
+        if (!$user) {
+
+            $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+            $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+            $email = $this->getValueByHeaderName('email', $rowData, $headers);
+            $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
+
+            $default_time_zone = $this->container->getParameter('default_time_zone');
+            $systemUser = $userSecUtil->findSystemUser();
+            $employmentType = $this->em->getRepository(EmploymentType::class)->findOneByName("Pathology Fellowship Applicant");
+            if( !$employmentType ) {
+                throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
+            }
+
+            $displayName = $firstName . " " . $lastName;
+            if ($middleName) {
+                $displayName = $firstName . " " . $middleName . " " . $lastName;
+            }
+
+            $userkeytype = $userSecUtil->getUsernameType('local-user');
+            $username = $this->createUserName($rowData,$headers);
+
+            //create excel user
+            $addobjects = false;
+            $user = new User($addobjects);
+            $user->setKeytype($userkeytype);
+            $user->setPrimaryPublicUserId($username);
+
+            //set unique username
+            $usernameUnique = $user->createUniqueUsername();
+            $user->setUsername($usernameUnique);
+            $user->setUsernameCanonical($usernameUnique);
+
+
+            $user->setEmail($email);
+            $user->setEmailCanonical($email);
+
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setMiddleName($middleName);
+            $user->setDisplayName($displayName);
+            $user->setPassword("");
+            $user->setCreatedby('googleapi');
+            $user->getPreferences()->setTimezone($default_time_zone);
+            $user->setLocked(true);
+
+            //Pathology Fellowship Applicant in EmploymentStatus
+            $employmentStatus = new EmploymentStatus($systemUser);
+            $employmentStatus->setEmploymentType($employmentType);
+            $user->addEmploymentStatus($employmentStatus);
+        }
+
+        return $user;
+    }
+    public function createUserName($rowData, $headers) {
+        //$middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
+        $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+        $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+        $email = $this->getValueByHeaderName('email', $rowData, $headers);
+
+        $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
+        $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
+
+        $lastNameCap = preg_replace('/\s+/', '_', $lastNameCap);
+        $firstNameCap = preg_replace('/\s+/', '_', $firstNameCap);
+
+        //Last Name + First Name + Email
+        $username = $lastNameCap . "_" . $firstNameCap . "_" . $email;
+
+        return $username;
+    }
+
+
     //need $document=null, $datafile=null, $testing=false
     public function parseFields_TEST( $rowData, $headers, $inputFileName, $document=null, $datafile=null, $testing=false ) {
         $em = $this->em;
@@ -3529,19 +3613,27 @@ class FellAppImportPopulateUtil {
     }
 
 
-    public function getValueByHeaderName($header, $row, $headers) {
+    public function getValueByHeaderName($keyName, $row, $headers) {
 
         $res = null;
 
-        if( !$header ) {
+        if( !$keyName ) {
             return $res;
         }
 
-        //echo "header=".$header."<br>";
-        //print_r($headers);
-        //print_r($row[0]);
+        if( isset($headers[0]) && is_array($headers[0]) ) {
+            $row = $row[0];
+            $headers = $headers[0];
+        }
+        return $this->getValueByHeaderKeyName($keyName, $row, $headers);
 
-        $key = array_search($header, $headers[0]);
+
+        //echo "header=".$keyName."<br>";
+        //dump($headers);
+        //dump($row[0]);
+        //exit();
+
+        $key = array_search($keyName, $headers[0]);
         //echo "key=".$key."<br>";
 
         if( $key === false ) {
@@ -3554,6 +3646,22 @@ class FellAppImportPopulateUtil {
         }
 
         //echo "res=".$res."<br>";
+        return $res;
+    }
+    public function getValueByHeaderKeyName( $keyName, $row, $header ) {
+        $res = null;
+        if( !$header ) {
+            return $res;
+        }
+        $key = array_search($keyName, $header);
+        if( $key === false ) {
+            //echo "key is false !!!!!!!!!!<br>";
+            return $res;
+        }
+        if( array_key_exists($key, $row) ) {
+            $res = $row[$key];
+        }
+        //echo "$keyName=$res <br>";
         return $res;
     }
 

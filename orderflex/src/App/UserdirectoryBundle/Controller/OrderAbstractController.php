@@ -13,6 +13,7 @@ use App\CallLogBundle\Util\CallLogUtilForm;
 use App\CrnBundle\Util\CrnUtil;
 use App\CrnBundle\Util\CrnUtilForm;
 use App\DemoDbBundle\Util\DemoDbUtil;
+use App\FellAppBundle\Util\FellAppImportPopulateHubUtil;
 use App\FellAppBundle\Util\FellAppImportPopulateUtil;
 use App\FellAppBundle\Util\FellAppUtil;
 use App\FellAppBundle\Util\GoogleSheetManagement;
@@ -113,6 +114,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['fellapp_googlesheetmanagement'] = '?'.GoogleSheetManagement::class;
         $subscribedServices['fellapp_googlesheetmanagement_v2'] = '?'.GoogleSheetManagementV2::class;
         $subscribedServices['fellapp_rec_letter_util'] = '?'.RecLetterUtil::class;
+        $subscribedServices['fellapp_importpopulate_hub_util'] = '?'.FellAppImportPopulateHubUtil::class;
 
         $subscribedServices['resapp_util'] = '?'.ResAppUtil::class;
         $subscribedServices['resapp_reportgenerator'] = '?'.\App\ResAppBundle\Util\ReportGenerator::class;

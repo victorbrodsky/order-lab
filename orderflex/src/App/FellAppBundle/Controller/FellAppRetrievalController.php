@@ -52,6 +52,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         
         if( !$secretKey ) {
             return new JsonResponse([
@@ -126,8 +127,8 @@ class FellAppRetrievalController extends OrderAbstractController
                 //dump($xlsxData);
 
                 //Use populateSpreadsheet
-                $this->populateSpreadsheetFromFilename($filepath);
-                //$this->xlsxFileParser($filepath);
+                //$this->populateSpreadsheetFromFilename($filepath);
+                $fellappImportPopulateHubUtil->xlsxFileParser($filepath);
 
                 //exit('retrieveApplicationDataAction');
             }
@@ -138,7 +139,7 @@ class FellAppRetrievalController extends OrderAbstractController
             } else {
                 dump("File not found: " . $filepath);
             }
-            exit('retrieveApplicationDataAction');
+            exit('Exit retrieveApplicationDataAction');
 
             //use the HASH values for each specialty on Caller and Remote servers
             
@@ -157,109 +158,7 @@ class FellAppRetrievalController extends OrderAbstractController
             ], 500);
         }
     }
-    public function populateSpreadsheetFromFilename( $filepath ) {
-        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
-        $document = new Document(); //dummy document
-        //$document->getServerPath(); //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
-        $document->setUniquename($uniquename);
-        $document->setUploadDirectory();
-
-
-        //// populateSpreadsheet( $document, $datafile=null, $deleteSourceRow=false, $testing=false )
-        $fellappImportPopulateUtil->populateSpreadsheet($document,$datafile=null,$deleteSourceRow=false,$testing=false);
-    }
-    public function xlsxFileParser( $xlsxFile ) {
-        $em = $this->getDoctrine()->getManager();
-
-        // Load spreadsheet
-        $reader = new XlsxReader();
-        $spreadsheet = $reader->load($xlsxFile);
-
-        // Remove temp file
-        //unlink($xlsxFile);
-
-        // Convert to array
-        $rows = $spreadsheet->getActiveSheet()->toArray();
-        // Dump or loop
-        //dump($rows);
-
-        $header = $rows[0];
-        $headerLen = count($header);
-        echo "header count=".$headerLen."<br>";
-        array_shift($rows);   // removes row 0
-
-        foreach($rows as $row) {
-            //dump($row);
-
-            $googleFormId = $this->getValueByHeaderName('ID',$row,$header);
-            //echo "ID value=$googleFormId <br>";
-            $fellowshipApplicationDb = $em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($googleFormId);
-            if( $fellowshipApplicationDb ) {
-                //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
-                continue; //skip this fell application, because it already exists in DB
-            }
-
-            $originalAppId = $this->getValueByHeaderName('originalAppId',$row,$header);
-            $instanceId = $this->getValueByHeaderName('instanceId',$row,$header);
-            $timestamp = $this->getValueByHeaderName('timestamp',$row,$header);
-            $lastName = $this->getValueByHeaderName('lastName',$row,$header);
-            $firstName = $this->getValueByHeaderName('firstName',$row,$header);
-
-            echo "#### $googleFormId #### <br>";
-        }
-        //die;
-    }
-    public function getValueByHeaderName( $keyName, $row, $header ) {
-        $res = null;
-        if( !$header ) {
-            return $res;
-        }
-        $key = array_search($keyName, $header);
-        if( $key === false ) {
-            //echo "key is false !!!!!!!!!!<br>";
-            return $res;
-        }
-        if( array_key_exists($key, $row) ) {
-            $res = $row[$key];
-        }
-        //echo "$keyName=$res <br>";
-        return $res;
-    }
-    public function previewXlsx($response)
-    {
-        $data = $response->toArray();
-        $xlsxBase64 = $data['remote_response']['xlsx_base64'];
-        $binaryXlsx = base64_decode($xlsxBase64);
-
-        // Load from memory stream
-        $temp = fopen('php://memory', 'r+');
-        fwrite($temp, $binaryXlsx);
-        rewind($temp);
-
-        $reader = new XlsxReader();
-        $spreadsheet = $reader->load($temp);
-
-        $data = $spreadsheet->getActiveSheet()->toArray();
-
-        // Build HTML manually
-        $html = "<html><body><table border='1' cellpadding='5'>";
-
-        foreach ($data as $row) {
-            $html .= "<tr>";
-            foreach ($row as $cell) {
-                $html .= "<td>" . htmlspecialchars($cell) . "</td>";
-            }
-            $html .= "</tr>";
-        }
-
-        $html .= "</table></body></html>";
-        dump($html);
-        exit('111');
-
-        return new Response($html);
-
-    }
 
 
     // Remote Server API Endpoint
