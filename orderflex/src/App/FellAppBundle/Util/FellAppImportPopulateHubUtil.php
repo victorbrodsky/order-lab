@@ -109,7 +109,7 @@ class FellAppImportPopulateHubUtil {
         // Process each data row (starting from row 2)
         for ($row = 2; $row <= $highestRow; $row++) {
 
-            if( $row > 3 ) {
+            if( $row > 2 ) {
                 break; //testing
             }
 
@@ -589,6 +589,9 @@ class FellAppImportPopulateHubUtil {
 
                 //create new Fellowship Applicantion
                 $fellowshipApplication = new FellowshipApplication($systemUser);
+
+                $fellowshipApplication->setRemoteId($originalAppId);
+                exit("after set originalAppId=$originalAppId");
 
                 $fellowshipApplication->setAppStatus($activeStatus);
                 //For HUB server, $googleFormId can be used to store unique application ID submitted via HUB server,

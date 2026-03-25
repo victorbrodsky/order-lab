@@ -78,7 +78,7 @@ class FellAppRetrievalController extends OrderAbstractController
             ->getQuery()
             ->getSingleScalarResult();
         if( !$minRemoteId ) {
-            $minRemoteId = 1;
+            $minRemoteId = 0;
         }
         echo "minRemoteId=$minRemoteId <br>";
         $remoteUrl = 'https://view.online/fellowship-applications/download-application-data?minid=' . $minRemoteId;
