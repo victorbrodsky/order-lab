@@ -1713,7 +1713,7 @@ class UtilController extends OrderAbstractController {
         $authUtil = $this->container->get('authenticator_utility');
         $encodeRes = $authUtil->isPasswordValid($user,$userpassword);
 
-        $encodeRes = true; //testing to change password
+        //$encodeRes = true; //testing to change password (maybe allow for platform admin to change passowrd without entering correct password)
 
         if( $encodeRes ) {
             $output = 'ok';
