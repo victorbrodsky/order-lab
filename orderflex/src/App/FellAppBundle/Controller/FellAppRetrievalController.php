@@ -265,7 +265,7 @@ class FellAppRetrievalController extends OrderAbstractController
 
         // Define all headers in the exact order requested
         $headers = [
-            'ID', 'originalAppId', 'instanceId', 'timestamp', 'lastName', 'firstName', 'middleName',
+            'ID', 'originalAppId', 'instanceId', 'primaryPublicUserId', 'timestamp', 'lastName', 'firstName', 'middleName',
             'uploadedPhotoUrl', 'uploadedCVUrl', 'uploadedCoverLetterUrl', 'uploadedUSMLEScoresUrl',
             'fellowshipType', 'trainingPeriodStart', 'trainingPeriodEnd',
             'otherNames', 'presentAddressStreet1', 'presentAddressStreet2', 'presentAddressCity',
