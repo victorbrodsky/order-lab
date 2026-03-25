@@ -185,7 +185,9 @@ class FellAppImportPopulateHubUtil {
         $firstNameCap = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($firstName);
         $lastNameCap = preg_replace('/\s+/', '_', $lastNameCap);
         $firstNameCap = preg_replace('/\s+/', '_', $firstNameCap);
-        $username = $lastNameCap . "_" . $firstNameCap . "_" . $email;
+        $emailCanonical = trim(strtolower($email));
+        $username = $lastNameCap . "_" . $firstNameCap . "_" . $emailCanonical;
+        $usernameCanonical = trim(strtolower($username));
 
         $displayName = $firstName . " " . $lastName;
         if ($middleName) {
@@ -195,37 +197,38 @@ class FellAppImportPopulateHubUtil {
         // Check if user exists: doe_john_3_cinava1@yahoo.com_@_local-user
         //$user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
         $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($primaryPublicUserId);
-        if (!$username) {
-            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
-        }
-        exit('$username='.$username);
         if (!$user) {
-            $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($email);
+            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($usernameCanonical);
         }
         if (!$user) {
-            $users = $this->em->getRepository(User::class)->findUserByUserInfoEmail($email);
+            $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($emailCanonical);
+        }
+        if (!$user) {
+            $users = $this->em->getRepository(User::class)->findUserByUserInfoEmail($emailCanonical);
             if (count($users) > 0) {
                 $user = $users[0];
             }
         }
         if (!$user) {
             //Check if username is email
-            $user = $userSecUtil->findUserByUsernameAsEmail($username);
+            $user = $userSecUtil->findUserByUsernameAsEmail($usernameCanonical);
         }
         if( !$user ) {
-            $user = $userSecUtil->getUserByUserstr($username);
+            $user = $userSecUtil->getUserByUserstr($usernameCanonical);
         }
 
         if (!$user) {
+            exit('Create new user='.$usernameCanonical);
             // Create new user
             $user = new User(false);
             $user->setKeytype($userkeytype);
-            $user->setPrimaryPublicUserId($username);
+            //$user->setPrimaryPublicUserId($username);
+            $user->setPrimaryPublicUserId($primaryPublicUserId);
             $usernameUnique = $user->createUniqueUsername();
             $user->setUsername($usernameUnique);
             $user->setUsernameCanonical($usernameUnique);
-            $user->setEmail($email);
-            $user->setEmailCanonical($email);
+            $user->setEmail($emailCanonical);
+            $user->setEmailCanonical($emailCanonical);
             $user->setFirstName($firstName);
             $user->setLastName($lastName);
             $user->setMiddleName($middleName);
@@ -238,6 +241,8 @@ class FellAppImportPopulateHubUtil {
             $employmentStatus = new EmploymentStatus($systemUser);
             $employmentStatus->setEmploymentType($employmentType);
             $user->addEmploymentStatus($employmentStatus);
+        } else {
+            exit('Found user='.$usernameCanonical.', $primaryPublicUserId='.$primaryPublicUserId);
         }
 
         // Create Fellowship Application
