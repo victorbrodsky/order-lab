@@ -270,7 +270,7 @@ class FellappSiteParameterType extends AbstractType
         ////////////// Retrieval //////////////
         //(1) "URL of the fellowship application page hosted by Google"
         $builder->add('applicationPageLinkFellApp', null, array(
-            'label' => 'Link to the Fellowship Application Page:',
+            'label' => 'URL of the fellowship application page hosted by Google:',
             'attr' => array('class' => 'form-control')
         ));
 

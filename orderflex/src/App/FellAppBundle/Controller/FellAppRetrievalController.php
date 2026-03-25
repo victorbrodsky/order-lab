@@ -82,7 +82,7 @@ class FellAppRetrievalController extends OrderAbstractController
             $minRemoteId = 0;
         }
         echo "minRemoteId=$minRemoteId <br>";
-        exit('111');
+        //exit('111');
         $remoteUrl = 'https://view.online/fellowship-applications/download-application-data?maxid=' . $minRemoteId;
 
         try {

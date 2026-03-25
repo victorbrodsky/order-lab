@@ -443,7 +443,7 @@ class FellAppImportPopulateHubUtil {
         $fellowshipApplication->setSignatureName($signatureName);
         $fellowshipApplication->setSignatureDate($this->transformDatestrToDate($signatureDate));
 
-        if(1) {
+        if(0) {
             dump($fellowshipApplication);
             exit('Created fellowship application: ' . $fellowshipApplication->getId() .
                 ', $googleFormId=' . $googleFormId .
