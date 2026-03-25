@@ -69,19 +69,21 @@ class FellAppRetrievalController extends OrderAbstractController
         $logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
 
         // (1) Make API call to Remote Server
-        // Get minid from request or use 0 as default (get all new applications)
-        //$minId = $request->query->get('minid', 0);
+        // Get maxid from request or use 0 as default (get all new applications)
+        //$maxid = $request->query->get('maxid', 0);
         //$minRemoteId = $this->em->getRepository(FellowshipApplication::class)->findOneByRemoteId();
         $qb = $em->getRepository(FellowshipApplication::class)->createQueryBuilder('f');
         $minRemoteId = $qb
-            ->select('MIN(f.remoteId)')
+            //->select('MIN(f.remoteId)')
+            ->select('MAX(CAST(f.remoteId AS INTEGER))')
             ->getQuery()
             ->getSingleScalarResult();
         if( !$minRemoteId ) {
             $minRemoteId = 0;
         }
         echo "minRemoteId=$minRemoteId <br>";
-        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data?minid=' . $minRemoteId;
+        exit('111');
+        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data?maxid=' . $minRemoteId;
 
         try {
             //$client = HttpClient::create();
@@ -232,13 +234,13 @@ class FellAppRetrievalController extends OrderAbstractController
             ], 401);
         }
 
-        // Find FellowshipApplications with ID > minid
+        // Find FellowshipApplications with ID > maxid
         $em = $this->getDoctrine()->getManager();
-        $minId = $request->query->get('minid', 0);
+        $maxId = $request->query->get('maxid', 0);
         
         $fellapps = $em->getRepository(FellowshipApplication::class)->createQueryBuilder('f')
-            ->where('f.id > :minId')
-            ->setParameter('minId', $minId)
+            ->where('f.id > :maxid')
+            ->setParameter('maxid', $maxId)
             ->orderBy('f.id', 'ASC')
             ->getQuery()
             ->getResult();
@@ -246,14 +248,14 @@ class FellAppRetrievalController extends OrderAbstractController
         if( empty($fellapps) ) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'No new FellowshipApplications found with ID > ' . $minId
+                'message' => 'No new FellowshipApplications found with ID > ' . $maxId
             ], 404);
         }
 
         // Generate xlsx file with all new applications
         $xlsxData = $this->generateXlsxData($fellapps);
 
-        $filename = 'fellowship_applications_minid_' . $minId . '_' . date('Y-m-d-H-i-s') . '.xlsx';
+        $filename = 'fellowship_applications_maxid_' . $maxId . '_' . date('Y-m-d-H-i-s') . '.xlsx';
 
         // Return JSON response with xlsx data as base64
         return new JsonResponse([

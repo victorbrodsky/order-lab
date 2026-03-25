@@ -257,6 +257,8 @@ class FellAppImportPopulateHubUtil {
         $fellowshipApplication = new FellowshipApplication($systemUser);
         $fellowshipApplication->setAppStatus($activeStatus);
         $fellowshipApplication->setGoogleFormId($googleFormId);
+        $fellowshipApplication->setRemoteId($originalAppId);
+        //exit("after set originalAppId=$originalAppId");
         $user->addFellowshipApplication($fellowshipApplication);
 
         // Set timestamp
@@ -467,7 +469,7 @@ class FellAppImportPopulateHubUtil {
 
 
 
-
+    //NOT USED
     public function xlsxFileParser( $xlsxFile ) {
         $logger = $this->container->get('logger');
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
