@@ -108,6 +108,11 @@ class FellAppImportPopulateHubUtil {
 
         // Process each data row (starting from row 2)
         for ($row = 2; $row <= $highestRow; $row++) {
+
+            if( $row > 3 ) {
+                break; //testing
+            }
+
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE)[0];
 
             $googleFormId = $this->getValueByHeaderName('ID', $rowData, $headers);
@@ -390,6 +395,9 @@ class FellAppImportPopulateHubUtil {
         $fellowshipApplication->setSignatureDate($this->transformDatestrToDate($signatureDate));
 
         // Persist to database
+        //The FellowshipApplication is added to the User via
+        // $user->addFellowshipApplication($fellowshipApplication),
+        // so when the User is persisted, the application cascades to the database.
         $this->em->persist($user);
         $this->em->flush();
 
