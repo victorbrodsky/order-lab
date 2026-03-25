@@ -119,6 +119,7 @@ class FellAppImportPopulateHubUtil {
             $existingApp = $this->em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($googleFormId);
             if ($existingApp) {
                 $logger->notice('Skipping existing application with ID: ' . $googleFormId);
+                exit('Skipping existing application with ID: ' . $googleFormId);
                 continue;
             }
 

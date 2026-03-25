@@ -128,9 +128,10 @@ class FellAppRetrievalController extends OrderAbstractController
 
                 //Use populateSpreadsheet
                 //$this->populateSpreadsheetFromFilename($filepath);
-                $fellappImportPopulateHubUtil->xlsxFileParser($filepath);
+                //$fellappImportPopulateHubUtil->xlsxFileParser($filepath);
+                $populatedFellowshipApplications = $fellappImportPopulateHubUtil->populateFellappFromFile($filepath);
 
-                //exit('retrieveApplicationDataAction');
+                exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
             }
 
             if ($filepath && file_exists($filepath)) {
