@@ -84,6 +84,10 @@ class FellAppImportPopulateHubUtil {
         $this->uploadDir = 'Uploaded';
     }
 
+    public function populateFellappFromFile( $file ) {
+
+    }
+
     public function xlsxFileParser( $xlsxFile ) {
         $logger = $this->container->get('logger');
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
