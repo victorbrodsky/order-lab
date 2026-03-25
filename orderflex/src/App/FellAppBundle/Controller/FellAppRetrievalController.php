@@ -53,6 +53,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        $em = $this->getDoctrine()->getManager();
         
         if( !$secretKey ) {
             return new JsonResponse([
@@ -68,9 +69,19 @@ class FellAppRetrievalController extends OrderAbstractController
         $logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
 
         // (1) Make API call to Remote Server
-        // Get min_id from request or use 0 as default (get all new applications)
-        $minId = $request->query->get('min_id', 0);
-        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data?min_id=' . $minId;
+        // Get minid from request or use 0 as default (get all new applications)
+        //$minId = $request->query->get('minid', 0);
+        //$minRemoteId = $this->em->getRepository(FellowshipApplication::class)->findOneByRemoteId();
+        $qb = $em->getRepository(FellowshipApplication::class)->createQueryBuilder('f');
+        $minRemoteId = $qb
+            ->select('MIN(f.remoteId)')
+            ->getQuery()
+            ->getSingleScalarResult();
+        if( !$minRemoteId ) {
+            $minRemoteId = 1;
+        }
+        echo "minRemoteId=$minRemoteId <br>";
+        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data?minid=' . $minRemoteId;
 
         try {
             //$client = HttpClient::create();
@@ -221,9 +232,9 @@ class FellAppRetrievalController extends OrderAbstractController
             ], 401);
         }
 
-        // Find FellowshipApplications with ID > min_id
+        // Find FellowshipApplications with ID > minid
         $em = $this->getDoctrine()->getManager();
-        $minId = $request->query->get('min_id', 0);
+        $minId = $request->query->get('minid', 0);
         
         $fellapps = $em->getRepository(FellowshipApplication::class)->createQueryBuilder('f')
             ->where('f.id > :minId')
@@ -242,7 +253,7 @@ class FellAppRetrievalController extends OrderAbstractController
         // Generate xlsx file with all new applications
         $xlsxData = $this->generateXlsxData($fellapps);
 
-        $filename = 'fellowship_applications_min_id_' . $minId . '_' . date('Y-m-d-H-i-s') . '.xlsx';
+        $filename = 'fellowship_applications_minid_' . $minId . '_' . date('Y-m-d-H-i-s') . '.xlsx';
 
         // Return JSON response with xlsx data as base64
         return new JsonResponse([

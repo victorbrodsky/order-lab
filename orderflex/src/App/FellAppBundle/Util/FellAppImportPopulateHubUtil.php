@@ -116,13 +116,15 @@ class FellAppImportPopulateHubUtil {
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE)[0];
 
             $googleFormId = $this->getValueByHeaderName('ID', $rowData, $headers);
+            echo 'Processing $googleFormId=' . $googleFormId . "<br>";
+            $logger->notice('Processing $googleFormId=' . $googleFormId);
             if (!$googleFormId) {
                 continue; // Skip rows without ID
             }
 
             // Check if already exists
             $existingApp = $this->em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($googleFormId);
-            if ($existingApp) {
+            if( $existingApp ) {
                 $logger->notice('Skipping existing application with ID: ' . $googleFormId);
                 exit('Skipping existing application with ID: ' . $googleFormId);
                 continue;
@@ -194,11 +196,16 @@ class FellAppImportPopulateHubUtil {
             $displayName = $firstName . " " . $middleName . " " . $lastName;
         }
 
+        echo "emailCanonical=$emailCanonical, usernameCanonical=$usernameCanonical, primaryPublicUserId=$primaryPublicUserId <br>";
+
         // Check if user exists: doe_john_3_cinava1@yahoo.com_@_local-user
         //$user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
-        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($primaryPublicUserId);
+        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($usernameCanonical);
+        echo "1 Found findOneByPrimaryPublicUserId by usernameCanonical=$usernameCanonical => user=$user <br>";
+
         if (!$user) {
-            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($usernameCanonical);
+            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($primaryPublicUserId);
+            echo "2 Found findOneByPrimaryPublicUserId by primaryPublicUserId=$primaryPublicUserId => user=$user <br>";
         }
         if (!$user) {
             $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($emailCanonical);
@@ -223,7 +230,7 @@ class FellAppImportPopulateHubUtil {
             $user = new User(false);
             $user->setKeytype($userkeytype);
             //$user->setPrimaryPublicUserId($username);
-            $user->setPrimaryPublicUserId($primaryPublicUserId);
+            $user->setPrimaryPublicUserId($emailCanonical);
             $usernameUnique = $user->createUniqueUsername();
             $user->setUsername($usernameUnique);
             $user->setUsernameCanonical($usernameUnique);
@@ -242,7 +249,8 @@ class FellAppImportPopulateHubUtil {
             $employmentStatus->setEmploymentType($employmentType);
             $user->addEmploymentStatus($employmentStatus);
         } else {
-            exit('Found user='.$usernameCanonical.', $primaryPublicUserId='.$primaryPublicUserId);
+            echo 'Found user='.$user."<br>";
+            //exit('Found usernameCanonical='.$usernameCanonical.', $primaryPublicUserId='.$primaryPublicUserId);
         }
 
         // Create Fellowship Application
@@ -432,6 +440,17 @@ class FellAppImportPopulateHubUtil {
         $signatureDate = $this->getValueByHeaderName('signatureDate', $rowData, $headers);
         $fellowshipApplication->setSignatureName($signatureName);
         $fellowshipApplication->setSignatureDate($this->transformDatestrToDate($signatureDate));
+
+        if(0) {
+            dump($fellowshipApplication);
+            exit('Created fellowship application: ' . $fellowshipApplication->getId() .
+                ', $googleFormId=' . $googleFormId .
+                ', fellowshipSubspecialty=' . $fellowshipApplication->getFellowshipSubspecialty() .
+                ', globalFellowshipSpecialty=' . $fellowshipApplication->getGlobalFellowshipSpecialty() .
+                ',<br> applicant=' . $displayName .
+                ', primaryPublicUserId=' . $fellowshipApplication->getUser()->getPrimaryPublicUserId()
+            );
+        }
 
         // Persist to database
         //The FellowshipApplication is added to the User via

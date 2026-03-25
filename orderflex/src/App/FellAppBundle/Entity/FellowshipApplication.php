@@ -37,6 +37,9 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\Column(type: 'string', nullable: true)]
     private $googleFormId;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $remoteId;
+
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User', inversedBy: 'fellowshipApplications', cascade: ['remove'])]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $user;
@@ -480,6 +483,21 @@ class FellowshipApplication extends BaseUserAttributes {
         return $this->googleFormId;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRemoteId()
+    {
+        return $this->remoteId;
+    }
+
+    /**
+     * @param mixed $remoteId
+     */
+    public function setRemoteId($remoteId)
+    {
+        $this->remoteId = $remoteId;
+    }
 
     /**
      * @param mixed $endDate
