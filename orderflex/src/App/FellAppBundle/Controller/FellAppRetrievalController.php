@@ -134,11 +134,16 @@ class FellAppRetrievalController extends OrderAbstractController
                 exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
             }
 
-            if ($filepath && file_exists($filepath)) {
-                unlink($filepath);
-                dump("Deleted: " . $filepath);
-            } else {
-                dump("File not found: " . $filepath);
+            //remove $filepath
+            $removeFile = true;
+            $removeFile = false;
+            if( $removeFile ) {
+                if ($filepath && file_exists($filepath)) {
+                    unlink($filepath);
+                    dump("Deleted: " . $filepath);
+                } else {
+                    dump("File not found: " . $filepath);
+                }
             }
             exit('Exit retrieveApplicationDataAction');
 
@@ -381,6 +386,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $data['ID'] = $formId;
         $data['originalAppId'] = $fellapp->getId(); //original fellowship application ID
         $data['instanceId'] = $instanceId;
+        $data['primaryPublicUserId'] = $user ? $user->getPrimaryPublicUserId() : '';
 
         $data['timestamp'] = $fellapp->getTimestamp() ? $fellapp->getTimestamp()->format('Y-m-d H:i:s') : '';
         $data['lastName'] = $user ? $user->getLastName() : '';

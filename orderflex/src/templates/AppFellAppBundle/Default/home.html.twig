@@ -527,73 +527,75 @@
                 {#Set row color#}
                 {% set trclassname = "" %}
 
-                {% if entity.appStatus.name == 'archive' %}
-                    {#No attention required - plain complete order#}
-                    {#{% set trclassname = "action-cancel-status" %}#}
-                    {#{% set trclassname = "info" %}#}
-                    {% set trclassname = "fell-app-status-legend-archived" %}
-                {% endif %}
+                {% if entity.appStatus %}
+                    {% if entity.appStatus.name == 'archive' %}
+                        {#No attention required - plain complete order#}
+                        {#{% set trclassname = "action-cancel-status" %}#}
+                        {#{% set trclassname = "info" %}#}
+                        {% set trclassname = "fell-app-status-legend-archived" %}
+                    {% endif %}
 
-                {% if entity.appStatus.name == 'hide' %}
-                    {#urgent attention required#}
-                    {#{% set trclassname = "order-urgent-status" %}#}
-                    {#{% set trclassname = "danger" %}#}
-                    {% set trclassname = "fell-app-status-legend-hidden" %}
-                {% endif %}
+                    {% if entity.appStatus.name == 'hide' %}
+                        {#urgent attention required#}
+                        {#{% set trclassname = "order-urgent-status" %}#}
+                        {#{% set trclassname = "danger" %}#}
+                        {% set trclassname = "fell-app-status-legend-hidden" %}
+                    {% endif %}
 
-                {% if entity.appStatus.name == 'draft' %}
-                    {#urgent attention required#}
-                    {#{% set trclassname = "order-urgent-status" %}#}
-                    {#{% set trclassname = "danger" %}#}
-                    {% set trclassname = "fell-app-status-legend-hidden" %}
-                {% endif %}
+                    {% if entity.appStatus.name == 'draft' %}
+                        {#urgent attention required#}
+                        {#{% set trclassname = "order-urgent-status" %}#}
+                        {#{% set trclassname = "danger" %}#}
+                        {% set trclassname = "fell-app-status-legend-hidden" %}
+                    {% endif %}
 
-                {% if entity.appStatus.name == 'complete' %}
-                    {#urgent attention required#}
-                    {#{% set trclassname = "order-neutral-status" %}#}
-                    {#{% set trclassname = "order-complete-status" %}#}
-                    {% set trclassname = "fell-app-status-legend-complete" %}
-                {% endif %}
+                    {% if entity.appStatus.name == 'complete' %}
+                        {#urgent attention required#}
+                        {#{% set trclassname = "order-neutral-status" %}#}
+                        {#{% set trclassname = "order-complete-status" %}#}
+                        {% set trclassname = "fell-app-status-legend-complete" %}
+                    {% endif %}
 
-                {% if entity.appStatus.name == 'interviewee' %}
-                    {#urgent attention required#}
-                    {#{% set trclassname = "order-interviewee-status" %}#}
-                    {% set trclassname = "fell-app-status-legend-interviewee" %}
-                {% endif %}
+                    {% if entity.appStatus.name == 'interviewee' %}
+                        {#urgent attention required#}
+                        {#{% set trclassname = "order-interviewee-status" %}#}
+                        {% set trclassname = "fell-app-status-legend-interviewee" %}
+                    {% endif %}
 
-                {% if entity.appStatus.name == 'reject' %}
-                    {#{% set trclassname = "order-reject-status" %}#}
-                    {% set trclassname = "fell-app-status-legend-reject" %}
-                {% endif %}
+                    {% if entity.appStatus.name == 'reject' %}
+                        {#{% set trclassname = "order-reject-status" %}#}
+                        {% set trclassname = "fell-app-status-legend-reject" %}
+                    {% endif %}
 
-                {#{% if entity.appStatus.name == 'onhold' %}#}
-                    {#{% set trclassname = "order-onhold-status" %}#}
-                {#{% endif %}#}
+                    {#{% if entity.appStatus.name == 'onhold' %}#}
+                        {#{% set trclassname = "order-onhold-status" %}#}
+                    {#{% endif %}#}
 
-                {% if entity.appStatus.name == 'priority' %}
-                    {#{% set trclassname = "order-onhold-status" %}#}
-                    {% set trclassname = "fell-app-status-legend-priority" %}
-                {% endif %}
+                    {% if entity.appStatus.name == 'priority' %}
+                        {#{% set trclassname = "order-onhold-status" %}#}
+                        {% set trclassname = "fell-app-status-legend-priority" %}
+                    {% endif %}
 
-                {% if entity.appStatus.name == 'priorityinterviewee' %}
-                    {#{% set trclassname = "order-onhold-status" %}#}
-                    {% set trclassname = "fell-app-status-legend-priorityinterviewee" %}
-                {% endif %}
+                    {% if entity.appStatus.name == 'priorityinterviewee' %}
+                        {#{% set trclassname = "order-onhold-status" %}#}
+                        {% set trclassname = "fell-app-status-legend-priorityinterviewee" %}
+                    {% endif %}
 
-                {% if entity.appStatus.name == 'accepted' %}
-                    {% set trclassname = "fell-app-status-legend-accepted" %}
-                {% endif %}
-                {% if entity.appStatus.name == 'acceptedandnotified' %}
-                    {% set trclassname = "fell-app-status-legend-acceptedandnotified" %}
-                {% endif %}
-                {% if entity.appStatus.name == 'rejectedandnotified' %}
-                    {% set trclassname = "fell-app-status-legend-rejectedandnotified" %}
-                {% endif %}
-                {% if entity.appStatus.name == 'declined' %}
-                    {% set trclassname = "fell-app-status-legend-declined" %}
-                {% endif %}
-                {% if entity.appStatus.name == 'withdrawn' %}
-                    {% set trclassname = "fell-app-status-legend-withdrawn" %}
+                    {% if entity.appStatus.name == 'accepted' %}
+                        {% set trclassname = "fell-app-status-legend-accepted" %}
+                    {% endif %}
+                    {% if entity.appStatus.name == 'acceptedandnotified' %}
+                        {% set trclassname = "fell-app-status-legend-acceptedandnotified" %}
+                    {% endif %}
+                    {% if entity.appStatus.name == 'rejectedandnotified' %}
+                        {% set trclassname = "fell-app-status-legend-rejectedandnotified" %}
+                    {% endif %}
+                    {% if entity.appStatus.name == 'declined' %}
+                        {% set trclassname = "fell-app-status-legend-declined" %}
+                    {% endif %}
+                    {% if entity.appStatus.name == 'withdrawn' %}
+                        {% set trclassname = "fell-app-status-legend-withdrawn" %}
+                    {% endif %}
                 {% endif %}
                 {#EOF Set row color#}
 
@@ -751,7 +753,9 @@
                     </td>
 
                     <td>
-                        {{ entity.appStatus.getAction() }}: {{ letterCountStr }}
+                        {% if entity.appStatus %}
+                            {{ entity.appStatus.getAction() }}: {{ letterCountStr }}
+                        {% endif %}
                     </td>
 
                     <td>
@@ -975,9 +979,9 @@
                         {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
                         {#{% set styleStr = "" %}#}
 
-                        {% if entity.appStatus.name == 'complete' %}
+                        {% if entity.appStatus and entity.appStatus.name == 'complete' %}
                             {% set letterCountStr = "Complete" ~ " (" ~ letterCountStr ~ ")" %}
-                        {% elseif entity.appStatus.name == 'interviewee' %}
+                        {% elseif entity.appStatus and entity.appStatus.name == 'interviewee' %}
                             {% set letterCountStr = "Interviewee" ~ " (" ~ letterCountStr ~ ")" %}
                         {% else %}
                             {#X of Y reference letters received#}
@@ -986,6 +990,7 @@
                                 {#{% set docNumberStr = "doc" %}#}
                             {#{% endif %}#}
                             {#{% set letterCountStr = letterCount~" of "~notEmptyRef~" reference letters ("~totalDocCount~" "~docNumberStr~") received" %}#}
+                            {% set letterCountStr = "Undefined" ~ " (" ~ letterCountStr ~ ")" %}
                             {% set styleStr = "" %}
                         {% endif %}
 
@@ -1046,8 +1051,10 @@
                                     {% endif %}
 
                                     {#Edit - show to supeusers and show to ROLE_FELLAPP_PUBLIC_SUBMITTER when not active #}
-                                    {% if is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') and entity.appStatus.name != 'active'
-                                            or is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR')
+                                    {% if is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER') and
+                                            (entity.appStatus and entity.appStatus.name != 'active') or
+                                            is_granted('ROLE_FELLAPP_COORDINATOR') or
+                                            is_granted('ROLE_FELLAPP_DIRECTOR')
                                     %}
                                         <li>
                                             <a
@@ -1057,7 +1064,8 @@
                                     {% endif %}
 
                                     {#if logged in user == applicant && status is NOT = "Draft" => show Withdraw this application#}
-                                    {% if   entity.appStatus.name != 'withdrawn' and
+                                    {% if   entity.appStatus and
+                                            entity.appStatus.name != 'withdrawn' and
                                             entity.appStatus.name != 'draft' and
                                             entity.user.id == app.user.getId()
                                     %}
@@ -1091,7 +1099,7 @@
 
                                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
 
-                                        {% if entity.appStatus.name != 'active' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'active' %}
                                             <li>
                                                 <a
                                                         general-data-confirm="Are you sure you want to change status of this Application to 'Active'?"
@@ -1101,7 +1109,7 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'draft' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'draft' %}
                                             <li>
                                                 <a
                                                         general-data-confirm="Are you sure you want to change status of this Application to 'Draft'?"
@@ -1111,7 +1119,7 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'priority' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'priority' %}
                                             <li>
                                                 <a
                                                         general-data-confirm="Are you sure you want to mark this Application as Priority?"
@@ -1121,7 +1129,7 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'complete' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'complete' %}
                                             {% set filter = app.request.get('filter') %}
                                             <li>
                                                 <a
@@ -1132,9 +1140,9 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity and entity.getId() and entity.appStatus.name != 'interviewee' %}
+                                        {% if entity and entity.getId() and entity.appStatus and entity.appStatus.name != 'interviewee' %}
                                             <li>
-                                                {% if entity.appStatus.name == 'priority' %}
+                                                {% if entity.appStatus and entity.appStatus.name == 'priority' %}
                                                     {#When user clicks "Action > Mark as an Interviewee" AND current status is "Priority", show a confirmation modal#}
                                                     {#"[FirstName LastName]'s application for [Specialty] [Year] has the current status of 'Priority'. #}
                                                     {#Are you sure you would like to change the application status to 'Interviewee', #}
@@ -1174,7 +1182,7 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'priorityinterviewee' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'priorityinterviewee' %}
                                             <li>
                                                 <a
                                                         general-data-confirm="Are you sure you want to mark this Application as a Priority Interviewee?"
@@ -1208,7 +1216,7 @@
                                         {#{% endif %}#}
 
 
-                                        {% if entity.appStatus.name != 'hide' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'hide' %}
                                             <li>
                                                 <a
                                                     general-data-confirm="Are you sure you want to hide this Application?"
@@ -1218,7 +1226,7 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'archive' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'archive' %}
                                             <li>
                                                 <a
                                                     general-data-confirm="Are you sure you want to change status of this Application to 'Archived'?"
@@ -1232,7 +1240,7 @@
                                             {% set rejectionAcceptanceEmailWarning = fellapp_util.getRejectionAcceptanceEmailWarning(entity) %}
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'accepted' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'accepted' %}
                                             <li>
 
                                                 {% if static %}
@@ -1259,7 +1267,7 @@
 
                                             </li>
                                         {% endif %}
-                                        {% if entity.appStatus.name != 'acceptedandnotified' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'acceptedandnotified' %}
                                             <li>
                                                 {#<a#}
                                                         {#general-data-confirm="Are you sure you want to change status of this Application to 'Accepted and Notified'?"#}
@@ -1301,7 +1309,7 @@
                                             {#</li>#}
                                         {#{% endif %}#}
 
-                                        {% if entity.appStatus.name != 'declined' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'declined' %}
                                             <li>
                                                 <a
                                                     general-data-confirm="Are you sure you want to change status of this Application to 'Declined'?"
@@ -1311,7 +1319,7 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'reject' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'reject' %}
                                             <li>
                                                 {#<a#}
                                                         {#general-data-confirm="Are you sure you want to change status of this Application to 'Rejected'?"#}
@@ -1342,7 +1350,7 @@
                                             </li>
                                         {% endif %}
 
-                                        {% if entity.appStatus.name != 'rejectedandnotified' %}
+                                        {% if entity.appStatus and entity.appStatus.name != 'rejectedandnotified' %}
                                             <li>
                                                 {#<a#}
                                                         {#general-data-confirm="Are you sure you want to change status of this Application to 'Rejected and Notified'?"#}

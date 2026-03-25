@@ -85,7 +85,10 @@
             {% if entity.appStatus and cycle != "download" %}
                 <p>{{ entity.appStatus.action }}</p>
             {% endif %}
-            Fellowship Application ID {{ entity.id }}, {{ entity.getApplicantFullName() }}, submitted on {{ entity.timestamp|date('m/d/Y H:i A (T)','UTC') }}, imported on {{ entity.createdate|date('m/d/Y H:i A (T)','UTC') }}
+            Fellowship Application ID {{ entity.id }},
+            {{ entity.getApplicantFullName() }},
+            submitted on {{ entity.timestamp|date('m/d/Y H:i A (T)','UTC') }},
+            imported on {{ entity.createdate|date('m/d/Y H:i A (T)','UTC') }}, imported ID {{ entity.getGoogleFormId }}
         </div>
     </h4>
 {% endif %}

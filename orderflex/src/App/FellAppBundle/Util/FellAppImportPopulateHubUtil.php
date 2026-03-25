@@ -151,8 +151,19 @@ class FellAppImportPopulateHubUtil {
 
         // Get required lookup entities
         $activeStatus = $this->em->getRepository(FellAppStatus::class)->findOneByName("active");
+        if( !$activeStatus ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."active");
+        }
+
         $employmentType = $this->em->getRepository(EmploymentType::class)->findOneByName("Pathology Fellowship Applicant");
+        if( !$employmentType ) {
+            throw new EntityNotFoundException('Unable to find entity by name='."Pathology Fellowship Applicant");
+        }
+
         $userkeytype = $userSecUtil->getUsernameType('local-user');
+        if( !$userkeytype ) {
+            throw new EntityNotFoundException('Unable to find local user keytype');
+        }
 
         // Get field values
         $googleFormId = $this->getValueByHeaderName('ID', $rowData, $headers);
@@ -162,6 +173,7 @@ class FellAppImportPopulateHubUtil {
         $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
         $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
         $email = $this->getValueByHeaderName('email', $rowData, $headers);
+        $primaryPublicUserId = $this->getValueByHeaderName('primaryPublicUserId', $rowData, $headers);
 
         if (!$email || !$lastName || !$firstName) {
             $logger->warning('Missing required fields (email, lastName, or firstName) for ID: ' . $googleFormId);
@@ -180,8 +192,29 @@ class FellAppImportPopulateHubUtil {
             $displayName = $firstName . " " . $middleName . " " . $lastName;
         }
 
-        // Check if user exists
-        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
+        // Check if user exists: doe_john_3_cinava1@yahoo.com_@_local-user
+        //$user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
+        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($primaryPublicUserId);
+        if (!$username) {
+            $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
+        }
+        exit('$username='.$username);
+        if (!$user) {
+            $user = $this->em->getRepository(User::class)->findOneByEmailCanonical($email);
+        }
+        if (!$user) {
+            $users = $this->em->getRepository(User::class)->findUserByUserInfoEmail($email);
+            if (count($users) > 0) {
+                $user = $users[0];
+            }
+        }
+        if (!$user) {
+            //Check if username is email
+            $user = $userSecUtil->findUserByUsernameAsEmail($username);
+        }
+        if( !$user ) {
+            $user = $userSecUtil->getUserByUserstr($username);
+        }
 
         if (!$user) {
             // Create new user
@@ -218,6 +251,7 @@ class FellAppImportPopulateHubUtil {
             $fellowshipApplication->setTimestamp($this->transformDatestrToDate($timestamp));
         }
 
+        //TODO: use hash to get fellowshipType object
         // Fellowship Type
         $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
         if ($fellowshipType) {
