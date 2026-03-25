@@ -85,8 +85,321 @@ class FellAppImportPopulateHubUtil {
     }
 
     public function populateFellappFromFile( $file ) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
+        $systemUser = $userSecUtil->findSystemUser();
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+
+        // Load spreadsheet
+        $reader = new XlsxReader();
+        $spreadsheet = $reader->load($file);
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        // Get headers from row 1
+        $headers = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1, NULL, TRUE, FALSE)[0];
+
+        $populatedFellowshipApplications = new ArrayCollection();
+
+        // Process each data row (starting from row 2)
+        for ($row = 2; $row <= $highestRow; $row++) {
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE)[0];
+
+            $googleFormId = $this->getValueByHeaderName('ID', $rowData, $headers);
+            if (!$googleFormId) {
+                continue; // Skip rows without ID
+            }
+
+            // Check if already exists
+            $existingApp = $this->em->getRepository(FellowshipApplication::class)->findOneByGoogleFormId($googleFormId);
+            if ($existingApp) {
+                $logger->notice('Skipping existing application with ID: ' . $googleFormId);
+                continue;
+            }
+
+            try {
+                $fellowshipApplication = $this->createFellappFromRow($rowData, $headers, $systemUser);
+                if ($fellowshipApplication) {
+                    $populatedFellowshipApplications->add($fellowshipApplication);
+                }
+            } catch (\Exception $e) {
+                $logger->error('Error creating fellowship application from row ' . $row . ': ' . $e->getMessage());
+            }
+        }
+
+        return $populatedFellowshipApplications;
     }
+
+    /**
+     * Create a single FellowshipApplication from a spreadsheet row
+     */
+    private function createFellappFromRow($rowData, $headers, $systemUser) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+
+        // Get required lookup entities
+        $activeStatus = $this->em->getRepository(FellAppStatus::class)->findOneByName("active");
+        $employmentType = $this->em->getRepository(EmploymentType::class)->findOneByName("Pathology Fellowship Applicant");
+        $userkeytype = $userSecUtil->getUsernameType('local-user');
+
+        // Get field values
+        $googleFormId = $this->getValueByHeaderName('ID', $rowData, $headers);
+        $originalAppId = $this->getValueByHeaderName('originalAppId', $rowData, $headers);
+        $timestamp = $this->getValueByHeaderName('timestamp', $rowData, $headers);
+        $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
+        $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
+        $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
+        $email = $this->getValueByHeaderName('email', $rowData, $headers);
+
+        if (!$email || !$lastName || !$firstName) {
+            $logger->warning('Missing required fields (email, lastName, or firstName) for ID: ' . $googleFormId);
+            return null;
+        }
+
+        // Create username
+        $lastNameCap = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($lastName);
+        $firstNameCap = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($firstName);
+        $lastNameCap = preg_replace('/\s+/', '_', $lastNameCap);
+        $firstNameCap = preg_replace('/\s+/', '_', $firstNameCap);
+        $username = $lastNameCap . "_" . $firstNameCap . "_" . $email;
+
+        $displayName = $firstName . " " . $lastName;
+        if ($middleName) {
+            $displayName = $firstName . " " . $middleName . " " . $lastName;
+        }
+
+        // Check if user exists
+        $user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
+
+        if (!$user) {
+            // Create new user
+            $user = new User(false);
+            $user->setKeytype($userkeytype);
+            $user->setPrimaryPublicUserId($username);
+            $usernameUnique = $user->createUniqueUsername();
+            $user->setUsername($usernameUnique);
+            $user->setUsernameCanonical($usernameUnique);
+            $user->setEmail($email);
+            $user->setEmailCanonical($email);
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setMiddleName($middleName);
+            $user->setDisplayName($displayName);
+            $user->setPassword("");
+            $user->setCreatedby('hubimport');
+            $user->setLocked(true);
+
+            // Employment status
+            $employmentStatus = new EmploymentStatus($systemUser);
+            $employmentStatus->setEmploymentType($employmentType);
+            $user->addEmploymentStatus($employmentStatus);
+        }
+
+        // Create Fellowship Application
+        $fellowshipApplication = new FellowshipApplication($systemUser);
+        $fellowshipApplication->setAppStatus($activeStatus);
+        $fellowshipApplication->setGoogleFormId($googleFormId);
+        $user->addFellowshipApplication($fellowshipApplication);
+
+        // Set timestamp
+        if ($timestamp) {
+            $fellowshipApplication->setTimestamp($this->transformDatestrToDate($timestamp));
+        }
+
+        // Fellowship Type
+        $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
+        if ($fellowshipType) {
+            $fellowshipType = trim((string)$fellowshipType);
+            $fellowshipType = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($fellowshipType);
+            $transformer = new GenericTreeTransformer($this->em, $systemUser, 'FellowshipSubspecialty');
+            $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
+            $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
+        }
+
+        // Institution
+        $instPathologyFellowshipProgram = $userSecUtil->getSiteSettingParameter('localInstitutionFellApp', $this->container->getParameter('fellapp.sitename'));
+        if ($instPathologyFellowshipProgram) {
+            $fellowshipApplication->setInstitution($instPathologyFellowshipProgram);
+        }
+
+        // Training Period
+        $trainingPeriodStart = $this->getValueByHeaderName('trainingPeriodStart', $rowData, $headers);
+        $trainingPeriodEnd = $this->getValueByHeaderName('trainingPeriodEnd', $rowData, $headers);
+        $fellowshipApplication->setStartDate($this->transformDatestrToDate($trainingPeriodStart));
+        $fellowshipApplication->setEndDate($this->transformDatestrToDate($trainingPeriodEnd));
+
+        // Document URLs (will need to be downloaded separately - just storing URLs for now)
+        $uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl', $rowData, $headers);
+        $uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl', $rowData, $headers);
+        $uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl', $rowData, $headers);
+
+        // Present Address
+        $presentLocationType = $this->em->getRepository(LocationTypeList::class)->findOneByName("Present Address");
+        $presentLocation = new Location($systemUser);
+        $presentLocation->setName('Fellowship Applicant Present Address');
+        $presentLocation->addLocationType($presentLocationType);
+        $geoLocation = $this->createGeoLocation($this->em, $systemUser, 'presentAddress', $rowData, $headers);
+        if ($geoLocation) {
+            $presentLocation->setGeoLocation($geoLocation);
+        }
+        $user->addLocation($presentLocation);
+        $fellowshipApplication->addLocation($presentLocation);
+
+        // Phone numbers on present address
+        $telephoneHome = $this->getValueByHeaderName('telephoneHome', $rowData, $headers);
+        $telephoneMobile = $this->getValueByHeaderName('telephoneMobile', $rowData, $headers);
+        $telephoneFax = $this->getValueByHeaderName('telephoneFax', $rowData, $headers);
+        $presentLocation->setPhone($telephoneHome . "");
+        $presentLocation->setMobile($telephoneMobile . "");
+        $presentLocation->setFax($telephoneFax . "");
+
+        // Permanent Address
+        $permanentLocationType = $this->em->getRepository(LocationTypeList::class)->findOneByName("Permanent Address");
+        $permanentLocation = new Location($systemUser);
+        $permanentLocation->setName('Fellowship Applicant Permanent Address');
+        $permanentLocation->addLocationType($permanentLocationType);
+        $geoLocation = $this->createGeoLocation($this->em, $systemUser, 'permanentAddress', $rowData, $headers);
+        if ($geoLocation) {
+            $permanentLocation->setGeoLocation($geoLocation);
+        }
+        $user->addLocation($permanentLocation);
+        $fellowshipApplication->addLocation($permanentLocation);
+
+        // Work Phone
+        $telephoneWork = $this->getValueByHeaderName('telephoneWork', $rowData, $headers);
+        if ($telephoneWork) {
+            $workLocationType = $this->em->getRepository(LocationTypeList::class)->findOneByName("Work Address");
+            $workLocation = new Location($systemUser);
+            $workLocation->setName('Fellowship Applicant Work Address');
+            $workLocation->addLocationType($workLocationType);
+            $workLocation->setPhone($telephoneWork . "");
+            $user->addLocation($workLocation);
+            $fellowshipApplication->addLocation($workLocation);
+        }
+
+        // Citizenship
+        $citizenship = new Citizenship($systemUser);
+        $fellowshipApplication->addCitizenship($citizenship);
+        $visaStatus = $this->getValueByHeaderName('visaStatus', $rowData, $headers);
+        $citizenshipCountry = $this->getValueByHeaderName('citizenshipCountry', $rowData, $headers);
+        $citizenship->setVisa($visaStatus);
+        if ($citizenshipCountry) {
+            $citizenshipCountry = trim((string)$citizenshipCountry);
+            $transformer = new GenericTreeTransformer($this->em, $systemUser, 'Countries');
+            $citizenshipCountryEntity = $transformer->reverseTransform($citizenshipCountry);
+            $citizenship->setCountry($citizenshipCountryEntity);
+        }
+
+        // Date of Birth
+        $dateOfBirth = $this->getValueByHeaderName('dateOfBirth', $rowData, $headers);
+        if ($dateOfBirth) {
+            $fellowshipApplication->getUser()->getCredentials()->setDob($this->transformDatestrToDate($dateOfBirth));
+        }
+
+        // Trainings
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "undergraduateSchool", $rowData, $headers, 1);
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "graduateSchool", $rowData, $headers, 2);
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "medicalSchool", $rowData, $headers, 3);
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "residency", $rowData, $headers, 4);
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "gme1", $rowData, $headers, 5);
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "gme2", $rowData, $headers, 6);
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "otherExperience1", $rowData, $headers, 7);
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "otherExperience2", $rowData, $headers, 8);
+        $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "otherExperience3", $rowData, $headers, 9);
+
+        // Examination
+        $examination = new Examination($systemUser);
+        $fellowshipApplication->addExamination($examination);
+        $examination->setUSMLEStep1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep1DatePassed', $rowData, $headers)));
+        $examination->setUSMLEStep1Score($this->getValueByHeaderName('USMLEStep1Score', $rowData, $headers));
+        $examination->setUSMLEStep1Percentile($this->getValueByHeaderName('USMLEStep1Percentile', $rowData, $headers));
+        $examination->setUSMLEStep2CKDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CKDatePassed', $rowData, $headers)));
+        $examination->setUSMLEStep2CKScore($this->getValueByHeaderName('USMLEStep2CKScore', $rowData, $headers));
+        $examination->setUSMLEStep2CKPercentile($this->getValueByHeaderName('USMLEStep2CKPercentile', $rowData, $headers));
+        $examination->setUSMLEStep2CSDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CSDatePassed', $rowData, $headers)));
+        $examination->setUSMLEStep2CSScore($this->getValueByHeaderName('USMLEStep2CSScore', $rowData, $headers));
+        $examination->setUSMLEStep2CSPercentile($this->getValueByHeaderName('USMLEStep2CSPercentile', $rowData, $headers));
+        $examination->setUSMLEStep3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep3DatePassed', $rowData, $headers)));
+        $examination->setUSMLEStep3Score($this->getValueByHeaderName('USMLEStep3Score', $rowData, $headers));
+        $examination->setUSMLEStep3Percentile($this->getValueByHeaderName('USMLEStep3Percentile', $rowData, $headers));
+        
+        $ECFMGCertificate = $this->getValueByHeaderName('ECFMGCertificate', $rowData, $headers);
+        $examination->setECFMGCertificate($ECFMGCertificate == 'Yes');
+        $examination->setECFMGCertificateNumber($this->getValueByHeaderName('ECFMGCertificateNumber', $rowData, $headers));
+        $examination->setECFMGCertificateDate($this->transformDatestrToDate($this->getValueByHeaderName('ECFMGCertificateDate', $rowData, $headers)));
+        
+        $examination->setCOMLEXLevel1Score($this->getValueByHeaderName('COMLEXLevel1Score', $rowData, $headers));
+        $examination->setCOMLEXLevel1Percentile($this->getValueByHeaderName('COMLEXLevel1Percentile', $rowData, $headers));
+        $examination->setCOMLEXLevel1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel1DatePassed', $rowData, $headers)));
+        $examination->setCOMLEXLevel2Score($this->getValueByHeaderName('COMLEXLevel2Score', $rowData, $headers));
+        $examination->setCOMLEXLevel2Percentile($this->getValueByHeaderName('COMLEXLevel2Percentile', $rowData, $headers));
+        $examination->setCOMLEXLevel2DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel2DatePassed', $rowData, $headers)));
+        $examination->setCOMLEXLevel3Score($this->getValueByHeaderName('COMLEXLevel3Score', $rowData, $headers));
+        $examination->setCOMLEXLevel3Percentile($this->getValueByHeaderName('COMLEXLevel3Percentile', $rowData, $headers));
+        $examination->setCOMLEXLevel3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel3DatePassed', $rowData, $headers)));
+
+        // Medical Licenses
+        $this->createFellAppMedicalLicense($this->em, $fellowshipApplication, $systemUser, "medicalLicensure1", $rowData, $headers);
+        $this->createFellAppMedicalLicense($this->em, $fellowshipApplication, $systemUser, "medicalLicensure2", $rowData, $headers);
+
+        // Suspended Licensure and Legal Suit
+        $suspendedLicensure = $this->getValueByHeaderName('suspendedLicensure', $rowData, $headers);
+        $legalSuit = $this->getValueByHeaderName('legalSuit', $rowData, $headers);
+        $fellowshipApplication->setReprimand($suspendedLicensure);
+        $fellowshipApplication->setLawsuit($legalSuit);
+
+        // Board Certifications
+        $this->createFellAppBoardCertification($this->em, $fellowshipApplication, $systemUser, "boardCertification1", $rowData, $headers);
+        $this->createFellAppBoardCertification($this->em, $fellowshipApplication, $systemUser, "boardCertification2", $rowData, $headers);
+        $this->createFellAppBoardCertification($this->em, $fellowshipApplication, $systemUser, "boardCertification3", $rowData, $headers);
+
+        // References
+        $ref1 = $this->createFellAppReference($this->em, $systemUser, 'recommendation1', $rowData, $headers);
+        if ($ref1) {
+            $fellowshipApplication->addReference($ref1);
+        }
+        $ref2 = $this->createFellAppReference($this->em, $systemUser, 'recommendation2', $rowData, $headers);
+        if ($ref2) {
+            $fellowshipApplication->addReference($ref2);
+        }
+        $ref3 = $this->createFellAppReference($this->em, $systemUser, 'recommendation3', $rowData, $headers);
+        if ($ref3) {
+            $fellowshipApplication->addReference($ref3);
+        }
+        $ref4 = $this->createFellAppReference($this->em, $systemUser, 'recommendation4', $rowData, $headers);
+        if ($ref4) {
+            $fellowshipApplication->addReference($ref4);
+        }
+
+        // Honors, Publications, Memberships
+        $fellowshipApplication->setHonors($this->getValueByHeaderName('honors', $rowData, $headers));
+        $fellowshipApplication->setPublications($this->getValueByHeaderName('publications', $rowData, $headers));
+        $fellowshipApplication->setMemberships($this->getValueByHeaderName('memberships', $rowData, $headers));
+
+        // Signature
+        $signatureName = $this->getValueByHeaderName('signatureName', $rowData, $headers);
+        $signatureDate = $this->getValueByHeaderName('signatureDate', $rowData, $headers);
+        $fellowshipApplication->setSignatureName($signatureName);
+        $fellowshipApplication->setSignatureDate($this->transformDatestrToDate($signatureDate));
+
+        // Persist to database
+        $this->em->persist($user);
+        $this->em->flush();
+
+        $logger->notice('Created fellowship application: ' . $fellowshipApplication->getId() . ' for applicant: ' . $displayName);
+
+        return $fellowshipApplication;
+    }
+
+
+
+
 
     public function xlsxFileParser( $xlsxFile ) {
         $logger = $this->container->get('logger');
