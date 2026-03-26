@@ -75,7 +75,7 @@ class FellAppRetrievalController extends OrderAbstractController
                 'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
             ], 500);
         }
-        exit('$apiConnectionKey='.$apiConnectionKey);
+        //exit('$apiConnectionKey='.$apiConnectionKey);
 
         if( !$apiConnectionKey ) {
             return new JsonResponse([
@@ -233,7 +233,7 @@ class FellAppRetrievalController extends OrderAbstractController
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
-            ], 500);
+            ], 404);
         } else {
             $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
             foreach($apiConnectionKeys as $apiConnectionKey) {
@@ -245,6 +245,7 @@ class FellAppRetrievalController extends OrderAbstractController
                 }
             }
         }
+        $logger->notice('downloadApplicationDataAction: $authenticated='.$authenticated);
 
         if( !$authenticated ) {
             return new JsonResponse([
