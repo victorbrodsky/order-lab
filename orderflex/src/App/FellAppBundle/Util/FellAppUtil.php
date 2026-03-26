@@ -709,6 +709,39 @@ class FellAppUtil {
         return $institutions;
     }
 
+    //On local server only one institution with one $apiConnectionKey must exists
+    //On HUB server we can multiple institutions with non empty $apiConnectionKey
+    public function getApiConnectionKey() {
+        $logger = $this->container->get('logger');
+        $apiConnectionKey = null;
+        $institutions = $this->getFellowshipInstitutionsWithHash();
+        if( count($institutions) == 1 ) {
+            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
+        } else {
+            $ids = array_map(fn($i) => $i->getId(), $institutions);
+            $idsString = implode(',', $ids);
+            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
+                . count($institutions) .
+                ', Institution ids='.$idsString
+            );
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
+            ], 500);
+        }
+        return $apiConnectionKey;
+    }
+    public function getFellowshipInstitutionsWithHash() {
+        $repo = $this->em->getRepository(Institution::class);
+        $institutions = $repo->createQueryBuilder('i')
+            ->where('i.apiConnectionKey IS NOT NULL')
+            ->andWhere('i.apiConnectionKey <> :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getResult();
+        return $institutions;
+    }
+
     //TODO: replace getFellowshipSubspecialty and getGlobalFellowshipSpecialty where it is possible.
     //Wrapper function to get fellowship specialties according to the Server Network Accessibility and Role
     public function getFellowshipSpecialtyByServer( $fellapp ) {

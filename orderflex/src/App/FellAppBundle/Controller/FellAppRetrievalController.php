@@ -21,6 +21,7 @@ use App\FellAppBundle\Entity\FellowshipApplication;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\Institution;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,13 +51,16 @@ class FellAppRetrievalController extends OrderAbstractController
         
         // Get secret key for HMAC authentication
         $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        //$apiConnectionKey = $userSecUtil->getSiteSettingParameter('secretKey'); //apiConnectionKey
-        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
-        
-        if( !$secretKey ) {
+
+        //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        //$apiConnectionKey = $userSecUtil->getSiteSettingParameter('secretKey'); //apiConnectionKey in Institution
+        $apiConnectionKey = $fellappUtil->getApiConnectionKey();
+        //exit('$apiConnectionKey='.$apiConnectionKey);
+
+        if( !$apiConnectionKey ) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Secret key not configured'
@@ -65,7 +69,7 @@ class FellAppRetrievalController extends OrderAbstractController
         
         // Generate HMAC for authentication (include timestamp to prevent replay attacks)
         $timestamp = time();
-        $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $secretKey);
+        $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $apiConnectionKey);
         $logger->notice('retrieveApplicationDataAction: $hmac='.$hmac);
         $logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
 
@@ -187,6 +191,7 @@ class FellAppRetrievalController extends OrderAbstractController
     #[Route(path: '/download-application-data', name: 'fellapp_download_application_data', methods: ['GET'])]
     public function downloadApplicationDataAction( Request $request ) {
         $logger = $this->container->get('logger');
+        $fellappUtil = $this->container->get('fellapp_util');
         // Remote Server: Receive API call and generate xlsx
 
         // Verify HMAC authentication from headers
@@ -203,10 +208,11 @@ class FellAppRetrievalController extends OrderAbstractController
         }
 
         // Get secret key for HMAC verification
-        $userSecUtil = $this->container->get('user_security_utility');
-        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        $apiConnectionKey = $fellappUtil->getApiConnectionKey();
 
-        if( !$secretKey ) {
+        if( !$apiConnectionKey ) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Secret key not configured'
@@ -214,7 +220,7 @@ class FellAppRetrievalController extends OrderAbstractController
         }
 
         // Verify HMAC (use hash_equals for constant-time comparison)
-        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $secretKey);
+        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
 
         if( !hash_equals($expectedHmac, $hmacHeader) ) {
             return new JsonResponse([
