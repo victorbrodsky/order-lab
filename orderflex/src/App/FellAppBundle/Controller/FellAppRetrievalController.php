@@ -265,6 +265,7 @@ class FellAppRetrievalController extends OrderAbstractController
                 'message' => 'Request timestamp expired'
             ], 401);
         }
+        $logger->notice('downloadApplicationDataAction: authenticated successful');
 
         // Find FellowshipApplications with ID > maxid
         $em = $this->getDoctrine()->getManager();
