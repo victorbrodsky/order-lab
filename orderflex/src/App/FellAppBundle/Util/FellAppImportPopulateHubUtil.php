@@ -182,6 +182,15 @@ class FellAppImportPopulateHubUtil {
             return null;
         }
 
+        //check apiimportkeyglobal
+        $apiimportkeyglobal = $this->getValueByHeaderName('apiimportkeyglobal', $rowData, $headers);
+        if( $apiimportkeyglobal ) {
+            $apiimportkeyglobal = trim($apiimportkeyglobal);
+            //find local fellowship specialty  with $apiimportkeyglobal
+            $localSpecialty = $this->em->getRepository(EmploymentType::class)->findOneBy($apiimportkeyglobal);
+        }
+
+
         // Create username
         $lastNameCap = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($lastName);
         $firstNameCap = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($firstName);

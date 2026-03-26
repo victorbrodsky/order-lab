@@ -278,7 +278,9 @@ class FellAppRetrievalController extends OrderAbstractController
 
         // Define all headers in the exact order requested
         $headers = [
-            'ID', 'originalAppId', 'instanceId', 'primaryPublicUserId', 'timestamp', 'lastName', 'firstName', 'middleName',
+            'ID', 'originalAppId', 'instanceId', 'primaryPublicUserId',
+            'apiimportkey', 'apiimportkeyglobal',
+            'timestamp', 'lastName', 'firstName', 'middleName',
             'uploadedPhotoUrl', 'uploadedCVUrl', 'uploadedCoverLetterUrl', 'uploadedUSMLEScoresUrl',
             'fellowshipType', 'trainingPeriodStart', 'trainingPeriodEnd',
             'otherNames', 'presentAddressStreet1', 'presentAddressStreet2', 'presentAddressCity',
@@ -391,6 +393,18 @@ class FellAppRetrievalController extends OrderAbstractController
         $reprimandDocs = $fellapp->getReprimandDocuments();
         $lawsuitDocs = $fellapp->getLawsuitDocuments();
 
+        //specialty hash
+        $apiImportKey = null;
+        $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
+        if( $fellappSpecialty ) {
+            $apiImportKey = $fellappSpecialty->getApiImportKeys();
+        }
+        $apiImportKeyGlobal = null;
+        $globalFellappSpecialty = $fellapp->getGlobalFellowshipSpecialty();
+        if( $globalFellappSpecialty ) {
+            $apiImportKeyGlobal = $globalFellappSpecialty->getApiImportKeys();
+        }
+
         // Prepare data array
         $data = [];
 
@@ -400,6 +414,8 @@ class FellAppRetrievalController extends OrderAbstractController
         $data['originalAppId'] = $fellapp->getId(); //original fellowship application ID
         $data['instanceId'] = $instanceId;
         $data['primaryPublicUserId'] = $user ? $user->getPrimaryPublicUserId() : '';
+        $data['apiimportkey'] = $apiImportKey;
+        $data['apiimportkeyglobal'] = $apiImportKeyGlobal;
 
         $data['timestamp'] = $fellapp->getTimestamp() ? $fellapp->getTimestamp()->format('Y-m-d H:i:s') : '';
         $data['lastName'] = $user ? $user->getLastName() : '';
