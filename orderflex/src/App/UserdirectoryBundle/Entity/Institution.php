@@ -127,7 +127,11 @@ class Institution extends BaseCompositeNode
 //     * @ORM\JoinColumn(name="approvalType_id", referencedColumnName="id", nullable=true)
 //     */
 //    private $approvalType;
-    
+
+    //API key for establishing a connection to the hub
+    //API key expected in URL to enable remote connection: [l4kn5lk2nl23iron2i3n2l3inl23kn4o2i3j42fowiefw940]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $apiConnectionKey;
     
     //dummy field not linked to DB
     //private $institutionspositiontypes;
@@ -277,6 +281,21 @@ class Institution extends BaseCompositeNode
         return $this->types;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getApiConnectionKey()
+    {
+        return $this->apiConnectionKey;
+    }
+
+    /**
+     * @param mixed $apiConnectionKey
+     */
+    public function setApiConnectionKey($apiConnectionKey)
+    {
+        $this->apiConnectionKey = $apiConnectionKey;
+    }
 
     /**
      * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child

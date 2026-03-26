@@ -279,6 +279,9 @@ class FellowshipApplication extends BaseUserAttributes {
     #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $retrievalMethod;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $exportTimestamp;
+
     //Form node:
     //This will require to have $calllogEntryMessage in Message entity
     //#[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'calllogEntryMessage')]
@@ -465,6 +468,22 @@ class FellowshipApplication extends BaseUserAttributes {
     public function setRetrievalMethod($retrievalMethod)
     {
         $this->retrievalMethod = $retrievalMethod;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExportTimestamp()
+    {
+        return $this->exportTimestamp;
+    }
+
+    /**
+     * @param mixed $exportTimestamp
+     */
+    public function setExportTimestamp($exportTimestamp)
+    {
+        $this->exportTimestamp = $exportTimestamp;
     }
 
     /**
