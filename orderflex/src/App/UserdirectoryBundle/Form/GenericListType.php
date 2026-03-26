@@ -220,6 +220,13 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( strtolower($this->mapper['className']) == strtolower("Institution") ) {
+            $builder->add( 'apiConnectionKey', null, array(
+                'label'=>'API key for establishing a connection to the hub:',
+                'attr' => array('class'=>'form-control'),
+            ));
+        }
+
         //TODO: make it as institutional tree?
         if( method_exists($this->params['entity'],'getInstitution') ) {
 

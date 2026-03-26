@@ -52,6 +52,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        //$apiConnectionKey = $userSecUtil->getSiteSettingParameter('secretKey'); //apiConnectionKey
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         $em = $this->getDoctrine()->getManager();
         
