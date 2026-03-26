@@ -27,6 +27,7 @@ namespace App\FellAppBundle\Util;
 
 
 use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
+use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
 use App\FellAppBundle\Entity\FellAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=FellAppStatus
 use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
@@ -183,11 +184,15 @@ class FellAppImportPopulateHubUtil {
         }
 
         //check apiimportkeyglobal
-        $apiimportkeyglobal = $this->getValueByHeaderName('apiimportkeyglobal', $rowData, $headers);
-        if( $apiimportkeyglobal ) {
-            $apiimportkeyglobal = trim($apiimportkeyglobal);
+        $apiImportKeyGlobal = $this->getValueByHeaderName('apiimportkeyglobal', $rowData, $headers);
+        if( $apiImportKeyGlobal ) {
+            $apiImportKeyGlobal = trim($apiImportKeyGlobal);
             //find local fellowship specialty  with $apiimportkeyglobal
-            $localSpecialty = $this->em->getRepository(EmploymentType::class)->findOneBy($apiimportkeyglobal);
+            $localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)->findOneByApiImportKeys($apiImportKeyGlobal);
+            if( !$localSpecialty ) {
+                $logger->warning('Local FellowshipSubspecialty not found by API import key=[' . $apiImportKeyGlobal.']');
+                return null;
+            }
         }
 
 
@@ -284,7 +289,23 @@ class FellAppImportPopulateHubUtil {
             $fellowshipType = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($fellowshipType);
             $transformer = new GenericTreeTransformer($this->em, $systemUser, 'FellowshipSubspecialty');
             $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
-            $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
+            $keyMatch = false;
+            if( $fellowshipTypeEntity && $fellowshipTypeEntity->getId() === $localSpecialty->getId() ) {
+                $apiImportKeys = $fellowshipTypeEntity->getApiImportKeys();
+                foreach( $apiImportKeys as $apiImportKey ) {
+                    $keyValue = $apiImportKey->getValue();
+                    if( trim($keyValue) === trim($apiImportKeyGlobal) ) {
+                        $keyMatch = true;
+                        break;
+                    }
+                }
+            }
+            if( $keyMatch ) {
+                $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
+            } else {
+                $logger->warning('Not found matched API import key=[' . $apiImportKeyGlobal.']');
+                return null;
+            }
         }
 
         // Institution

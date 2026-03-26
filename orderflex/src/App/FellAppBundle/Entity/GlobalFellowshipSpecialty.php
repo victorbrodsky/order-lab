@@ -92,6 +92,7 @@ class GlobalFellowshipSpecialty extends ListAbstract
     //#[ORM\Column(name: 'apiImportKeys', type: 'array')]
     //private $apiImportKeys;
 
+    //Key(s) for application import: [2lk24n2k3n4o95n4o86n4o2i3noifinof] (accept multiple new values via Select2)
     #[ORM\OneToMany(targetEntity: 'FellAppImportKey', mappedBy: 'globalspecialty', cascade: ['persist'])]
     private $apiImportKeys;
 

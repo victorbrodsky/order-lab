@@ -38,6 +38,10 @@ class FellAppImportKey extends ListAbstract
     #[ORM\JoinColumn(name: 'globalspecialty_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $globalspecialty;
 
+    #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty', inversedBy: 'apiImportKeys', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'globalspecialty_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
+    private $localspecialty;
+
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
@@ -76,6 +80,21 @@ class FellAppImportKey extends ListAbstract
         $this->globalspecialty = $globalspecialty;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getLocalspecialty()
+    {
+        return $this->localspecialty;
+    }
+
+    /**
+     * @param mixed $localspecialty
+     */
+    public function setLocalspecialty($localspecialty)
+    {
+        $this->localspecialty = $localspecialty;
+    }
 
 
 
