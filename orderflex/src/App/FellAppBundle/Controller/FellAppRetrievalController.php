@@ -60,7 +60,7 @@ class FellAppRetrievalController extends OrderAbstractController
         //$apiConnectionKey = $fellappUtil->getApiConnectionKey();
         //On local server only one institution with one $apiConnectionKey must exists
         //On HUB server we can multiple institutions with non empty $apiConnectionKey
-        $institutions = $this->getFellowshipInstitutionsWithHash();
+        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
         if( count($institutions) == 1 ) {
             $apiConnectionKey = $institutions[0]->getApiConnectionKey();
         } else {
@@ -228,7 +228,7 @@ class FellAppRetrievalController extends OrderAbstractController
         //$userSecUtil = $this->container->get('user_security_utility');
         //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
         $authenticated = false;
-        $institutions = $this->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
+        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
         if( count($institutions) == 0 ) {
             return new JsonResponse([
                 'success' => false,
