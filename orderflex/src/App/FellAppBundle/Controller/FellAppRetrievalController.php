@@ -410,6 +410,9 @@ class FellAppRetrievalController extends OrderAbstractController
     private function populateRow( $sheet, FellowshipApplication $fellapp, array $headers, int $row ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $instanceId = $userSecUtil->getSiteSettingParameter('instanceId');
+        $logger = $this->container->get('logger');
+
+        $logger->notice('populateRow: start for $fellapp ID='.$fellapp->getId());
 
         // Get related entities
         $user = $fellapp->getUser();
