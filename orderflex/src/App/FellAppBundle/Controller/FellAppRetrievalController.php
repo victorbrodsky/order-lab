@@ -57,8 +57,25 @@ class FellAppRetrievalController extends OrderAbstractController
 
         //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
         //$apiConnectionKey = $userSecUtil->getSiteSettingParameter('secretKey'); //apiConnectionKey in Institution
-        $apiConnectionKey = $fellappUtil->getApiConnectionKey();
-        //exit('$apiConnectionKey='.$apiConnectionKey);
+        //$apiConnectionKey = $fellappUtil->getApiConnectionKey();
+        //On local server only one institution with one $apiConnectionKey must exists
+        //On HUB server we can multiple institutions with non empty $apiConnectionKey
+        $institutions = $this->getFellowshipInstitutionsWithHash();
+        if( count($institutions) == 1 ) {
+            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
+        } else {
+            $ids = array_map(fn($i) => $i->getId(), $institutions);
+            $idsString = implode(',', $ids);
+            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
+                . count($institutions) .
+                ', Institution ids='.$idsString
+            );
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
+            ], 500);
+        }
+        exit('$apiConnectionKey='.$apiConnectionKey);
 
         if( !$apiConnectionKey ) {
             return new JsonResponse([
@@ -210,19 +227,26 @@ class FellAppRetrievalController extends OrderAbstractController
         // Get secret key for HMAC verification
         //$userSecUtil = $this->container->get('user_security_utility');
         //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        $apiConnectionKey = $fellappUtil->getApiConnectionKey();
-
-        if( !$apiConnectionKey ) {
+        $authenticated = false;
+        $institutions = $this->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
+        if( count($institutions) == 0 ) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Secret key not configured'
+                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
             ], 500);
+        } else {
+            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
+            foreach($apiConnectionKeys as $apiConnectionKey) {
+                // Verify HMAC (use hash_equals for constant-time comparison)
+                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
+                if( hash_equals($expectedHmac, $hmacHeader) ) {
+                    $authenticated = true;
+                    break;
+                }
+            }
         }
 
-        // Verify HMAC (use hash_equals for constant-time comparison)
-        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
-
-        if( !hash_equals($expectedHmac, $hmacHeader) ) {
+        if( !$authenticated ) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Invalid HMAC authentication'
