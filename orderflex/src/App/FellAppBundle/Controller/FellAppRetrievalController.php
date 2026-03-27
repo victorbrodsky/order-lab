@@ -436,7 +436,7 @@ class FellAppRetrievalController extends OrderAbstractController
         if( $fellappSpecialty ) {
             $apiImportKeys = $fellappSpecialty->getApiImportKeys();
             $apiImportKeysJson = json_encode($apiImportKeys);
-            $logger->notice($fellappSpecialty->getName().': $apiImportKeysJson='.$apiImportKeysJson);
+            $logger->notice($fellappSpecialty->getNameInstitution().': $apiImportKeysJson='.$apiImportKeysJson);
         }
 
         $apiImportKeyGlobal = null;
@@ -444,7 +444,7 @@ class FellAppRetrievalController extends OrderAbstractController
         if( $globalFellappSpecialty ) {
             $apiImportKeyGlobals = $globalFellappSpecialty->getApiImportKeys();
             $apiImportKeysGlobalJson = json_encode($apiImportKeyGlobals);
-            $logger->notice($globalFellappSpecialty->getName().': $apiImportKeysGlobalJson='.$apiImportKeysGlobalJson);
+            $logger->notice($globalFellappSpecialty->getNameInstitution().': $apiImportKeysGlobalJson='.$apiImportKeysGlobalJson);
         }
 
         // Prepare data array
