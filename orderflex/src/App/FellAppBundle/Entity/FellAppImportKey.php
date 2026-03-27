@@ -52,7 +52,7 @@ class FellAppImportKey extends ListAbstract
 
 
 
-    
+
 
     /**
      * @return mixed
@@ -105,7 +105,7 @@ class FellAppImportKey extends ListAbstract
 
 
     public function __toString() {
-        return "name=".$this->name . "; value=" . $this->value;
+        return "name=".$this->getName() . "; apiKeyValue=" . $this->getApiKeyValue();
     }
 
 
