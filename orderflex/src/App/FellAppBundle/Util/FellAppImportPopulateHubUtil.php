@@ -187,11 +187,20 @@ class FellAppImportPopulateHubUtil {
         $apiImportKeyGlobal = $this->getValueByHeaderName('apiimportkeyglobal', $rowData, $headers);
         if( $apiImportKeyGlobal ) {
             $apiImportKeyGlobal = trim($apiImportKeyGlobal);
+            $apiImportKeyGlobals = json_decode($apiImportKeyGlobal, true) ?? [];
+
             //find local fellowship specialty  with $apiimportkeyglobal
-            $localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)->findOneByApiImportKeys($apiImportKeyGlobal);
-            if( !$localSpecialty ) {
-                $logger->warning('Local FellowshipSubspecialty not found by API import key=[' . $apiImportKeyGlobal.']');
-                return null;
+            $foundSpecialty = false;
+            foreach($apiImportKeyGlobals as $apiImportKeyGlobal) {
+                $localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)->findOneByApiImportKeys($apiImportKeyGlobal);
+                if( $foundSpecialty ) {
+                    $foundSpecialty = true;
+                    break;
+                }
+                if( $foundSpecialty === false ) {
+                    $logger->warning('Local FellowshipSubspecialty not found by API import key=[' . $apiImportKeyGlobal . ']');
+                    return null;
+                }
             }
         }
 
@@ -210,7 +219,7 @@ class FellAppImportPopulateHubUtil {
             $displayName = $firstName . " " . $middleName . " " . $lastName;
         }
 
-        echo "emailCanonical=$emailCanonical, usernameCanonical=$usernameCanonical, primaryPublicUserId=$primaryPublicUserId <br>";
+        echo "originalAppId=$originalAppId, emailCanonical=$emailCanonical, usernameCanonical=$usernameCanonical, primaryPublicUserId=$primaryPublicUserId <br>";
 
         // Check if user exists: doe_john_3_cinava1@yahoo.com_@_local-user
         //$user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
@@ -279,8 +288,7 @@ class FellAppImportPopulateHubUtil {
         if ($timestamp) {
             $fellowshipApplication->setTimestamp($this->transformDatestrToDate($timestamp));
         }
-
-        //TODO: use hash to get fellowshipType object
+        
         //using the HASH values for each specialty - only download applications for which the HASH value for Fellowship Specialty matches
         // Fellowship Type
         $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);

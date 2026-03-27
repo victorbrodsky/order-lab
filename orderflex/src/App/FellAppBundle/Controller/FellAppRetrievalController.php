@@ -52,6 +52,7 @@ class FellAppRetrievalController extends OrderAbstractController
         // Get secret key for HMAC authentication
         $logger = $this->container->get('logger');
         //$userSecUtil = $this->container->get('user_security_utility');
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
 
