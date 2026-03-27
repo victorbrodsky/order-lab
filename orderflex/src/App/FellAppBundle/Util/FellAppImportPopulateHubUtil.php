@@ -288,7 +288,7 @@ class FellAppImportPopulateHubUtil {
         if ($timestamp) {
             $fellowshipApplication->setTimestamp($this->transformDatestrToDate($timestamp));
         }
-        
+
         //using the HASH values for each specialty - only download applications for which the HASH value for Fellowship Specialty matches
         // Fellowship Type
         $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
