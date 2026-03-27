@@ -430,18 +430,20 @@ class FellAppRetrievalController extends OrderAbstractController
         $lawsuitDocs = $fellapp->getLawsuitDocuments();
 
         //specialty hash
-        $apiImportKey = null;
+        $apiImportKeysJson = null;
         $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
         if( $fellappSpecialty ) {
-            $apiImportKey = $fellappSpecialty->getApiImportKeys();
+            $apiImportKeys = $fellappSpecialty->getApiImportKeys();
+            $apiImportKeysJson = json_encode($apiImportKeys);
         }
-        $logger->notice('downloadApplicationDataAction: apiImportKey='.$apiImportKey);
+        $logger->notice('downloadApplicationDataAction: $apiImportKeysGlobalJson='.$apiImportKeysJson);
         $apiImportKeyGlobal = null;
         $globalFellappSpecialty = $fellapp->getGlobalFellowshipSpecialty();
         if( $globalFellappSpecialty ) {
-            $apiImportKeyGlobal = $globalFellappSpecialty->getApiImportKeys();
+            $apiImportKeyGlobals = $globalFellappSpecialty->getApiImportKeys();
+            $apiImportKeysGlobalJson = json_encode($apiImportKeyGlobals);
         }
-        $logger->notice('downloadApplicationDataAction: apiImportKeyGlobal='.$apiImportKeyGlobal);
+        $logger->notice('downloadApplicationDataAction: $apiImportKeysGlobalJson='.$apiImportKeysGlobalJson);
 
         // Prepare data array
         $data = [];
@@ -452,8 +454,8 @@ class FellAppRetrievalController extends OrderAbstractController
         $data['originalAppId'] = $fellapp->getId(); //original fellowship application ID
         $data['instanceId'] = $instanceId;
         $data['primaryPublicUserId'] = $user ? $user->getPrimaryPublicUserId() : '';
-        $data['apiimportkey'] = $apiImportKey;
-        $data['apiimportkeyglobal'] = $apiImportKeyGlobal;
+        $data['apiimportkey'] = $apiImportKeysJson;
+        $data['apiimportkeyglobal'] = $apiImportKeysGlobalJson;
 
         $data['timestamp'] = $fellapp->getTimestamp() ? $fellapp->getTimestamp()->format('Y-m-d H:i:s') : '';
         $data['lastName'] = $user ? $user->getLastName() : '';
