@@ -64,6 +64,8 @@ var _usernametype = [];
 
 var _specificIndividuals = [];
 var _learnareas = [];
+var _apiimportkey = [];
+
 
 function initAllComboboxGeneric(newForm) {
 
@@ -111,6 +113,8 @@ function initAllComboboxGeneric(newForm) {
 
     getComboboxGeneric(newForm,'specificindividuals',_specificIndividuals,true,'');
     getComboboxGeneric(newForm,'learnareas',_learnareas,true);
+
+    getComboboxGeneric(newForm,'apiimportkey',_apiimportkey,false);
 }
 
 

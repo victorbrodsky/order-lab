@@ -8205,6 +8205,7 @@ class AdminController extends OrderAbstractController
             "615" => array('ExpectedDegreeList','expecteddegree-list','Expected Degree'),
             "620" => array('LanguageProficiency','fellapplanguageproficiency-list'),
             "625" => array('RetrievalMethodList','retrievalmethod-list','Retrieval method for fellowship applications'),
+            "627" => array('FellAppImportKey','fellappimportkey-list','Fellowship Application Import Keys'),
 
             "630" => array('CollaborationTypeList','collaborationtypes-list'),
             "640" => array('PermissionList','permission-list'),

@@ -318,6 +318,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/phdfield/', name: 'phdfield-list', methods: ['GET'])]
     #[Route(path: '/list/expecteddegree/', name: 'expecteddegree-list', methods: ['GET'])]
     #[Route(path: '/list/retrievalmethod/', name: 'retrievalmethod-list', methods: ['GET'])]
+    #[Route(path: '/list/fellappimportkey/', name: 'fellappimportkey-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
     public function indexAction(Request $request)
     {
@@ -1038,6 +1039,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/phdfield/', name: 'phdfield_create', methods: ['POST'])]
     #[Route(path: '/list/expecteddegree/', name: 'expecteddegree_create', methods: ['POST'])]
     #[Route(path: '/list/retrievalmethod/', name: 'retrievalmethod_create', methods: ['POST'])]
+    #[Route(path: '/list/fellappimportkey/', name: 'fellappimportkey_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function createAction(Request $request)
     {
@@ -1422,6 +1424,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/phdfield/new', name: 'phdfield_new', methods: ['GET'])]
     #[Route(path: '/list/expecteddegree/new', name: 'expecteddegree_new', methods: ['GET'])]
     #[Route(path: '/list/retrievalmethod/new', name: 'retrievalmethod_new', methods: ['GET'])]
+    #[Route(path: '/list/fellappimportkey/new', name: 'fellappimportkey_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
     public function newAction(Request $request)
     {
@@ -1751,6 +1754,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/phdfield/{id}', name: 'phdfield_show', methods: ['GET'])]
     #[Route(path: '/list/expecteddegree/{id}', name: 'expecteddegree_show', methods: ['GET'])]
     #[Route(path: '/list/retrievalmethod/{id}', name: 'retrievalmethod_show', methods: ['GET'])]
+    #[Route(path: '/list/fellappimportkey/{id}', name: 'fellappimportkey_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
     public function showAction(Request $request,$id)
     {
@@ -2069,6 +2073,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/phdfield/{id}/edit', name: 'phdfield_edit', methods: ['GET'])]
     #[Route(path: '/list/expecteddegree/{id}/edit', name: 'expecteddegree_edit', methods: ['GET'])]
     #[Route(path: '/list/retrievalmethod/{id}/edit', name: 'retrievalmethod_edit', methods: ['GET'])]
+    #[Route(path: '/list/fellappimportkey/{id}/edit', name: 'fellappimportkey_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -2441,6 +2446,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/phdfield/{id}', name: 'phdfield_update', methods: ['PUT'])]
     #[Route(path: '/list/expecteddegree/{id}', name: 'expecteddegree_update', methods: ['PUT'])]
     #[Route(path: '/list/retrievalmethod/{id}', name: 'retrievalmethod_update', methods: ['PUT'])]
+    #[Route(path: '/list/fellappimportkey/{id}', name: 'fellappimportkey_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {
@@ -3321,6 +3327,11 @@ class ListController extends OrderAbstractController
             case "retrievalmethod":
                 $className = "RetrievalMethodList";
                 $displayName = "Retrieval method for fellowship applications";
+                $bundleName = "FellAppBundle";
+                break;
+            case "fellappimportkey":
+                $className = "FellAppImportKey";
+                $displayName = "Fellowship Application Import Keys";
                 $bundleName = "FellAppBundle";
                 break;
 

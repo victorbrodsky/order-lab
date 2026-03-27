@@ -197,13 +197,14 @@ class FellAppImportPopulateHubUtil {
                     $foundSpecialty = true;
                     break;
                 }
-                if( $foundSpecialty === false ) {
-                    $logger->warning('Local FellowshipSubspecialty not found by API import key=[' . $apiImportKeyGlobal . ']');
-                    return null;
-                }
+            }
+            if( $foundSpecialty === false ) {
+                //echo 'Local FellowshipSubspecialty not found by API import key=[' . $apiImportKeyGlobal . ']'."<br>";
+                $logger->warning('Local FellowshipSubspecialty not found by API import key=[' . $apiImportKeyGlobal . ']');
+                return null;
             }
         }
-
+        $logger->warning('Local FellowshipSubspecialty found by API import key=[' . $apiImportKeyGlobal . ']');
 
         // Create username
         $lastNameCap = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($lastName);

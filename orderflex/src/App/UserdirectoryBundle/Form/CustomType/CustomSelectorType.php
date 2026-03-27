@@ -247,6 +247,11 @@ class CustomSelectorType extends AbstractType {
                 $transformer = new GenericManyToManyTransformer($this->om, $username, 'TenantUrlList');
                 break;
 
+            case "apiimportkey":
+                //$transformer = new GenericTreeTransformer($this->om, $username, 'FellAppImportKey');
+                $transformer = new GenericManyToManyTransformer($this->om, $username, 'FellAppImportKey', 'FellAppBundle');
+                break;
+
             default:
                 $transformer = new StringTransformer($this->om, $username);
         }

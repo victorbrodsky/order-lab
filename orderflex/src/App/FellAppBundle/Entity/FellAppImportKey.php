@@ -42,26 +42,32 @@ class FellAppImportKey extends ListAbstract
     #[ORM\JoinColumn(name: 'globalspecialty_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $localspecialty;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
+//    #[ORM\Column(type: 'string', length: 255)]
+//    #[Assert\NotBlank]
+//    #[Assert\Length(max: 255)]
+//    private string $value;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
-    private string $value;
+    protected $apiKeyValue;
 
 
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-    }
+
+    
 
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getApiKeyValue()
     {
-        return $this->value;
+        return $this->apiKeyValue;
+    }
+
+    /**
+     * @param mixed $apiKeyValue
+     */
+    public function setApiKeyValue($apiKeyValue)
+    {
+        $this->apiKeyValue = $apiKeyValue;
     }
 
     /**

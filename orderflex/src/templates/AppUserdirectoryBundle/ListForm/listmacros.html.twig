@@ -1506,6 +1506,14 @@
         {{ formmacros.field(form.apiConnectionKey) }}
     {% endif %}
 
+    {% if form.apiImportKeys is defined %}
+        {{ formmacros.field(form.apiImportKeys) }}
+    {% endif %}
+
+    {% if form.apiKeyValue is defined %}
+        {{ formmacros.field(form.apiKeyValue) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}
