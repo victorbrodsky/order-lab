@@ -449,6 +449,7 @@ class FellAppRetrievalController extends OrderAbstractController
             $apiImportKeyGlobals = $globalFellappSpecialty->getApiImportKeys();
             $values = [];
             foreach ($apiImportKeyGlobals as $keyObj) {
+                $logger->notice('getApiKeyValue='.$keyObj->getApiKeyValue());
                 $values[] = $keyObj->getApiKeyValue();
             }
             $apiImportKeysGlobalJson = json_encode($values);
