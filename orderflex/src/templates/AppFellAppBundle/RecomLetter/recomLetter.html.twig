@@ -13,7 +13,8 @@
     {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
     {{ usermacros.nonLiveSiteRedirect() }}
 
-    {#<link rel="icon" type="image/x-icon" href="{{ asset(favicon) }}" />#}
+    {% set favicon = 'glyphicons-157-show-thumbnails.png' %}
+    <link rel="icon" type="image/x-icon" href="{{ asset(favicon) }}" />
 </head>
 <body>
 
