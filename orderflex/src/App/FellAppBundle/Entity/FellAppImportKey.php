@@ -39,7 +39,7 @@ class FellAppImportKey extends ListAbstract
     private $globalspecialty;
 
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\FellowshipSubspecialty', inversedBy: 'apiImportKeys', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name: 'globalspecialty_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
+    #[ORM\JoinColumn(name: 'localspecialty_id', referencedColumnName: 'id', onDelete: 'CASCADE', nullable: true)]
     private $localspecialty;
 
 //    #[ORM\Column(type: 'string', length: 255)]

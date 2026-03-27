@@ -1512,7 +1512,11 @@
 
     {% if form.apiKeyValue is defined %}
         {{ formmacros.field(form.apiKeyValue) }}
+        {#{{ form_row(form.apiImportKeys) }}#}
     {% endif %}
+    {#{% if form.apiKeyValue.apiKeyValue is defined %}#}
+        {#{{ formmacros.field(form.apiKeyValue.apiKeyValue) }}#}
+    {#{% endif %}#}
 
 {% endmacro %}
 

@@ -114,7 +114,7 @@ function initAllComboboxGeneric(newForm) {
     getComboboxGeneric(newForm,'specificindividuals',_specificIndividuals,true,'');
     getComboboxGeneric(newForm,'learnareas',_learnareas,true);
 
-    getComboboxGeneric(newForm,'apiimportkey',_apiimportkey,false);
+    getComboboxGeneric(newForm,'apiimportkey',_apiimportkey,true);
 }
 
 

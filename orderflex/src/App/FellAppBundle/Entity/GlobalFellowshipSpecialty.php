@@ -255,7 +255,13 @@ class GlobalFellowshipSpecialty extends ListAbstract
     }
     public function removeApiImportKey($item)
     {
-        $this->apiImportKeys->removeElement($item);
+        //$this->apiImportKeys->removeElement($item);
+        if ($this->apiImportKeys->removeElement($item)) {
+            if ($item->getGlobalspecialty() === $this) {
+                $item->setGlobalspecialty(null);
+            }
+        }
+        return $this;
     }
     public function getApiImportKeys()
     {

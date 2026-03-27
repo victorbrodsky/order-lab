@@ -22,6 +22,7 @@ namespace App\UserdirectoryBundle\Form;
 use App\FellAppBundle\Entity\ExpectedDegreeList;
 use App\FellAppBundle\Entity\FellAppImportKey;
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
+use App\FellAppBundle\Form\FellAppImportKeyType;
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
 use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
@@ -661,10 +662,39 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'classtype' => 'apiimportkey'
             ));
+//            $builder->add('apiImportKeys', CollectionType::class, [
+//                'class' => FellAppImportKeyType::class,
+//                'label' => 'Key(s) for application import:',
+//                'required' => false,
+//                'multiple' => true,
+//                'expanded' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'by_reference' => false,   // critical for OneToMany
+//                'choice_label' => 'apiKeyValue',   // calls getApiKeyValue()
+//                'attr' => ['class' => 'combobox combobox-width'],
+//            ]);
+//            $builder->add('apiImportKeys', CollectionType::class, [
+//                'entry_type' => FellAppImportKeyType::class,
+//                'label' => 'Key(s) for application import:',
+//                'required' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'by_reference' => false,   // critical for OneToMany
+//            ]);
+//            $builder->add('apiImportKeys', EntityType::class, [
+//                'class' => FellAppImportKey::class,
+//                'choice_label' => 'apiKeyValue',
+//                'multiple' => true,
+//                'expanded' => false,
+//                'by_reference' => false,
+//                'attr' => ['class' => 'combobox combobox-width'],
+//            ]);
+
+
 
             //lowestRoles linkToListId
         }
-
         if( strtolower($this->mapper['className']) == strtolower("FellAppImportKey") ) {
             $builder->add('apiKeyValue',null,array(
                 'label'=>'Api key value:',

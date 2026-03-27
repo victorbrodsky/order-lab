@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Form\CustomType;
 
 
 use App\UserdirectoryBundle\Form\DataTransformer\DayMonthDateTransformer;
+use App\UserdirectoryBundle\Form\DataTransformer\FellAppImportKeyTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\GenericUserTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\StringItemCodeTransformer;
 use App\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
@@ -248,7 +249,7 @@ class CustomSelectorType extends AbstractType {
                 break;
 
             case "apiimportkey":
-                //$transformer = new GenericTreeTransformer($this->om, $username, 'FellAppImportKey');
+                //$transformer = new FellAppImportKeyTransformer($this->om, $username); //, 'FellAppImportKey', 'FellAppBundle');
                 $transformer = new GenericManyToManyTransformer($this->om, $username, 'FellAppImportKey', 'FellAppBundle');
                 break;
 

@@ -228,12 +228,19 @@ class FellowshipSubspecialty extends ListAbstract
     {
         if( $item && !$this->apiImportKeys->contains($item) ) {
             $this->apiImportKeys->add($item);
+            $item->setLocalspecialty($this);
         }
         return $this;
     }
     public function removeApiImportKey($item)
     {
-        $this->apiImportKeys->removeElement($item);
+        //$this->apiImportKeys->removeElement($item);
+        if ($this->apiImportKeys->removeElement($item)) {
+            if ($item->getLocalspecialty() === $this) {
+                $item->setLocalspecialty(null);
+            }
+        }
+        return $this;
     }
     public function getApiImportKeys()
     {

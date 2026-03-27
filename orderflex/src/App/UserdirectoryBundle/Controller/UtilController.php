@@ -2072,6 +2072,11 @@ class UtilController extends OrderAbstractController {
                 $bundleName = "ResAppBundle";
                 break;
 
+            case "apiimportkey":
+                $className = "FellAppImportKey";
+                $bundleName = "FellAppBundle";
+                break;
+
 //            case "patientLists":
 //                $bundleName = "OrderformBundle";
 //                $className = "PatientListHierarchy";
