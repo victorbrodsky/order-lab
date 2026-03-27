@@ -435,11 +435,13 @@ class FellAppRetrievalController extends OrderAbstractController
         if( $fellappSpecialty ) {
             $apiImportKey = $fellappSpecialty->getApiImportKeys();
         }
+        $logger->notice('downloadApplicationDataAction: apiImportKey='.$apiImportKey);
         $apiImportKeyGlobal = null;
         $globalFellappSpecialty = $fellapp->getGlobalFellowshipSpecialty();
         if( $globalFellappSpecialty ) {
             $apiImportKeyGlobal = $globalFellappSpecialty->getApiImportKeys();
         }
+        $logger->notice('downloadApplicationDataAction: apiImportKeyGlobal='.$apiImportKeyGlobal);
 
         // Prepare data array
         $data = [];
