@@ -192,8 +192,17 @@ class FellAppImportPopulateHubUtil {
             //find local fellowship specialty  with $apiimportkeyglobal
             $foundSpecialty = false;
             foreach($apiImportKeyGlobals as $apiImportKeyGlobal) {
-                $localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)->findOneByApiImportKeys($apiImportKeyGlobal);
-                if( $foundSpecialty ) {
+                //$localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)->findOneByApiImportKeys($apiImportKeyGlobal);
+                //$localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)->findOneByName($apiImportKeyGlobal);
+                $localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)
+                    ->createQueryBuilder('fs')
+                    ->join('fs.apiImportKeys', 'k')
+                    ->where('k.name = :name')
+                    ->setParameter('name', $apiImportKeyGlobal)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+
+                if( $localSpecialty ) {
                     $foundSpecialty = true;
                     break;
                 }
@@ -294,27 +303,53 @@ class FellAppImportPopulateHubUtil {
         // Fellowship Type
         $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
         if ($fellowshipType) {
-            $fellowshipType = trim((string)$fellowshipType);
-            $fellowshipType = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($fellowshipType);
-            $transformer = new GenericTreeTransformer($this->em, $systemUser, 'FellowshipSubspecialty');
-            $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
-            $keyMatch = false;
-            if( $fellowshipTypeEntity && $fellowshipTypeEntity->getId() === $localSpecialty->getId() ) {
-                $apiImportKeys = $fellowshipTypeEntity->getApiImportKeys();
-                foreach( $apiImportKeys as $apiImportKey ) {
-                    $keyValue = $apiImportKey->getValue();
-                    if( trim($keyValue) === trim($apiImportKeyGlobal) ) {
-                        $keyMatch = true;
-                        break;
-                    }
+//            $fellowshipType = trim((string)$fellowshipType);
+//            $fellowshipType = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($fellowshipType);
+//            $transformer = new GenericTreeTransformer($this->em, $systemUser, 'FellowshipSubspecialty');
+//            $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
+//            $logger->notice('Found $fellowshipTypeEntity=' . $fellowshipTypeEntity->getNameInstitution() . "]");
+//            $logger->notice('Compare to $localSpecialty=' . $localSpecialty->getNameInstitution() . "]");
+//            $keyMatch = false;
+//            if( $fellowshipTypeEntity ) {
+//                $apiImportKeys = $fellowshipTypeEntity->getApiImportKeys();
+//                $logger->notice('Found $fellowshipTypeEntity $apiImportKeys count=' . count($apiImportKeys) . "]");
+//                foreach( $apiImportKeys as $apiImportKey ) {
+//                    $keyValue = $apiImportKey->getName();
+//                    $logger->warning('Compare specialty API import:[' . trim($keyValue) . "]?=[" . trim($apiImportKeyGlobal).']');
+//                    if( trim($keyValue) === trim($apiImportKeyGlobal) ) {
+//                        $keyMatch = true;
+//                        break;
+//                    }
+//                }
+//            }
+
+            $fellowshipTypeEntity = $this->em->getRepository(FellowshipSubspecialty::class)
+                ->createQueryBuilder('fs')
+                ->join('fs.apiImportKeys', 'k')
+                ->where('k.name = :name')
+                ->setParameter('name', $apiImportKeyGlobal)
+                ->getQuery()
+                ->getOneOrNullResult();
+            if( $fellowshipTypeEntity ) {
+                if( trim($fellowshipType) != trim($fellowshipTypeEntity->getName()) ) {
+                    $logger->warning('Matched API import key fellowship type found, but names are different[' .
+                        '$fellowshipType=['.trim($fellowshipType).']'.
+                        '$fellowshipTypeEntity->getName()=['.trim($fellowshipTypeEntity->getName()). ']'
+                    );
                 }
-            }
-            if( $keyMatch ) {
+                $logger->notice($fellowshipType.': Found $fellowshipTypeEntity=' . $fellowshipTypeEntity->getNameInstitution() . "]");
                 $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
             } else {
                 $logger->warning('Not found matched API import key=[' . $apiImportKeyGlobal.']');
                 return null;
             }
+
+//            if( $keyMatch ) {
+//                $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
+//            } else {
+//                $logger->warning('Not found matched API import key=[' . $apiImportKeyGlobal.']');
+//                return null;
+//            }
         }
 
         // Institution

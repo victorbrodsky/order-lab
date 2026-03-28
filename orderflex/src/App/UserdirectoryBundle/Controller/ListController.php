@@ -4510,6 +4510,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/phdfield/{id}', name: 'phdfield_delete', methods: ['DELETE'])]
     #[Route(path: '/list/expecteddegree/{id}', name: 'expecteddegree_delete', methods: ['DELETE'])]
     #[Route(path: '/list/retrievalmethod/{id}', name: 'retrievalmethod_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/fellappimportkey/{id}', name: 'fellappimportkey_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
