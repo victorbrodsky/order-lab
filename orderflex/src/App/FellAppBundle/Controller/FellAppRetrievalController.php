@@ -897,6 +897,66 @@ class FellAppRetrievalController extends OrderAbstractController
 
 
     /**
+     * API endpoint to download a single document file by its hash (Remote server)
+     * Route: /fellowship-applications/download-application-file
+     */
+    #[Route(path: '/download-application-file', name: 'fellapp_download_application_file', methods: ['GET'])]
+    public function downloadApplicationFileAction(Request $request) {
+        $logger = $this->get('logger');
+        $userSecUtil = $this->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+
+        // Get authentication headers
+        $hmacHeader = $request->headers->get('X-HMAC');
+        $timestampHeader = $request->headers->get('X-Timestamp');
+
+        // Verify HMAC
+        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $secretKey);
+        if (!hash_equals($expectedHmac, $hmacHeader)) {
+            return new JsonResponse(['success' => false, 'message' => 'Invalid HMAC'], 403);
+        }
+
+        // Verify timestamp (prevent replay attacks - allow 5 minute window)
+        $currentTime = time();
+        if (abs($currentTime - $timestampHeader) > 300) {
+            return new JsonResponse(['success' => false, 'message' => 'Request timestamp too old'], 403);
+        }
+
+        // Get document hash from query parameter
+        $documentHash = $request->query->get('document_hash');
+        if (!$documentHash) {
+            return new JsonResponse(['success' => false, 'message' => 'Missing document_hash parameter'], 400);
+        }
+
+        // Find document by hash
+        $em = $this->getDoctrine()->getManager();
+        $document = $em->getRepository(Document::class)->findOneByDocumentHash($documentHash);
+
+        if (!$document) {
+            return new JsonResponse(['success' => false, 'message' => 'Document not found'], 404);
+        }
+
+        // Get file path
+        $filePath = $document->getFullServerPath();
+        if (!file_exists($filePath)) {
+            return new JsonResponse(['success' => false, 'message' => 'File not found on server'], 404);
+        }
+
+        // Read file content and encode as base64
+        $fileContent = file_get_contents($filePath);
+        $base64Content = base64_encode($fileContent);
+
+        // Return file data
+        return new JsonResponse([
+            'success' => true,
+            'filename' => $document->getOriginalname() ?: $document->getUniquename(),
+            'mimeType' => $document->getMimeType() ?: 'application/octet-stream',
+            'document_hash' => $documentHash,
+            'file_base64' => $base64Content
+        ]);
+    }
+
+    /**
      * Helper function to get URL of first document
      */
     private function getFirstDocumentUrl($documents) {

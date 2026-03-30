@@ -548,7 +548,230 @@ class FellAppImportPopulateHubUtil {
 
 
     public function downloadRemoteDocuments($fellowshipApplication,$rowData,$headers) {
-        
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $systemUser = $userSecUtil->findSystemUser();
+
+        // Get storage path
+        $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter(
+            'applicantsUploadPathFellApp',
+            $this->container->getParameter('fellapp.sitename')
+        );
+        if( !$applicantsUploadPathFellApp ) {
+            $applicantsUploadPathFellApp = "FellowshipApplicantUploads";
+        }
+        $storagePath = $this->container->get('kernel')->getProjectDir() . '/public/Uploaded/fellapp/' . $applicantsUploadPathFellApp;
+
+        // Get remote server URL from site settings
+        $remoteUrl = $userSecUtil->getSiteSettingParameter('fellappRemoteServerUrl');
+        if( !$remoteUrl ) {
+            $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
+            return false;
+        }
+
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        if( !$secretKey ) {
+            $logger->warning('secretKey is not defined in Site Parameters. Cannot download remote documents.');
+            return false;
+        }
+
+        // Document types to download with their corresponding row field names and attachment methods
+        $documentTypes = [
+            [
+                'urlField' => 'uploadedPhotoUrl',
+                'hashField' => 'uploadedPhotoHash',
+                'docType' => 'Fellowship Photo',
+                'attachMethod' => 'addAvatar'
+            ],
+            [
+                'urlField' => 'uploadedCVUrl',
+                'hashField' => 'uploadedCVHash',
+                'docType' => 'Fellowship CV',
+                'attachMethod' => 'addCv'
+            ],
+            [
+                'urlField' => 'uploadedCoverLetterUrl',
+                'hashField' => 'uploadedCoverLetterHash',
+                'docType' => 'Fellowship Cover Letter',
+                'attachMethod' => 'addCoverLetter'
+            ],
+            [
+                'urlField' => 'uploadedUSMLEScoresUrl',
+                'hashField' => 'uploadedUSMLEScoresHash',
+                'docType' => 'Fellowship USMLE Scores',
+                'attachMethod' => 'addScore',
+                'attachTo' => 'examination'
+            ],
+            [
+                'urlField' => 'uploadedReprimandExplanationUrl',
+                'hashField' => 'uploadedReprimandExplanationHash',
+                'docType' => 'Fellowship Reprimand',
+                'attachMethod' => 'addReprimandDocument'
+            ],
+            [
+                'urlField' => 'uploadedLegalExplanationUrl',
+                'hashField' => 'uploadedLegalExplanationHash',
+                'docType' => 'Fellowship Legal Suit',
+                'attachMethod' => 'addReprimandDocument'
+            ]
+        ];
+
+        $examination = null;
+
+        foreach ($documentTypes as $docConfig) {
+            $fileUrl = $this->getValueByHeaderName($docConfig['urlField'], $rowData, $headers);
+            $fileHash = $this->getValueByHeaderName($docConfig['hashField'], $rowData, $headers);
+
+            if (!$fileUrl || !$fileHash) {
+                continue; // Skip if no URL or hash provided
+            }
+
+            // Check if document already exists locally by hash
+            $existingDoc = $this->em->getRepository(Document::class)->findOneByDocumentHash($fileHash);
+            if ($existingDoc) {
+                $logger->notice('Document with hash ' . $fileHash . ' already exists locally. Skipping download.');
+                // Attach existing document to fellowship application
+                $this->attachDocumentToFellowship($fellowshipApplication, $existingDoc, $docConfig, $examination);
+                continue;
+            }
+
+            // Download file from remote server
+            try {
+                $document = $this->downloadFileFromRemote(
+                    $fileUrl,
+                    $fileHash,
+                    $docConfig['docType'],
+                    $storagePath,
+                    $systemUser,
+                    $remoteUrl,
+                    $secretKey
+                );
+
+                if ($document) {
+                    // Attach document to fellowship application
+                    $this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, $examination);
+                    $logger->notice('Downloaded and attached ' . $docConfig['docType'] . ' for application ID ' . $fellowshipApplication->getId());
+                }
+            } catch (\Exception $e) {
+                $logger->error('Error downloading ' . $docConfig['docType'] . ': ' . $e->getMessage());
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Attach a document to the FellowshipApplication based on configuration
+     */
+    private function attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, &$examination) {
+        $attachMethod = $docConfig['attachMethod'];
+
+        if (isset($docConfig['attachTo']) && $docConfig['attachTo'] === 'examination') {
+            // For examination documents (USMLE scores)
+            if (!$examination) {
+                $examination = $fellowshipApplication->getExaminations()->first();
+                if (!$examination) {
+                    $systemUser = $this->container->get('user_security_utility')->findSystemUser();
+                    $examination = new \App\UserdirectoryBundle\Entity\Examination($systemUser);
+                    $fellowshipApplication->addExamination($examination);
+                }
+            }
+            $examination->$attachMethod($document);
+        } else {
+            // For regular fellowship application documents
+            $fellowshipApplication->$attachMethod($document);
+        }
+    }
+
+    /**
+     * Download a file from the remote server using HMAC authentication
+     */
+    private function downloadFileFromRemote($fileUrl, $fileHash, $documentType, $storagePath, $systemUser, $remoteBaseUrl, $secretKey) {
+        $logger = $this->container->get('logger');
+
+        // Generate HMAC for authentication
+        $timestamp = time();
+        $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $secretKey);
+
+        // Construct API URL
+        $apiUrl = $remoteBaseUrl . '/fellowship-applications/download-application-file?document_hash=' . urlencode($fileHash);
+
+        // Make API request with authentication headers
+        $httpClient = new \Symfony\Component\HttpClient\HttpClient();
+        $response = $httpClient->request('GET', $apiUrl, [
+            'headers' => [
+                'X-HMAC' => $hmac,
+                'X-Timestamp' => $timestamp,
+            ],
+            'timeout' => 60,
+        ]);
+
+        $statusCode = $response->getStatusCode();
+        if ($statusCode !== 200) {
+            throw new \Exception('Remote server returned status code: ' . $statusCode);
+        }
+
+        $data = $response->toArray();
+
+        if (!isset($data['success']) || !$data['success']) {
+            throw new \Exception('Remote server error: ' . ($data['message'] ?? 'Unknown error'));
+        }
+
+        // Decode base64 file content
+        $fileContent = base64_decode($data['file_base64']);
+        if ($fileContent === false) {
+            throw new \Exception('Failed to decode base64 file content');
+        }
+
+        // Create unique filename
+        $currentDatetime = new \DateTime();
+        $currentDatetimeTimestamp = $currentDatetime->getTimestamp();
+        $filename = $data['filename'] ?? 'downloaded_file';
+        $fileExt = pathinfo($filename, PATHINFO_EXTENSION);
+        $fileExtStr = $fileExt ? '.' . $fileExt : '';
+        $fileUniqueName = $currentDatetimeTimestamp . 'ID' . $fileHash . $fileExtStr;
+
+        // Ensure storage directory exists
+        if (!file_exists($storagePath)) {
+            mkdir($storagePath, 0700, true);
+            chmod($storagePath, 0700);
+        }
+
+        // Save file to storage
+        $targetFile = $storagePath . DIRECTORY_SEPARATOR . $fileUniqueName;
+        file_put_contents($targetFile, $fileContent);
+
+        // Calculate file size
+        $filesize = strlen($fileContent) / 1024; // KB
+
+        // Create Document entity
+        $document = new Document($systemUser);
+        $document->setDocumentHash($fileHash);
+        $document->setUniquename($fileUniqueName);
+        $document->setUploadDirectory(str_replace($this->container->get('kernel')->getProjectDir() . '/public/', '', $storagePath));
+        $document->setSize($filesize);
+        $document->setCleanOriginalname($filename);
+
+        // Set document type using transformer
+        $transformer = new GenericTreeTransformer($this->em, $systemUser, "DocumentTypeList", "UserdirectoryBundle");
+        $documentTypeObject = $transformer->reverseTransform($documentType);
+        if ($documentTypeObject) {
+            $document->setType($documentTypeObject);
+        }
+
+        // Persist document
+        $this->em->persist($document);
+        $this->em->flush();
+
+        // Generate thumbnails
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $resImage = $userServiceUtil->generateTwoThumbnails($document);
+        if ($resImage) {
+            $logger->notice("Thumbnails generated for document ID=" . $document->getId());
+        }
+
+        return $document;
     }
 
 
