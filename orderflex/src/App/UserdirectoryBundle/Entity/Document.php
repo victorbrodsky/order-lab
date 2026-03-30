@@ -39,6 +39,8 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Mime\MimeTypes;
+
 
 
 #[ORM\Table(name: 'user_document')]
@@ -894,6 +896,19 @@ class Document {
         ]);
 
         return hash('sha256', $data);
+    }
+
+    public function getMimeType() {
+        $path = $this->getFullServerPath();
+
+        if (!is_file($path)) {
+            return null;
+        }
+
+        $mimeTypes = new MimeTypes();
+        $mime = $mimeTypes->guessMimeType($path);
+
+        return $mime ?: null;
     }
 
 

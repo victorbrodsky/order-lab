@@ -28,6 +28,8 @@ namespace App\UserdirectoryBundle\Util;
 * more here: https://tn123.org/mod_xsendfile/
 */
 
+//use Symfony\Component\Mime\MimeTypes;
+
 
 class LargeFileDownloader {
 
@@ -341,7 +343,18 @@ class LargeFileDownloader {
 
         return $mimeType;
     }
-
+//    public function getSymfonyMimeType( $path ) {
+//        //$path = $this->getFullServerPath();
+//
+//        if (!is_file($path)) {
+//            return null;
+//        }
+//
+//        $mimeTypes = new MimeTypes();
+//        $mime = $mimeTypes->guessMimeType($path);
+//
+//        return $mime ?: null;
+//    }
 
 
 
