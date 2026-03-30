@@ -53,7 +53,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $logger = $this->container->get('logger');
         //$userSecUtil = $this->container->get('user_security_utility');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
-        $fellappUtil = $this->container->get('fellapp_util');
+        //$fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
 
         //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
@@ -61,21 +61,22 @@ class FellAppRetrievalController extends OrderAbstractController
         //$apiConnectionKey = $fellappUtil->getApiConnectionKey();
         //On local server only one institution with one $apiConnectionKey must exists
         //On HUB server we can multiple institutions with non empty $apiConnectionKey
-        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
-        if( count($institutions) == 1 ) {
-            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
-        } else {
-            $ids = array_map(fn($i) => $i->getId(), $institutions);
-            $idsString = implode(',', $ids);
-            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
-                . count($institutions) .
-                ', Institution ids='.$idsString
-            );
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
-            ], 500);
-        }
+//        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
+//        if( count($institutions) == 1 ) {
+//            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
+//        } else {
+//            $ids = array_map(fn($i) => $i->getId(), $institutions);
+//            $idsString = implode(',', $ids);
+//            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
+//                . count($institutions) .
+//                ', Institution ids='.$idsString
+//            );
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
+//            ], 500);
+//        }
+        $apiConnectionKey = $fellappImportPopulateHubUtil->getApiConnectionKey();
         //exit('$apiConnectionKey='.$apiConnectionKey);
 
         if( !$apiConnectionKey ) {
@@ -210,6 +211,7 @@ class FellAppRetrievalController extends OrderAbstractController
     public function downloadApplicationDataAction( Request $request ) {
         $logger = $this->container->get('logger');
         $fellappUtil = $this->container->get('fellapp_util');
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         // Remote Server: Receive API call and generate xlsx
 
         // Verify HMAC authentication from headers
@@ -225,35 +227,42 @@ class FellAppRetrievalController extends OrderAbstractController
             ], 401);
         }
 
-        // Get secret key for HMAC verification
+        /////////// Verify HMAC Get secret key for HMAC verification ///////////
         //$userSecUtil = $this->container->get('user_security_utility');
         //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        $authenticated = false;
-        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
-        if( count($institutions) == 0 ) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
-            ], 404);
-        } else {
-            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
-            foreach($apiConnectionKeys as $apiConnectionKey) {
-                // Verify HMAC (use hash_equals for constant-time comparison)
-                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
-                if( hash_equals($expectedHmac, $hmacHeader) ) {
-                    $authenticated = true;
-                    break;
-                }
-            }
-        }
-        $logger->notice('downloadApplicationDataAction: $authenticated='.$authenticated);
-
-        if( !$authenticated ) {
+//        $authenticated = false;
+//        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
+//        if( count($institutions) == 0 ) {
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
+//            ], 404);
+//        } else {
+//            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
+//            foreach($apiConnectionKeys as $apiConnectionKey) {
+//                // Verify HMAC (use hash_equals for constant-time comparison)
+//                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
+//                if( hash_equals($expectedHmac, $hmacHeader) ) {
+//                    $authenticated = true;
+//                    break;
+//                }
+//            }
+//        }
+//        $logger->notice('downloadApplicationDataAction: $authenticated='.$authenticated);
+//
+//        if( !$authenticated ) {
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Invalid HMAC authentication'
+//            ], 401);
+//        }
+        if( $fellappImportPopulateHubUtil->authenticateHmac($hmacHeader,$timestampHeader) === false ) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Invalid HMAC authentication'
             ], 401);
         }
+        /////////// EOF Verify HMAC Get secret key for HMAC verification ///////////
 
         // Optional: Check timestamp to prevent replay attacks (e.g., allow 5 minute window)
         $currentTime = time();
@@ -903,18 +912,59 @@ class FellAppRetrievalController extends OrderAbstractController
     #[Route(path: '/download-application-file', name: 'fellapp_download_application_file', methods: ['GET'])]
     public function downloadApplicationFileAction(Request $request) {
         $logger = $this->get('logger');
-        $userSecUtil = $this->get('user_security_utility');
-        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        //$userSecUtil = $this->get('user_security_utility');
+        $fellappUtil = $this->container->get('fellapp_util');
+        //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        //TODO: use institution's hash
 
         // Get authentication headers
         $hmacHeader = $request->headers->get('X-HMAC');
         $timestampHeader = $request->headers->get('X-Timestamp');
 
         // Verify HMAC
-        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $secretKey);
-        if (!hash_equals($expectedHmac, $hmacHeader)) {
-            return new JsonResponse(['success' => false, 'message' => 'Invalid HMAC'], 403);
+        //$expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $secretKey);
+        //if (!hash_equals($expectedHmac, $hmacHeader)) {
+        //    return new JsonResponse(['success' => false, 'message' => 'Invalid HMAC'], 403);
+        //}
+
+        /////////// Verify HMAC Get secret key for HMAC verification ///////////
+//        //$userSecUtil = $this->container->get('user_security_utility');
+//        $authenticated = false;
+//        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
+//        if( count($institutions) == 0 ) {
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
+//            ], 404);
+//        } else {
+//            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
+//            foreach($apiConnectionKeys as $apiConnectionKey) {
+//                // Verify HMAC (use hash_equals for constant-time comparison)
+//                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
+//                if( hash_equals($expectedHmac, $hmacHeader) ) {
+//                    $authenticated = true;
+//                    break;
+//                }
+//            }
+//        }
+//        $logger->notice('downloadApplicationDataAction: $authenticated='.$authenticated);
+//
+//        if( !$authenticated ) {
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Invalid HMAC authentication'
+//            ], 401);
+//        }
+
+        if( $fellappImportPopulateHubUtil->authenticateHmac($hmacHeader,$timestampHeader) === false ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Invalid HMAC authentication'
+            ], 401);
         }
+        /////////// EOF Verify HMAC Get secret key for HMAC verification ///////////
+
 
         // Verify timestamp (prevent replay attacks - allow 5 minute window)
         $currentTime = time();

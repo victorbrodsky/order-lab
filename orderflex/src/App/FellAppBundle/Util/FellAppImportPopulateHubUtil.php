@@ -550,6 +550,8 @@ class FellAppImportPopulateHubUtil {
     public function downloadRemoteDocuments($fellowshipApplication,$rowData,$headers) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        //$fellappUtil = $this->container->get('fellapp_util');
 
         $systemUser = $userSecUtil->findSystemUser();
 
@@ -564,16 +566,53 @@ class FellAppImportPopulateHubUtil {
         $storagePath = $this->container->get('kernel')->getProjectDir() . '/public/Uploaded/fellapp/' . $applicantsUploadPathFellApp;
 
         // Get remote server URL from site settings
-        $remoteUrl = $userSecUtil->getSiteSettingParameter('fellappRemoteServerUrl');
+        $remoteUrl = $userSecUtil->getSiteSettingParameter(
+            'hubServerApiUrl',
+            $this->container->getParameter('fellapp.sitename'));
         if( !$remoteUrl ) {
             $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
             return false;
         }
+        //$remoteUrl = https://view.online/fellowship-applications/download-application-data
+        //Get $remoteBaseUrl=https://view.online
+        $parts = parse_url($remoteUrl);
+        $remoteBaseUrl = $parts['scheme'] . '://' . $parts['host'];
 
-        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        if( !$secretKey ) {
-            $logger->warning('secretKey is not defined in Site Parameters. Cannot download remote documents.');
-            return false;
+//        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+//        if( !$secretKey ) {
+//            $logger->warning('secretKey is not defined in Site Parameters. Cannot download remote documents.');
+//            return false;
+//        }
+
+        //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        //$apiConnectionKey = $userSecUtil->getSiteSettingParameter('secretKey'); //apiConnectionKey in Institution
+        //$apiConnectionKey = $fellappUtil->getApiConnectionKey();
+        //On local server only one institution with one $apiConnectionKey must exists
+        //On HUB server we can multiple institutions with non empty $apiConnectionKey
+//        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
+//        if( count($institutions) == 1 ) {
+//            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
+//        } else {
+//            $ids = array_map(fn($i) => $i->getId(), $institutions);
+//            $idsString = implode(',', $ids);
+//            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
+//                . count($institutions) .
+//                ', Institution ids='.$idsString
+//            );
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
+//            ], 500);
+//        }
+
+        $apiConnectionKey = $fellappImportPopulateHubUtil->getApiConnectionKey();
+        //exit('$apiConnectionKey='.$apiConnectionKey);
+
+        if( !$apiConnectionKey ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Secret key not configured'
+            ], 500);
         }
 
         // Document types to download with their corresponding row field names and attachment methods
@@ -644,8 +683,8 @@ class FellAppImportPopulateHubUtil {
                     $docConfig['docType'],
                     $storagePath,
                     $systemUser,
-                    $remoteUrl,
-                    $secretKey
+                    $remoteBaseUrl,
+                    $apiConnectionKey
                 );
 
                 if ($document) {
@@ -694,7 +733,7 @@ class FellAppImportPopulateHubUtil {
         $timestamp = time();
         $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $secretKey);
 
-        // Construct API URL
+        // Construct API URL $remoteBaseUrl=https://view.online
         $apiUrl = $remoteBaseUrl . '/fellowship-applications/download-application-file?document_hash=' . urlencode($fileHash);
 
         // Make API request with authentication headers
@@ -732,6 +771,8 @@ class FellAppImportPopulateHubUtil {
         $fileExtStr = $fileExt ? '.' . $fileExt : '';
         $fileUniqueName = $currentDatetimeTimestamp . 'ID' . $fileHash . $fileExtStr;
 
+        $logger->notice("downloadFileFromRemote: fileUrl=$fileUrl, filename=$filename, fileHash=$fileHash");
+
         // Ensure storage directory exists
         if (!file_exists($storagePath)) {
             mkdir($storagePath, 0700, true);
@@ -741,6 +782,8 @@ class FellAppImportPopulateHubUtil {
         // Save file to storage
         $targetFile = $storagePath . DIRECTORY_SEPARATOR . $fileUniqueName;
         file_put_contents($targetFile, $fileContent);
+
+        $logger->notice("downloadFileFromRemote: file saved in targetFile=$targetFile");
 
         // Calculate file size
         $filesize = strlen($fileContent) / 1024; // KB
@@ -760,9 +803,12 @@ class FellAppImportPopulateHubUtil {
             $document->setType($documentTypeObject);
         }
 
+        //return $document; //testing
         // Persist document
-        $this->em->persist($document);
-        $this->em->flush();
+        if(1) {
+            $this->em->persist($document);
+            $this->em->flush();
+        }
 
         // Generate thumbnails
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -1262,6 +1308,69 @@ class FellAppImportPopulateHubUtil {
         return $training;
     }
 
+    public function getValueByHeaderName($keyName, $row, $headers) {
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+        return $fellappImportPopulateUtil->getValueByHeaderName($keyName, $row, $headers);
+    }
 
+    public function authenticateHmac( $hmacHeader, $timestampHeader ) {
+        $logger = $this->container->get('logger');
+        $fellappUtil = $this->container->get('fellapp_util');
+        /////////// Verify HMAC Get secret key for HMAC verification ///////////
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        $authenticated = false;
+        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
+        if( count($institutions) == 0 ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
+            ], 404);
+        } else {
+            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
+            foreach($apiConnectionKeys as $apiConnectionKey) {
+                // Verify HMAC (use hash_equals for constant-time comparison)
+                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
+                if( hash_equals($expectedHmac, $hmacHeader) ) {
+                    $authenticated = true;
+                    break;
+                }
+            }
+        }
+        $logger->notice('downloadApplicationDataAction: $authenticated='.$authenticated);
+
+        return $authenticated;
+
+//        if( !$authenticated ) {
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Invalid HMAC authentication'
+//            ], 401);
+//        }
+        /////////// EOF Verify HMAC Get secret key for HMAC verification ///////////
+    }
+
+    public function getApiConnectionKey() {
+        $logger = $this->container->get('logger');
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $apiConnectionKey = null;
+        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
+        if( count($institutions) == 1 ) {
+            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
+        } else {
+            $ids = array_map(fn($i) => $i->getId(), $institutions);
+            $idsString = implode(',', $ids);
+            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
+                . count($institutions) .
+                ', Institution ids='.$idsString
+            );
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
+//            ], 500);
+        }
+        return $apiConnectionKey;
+    }
 
 } 
