@@ -915,49 +915,14 @@ class FellAppRetrievalController extends OrderAbstractController
         $logger = $this->get('logger');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         //$userSecUtil = $this->get('user_security_utility');
-        $fellappUtil = $this->container->get('fellapp_util');
+        //$fellappUtil = $this->container->get('fellapp_util');
         //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        //TODO: use institution's hash
 
         // Get authentication headers
         $hmacHeader = $request->headers->get('X-HMAC');
         $timestampHeader = $request->headers->get('X-Timestamp');
 
-        // Verify HMAC
-        //$expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $secretKey);
-        //if (!hash_equals($expectedHmac, $hmacHeader)) {
-        //    return new JsonResponse(['success' => false, 'message' => 'Invalid HMAC'], 403);
-        //}
-
         /////////// Verify HMAC Get secret key for HMAC verification ///////////
-//        //$userSecUtil = $this->container->get('user_security_utility');
-//        $authenticated = false;
-//        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
-//        if( count($institutions) == 0 ) {
-//            return new JsonResponse([
-//                'success' => false,
-//                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
-//            ], 404);
-//        } else {
-//            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
-//            foreach($apiConnectionKeys as $apiConnectionKey) {
-//                // Verify HMAC (use hash_equals for constant-time comparison)
-//                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
-//                if( hash_equals($expectedHmac, $hmacHeader) ) {
-//                    $authenticated = true;
-//                    break;
-//                }
-//            }
-//        }
-//        $logger->notice('downloadApplicationDataAction: $authenticated='.$authenticated);
-//
-//        if( !$authenticated ) {
-//            return new JsonResponse([
-//                'success' => false,
-//                'message' => 'Invalid HMAC authentication'
-//            ], 401);
-//        }
-
         if( $fellappImportPopulateHubUtil->authenticateHmac($hmacHeader,$timestampHeader) === false ) {
             return new JsonResponse([
                 'success' => false,

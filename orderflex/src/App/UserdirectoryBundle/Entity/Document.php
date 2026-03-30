@@ -863,20 +863,39 @@ class Document {
         }
         return NULL;
     }
-    public function generateDocumentHash() {
-        //set hash if file exists
-        $filename = $this->getFullServerPath();
-        if( file_exists($filename) ) {
-            $hash = md5_file($filename);
-            if( $hash ) {
-                return $hash;
-            }
-        }
-//        else {
-//            exit("Testing: file does not exists");
+//    public function generateDocumentHash() {
+//        //set hash if file exists
+//        $filename = $this->getFullServerPath();
+//        if( file_exists($filename) ) {
+//            $hash = md5_file($filename);
+//            if( $hash ) {
+//                return $hash;
+//            }
+//            // Use a stronger hash algorithm than MD5
+//            //return hash_file('sha256', $filename) ?: null;
 //        }
+//
+//        return NULL;
+//    }
+    //unique hash that changes when the file changes
+    //with extra uniqueness (e.g., include filename + size + mtime)
+    public function generateDocumentHash() {
+        $filename = $this->getFullServerPath();
 
-        return NULL;
+        if (!is_file($filename)) {
+            return null;
+        }
+
+        $data = json_encode([
+            'content' => hash_file('sha256', $filename),
+            'mtime'   => filemtime($filename),
+            'size'    => filesize($filename),
+            'name'    => basename($filename),
+        ]);
+
+        return hash('sha256', $data);
     }
-    
+
+
+
 }

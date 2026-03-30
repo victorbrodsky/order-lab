@@ -650,7 +650,7 @@ class FellAppImportPopulateHubUtil {
             // Check if document already exists locally by hash
             $existingDoc = $this->em->getRepository(Document::class)->findOneByDocumentHash($fileHash);
             if ($existingDoc) {
-                $logger->notice('Document with hash ' . $fileHash . ' already exists locally. Skipping download.');
+                $logger->notice('Skipping download: Document ID='.$existingDoc->getId().' with hash ' . $fileHash . ' already exists locally.');
                 // Attach existing document to fellowship application
                 $this->attachDocumentToFellowship($fellowshipApplication, $existingDoc, $docConfig, $examination);
                 continue;
@@ -1358,6 +1358,24 @@ class FellAppImportPopulateHubUtil {
 //            ], 500);
         }
         return $apiConnectionKey;
+    }
+
+    public function generateDocumentHash( $document ) {
+        //$filename = $this->getFullServerPath();
+        $filename = $document->getUniquename();
+
+        if (!is_file($filename)) {
+            return null;
+        }
+
+        $data = json_encode([
+            'content' => hash_file('sha256', $filename),
+            'mtime'   => filemtime($filename),
+            'size'    => filesize($filename),
+            'name'    => basename($filename),
+        ]);
+
+        return hash('sha256', $data);
     }
 
 } 

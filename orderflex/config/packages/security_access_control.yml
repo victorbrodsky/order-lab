@@ -153,6 +153,7 @@ security:
        - { path: ^.*/fellowship-applications/download-application-data, role: PUBLIC_ACCESS }
        - { path: ^.*/fellowship-applications/retrieve-application-data, role: PUBLIC_ACCESS }
        - { path: ^.*/fellowship-applications/submit-a-letter-of-recommendation, role: PUBLIC_ACCESS }
+       - { path: ^.*/fellowship-applications/download-application-file, role: PUBLIC_ACCESS }
 
   #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
 
