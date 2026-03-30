@@ -1322,10 +1322,11 @@ class FellAppImportPopulateHubUtil {
         $authenticated = false;
         $institutions = $fellappUtil->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
         if( count($institutions) == 0 ) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
-            ], 404);
+            $logger->notice('downloadApplicationDataAction: Error retrieving apiConnectionKey: No institutions found with apiConnectionKey');
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
+//            ], 404);
         } else {
             $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
             foreach($apiConnectionKeys as $apiConnectionKey) {
