@@ -315,7 +315,14 @@ class FellAppRetrievalController extends OrderAbstractController
             'ID', 'originalAppId', 'instanceId', 'primaryPublicUserId',
             'apiimportkey', 'apiimportkeyglobal',
             'timestamp', 'lastName', 'firstName', 'middleName',
-            'uploadedPhotoUrl', 'uploadedCVUrl', 'uploadedCoverLetterUrl', 'uploadedUSMLEScoresUrl',
+            'uploadedPhotoUrl',
+            'uploadedPhotoHash',
+            'uploadedCVUrl',
+            'uploadedCVHash',
+            'uploadedCoverLetterUrl',
+            'uploadedCoverLetterHash',
+            'uploadedUSMLEScoresUrl',
+            'uploadedUSMLEScoresHash',
             'fellowshipType', 'trainingPeriodStart', 'trainingPeriodEnd',
             'otherNames', 'presentAddressStreet1', 'presentAddressStreet2', 'presentAddressCity',
             'presentAddressState', 'presentAddressZip', 'presentAddressCountry', 'samePAddress',
@@ -354,7 +361,12 @@ class FellAppRetrievalController extends OrderAbstractController
             'medicalLicensure1Number', 'medicalLicensure1Active',
             'medicalLicensure2Country', 'medicalLicensure2State', 'medicalLicensure2DateIssued',
             'medicalLicensure2Number', 'medicalLicensure2Active',
-            'suspendedLicensure', 'uploadedReprimandExplanationUrl', 'legalSuit', 'uploadedLegalExplanationUrl',
+            'suspendedLicensure',
+            'uploadedReprimandExplanationUrl',
+            'uploadedReprimandExplanationHash',
+            'legalSuit',
+            'uploadedLegalExplanationUrl',
+            'uploadedLegalExplanationHash',
             'boardCertification1Board', 'boardCertification1Area', 'boardCertification1Date',
             'boardCertification2Board', 'boardCertification2Area', 'boardCertification2Date',
             'boardCertification3Board', 'boardCertification3Area', 'boardCertification3Date',
@@ -430,7 +442,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $reprimandDocs = $fellapp->getReprimandDocuments();
         $lawsuitDocs = $fellapp->getLawsuitDocuments();
 
-        //specialty hash
+        //FellowshipSubspecialty api key
         $apiImportKeysJson = null;
         $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
         if( $fellappSpecialty ) {
@@ -444,6 +456,7 @@ class FellAppRetrievalController extends OrderAbstractController
             $logger->notice($fellappSpecialty->getNameInstitution().': $apiImportKeysJson='.$apiImportKeysJson);
         }
 
+        //GlobalFellowshipSpecialty api key
         $apiImportKeyGlobal = null;
         $globalFellappSpecialty = $fellapp->getGlobalFellowshipSpecialty();
         if( $globalFellappSpecialty ) {
@@ -466,21 +479,33 @@ class FellAppRetrievalController extends OrderAbstractController
         $data['originalAppId'] = $fellapp->getId(); //original fellowship application ID
         $data['instanceId'] = $instanceId;
         $data['primaryPublicUserId'] = $user ? $user->getPrimaryPublicUserId() : '';
-        $data['apiimportkey'] = $apiImportKeysJson;
-        $data['apiimportkeyglobal'] = $apiImportKeysGlobalJson;
+        $data['apiimportkey'] = $apiImportKeysJson;                 //FellowshipSubspecialty api key
+        $data['apiimportkeyglobal'] = $apiImportKeysGlobalJson;     //GlobalFellowshipSpecialty api key
 
         $data['timestamp'] = $fellapp->getTimestamp() ? $fellapp->getTimestamp()->format('Y-m-d H:i:s') : '';
         $data['lastName'] = $user ? $user->getLastName() : '';
         $data['firstName'] = $user ? $user->getFirstName() : '';
         $data['middleName'] = $user ? $user->getMiddleName() : '';
 
-        // Document URLs
+        ///////////// Document URLs /////////////
         $data['uploadedPhotoUrl'] = $this->getFirstDocumentUrl($avatars);
+        $data['uploadedPhotoHash'] = $this->getFirstDocumentHash($avatars); //documenthash
+
         $data['uploadedCVUrl'] = $this->getFirstDocumentUrl($cvs);
+        $data['uploadedCVHash'] = $this->getFirstDocumentHash($cvs);
+
         $data['uploadedCoverLetterUrl'] = $this->getFirstDocumentUrl($coverLetters);
+        $data['uploadedCoverLetterHash'] = $this->getFirstDocumentHash($coverLetters);
+
         $data['uploadedUSMLEScoresUrl'] = '';
+        $data['uploadedUSMLEScoresHash'] = '';
+
         $data['uploadedReprimandExplanationUrl'] = $this->getFirstDocumentUrl($reprimandDocs);
+        $data['uploadedReprimandExplanationHash'] = $this->getFirstDocumentHash($reprimandDocs);
+
         $data['uploadedLegalExplanationUrl'] = $this->getFirstDocumentUrl($lawsuitDocs);
+        $data['uploadedLegalExplanationHash'] = $this->getFirstDocumentHash($lawsuitDocs);
+        ///////////// EOF Document URLs /////////////
 
         // Fellowship Type and Training Period
         $data['fellowshipType'] = $fellapp->getFellowshipSubspecialty() ? $fellapp->getFellowshipSubspecialty()->getName() : '';
@@ -881,6 +906,20 @@ class FellAppRetrievalController extends OrderAbstractController
         $doc = $documents->first();
         if ($doc) {
             return $doc->getAbsoluteUploadFullPath() ?? '';
+        }
+        return '';
+    }
+
+    /**
+     * Helper function to get URL of hash document
+     */
+    private function getFirstDocumentHash($documents) {
+        if (!$documents || $documents->count() == 0) {
+            return '';
+        }
+        $doc = $documents->first();
+        if ($doc) {
+            return $doc->getDocumentHash() ?? '';
         }
         return '';
     }
