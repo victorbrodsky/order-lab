@@ -60,6 +60,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpClient\HttpClient;
 
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 
@@ -717,8 +718,13 @@ class FellAppImportPopulateHubUtil {
         $apiUrl = $remoteBaseUrl . '/fellowship-applications/download-application-file?document_hash=' . urlencode($fileHash);
 
         // Make API request with authentication headers
-        $httpClient = new \Symfony\Component\HttpClient\HttpClient();
-        $response = $httpClient->request('GET', $apiUrl, [
+        //$httpClient = new \Symfony\Component\HttpClient\HttpClient();
+        $client = HttpClient::create([
+            'verify_peer' => false,
+            'verify_host' => false
+        ]);
+
+        $response = $client->request('GET', $apiUrl, [
             'headers' => [
                 'X-HMAC' => $hmac,
                 'X-Timestamp' => $timestamp,
