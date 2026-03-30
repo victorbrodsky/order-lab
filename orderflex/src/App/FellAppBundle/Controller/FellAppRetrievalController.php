@@ -448,6 +448,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $avatars = $fellapp->getAvatars();
         $cvs = $fellapp->getCvs();
         $coverLetters = $fellapp->getCoverLetters();
+        $usmlDocs = $fellapp->getExaminationScores(); //get USML scores files
         $reprimandDocs = $fellapp->getReprimandDocuments();
         $lawsuitDocs = $fellapp->getLawsuitDocuments();
 
@@ -506,8 +507,8 @@ class FellAppRetrievalController extends OrderAbstractController
         $data['uploadedCoverLetterUrl'] = $this->getFirstDocumentUrl($coverLetters);
         $data['uploadedCoverLetterHash'] = $this->getFirstDocumentHash($coverLetters);
 
-        $data['uploadedUSMLEScoresUrl'] = '';
-        $data['uploadedUSMLEScoresHash'] = '';
+        $data['uploadedUSMLEScoresUrl'] = $this->getFirstDocumentUrl($usmlDocs);
+        $data['uploadedUSMLEScoresHash'] = $this->getFirstDocumentHash($usmlDocs);
 
         $data['uploadedReprimandExplanationUrl'] = $this->getFirstDocumentUrl($reprimandDocs);
         $data['uploadedReprimandExplanationHash'] = $this->getFirstDocumentHash($reprimandDocs);

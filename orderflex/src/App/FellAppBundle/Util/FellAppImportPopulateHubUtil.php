@@ -213,7 +213,7 @@ class FellAppImportPopulateHubUtil {
                 return null;
             }
         }
-        $logger->warning('Local FellowshipSubspecialty found by API import key=[' . $apiImportKeyGlobal . ']');
+        $logger->notice('Local FellowshipSubspecialty found by API import key=[' . $apiImportKeyGlobal . ']');
 
         // Create username
         $lastNameCap = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($lastName);
@@ -303,26 +303,6 @@ class FellAppImportPopulateHubUtil {
         // Fellowship Type
         $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
         if ($fellowshipType) {
-//            $fellowshipType = trim((string)$fellowshipType);
-//            $fellowshipType = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($fellowshipType);
-//            $transformer = new GenericTreeTransformer($this->em, $systemUser, 'FellowshipSubspecialty');
-//            $fellowshipTypeEntity = $transformer->reverseTransform($fellowshipType);
-//            $logger->notice('Found $fellowshipTypeEntity=' . $fellowshipTypeEntity->getNameInstitution() . "]");
-//            $logger->notice('Compare to $localSpecialty=' . $localSpecialty->getNameInstitution() . "]");
-//            $keyMatch = false;
-//            if( $fellowshipTypeEntity ) {
-//                $apiImportKeys = $fellowshipTypeEntity->getApiImportKeys();
-//                $logger->notice('Found $fellowshipTypeEntity $apiImportKeys count=' . count($apiImportKeys) . "]");
-//                foreach( $apiImportKeys as $apiImportKey ) {
-//                    $keyValue = $apiImportKey->getName();
-//                    $logger->warning('Compare specialty API import:[' . trim($keyValue) . "]?=[" . trim($apiImportKeyGlobal).']');
-//                    if( trim($keyValue) === trim($apiImportKeyGlobal) ) {
-//                        $keyMatch = true;
-//                        break;
-//                    }
-//                }
-//            }
-
             $fellowshipTypeEntity = $this->em->getRepository(FellowshipSubspecialty::class)
                 ->createQueryBuilder('fs')
                 ->join('fs.apiImportKeys', 'k')
