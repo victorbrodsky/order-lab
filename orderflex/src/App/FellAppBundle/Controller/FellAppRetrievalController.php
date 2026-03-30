@@ -921,7 +921,7 @@ class FellAppRetrievalController extends OrderAbstractController
      */
     #[Route(path: '/download-application-file', name: 'fellapp_download_application_file', methods: ['GET'])]
     public function downloadApplicationFileAction(Request $request) {
-        $logger = $this->get('logger');
+        $logger = $this->container->get('logger');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         //$userSecUtil = $this->get('user_security_utility');
         //$fellappUtil = $this->container->get('fellapp_util');
