@@ -345,14 +345,45 @@ class FellAppImportPopulateHubUtil {
         $fellowshipApplication->setStartDate($this->transformDatestrToDate($trainingPeriodStart));
         $fellowshipApplication->setEndDate($this->transformDatestrToDate($trainingPeriodEnd));
 
+        // Examination
+        $examination = new Examination($systemUser); //create new Examination
+        $fellowshipApplication->addExamination($examination);
+        $examination->setUSMLEStep1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep1DatePassed', $rowData, $headers)));
+        $examination->setUSMLEStep1Score($this->getValueByHeaderName('USMLEStep1Score', $rowData, $headers));
+        $examination->setUSMLEStep1Percentile($this->getValueByHeaderName('USMLEStep1Percentile', $rowData, $headers));
+        $examination->setUSMLEStep2CKDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CKDatePassed', $rowData, $headers)));
+        $examination->setUSMLEStep2CKScore($this->getValueByHeaderName('USMLEStep2CKScore', $rowData, $headers));
+        $examination->setUSMLEStep2CKPercentile($this->getValueByHeaderName('USMLEStep2CKPercentile', $rowData, $headers));
+        $examination->setUSMLEStep2CSDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CSDatePassed', $rowData, $headers)));
+        $examination->setUSMLEStep2CSScore($this->getValueByHeaderName('USMLEStep2CSScore', $rowData, $headers));
+        $examination->setUSMLEStep2CSPercentile($this->getValueByHeaderName('USMLEStep2CSPercentile', $rowData, $headers));
+        $examination->setUSMLEStep3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep3DatePassed', $rowData, $headers)));
+        $examination->setUSMLEStep3Score($this->getValueByHeaderName('USMLEStep3Score', $rowData, $headers));
+        $examination->setUSMLEStep3Percentile($this->getValueByHeaderName('USMLEStep3Percentile', $rowData, $headers));
+
+        $ECFMGCertificate = $this->getValueByHeaderName('ECFMGCertificate', $rowData, $headers);
+        $examination->setECFMGCertificate($ECFMGCertificate == 'Yes');
+        $examination->setECFMGCertificateNumber($this->getValueByHeaderName('ECFMGCertificateNumber', $rowData, $headers));
+        $examination->setECFMGCertificateDate($this->transformDatestrToDate($this->getValueByHeaderName('ECFMGCertificateDate', $rowData, $headers)));
+
+        $examination->setCOMLEXLevel1Score($this->getValueByHeaderName('COMLEXLevel1Score', $rowData, $headers));
+        $examination->setCOMLEXLevel1Percentile($this->getValueByHeaderName('COMLEXLevel1Percentile', $rowData, $headers));
+        $examination->setCOMLEXLevel1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel1DatePassed', $rowData, $headers)));
+        $examination->setCOMLEXLevel2Score($this->getValueByHeaderName('COMLEXLevel2Score', $rowData, $headers));
+        $examination->setCOMLEXLevel2Percentile($this->getValueByHeaderName('COMLEXLevel2Percentile', $rowData, $headers));
+        $examination->setCOMLEXLevel2DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel2DatePassed', $rowData, $headers)));
+        $examination->setCOMLEXLevel3Score($this->getValueByHeaderName('COMLEXLevel3Score', $rowData, $headers));
+        $examination->setCOMLEXLevel3Percentile($this->getValueByHeaderName('COMLEXLevel3Percentile', $rowData, $headers));
+        $examination->setCOMLEXLevel3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel3DatePassed', $rowData, $headers)));
+
         // Document URLs (will need to be downloaded separately - just storing URLs for now)
         //Use documenthash to check if file already exists
-        $uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl', $rowData, $headers);
-        $uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl', $rowData, $headers);
-        $uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl', $rowData, $headers);
+        //$uploadedPhotoUrl = $this->getValueByHeaderName('uploadedPhotoUrl', $rowData, $headers);
+        //$uploadedCVUrl = $this->getValueByHeaderName('uploadedCVUrl', $rowData, $headers);
+        //$uploadedCoverLetterUrl = $this->getValueByHeaderName('uploadedCoverLetterUrl', $rowData, $headers);
         //public function downloadRemoteDocuments( $fellowshipApplication, $rowData, $headers )
         //Use uploadGoogleDocuments
-        $this->downloadRemoteDocuments($fellowshipApplication,$rowData,$headers);
+        $this->downloadRemoteDocuments($fellowshipApplication,$rowData,$headers,$examination); //create new Examination
 
         // Present Address
         $presentLocationType = $this->em->getRepository(LocationTypeList::class)->findOneByName("Present Address");
@@ -428,37 +459,6 @@ class FellAppImportPopulateHubUtil {
         $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "otherExperience2", $rowData, $headers, 8);
         $this->createFellAppTraining($this->em, $fellowshipApplication, $systemUser, "otherExperience3", $rowData, $headers, 9);
 
-        // Examination
-        $examination = new Examination($systemUser);
-        $fellowshipApplication->addExamination($examination);
-        $examination->setUSMLEStep1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep1DatePassed', $rowData, $headers)));
-        $examination->setUSMLEStep1Score($this->getValueByHeaderName('USMLEStep1Score', $rowData, $headers));
-        $examination->setUSMLEStep1Percentile($this->getValueByHeaderName('USMLEStep1Percentile', $rowData, $headers));
-        $examination->setUSMLEStep2CKDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CKDatePassed', $rowData, $headers)));
-        $examination->setUSMLEStep2CKScore($this->getValueByHeaderName('USMLEStep2CKScore', $rowData, $headers));
-        $examination->setUSMLEStep2CKPercentile($this->getValueByHeaderName('USMLEStep2CKPercentile', $rowData, $headers));
-        $examination->setUSMLEStep2CSDatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep2CSDatePassed', $rowData, $headers)));
-        $examination->setUSMLEStep2CSScore($this->getValueByHeaderName('USMLEStep2CSScore', $rowData, $headers));
-        $examination->setUSMLEStep2CSPercentile($this->getValueByHeaderName('USMLEStep2CSPercentile', $rowData, $headers));
-        $examination->setUSMLEStep3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('USMLEStep3DatePassed', $rowData, $headers)));
-        $examination->setUSMLEStep3Score($this->getValueByHeaderName('USMLEStep3Score', $rowData, $headers));
-        $examination->setUSMLEStep3Percentile($this->getValueByHeaderName('USMLEStep3Percentile', $rowData, $headers));
-        
-        $ECFMGCertificate = $this->getValueByHeaderName('ECFMGCertificate', $rowData, $headers);
-        $examination->setECFMGCertificate($ECFMGCertificate == 'Yes');
-        $examination->setECFMGCertificateNumber($this->getValueByHeaderName('ECFMGCertificateNumber', $rowData, $headers));
-        $examination->setECFMGCertificateDate($this->transformDatestrToDate($this->getValueByHeaderName('ECFMGCertificateDate', $rowData, $headers)));
-        
-        $examination->setCOMLEXLevel1Score($this->getValueByHeaderName('COMLEXLevel1Score', $rowData, $headers));
-        $examination->setCOMLEXLevel1Percentile($this->getValueByHeaderName('COMLEXLevel1Percentile', $rowData, $headers));
-        $examination->setCOMLEXLevel1DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel1DatePassed', $rowData, $headers)));
-        $examination->setCOMLEXLevel2Score($this->getValueByHeaderName('COMLEXLevel2Score', $rowData, $headers));
-        $examination->setCOMLEXLevel2Percentile($this->getValueByHeaderName('COMLEXLevel2Percentile', $rowData, $headers));
-        $examination->setCOMLEXLevel2DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel2DatePassed', $rowData, $headers)));
-        $examination->setCOMLEXLevel3Score($this->getValueByHeaderName('COMLEXLevel3Score', $rowData, $headers));
-        $examination->setCOMLEXLevel3Percentile($this->getValueByHeaderName('COMLEXLevel3Percentile', $rowData, $headers));
-        $examination->setCOMLEXLevel3DatePassed($this->transformDatestrToDate($this->getValueByHeaderName('COMLEXLevel3DatePassed', $rowData, $headers)));
-
         // Medical Licenses
         $this->createFellAppMedicalLicense($this->em, $fellowshipApplication, $systemUser, "medicalLicensure1", $rowData, $headers);
         $this->createFellAppMedicalLicense($this->em, $fellowshipApplication, $systemUser, "medicalLicensure2", $rowData, $headers);
@@ -528,7 +528,7 @@ class FellAppImportPopulateHubUtil {
 
 
 
-    public function downloadRemoteDocuments($fellowshipApplication,$rowData,$headers) {
+    public function downloadRemoteDocuments($fellowshipApplication,$rowData,$headers,$examination) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
@@ -558,33 +558,6 @@ class FellAppImportPopulateHubUtil {
         //Get $remoteBaseUrl=https://view.online
         $parts = parse_url($remoteUrl);
         $remoteBaseUrl = $parts['scheme'] . '://' . $parts['host'];
-
-//        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-//        if( !$secretKey ) {
-//            $logger->warning('secretKey is not defined in Site Parameters. Cannot download remote documents.');
-//            return false;
-//        }
-
-        //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        //$apiConnectionKey = $userSecUtil->getSiteSettingParameter('secretKey'); //apiConnectionKey in Institution
-        //$apiConnectionKey = $fellappUtil->getApiConnectionKey();
-        //On local server only one institution with one $apiConnectionKey must exists
-        //On HUB server we can multiple institutions with non empty $apiConnectionKey
-//        $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
-//        if( count($institutions) == 1 ) {
-//            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
-//        } else {
-//            $ids = array_map(fn($i) => $i->getId(), $institutions);
-//            $idsString = implode(',', $ids);
-//            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
-//                . count($institutions) .
-//                ', Institution ids='.$idsString
-//            );
-//            return new JsonResponse([
-//                'success' => false,
-//                'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
-//            ], 500);
-//        }
 
         $apiConnectionKey = $fellappImportPopulateHubUtil->getApiConnectionKey();
         //exit('$apiConnectionKey='.$apiConnectionKey);
@@ -637,7 +610,7 @@ class FellAppImportPopulateHubUtil {
             ]
         ];
 
-        $examination = null;
+        //$examination = null;
 
         foreach ($documentTypes as $docConfig) {
             $fileUrl = $this->getValueByHeaderName($docConfig['urlField'], $rowData, $headers);
@@ -653,7 +626,7 @@ class FellAppImportPopulateHubUtil {
                 $logger->notice('Skipping download: Document '.$docConfig['docType'].', ID='.$existingDoc->getId().' with hash ' . $fileHash . ' already exists locally.');
                 // Attach existing document to fellowship application
                 //$this->attachDocumentToFellowship($fellowshipApplication, $existingDoc, $docConfig, $examination);
-                $this->attachDocumentToFellowship($fellowshipApplication, $existingDoc, $docConfig);
+                $this->attachDocumentToFellowship($fellowshipApplication, $existingDoc, $docConfig, $examination);
                 continue;
             }
 
@@ -687,19 +660,27 @@ class FellAppImportPopulateHubUtil {
     /**
      * Attach a document to the FellowshipApplication based on configuration
      */
-    private function attachDocumentToFellowship($fellowshipApplication, $document, $docConfig) {
+    private function attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, $examination) {
         $logger = $this->container->get('logger');
+        //return; //testing
+
+        //check if document is valid (has ID)
+        if( $document && $document->getId() ) {
+            //ok
+            $logger->notice("attachDocumentToFellowship: add document ID=".$document->getId());
+        } else {
+            $logger->notice("attachDocumentToFellowship: skip document without ID");
+        }
 
         $attachMethod = $docConfig['attachMethod'];
 
         if (isset($docConfig['attachTo']) && $docConfig['attachTo'] === 'examination') {
             // For examination documents (USMLE scores)
-            $examination = null;
-            $examinations = $fellowshipApplication->getExaminations();
-            $logger->notice("attachDocumentToFellowship: examination count=".count($examinations));
-            if( count($examinations) > 0 ) {
-                $examination = $examinations->first();
-            }
+//            $examinations = $fellowshipApplication->getExaminations();
+//            $logger->notice("attachDocumentToFellowship: examination count=".count($examinations));
+//            if( count($examinations) > 0 ) {
+//                $examination = $examinations->first();
+//            }
             if( !$examination ) {
                 $logger->notice("attachDocumentToFellowship: create new examination");
                 $systemUser = $this->container->get('user_security_utility')->findSystemUser();
@@ -713,26 +694,27 @@ class FellAppImportPopulateHubUtil {
             $logger->notice("attachDocumentToFellowship: add regular document docType=".$docConfig['docType']);
             $fellowshipApplication->$attachMethod($document);
         }
+        $logger->notice("attachDocumentToFellowship: holder examination count=".count($fellowshipApplication->getExaminations()));
     }
-    private function attachDocumentToFellowship_ORIG($fellowshipApplication, $document, $docConfig, &$examination) {
-        $attachMethod = $docConfig['attachMethod'];
-
-        if (isset($docConfig['attachTo']) && $docConfig['attachTo'] === 'examination') {
-            // For examination documents (USMLE scores)
-            if (!$examination) {
-                $examination = $fellowshipApplication->getExaminations()->first();
-                if (!$examination) {
-                    $systemUser = $this->container->get('user_security_utility')->findSystemUser();
-                    $examination = new \App\UserdirectoryBundle\Entity\Examination($systemUser);
-                    $fellowshipApplication->addExamination($examination);
-                }
-            }
-            $examination->$attachMethod($document);
-        } else {
-            // For regular fellowship application documents
-            $fellowshipApplication->$attachMethod($document);
-        }
-    }
+//    private function attachDocumentToFellowship_ORIG($fellowshipApplication, $document, $docConfig, &$examination) {
+//        $attachMethod = $docConfig['attachMethod'];
+//
+//        if (isset($docConfig['attachTo']) && $docConfig['attachTo'] === 'examination') {
+//            // For examination documents (USMLE scores)
+//            if (!$examination) {
+//                $examination = $fellowshipApplication->getExaminations()->first();
+//                if (!$examination) {
+//                    $systemUser = $this->container->get('user_security_utility')->findSystemUser();
+//                    $examination = new \App\UserdirectoryBundle\Entity\Examination($systemUser);
+//                    $fellowshipApplication->addExamination($examination);
+//                }
+//            }
+//            $examination->$attachMethod($document);
+//        } else {
+//            // For regular fellowship application documents
+//            $fellowshipApplication->$attachMethod($document);
+//        }
+//    }
 
     /**
      * Download a file from the remote server using HMAC authentication
@@ -898,7 +880,7 @@ class FellAppImportPopulateHubUtil {
             $fellowshipApplication->addCoverLetter($uploadedCoverLetterUrlDb);
         }
 
-        $examination = new Examination($systemUser);
+        $examination = new Examination($systemUser); //uploadGoogleDocuments not used
         $fellowshipApplication->addExamination($examination);
         //uploadedUSMLEScoresUrl
         $uploadedUSMLEScoresUrl = $this->getValueByHeaderName('uploadedUSMLEScoresUrl', $rowData, $headers);
