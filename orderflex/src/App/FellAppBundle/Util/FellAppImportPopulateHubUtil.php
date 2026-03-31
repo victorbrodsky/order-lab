@@ -650,9 +650,10 @@ class FellAppImportPopulateHubUtil {
             // Check if document already exists locally by hash
             $existingDoc = $this->em->getRepository(Document::class)->findOneByDocumentHash($fileHash);
             if ($existingDoc) {
-                $logger->notice('Skipping download: Document ID='.$existingDoc->getId().' with hash ' . $fileHash . ' already exists locally.');
+                $logger->notice('Skipping download: Document '.$docConfig['docType'].', ID='.$existingDoc->getId().' with hash ' . $fileHash . ' already exists locally.');
                 // Attach existing document to fellowship application
-                $this->attachDocumentToFellowship($fellowshipApplication, $existingDoc, $docConfig, $examination);
+                //$this->attachDocumentToFellowship($fellowshipApplication, $existingDoc, $docConfig, $examination);
+                $this->attachDocumentToFellowship($fellowshipApplication, $existingDoc, $docConfig);
                 continue;
             }
 
@@ -670,8 +671,9 @@ class FellAppImportPopulateHubUtil {
 
                 if ($document) {
                     // Attach document to fellowship application
-                    $this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, $examination);
-                    $logger->notice('Downloaded and attached ' . $docConfig['docType'] . ' for application ID ' . $fellowshipApplication->getId());
+                    //$this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, $examination);
+                    $this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig);
+                    $logger->notice('Downloaded and attached docType=' . $docConfig['docType'] . ' for application ID ' . $fellowshipApplication->getId());
                 }
             } catch (\Exception $e) {
                 $logger->error('Error downloading ' . $docConfig['docType'] . ': ' . $e->getMessage());
@@ -681,10 +683,38 @@ class FellAppImportPopulateHubUtil {
         return true;
     }
 
+    //TODO: remove &$examination and check if $examination = $fellowshipApplication->getExaminations()->first();
     /**
      * Attach a document to the FellowshipApplication based on configuration
      */
-    private function attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, &$examination) {
+    private function attachDocumentToFellowship($fellowshipApplication, $document, $docConfig) {
+        $logger = $this->container->get('logger');
+
+        $attachMethod = $docConfig['attachMethod'];
+
+        if (isset($docConfig['attachTo']) && $docConfig['attachTo'] === 'examination') {
+            // For examination documents (USMLE scores)
+            $examination = null;
+            $examinations = $fellowshipApplication->getExaminations();
+            $logger->notice("attachDocumentToFellowship: examination count=".count($examinations));
+            if( count($examinations) > 0 ) {
+                $examination = $examinations->first();
+            }
+            if( !$examination ) {
+                $logger->notice("attachDocumentToFellowship: create new examination");
+                $systemUser = $this->container->get('user_security_utility')->findSystemUser();
+                $examination = new Examination($systemUser);
+                $fellowshipApplication->addExamination($examination);
+            }
+            $logger->notice("attachDocumentToFellowship: add document to examination docType=".$docConfig['docType']);
+            $examination->$attachMethod($document);
+        } else {
+            // For regular fellowship application documents
+            $logger->notice("attachDocumentToFellowship: add regular document docType=".$docConfig['docType']);
+            $fellowshipApplication->$attachMethod($document);
+        }
+    }
+    private function attachDocumentToFellowship_ORIG($fellowshipApplication, $document, $docConfig, &$examination) {
         $attachMethod = $docConfig['attachMethod'];
 
         if (isset($docConfig['attachTo']) && $docConfig['attachTo'] === 'examination') {

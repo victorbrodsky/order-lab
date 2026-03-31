@@ -109,3 +109,20 @@ Each application has unique sequential ID. I want to use last_downloaded_id appr
 3) Add all these new application's metadata to the $xlsxData as new row.
 
 
+TODO:
+[2026-03-30T22:57:13.554059+00:00] app.NOTICE: downloadFileFromRemote: fileUrl=http://view.online/Uploaded/fellapp/documents/69caeec18b982.jpg, filename=dog.jpg, fileHash=5ace22d0092f0533befd9d47a032e1c5561d6704f9169c5b396a08f74287b3c1 [] []
+[2026-03-30T22:57:13.557519+00:00] app.NOTICE: downloadFileFromRemote: file saved in targetFile=C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex/public/Uploaded/fellapp/fellapp/FellowshipApplicantUploads\1774911433ID5ace22d0092f0533befd9d47a032e1c5561d6704f9169c5b396a08f74287b3c1.jpg [] []
+[2026-03-30T22:57:13.598171+00:00] app.NOTICE: Downloaded and attached Fellowship Photo for application ID 1771 [] []
+[2026-03-30T22:57:13.850114+00:00] app.NOTICE: downloadFileFromRemote: fileUrl=http://view.online/Uploaded/fellapp/documents/69caeec789e50.pdf, filename=sample.pdf, fileHash=c8aa78406f3cc62679ddffa226bc0d2bc6a8319b7a743912c43c54ad35e24d51 [] []
+[2026-03-30T22:57:13.853124+00:00] app.NOTICE: downloadFileFromRemote: file saved in targetFile=C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex/public/Uploaded/fellapp/fellapp/FellowshipApplicantUploads\1774911433IDc8aa78406f3cc62679ddffa226bc0d2bc6a8319b7a743912c43c54ad35e24d51.pdf [] []
+[2026-03-30T22:57:13.867633+00:00] app.NOTICE: Downloaded and attached Fellowship CV for application ID 1771 [] []
+[2026-03-30T22:57:14.251165+00:00] app.NOTICE: downloadFileFromRemote: fileUrl=http://view.online/Uploaded/fellapp/documents/69caeecd91f56.pdf, filename=sample_itinerary.pdf, fileHash=853e44b2a372c411e75a9ca331cb5c30420ba99037a54baae577346ad0239ea5 [] []
+[2026-03-30T22:57:14.252206+00:00] app.NOTICE: downloadFileFromRemote: file saved in targetFile=C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex/public/Uploaded/fellapp/fellapp/FellowshipApplicantUploads\1774911434ID853e44b2a372c411e75a9ca331cb5c30420ba99037a54baae577346ad0239ea5.pdf [] []
+[2026-03-30T22:57:14.265718+00:00] app.NOTICE: Downloaded and attached Fellowship Cover Letter for application ID 1771 [] []
+[2026-03-30T22:57:14.488842+00:00] app.NOTICE: downloadFileFromRemote: fileUrl=http://view.online/Uploaded/fellapp/documents/69caeed53e815.pdf, filename=fellowship_usmle_score_summary.pdf, fileHash=f5cbdc89ae1a8c77f571f0495518614b18ace85b910d9fd86775e7ae543e5001 [] []
+[2026-03-30T22:57:14.489821+00:00] app.NOTICE: downloadFileFromRemote: file saved in targetFile=C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex/public/Uploaded/fellapp/fellapp/FellowshipApplicantUploads\1774911434IDf5cbdc89ae1a8c77f571f0495518614b18ace85b910d9fd86775e7ae543e5001.pdf [] []
+[2026-03-30T22:57:14.506128+00:00] app.NOTICE: Downloaded and attached Fellowship USMLE Scores for application ID 1771 [] []
+
+remove &$examination and check if $examination = $fellowshipApplication->getExaminations()->first();
+private function attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, &$examination)
+

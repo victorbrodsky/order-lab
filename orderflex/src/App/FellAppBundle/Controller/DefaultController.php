@@ -375,6 +375,12 @@ class DefaultController extends OrderAbstractController
 //        }
 //        exit('$fellappRecLetterUrl1');
 
+        $em = $this->getDoctrine()->getManager();
+        $fellapp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find(1772);
+        $examinations = $fellapp->getExaminations();
+        echo "examinations=".count($examinations)."<br>";
+        exit('exit default FellowshipApplication');
+
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
 

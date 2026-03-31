@@ -390,10 +390,13 @@
 
     {% for document in documents %}
 
+        {#{% set dummyFieldHtml = "" %}#}
         {% if asFormOrEntity == "asForm" %}
             {% set documentObj = document.vars.value %}
+            {#{% set dummyFieldHtml = formmacros.field(document.dummyprototypefield) %}#}
         {% else %}
             {% set documentObj = document %}
+            {#{% set dummyFieldHtml = formmacros.field(document.dummyprototypefield) %}#}
         {% endif %}
 
         {% if documentObj %}
@@ -431,7 +434,9 @@
 
                 {% if asFormOrEntity == "asForm" %}
                     {{ formmacros.field(document.id) }}
-                    {{ formmacros.field(document.dummyprototypefield) }}
+                    {% if not document.dummyprototypefield.isRendered %}
+                        {{ formmacros.field(document.dummyprototypefield) }}
+                    {% endif %}
                 {% endif %}
             </div>
 
@@ -446,12 +451,17 @@
     {% if asFormOrEntity == "asForm" %}
         {% if asDocumentArray == "asDocumentArray" %}
             {#use dummy-prototype-field to get id and name prototype for adding new document#}
-            {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
+            {#{{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}#}
+            {% if not documents.vars.prototype.dummyprototypefield.isRendered %}
+                {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
+            {% endif %}
             {% do documents.setRendered %}
         {% else %}
             {#For single document without prototype: use dummy field to get id and name for adding new document#}
             {% set document = documents[0] %}
-            {{ formmacros.field(document.dummyprototypefield) }}
+            {% if not document.dummyprototypefield.isRendered %}
+                {{ formmacros.field(document.dummyprototypefield) }}
+            {% endif %}
             {% do document.setRendered %}
         {% endif %}
     {% endif %}
