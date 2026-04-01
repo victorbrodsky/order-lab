@@ -282,7 +282,10 @@ class RecLetterUtil {
         $localInstitutionFellApp = "Weill Cornell Medical College / New York Presbyterian Hospital";
 
         //$identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp'); //55555
-        $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('identificationUploadLetterFellApp',$this->container->getParameter('fellapp.sitename'));
+        $identificationUploadLetterFellApp = $userSecUtil->getSiteSettingParameter(
+            'identificationUploadLetterFellApp',
+            $this->container->getParameter('fellapp.sitename')
+        );
         if( !$identificationUploadLetterFellApp ) {
             $identificationUploadLetterFellApp = "55555";
         }

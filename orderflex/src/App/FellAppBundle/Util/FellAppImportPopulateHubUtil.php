@@ -170,6 +170,13 @@ class FellAppImportPopulateHubUtil {
             throw new EntityNotFoundException('Unable to find local user keytype');
         }
 
+        //Get retrieval method from fellapp site parameters
+        $siteParam = $userSecUtil->getSpecificSiteSettingParameter($this->getParameter('fellapp.sitename'));
+        $retrievalMethod = $siteParam->getRetrievalMethod();
+        if( !$retrievalMethod ) {
+            throw new EntityNotFoundException('Retrieval method is not set in the fellowship site settings');
+        }
+
         // Get field values
         $googleFormId = $this->getValueByHeaderName('ID', $rowData, $headers);
         $originalAppId = $this->getValueByHeaderName('originalAppId', $rowData, $headers);
@@ -300,6 +307,7 @@ class FellAppImportPopulateHubUtil {
         $fellowshipApplication->setAppStatus($activeStatus);
         $fellowshipApplication->setGoogleFormId($googleFormId);
         $fellowshipApplication->setRemoteId($originalAppId);
+        $fellowshipApplication->setRetrievalMethod($retrievalMethod);
         //exit("after set originalAppId=$originalAppId");
         $user->addFellowshipApplication($fellowshipApplication);
 

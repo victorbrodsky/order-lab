@@ -4251,7 +4251,18 @@ class FellAppUtil {
 //        }
 
         //$retrievalMethod = $userSecUtil->getSiteSettingParameter('retrievalMethod',$this->container->getParameter('fellapp.sitename'));
-        $retrievalMethod = $fellapp->getRetrievalMethod();
+        $retrievalMethod = "";
+        $retrievalMethodEntity = $fellapp->getRetrievalMethod();
+        if( $retrievalMethodEntity ) {
+            $retrievalMethod = $retrievalMethodEntity->getName();
+        }
+
+        //if fellapp does not have retrieval method then get it from fellowhsip site settings
+        if( !$retrievalMethod ) {
+            $fellappSiteParam = $userSecUtil->getSpecificSiteSettingParameter($this->container->getParameter('fellapp.sitename'));
+            $retrievalMethod = $fellappSiteParam->getRetrievalMethod()."";
+        }
+
         //echo "retrievalMethod=[$retrievalMethod] <br>";
         $fellappRecLetterUrl = null;
         switch (trim($retrievalMethod)) {

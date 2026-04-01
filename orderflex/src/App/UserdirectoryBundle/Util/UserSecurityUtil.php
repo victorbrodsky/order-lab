@@ -1975,11 +1975,29 @@ class UserSecurityUtil {
 
         return $res;
     }
+    public function getSpecificSiteSettingParameter( $sitename=null ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $param = $userServiceUtil->getSingleSiteSettingParameter();
+
+        if( $param === null ) {
+            return null;
+        }
+
+        //Get specific site setting parameter
+        if( $sitename ) {
+            //Convention name: CalllogSiteParameter
+            $getterSiteParameter = "get".$sitename."SiteParameter"; //getCallogSiteParameter
+            $specificSiteSettingParameter = $param->$getterSiteParameter();
+            if( $specificSiteSettingParameter ) {
+                return $specificSiteSettingParameter;
+            }
+        }
+
+        return $param;
+    }
 
     public function setLoginAttempt( $request, $options ) {
-
         //return;
-
         $user = null;
         $username = null;
         $roles = null;
