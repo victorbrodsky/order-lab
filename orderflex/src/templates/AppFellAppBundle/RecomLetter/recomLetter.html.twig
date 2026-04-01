@@ -20,262 +20,67 @@
 
 <div class="container text-center">
 
-    {#<div class="panel panel-info">#}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
-        {#<div class="panel-heading">#}
-            {#<h4 class="panel-title">#}
-                {#<a data-toggle="collapse" href="#recommendations">#}
-                    {#Letters of Recommendation and/or References#}
-                {#</a>#}
-            {#</h4>#}
-        {#</div>#}
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" class="form-control" id="recommendationLetterID" name="recommendationLetterID" placeholder="Recommendation Letter ID" readonly>
+    <input type="hidden" class="form-control" id="instituteIdentification" name="instituteIdentification" placeholder="Institute Identification" readonly>
+    <input type="hidden" class="form-control" id="applicationID" name="applicationID" placeholder="Application ID" readonly>
 
-        {#<div id="recommendations" class="panel-collapse collapse in">#}
-            {#<div class="panel-body">#}
+    {{ form_start(form) }}
 
-                {#<p id="referenceLetterNote">#}
-                    {#Please list the individuals who will write your letters of recommendation. At least three are required.#}
-                {#</p>#}
+    <div class="panel panel-info">
 
-                {#<div class="well">#}
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#refauthor">
+                    Recommendation Letter in PDF format
+                </a>
+            </h4>
+        </div>
 
-                    {#<label class="control-label">Reference #1</label>#}
+        <div id="refauthor" class="panel-collapse collapse in">
+            <div class="panel-body">
 
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation1FirstName" class="control-label required">First Name</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1FirstName" name="recommendation1FirstName" placeholder="First Name">#}
-                        {#</div>#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation1LastName" class="control-label required">Last Name</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1LastName" name="recommendation1LastName" placeholder="Last Name">#}
-                        {#</div>#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation1Degree" class="control-label">Degree(s)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1Degree" name="recommendation1Degree" placeholder="Degree(s)">#}
-                        {#</div>#}
-                    {#</div>#}
+                <p>
+                <div class="well form-element-holder user-Reference">
+                    <label class="col-xs-12 control-label">Reference Letters (All documents will be added to the Complete Application PDF)</label>
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-12">
 
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1Title" class="control-label">Title</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1Title" name="recommendation1Title" placeholder="Title">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1Institution" class="control-label">Institution</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1Institution" name="recommendation1Institution" placeholder="Institution">#}
-                        {#</div>#}
-                    {#</div>#}
+                            {#{% if reference is defined %}#}
+                                {#{{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Recommendation Letter in PDF format') }}#}
+                            {#{% endif %}#}
+                            {#cycle={{ cycle }}#}
+                            <div class="well form-element-holder user-travelIntakeForms">
+                                <label class="col-xs-12 control-label">Recommendation Letter in PDF format</label>
+                                <div class="row withpaddingtop">
+                                    <div class="col-xs-12">
+                                        {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',1,'default','Recommendation Letter in PDF format',"asForm") }}
+                                    </div>
+                                </div>
+                            </div>
 
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1Phone" class="control-label">Phone Number</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1Phone" name="recommendation1Phone" placeholder="Phone Number">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1Email" class="control-label required">E-Mail</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1Email" name="recommendation1Email" placeholder="E-Mail">#}
-                        {#</div>#}
-                    {#</div>#}
+                        </div>
+                    </div>
+                </div>
+                </p>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+
+    </div> <!-- panel panel-info -->
 
 
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1AddressStreet1" class="control-label">Street (Line 1)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1AddressStreet1" name="recommendation1AddressStreet1" placeholder="Street (Line 1)">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1AddressStreet2" class="control-label">Street (Line 2)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1AddressStreet2" name="recommendation1AddressStreet2" placeholder="Street (Line 2)">#}
-                        {#</div>#}
-                    {#</div>#}
+    {#{{ form_start(form) }}#}
+        {#{{ form_widget(form) }}#}
+        {#{{ formmacros.field(form.firstName)}}#}
+        {#{{ formmacros.field(form.name)}}#}
+        {#{{ formmacros.field(form.title)}}#}
+        {#{{ formmacros.field(form.email)}}#}
 
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1AddressCity" class="control-label">City</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1AddressCity" name="recommendation1AddressCity" placeholder="City">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1AddressState" class="control-label">State</label>#}
-                            {#<input type="hidden" class="combobox usstates" id="recommendation1AddressState" name="recommendation1AddressState" placeholder="State">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1AddressZip" class="control-label">ZIP / Postal code</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1AddressZip" name="recommendation1AddressZip" placeholder="ZIP / Postal code">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation1AddressCountry" class="control-label">Country</label>#}
-                            {#<input type="text" class="form-control" id="recommendation1AddressCountry" name="recommendation1AddressCountry" placeholder="Country">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                {#</div> <!-- well -->#}
-
-
-
-                {#<div class="well">#}
-
-                    {#<label class="control-label">Reference #2</label>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation2FirstName" class="control-label required">First Name</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2FirstName" name="recommendation2FirstName" placeholder="First Name">#}
-                        {#</div>#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation2LastName" class="control-label required">Last Name</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2LastName" name="recommendation2LastName" placeholder="Last Name">#}
-                        {#</div>#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation2Degree" class="control-label">Degree(s)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2Degree" name="recommendation2Degree" placeholder="Degree(s)">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2Title" class="control-label">Title</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2Title" name="recommendation2Title" placeholder="Title">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2Institution" class="control-label">Institution</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2Institution" name="recommendation2Institution" placeholder="Institution">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2Phone" class="control-label">Phone Number</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2Phone" name="recommendation2Phone" placeholder="Phone Number">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2Email" class="control-label required">E-Mail</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2Email" name="recommendation2Email" placeholder="E-Mail">#}
-                        {#</div>#}
-                    {#</div>#}
-
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2AddressStreet1" class="control-label">Street (Line 1)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2AddressStreet1" name="recommendation2AddressStreet1" placeholder="Street (Line 1)">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2AddressStreet2" class="control-label">Street (Line 2)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2AddressStreet2" name="recommendation2AddressStreet2" placeholder="Street (Line 2)">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2AddressCity" class="control-label">City</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2AddressCity" name="recommendation2AddressCity" placeholder="City">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2AddressState" class="control-label">State</label>#}
-                            {#<input type="hidden" class="combobox usstates" id="recommendation2AddressState" name="recommendation2AddressState" placeholder="State">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2AddressZip" class="control-label">ZIP / Postal code</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2AddressZip" name="recommendation2AddressZip" placeholder="ZIP / Postal code">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation2AddressCountry" class="control-label">Country</label>#}
-                            {#<input type="text" class="form-control" id="recommendation2AddressCountry" name="recommendation2AddressCountry" placeholder="Country">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                {#</div> <!-- well -->#}
-
-
-
-                {#<div class="well">#}
-
-                    {#<label class="control-label">Reference #3</label>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation3FirstName" class="control-label required">First Name</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3FirstName" name="recommendation3FirstName" placeholder="First Name">#}
-                        {#</div>#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation3LastName" class="control-label required">Last Name</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3LastName" name="recommendation3LastName" placeholder="Last Name">#}
-                        {#</div>#}
-                        {#<div class="col-xs-4">#}
-                            {#<label for="recommendation3Degree" class="control-label">Degree(s)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3Degree" name="recommendation3Degree" placeholder="Degree(s)">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3Title" class="control-label">Title</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3Title" name="recommendation3Title" placeholder="Title">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3Institution" class="control-label">Institution</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3Institution" name="recommendation3Institution" placeholder="Institution">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3Phone" class="control-label">Phone Number</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3Phone" name="recommendation3Phone" placeholder="Phone Number">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3Email" class="control-label required">E-Mail</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3Email" name="recommendation3Email" placeholder="E-Mail">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3AddressStreet1" class="control-label">Street (Line 1)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3AddressStreet1" name="recommendation3AddressStreet1" placeholder="Street (Line 1)">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3AddressStreet2" class="control-label">Street (Line 2)</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3AddressStreet2" name="recommendation3AddressStreet2" placeholder="Street (Line 2)">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3AddressCity" class="control-label">City</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3AddressCity" name="recommendation3AddressCity" placeholder="City">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3AddressState" class="control-label">State</label>#}
-                            {#<input type="hidden" class="combobox usstates" id="recommendation3AddressState" name="recommendation3AddressState" placeholder="State">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                    {#<div class="row withpaddingtop">#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3AddressZip" class="control-label">ZIP / Postal code</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3AddressZip" name="recommendation3AddressZip" placeholder="ZIP / Postal code">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6">#}
-                            {#<label for="recommendation3AddressCountry" class="control-label">Country</label>#}
-                            {#<input type="text" class="form-control" id="recommendation3AddressCountry" name="recommendation3AddressCountry" placeholder="Country">#}
-                        {#</div>#}
-                    {#</div>#}
-
-                {#</div> <!-- well -->#}
-
-
-            {#</div> <!-- panel-body -->#}
-        {#</div> <!-- panel-collapse -->#}
-
-    {#</div> <!-- panel panel-info -->#}
+        {#<button class="btn btn-primary">Submit</button>#}
+    {#{{ form_end(form) }}#}
 
 
     <div class="panel panel-info">
@@ -283,7 +88,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#applicantInformation">
-                    Applicant Information
+                    Reference Letter Author:
                 </a>
             </h4>
         </div>
@@ -291,41 +96,19 @@
         <div id="applicantInformation" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                <input type="hidden" class="form-control" id="recommendationLetterID" name="recommendationLetterID" placeholder="Recommendation Letter ID" readonly>
-                <input type="hidden" class="form-control" id="instituteIdentification" name="instituteIdentification" placeholder="Institute Identification" readonly>
-                <input type="hidden" class="form-control" id="applicationID" name="applicationID" placeholder="Application ID" readonly>
+                {{ formmacros.field(form.firstName)}}
+                {{ formmacros.field(form.name)}}
+                {{ formmacros.field(form.title)}}
+                {{ formmacros.field(form.email)}}
 
-                <div class="row">
-                    <!--
-                      <div class="col-xs-4">
-                        <label for="recommendationLetterID" class="col-xs-12 control-label required">Recommendation Letter ID</label>
-                        <input type="text" class="form-control" id="recommendationLetterID" name="recommendationLetterID" placeholder="Recommendation Letter ID" readonly>
-                      </div>
-                    -->
-                    <div class="col-xs-6">
-                        <label for="applicantFirstName" class="col-xs-12 control-label">Applicant First Name</label>
-                        <input type="text" class="form-control" id="applicantFirstName"
-                               name="applicantFirstName" placeholder="Applicant First Name">
-                    </div>
-                    <div class="col-xs-6">
-                        <label for="applicantLastName" class="col-xs-12 control-label">Applicant Last Name</label>
-                        <input type="text" class="form-control" id="applicantLastName"
-                               name="applicantLastName" placeholder="Applicant Last Name">
-                    </div>
-                </div> <!-- row -->
-
-
-                <div class="row withpaddingtop">
-                    <div class="form-group">
-                        <label for="my_textarea">Recommendation Letter</label>
-                        <textarea id="my_textarea" class="form-control" rows="4" name="my_textarea"></textarea>
-                    </div>
-                </div> <!-- row -->
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
 
     </div> <!-- panel panel-info -->
+
+    {% do form.setRendered %}
+    {{ form_end(form) }}
 
     <button type="submit" class="btn btn-primary">
         Submit

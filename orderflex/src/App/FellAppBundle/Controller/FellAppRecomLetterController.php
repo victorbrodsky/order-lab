@@ -17,6 +17,8 @@
 
 namespace App\FellAppBundle\Controller;
 
+use App\FellAppBundle\Entity\Reference;
+use App\FellAppBundle\Form\ReferenceType;
 use App\UserdirectoryBundle\Controller\ListController;
 
 
@@ -38,8 +40,37 @@ class FellAppRecomLetterController extends ListController
 //            return $this->redirect($this->generateUrl('fellapp-nopermission'));
 //        }
 
-        
+        $cycle = 'new';
+        $entity = new Reference();
 
+        $params = array(
+            'cycle' => $cycle,
+            'em' => $this->getDoctrine()->getManager()
+        );
+        $form = $this->createForm(ReferenceType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //$data = $form->getData();
+
+
+            $this->addFlash('success', 'Recommendation letter submitted successfully.');
+
+            return $this->redirectToRoute('app_recom_letter');
+        }
+
+//        return $this->render('recom_letter/form.html.twig', [
+//            'form' => $form->createView(),
+//        ]);
+
+        return array(
+            'form' => $form,
+            'cycle' => $cycle
+        );
 
     }
 
