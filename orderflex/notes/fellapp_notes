@@ -123,6 +123,4 @@ TODO:
 [2026-03-30T22:57:14.489821+00:00] app.NOTICE: downloadFileFromRemote: file saved in targetFile=C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex/public/Uploaded/fellapp/fellapp/FellowshipApplicantUploads\1774911434IDf5cbdc89ae1a8c77f571f0495518614b18ace85b910d9fd86775e7ae543e5001.pdf [] []
 [2026-03-30T22:57:14.506128+00:00] app.NOTICE: Downloaded and attached Fellowship USMLE Scores for application ID 1771 [] []
 
-remove &$examination and check if $examination = $fellowshipApplication->getExaminations()->first();
-private function attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, &$examination)
 

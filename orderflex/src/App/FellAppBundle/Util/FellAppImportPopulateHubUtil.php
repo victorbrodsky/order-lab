@@ -152,6 +152,7 @@ class FellAppImportPopulateHubUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+        $testing = false;
 
         // Get required lookup entities
         $activeStatus = $this->em->getRepository(FellAppStatus::class)->findOneByName("active");
@@ -231,6 +232,13 @@ class FellAppImportPopulateHubUtil {
         }
 
         echo "originalAppId=$originalAppId, emailCanonical=$emailCanonical, usernameCanonical=$usernameCanonical, primaryPublicUserId=$primaryPublicUserId <br>";
+
+        //create logger which must be deleted on successefull creation of application
+        $eventAttempt = "Attempt of creating Fellowship Applicant " . $displayName . " with unique Google Applicant ID=" . $googleFormId;
+        if( $testing == false ) {
+            //TODO: test delete $eventLogAttempt
+            $eventLogAttempt = $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $eventAttempt, $systemUser, null, null, 'Fellowship Application Creation Failed');
+        }
 
         // Check if user exists: doe_john_3_cinava1@yahoo.com_@_local-user
         //$user = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($username);
@@ -487,10 +495,10 @@ class FellAppImportPopulateHubUtil {
         if ($ref3) {
             $fellowshipApplication->addReference($ref3);
         }
-        $ref4 = $this->createFellAppReference($this->em, $systemUser, 'recommendation4', $rowData, $headers);
-        if ($ref4) {
-            $fellowshipApplication->addReference($ref4);
-        }
+        //$ref4 = $this->createFellAppReference($this->em, $systemUser, 'recommendation4', $rowData, $headers);
+        //if ($ref4) {
+        //    $fellowshipApplication->addReference($ref4);
+        //}
 
         // Honors, Publications, Memberships
         $fellowshipApplication->setHonors($this->getValueByHeaderName('honors', $rowData, $headers));
@@ -523,8 +531,64 @@ class FellAppImportPopulateHubUtil {
 
         $logger->notice('Created fellowship application: ' . $fellowshipApplication->getId() . ' for applicant: ' . $displayName);
 
+        //everything looks fine => remove creation attempt log
+        //TODO: test all below
+        if( $testing == false ) {
+            $this->em->remove($eventLogAttempt);
+            if ($testing == false) {
+                $this->em->flush();
+            }
+        }
+
+        $event = "Populated fellowship applicant " . $displayName . "; Application ID " . $fellowshipApplication->getId();
+        if( $testing == false ) {
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $systemUser, $fellowshipApplication, null, 'Fellowship Application Created');
+        }
+
+        //add application pdf generation to queue
+        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+        $fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId() );
+
+        //send confirmation email to this applicant for prod server
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'live' ) {
+            //send confirmation email to this applicant
+            //$confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+            $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp',$this->container->getParameter('fellapp.sitename'));
+            $confirmationSubjectFellApp = $userSecUtil->getSiteSettingParameter('confirmationSubjectFellApp',$this->container->getParameter('fellapp.sitename'));
+            $confirmationBodyFellApp = $userSecUtil->getSiteSettingParameter('confirmationBodyFellApp',$this->container->getParameter('fellapp.sitename'));
+            //$logger->notice("Before Send confirmation email to " . $email . " from " . $confirmationEmailFellApp);
+            if ($email && $confirmationEmailFellApp && $confirmationSubjectFellApp && $confirmationBodyFellApp) {
+                $logger->notice("Send confirmation email (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $emailUtil->sendEmail($email, $confirmationSubjectFellApp, $confirmationBodyFellApp, null, $confirmationEmailFellApp);
+            } else {
+                $logger->error("ERROR: confirmation email has not been sent (fellowship application " . $fellowshipApplication->getId() . " populated in DB) to the applicant email " . $email . " from " . $confirmationEmailFellApp);
+
+            }
+
+        }//if live
+
+        if( $environment == 'live' ) {
+            //send confirmation email to the corresponding Fellowship director and coordinator
+            $fellappUtil = $this->container->get('fellapp_util');
+            $fellappUtil->sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $user );
+        }
+
+        //create reference hash ID. Must run after fellowship is in DB and has IDs
+        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication,true);
+        if( $environment == 'live' ) {
+            // send invitation email to upload recommendation letter to references
+            $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication,true);
+        }
+
+        //if( $deleteSourceRow ) {
+        //
+        //}
+
         return $fellowshipApplication;
-    }
+    }//createFellappFromRow
 
 
 
@@ -645,7 +709,7 @@ class FellAppImportPopulateHubUtil {
                 if ($document) {
                     // Attach document to fellowship application
                     //$this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, $examination);
-                    $this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig);
+                    $this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, $examination);
                     $logger->notice('Downloaded and attached docType=' . $docConfig['docType'] . ' for application ID ' . $fellowshipApplication->getId());
                 }
             } catch (\Exception $e) {
@@ -656,7 +720,6 @@ class FellAppImportPopulateHubUtil {
         return true;
     }
 
-    //TODO: remove &$examination and check if $examination = $fellowshipApplication->getExaminations()->first();
     /**
      * Attach a document to the FellowshipApplication based on configuration
      */
@@ -929,6 +992,7 @@ class FellAppImportPopulateHubUtil {
     }
 
     public function createFellAppReference($em,$author,$typeStr,$rowData,$headers,$testOnly=false) {
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
         //recommendation1Name	recommendation1Title	recommendation1Institution	recommendation1AddressStreet1
         //recommendation1AddressStreet2	recommendation1AddressCity	recommendation1AddressState	recommendation1AddressZip	recommendation1AddressCountry
@@ -950,10 +1014,10 @@ class FellAppImportPopulateHubUtil {
 
         //Capitalize
         if( $recommendationFirstName ) {
-            $recommendationFirstName = $this->capitalizeIfNotAllCapital($recommendationFirstName);
+            $recommendationFirstName = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($recommendationFirstName);
         }
         if( $recommendationLastName ) {
-            $recommendationLastName = $this->capitalizeIfNotAllCapital($recommendationLastName);
+            $recommendationLastName = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($recommendationLastName);
         }
 
         $reference = new Reference($author);
@@ -992,7 +1056,7 @@ class FellAppImportPopulateHubUtil {
         if( $instStr ) {
             $params = array('type'=>'Educational');
             $instStr = trim((string)$instStr);
-            $instStr = $this->capitalizeIfNotAllCapital($instStr);
+            $instStr = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($instStr);
             $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
             $instEntity = $transformer->reverseTransform($instStr);
             $reference->setInstitution($instEntity);
@@ -1147,6 +1211,7 @@ class FellAppImportPopulateHubUtil {
     }
 
     public function createFellAppTraining($em,$fellowshipApplication,$author,$typeStr,$rowData,$headers,$orderinlist) {
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
         //Start
         $trainingStart = $this->getValueByHeaderName($typeStr.'Start',$rowData,$headers);
@@ -1272,7 +1337,7 @@ class FellAppImportPopulateHubUtil {
         if( $schoolName ) {
             $params = array('type'=>'Educational');
             $schoolName = trim((string)$schoolName);
-            $schoolName = $this->capitalizeIfNotAllCapital($schoolName);
+            $schoolName = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($schoolName);
             $transformer = new GenericTreeTransformer($em, $author, 'Institution', null, $params);
             $schoolNameEntity = $transformer->reverseTransform($schoolName);
             $training->setInstitution($schoolNameEntity);

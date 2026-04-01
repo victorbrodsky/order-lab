@@ -35,7 +35,6 @@ class ReferenceController extends OrderAbstractController
 
     #[Route(path: '/invite-references-submit-letters/{id}', name: 'fellapp_invite_references_submit_letters', methods: ['GET'])]
     public function InviteReferencesToSubmitLettersAction(Request $request, FellowshipApplication $fellapp) {
-
         if(
             $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
             $this->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
@@ -44,34 +43,6 @@ class ReferenceController extends OrderAbstractController
         }
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        //$userSecUtil = $this->container->get('user_security_utility');
-        //$em = $this->getDoctrine()->getManager();
-        //$user = $this->getUser();
-
-        //testing
-        //$res = $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellapp,true);
-        //echo "res:<br>";
-        //print_r($res);
-        //exit();
-
-//        $referenceNames = array();
-//        foreach($fellapp->getReferences() as $reference) {
-//            if( count($reference->getDocuments()) == 0 ) {
-//                //send invitation email
-//                $res = $fellappRecLetterUtil->inviteSingleReferenceToSubmitLetter($reference,$fellapp);
-//                if( $res['res'] == true ) {
-//                    $this->addFlash(
-//                        'notice',
-//                        $res['msg']
-//                    );
-//                } else {
-//                    $this->addFlash(
-//                        'warning',
-//                        $res['msg']
-//                    );
-//                }
-//            }
-//        }
 
         $resArr = $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellapp,true);
         if( $resArr && is_array($resArr) ) {
@@ -95,17 +66,6 @@ class ReferenceController extends OrderAbstractController
             );
         }
 
-//        if( count($referenceNames) > 0 ) {
-//            $msg = 'All remaining references '.implode(", ",$referenceNames).' have been invited to submit letters.';
-//        } else {
-//            $msg = "No invitations have been sent.";
-//        }
-//
-//        $this->addFlash(
-//            'notice',
-//            $msg
-//        );
-
         return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellapp->getId())));
     }
 
@@ -121,11 +81,7 @@ class ReferenceController extends OrderAbstractController
         }
 
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        //$userSecUtil = $this->container->get('user_security_utility');
-        //$em = $this->getDoctrine()->getManager();
-        //$user = $this->getUser();
 
-        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Reference'] by [Reference::class]
         $reference = $this->getDoctrine()->getRepository(Reference::class)->find($referenceid);
         if( !$reference ) {
             throw new \Exception("No reference found by ID ".$referenceid);

@@ -374,14 +374,39 @@ class DefaultController extends OrderAbstractController
 //            echo "match notok <br>";
 //        }
 //        exit('$fellappRecLetterUrl1');
+//        $fellapp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find(1778);
+//        $examinations = $fellapp->getExaminations();
+//        echo "examinations=".count($examinations)."<br>";
+//        foreach($examinations as $examination) {
+//            echo "examination usmle score docs=".count($examination->getScores())."<br>";
+//        }
+//        exit('exit default FellowshipApplication');
 
-        $fellapp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find(1778);
-        $examinations = $fellapp->getExaminations();
-        echo "examinations=".count($examinations)."<br>";
-        foreach($examinations as $examination) {
-            echo "examination usmle score docs=".count($examination->getScores())."<br>";
-        }
-        exit('exit default FellowshipApplication');
+        ///////////
+//        $entity = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find(1676);
+//        $fellappUtil = $this->container->get('fellapp_util');
+//        $holderNamespace = "App\\UserdirectoryBundle\\Entity";
+//        $holderName = "FormNode";
+//        $holderId = $fellappUtil->getFellappParentFormNodeId();
+//        $entityNamespace = "App\\FellAppBundle\\Entity";
+//        $entityName = "FellowshipApplication";
+//        $entityId = $entity->getId();
+//        $testing = false;
+//        $params = [
+//            'cycle'           => 'show',
+//            'holderNamespace' => $holderNamespace ?? null,
+//            'holderName'      => $holderName ?? null,
+//            'holderId'        => $holderId,
+//            'entityNamespace' => $entityNamespace ?? null,
+//            'entityName'      => $entityName ?? null,
+//            'entityId'        => $entityId ?? null,
+//            'testing'         => $testing ?? false,
+//        ];
+//
+//        $screeningQuestionsArray = $fellappUtil->getFellAppFormNodeHtml(null, $params); //return array
+//        dump($screeningQuestionsArray);
+//        exit('111');
+        /////////
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }

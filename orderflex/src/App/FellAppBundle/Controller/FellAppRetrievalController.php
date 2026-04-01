@@ -328,6 +328,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $instanceId = $userSecUtil->getSiteSettingParameter('instanceId');
 
+        //TODO: add Screening Questions use $screeningQuestionsArray = $fellappUtil->getFellAppFormNodeHtml(null, $params);
         // Define all headers in the exact order requested
         $headers = [
             'ID', 'originalAppId', 'instanceId', 'primaryPublicUserId',
@@ -400,10 +401,10 @@ class FellAppRetrievalController extends OrderAbstractController
             'recommendation3Title', 'recommendation3Institution', 'recommendation3Email',
             'recommendation3AddressStreet1', 'recommendation3AddressStreet2', 'recommendation3AddressCity',
             'recommendation3AddressState', 'recommendation3AddressZip', 'recommendation3AddressCountry',
-            'recommendation4FirstName', 'recommendation4LastName', 'recommendation4Degree', 'recommendation4Phone',
-            'recommendation4Title', 'recommendation4Institution', 'recommendation4Email',
-            'recommendation4AddressStreet1', 'recommendation4AddressStreet2', 'recommendation4AddressCity',
-            'recommendation4AddressState', 'recommendation4AddressZip', 'recommendation4AddressCountry',
+            //'recommendation4FirstName', 'recommendation4LastName', 'recommendation4Degree', 'recommendation4Phone',
+            //'recommendation4Title', 'recommendation4Institution', 'recommendation4Email',
+            //'recommendation4AddressStreet1', 'recommendation4AddressStreet2', 'recommendation4AddressCity',
+            //'recommendation4AddressState', 'recommendation4AddressZip', 'recommendation4AddressCountry',
             'honors', 'publications', 'memberships', 'signatureName', 'signatureDate'
         ];
 

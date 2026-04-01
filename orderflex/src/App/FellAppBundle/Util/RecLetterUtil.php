@@ -173,7 +173,10 @@ class RecLetterUtil {
             return $res;
         }
 
-        $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp',$this->container->getParameter('fellapp.sitename'));
+        $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter(
+            'sendEmailUploadLetterFellApp',
+            $this->container->getParameter('fellapp.sitename')
+        );
         if( !$sendEmailUploadLetterFellApp ) {
             $msg = "Automatically send invitation emails to upload recommendation letters is set to NO: invitation email will not be send to reference ".$reference->getFullName();
             $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
