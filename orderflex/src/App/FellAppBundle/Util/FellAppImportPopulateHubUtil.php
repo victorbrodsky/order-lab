@@ -171,7 +171,7 @@ class FellAppImportPopulateHubUtil {
         }
 
         //Get retrieval method from fellapp site parameters
-        $siteParam = $userSecUtil->getSpecificSiteSettingParameter($this->getParameter('fellapp.sitename'));
+        $siteParam = $userSecUtil->getSpecificSiteSettingParameter($this->container->getParameter('fellapp.sitename'));
         $retrievalMethod = $siteParam->getRetrievalMethod();
         if( !$retrievalMethod ) {
             throw new EntityNotFoundException('Retrieval method is not set in the fellowship site settings');
