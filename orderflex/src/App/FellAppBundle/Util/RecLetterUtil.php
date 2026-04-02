@@ -346,39 +346,121 @@ class RecLetterUtil {
             return $res;
         }
 
-        $uploadFormLink = $fellappRecLetterUrl."?";
+        //TODO: Better option is to pass parameters to use Base64‑encoded JSON
+        //https://view.online/fellowship-applications/submit-a-letter-of-recommendation?token=eyJhbGciOi...
+//        {
+//          "Reference-Letter-ID": "6f6df91ca201180c14e1848086cab93b1d629674",
+//          "Identification": "wcmpathdev",
+//          "Applicant": {
+//                    "FirstName": "John 3",
+//            "LastName": "Doe",
+//            "Email": "cinava1@yahoo.com"
+//          },
+//          "Fellowship": {
+//                    "Type": "Clinical Informatics",
+//            "Start": "07/01/2027",
+//            "End": "06/30/2028"
+//          },
+//          "Reference": {
+//                    "FirstName": "Ref1First",
+//            "LastName": "Ref1Last",
+//            "Degree": "MD",
+//            "Title": "Ref1Title",
+//            "Institution": "",
+//            "Phone": "",
+//            "Email": "cinava@yahoo.com"
+//          }
+//        }
+//        const payload = Buffer.from(JSON.stringify(data)).toString('base64url');
+//        Append it to the URL: ...?data=<base64url>
+//        On the remote server, decode it: const decoded = JSON.parse(Buffer.from(req.query.data, 'base64url').toString());
+//        Optional: sign with HMAC signature
+        $retrievalMethod = $fellappUtil->getFellappRetrievalMethod($fellapp);
+        if( $retrievalMethod == 'Dedicated public tandem hub server tenant instance' ) {
+            //Generetae JSON here
+            $data = [
+                "Reference-Letter-ID" => $reference->getRecLetterHashId(),
+                "Identification" => $identificationUploadLetterFellApp,
 
-        $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
-        $uploadFormLink = $uploadFormLink . "&Identification=" . $identificationUploadLetterFellApp;
-        $uploadFormLink = $uploadFormLink . "&Applicant-First-Name=" . $applicant->getFirstName();
-        $uploadFormLink = $uploadFormLink . "&Applicant-Last-Name=" . $applicant->getLastName();
-        $uploadFormLink = $uploadFormLink . "&Applicant-E-Mail=" . $applicant->getSingleEmail();
-        $uploadFormLink = $uploadFormLink . "&Fellowship-Type=" . $fellapp->getFellowshipSubspecialty()->getName();
-        $uploadFormLink = $uploadFormLink . "&Fellowship-Start-Date=" . $fellapp->getStartDate()->format("m/d/Y");
-        $uploadFormLink = $uploadFormLink . "&Fellowship-End-Date=" . $fellapp->getEndDate()->format("m/d/Y");
-        $uploadFormLink = $uploadFormLink . "&Reference-First-Name=" . $reference->getFirstName();
-        $uploadFormLink = $uploadFormLink . "&Reference-Last-Name=" . $reference->getName();
-        $uploadFormLink = $uploadFormLink . "&Reference-Degree=" . $reference->getDegree();
-        $uploadFormLink = $uploadFormLink . "&Reference-Title=" . $reference->getTitle();
-        $uploadFormLink = $uploadFormLink . "&Reference-Institution=" . $refInstStr;
-        $uploadFormLink = $uploadFormLink . "&Reference-Phone=" . $reference->getPhone();
-        $uploadFormLink = $uploadFormLink . "&Reference-EMail=" . $reference->getEmail();
-        if( $geoLocation ) {
+                "Applicant" => [
+                    "FirstName" => $applicant->getFirstName(),
+                    "LastName"  => $applicant->getLastName(),
+                    "Email"     => $applicant->getSingleEmail()
+                ],
 
-            $state = $geoLocation->getState();
-            if( $state ) {
-                $stateStr = $state->getName();
-            } else {
-                $stateStr = NULL;
+                "Fellowship" => [
+                    "Type"  => $fellapp->getFellowshipSubspecialty()->getName(),
+                    "Start" => $fellapp->getStartDate()->format("m/d/Y"),
+                    "End"   => $fellapp->getEndDate()->format("m/d/Y")
+                ],
+
+                "Reference" => [
+                    "FirstName"   => $reference->getFirstName(),
+                    "LastName"    => $reference->getName(),
+                    "Degree"      => $reference->getDegree(),
+                    "Title"       => $reference->getTitle(),
+                    "Institution" => $refInstStr,
+                    "Phone"       => $reference->getPhone(),
+                    "Email"       => $reference->getEmail()
+                ]
+            ];
+
+            // Add geo location address if available
+            if ($geoLocation) {
+                $state = $geoLocation->getState();
+                $stateStr = $state ? $state->getName() : null;
+                
+                $data["Reference"]["Address"] = [
+                    "Street1" => $geoLocation->getStreet1(),
+                    "Street2" => $geoLocation->getStreet2(),
+                    "City"    => $geoLocation->getCity(),
+                    "State"   => $stateStr,
+                    "Zip"     => $geoLocation->getZip(),
+                    "Country" => $geoLocation->getCountry()
+                ];
             }
 
-            $uploadFormLink = $uploadFormLink . "&Reference-Street1=" . $geoLocation->getStreet1();
-            $uploadFormLink = $uploadFormLink . "&Reference-Street2=" . $geoLocation->getStreet2();
-            $uploadFormLink = $uploadFormLink . "&Reference-City=" . $geoLocation->getCity();
-            $uploadFormLink = $uploadFormLink . "&Reference-State=" . $stateStr;
-            $uploadFormLink = $uploadFormLink . "&Reference-Zip=" . $geoLocation->getZip();
-            $uploadFormLink = $uploadFormLink . "&Reference-Country=" . $geoLocation->getCountry();
-        }
+            // Encode to base64url and append to URL
+            $payload = base64_encode(json_encode($data));
+            //$url = "https://view.online/fellowship-applications/submit-a-letter-of-recommendation?data=" . $base64;
+            $uploadFormLink = $fellappRecLetterUrl . "?data=" . rtrim(strtr($payload, '+/', '-_'), '=');
+
+        } else {
+
+            $uploadFormLink = $fellappRecLetterUrl . "?";
+
+            $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
+            $uploadFormLink = $uploadFormLink . "&Identification=" . $identificationUploadLetterFellApp;
+            $uploadFormLink = $uploadFormLink . "&Applicant-First-Name=" . $applicant->getFirstName();
+            $uploadFormLink = $uploadFormLink . "&Applicant-Last-Name=" . $applicant->getLastName();
+            $uploadFormLink = $uploadFormLink . "&Applicant-E-Mail=" . $applicant->getSingleEmail();
+            $uploadFormLink = $uploadFormLink . "&Fellowship-Type=" . $fellapp->getFellowshipSubspecialty()->getName();
+            $uploadFormLink = $uploadFormLink . "&Fellowship-Start-Date=" . $fellapp->getStartDate()->format("m/d/Y");
+            $uploadFormLink = $uploadFormLink . "&Fellowship-End-Date=" . $fellapp->getEndDate()->format("m/d/Y");
+            $uploadFormLink = $uploadFormLink . "&Reference-First-Name=" . $reference->getFirstName();
+            $uploadFormLink = $uploadFormLink . "&Reference-Last-Name=" . $reference->getName();
+            $uploadFormLink = $uploadFormLink . "&Reference-Degree=" . $reference->getDegree();
+            $uploadFormLink = $uploadFormLink . "&Reference-Title=" . $reference->getTitle();
+            $uploadFormLink = $uploadFormLink . "&Reference-Institution=" . $refInstStr;
+            $uploadFormLink = $uploadFormLink . "&Reference-Phone=" . $reference->getPhone();
+            $uploadFormLink = $uploadFormLink . "&Reference-EMail=" . $reference->getEmail();
+            if ($geoLocation) {
+
+                $state = $geoLocation->getState();
+                if ($state) {
+                    $stateStr = $state->getName();
+                } else {
+                    $stateStr = NULL;
+                }
+
+                $uploadFormLink = $uploadFormLink . "&Reference-Street1=" . $geoLocation->getStreet1();
+                $uploadFormLink = $uploadFormLink . "&Reference-Street2=" . $geoLocation->getStreet2();
+                $uploadFormLink = $uploadFormLink . "&Reference-City=" . $geoLocation->getCity();
+                $uploadFormLink = $uploadFormLink . "&Reference-State=" . $stateStr;
+                $uploadFormLink = $uploadFormLink . "&Reference-Zip=" . $geoLocation->getZip();
+                $uploadFormLink = $uploadFormLink . "&Reference-Country=" . $geoLocation->getCountry();
+            }
+        }//$retrievalMethod
 
         $uploadFormLink = '<a href="'.$uploadFormLink.'">'.$uploadFormLink.'</a>';
 

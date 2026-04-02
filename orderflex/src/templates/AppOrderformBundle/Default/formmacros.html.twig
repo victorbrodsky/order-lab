@@ -234,6 +234,21 @@
     </p>
 {% endmacro %}
 
+{% macro simplefield_vertical( label, value, type, disabled, tooltip, id ) %}
+    {% if id is not defined or id=="" %}
+        {% set id = "not-mapped-simplefield" %}
+    {% endif %}
+
+    <label for="{{ id }}" class="col-xs-12 control-label">{{ label }}</label>
+    <input type="text" class="form-control not-mapped-simplefield"
+           id="{{ id }}"
+           readonly=""
+           value="{{ value|raw }}"
+            {{ disabled }}
+           data-toggle="tooltip" title="{{ tooltip }}"
+    >
+{% endmacro %}
+
 
 {% macro field_notempty( field, cycle, label, attr ) %}
     {% import _self as formmacros %}

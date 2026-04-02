@@ -4251,21 +4251,25 @@ class FellAppUtil {
 //        }
 
         //$retrievalMethod = $userSecUtil->getSiteSettingParameter('retrievalMethod',$this->container->getParameter('fellapp.sitename'));
-        $retrievalMethod = "";
-        $retrievalMethodEntity = $fellapp->getRetrievalMethod();
-        if( $retrievalMethodEntity ) {
-            $retrievalMethod = $retrievalMethodEntity->getName();
-        }
-
-        //if fellapp does not have retrieval method then get it from fellowhsip site settings
-        if( !$retrievalMethod ) {
-            $fellappSiteParam = $userSecUtil->getSpecificSiteSettingParameter($this->container->getParameter('fellapp.sitename'));
-            $retrievalMethod = $fellappSiteParam->getRetrievalMethod()."";
+//        $retrievalMethod = "";
+//        $retrievalMethodEntity = $fellapp->getRetrievalMethod();
+//        if( $retrievalMethodEntity ) {
+//            $retrievalMethod = $retrievalMethodEntity->getName();
+//        }
+//
+//        //if fellapp does not have retrieval method then get it from fellowhsip site settings
+//        if( !$retrievalMethod ) {
+//            $fellappSiteParam = $userSecUtil->getSpecificSiteSettingParameter($this->container->getParameter('fellapp.sitename'));
+//            $retrievalMethod = $fellappSiteParam->getRetrievalMethod()."";
+//        }
+        $retrievalMethod = $this->getFellappRetrievalMethod($fellapp);
+        if( $retrievalMethod ) {
+            $retrievalMethod = trim($retrievalMethod);
         }
 
         //echo "retrievalMethod=[$retrievalMethod] <br>";
         $fellappRecLetterUrl = null;
-        switch (trim($retrievalMethod)) {
+        switch ( $retrievalMethod ) {
             case "None (Manually uploaded)":
                 break;
             case "Google Drive":
@@ -4301,5 +4305,21 @@ class FellAppUtil {
         //echo "fellappFormLink=[$fellappFormLink] <br>";
 
         return $fellappRecLetterUrl;
+    }
+
+    public function getFellappRetrievalMethod( $fellapp=null ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $retrievalMethod = null;
+        $retrievalMethodEntity = $fellapp->getRetrievalMethod();
+        if( $retrievalMethodEntity ) {
+            $retrievalMethod = $retrievalMethodEntity->getName();
+        }
+
+        //if fellapp does not have retrieval method then get it from fellowhsip site settings
+        if( !$retrievalMethod ) {
+            $fellappSiteParam = $userSecUtil->getSpecificSiteSettingParameter($this->container->getParameter('fellapp.sitename'));
+            $retrievalMethod = $fellappSiteParam->getRetrievalMethod()."";
+        }
+        return $retrievalMethod;
     }
 } 

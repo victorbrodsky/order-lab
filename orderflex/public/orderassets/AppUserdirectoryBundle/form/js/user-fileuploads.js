@@ -1198,7 +1198,7 @@ function disableEnable_Dropzone_NEW( dropzoneElement, disabled, tooltipName, for
     if( disabled ) {
         if( !dropzoneElement.hasClass('dropzone-keep-enabled') || forcedisable ) {
             //disable
-            //console.log('disable dropzone');
+            console.log('disable dropzone');
             dropzoneElement.removeClass('dz-clickable'); // remove cursor
             dropzoneDom.removeEventListener('click', myDropzone.listeners[1].events.click);
         }
@@ -1209,7 +1209,7 @@ function disableEnable_Dropzone_NEW( dropzoneElement, disabled, tooltipName, for
         }
     } else {
         //enable
-        //console.log('enable dropzone');
+        console.log('enable dropzone');
         dropzoneElement.addClass('dz-clickable'); // add cursor
         dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
         //remove tooltip
