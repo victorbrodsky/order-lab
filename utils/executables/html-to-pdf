@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+from playwright.sync_api import sync_playwright
+import sys
+
+input_file = sys.argv[-2]
+output_file = sys.argv[-1]
+
+with sync_playwright() as p:
+    browser = p.chromium.launch()
+    page = browser.new_page()
+    page.goto("file://" + input_file)
+    page.pdf(path=output_file)
+    browser.close()

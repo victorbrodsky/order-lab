@@ -147,6 +147,8 @@ function prep()
     chown -R "$WEB_USER" /etc/haproxy/haproxy.cfg
     chmod 744 /etc/haproxy/haproxy.cfg
 
+    sudo chmod +x $PROJECT_LOCAL_PATH/../utils/executables/html-to-pdf
+
     #echo "*** Set permissions to run git ***"
     #chown -R "$WEB_USER" /usr/bin/git
     #chown -R "$WEB_USER" .git

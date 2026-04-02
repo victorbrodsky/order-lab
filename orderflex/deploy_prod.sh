@@ -189,6 +189,8 @@ function prep(){
 
     #echo "*** Set permissions to run git ***"
     #chown -R "$WEB_USER" /usr/bin/git
+
+    sudo chmod +x $PROJECT_LOCAL_PATH/../utils/executables/html-to-pdf
 }
 
 
