@@ -123,6 +123,10 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'text', nullable: true)]
     private $screeningMessage;
 
+    //Show as an available option on the fellowship application form (“Apply” page)
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $showOption;
+
 
 
     public function __construct()
@@ -331,6 +335,24 @@ class GlobalFellowshipSpecialty extends ListAbstract
     {
         $this->screeningMessage = $screeningMessage;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getShowOption()
+    {
+        return $this->showOption;
+    }
+
+    /**
+     * @param mixed $showOption
+     */
+    public function setShowOption($showOption)
+    {
+        $this->showOption = $showOption;
+    }
+
+    
 
 
     

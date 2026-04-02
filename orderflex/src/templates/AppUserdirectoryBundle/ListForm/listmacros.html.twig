@@ -1494,6 +1494,10 @@
         {{ formmacros.field(form.noticeAttachment) }}
     {% endif %}
 
+    {% if form.showOptionFellApp is defined %}
+        {{ formmacros.field(form.showOptionFellApp) }}
+    {% endif %}
+
     {% if form.screeningMessage is defined %}
         {{ formmacros.field(form.screeningMessage) }}
     {% endif %}
@@ -1504,6 +1508,14 @@
 
     {% if form.apiConnectionKey is defined %}
         {{ formmacros.field(form.apiConnectionKey) }}
+    {% endif %}
+
+    {% if form.apiHashConnectionKey is defined %}
+        {{ formmacros.field(form.apiHashConnectionKey) }}
+    {% endif %}
+
+    {% if form.showOption is defined %}
+        {{ formmacros.field(form.showOption) }}
     {% endif %}
 
     {% if form.apiImportKeys is defined %}

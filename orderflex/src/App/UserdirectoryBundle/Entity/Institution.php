@@ -132,7 +132,14 @@ class Institution extends BaseCompositeNode
     //API key expected in URL to enable remote connection: [l4kn5lk2nl23iron2i3n2l3inl23kn4o2i3j42fowiefw940]
     #[ORM\Column(type: 'string', nullable: true)]
     private $apiConnectionKey;
-    
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $apiHashConnectionKey;
+
+    //Show as an available option on the fellowship application form (“Apply” page)
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $showOptionFellApp;
+
     //dummy field not linked to DB
     //private $institutionspositiontypes;
 
@@ -296,6 +303,42 @@ class Institution extends BaseCompositeNode
     {
         $this->apiConnectionKey = $apiConnectionKey;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getApiHashConnectionKey()
+    {
+        return $this->apiHashConnectionKey;
+    }
+
+    /**
+     * @param mixed $apiHashConnectionKey
+     */
+    public function setApiHashConnectionKey($apiHashConnectionKey)
+    {
+        $this->apiHashConnectionKey = $apiHashConnectionKey;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowOptionFellApp()
+    {
+        return $this->showOptionFellApp;
+    }
+
+    /**
+     * @param mixed $showOptionFellApp
+     */
+    public function setShowOptionFellApp($showOptionFellApp)
+    {
+        $this->showOptionFellApp = $showOptionFellApp;
+    }
+
+    
+    
+    
 
     /**
      * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child

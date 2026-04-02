@@ -113,6 +113,9 @@ class FellowshipSubspecialty extends ListAbstract
     #[ORM\OneToMany(targetEntity: 'App\FellAppBundle\Entity\FellAppImportKey', mappedBy: 'localspecialty', cascade: ['persist'])]
     private $apiImportKeys;
 
+    //Show as an available option on the fellowship application form (“Apply” page)
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $showOption;
 
 
     public function __construct($author=null) {
@@ -246,6 +249,26 @@ class FellowshipSubspecialty extends ListAbstract
     {
         return $this->apiImportKeys;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getShowOption()
+    {
+        return $this->showOption;
+    }
+
+    /**
+     * @param mixed $showOption
+     */
+    public function setShowOption($showOption)
+    {
+        $this->showOption = $showOption;
+    }
+
+    
+    
+    
 
     /**
      * @return mixed

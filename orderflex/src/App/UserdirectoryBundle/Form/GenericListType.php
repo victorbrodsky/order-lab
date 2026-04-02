@@ -222,10 +222,20 @@ class GenericListType extends AbstractType
             ));
         }
 
+        //Fellapp import
         if( strtolower($this->mapper['className']) == strtolower("Institution") ) {
             $builder->add( 'apiConnectionKey', null, array(
                 'label'=>'API key for establishing a connection to the hub:',
                 'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add( 'apiHashConnectionKey', null, array(
+                'label'=>'API hash key for establishing a connection to the hub:',
+                'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add( 'showOptionFellApp', null, array(
+                'label'=>'Show as an available option on the fellowship application form (“Apply” page):',
+                'required' => false
+                //'attr' => array('class'=>'form-control'),
             ));
         }
 
@@ -662,36 +672,12 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'classtype' => 'apiimportkey'
             ));
-//            $builder->add('apiImportKeys', CollectionType::class, [
-//                'class' => FellAppImportKeyType::class,
-//                'label' => 'Key(s) for application import:',
-//                'required' => false,
-//                'multiple' => true,
-//                'expanded' => false,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'by_reference' => false,   // critical for OneToMany
-//                'choice_label' => 'apiKeyValue',   // calls getApiKeyValue()
-//                'attr' => ['class' => 'combobox combobox-width'],
-//            ]);
-//            $builder->add('apiImportKeys', CollectionType::class, [
-//                'entry_type' => FellAppImportKeyType::class,
-//                'label' => 'Key(s) for application import:',
-//                'required' => false,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'by_reference' => false,   // critical for OneToMany
-//            ]);
-//            $builder->add('apiImportKeys', EntityType::class, [
-//                'class' => FellAppImportKey::class,
-//                'choice_label' => 'apiKeyValue',
-//                'multiple' => true,
-//                'expanded' => false,
-//                'by_reference' => false,
-//                'attr' => ['class' => 'combobox combobox-width'],
-//            ]);
 
-
+            $builder->add('showOption', null, array(
+                'label'=>'Show as an available option on the fellowship application form (“Apply” page):',
+                'required' => false,
+                //'attr' => array('class' => 'textarea form-control')
+            ));
 
             //lowestRoles linkToListId
         }
