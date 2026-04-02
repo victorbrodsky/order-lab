@@ -3,32 +3,84 @@ import sys
 import os
 from playwright.sync_api import sync_playwright
 
-# Validate arguments
-if len(sys.argv) < 3:
-    print("Usage: html-to-pdf input.html output.pdf")
+# -----------------------------
+# Parse arguments (Snappy style)
+# -----------------------------
+
+args = sys.argv[1:]
+
+cookies = []
+input_file = None
+output_file = None
+
+i = 0
+while i < len(args):
+    if args[i] == "--cookie":
+        # Format: --cookie NAME VALUE
+        name = args[i+1]
+        value = args[i+2]
+        cookies.append({"name": name, "value": value})
+        i += 3
+        continue
+
+    # Last two arguments are input + output
+    if i == len(args) - 2:
+        input_file = args[i]
+        output_file = args[i+1]
+        break
+
+    i += 1
+
+if not input_file or not output_file:
+    print("Usage: html-to-pdf [options] input.html output.pdf")
     sys.exit(1)
 
-input_file = sys.argv[-2]
-output_file = sys.argv[-1]
+# -----------------------------
+# Normalize paths / URLs
+# -----------------------------
 
-# Convert to absolute paths
-input_file = os.path.abspath(input_file)
+is_url = input_file.startswith("http://") or input_file.startswith("https://")
+
+if not is_url:
+    # Convert local file to absolute path
+    input_file = os.path.abspath(input_file)
+    if not os.path.exists(input_file):
+        print(f"Error: input file not found: {input_file}")
+        sys.exit(1)
+    page_url = "file://" + input_file
+else:
+    page_url = input_file
+
 output_file = os.path.abspath(output_file)
 
-# Ensure input file exists
-if not os.path.exists(input_file):
-    print(f"Error: input file not found: {input_file}")
-    sys.exit(1)
-
-# Build proper file:// URL
-file_url = "file://" + input_file
+# -----------------------------
+# Launch Playwright
+# -----------------------------
 
 with sync_playwright() as p:
     browser = p.chromium.launch()
-    page = browser.new_page()
 
-    # Load the HTML file
-    page.goto(file_url)
+    # Inject cookies if needed
+    if cookies:
+        # Cookies require domain for URLs
+        if is_url:
+            from urllib.parse import urlparse
+            domain = urlparse(page_url).hostname
+        else:
+            # Local file → fake domain
+            domain = "localhost"
+
+        for c in cookies:
+            c["domain"] = domain
+            c["path"] = "/"
+
+        context = browser.new_context(cookies=cookies)
+        page = context.new_page()
+    else:
+        page = browser.new_page()
+
+    # Load page
+    page.goto(page_url)
 
     # Generate PDF
     page.pdf(
@@ -40,4 +92,5 @@ with sync_playwright() as p:
     browser.close()
 
 print(f"PDF generated: {output_file}")
+
 

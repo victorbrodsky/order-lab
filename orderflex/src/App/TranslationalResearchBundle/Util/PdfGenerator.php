@@ -291,6 +291,13 @@ class PdfGenerator
         session_write_close();
         $PHPSESSID = $session->getId();
 
+//        //TODO: try Without authentication
+//        $html = $this->renderView('template.html.twig', [...]);
+//        $this->container->get('knp_snappy.pdf')->generateFromHtml(
+//            $html,
+//            $applicationOutputFilePath
+//        );
+
         ///usr/bin/xvfb-run: line 186: kill No such process stdout
         //https://stackoverflow.com/questions/30504274/xvfb-run-line-171-kill-25939-no-such-process
         //fet log: -e /tmp/xvfb.log
