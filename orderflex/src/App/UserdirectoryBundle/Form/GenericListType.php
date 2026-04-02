@@ -229,7 +229,7 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'form-control'),
             ));
             $builder->add( 'apiHashConnectionKey', null, array(
-                'label'=>'API hash key for establishing a connection to the hub:',
+                'label'=>'API key hash for establishing a connection to the hub:',
                 'attr' => array('class'=>'form-control'),
             ));
             $builder->add( 'showOptionFellApp', null, array(
