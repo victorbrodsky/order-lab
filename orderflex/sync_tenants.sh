@@ -96,6 +96,12 @@ f_sync() {
             git pull
     fi
 
+    if [ -n "$type" ] && [ "$type" == "stash" ]
+        then
+            echo -e ${COLOR} git stash for "$1" ${NC}
+            git stash
+    fi
+
     ### DB migration ###
     if [ -n "$type" ] && [ "$type" == "dbstatus" ]
         then
