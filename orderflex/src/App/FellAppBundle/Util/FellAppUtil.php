@@ -662,6 +662,23 @@ class FellAppUtil {
         return $resultfilterTypes;
     }
 
+    public function hasExpectedDegree( $fellapp ) {
+        $expectedDegreeFlag = false;
+        if( !$fellapp ) {
+            return $expectedDegreeFlag;
+        }
+        $fellappSpecialty = $this->getFellowshipSpecialtyByServer($fellapp);
+        if( !$fellappSpecialty ) {
+            return $expectedDegreeFlag;
+        }
+        $expectedDegree = $fellappSpecialty->getExpectedDegree();
+        if( $expectedDegree && $expectedDegree == 'PhD' ) {
+            $expectedDegreeFlag = true;
+        }
+        //$expectedDegreeFlag = true;//testing
+        return $expectedDegreeFlag;
+    }
+
     //Get all global fellowship types (getGlobalFellowshipTypesByInstitution) =>
     //get all associated institution
     public function getFellowshipInstitutions( $institutionId=null, $filtered=true ) {

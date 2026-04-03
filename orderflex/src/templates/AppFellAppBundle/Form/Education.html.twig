@@ -65,20 +65,30 @@
                 {% set trainingLabel = "Residency:" %}
                 {% set degreeLabel = null %}
                 {% set showTraining = true %}
+                {% if entity and fellapp_util.hasExpectedDegree(entity) %}
+                    {% set showTraining = false %}
+                {% endif %}
             {% endif %}
             {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'Post-Residency Fellowship' %}
                 {% set trainingLabel = "Post-Residency Fellowship:" %}
                 {% set majorLabel = "Area of training:" %}
                 {% set degreeLabel = null %}
                 {% set showTraining = true %}
+                {% if entity and fellapp_util.hasExpectedDegree(entity) %}
+                    {% set showTraining = false %}
+                {% endif %}
             {% endif %}
             {% if training.vars.value.trainingType and training.vars.value.trainingType.name == 'GME' %}
                 {% set trainingLabel = "Other GME, if applicable:" %}
                 {% set majorLabel = "Area of training:" %}
                 {% set degreeLabel = null %}
                 {% set showTraining = true %}
+                {% if entity and fellapp_util.hasExpectedDegree(entity) %}
+                    {% set showTraining = false %}
+                {% endif %}
             {% endif %}
         {% endif %}
+
 
         {#{% set showAllExpectedDegree = true %}#}
         {#{% set trainingLabelSlug = trainingLabel|lower|replace({' ': '-', '_', ',': '', ':': ''}) %}#}
@@ -162,7 +172,7 @@
 
             {#</div>#}
         </div>
-        {% endif %}
+        {% endif %} {#showTraining#}
 
     {% endfor %}
 

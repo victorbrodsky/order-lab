@@ -36,8 +36,8 @@ knp_snappy:
             load-error-handling: ignore
             load-media-error-handling: ignore
             enable-local-file-access: true
-            enable-javascript: true
-            no-stop-slow-scripts: true
+            #enable-javascript: true
+            #no-stop-slow-scripts: true
             #window-status: 'ready' #fixing js delay
             #disable-external-links: true
             #debug-javascript: true

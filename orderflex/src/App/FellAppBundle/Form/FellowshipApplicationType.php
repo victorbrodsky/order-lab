@@ -341,12 +341,14 @@ class FellowshipApplicationType extends AbstractType
         $builder->add('reprimand', ChoiceType::class, [
             'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
             'choices' => [
-                'Yes' => true,
-                'No' => false,
+                'Yes' => 1,
+                'No' => 0,
             ],
             'expanded' => true, // renders as radio buttons
             'multiple' => false, // single choice
-            'required' => true,
+            //'required' => true,
+            'required' => false,
+            'placeholder' => false,   // <- THIS removes the “None” radio button
             'attr' => [
                 'class' => 'fellapp-reprimand-field radio-spacing',
                 'onclick' => 'showHideWellByRadioButtons(this)',
@@ -388,7 +390,7 @@ class FellowshipApplicationType extends AbstractType
             'expanded' => true, // renders as radio buttons
             'multiple' => false, // single choice
             'required' => false,
-            'placeholder' => false,   // ← THIS removes the “None” radio button
+            'placeholder' => false,   // <- THIS removes the “None” radio button
             //'required' => true,
             'attr' => [
                 'class' => 'fellapp-lawsuit-field radio-spacing',

@@ -126,3 +126,16 @@ TODO:
 
 'C:\Users\cinav\Documents\WCMC\ORDER\olegutil\wkhtmltopdf\bin\wkhtmltopdf.exe' --lowquality --debug-javascript --disable-external-links --enable-javascript --javascript-delay "9000" --load-error-handling "ignore" --load-media-error-handling "ignore" --enable-local-file-access --no-stop-slow-scripts --window-status "ready" "http://localhost/fellowship-applications/download/1780" "C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\Uploaded\fellapp/Reports/temp_1780/application_ID1780.pdf"
 
+7. On https://view.online/fellowship-applications/apply , if the Fellowship Specialty is set to a specialty with the "Expected Degree for Applicants" to "PhD" (and the fellowship specialty aray when multiselect is enabled does not include any with a value that does not equal to "PhD" - meaning ONLY one or more "PhD" ones are selected), hide the following sections and fields:
+
+Hide on download if $specialty->getExpectedDegree() == 'PhD'
+v Education > Residency
+v Education > Post-Residency Fellowship
+v Education > Other GME, if applicable
+v National Boards
+v Medical Licensure (hide all fields in this section except "Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?")
+v Board Certification
+v  Attached Documents > USMLE Scores (All documents will be added to the Complete Application PDF)
+
+
+

@@ -187,12 +187,14 @@ class ApplyFellowshipApplicationType extends AbstractType
         $builder->add('reprimand', ChoiceType::class, [
             'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
             'choices' => [
-                'Yes' => true,
-                'No' => false,
+                'Yes' => 1,
+                'No' => 0,
             ],
             'expanded' => true, // renders as radio buttons
             'multiple' => false, // single choice
-            'required' => true,
+            'required' => false,
+            'placeholder' => false,   // <- THIS removes the “None” radio button
+            //'required' => true,
             'attr' => [
                 'class' => 'fellapp-reprimand-field radio-spacing',
                 'onclick' => 'showHideWellByRadioButtons(this)',
@@ -224,12 +226,13 @@ class ApplyFellowshipApplicationType extends AbstractType
         $builder->add('lawsuit', ChoiceType::class, [
             'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?', //false,
             'choices' => [
-                'Yes' => true,
-                'No' => false,
+                'Yes' => 1,
+                'No' => 0,
             ],
             'expanded' => true, // renders as radio buttons
             'multiple' => false, // single choice
             'required' => false,
+            'placeholder' => false,   // <- THIS removes the “None” radio button
             //'required' => true,
             'attr' => [
                 'class' => 'fellapp-lawsuit-field radio-spacing',

@@ -244,13 +244,24 @@
     {% include 'AppFellAppBundle/Form/Education.html.twig' %}
 
     <!-- National Boards -->
-    {% include 'AppFellAppBundle/Form/NationalBoards.html.twig' %}
+    {#{% include 'AppFellAppBundle/Form/NationalBoards.html.twig' %}#}
+    {% set showSection = true %}
+    {% if cycle == "download" %}
+        {% if entity and fellapp_util.hasExpectedDegree(entity) %}
+            {% set showSection = false %}
+        {% endif %}
+    {% endif %}
+    {% if showSection %}
+        {% include 'AppFellAppBundle/Form/NationalBoards.html.twig' %}
+    {% endif %}
 
     <!-- MedicalLicensure -->
     {% include 'AppFellAppBundle/Form/MedicalLicensure.html.twig' %}
 
     <!-- Board Certification -->
-    {% include 'AppFellAppBundle/Form/BoardCertification.html.twig' %}
+    {% if showSection %}
+        {% include 'AppFellAppBundle/Form/BoardCertification.html.twig' %}
+    {% endif %}
 
     <!-- Recommendations -->
     {% include 'AppFellAppBundle/Form/Recommendations.html.twig' %}
