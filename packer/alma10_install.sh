@@ -392,30 +392,52 @@ f_install_util () {
 	sudo yum install -y ghostscript
 	#sudo yum install -y pdftk
 	
-	#https://gist.github.com/apphancer/8654e82aa582d1cf02c955536df06449
-	#https://jaimegris.wordpress.com/2015/03/04/how-to-install-wkhtmltopdf-in-centos-7-0/
-	echo -e "${COLOR} Install wkhtmltopdf dependencies xorg-x11-fonts-75dpi and xorg-x11-fonts-Type1 ${NC}"
-	yum install -y xorg-x11-fonts-75dpi
-	yum install -y xorg-x11-fonts-Type1
-	yum install xz
-	
-	echo -e "${COLOR} Synchronize the rpm and yumdb databases ${NC}"
-	yum history sync
-	
-	echo -e "${COLOR} Install wkhtmltopdf ${NC}"
-	###https://computingforgeeks.com/install-wkhtmltopdf-wkhtmltoimage-on-rocky-almalinux/?expand_article=1
-	###wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.centos8.x86_64.rpm
-	###sudo dnf install -y ./wkhtmltox-0.12.6-1.centos8.x86_64.rpm
-	#https://docs.faveohelpdesk.com/docs/installation/providers/enterprise/wkhtmltopdf/
-	wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox-0.12.6.1-2.almalinux9.x86_64.rpm
-	sudo dnf install -y ./wkhtmltox-0.12.6.1-2.almalinux9.x86_64.rpm
-	
-	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
-	sudo yum install -y xorg-x11-server-Xvfb
-	
-	echo -e ${COLOR} Get version wkhtmltopdf ${NC}
-	/usr/bin/xvfb-run wkhtmltopdf --version
-	
+#	#https://gist.github.com/apphancer/8654e82aa582d1cf02c955536df06449
+#	#https://jaimegris.wordpress.com/2015/03/04/how-to-install-wkhtmltopdf-in-centos-7-0/
+#	echo -e "${COLOR} Install wkhtmltopdf dependencies xorg-x11-fonts-75dpi and xorg-x11-fonts-Type1 ${NC}"
+#	yum install -y xorg-x11-fonts-75dpi
+#	yum install -y xorg-x11-fonts-Type1
+#	yum install xz
+#
+#	echo -e "${COLOR} Synchronize the rpm and yumdb databases ${NC}"
+#	yum history sync
+#
+#	echo -e "${COLOR} Install wkhtmltopdf ${NC}"
+#	###https://computingforgeeks.com/install-wkhtmltopdf-wkhtmltoimage-on-rocky-almalinux/?expand_article=1
+#	###wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.centos8.x86_64.rpm
+#	###sudo dnf install -y ./wkhtmltox-0.12.6-1.centos8.x86_64.rpm
+#	#https://docs.faveohelpdesk.com/docs/installation/providers/enterprise/wkhtmltopdf/
+#	wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox-0.12.6.1-2.almalinux9.x86_64.rpm
+#	sudo dnf install -y ./wkhtmltox-0.12.6.1-2.almalinux9.x86_64.rpm
+#
+#	echo -e ${COLOR} Install xorg-x11-server-Xvfb ${NC}
+#	sudo yum install -y xorg-x11-server-Xvfb
+#
+#	echo -e ${COLOR} Get version wkhtmltopdf ${NC}
+#	/usr/bin/xvfb-run wkhtmltopdf --version
+
+	#For ALma10 use:
+    #0) if pgdg13 error:
+    # a) sudo dnf config-manager --set-disabled pgdg13
+    # b) verify (optional): dnf repolist
+    # c) sudo dnf clean all
+    # d) sudo dnf makecache
+    #1) dnf install xwayland-run
+    #2) set wkhtmltopdfpathLinux to: xwfb-run -- /usr/local/bin/wkhtmltopdf
+    #3) Optional test: xwfb-run -- /usr/local/bin/wkhtmltopdf http://google.com test.pdf
+    # Note: The -- separator is required to distinguish between xwfb-run options and the wkhtmltopdf command
+
+    echo -e "${COLOR} Install wkhtmltopdf dependencies and xwayland instead of xvfb ${NC}"
+    echo -e "${COLOR} 0) Disable the broken PostgreSQL 13 repo ${NC}"
+    sudo dnf config-manager --set-disabled pgdg13
+    sudo dnf clean all
+    sudo dnf makecache
+    echo -e "${COLOR} Install xwayland-run ${NC}"
+    sudo dnf install xwayland-run
+    echo -e "${COLOR} Get wkhtmltopdf version  ${NC}"
+    /usr/bin/xwfb-run wkhtmltopdf --version
+    echo -e "${COLOR} Make sure to set wkhtmltopdfpathLinux to: xwfb-run -- /usr/local/bin/wkhtmltopdf ${NC}"
+
 	#http://bashworkz.com/installing-pdftk-on-centos-5-and-6-pdf-management-utility-tool/
 	#echo -e ${COLOR} Install pdftk ${NC}
 	#sudo yum install -y libgcj
