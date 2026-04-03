@@ -1563,6 +1563,7 @@ class FellAppController extends OrderAbstractController {
 //                //exit('eof edit post applicant: no $globalFellowshipSpecialty found');
 //            }
             ////// Form Nodes /////////
+            //TODO: might be better to get fellowshyp specialty by $fellowshipSpecialty = $fellappUtil->getFellowshipSpecialtyByServer($entity);
             $globalFellowshipSpecialty = $entity->getGlobalFellowshipSpecialty();
             if( $globalFellowshipSpecialty && $globalFellowshipSpecialty->getScreeningQuestions() ) {
                 //$logger->notice("Before processFormNodes edit post");
