@@ -377,13 +377,19 @@ class FellowshipApplicationType extends AbstractType
         //$builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
         $builder->add('lawsuit', ChoiceType::class, [
             'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?', //false,
+//            'choices' => [
+//                'Yes' => true,
+//                'No' => false,
+//            ],
             'choices' => [
-                'Yes' => true,
-                'No' => false,
+                'Yes' => 1, //'yes',
+                'No'  => 0, //'no',
             ],
             'expanded' => true, // renders as radio buttons
             'multiple' => false, // single choice
-            'required' => true,
+            'required' => false,
+            'placeholder' => false,   // ← THIS removes the “None” radio button
+            //'required' => true,
             'attr' => [
                 'class' => 'fellapp-lawsuit-field radio-spacing',
                 'onclick' => 'showHideWellByRadioButtons(this)',

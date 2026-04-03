@@ -9,8 +9,20 @@
 #        options:    []
 
 #For ALma10 use:
+#0) if pgdg13 error:
+# a) sudo dnf config-manager --set-disabled pgdg13
+# b) verify (optional): dnf repolist
+# c) sudo dnf clean all
+# d) sudo dnf makecache
+#1) dnf install xwayland-run
+#2) set wkhtmltopdfpathLinux to: xwfb-run -- /usr/local/bin/wkhtmltopdf
+#3) Optional test: xwfb-run -- /usr/local/bin/wkhtmltopdf http://google.com test.pdf
+# Note: The -- separator is required to distinguish between xwfb-run options and the wkhtmltopdf command
+
+# Another option to use playwright:
 # pip install playwright
 # playwright install chromium
+
 
 knp_snappy:
     process_timeout: 300 # In seconds
@@ -24,6 +36,11 @@ knp_snappy:
             load-error-handling: ignore
             load-media-error-handling: ignore
             enable-local-file-access: true
+            enable-javascript: true
+            no-stop-slow-scripts: true
+            #window-status: 'ready' #fixing js delay
+            #disable-external-links: true
+            #debug-javascript: true
             #ignore-ssl-errors: true
             #no-stop-slow-scripts: true
             #disable-smart-shrinking: true

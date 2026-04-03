@@ -297,6 +297,7 @@ class PdfGenerator
 //            $html,
 //            $applicationOutputFilePath
 //        );
+//        On Alma10 use: dnf install xwayland-run and then set wkhtmltopdfpathLinux to xwfb-run -- /usr/local/bin/wkhtmltopdf
 
         ///usr/bin/xvfb-run: line 186: kill No such process stdout
         //https://stackoverflow.com/questions/30504274/xvfb-run-line-171-kill-25939-no-such-process

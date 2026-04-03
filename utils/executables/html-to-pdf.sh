@@ -3,6 +3,9 @@ import sys
 import os
 from playwright.sync_api import sync_playwright
 
+#On Alma10 we can use playwright usinf this script instead of deprecated xvfb-run
+#Set wkhtmltopdfpath to '/path/html-to-pdf.sh'
+
 # -----------------------------
 # Parse arguments (Snappy style)
 # -----------------------------

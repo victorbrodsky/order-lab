@@ -1012,6 +1012,21 @@ class ReportGenerator {
 //                //'no-stop-slow-scripts' => true
 //            )
 //        );
+
+        //$pageUrl = $pageUrl . '?pdf=1';
+
+//        $command = $this->container->get('knp_snappy.pdf')->getCommand(
+//            $pageUrl,
+//            $applicationOutputFilePath,
+//            [
+//                'cookie' => [
+//                    'PHPSESSID' => $PHPSESSID,
+//                ],
+//            ]
+//        );
+//        //dd($this->container->get('knp_snappy.pdf')->getCommand($pageUrl, $applicationOutputFilePath));
+//        $logger->notice("before knp_snappy command=[".$this->container->get('knp_snappy.pdf')->getCommand($pageUrl, $applicationOutputFilePath)."]");
+
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath,

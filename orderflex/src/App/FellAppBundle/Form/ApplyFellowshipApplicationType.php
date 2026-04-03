@@ -229,7 +229,8 @@ class ApplyFellowshipApplicationType extends AbstractType
             ],
             'expanded' => true, // renders as radio buttons
             'multiple' => false, // single choice
-            'required' => true,
+            'required' => false,
+            //'required' => true,
             'attr' => [
                 'class' => 'fellapp-lawsuit-field radio-spacing',
                 'onclick' => 'showHideWellByRadioButtons(this)',

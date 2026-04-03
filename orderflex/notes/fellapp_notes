@@ -124,3 +124,5 @@ TODO:
 [2026-03-30T22:57:14.506128+00:00] app.NOTICE: Downloaded and attached Fellowship USMLE Scores for application ID 1771 [] []
 
 
+'C:\Users\cinav\Documents\WCMC\ORDER\olegutil\wkhtmltopdf\bin\wkhtmltopdf.exe' --lowquality --debug-javascript --disable-external-links --enable-javascript --javascript-delay "9000" --load-error-handling "ignore" --load-media-error-handling "ignore" --enable-local-file-access --no-stop-slow-scripts --window-status "ready" "http://localhost/fellowship-applications/download/1780" "C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\Uploaded\fellapp/Reports/temp_1780/application_ID1780.pdf"
+

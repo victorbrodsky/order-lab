@@ -29,7 +29,8 @@
 {% block content %}
 
     {#<input type="hidden" id="disableIdleTimeout" value="1" />#}
-
+    {#cycle={{ cycle }}#}
+    {#app.request.get('pdf')={{ app.request.get('pdf') }}<br>#}
     {% if cycle == "download" %}
         {% set collapsein = "in" %}
     {% else %}
@@ -59,8 +60,8 @@
     {% include 'AppFellAppBundle/Form/applicant-content-js.html.twig' %}
 
     <script language="Javascript">
-
         $(document).ready(function() {
+
             var hashValue = window.location.hash;
             //console.log("hashValue="+hashValue);
             if( hashValue == '#interviews' ) {
@@ -68,11 +69,11 @@
                 $('#interviews').collapse('show');
                 expandTextarea($('#interviews'));
             }
+
+            //window.status = 'ready';
         });
 
     </script>
-
-
 
 {% endblock %}
 
