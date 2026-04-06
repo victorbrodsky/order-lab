@@ -1002,4 +1002,33 @@ class DefaultController extends OrderAbstractController
         exit($res);
     }
 
+    //http://127.0.0.1/fellowship-applications/set-show-specialties
+    #[Route(path: '/set-show-specialties', name: 'fellapp_set_show_specialties')]
+    public function setFellowshipSpecialtiesShowAction( Request $request )
+    {
+        //exit("not allowed: setFellowshipSpecialtiesShowAction");
+        if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
+        }
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $fellowshipSpecialties = $fellappUtil->getValidFellowshipTypes($asEntities=true);
+        echo "Valid fellowshipSpecialties=".count($fellowshipSpecialties)."<br>";
+        foreach($fellowshipSpecialties as $fellowshipSpecialty) {
+            $fellowshipSpecialty->setShowOption(true);
+            echo "setShowOption ID=".$fellowshipSpecialty->getName()."<br>";
+        }
+
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false);
+        echo "Valid globalFellTypes=".count($globalFellTypes)."<br>";
+        foreach($globalFellTypes as $globalFellType) {
+            $globalFellType->setShowOption(true);
+            echo "Global setShowOption ID=".$globalFellType->getName()."<br>";
+        }
+
+        $em->flush();
+        exit("setFellowshipSpecialtiesShowAction");
+    }
 }
