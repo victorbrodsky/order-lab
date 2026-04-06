@@ -708,7 +708,7 @@ class FellAppUtil {
     //Get all global fellowship types (getGlobalFellowshipTypesByInstitution) =>
     //get all associated institution
     //Default $showOption=null will ignore showOption
-    public function getFellowshipInstitutions( $institutionId=null, $showOption=null ) {
+    public function getFellowshipInstitutions( $institutionId=null, $showOptionFellApp=null ) {
         $repository = $this->em->getRepository(GlobalFellowshipSpecialty::class);
         $dql = $repository->createQueryBuilder('list')
             ->select('institution.id') // fetch only institution
@@ -728,12 +728,12 @@ class FellAppUtil {
             $parameters['typeadd'] = 'user-added';
         }
 
-        if( $showOption !== null ) {
-            //echo 'getFellowshipInstitutions: $showOption='.$showOption.'<br>';
-            //$dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL");
-            $dql->andWhere("list.showOptionFellApp = :showOption");
-            $parameters['showOption'] = $showOption;
-        }
+//        if( $showOption !== null ) {
+//            //echo 'getFellowshipInstitutions: $showOption='.$showOption.'<br>';
+//            //$dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL");
+//            $dql->andWhere("list.showOptionFellApp = :showOption");
+//            $parameters['showOption'] = $showOption;
+//        }
 
         if( $institutionId ) {
             $dql->andWhere('institution.id = :institutionId');
@@ -751,8 +751,28 @@ class FellAppUtil {
         $results = $query->getResult();
         $ids = array_map(fn($row) => $row['id'], $results);
 
+        if (empty($ids)) {
+            return [];
+        }
+
         $repository = $this->em->getRepository(Institution::class);
-        $institutions = $repository->findBy(['id' => $ids]);
+        //$institutions = $repository->findBy(['id' => $ids]);
+//        $institutions = $repository->findBy([
+//            'id' => $ids,
+//            'showOptionFellApp' => $showOption,
+//        ]);
+        $instDql = $repository->createQueryBuilder('i');
+        $instDql->where('i.id IN (:ids)');
+        $instParameters = array();
+        if( $showOptionFellApp !== null ) {
+            $instDql->andWhere('i.showOptionFellApp = :showOptionFellApp');
+            $instParameters['showOptionFellApp'] = $showOptionFellApp;
+        }
+        $instQuery = $instDql->getQuery();
+        if( count($instParameters) > 0 ) {
+            $instQuery->setParameters($instParameters);
+        }
+        $institutions = $query->getResult();
 
         //dump($institutions);
         //echo '$results='.count($institutions).'<br>';
