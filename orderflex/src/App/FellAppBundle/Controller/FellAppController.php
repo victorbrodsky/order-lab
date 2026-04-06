@@ -1132,31 +1132,6 @@ class FellAppController extends OrderAbstractController {
         //add empty fields if they are not exist
         $fellappUtil = $this->container->get('fellapp_util');
 
-        $fellTypes = array();
-        $globalFellTypes = array();
-
-//        if( $routeName == "fellapp_apply" || $routeName == "fellapp_apply_post" ) {
-//            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
-//            if( count($globalFellTypes) == 0 ) {
-//                return array();
-//            }
-//        } else {
-//            $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-//            if( count($fellTypes) == 0 ) {
-//                return array();
-//            }
-//        }
-        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
-        if( $serverRole."" != 'Internet (Hub)' ) {
-            //$fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
-            //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true); //array of entities
-            $fellTypes = $fellappUtil->getValidFellowshipTypes(true); //array of entities
-            //echo "fellowshipTypes count=".count($fellTypes)."<br>";
-        } else {
-            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
-            //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
-        }
-
         //echo "getFellowshipSubspecialty=".$entity->getFellowshipSubspecialty()."<br>";
         //echo "getGlobalFellowshipSpecialty=".$entity->getGlobalFellowshipSpecialty()."<br>";
 
@@ -1166,6 +1141,7 @@ class FellAppController extends OrderAbstractController {
         
         $fellappUtil->addEmptyFellAppFields($entity); //getShowParameters
 
+        $showOption = null;
         $captchaSiteKey = null;
 
         if( $routeName == "fellapp_show" ) {
@@ -1177,6 +1153,7 @@ class FellAppController extends OrderAbstractController {
 
         if( $routeName == "fellapp_new" ) {
             $cycle = 'new';
+            //$showOption = true;
             $disabled = false;
             $method = "POST";
             $action = $this->generateUrl('fellapp_create_applicant');
@@ -1184,6 +1161,7 @@ class FellAppController extends OrderAbstractController {
 
         if( $routeName == "fellapp_apply" ) {
             $cycle = 'new';
+            $showOption = true;
             $disabled = false;
             $method = "POST";
             $action = $this->generateUrl('fellapp_apply_post'); // /apply use the same post submit as /new form
@@ -1236,6 +1214,23 @@ class FellAppController extends OrderAbstractController {
             }
         }
 
+        $fellTypes = array();
+        $globalFellTypes = array();
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $serverRole."" != 'Internet (Hub)' ) {
+            //$fellTypes = $fellappUtil->getFellowshipTypesByUser($user);
+            //$fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true); //array of entities
+            $fellTypes = $fellappUtil->getValidFellowshipTypes(true,$showOption); //array of entities getShowParameters
+            //echo "fellowshipTypes count=".count($fellTypes)."<br>";
+        } else {
+            $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution(
+                $institution=null,
+                $asArray=false,
+                $showOption
+            ); //return as entities
+            //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
+        }
+
         $institutions = $fellappUtil->getFellowshipInstitutions();
 
         $programInstitution = null;
@@ -1243,7 +1238,6 @@ class FellAppController extends OrderAbstractController {
             //$programInstitution = $institutions[0];
             $programInstitution = $em->getRepository(Institution::class)->find($institutionId);
         }
-
 
         $programSpecialty = null;
         if( $specialtyId ) {

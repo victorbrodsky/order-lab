@@ -529,22 +529,37 @@ class FellAppUtil {
         return $fellTypes;
     }
     //get all fellowship application types (default, user-added)
-    public function getValidFellowshipTypes( $asEntities=false ) {
+    //Default $showOption=true will show only where $showOption checkbox is checked (showOption is set to true)
+    //Default $showOption=null will ignore showOption
+    public function getValidFellowshipTypes( $asEntities=false, $showOption=null ) {
         $em = $this->em;
 
         //get list of fellowship type with extra "ALL"
         $repository = $em->getRepository(FellowshipSubspecialty::class);
         $dql = $repository->createQueryBuilder('list');
         $dql->where("list.type = :typedef OR list.type = :typeadd");
+
+        $parameters = array(
+            'typedef' => 'default',
+            'typeadd' => 'user-added'
+        );
+
+        if( $showOption != null ) {
+            $dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL"); //show checked or null
+            $parameters['showOption'] = $showOption;
+        }
+
         //$dql->orderBy("list.orderinlist","ASC"); //order by orderinlist
         $dql->orderBy("list.name","ASC"); //order alphabetically
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'typedef' => 'default',
-            'typeadd' => 'user-added',
-        ));
+//        $query->setParameters( array(
+//            'typedef' => 'default',
+//            'typeadd' => 'user-added',
+//            'showOption' => $showOption
+//        ));
+        $query->setParameters($parameters);
 
         $fellTypes = $query->getResult();
         //echo "getValidFellowshipTypes: fellTypes count=".count($fellTypes)."<br>";
@@ -564,7 +579,12 @@ class FellAppUtil {
     }
     //get all global fellowship application types.
     // Original - $asEntities=false (default as array) -> default as select2, if entity set $asArray=false
-    public function getGlobalFellowshipTypesByInstitution( $institution=null, $asArray='select2', $filtered=true ) {
+    //Default $showOption=null will ignore showOption
+    public function getGlobalFellowshipTypesByInstitution(
+        $institution=null,
+        $asArray='select2',
+        $showOption=null
+    ) {
         $em = $this->em;
         //get list of fellowship type with extra "ALL"
         $repository = $em->getRepository(GlobalFellowshipSpecialty::class);
@@ -575,10 +595,16 @@ class FellAppUtil {
 
         $parameters = [];
 
+        $filtered = true;
         if( $filtered ) {
             $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
             $parameters['typedef'] = 'default';
             $parameters['typeadd'] = 'user-added';
+        }
+
+        if( $showOption != null ) {
+            $dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL");
+            $parameters['showOption'] = $showOption;
         }
 
         if( $institution ) {
