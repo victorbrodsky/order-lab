@@ -1017,15 +1017,19 @@ class DefaultController extends OrderAbstractController
         $fellowshipSpecialties = $fellappUtil->getValidFellowshipTypes($asEntities=true);
         echo "Valid fellowshipSpecialties=".count($fellowshipSpecialties)."<br>";
         foreach($fellowshipSpecialties as $fellowshipSpecialty) {
-            $fellowshipSpecialty->setShowOption(true);
-            echo "setShowOption ID=".$fellowshipSpecialty->getName()."<br>";
+            if( $fellowshipSpecialty->getShowOption() === null ) {
+                $fellowshipSpecialty->setShowOption(true);
+                echo "setShowOption ID=" . $fellowshipSpecialty->getName() . "<br>";
+            }
         }
 
         $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false);
         echo "Valid globalFellTypes=".count($globalFellTypes)."<br>";
         foreach($globalFellTypes as $globalFellType) {
-            $globalFellType->setShowOption(true);
-            echo "Global setShowOption ID=".$globalFellType->getName()."<br>";
+            if( $globalFellType->getShowOption() === null ) {
+                $globalFellType->setShowOption(true);
+                echo "Global setShowOption ID=" . $globalFellType->getName() . "<br>";
+            }
         }
 
         $em->flush();
