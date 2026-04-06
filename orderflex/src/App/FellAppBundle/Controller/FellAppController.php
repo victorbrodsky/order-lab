@@ -1239,10 +1239,10 @@ class FellAppController extends OrderAbstractController {
         $institutions = $fellappUtil->getFellowshipInstitutions(null,$showOption);
         foreach( $institutions as $institution) {
             //echo "Inst institution=".$institution->getNameInstitution()."<br>";
-            echo "Inst institution=".$institution->getId()."<br>";
-            $instThis = $em->getRepository(GlobalFellowshipSpecialty::class)->find($institution->getId());
-            if( $instThis )
-                echo "Inst institution=".$instThis->getNameInstitution()."<br>";
+            //echo "Inst institution=".$institution->getId()."<br>";
+            //$instThis = $em->getRepository(GlobalFellowshipSpecialty::class)->find($institution->getId());
+            //if( $instThis )
+            echo "Inst institution=".$institution->getTreeName()."<br>";
         }
 
         $programInstitution = null;
