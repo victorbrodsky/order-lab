@@ -707,7 +707,8 @@ class FellAppUtil {
 
     //Get all global fellowship types (getGlobalFellowshipTypesByInstitution) =>
     //get all associated institution
-    public function getFellowshipInstitutions( $institutionId=null, $filtered=true ) {
+    //Default $showOption=null will ignore showOption
+    public function getFellowshipInstitutions( $institutionId=null, $showOption=null ) {
         $repository = $this->em->getRepository(GlobalFellowshipSpecialty::class);
         $dql = $repository->createQueryBuilder('list')
             ->select('institution.id') // fetch only institution
@@ -720,10 +721,16 @@ class FellAppUtil {
 
         $parameters = [];
 
+        $filtered = true;
         if( $filtered ) {
             $dql->andWhere("list.type = :typedef OR list.type = :typeadd");
             $parameters['typedef'] = 'default';
             $parameters['typeadd'] = 'user-added';
+        }
+
+        if( $showOption != null ) {
+            $dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL");
+            $parameters['showOption'] = $showOption;
         }
 
         if( $institutionId ) {

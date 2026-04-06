@@ -1231,7 +1231,7 @@ class FellAppController extends OrderAbstractController {
             //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
         }
 
-        $institutions = $fellappUtil->getFellowshipInstitutions();
+        $institutions = $fellappUtil->getFellowshipInstitutions(null,$showOption);
 
         $programInstitution = null;
         if( $institutionId && count($institutions) > 0 ) {
