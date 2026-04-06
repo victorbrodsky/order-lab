@@ -156,6 +156,8 @@ class Institution extends BaseCompositeNode
 
         $this->collaborationInstitutions = new ArrayCollection();
         $this->collaborations = new ArrayCollection();
+
+        $this->setShowOptionFellApp(true);
     }
 
 

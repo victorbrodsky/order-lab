@@ -124,6 +124,7 @@ class FellowshipSubspecialty extends ListAbstract
         $this->directors = new ArrayCollection();
         $this->interviewers = new ArrayCollection();
         $this->apiImportKeys = new ArrayCollection();
+        $this->setShowOption(true);
     }
 
 
