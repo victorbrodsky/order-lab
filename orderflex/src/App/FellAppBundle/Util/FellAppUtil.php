@@ -761,9 +761,10 @@ class FellAppUtil {
 //            'id' => $ids,
 //            'showOptionFellApp' => $showOption,
 //        ]);
+        $instParameters = array();
         $instDql = $repository->createQueryBuilder('i');
         $instDql->where('i.id IN (:ids)');
-        $instParameters = array();
+        $instParameters['ids'] = $ids;
         if( $showOptionFellApp !== null ) {
             $instDql->andWhere('i.showOptionFellApp = :showOptionFellApp');
             $instParameters['showOptionFellApp'] = $showOptionFellApp;
@@ -772,7 +773,7 @@ class FellAppUtil {
         if( count($instParameters) > 0 ) {
             $instQuery->setParameters($instParameters);
         }
-        $institutions = $query->getResult();
+        $institutions = $instQuery->getResult();
 
         //dump($institutions);
         //echo '$results='.count($institutions).'<br>';
