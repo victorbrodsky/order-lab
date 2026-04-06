@@ -1231,6 +1231,11 @@ class FellAppController extends OrderAbstractController {
             //echo "globalFellTypes count=".count($globalFellTypes)."<br>";
         }
 
+        if( $showOption ) {
+            echo 'TRUE $showOption='.$showOption.'<br>';
+        } else {
+            echo 'FALSE $showOption='.$showOption.'<br>';
+        }
         $institutions = $fellappUtil->getFellowshipInstitutions(null,$showOption);
 
         $programInstitution = null;
@@ -4023,6 +4028,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         $institutions = $fellappUtil->getFellowshipInstitutions();
+        //$institutions = $fellappUtil->getFellowshipInstitutions(null,$showOption=true);
 
         $institutionId = null;
         $programInstitution = null;

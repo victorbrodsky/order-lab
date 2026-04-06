@@ -544,7 +544,7 @@ class FellAppUtil {
             'typeadd' => 'user-added'
         );
 
-        if( $showOption != null ) {
+        if( $showOption !== null ) {
             $dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL"); //show checked or null
             $parameters['showOption'] = $showOption;
         }
@@ -602,7 +602,7 @@ class FellAppUtil {
             $parameters['typeadd'] = 'user-added';
         }
 
-        if( $showOption != null ) {
+        if( $showOption !== null ) {
             $dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL");
             $parameters['showOption'] = $showOption;
         }
@@ -728,7 +728,7 @@ class FellAppUtil {
             $parameters['typeadd'] = 'user-added';
         }
 
-        if( $showOption != null ) {
+        if( $showOption !== null ) {
             //$dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL");
             $dql->andWhere("list.showOption = :showOption");
             $parameters['showOption'] = $showOption;
