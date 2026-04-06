@@ -729,6 +729,7 @@ class FellAppUtil {
         }
 
         if( $showOption !== null ) {
+            echo 'getFellowshipInstitutions: $showOption='.$showOption.'<br>';
             //$dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL");
             $dql->andWhere("list.showOption = :showOption");
             $parameters['showOption'] = $showOption;
