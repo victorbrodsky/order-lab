@@ -1241,7 +1241,8 @@ class FellAppController extends OrderAbstractController {
             //echo "Inst institution=".$institution->getNameInstitution()."<br>";
             echo "Inst institution=".$institution->getId()."<br>";
             $instThis = $em->getRepository(GlobalFellowshipSpecialty::class)->find($institution->getId());
-            echo "Inst institution=".$instThis->getNameInstitution()."<br>";
+            if( $instThis )
+                echo "Inst institution=".$instThis->getNameInstitution()."<br>";
         }
 
         $programInstitution = null;
