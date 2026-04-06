@@ -1507,7 +1507,14 @@
     {% endif %}
 
     {% if form.apiConnectionKey is defined %}
-        {{ formmacros.field(form.apiConnectionKey) }}
+        <div class="row">
+            <div class="col-xs-10">
+                {{ formmacros.field(form.apiConnectionKey) }}
+            </div>
+            <div class="col-xs-2" style="padding-top: 25px;">
+                <button type="button" id="hashApiKeyBtn" class="btn btn-primary">Hash</button>
+            </div>
+        </div>
     {% endif %}
 
     {% if form.apiHashConnectionKey is defined %}
@@ -1549,6 +1556,45 @@
 {% endmacro %}
 
 
+{% block additionaljs %}
+
+<script language="Javascript">
+
+    $(document).ready(function() {
+
+        // Hash API Connection Key functionality
+        $('#hashApiKeyBtn').on('click', function() {
+            var apiKeyInput = $('input[name*="apiConnectionKey"]');
+            var apiHashInput = $('input[name*="apiHashConnectionKey"]');
+            var plainText = apiKeyInput.val();
+            console.error('hashApiKeyBtn clicked plainText='+plainText);
+
+            if (!plainText) {
+                alert('Please enter a value in the API Connection Key field first.');
+                return;
+            }
+
+            // Use Web Crypto API for SHA256 hashing
+            crypto.subtle.digest('SHA-256', new TextEncoder().encode(plainText)).then(function(buffer) {
+                var hashArray = Array.from(new Uint8Array(buffer));
+                var hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+                // Set the hashed value to apiHashConnectionKey field
+                apiHashInput.val(hashHex);
+
+                // Clear the apiConnectionKey field
+                apiKeyInput.val('');
+            }).catch(function(error) {
+                console.error('Error hashing value:', error);
+                alert('Error hashing value. Please try again.');
+            });
+        });
+
+    });
+
+</script>
+{% endblock %}
+
 {#{% block additionaljs %}#}
 
 {#<script type="text/javascript">#}
@@ -1564,7 +1610,7 @@
 {#//            $(".requireTissueProcessing").on("change", function(e) {#}
 {#//                var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();#}
 {#//                //console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);#}
-{#//                transresShowHideRequireTissueProcessing(requireTissueProcessing);#}
+{#//                //transresShowHideRequireTissueProcessing(requireTissueProcessing);#}
 {#//            });#}
 
             {#//transres-review-submit#}

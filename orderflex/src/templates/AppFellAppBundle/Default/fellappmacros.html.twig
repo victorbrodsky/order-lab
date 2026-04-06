@@ -591,9 +591,13 @@
                     <h4 class="modal-title" id="confirmSubmitLabel">Confirm Submission</h4>
                 </div>
                 <div class="modal-body">
+                    {% if route_path == 'fellapp_new' %}
+                        Are you sure you would like to add this new application?
+                    {% else %}
                     You are about to submit your application for review.
                     You will not have access to edit your application after it is submitted.
                     Are you sure you would like to submit your application?
+                    {% endif %}
                 </div>
                 <div class="modal-footer">
                     {#<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>#}
