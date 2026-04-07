@@ -18,6 +18,7 @@
 namespace App\FellAppBundle\Controller;
 
 use App\FellAppBundle\Entity\Reference;
+use App\FellAppBundle\Form\ReferenceSimpleType;
 use App\FellAppBundle\Form\ReferenceType;
 use App\UserdirectoryBundle\Controller\ListController;
 use App\UserdirectoryBundle\Entity\GeoLocation;
@@ -31,23 +32,38 @@ use Symfony\Component\HttpFoundation\Request;
 class FellAppRecomLetterController extends ListController
 {
 
+    //http://127.0.0.1/fellowship-applications/submit-a-letter-of-recommendation?data=eyJSZWZlcmVuY2UtTGV0dGVyLUlEIjoiMzFlOTA5YjFmMmUyMzgwNzBmZjEwNWFlOWQwZmM5MGVhZGJjZjViOCIsIklkZW50aWZpY2F0aW9uIjoid2NtcGF0aGRldiIsIkFwcGxpY2FudCI6eyJGaXJzdE5hbWUiOiJKb2huIDMiLCJMYXN0TmFtZSI6IkRvZSIsIkVtYWlsIjoiY2luYXZhMUB5YWhvby5jb20ifSwiRmVsbG93c2hpcCI6eyJUeXBlIjoiQ2xpbmljYWwgSW5mb3JtYXRpY3MiLCJTdGFydCI6IjA3XC8wMVwvMjAyNyIsIkVuZCI6IjA2XC8zMFwvMjAyOCJ9LCJSZWZlcmVuY2UiOnsiRmlyc3ROYW1lIjoiUmVmMUZpcnN0IiwiTGFzdE5hbWUiOiJSZWYxTGFzdCIsIkRlZ3JlZSI6Ik1EIiwiVGl0bGUiOiJSZWYxVGl0bGUiLCJJbnN0aXR1dGlvbiI6bnVsbCwiUGhvbmUiOm51bGwsIkVtYWlsIjoiY2luYXZhQHlhaG9vLmNvbSJ9fQ
 
     //https://view.online/fellowship-applications/submit-a-letter-of-recommendation
     //https://view.online/fellowship-applications/submit-a-letter-of-recommendation?HASHofLETTER
-    #[Route(path: '/submit-a-letter-of-recommendation', name: 'fellapp_recom_letter', methods: ['GET'])]
-    #[Template('AppFellAppBundle/RecomLetter/recomLetter.html.twig')]
+    #[Route(path: '/submit-a-letter-of-recommendation', name: 'fellapp_recom_letter')]
+    #[Template('AppFellAppBundle/RecomLetter/recommendation-letter.html.twig')]
     public function recomLetterAction(Request $request)
     {
 //        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ) {
 //            return $this->redirect($this->generateUrl('fellapp-nopermission'));
 //        }
-        //receive base64 JSON encoded data: https://view.online/fellowship-applications/submit-a-letter-of-recommendation?data=eyJSZWZlcmVuY2Ut...
-        $encoded = $request->query->get('data'); // or $request->get('data')
-        $base64 = strtr($encoded, '-_', '+/');
-        $json = base64_decode($base64);
-        $data = json_decode($json, true);
-        //dump($data);
-        //exit('data');
+        //receive base64 JSON encoded data from URL (GET) or from request (POST)
+        $em = $this->getDoctrine()->getManager();
+        $logger = $this->container->get('logger');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        
+        $data = [];
+        $encoded = $request->query->get('data');
+        if ($encoded) {
+            // GET request with data in URL
+            $base64 = strtr($encoded, '-_', '+/');
+            $json = base64_decode($base64);
+            $data = json_decode($json, true) ?? [];
+            // Store data in session for POST submission
+            $request->getSession()->set('recom_letter_data', $data);
+        } elseif ($request->isMethod('POST')) {
+            // POST request - retrieve data from session or form
+            $data = $request->getSession()->get('recom_letter_data', []);
+        }
 
         //testing
         //$refData['Reference']['Institution'] =
@@ -56,7 +72,7 @@ class FellAppRecomLetterController extends ListController
         $city = '';
         $country = '';
 
-        $cycle = 'show';
+        $cycle = 'new';
         $reference = new Reference();
 
         // Populate reference data from JSON
@@ -130,14 +146,14 @@ class FellAppRecomLetterController extends ListController
             $fellappEnd = $data['Fellowship']['End'];
         }
 
-        $disabled = true;
         //$disabled = false;
+        $disabled = true;
         $params = array(
             'cycle' => $cycle,
             'em' => $this->getDoctrine()->getManager()
         );
         $form = $this->createForm(ReferenceType::class, $reference, array(
-            'method' => 'GET',
+            'method' => 'POST',
             'form_custom_value'=>$params,
             'disabled' => $disabled,
         ));
@@ -146,11 +162,42 @@ class FellAppRecomLetterController extends ListController
 
         if ($form->isSubmitted() && $form->isValid()) {
             //$data = $form->getData();
-            exit('submitted');
+            //exit('submitted');
 
             $this->addFlash('success', 'Recommendation letter submitted successfully.');
 
-            return $this->redirectToRoute('app_recom_letter');
+            $em->persist($reference);
+            $em->flush();
+
+            $emailSubject = "Recommendation Letter Submitted for {$applicantData['FirstName']} {$applicantData['LastName']}";
+
+            $degreeStr = "";
+            $degreeReference = strtolower($refData['Degree']);
+            if(
+                strpos((string)$degreeReference, 'md') !== false
+                || strpos((string)$degreeReference, 'm.d.') !== false
+                || strpos((string)$degreeReference, 'phd') !== false
+                || strpos((string)$degreeReference, 'ph.d') !== false
+                || strpos((string)$degreeReference, 'dr.') !== false
+            ) {
+                $degreeStr = "Dr. ";
+            }
+
+            $emailBody = "Dear {$degreeStr}{$refData['FirstName']} {$refData['LastName']},<br><br>".
+                "This email confirms the submission of a recommendation letter for ".
+                "{$applicantData['FirstName']} {$applicantData['LastName']}.<br><br>".
+                "Sincerely,<br>".
+                "Fellowship Program Coordinator";
+
+            $emailUtil->sendEmail(
+                $email,
+                $emailSubject,
+                $emailBody
+                //$cc,
+                //$senderEmail
+            );
+
+            return $this->redirectToRoute('fellapp_recom_letter_confirmation');
         }
 
 //        return $this->render('recom_letter/form.html.twig', [
@@ -171,10 +218,72 @@ class FellAppRecomLetterController extends ListController
             'fellappSpecialty' => $fellappSpecialty,
             'fellappStart' => $fellappStart,
             'fellappEnd' => $fellappEnd,
+            'systemUser' => $systemUser
         );
-
     }
 
+    #[Route(path: '/submit-a-letter-of-recommendation/confirmation', name: 'fellapp_recom_letter_confirmation')]
+    #[Template('AppFellAppBundle/RecomLetter/recommendation-letter-confirmation.html.twig')]
+    public function recomLetterSimpleAction(Request $request)
+    {
 
+
+        return array(
+        );
+    }
+
+//    #[Route(path: '/submit-a-letter-of-recommendation-simple', name: 'fellapp_recom_letter_simple')]
+//    #[Template('AppFellAppBundle/RecomLetter/recom-letter-simple.html.twig')]
+//    public function recomLetterSimpleAction(Request $request)
+//    {
+//        //receive base64 JSON encoded data from URL (GET) or from request (POST)
+//        $data = [];
+//        $encoded = $request->query->get('data');
+//        if ($encoded) {
+//            // GET request with data in URL
+//            $base64 = strtr($encoded, '-_', '+/');
+//            $json = base64_decode($base64);
+//            $data = json_decode($json, true) ?? [];
+//            // Store data in session for POST submission
+//            $request->getSession()->set('recom_letter_data', $data);
+//        } elseif ($request->isMethod('POST')) {
+//            // POST request - retrieve data from session or form
+//            $data = $request->getSession()->get('recom_letter_data', []);
+//        }
+//
+//        $cycle = 'new';
+//        $reference = new Reference();
+//
+//        //$disabled = false;
+//        //$disabled = false;
+//        $params = array(
+//            'cycle' => $cycle,
+//            'em' => $this->getDoctrine()->getManager()
+//        );
+//        $form = $this->createForm(ReferenceSimpleType::class, $reference, array(
+//            'method' => 'POST',
+//            'form_custom_value'=>$params,
+//            //'disabled' => $disabled,
+//        ));
+//
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            //$data = $form->getData();
+//            exit('submitted');
+//
+//            $this->addFlash('success', 'Recommendation letter submitted successfully.');
+//
+//            return $this->redirectToRoute('app_recom_letter');
+//        }
+//
+//
+//        return array(
+//            'form' => $form,
+//            'entity' => $reference,
+//            'cycle' => $cycle,
+//        );
+//
+//    }
 
 }

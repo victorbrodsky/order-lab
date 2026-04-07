@@ -1,0 +1,41 @@
+{% extends "AppFellAppBundle/Default/base.html.twig" %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}
+
+{% block title %}
+    Rec Letter
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {#form-prototype-data#}
+    <div id="form-prototype-data"
+         {#data-prototype-fellapp-interviews = "{{ fellappmacros.interviewForm(form.documents,cycle,'fellapp-documents','prototype', sitename,1)|e }}"#}
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('fellapp_gallery') }}"
+         {#data-userid = "{{ entity.user.id }}"#}
+    ></div>
+
+    {{ form_start(form) }}
+
+    <div class="well form-element-holder user-FellowshipApplication">
+        <label class="col-xs-12 control-label">Rec Letter</label>
+        <div class="row withpaddingtop">
+            <div class="col-xs-12">
+
+                {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Rec Letter') }}
+
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Submit
+    </button>
+
+    {{ form_end(form) }}
+
+{% endblock %}

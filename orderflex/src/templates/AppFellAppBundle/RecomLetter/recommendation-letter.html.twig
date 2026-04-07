@@ -16,42 +16,8 @@
 
 {% extends "AppFellAppBundle/Default/base.html.twig" %}
 {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-
-{# Override base template to use minimal JS for anonymous users #}
-{% block mainjs %}
-    {# Essential JS + AJAX utilities for select2 #}
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/jquery-ui.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/js/bootstrap-datepicker.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
-    
-    {# FOSJsRoutingBundle for routing #}
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-    
-    {# Include common/selectAjax to enable getComboboxGeneric #}
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-form.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-selectAjax.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-masking.js') }}"></script>
-    {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-formReady.js') }}"></script>#}
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-validation.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-fileuploads.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/store-js/dist/store.legacy.min.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery-idleTimeout/jquery-idleTimeout.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-jquery-idleTimeout.js') }}"></script>
-    <script src="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/dropzone.js') }}"></script>
-
-
-{% endblock %}
-
-{#{% block browsercheck %}{% endblock %}#}
-{#{% block header %}{% endblock %}#}
-{#{% block errorwatchjs %}{% endblock %}#}
-{#{% block maincss %}{% endblock %}#}
+{% import "AppFellAppBundle/Default/fellappmacros.html.twig" as fellappmacros %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
 {% block header %}
 {% endblock %}
@@ -62,17 +28,18 @@
 
 {% block content %}
 
-    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    {{ form_start(form) }}
 
-    {#<input type="hidden" id="formcycle" value="{{ cycle }}" />#}
-    <input type="hidden" id="formcycle" value="new" />
-    {#<input type="hidden" class="form-control" id="recommendationLetterID" name="recommendationLetterID" value="{{ form.vars.data.recLetterHashId|default('') }}" placeholder="Recommendation Letter ID" readonly>#}
-    {#<input type="hidden" class="form-control" id="instituteIdentification" name="instituteIdentification" placeholder="Institute Identification" readonly>#}
-    {#<input type="hidden" class="form-control" id="applicationID" name="applicationID" placeholder="Application ID" readonly>#}
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" class="form-control" id="recommendationLetterID" name="recommendationLetterID" value="{{ form.vars.data.recLetterHashId|default('') }}" placeholder="Recommendation Letter ID" readonly>
+
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('fellapp_gallery') }}"
+         data-userid = "{{ systemUser.id }}"
+    ></div>
 
     <br>
-
-    {{ form_start(form) }}
 
     <div class="panel panel-info">
 
@@ -89,7 +56,7 @@
 
                 <p>
                 <div class="well form-element-holder user-Reference">
-                    <label class="col-xs-12 control-label">Reference Letters (All documents will be added to the Complete Application PDF)</label>
+                    <label class="col-xs-12 control-label">Reference Letter</label>
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
 
@@ -102,11 +69,18 @@
                             {#<label class="col-xs-12 control-label">Recommendation Letter in PDF format</label>#}
                             {#<div class="row withpaddingtop">#}
                             <div class="col-xs-12">
-                                {#{{ usermacros.documentsContainer(null,form.documents,'new','noprototype',8,'default','Recommendation Letter in PDF format',"asForm") }}#}
                                 {{ usermacros.documentsContainer(
-                                        null,form.documents,'new','noprototype',1,'active','Recommendation Letter in PDF format'
-                                    )
-                                }}
+                                    null,
+                                    form.documents,
+                                    cycle,
+                                    'noprototype',
+                                    1,
+                                    'default',
+                                    'Recommendation Letter in PDF format'
+                                ) }}
+
+                                {#{{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Recommendation Letter in PDF format') }}#}
+
                             </div>
                             {#</div>#}
                             {#</div>#}
