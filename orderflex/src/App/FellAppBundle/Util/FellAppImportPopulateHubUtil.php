@@ -631,10 +631,10 @@ class FellAppImportPopulateHubUtil {
         $parts = parse_url($remoteUrl);
         $remoteBaseUrl = $parts['scheme'] . '://' . $parts['host'];
 
-        $apiConnectionKey = $fellappImportPopulateHubUtil->getApiConnectionKey();
-        //exit('$apiConnectionKey='.$apiConnectionKey);
+        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
 
-        if( !$apiConnectionKey ) {
+        if( !$apiHashConnectionKey ) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Secret key not configured'
@@ -711,7 +711,7 @@ class FellAppImportPopulateHubUtil {
                     $storagePath,
                     $systemUser,
                     $remoteBaseUrl,
-                    $apiConnectionKey
+                    $apiHashConnectionKey
                 );
 
                 if ($document) {
@@ -1399,10 +1399,20 @@ class FellAppImportPopulateHubUtil {
 //                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
 //            ], 404);
         } else {
-            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
-            foreach($apiConnectionKeys as $apiConnectionKey) {
+//            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
+//            foreach($apiConnectionKeys as $apiConnectionKey) {
+//                // Verify HMAC (use hash_equals for constant-time comparison)
+//                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
+//                if( hash_equals($expectedHmac, $hmacHeader) ) {
+//                    $authenticated = true;
+//                    break;
+//                }
+//            }
+
+            $apiHashConnectionKeys = array_map(fn($i) => $i->getApiHashConnectionKey(), $institutions); //use apiHashConnectionKey
+            foreach($apiHashConnectionKeys as $apiHashConnectionKey) {
                 // Verify HMAC (use hash_equals for constant-time comparison)
-                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
+                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiHashConnectionKey);
                 if( hash_equals($expectedHmac, $hmacHeader) ) {
                     $authenticated = true;
                     break;
@@ -1422,27 +1432,24 @@ class FellAppImportPopulateHubUtil {
         /////////// EOF Verify HMAC Get secret key for HMAC verification ///////////
     }
 
-    public function getApiConnectionKey() {
+    public function getInstitutionApiHashConnectionKey() {
         $logger = $this->container->get('logger');
         $fellappUtil = $this->container->get('fellapp_util');
 
-        $apiConnectionKey = null;
+        $apiHashConnectionKey = null;
         $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
         if( count($institutions) == 1 ) {
-            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
+            //$apiConnectionKey = $institutions[0]->getApiConnectionKey();
+            $apiHashConnectionKey = $institutions[0]->getApiHashConnectionKey();
         } else {
             $ids = array_map(fn($i) => $i->getId(), $institutions);
             $idsString = implode(',', $ids);
-            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
+            $logger->warning('Error retrieving apiHashConnectionKey: multiple institutions found with apiHashConnectionKey, count='
                 . count($institutions) .
                 ', Institution ids='.$idsString
             );
-//            return new JsonResponse([
-//                'success' => false,
-//                'message' => 'Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count=' . count($institutions)
-//            ], 500);
         }
-        return $apiConnectionKey;
+        return $apiHashConnectionKey;
     }
 
     public function generateDocumentHash( $document ) {

@@ -814,8 +814,8 @@ class FellAppUtil {
     public function getFellowshipInstitutionsWithHash() {
         $repo = $this->em->getRepository(Institution::class);
         $institutions = $repo->createQueryBuilder('i')
-            ->where('i.apiConnectionKey IS NOT NULL')
-            ->andWhere('i.apiConnectionKey <> :empty')
+            ->where('i.apiConnectionKey IS NOT NULL OR i.apiHashConnectionKey IS NOT NULL')
+            ->andWhere('i.apiConnectionKey <> :empty OR i.apiHashConnectionKey <> :empty')
             ->setParameter('empty', '')
             ->getQuery()
             ->getResult();
