@@ -604,6 +604,10 @@ class FellAppUtil {
 
         if( $showOption !== null ) {
             $dql->andWhere("list.showOption = :showOption OR list.showOption IS NULL");
+
+            //plus select only if the parent institution's showOptionFellApp is set to true or null
+            $dql->andWhere("institution.showOptionFellApp = :showOption OR institution.showOptionFellApp IS NULL");
+
             $parameters['showOption'] = $showOption;
         }
 
@@ -612,10 +616,10 @@ class FellAppUtil {
             //$dql->where("institution.id = ".$pathology->getId());
             $dql->andWhere("institution.id = :institution");
 
-            if( $showOption !== null ) {
-                $dql->andWhere("institution.showOptionFellApp = :showOption OR institution.showOptionFellApp IS NULL");
-                $parameters['showOption'] = $showOption;
-            }
+//            if( $showOption !== null ) {
+//                $dql->andWhere("institution.showOptionFellApp = :showOption OR institution.showOptionFellApp IS NULL");
+//                $parameters['showOption'] = $showOption;
+//            }
 
             $parameters['institution'] = $institution;
         }
