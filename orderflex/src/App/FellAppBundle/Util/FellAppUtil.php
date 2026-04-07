@@ -611,9 +611,12 @@ class FellAppUtil {
             //echo "institution=$institution, ID=".$institution->getId()."<br>";
             //$dql->where("institution.id = ".$pathology->getId());
             $dql->andWhere("institution.id = :institution");
-//            $parameters = array(
-//                'institution' => $institution,
-//            );
+
+            if( $showOption !== null ) {
+                $dql->andWhere("institution.showOptionFellApp = :showOption OR institution.showOptionFellApp IS NULL");
+                $parameters['showOption'] = $showOption;
+            }
+
             $parameters['institution'] = $institution;
         }
 
