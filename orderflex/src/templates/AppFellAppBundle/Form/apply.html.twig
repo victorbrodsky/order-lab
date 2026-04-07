@@ -451,12 +451,15 @@
                 console.log('apply: Institution changed:', instId);
 
                 if( !instId ) {
+                    console.log('apply: Institution Empty');
                     // Institution cleared: clear specialty and remove URL params
                     try {
                         global.val('').trigger('change.select2');
+                        console.log('apply: Institution Empty: trigger change.select2');
                     } catch (e) {
-                        //global.val('');
-                        global.val('').trigger('change.select2');
+                        console.log('apply: Institution Empty: catch:',e);
+                        global.val('');
+                        //global.val('').trigger('change.select2');
                     }
 
                     if (!initializingFromUrl) {
