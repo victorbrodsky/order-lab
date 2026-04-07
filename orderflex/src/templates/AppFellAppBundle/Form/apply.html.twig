@@ -455,9 +455,9 @@
                     // Institution cleared: clear specialty and remove URL params
                     try {
                         global.val('').trigger('change.select2');
-                        console.log('apply: Institution Empty: trigger change.select2');
+                        console.log('apply: Institution Empty: trigger global change.select2');
                     } catch (e) {
-                        console.log('apply: Institution Empty: catch:',e);
+                        //console.log('apply: Institution Empty: catch:',e);
                         global.val('');
                         //global.val('').trigger('change.select2');
                     }

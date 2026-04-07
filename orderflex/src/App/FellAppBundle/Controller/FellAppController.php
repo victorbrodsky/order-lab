@@ -1153,10 +1153,11 @@ class FellAppController extends OrderAbstractController {
 
         if( $routeName == "fellapp_new" ) {
             $cycle = 'new';
-            //$showOption = true;
             $disabled = false;
             $method = "POST";
             $action = $this->generateUrl('fellapp_create_applicant');
+
+            $showOption = true;
         }
 
         if( $routeName == "fellapp_apply" ) {
