@@ -1006,7 +1006,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/set-show-specialties', name: 'fellapp_set_show_specialties')]
     public function setFellowshipSpecialtiesShowAction( Request $request )
     {
-        //exit("not allowed: setFellowshipSpecialtiesShowAction");
+        exit("not allowed: setFellowshipSpecialtiesShowAction");
         if (false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->getParameter('fellapp.sitename') . '-nopermission'));
         }

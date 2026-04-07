@@ -3847,7 +3847,11 @@ class FellAppController extends OrderAbstractController {
 //            'name' => $city->getName(),
 //        ])->toArray();
         $fellappUtil = $this->container->get('fellapp_util');
-        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution); //resturn as select2 array
+        $globalFellTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution(
+            $institution,
+            $asArray='select2',
+            $showOption=true
+        ); //resturn as select2 array
 
         //return new JsonResponse($globalFellTypes);
         $response = new Response();
