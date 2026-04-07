@@ -475,6 +475,7 @@
                     $('#form-second-part').fadeIn();
                     $('#save-submit-panel').fadeIn();
 
+                    console.log('apply: instId empty => return');
                     return;
                 }
                 
@@ -499,7 +500,8 @@
                         }
                     }
                 }
-                
+
+                console.log('apply: before calling filterGlobalByInstitution');
                 filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
                 //isSyncing = false;
             });
