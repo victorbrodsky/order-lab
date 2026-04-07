@@ -455,7 +455,8 @@
                     try {
                         global.val('').trigger('change.select2');
                     } catch (e) {
-                        global.val('');
+                        //global.val('');
+                        global.val('').trigger('change.select2');
                     }
 
                     if (!initializingFromUrl) {
@@ -533,10 +534,10 @@
         });
 
         function filterGlobalByInstitution(instId, doneCallback) {
-            console.log('filterGlobalByInstitution:', 'instId=', instId);
+            console.log('filter GlobalByInstitution:', 'instId=', instId);
 
             if( !instId ) {
-                console.log('filterGlobalByInstitution: instId is null');
+                console.log('filter GlobalByInstitution: instId is null');
                 //return;
             }
 
