@@ -599,7 +599,7 @@ class FellAppImportPopulateHubUtil {
     }//createFellappFromRow
 
 
-
+    //Run on Local server to download a document from remote server
     public function downloadRemoteDocuments($fellowshipApplication,$rowData,$headers,$examination) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1432,17 +1432,20 @@ class FellAppImportPopulateHubUtil {
         /////////// EOF Verify HMAC Get secret key for HMAC verification ///////////
     }
 
-    public function getInstitutionApiHashConnectionKey() {
+    public function getInstitutionApiHashConnectionKey( $getInstitutions=false ) {
         $logger = $this->container->get('logger');
         $fellappUtil = $this->container->get('fellapp_util');
 
         $apiHashConnectionKey = null;
         $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
+        if( $getInstitutions ) {
+            return $institutions;
+        }
         if( count($institutions) == 1 ) {
             //$apiConnectionKey = $institutions[0]->getApiConnectionKey();
             $apiHashConnectionKey = $institutions[0]->getApiHashConnectionKey();
         } else {
-            $ids = array_map(fn($i) => $i->getId(), $institutions);
+            $ids = array_map(fn($i) => $i->getId().":".$i->getName(), $institutions);
             $idsString = implode(',', $ids);
             $logger->warning('Error retrieving apiHashConnectionKey: multiple institutions found with apiHashConnectionKey, count='
                 . count($institutions) .

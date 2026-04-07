@@ -58,7 +58,7 @@ class FellAppRetrievalController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
-        //exit('$apiConnectionKey='.$apiConnectionKey);
+        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
 
         if( !$apiHashConnectionKey ) {
             return new JsonResponse([

@@ -3029,6 +3029,39 @@ class FellAppController extends OrderAbstractController {
     }
 
     /**
+     * List institutions with api hash key
+     */
+    #[Route(path: '/list-institutions-api-hash-key', name: 'fellapp_list_institutions_api_hash_key')]
+    public function listInstitutionsApiHashKeyAction(Request $request) {
+
+        if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+
+        $institutions = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey($getInstitutions=true);
+        $institutionList = [];
+        foreach($institutions as $institution) {
+            //echo "institution=".$institution->getTreeName()."<br>";
+            $institutionList[] = "ID ".$institution->getId().": ".$institution->getTreeName();
+        }
+        //exit('Institutions with api hash key');
+
+        $institutionListStr = "No institutions found with api hash key";
+        if( count($institutionList) > 0 ) {
+            $institutionListStr = implode('<br>', $institutionList);
+        }
+
+        $this->addFlash(
+            'notice',
+            $institutionListStr
+        );
+
+        return $this->redirect( $this->generateUrl('fellapp_home') );
+    }
+
+    /**
      * Show home page
      */
     #[Route(path: '/populate', name: 'fellapp_populate')]
