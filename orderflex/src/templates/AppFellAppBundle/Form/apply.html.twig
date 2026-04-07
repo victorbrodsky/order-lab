@@ -475,6 +475,8 @@
                     $('#form-second-part').fadeIn();
                     $('#save-submit-panel').fadeIn();
 
+                    console.log('apply: instId empty: before calling filterGlobalByInstitution');
+                    filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
                     console.log('apply: instId empty => return');
                     return;
                 }
