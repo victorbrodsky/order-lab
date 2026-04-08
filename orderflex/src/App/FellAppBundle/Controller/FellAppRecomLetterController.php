@@ -319,11 +319,18 @@ class FellAppRecomLetterController extends ListController
         // Find all references that need letters (recLetterReceived is false or null)
         // and have a recLetterHashId
         $em = $this->getDoctrine()->getManager();
-        $references = $em->getRepository(Reference::class)->findBy(
-            ['recLetterReceived' => null],
-            ['id' => 'ASC'],
-            2 // limit testing
-        );
+//        $references = $em->getRepository(Reference::class)->findBy(
+//            ['recLetterReceived' => null],
+//            ['id' => 'ASC'],
+//            2 // limit testing
+//        );
+        $qb = $em->getRepository(Reference::class)->createQueryBuilder('r');
+        $qb->join('r.fellapp', 'f');
+        $qb->andWhere('f.remoteId IS NOT NULL');
+        $qb->andWhere('r.recLetterReceived IS NOT NULL');
+        $qb->orderBy('r.id', 'ASC');
+        $qb->setMaxResults(2); //testing limit
+        $references = $qb->getQuery()->getResult();
 
         $referencesToProcess = [];
         foreach ($references as $reference) {
