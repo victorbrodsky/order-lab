@@ -56,7 +56,7 @@ class FellAppRecomLetterController extends ListController
 
         $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter(
             'confirmationEmailFellApp',
-            $this->container->getParameter('fellapp.sitename')
+            $this->getParameter('fellapp.sitename')
         );
         if( !$confirmationEmailFellApp ) {
             $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('siteEmail');
