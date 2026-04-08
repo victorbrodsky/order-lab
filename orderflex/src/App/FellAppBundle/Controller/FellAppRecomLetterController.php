@@ -296,16 +296,290 @@ class FellAppRecomLetterController extends ListController
     }
 
 
+
+
+    
     //Caller Server: Make API call to Remote Server
+    // This action retrieves recommendation letters from the remote server
     #[Route(path: '/retrieve-recommendation-letters', name: 'fellapp_retrieve_recommendation_letters', methods: ['GET'])]
     public function retrieveRecommendationLettersAction( Request $request ) {
+        $logger = $this->container->get('logger');
+        $logger->notice("Starting retrieveRecommendationLettersAction");
 
+        // Get remote server URL from settings
+        $userSecUtil = $this->container->get('user_security_utility');
+        $remoteServerUrl = $userSecUtil->getSiteSettingParameter('externalServerHRecLetterUrl');
+        $apiKey = $userSecUtil->getSiteSettingParameter('apiKey');
+
+        if (!$remoteServerUrl) {
+            $logger->error("Remote server URL not configured");
+            return new JsonResponse(['error' => 'Remote server URL not configured'], 500);
+        }
+
+        // Find all references that need letters (recLetterReceived is false or null)
+        // and have a recLetterHashId
+        $em = $this->getDoctrine()->getManager();
+        $references = $em->getRepository(Reference::class)->findBy(
+            ['recLetterReceived' => null],
+            ['id' => 'ASC'],
+            2 // limit testing
+        );
+
+        $referencesToProcess = [];
+        foreach ($references as $reference) {
+            if ($reference->getRecLetterHashId() && !$reference->getRecLetterReceived()) {
+                $referencesToProcess[] = $reference;
+            }
+        }
+
+        if (empty($referencesToProcess)) {
+            $logger->notice("No references need recommendation letters");
+            return new JsonResponse(['message' => 'No references need recommendation letters', 'count' => 0]);
+        }
+
+        // Prepare request to remote server
+        $hashkey = uniqid('', true);
+        $timestamp = time();
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        $hmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
+
+        // Build list of hash IDs to request
+        $hashIds = [];
+        foreach ($referencesToProcess as $ref) {
+            $hashIds[] = $ref->getRecLetterHashId();
+        }
+
+        $url = $remoteServerUrl . '/send-recommendation-letters';
+        $url .= '?hashkey=' . urlencode($hashkey);
+        $url .= '&timestamp=' . $timestamp;
+        $url .= '&hmac=' . urlencode($hmac);
+        $url .= '&hashids=' . urlencode(implode(',', $hashIds));
+
+        $logger->notice("Calling remote server: " . $url);
+
+        // Make API call
+        $client = HttpClient::create();
+        try {
+            $response = $client->request('GET', $url, [
+                'timeout' => 300,
+                'verify_peer' => false,
+                'verify_host' => false,
+            ]);
+            $statusCode = $response->getStatusCode();
+            $content = $response->getContent();
+
+            if ($statusCode !== 200) {
+                $logger->error("Remote server returned status $statusCode: $content");
+                return new JsonResponse(['error' => 'Remote server error', 'status' => $statusCode], 500);
+            }
+
+            $data = json_decode($content, true);
+            if (!isset($data['letters']) || !is_array($data['letters'])) {
+                $logger->error("Invalid response from remote server");
+                return new JsonResponse(['error' => 'Invalid response from remote server'], 500);
+            }
+
+            $processedCount = 0;
+            foreach ($data['letters'] as $letterData) {
+                if (!isset($letterData['hashId']) || !isset($letterData['documentData'])) {
+                    continue;
+                }
+
+                // Find the local reference by hash ID
+                $reference = $em->getRepository(Reference::class)->findOneBy([
+                    'recLetterHashId' => $letterData['hashId']
+                ]);
+
+                if (!$reference) {
+                    $logger->warning("Reference not found for hash ID: " . $letterData['hashId']);
+                    continue;
+                }
+
+                // Skip if already received
+                if ($reference->getRecLetterReceived()) {
+                    $logger->notice("Reference already has letter received: " . $letterData['hashId']);
+                    continue;
+                }
+
+                // Create and attach document
+                $document = new Document($this->getUser());
+                $document->setUniqueid($letterData['hashId']);
+                $document->setOriginalname($letterData['filename'] ?? 'recommendation_letter.pdf');
+                $document->setTitle('Recommendation Letter');
+
+                // Decode and save file
+                $fileData = base64_decode($letterData['documentData']);
+                $uploadPath = $this->getParameter('fellapp.uploadpath');
+                $filename = $letterData['hashId'] . '.pdf';
+                $filepath = $uploadPath . '/' . $filename;
+
+                // Ensure directory exists
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+
+                file_put_contents($filepath, $fileData);
+                $document->setUploadDirectory($uploadPath);
+                $document->setUniquename($filename);
+                $document->setSize(strlen($fileData));
+                $document->setMimeType('application/pdf');
+
+                // Generate hash
+                $document->generateDocumentHash($filepath);
+
+                $em->persist($document);
+                $reference->addDocument($document);
+                $reference->setRecLetterReceived(true);
+
+                $processedCount++;
+                $logger->notice("Attached document to reference: " . $letterData['hashId']);
+            }
+
+            $em->flush();
+
+            $logger->notice("Processed $processedCount recommendation letters");
+            return new JsonResponse([
+                'message' => 'Recommendation letters retrieved successfully',
+                'count' => $processedCount,
+                'requested' => count($hashIds)
+            ]);
+
+        } catch (\Exception $e) {
+            $logger->error("Error retrieving recommendation letters: " . $e->getMessage());
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
     }
 
     //Remote Server: API Endpoint to send recommendation letters to Caller server
+    // This action sends recommendation letters to the caller server
     #[Route(path: '/send-recommendation-letters', name: 'fellapp_send_recommendation_letters', methods: ['GET'])]
     public function sendRecommendationLettersAction( Request $request ) {
+        $logger = $this->container->get('logger');
+        $logger->notice("Starting sendRecommendationLettersAction");
 
+        // Get authentication parameters
+        $hashkey = $request->query->get('hashkey');
+        $timestamp = $request->query->get('timestamp');
+        $hmac = $request->query->get('hmac');
+        $hashIdsParam = $request->query->get('hashids');
+
+        // Validate required parameters
+        if (!$hashkey || !$timestamp || !$hmac) {
+            $logger->error("Missing authentication parameters");
+            return new JsonResponse(['error' => 'Missing authentication parameters'], 400);
+        }
+
+        // Validate HMAC
+        $userSecUtil = $this->container->get('user_security_utility');
+        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+        $expectedHmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
+
+        if (!hash_equals($expectedHmac, $hmac)) {
+            $logger->error("HMAC authentication failed");
+            return new JsonResponse(['error' => 'Authentication failed'], 401);
+        }
+
+        // Validate timestamp (allow 5 minute window)
+        $currentTime = time();
+        $requestTime = (int)$timestamp;
+        if (abs($currentTime - $requestTime) > 300) {
+            $logger->error("Request timestamp too old");
+            return new JsonResponse(['error' => 'Request expired'], 401);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        // Get hash IDs to process
+        $hashIds = [];
+        if ($hashIdsParam) {
+            $hashIds = explode(',', $hashIdsParam);
+        }
+
+        $letters = [];
+
+        if (!empty($hashIds)) {
+            // Find references by specific hash IDs
+            foreach ($hashIds as $hashId) {
+                $reference = $em->getRepository(Reference::class)->findOneBy([
+                    'recLetterHashId' => trim($hashId)
+                ]);
+
+                if (!$reference) {
+                    $logger->warning("Reference not found for hash ID: $hashId");
+                    continue;
+                }
+
+                // Get the most recent document
+                $document = $reference->getRecentReferenceLetter();
+                if (!$document) {
+                    $logger->warning("No document found for reference: $hashId");
+                    continue;
+                }
+
+                // Get file path
+                $filepath = $document->getFullServerPath();
+                if (!file_exists($filepath)) {
+                    $logger->error("File not found: $filepath");
+                    continue;
+                }
+
+                // Read and encode file
+                $fileData = file_get_contents($filepath);
+                $encodedData = base64_encode($fileData);
+
+                $letters[] = [
+                    'hashId' => $hashId,
+                    'documentData' => $encodedData,
+                    'filename' => $document->getOriginalname() ?? 'recommendation_letter.pdf',
+                    'hash' => $document->getDocumentHash() ?? hash_file('md5', $filepath)
+                ];
+
+                // Mark as sent
+                $reference->setRecLetterReceived(true);
+                $logger->notice("Sent recommendation letter for hash ID: $hashId");
+            }
+        } else {
+            // Return all available recommendation letters
+            $references = $em->getRepository(Reference::class)->findAll();
+
+            foreach ($references as $reference) {
+                if (!$reference->getRecLetterHashId()) {
+                    continue;
+                }
+
+                $document = $reference->getRecentReferenceLetter();
+                if (!$document) {
+                    continue;
+                }
+
+                $filepath = $document->getFullServerPath();
+                if (!file_exists($filepath)) {
+                    continue;
+                }
+
+                $fileData = file_get_contents($filepath);
+                $encodedData = base64_encode($fileData);
+
+                $letters[] = [
+                    'hashId' => $reference->getRecLetterHashId(),
+                    'documentData' => $encodedData,
+                    'filename' => $document->getOriginalname() ?? 'recommendation_letter.pdf',
+                    'hash' => $document->getDocumentHash() ?? hash_file('md5', $filepath)
+                ];
+
+                $reference->setRecLetterReceived(true);
+            }
+        }
+
+        $em->flush();
+
+        $logger->notice("Returning " . count($letters) . " recommendation letters");
+
+        return new JsonResponse([
+            'success' => true,
+            'letters' => $letters,
+            'count' => count($letters)
+        ]);
     }
 
 }
