@@ -29,6 +29,8 @@ use App\UserdirectoryBundle\Entity\Institution;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class FellAppRecomLetterController extends ListController
 {
@@ -51,7 +53,15 @@ class FellAppRecomLetterController extends ListController
 
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
-        
+
+        $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter(
+            'confirmationEmailFellApp',
+            $this->container->getParameter('fellapp.sitename')
+        );
+        if( !$confirmationEmailFellApp ) {
+            $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('siteEmail');
+        }
+
         $data = [];
         $encoded = $request->query->get('data');
         if ($encoded) {
@@ -66,6 +76,50 @@ class FellAppRecomLetterController extends ListController
             $data = $request->getSession()->get('recom_letter_data', []);
         }
 
+        $applicantData = null;
+        $firstName = 'Applicant FirstName';
+        $lastName = 'Applicant LastName';
+        $email = 'Applicant Email';
+
+        // Populate reference data from JSON
+        if (isset($data['Applicant'])) {
+            $applicantData = $data['Applicant'];
+            $firstName = $applicantData['FirstName'];
+            $lastName = $applicantData['LastName'];
+            $email = $applicantData['Email'];
+        }
+
+        // Store reference letter hash ID if provided
+        $recLetterHashId = null;
+        if (isset($data['Reference-Letter-ID'])) {
+            $recLetterHashId = $data['Reference-Letter-ID'];
+        }
+
+        if( !$recLetterHashId ) {
+            $msg = 'Something is wrong - the reference letter ID is not set for '.$firstName. ' ' . $lastName . ' ' . $email;
+            $subject = $msg;
+
+            $this->addFlash(
+                'warning',
+                $msg
+            );
+
+            $logger->error($msg);
+
+
+            
+            $emailUtil->sendEmail(
+                $confirmationEmailFellApp,
+                $subject,
+                $msg
+            );
+
+            return new JsonResponse([
+                'success' => false,
+                'message' => $msg
+            ], 500);
+        }
+
         //testing
         //$refData['Reference']['Institution'] =
         $institution = '';
@@ -76,12 +130,8 @@ class FellAppRecomLetterController extends ListController
         $cycle = 'new';
         $reference = new Reference();
 
-        // Populate reference data from JSON
-        if (isset($data['Applicant'])) {
-            $applicantData = $data['Applicant'];
-            $firstName = $applicantData['FirstName'];
-            $lastName = $applicantData['LastName'];
-            $email = $applicantData['Email'];
+        if( $recLetterHashId ) {
+            $reference->setRecLetterHashId($recLetterHashId);
         }
 
         if (isset($data['Reference'])) {
@@ -131,11 +181,21 @@ class FellAppRecomLetterController extends ListController
                 //exit('$geoLocation='.$geoLocation);
                 $reference->setGeoLocation($geoLocation);
             }
-        }
+        } else {
 
-        // Store reference letter hash ID if provided
-        if (isset($data['Reference-Letter-ID'])) {
-            $reference->setRecLetterHashId($data['Reference-Letter-ID']);
+            $subject = "Reference letter submission error";
+            $msg = $subject . ": the data does not contain any reference information.";
+
+            $emailUtil->sendEmail(
+                $confirmationEmailFellApp,
+                $subject,
+                $msg
+            );
+
+            return new JsonResponse([
+                'success' => false,
+                'message' => $msg
+            ], 500);
         }
 
         $fellappSpecialty = null;
@@ -229,64 +289,9 @@ class FellAppRecomLetterController extends ListController
     #[Template('AppFellAppBundle/RecomLetter/recommendation-letter-confirmation.html.twig')]
     public function recomLetterSimpleAction(Request $request)
     {
-
-
         return array(
         );
     }
 
-//    #[Route(path: '/submit-a-letter-of-recommendation-simple', name: 'fellapp_recom_letter_simple')]
-//    #[Template('AppFellAppBundle/RecomLetter/recom-letter-simple.html.twig')]
-//    public function recomLetterSimpleAction(Request $request)
-//    {
-//        //receive base64 JSON encoded data from URL (GET) or from request (POST)
-//        $data = [];
-//        $encoded = $request->query->get('data');
-//        if ($encoded) {
-//            // GET request with data in URL
-//            $base64 = strtr($encoded, '-_', '+/');
-//            $json = base64_decode($base64);
-//            $data = json_decode($json, true) ?? [];
-//            // Store data in session for POST submission
-//            $request->getSession()->set('recom_letter_data', $data);
-//        } elseif ($request->isMethod('POST')) {
-//            // POST request - retrieve data from session or form
-//            $data = $request->getSession()->get('recom_letter_data', []);
-//        }
-//
-//        $cycle = 'new';
-//        $reference = new Reference();
-//
-//        //$disabled = false;
-//        //$disabled = false;
-//        $params = array(
-//            'cycle' => $cycle,
-//            'em' => $this->getDoctrine()->getManager()
-//        );
-//        $form = $this->createForm(ReferenceSimpleType::class, $reference, array(
-//            'method' => 'POST',
-//            'form_custom_value'=>$params,
-//            //'disabled' => $disabled,
-//        ));
-//
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            //$data = $form->getData();
-//            exit('submitted');
-//
-//            $this->addFlash('success', 'Recommendation letter submitted successfully.');
-//
-//            return $this->redirectToRoute('app_recom_letter');
-//        }
-//
-//
-//        return array(
-//            'form' => $form,
-//            'entity' => $reference,
-//            'cycle' => $cycle,
-//        );
-//
-//    }
 
 }
