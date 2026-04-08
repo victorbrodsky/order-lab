@@ -101,7 +101,6 @@ class DocumentRepository extends EntityRepository {
 
                 //echo "docDb: [".$docDb."]<br>";
                 if( $docDb ) {
-
                     //echo "docDb id=".$docDb->getId()."<br>";
                     //set type if not set
                     if( !$docDb->getType() && $docType ) {

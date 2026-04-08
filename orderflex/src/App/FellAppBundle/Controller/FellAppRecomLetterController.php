@@ -36,9 +36,9 @@ class FellAppRecomLetterController extends ListController
 {
 
     //http://127.0.0.1/fellowship-applications/submit-a-letter-of-recommendation?data=eyJSZWZlcmVuY2UtTGV0dGVyLUlEIjoiMzFlOTA5YjFmMmUyMzgwNzBmZjEwNWFlOWQwZmM5MGVhZGJjZjViOCIsIklkZW50aWZpY2F0aW9uIjoid2NtcGF0aGRldiIsIkFwcGxpY2FudCI6eyJGaXJzdE5hbWUiOiJKb2huIDMiLCJMYXN0TmFtZSI6IkRvZSIsIkVtYWlsIjoiY2luYXZhMUB5YWhvby5jb20ifSwiRmVsbG93c2hpcCI6eyJUeXBlIjoiQ2xpbmljYWwgSW5mb3JtYXRpY3MiLCJTdGFydCI6IjA3XC8wMVwvMjAyNyIsIkVuZCI6IjA2XC8zMFwvMjAyOCJ9LCJSZWZlcmVuY2UiOnsiRmlyc3ROYW1lIjoiUmVmMUZpcnN0IiwiTGFzdE5hbWUiOiJSZWYxTGFzdCIsIkRlZ3JlZSI6Ik1EIiwiVGl0bGUiOiJSZWYxVGl0bGUiLCJJbnN0aXR1dGlvbiI6bnVsbCwiUGhvbmUiOm51bGwsIkVtYWlsIjoiY2luYXZhQHlhaG9vLmNvbSJ9fQ
-
     //https://view.online/fellowship-applications/submit-a-letter-of-recommendation
     //https://view.online/fellowship-applications/submit-a-letter-of-recommendation?HASHofLETTER
+    //*** Remote server: submit recommendation letter ***/
     #[Route(path: '/submit-a-letter-of-recommendation', name: 'fellapp_recom_letter')]
     #[Template('AppFellAppBundle/RecomLetter/recommendation-letter.html.twig')]
     public function recomLetterAction(Request $request)
@@ -207,8 +207,8 @@ class FellAppRecomLetterController extends ListController
             $fellappEnd = $data['Fellowship']['End'];
         }
 
-        //$disabled = false;
-        $disabled = true;
+        $disabled = false;
+        //$disabled = true;
         $params = array(
             'cycle' => $cycle,
             'em' => $this->getDoctrine()->getManager()
@@ -225,7 +225,7 @@ class FellAppRecomLetterController extends ListController
             //$data = $form->getData();
             //exit('submitted');
 
-            $em->getRepository(Document::class)->processDocuments( $reference );
+            $em->getRepository(Document::class)->processDocuments($reference);
 
             $this->addFlash('success', 'Recommendation letter submitted successfully.');
 
@@ -284,14 +284,26 @@ class FellAppRecomLetterController extends ListController
             'systemUser' => $systemUser
         );
     }
-
+    //Remote Server: confirmation of recommendation letter submition
     #[Route(path: '/submit-a-letter-of-recommendation/confirmation', name: 'fellapp_recom_letter_confirmation')]
     #[Template('AppFellAppBundle/RecomLetter/recommendation-letter-confirmation.html.twig')]
-    public function recomLetterSimpleAction(Request $request)
+    public function recomLetterConfirmationAction(Request $request)
     {
         return array(
         );
     }
 
+
+    //Caller Server: Make API call to Remote Server
+    #[Route(path: '/retrieve-recommendation-letters', name: 'fellapp_retrieve_recommendation_letters', methods: ['GET'])]
+    public function retrieveRecommendationLettersAction( Request $request ) {
+
+    }
+
+    //Remote Server: API Endpoint to send recommendation letters to Caller server
+    #[Route(path: '/send-recommendation-letters', name: 'fellapp_send_recommendation_letters', methods: ['GET'])]
+    public function sendRecommendationLettersAction( Request $request ) {
+
+    }
 
 }

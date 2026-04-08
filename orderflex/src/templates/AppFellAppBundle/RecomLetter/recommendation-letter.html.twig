@@ -117,18 +117,18 @@
             <div class="panel-body text-left">
                 <div class="row withpaddingtop">
                     <div class="col-xs-6">
-                        {{ form_row(form.firstName) }}
+                        {{ form_row(form.firstName, { 'attr': { 'readonly': 'readonly' } }) }}
                     </div>
                     <div class="col-xs-6">
-                        {{ form_row(form.name) }}
+                        {{ form_row(form.name, { 'attr': { 'readonly': 'readonly' } }) }}
                     </div>
                 </div>
                 <div class="row withpaddingtop">
                     <div class="col-xs-6">
-                        {{ form_row(form.degree) }}
+                        {{ form_row(form.degree, { 'attr': { 'readonly': 'readonly' } }) }}
                     </div>
                     <div class="col-xs-6">
-                        {{ form_row(form.title) }}
+                        {{ form_row(form.title, { 'attr': { 'readonly': 'readonly' } }) }}
                     </div>
                 </div>
                 <div class="row withpaddingtop">
@@ -138,10 +138,10 @@
                     </div>
                     <div class="col-xs-4">
                         {#{{ form_row(form.phone) }}#}
-                        {{ form_row(form.phone, { 'attr': { 'disabled': 'disabled' } }) }}
+                        {{ form_row(form.phone, { 'attr': { 'readonly': 'readonly' } }) }}
                     </div>
                     <div class="col-xs-4">
-                        {{ form_row(form.email) }}
+                        {{ form_row(form.email, { 'attr': { 'readonly': 'readonly' } }) }}
                     </div>
                 </div>
 
@@ -150,10 +150,10 @@
                 {% if form.geoLocation is defined %}
                     <div class="row withpaddingtop">
                         <div class="col-xs-6">
-                            {{ form_row(form.geoLocation.street1) }}
+                            {{ form_row(form.geoLocation.street1, { 'attr': { 'readonly': 'readonly' } }) }}
                         </div>
                         <div class="col-xs-6">
-                            {{ form_row(form.geoLocation.street2) }}
+                            {{ form_row(form.geoLocation.street2, { 'attr': { 'readonly': 'readonly' } }) }}
                         </div>
                     </div> <!-- row -->
 
@@ -167,7 +167,7 @@
                             {{ formmacros.simplefield_vertical("State", state, "", "disabled") }}
                         </div>
                         <div class="col-xs-3">
-                            {{ form_row(form.geoLocation.zip) }}
+                            {{ form_row(form.geoLocation.zip, { 'attr': { 'readonly': 'readonly' } }) }}
                         </div>
                         <div class="col-xs-3">
                             {#{{ form_row(form.geoLocation.country) }}#}
