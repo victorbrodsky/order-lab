@@ -1299,15 +1299,15 @@
                                             </li>
                                         {% endif %}
 
-                                        {#{% if entity.appStatus.name != 'withdrawn' %}#}
-                                            {#<li>#}
-                                                {#<a#}
-                                                    {#general-data-confirm="Are you sure you want to change status of this Application to 'Withdrawn'?"#}
-                                                    {#general-data-callback="refreshpage"#}
-                                                    {#href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"#}
-                                                {#>Mark as Withdrawn</a>#}
-                                            {#</li>#}
-                                        {#{% endif %}#}
+                                        {% if entity.appStatus.name != 'withdrawn' %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to change status of this Application to 'Withdrawn'?"
+                                                    general-data-callback="refreshpage"
+                                                    href="{{ path('fellapp_status', { 'id': entity.id, 'status': 'withdrawn' }, true) }}"
+                                                >Mark as Withdrawn</a>
+                                            </li>
+                                        {% endif %}
 
                                         {% if entity.appStatus and entity.appStatus.name != 'declined' %}
                                             <li>
