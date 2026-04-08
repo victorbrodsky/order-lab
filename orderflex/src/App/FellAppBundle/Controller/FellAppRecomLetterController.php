@@ -21,6 +21,7 @@ use App\FellAppBundle\Entity\Reference;
 use App\FellAppBundle\Form\ReferenceSimpleType;
 use App\FellAppBundle\Form\ReferenceType;
 use App\UserdirectoryBundle\Controller\ListController;
+use App\UserdirectoryBundle\Entity\Document;
 use App\UserdirectoryBundle\Entity\GeoLocation;
 use App\UserdirectoryBundle\Entity\Institution;
 //use App\UserdirectoryBundle\Entity\States;
@@ -163,6 +164,8 @@ class FellAppRecomLetterController extends ListController
         if ($form->isSubmitted() && $form->isValid()) {
             //$data = $form->getData();
             //exit('submitted');
+
+            $em->getRepository(Document::class)->processDocuments( $reference );
 
             $this->addFlash('success', 'Recommendation letter submitted successfully.');
 
