@@ -30,6 +30,7 @@ use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpClient\HttpClient;
 
 
 class FellAppRecomLetterController extends ListController
@@ -313,7 +314,7 @@ class FellAppRecomLetterController extends ListController
         // Get remote server URL from site settings
         $remoteUrl = $userSecUtil->getSiteSettingParameter(
             'hubServerApiUrl',
-            $this->container->getParameter('fellapp.sitename'));
+            $this->getParameter('fellapp.sitename'));
         if( !$remoteUrl ) {
             $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
             return false;
@@ -341,10 +342,19 @@ class FellAppRecomLetterController extends ListController
         $qb = $em->getRepository(Reference::class)->createQueryBuilder('r');
         $qb->join('r.fellapp', 'f');
         $qb->andWhere('f.remoteId IS NOT NULL');
-        $qb->andWhere('r.recLetterReceived IS NOT NULL');
+        //$qb->andWhere('r.recLetterReceived IS NOT NULL');
+        $qb->andWhere('r.recLetterReceived IS NULL OR r.recLetterReceived = FALSE');
         $qb->orderBy('r.id', 'ASC');
-        $qb->setMaxResults(2); //testing limit
+        //$qb->setMaxResults(2); //testing limit
         $references = $qb->getQuery()->getResult();
+//        echo "ref count=".count($references)."<br>";
+//        foreach($references as $reference) {
+//            if( $reference->getRecLetterReceived() != true ) {
+//                echo "Ref ID=".$reference->getId()."<br>";
+//                echo "Fellapp ID=".$reference->getFellapp()->getId()."<br>";
+//            }
+//        }
+        //exit('111');
 
         $referencesToProcess = [];
         foreach ($references as $reference) {
