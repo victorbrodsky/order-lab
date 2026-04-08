@@ -53,6 +53,7 @@ class FellAppRetrievalController extends OrderAbstractController
         // Get secret key for HMAC authentication
         $logger = $this->container->get('logger');
         //$userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         //$fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
@@ -88,7 +89,16 @@ class FellAppRetrievalController extends OrderAbstractController
         }
         echo "minRemoteId=$minRemoteId <br>";
         //exit('111');
-        $remoteUrl = 'https://view.online/fellowship-applications/download-application-data?maxid=' . $minRemoteId;
+        //$remoteUrl = 'https://view.online/fellowship-applications/download-application-data?maxid=' . $minRemoteId;
+        $remoteUrl = $userSecUtil->getSiteSettingParameter(
+            'hubServerApiUrl',
+            $this->container->getParameter('fellapp.sitename'));
+        if( !$remoteUrl ) {
+            $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
+            return false;
+        }
+
+        $remoteUrl = $remoteUrl . '?maxid=' . $minRemoteId;
 
         try {
             //$client = HttpClient::create();

@@ -308,8 +308,22 @@ class FellAppRecomLetterController extends ListController
 
         // Get remote server URL from settings
         $userSecUtil = $this->container->get('user_security_utility');
-        $remoteServerUrl = $userSecUtil->getSiteSettingParameter('externalServerHRecLetterUrl');
-        $apiKey = $userSecUtil->getSiteSettingParameter('apiKey');
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        //$remoteServerUrl = $userSecUtil->getSiteSettingParameter('externalServerHRecLetterUrl');
+        // Get remote server URL from site settings
+        $remoteUrl = $userSecUtil->getSiteSettingParameter(
+            'hubServerApiUrl',
+            $this->container->getParameter('fellapp.sitename'));
+        if( !$remoteUrl ) {
+            $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
+            return false;
+        }
+        //$remoteUrl = https://view.online/fellowship-applications/download-application-data
+        //Get $remoteBaseUrl=https://view.online
+        $parts = parse_url($remoteUrl);
+        $remoteServerUrl = $parts['scheme'] . '://' . $parts['host'];
+
+        //$apiKey = $userSecUtil->getSiteSettingParameter('apiKey');
 
         if (!$remoteServerUrl) {
             $logger->error("Remote server URL not configured");
@@ -345,10 +359,24 @@ class FellAppRecomLetterController extends ListController
         }
 
         // Prepare request to remote server
-        $hashkey = uniqid('', true);
+//        $hashkey = uniqid('', true);
+//        $timestamp = time();
+//        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+//        $hmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
+
+        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
+        if( !$apiHashConnectionKey ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Secret key not configured'
+            ], 500);
+        }
+        // Generate HMAC for authentication (include timestamp to prevent replay attacks)
         $timestamp = time();
-        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        $hmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
+        $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $apiHashConnectionKey);
+        $logger->notice('retrieveApplicationDataAction: $hmac='.$hmac);
+        $logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
 
         // Build list of hash IDs to request
         $hashIds = [];
@@ -356,8 +384,8 @@ class FellAppRecomLetterController extends ListController
             $hashIds[] = $ref->getRecLetterHashId();
         }
 
-        $url = $remoteServerUrl . '/send-recommendation-letters';
-        $url .= '?hashkey=' . urlencode($hashkey);
+        $url = $remoteServerUrl . '/fellowship-applications/send-recommendation-letters';
+        $url .= '?hashkey=' . urlencode($apiHashConnectionKey);
         $url .= '&timestamp=' . $timestamp;
         $url .= '&hmac=' . urlencode($hmac);
         $url .= '&hashids=' . urlencode(implode(',', $hashIds));
