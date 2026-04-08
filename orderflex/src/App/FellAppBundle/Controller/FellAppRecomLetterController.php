@@ -385,20 +385,22 @@ class FellAppRecomLetterController extends ListController
         }
 
         $url = $remoteServerUrl . '/fellowship-applications/send-recommendation-letters';
-        $url .= '?hashkey=' . urlencode($apiHashConnectionKey);
-        $url .= '&timestamp=' . $timestamp;
-        $url .= '&hmac=' . urlencode($hmac);
-        $url .= '&hashids=' . urlencode(implode(',', $hashIds));
+        $url .= '?hashids=' . urlencode(implode(',', $hashIds));
 
         $logger->notice("Calling remote server: " . $url);
 
         // Make API call
         $client = HttpClient::create();
         try {
+            // Send HMAC authentication headers
             $response = $client->request('GET', $url, [
                 'timeout' => 300,
                 'verify_peer' => false,
                 'verify_host' => false,
+                'headers' => [
+                    'X-HMAC' => $hmac,
+                    'X-Timestamp' => $timestamp
+                ]
             ]);
             $statusCode = $response->getStatusCode();
             $content = $response->getContent();
@@ -492,34 +494,37 @@ class FellAppRecomLetterController extends ListController
         $logger = $this->container->get('logger');
         $logger->notice("Starting sendRecommendationLettersAction");
 
-        // Get authentication parameters
-        $hashkey = $request->query->get('hashkey');
-        $timestamp = $request->query->get('timestamp');
-        $hmac = $request->query->get('hmac');
+        // Get authentication headers
+        $hmacHeader = $request->headers->get('X-HMAC');
+        $timestampHeader = $request->headers->get('X-Timestamp');
         $hashIdsParam = $request->query->get('hashids');
 
-        // Validate required parameters
-        if (!$hashkey || !$timestamp || !$hmac) {
-            $logger->error("Missing authentication parameters");
-            return new JsonResponse(['error' => 'Missing authentication parameters'], 400);
-        }
+        $logger->notice('sendRecommendationLettersAction: $hmacHeader='.$hmacHeader);
+        $logger->notice('sendRecommendationLettersAction: $timestampHeader='.$timestampHeader);
 
-        // Validate HMAC
+        /////////// Verify HMAC ///////////
         $userSecUtil = $this->container->get('user_security_utility');
         $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
-        $expectedHmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
 
-        if (!hash_equals($expectedHmac, $hmac)) {
-            $logger->error("HMAC authentication failed");
-            return new JsonResponse(['error' => 'Authentication failed'], 401);
+        if( !$secretKey ) {
+            $logger->error('Secret key not configured');
+            return new JsonResponse(['error' => 'Secret key not configured'], 500);
         }
 
         // Validate timestamp (allow 5 minute window)
         $currentTime = time();
-        $requestTime = (int)$timestamp;
+        $requestTime = (int)$timestampHeader;
         if (abs($currentTime - $requestTime) > 300) {
             $logger->error("Request timestamp too old");
             return new JsonResponse(['error' => 'Request expired'], 401);
+        }
+
+        // Validate HMAC
+        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $secretKey);
+
+        if (!hash_equals($expectedHmac, $hmacHeader)) {
+            $logger->error("HMAC authentication failed. Expected: $expectedHmac, Got: $hmacHeader");
+            return new JsonResponse(['error' => 'Authentication failed'], 401);
         }
 
         $em = $this->getDoctrine()->getManager();
