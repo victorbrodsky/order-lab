@@ -542,8 +542,8 @@ class FellAppRecomLetterController extends ListController
         }
 
         // Validate HMAC
-        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $secretKey);
-
+        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiHashConnectionKey);
+        
         if (!hash_equals($expectedHmac, $hmacHeader)) {
             $logger->error("HMAC authentication failed. Expected: $expectedHmac, Got: $hmacHeader");
             return new JsonResponse(['error' => 'Authentication failed'], 401);
