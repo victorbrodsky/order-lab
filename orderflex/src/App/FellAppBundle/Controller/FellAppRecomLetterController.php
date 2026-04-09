@@ -131,7 +131,7 @@ class FellAppRecomLetterController extends ListController
         $cycle = 'new';
         $reference = new Reference();
 
-        $this->setRecLetterReceived(false);
+        $reference->setRecLetterReceived(false);
 
         if( $recLetterHashId ) {
             $reference->setRecLetterHashId($recLetterHashId);
