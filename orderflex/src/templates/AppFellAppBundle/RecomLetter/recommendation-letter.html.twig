@@ -47,8 +47,6 @@
             <h4 class="panel-title">
                 <a data-toggle="collapse" href="#refauthor">
                     Recommendation Letter in PDF format
-                    {#{{ formmacros.simplefield_vertical("recommendationLetterID", form.vars.data.recLetterHashId|default(''), "", "disabled") }}#}
-                    <p>recommendationLetterID={{ form.vars.data.recLetterHashId|default('') }}</p>
                 </a>
             </h4>
         </div>
@@ -61,6 +59,8 @@
                     <label class="col-xs-12 control-label">Reference Letter</label>
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
+
+                            <p>recommendationLetterID={{ form.vars.data.recLetterHashId|default('') }}</p>
 
                             {#{% if reference is defined %}#}
                             {#no dz-clickable ???#}
