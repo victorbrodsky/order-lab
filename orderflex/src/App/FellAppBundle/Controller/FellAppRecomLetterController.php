@@ -302,6 +302,7 @@ class FellAppRecomLetterController extends ListController
     
     //Caller Server: Make API call to Remote Server
     // This action retrieves recommendation letters from the remote server
+    //http://127.0.0.1/fellowship-applications/retrieve-recommendation-letters
     #[Route(path: '/retrieve-recommendation-letters', name: 'fellapp_retrieve_recommendation_letters', methods: ['GET'])]
     public function retrieveRecommendationLettersAction( Request $request ) {
         $logger = $this->container->get('logger');
