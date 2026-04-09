@@ -418,19 +418,20 @@ class FellAppRecomLetterController extends ListController
             $content = $response->getContent();
 
             if ($statusCode !== 200) {
-                $logger->error("Remote server returned status $statusCode: $content");
+                $logger->error("Caller server: returned status $statusCode: $content");
                 return new JsonResponse(['error' => 'Remote server error', 'status' => $statusCode], 500);
             }
 
             $data = json_decode($content, true);
             if (!isset($data['letters']) || !is_array($data['letters'])) {
-                $logger->error("Invalid response from remote server");
+                $logger->error("Caller server: Invalid response from remote server");
                 return new JsonResponse(['error' => 'Invalid response from remote server'], 500);
             }
 
             $processedCount = 0;
             foreach ($data['letters'] as $letterData) {
                 if (!isset($letterData['hashId']) || !isset($letterData['documentData'])) {
+                    $logger->warning("Caller server: skip: $letterData does not have hashId and documentData");
                     continue;
                 }
 
@@ -481,12 +482,12 @@ class FellAppRecomLetterController extends ListController
                 $reference->setRecLetterReceived(true);
 
                 $processedCount++;
-                $logger->notice("Attached document to reference: " . $letterData['hashId']);
-            }
+                $logger->notice("Caller server: Attached document to reference: " . $letterData['hashId']);
+            }//foreach
 
             $em->flush();
 
-            $logger->notice("Processed $processedCount recommendation letters");
+            $logger->notice("Caller server: Processed $processedCount recommendation letters");
             return new JsonResponse([
                 'message' => 'Recommendation letters retrieved successfully',
                 'count' => $processedCount,
@@ -543,7 +544,7 @@ class FellAppRecomLetterController extends ListController
 
         // Validate HMAC
         $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiHashConnectionKey);
-        
+
         if (!hash_equals($expectedHmac, $hmacHeader)) {
             $logger->error("HMAC authentication failed. Expected: $expectedHmac, Got: $hmacHeader");
             return new JsonResponse(['error' => 'Authentication failed'], 401);
