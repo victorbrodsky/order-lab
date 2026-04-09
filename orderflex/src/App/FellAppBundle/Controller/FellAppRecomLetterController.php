@@ -376,7 +376,7 @@ class FellAppRecomLetterController extends ListController
 //        $hmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
 
         $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
-        $logger->notice("Caller server: retrieveRecommendationLettersAction: apiHashConnectionKey=$apiHashConnectionKey");
+        //$logger->notice("Caller server: retrieveRecommendationLettersAction: apiHashConnectionKey=$apiHashConnectionKey");
         //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
         if( !$apiHashConnectionKey ) {
             return new JsonResponse([
@@ -387,8 +387,8 @@ class FellAppRecomLetterController extends ListController
         // Generate HMAC for authentication (include timestamp to prevent replay attacks)
         $timestamp = time();
         $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $apiHashConnectionKey);
-        $logger->notice('retrieveApplicationDataAction: $hmac='.$hmac);
-        $logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
+        //$logger->notice('retrieveApplicationDataAction: $hmac='.$hmac);
+        //$logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
 
         // Build list of hash IDs to request
         $hashIds = [];
@@ -427,6 +427,8 @@ class FellAppRecomLetterController extends ListController
                 $logger->error("Caller server: Invalid response from remote server");
                 return new JsonResponse(['error' => 'Invalid response from remote server'], 500);
             }
+
+            $logger->notice("Caller server: letters count=" . count($data['letters']));
 
             $processedCount = 0;
             foreach ($data['letters'] as $letterData) {
