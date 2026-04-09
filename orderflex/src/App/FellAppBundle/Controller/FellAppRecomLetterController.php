@@ -474,7 +474,7 @@ class FellAppRecomLetterController extends ListController
                 $document->setUploadDirectory($uploadPath);
                 $document->setUniquename($filename);
                 $document->setSize(strlen($fileData));
-                $document->setMimeType('application/pdf');
+                //$document->setMimeType('application/pdf');
 
                 // Generate hash
                 $document->generateDocumentHash($filepath);

@@ -60,7 +60,8 @@
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
 
-                            <p>recommendationLetterID={{ form.vars.data.recLetterHashId|default('') }}</p>
+                            {{ formmacros.simplefield_vertical("recommendationLetterID", form.vars.data.recLetterHashId|default(''), "", "disabled") }}
+                            {#<p>recommendationLetterID={{ form.vars.data.recLetterHashId|default('') }}</p>#}
 
                             {#{% if reference is defined %}#}
                             {#no dz-clickable ???#}
