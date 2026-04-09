@@ -483,6 +483,8 @@ class FellAppRecomLetterController extends ListController
                 $reference->addDocument($document);
                 $reference->setRecLetterReceived(true);
 
+                //send separate API confirmation call to remote server to set $remoteReference->setRecLetterReceived(true);
+
                 $processedCount++;
                 $logger->notice("Caller server: Attached document to reference: " . $letterData['hashId']);
             }//foreach
@@ -602,7 +604,7 @@ class FellAppRecomLetterController extends ListController
                 ];
 
                 // Mark as sent
-                $reference->setRecLetterReceived(true);
+                $reference->setRecLetterReceived(true); //Remote Server. setRecLetterReceived(true) on a separate confirmation API call
                 $logger->notice("Sent recommendation letter for hash ID: $hashId");
             }
         } else {
@@ -635,7 +637,7 @@ class FellAppRecomLetterController extends ListController
                     'hash' => $document->getDocumentHash() ?? hash_file('md5', $filepath)
                 ];
 
-                $reference->setRecLetterReceived(true);
+                $reference->setRecLetterReceived(true); //Remote Server
             }
         }
 
