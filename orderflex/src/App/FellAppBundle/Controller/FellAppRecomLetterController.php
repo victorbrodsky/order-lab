@@ -376,6 +376,7 @@ class FellAppRecomLetterController extends ListController
 //        $hmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
 
         $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        $logger->notice("Caller server: retrieveRecommendationLettersAction: apiHashConnectionKey=$apiHashConnectionKey");
         //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
         if( !$apiHashConnectionKey ) {
             return new JsonResponse([
@@ -523,6 +524,7 @@ class FellAppRecomLetterController extends ListController
 //        }
 
         $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        $logger->notice("Remote server: sendRecommendationLettersAction: apiHashConnectionKey=$apiHashConnectionKey");
         //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
         if( !$apiHashConnectionKey ) {
             return new JsonResponse([
