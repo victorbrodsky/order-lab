@@ -502,6 +502,7 @@ class FellAppRecomLetterController extends ListController
     // This action sends recommendation letters to the caller server
     #[Route(path: '/send-recommendation-letters', name: 'fellapp_send_recommendation_letters', methods: ['GET'])]
     public function sendRecommendationLettersAction( Request $request ) {
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         $logger = $this->container->get('logger');
         $logger->notice("Starting sendRecommendationLettersAction");
 
@@ -514,12 +515,20 @@ class FellAppRecomLetterController extends ListController
         $logger->notice('sendRecommendationLettersAction: $timestampHeader='.$timestampHeader);
 
         /////////// Verify HMAC ///////////
-        $userSecUtil = $this->container->get('user_security_utility');
-        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+//        if( !$secretKey ) {
+//            $logger->error('Secret key not configured');
+//            return new JsonResponse(['error' => 'Secret key not configured'], 500);
+//        }
 
-        if( !$secretKey ) {
-            $logger->error('Secret key not configured');
-            return new JsonResponse(['error' => 'Secret key not configured'], 500);
+        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
+        if( !$apiHashConnectionKey ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Secret key not configured'
+            ], 500);
         }
 
         // Validate timestamp (allow 5 minute window)
