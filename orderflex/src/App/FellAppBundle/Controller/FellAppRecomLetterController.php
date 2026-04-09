@@ -559,10 +559,12 @@ class FellAppRecomLetterController extends ListController
         if ($hashIdsParam) {
             $hashIds = explode(',', $hashIdsParam);
         }
+        $logger->notice("Remote server: hashIds count=".count($hashIds));
 
         $letters = [];
 
         if (!empty($hashIds)) {
+            $logger->notice("Remote server: hashIds proceed. count=".count($hashIds));
             // Find references by specific hash IDs
             foreach ($hashIds as $hashId) {
                 $reference = $em->getRepository(Reference::class)->findOneBy([
@@ -606,6 +608,7 @@ class FellAppRecomLetterController extends ListController
         } else {
             // Return all available recommendation letters
             $references = $em->getRepository(Reference::class)->findAll();
+            $logger->notice("Remote server: No hashIds: Return all available recommendation letters. count=".count($references));
 
             foreach ($references as $reference) {
                 if (!$reference->getRecLetterHashId()) {
@@ -638,7 +641,7 @@ class FellAppRecomLetterController extends ListController
 
         $em->flush();
 
-        $logger->notice("Returning " . count($letters) . " recommendation letters");
+        $logger->notice("Remote Server: Returning " . count($letters) . " recommendation letters");
 
         return new JsonResponse([
             'success' => true,
