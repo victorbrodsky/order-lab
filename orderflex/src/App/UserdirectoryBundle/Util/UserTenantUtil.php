@@ -1255,11 +1255,11 @@ class UserTenantUtil
     public function isTenantInitialized($tenant)
     {
         //return true; //testing
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $initialized = false;
 
         if (!$tenant) {
-            $logger->notice("isTenantInitialized: tenant is null");
+            //$logger->notice("isTenantInitialized: tenant is null");
             return $initialized;
         }
 
@@ -1267,7 +1267,7 @@ class UserTenantUtil
         $conn = $this->getConnectionTenantDB($tenant);
 
         if (!$conn) {
-            $logger->notice("isTenantInitialized: connection is null for tenant DB=" . $tenant->getDatabaseName());
+            //$logger->notice("isTenantInitialized: connection is null for tenant DB=" . $tenant->getDatabaseName());
             return $initialized;
         }
 
@@ -1277,7 +1277,7 @@ class UserTenantUtil
         //dump($userRows);
         //exit();
         //$id = $hostedGroupRows[0]['id'];
-        $logger->notice("isTenantInitialized: $tenant, found rows count=" . count($userRows));
+        //$logger->notice("isTenantInitialized: $tenant, found rows count=" . count($userRows));
         if (count($userRows) > 0) {
             $initialized = true;
         }
