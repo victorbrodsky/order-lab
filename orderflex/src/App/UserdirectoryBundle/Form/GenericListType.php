@@ -666,12 +666,21 @@ class GenericListType extends AbstractType
 //                },
 //                'attr' => array('class'=>'combobox combobox-width')
 //            ));
-            $builder->add('apiImportKeys', CustomSelectorType::class, array(
-                'label' => 'Key(s) for application import:',
-                'attr' => array('class' => 'combobox ajax-combobox-apiimportkey', 'type' => 'hidden'),
-                'required' => false,
-                'classtype' => 'apiimportkey'
+//            $builder->add('apiImportKeys', CustomSelectorType::class, array(
+//                'label' => 'Key(s) for application import:',
+//                'attr' => array('class' => 'combobox ajax-combobox-apiimportkey', 'type' => 'hidden'),
+//                'required' => false,
+//                'classtype' => 'apiimportkey'
+//            ));
+            $builder->add( 'apiConnectionKey', null, array(
+                'label'=>'API key for establishing a connection to the hub:',
+                'attr' => array('class'=>'form-control'),
             ));
+            $builder->add( 'apiHashConnectionKey', null, array(
+                'label'=>'API key hash for establishing a connection to the hub:',
+                'attr' => array('class'=>'form-control'),
+            ));
+
 
             $builder->add('showOption', null, array(
                 'label'=>'Show as an available option on the fellowship application form (“Apply” page):',

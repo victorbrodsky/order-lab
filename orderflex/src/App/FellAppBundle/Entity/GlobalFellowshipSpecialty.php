@@ -81,6 +81,9 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'string', nullable: true)]
     private $apiConnectionKey;
 
+    //#[ORM\Column(type: 'string', nullable: true)]
+    private $apiHashConnectionKey;
+
     //Key(s) for application import: [2lk24n2k3n4o95n4o86n4o2i3noifinof] (accept multiple new values via Select2)
     //    $entity->setApiImportKeys([
     //    '2lk24n2k3n4o95n4o86n4o2i3noifinof',
@@ -272,6 +275,24 @@ class GlobalFellowshipSpecialty extends ListAbstract
     {
         return $this->apiImportKeys;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getApiHashConnectionKey()
+    {
+        return $this->apiHashConnectionKey;
+    }
+
+    /**
+     * @param mixed $apiHashConnectionKey
+     */
+    public function setApiHashConnectionKey($apiHashConnectionKey)
+    {
+        $this->apiHashConnectionKey = $apiHashConnectionKey;
+    }
+    
+    
 
     /**
      * @return mixed

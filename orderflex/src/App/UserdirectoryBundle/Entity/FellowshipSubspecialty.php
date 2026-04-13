@@ -113,6 +113,13 @@ class FellowshipSubspecialty extends ListAbstract
     #[ORM\OneToMany(targetEntity: 'App\FellAppBundle\Entity\FellAppImportKey', mappedBy: 'localspecialty', cascade: ['persist'])]
     private $apiImportKeys;
 
+    //API key expected in URL to enable remote connection: [l4kn5lk2nl23iron2i3n2l3inl23kn4o2i3j42fowiefw940]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $apiConnectionKey;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $apiHashConnectionKey;
+
     //Show as an available option on the fellowship application form (“Apply” page)
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $showOption;
@@ -249,6 +256,38 @@ class FellowshipSubspecialty extends ListAbstract
     public function getApiImportKeys()
     {
         return $this->apiImportKeys;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApiConnectionKey()
+    {
+        return $this->apiConnectionKey;
+    }
+
+    /**
+     * @param mixed $apiConnectionKey
+     */
+    public function setApiConnectionKey($apiConnectionKey)
+    {
+        $this->apiConnectionKey = $apiConnectionKey;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApiHashConnectionKey()
+    {
+        return $this->apiHashConnectionKey;
+    }
+
+    /**
+     * @param mixed $apiHashConnectionKey
+     */
+    public function setApiHashConnectionKey($apiHashConnectionKey)
+    {
+        $this->apiHashConnectionKey = $apiHashConnectionKey;
     }
 
     /**
