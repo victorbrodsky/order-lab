@@ -1489,6 +1489,30 @@ class FellAppImportPopulateHubUtil {
         return $apiHashConnectionKey;
     }
 
+    public function getInstitutionApiConnectionKey( $getInstitutions=false ) {
+        $logger = $this->container->get('logger');
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        $apiConnectionKey = null;
+        $institutions = $fellappUtil->getFellowshipInstitutionsWithApiKey();
+        if( $getInstitutions ) {
+            return $institutions;
+        }
+        //exit('inst count='.count($institutions));
+        if( count($institutions) == 1 ) {
+            //$apiConnectionKey = $institutions[0]->getApiConnectionKey();
+            $apiConnectionKey = $institutions[0]->getApiConnectionKey();
+        } else {
+            $ids = array_map(fn($i) => $i->getId().":".$i->getName(), $institutions);
+            $idsString = implode(',', $ids);
+            $logger->warning('Error retrieving apiHashConnectionKey: multiple institutions found with apiHashConnectionKey, count='
+                . count($institutions) .
+                ', Institution ids='.$idsString
+            );
+        }
+        return $apiConnectionKey;
+    }
+
     public function generateDocumentHash( $document ) {
         //$filename = $this->getFullServerPath();
         $filename = $document->getUniquename();

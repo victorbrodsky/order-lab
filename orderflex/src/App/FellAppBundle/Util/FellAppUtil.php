@@ -825,6 +825,20 @@ class FellAppUtil {
         return $institutions;
     }
 
+    public function getFellowshipInstitutionsWithApiKey() {
+        $repo = $this->em->getRepository(Institution::class);
+        $institutions = $repo->createQueryBuilder('i')
+            //->where('i.apiConnectionKey IS NOT NULL OR i.apiHashConnectionKey IS NOT NULL')
+            //->andWhere('i.apiConnectionKey <> :empty OR i.apiHashConnectionKey <> :empty')
+            ->where('i.apiConnectionKey IS NOT NULL')
+            ->andWhere('i.apiConnectionKey <> :empty')
+            ->setParameter('empty', '')
+            ->getQuery()
+            ->getResult();
+        //echo 'count($institutions)='.count($institutions).'<br>';
+        return $institutions;
+    }
+
     //TODO: replace getFellowshipSubspecialty and getGlobalFellowshipSpecialty where it is possible.
     //Wrapper function to get fellowship specialties according to the Server Network Accessibility and Role
     public function getFellowshipSpecialtyByServer( $fellapp ) {
@@ -4393,9 +4407,12 @@ class FellAppUtil {
     public function getFellappRetrievalMethod( $fellapp=null ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $retrievalMethod = null;
-        $retrievalMethodEntity = $fellapp->getRetrievalMethod();
-        if( $retrievalMethodEntity ) {
-            $retrievalMethod = $retrievalMethodEntity->getName();
+
+        if( $fellapp ) {
+            $retrievalMethodEntity = $fellapp->getRetrievalMethod();
+            if ($retrievalMethodEntity) {
+                $retrievalMethod = $retrievalMethodEntity->getName();
+            }
         }
 
         //if fellapp does not have retrieval method then get it from fellowhsip site settings

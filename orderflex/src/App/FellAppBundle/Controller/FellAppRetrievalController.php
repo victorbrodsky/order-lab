@@ -58,15 +58,19 @@ class FellAppRetrievalController extends OrderAbstractController
         //$fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
 
-        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
-        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
+        //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        $apiConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiConnectionKey();
+        //exit('$apiConnectionKey='.$apiConnectionKey);
 
-        if( !$apiHashConnectionKey ) {
+        if( !$apiConnectionKey ) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Secret key not configured'
             ], 500);
         }
+
+        //On Caller (local) server, the
+        $apiHashConnectionKey = hash('sha256', $apiConnectionKey);
         
         // Generate HMAC for authentication (include timestamp to prevent replay attacks)
         $timestamp = time();
@@ -92,7 +96,7 @@ class FellAppRetrievalController extends OrderAbstractController
         //$remoteUrl = 'https://view.online/fellowship-applications/download-application-data?maxid=' . $minRemoteId;
         $remoteUrl = $userSecUtil->getSiteSettingParameter(
             'hubServerApiUrl',
-            $this->container->getParameter('fellapp.sitename'));
+            $this->getParameter('fellapp.sitename'));
         if( !$remoteUrl ) {
             $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
             return false;
@@ -159,7 +163,14 @@ class FellAppRetrievalController extends OrderAbstractController
                 //$fellappImportPopulateHubUtil->xlsxFileParser($filepath);
                 $populatedFellowshipApplications = $fellappImportPopulateHubUtil->populateFellappFromFile($filepath);
 
-                exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
+                //exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
+
+                //redirect to Home page
+                $this->addFlash(
+                    'notice',
+                    'Populated FellowshipApplications count='.count($populatedFellowshipApplications)
+                );
+                return $this->redirect( $this->generateUrl('fellapp_home') );
             }
 
             //remove $filepath
