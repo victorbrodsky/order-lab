@@ -81,7 +81,7 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'string', nullable: true)]
     private $apiConnectionKey;
 
-    //#[ORM\Column(type: 'string', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private $apiHashConnectionKey;
 
     //Key(s) for application import: [2lk24n2k3n4o95n4o86n4o2i3noifinof] (accept multiple new values via Select2)

@@ -1510,9 +1510,15 @@
         <div class="input-group">
             {{ formmacros.field(form.apiConnectionKey) }}
             <span class="input-group-btn">
-                <button type="button" id="hashApiKeyBtn" class="btn btn-primary">
-                    Hash
-                </button>
+                {% if cycle == 'show' %}
+                    <button type="button" id="hashApiKeyBtn" class="btn btn-primary" disabled="disabled">
+                        Hash
+                    </button>
+                {% else %}
+                    <button type="button" id="hashApiKeyBtn" class="btn btn-primary">
+                        Hash
+                    </button>
+                {% endif %}
             </span>
         </div>
     {% endif %}
