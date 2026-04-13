@@ -146,7 +146,7 @@ class FellAppImportPopulateHubUtil {
     }
 
     /**
-     * Create a single FellowshipApplication from a spreadsheet row
+     * Caller (local) server: Create a single FellowshipApplication from a spreadsheet row
      */
     private function createFellappFromRow($rowData, $headers, $systemUser) {
         $logger = $this->container->get('logger');
@@ -224,8 +224,9 @@ class FellAppImportPopulateHubUtil {
 
             $localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)
                 ->createQueryBuilder('fs')
-                ->join('fs.apiHashConnectionKey', 'k')
-                ->where('k.name = :name')
+                //->join('fs.apiHashConnectionKey', 'k')
+                //->where('k.name = :name')
+                ->where('fs.apiConnectionKey = :name')
                 ->setParameter('name', $apiHashImportKeyGlobal)
                 ->getQuery()
                 ->getOneOrNullResult();
@@ -356,8 +357,9 @@ class FellAppImportPopulateHubUtil {
 
             $fellowshipTypeEntity = $this->em->getRepository(FellowshipSubspecialty::class)
                 ->createQueryBuilder('fs')
-                ->join('fs.apiHashConnectionKey', 'k')
-                ->where('k.name = :name')
+                //->join('fs.apiHashConnectionKey', 'k')
+                //->where('k.name = :name')
+                ->where('fs.apiConnectionKey = :name')
                 ->setParameter('name', $apiHashImportKeyGlobal)
                 ->getQuery()
                 ->getOneOrNullResult();
