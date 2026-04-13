@@ -673,11 +673,11 @@ class GenericListType extends AbstractType
 //                'classtype' => 'apiimportkey'
 //            ));
             $builder->add( 'apiConnectionKey', null, array(
-                'label'=>'API key for establishing a connection to the hub:',
+                'label'=>'API key for transmission of application data for this Fellowship Specialty program:',
                 'attr' => array('class'=>'form-control'),
             ));
             $builder->add( 'apiHashConnectionKey', null, array(
-                'label'=>'API key hash for establishing a connection to the hub:',
+                'label'=>'API key hash for transmission of application data for this Fellowship Specialty program:',
                 'attr' => array('class'=>'form-control'),
             ));
 
