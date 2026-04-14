@@ -582,31 +582,41 @@ class FellAppHubRecomLetterController extends ListController
 //            return new JsonResponse(['error' => 'Secret key not configured'], 500);
 //        }
 
-        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey(); //Remote Server
-        $logger->notice("Remote server: sendRecommendationLettersAction: apiHashConnectionKey=$apiHashConnectionKey");
-        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
-        if( !$apiHashConnectionKey ) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Secret key not configured'
-            ], 500);
-        }
-
-        // Validate timestamp (allow 5 minute window)
-        $currentTime = time();
-        $requestTime = (int)$timestampHeader;
-        if (abs($currentTime - $requestTime) > 300) {
-            $logger->error("Request timestamp too old");
-            return new JsonResponse(['error' => 'Request expired'], 401);
-        }
-
-        // Validate HMAC
-        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiHashConnectionKey);
-
-        if (!hash_equals($expectedHmac, $hmacHeader)) {
-            $logger->error("HMAC authentication failed. Expected: $expectedHmac, Got: $hmacHeader");
+        //////////////// Remote Server AUTH ////////////////////////
+//        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey(); //Remote Server
+//        $logger->notice("Remote server: sendRecommendationLettersAction: apiHashConnectionKey=$apiHashConnectionKey");
+//        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
+//        if( !$apiHashConnectionKey ) {
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Secret key not configured'
+//            ], 500);
+//        }
+//
+//        // Validate timestamp (allow 5 minute window)
+//        $currentTime = time();
+//        $requestTime = (int)$timestampHeader;
+//        if (abs($currentTime - $requestTime) > 300) {
+//            $logger->error("Request timestamp too old");
+//            return new JsonResponse(['error' => 'Request expired'], 401);
+//        }
+//
+//        // Validate HMAC
+//        $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiHashConnectionKey);
+//
+//        if (!hash_equals($expectedHmac, $hmacHeader)) {
+//            $logger->error("HMAC authentication failed. Expected: $expectedHmac, Got: $hmacHeader");
+//            return new JsonResponse(['error' => 'Authentication failed'], 401);
+//        }
+        /////////////////////
+        //HUB server can have multiple institutions with HASH: compare $hmacHeader foreach institution hash
+        $authenticated = $fellappImportPopulateHubUtil->authenticateHmac($hmacHeader,$timestampHeader);
+        if (!$authenticated) {
+            $logger->error("HMAC authentication failed for hmacHeader=$hmacHeader");
             return new JsonResponse(['error' => 'Authentication failed'], 401);
         }
+
+        /////////////// //////////////////
 
         $em = $this->getDoctrine()->getManager();
 

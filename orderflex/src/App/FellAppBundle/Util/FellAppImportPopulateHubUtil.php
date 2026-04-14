@@ -1434,6 +1434,7 @@ class FellAppImportPopulateHubUtil {
         return $fellappImportPopulateUtil->getValueByHeaderName($keyName, $row, $headers);
     }
 
+    //Verify received $hmacHeader with the each institution's ApiHashConnectionKey
     public function authenticateHmac( $hmacHeader, $timestampHeader ) {
         $logger = $this->container->get('logger');
         $fellappUtil = $this->container->get('fellapp_util');
@@ -1444,21 +1445,7 @@ class FellAppImportPopulateHubUtil {
         $institutions = $fellappUtil->getFellowshipInstitutionsWithHash(); //Remote Server API Endpoint
         if( count($institutions) == 0 ) {
             $logger->notice('downloadApplicationDataAction: Error retrieving apiConnectionKey: No institutions found with apiConnectionKey');
-//            return new JsonResponse([
-//                'success' => false,
-//                'message' => 'Error retrieving apiConnectionKey: No institutions found with apiConnectionKey'
-//            ], 404);
         } else {
-//            $apiConnectionKeys = array_map(fn($i) => $i->getApiConnectionKey(), $institutions);
-//            foreach($apiConnectionKeys as $apiConnectionKey) {
-//                // Verify HMAC (use hash_equals for constant-time comparison)
-//                $expectedHmac = hash_hmac('sha256', 'fellapp-api:' . $timestampHeader, $apiConnectionKey);
-//                if( hash_equals($expectedHmac, $hmacHeader) ) {
-//                    $authenticated = true;
-//                    break;
-//                }
-//            }
-
             $apiHashConnectionKeys = array_map(fn($i) => $i->getApiHashConnectionKey(), $institutions); //use apiHashConnectionKey
             foreach($apiHashConnectionKeys as $apiHashConnectionKey) {
                 // Verify HMAC (use hash_equals for constant-time comparison)
@@ -1472,14 +1459,6 @@ class FellAppImportPopulateHubUtil {
         $logger->notice('downloadApplicationDataAction: $authenticated='.$authenticated);
 
         return $authenticated;
-
-//        if( !$authenticated ) {
-//            return new JsonResponse([
-//                'success' => false,
-//                'message' => 'Invalid HMAC authentication'
-//            ], 401);
-//        }
-        /////////// EOF Verify HMAC Get secret key for HMAC verification ///////////
     }
 
     public function getInstitutionApiHashConnectionKey( $getInstitutions=false )
