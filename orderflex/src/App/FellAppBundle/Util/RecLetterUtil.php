@@ -209,6 +209,7 @@ class RecLetterUtil {
                 if ($hash) {
                     $reference->setRecLetterHashId($hash);
                     $this->em->flush($reference);
+                    $logger->notice("inviteSingleReferenceToSubmitLetter: generated new Reference RecLetterHashId=[$hash]");
                     //echo $fellapp->getId()." (".$reference->getId()."): added hash=".$hash."<br>";
 //                    $this->container->get('session')->getFlashBag()->add(
 //                        'warning',
@@ -377,6 +378,7 @@ class RecLetterUtil {
 //        Optional: sign with HMAC signature
         $retrievalMethod = $fellappUtil->getFellappRetrievalMethod($fellapp);
         if( $retrievalMethod == 'Dedicated public tandem hub server tenant instance' ) {
+            $logger->notice("Construct data for reference letter invitation: reference recLetterHashId=".$reference->getRecLetterHashId());
             //Generetae JSON here
             $data = [
                 "Remote-Application-ID" => $fellapp->getRemoteId(), //remote application ID
@@ -431,7 +433,7 @@ class RecLetterUtil {
             $uploadFormLink = $fellappRecLetterUrl . "?";
 
             $uploadFormLink = $uploadFormLink . "Remote-Application-ID=" . $fellapp->getRemoteId();
-            $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
+            $uploadFormLink = $uploadFormLink . "&Reference-Letter-ID=" . $reference->getRecLetterHashId();
             $uploadFormLink = $uploadFormLink . "&Identification=" . $identificationUploadLetterFellApp;
             $uploadFormLink = $uploadFormLink . "&Applicant-First-Name=" . $applicant->getFirstName();
             $uploadFormLink = $uploadFormLink . "&Applicant-Last-Name=" . $applicant->getLastName();
