@@ -320,6 +320,7 @@ class FellAppHubRecomLetterController extends ListController
             'form' => $form,
             'entity' => $reference,
             'cycle' => $cycle,
+            'fellappId' => $fellappId,
             'firstName' => $firstName,
             'lastName' => $lastName,
             'email' => $email,

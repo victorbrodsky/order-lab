@@ -234,6 +234,7 @@
     {#{% do form.setRendered %}#}
 
     {{ formmacros.simplefield_vertical("Recommendation Letter ID", form.vars.data.recLetterHashId|default(''), "", "disabled") }}
+    {{ formmacros.simplefield_vertical("Fellowship Application ID", fellappId|default(''), "", "disabled") }}
     {#<p>recommendationLetterID={{ form.vars.data.recLetterHashId|default('') }}</p>#}
     {{ form_end(form) }}
 
