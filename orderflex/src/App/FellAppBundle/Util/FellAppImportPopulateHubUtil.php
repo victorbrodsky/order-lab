@@ -152,6 +152,7 @@ class FellAppImportPopulateHubUtil {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+        $fellappUtil = $this->container->get('fellapp_util');
         $testing = false;
 
         // Get required lookup entities
@@ -193,7 +194,8 @@ class FellAppImportPopulateHubUtil {
         }
 
         //check apiimportkeyglobal
-        $apiHashImportKeyGlobal = $this->getValueByHeaderName('apiimportkeyglobal', $rowData, $headers);
+        //$apiHashImportKeyGlobal = $this->getValueByHeaderName('apiimportkeyglobal', $rowData, $headers);
+        $apiHashImportKeyGlobal = $this->getValueByHeaderName('apihashconnectionglobalkey', $rowData, $headers);
         if( $apiHashImportKeyGlobal ) {
             $apiHashImportKeyGlobal = trim($apiHashImportKeyGlobal);
 
@@ -221,15 +223,17 @@ class FellAppImportPopulateHubUtil {
 //                $logger->warning('Local FellowshipSubspecialty not found by API import key=[' . $apiImportKeyGlobal . ']');
 //                return null;
 //            }
+//            $localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)
+//                ->createQueryBuilder('fs')
+//                //->join('fs.apiHashConnectionKey', 'k')
+//                //->where('k.name = :name')
+//                ->where('fs.apiConnectionKey = :name')
+//                ->setParameter('name', $apiHashImportKeyGlobal)
+//                ->getQuery()
+//                ->getOneOrNullResult();
 
-            $localSpecialty = $this->em->getRepository(FellowshipSubspecialty::class)
-                ->createQueryBuilder('fs')
-                //->join('fs.apiHashConnectionKey', 'k')
-                //->where('k.name = :name')
-                ->where('fs.apiConnectionKey = :name')
-                ->setParameter('name', $apiHashImportKeyGlobal)
-                ->getQuery()
-                ->getOneOrNullResult();
+            $localSpecialty = $fellappUtil->findFellowshipSpeciatlyByApiHashKey($apiHashImportKeyGlobal);
+
             if( !$localSpecialty ) {
                 //echo 'Local FellowshipSubspecialty not found by API import key=[' . $apiImportKeyGlobal . ']'."<br>";
                 $logger->warning('Local FellowshipSubspecialty not found by API Hash import key=[' . $apiHashImportKeyGlobal . ']');
@@ -354,15 +358,17 @@ class FellAppImportPopulateHubUtil {
 //                $logger->warning('Not found matched API import key=[' . $apiImportKeyGlobal.']');
 //                return null;
 //            }
+//            $fellowshipTypeEntity = $this->em->getRepository(FellowshipSubspecialty::class)
+//                ->createQueryBuilder('fs')
+//                //->join('fs.apiHashConnectionKey', 'k')
+//                //->where('k.name = :name')
+//                ->where('fs.apiConnectionKey = :name')
+//                ->setParameter('name', $apiHashImportKeyGlobal)
+//                ->getQuery()
+//                ->getOneOrNullResult();
 
-            $fellowshipTypeEntity = $this->em->getRepository(FellowshipSubspecialty::class)
-                ->createQueryBuilder('fs')
-                //->join('fs.apiHashConnectionKey', 'k')
-                //->where('k.name = :name')
-                ->where('fs.apiConnectionKey = :name')
-                ->setParameter('name', $apiHashImportKeyGlobal)
-                ->getQuery()
-                ->getOneOrNullResult();
+            $fellowshipTypeEntity = $fellappUtil->findFellowshipSpeciatlyByApiHashKey($apiHashImportKeyGlobal);
+
             if( $fellowshipTypeEntity ) {
                 if( strtolower(trim($fellowshipType)) != strtolower(trim($fellowshipTypeEntity->getName())) ) {
                     $logger->warning('Matched API import key fellowship type found, but names are different[' .
@@ -671,10 +677,12 @@ class FellAppImportPopulateHubUtil {
         //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
 
         if( !$apiHashConnectionKey ) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Secret key not configured'
-            ], 500);
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Secret key not configured'
+//            ], 500);
+            $logger->warning('downloadRemoteDocuments apiHashConnectionKey is empty');
+            return false;
         }
 
         // Document types to download with their corresponding row field names and attachment methods

@@ -839,6 +839,37 @@ class FellAppUtil {
         return $institutions;
     }
 
+    public function getFellowshipSpeciatliesWithApiKey() {
+        //0) foreach local FellowshipSubspecialty where apiConnectionKey is set:
+        //1) get apiConnectionKey and then get hash => apiHashConnectionKeyLocal of the local specialty
+        //2) compare apiHashConnectionKeyLocal with apiHashConnectionKey from remote
+        $localSpecialties = $this->em->getRepository(FellowshipSubspecialty::class)
+            ->createQueryBuilder('fs')
+            //->join('fs.apiHashConnectionKey', 'k')
+            //->where('k.name = :name')
+            ->where('fs.apiConnectionKey IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+        return $localSpecialties;
+    }
+
+    public function findFellowshipSpeciatlyByApiHashKey( $apiHashKey ) {
+        if( !$apiHashKey ) {
+            return null;
+        }
+        $localSpecialties = $this->getFellowshipSpeciatliesWithApiKey();
+        foreach( $localSpecialties as $localSpecialty) {
+            $localApiConnectionKey = $localSpecialty->getApiConnectionKey();
+            if( $localApiConnectionKey ) {
+                $localApiConnectionHashKey = hash('sha256', $localApiConnectionKey);
+                if ($localApiConnectionHashKey && trim($localApiConnectionHashKey) === trim($apiHashKey)) {
+                    return $localSpecialty;
+                }
+            }
+        }
+        return null;
+    }
+
     //TODO: replace getFellowshipSubspecialty and getGlobalFellowshipSpecialty where it is possible.
     //Wrapper function to get fellowship specialties according to the Server Network Accessibility and Role
     public function getFellowshipSpecialtyByServer( $fellapp ) {
