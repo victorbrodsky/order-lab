@@ -1505,6 +1505,8 @@ class FellAppImportPopulateHubUtil {
                 . count($institutions) .
                 ', Institution ids='.$idsString
             );
+            //Use the first ApiHashConnectionKey???
+            //$apiHashConnectionKey = $institutions[0]->getApiHashConnectionKey();
         } else {
             $logger->warning('Error retrieving apiHashConnectionKey: Logical error. Institution count='.count($institutions));
         }

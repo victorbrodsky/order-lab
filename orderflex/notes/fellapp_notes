@@ -141,3 +141,4 @@ v Attached Documents > USMLE Scores (All documents will be added to the Complete
 TODO: HUB server can have multiple institutions with HASH:
 => Error retrieving apiHashConnectionKey: multiple institutions found with apiHashConnectionKey
 Line: 1504 in FellAppBundle\Util\FellAppImportPopulateHubUtil.php
+Used in sendRecommendationLettersAction
