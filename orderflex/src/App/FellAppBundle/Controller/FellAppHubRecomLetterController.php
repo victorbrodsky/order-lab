@@ -424,10 +424,13 @@ class FellAppHubRecomLetterController extends ListController
 //        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 //        $hmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
 
-        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        $apiConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiConnectionKey(); //Caller (local) server
         //$logger->notice("Caller server: retrieveRecommendationLettersAction: apiHashConnectionKey=$apiHashConnectionKey");
         //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
-        if( !$apiHashConnectionKey ) {
+        if( $apiConnectionKey ) {
+            $apiConnectionKey = hash('sha256', $apiConnectionKey);
+        } else {    
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Secret key not configured'

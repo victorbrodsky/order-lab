@@ -678,7 +678,7 @@ class FellAppImportPopulateHubUtil {
         $localApiConnectionHashKey = null;
         //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
         $localApiConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiConnectionKey(); //Run on Local server
-        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
+        //exit('$localApiConnectionKey='.$localApiConnectionKey);
 
         if( $localApiConnectionKey ) {
             $localApiConnectionHashKey = hash('sha256', $localApiConnectionKey);
