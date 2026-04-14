@@ -673,15 +673,15 @@ class FellAppImportPopulateHubUtil {
         $parts = parse_url($remoteUrl);
         $remoteBaseUrl = $parts['scheme'] . '://' . $parts['host'];
 
-        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        $localApiConnectionHashKey = null;
+        //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        $localApiConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiConnectionKey(); //Run on Local server
         //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
 
-        if( !$apiHashConnectionKey ) {
-//            return new JsonResponse([
-//                'success' => false,
-//                'message' => 'Secret key not configured'
-//            ], 500);
-            $logger->warning('downloadRemoteDocuments apiHashConnectionKey is empty');
+        if( $localApiConnectionKey ) {
+            $localApiConnectionHashKey = hash('sha256', $localApiConnectionKey);
+        } else {
+            $logger->warning('downloadRemoteDocuments: Local apiConnectionKey is empty');
             return false;
         }
 
@@ -755,7 +755,7 @@ class FellAppImportPopulateHubUtil {
                     $storagePath,
                     $systemUser,
                     $remoteBaseUrl,
-                    $apiHashConnectionKey
+                    $localApiConnectionHashKey
                 );
 
                 if ($document) {
@@ -1476,25 +1476,31 @@ class FellAppImportPopulateHubUtil {
         /////////// EOF Verify HMAC Get secret key for HMAC verification ///////////
     }
 
-    public function getInstitutionApiHashConnectionKey( $getInstitutions=false ) {
+    public function getInstitutionApiHashConnectionKey( $getInstitutions=false )
+    {
         $logger = $this->container->get('logger');
         $fellappUtil = $this->container->get('fellapp_util');
 
         $apiHashConnectionKey = null;
         $institutions = $fellappUtil->getFellowshipInstitutionsWithHash();
-        if( $getInstitutions ) {
+        if ($getInstitutions) {
             return $institutions;
         }
-        if( count($institutions) == 1 ) {
+        if(count($institutions) == 1) {
             //$apiConnectionKey = $institutions[0]->getApiConnectionKey();
             $apiHashConnectionKey = $institutions[0]->getApiHashConnectionKey();
-        } else {
+        } elseif(count($institutions) == 0) {
+            $logger->warning('Error retrieving apiHashConnectionKey: No institutions found with apiHashConnectionKey');
+        }
+        elseif( count($institutions) > 1) {
             $ids = array_map(fn($i) => $i->getId().":".$i->getName(), $institutions);
             $idsString = implode(',', $ids);
             $logger->warning('Error retrieving apiHashConnectionKey: multiple institutions found with apiHashConnectionKey, count='
                 . count($institutions) .
                 ', Institution ids='.$idsString
             );
+        } else {
+            $logger->warning('Error retrieving apiHashConnectionKey: Logical error. Institution count='.count($institutions));
         }
         return $apiHashConnectionKey;
     }
@@ -1509,17 +1515,24 @@ class FellAppImportPopulateHubUtil {
             return $institutions;
         }
         //exit('inst count='.count($institutions));
-        if( count($institutions) == 1 ) {
+
+        if(count($institutions) == 1) {
             //$apiConnectionKey = $institutions[0]->getApiConnectionKey();
             $apiConnectionKey = $institutions[0]->getApiConnectionKey();
-        } else {
+        } elseif(count($institutions) == 0) {
+            $logger->warning('Error retrieving apiConnectionKey: No institutions found with apiConnectionKey');
+        }
+        elseif( count($institutions) > 1) {
             $ids = array_map(fn($i) => $i->getId().":".$i->getName(), $institutions);
             $idsString = implode(',', $ids);
-            $logger->warning('Error retrieving apiHashConnectionKey: multiple institutions found with apiHashConnectionKey, count='
+            $logger->warning('Error retrieving apiConnectionKey: multiple institutions found with apiConnectionKey, count='
                 . count($institutions) .
                 ', Institution ids='.$idsString
             );
+        } else {
+            $logger->warning('Error retrieving apiConnectionKey: Logical error. Institution count='.count($institutions));
         }
+
         return $apiConnectionKey;
     }
 
