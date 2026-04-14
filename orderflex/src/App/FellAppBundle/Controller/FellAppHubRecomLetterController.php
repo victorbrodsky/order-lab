@@ -149,7 +149,7 @@ class FellAppHubRecomLetterController extends ListController
         //TODO: instead of creating a new Reference, find existing Reference which is attached to the existing Fellowship Application
         //$reference = new Reference();
         //Use $recLetterHashId and Application ID $fellappId = $data['Application-ID'];
-        $references = $this->createQueryBuilder('r')
+        $references = $em->getRepository(Reference::class)->createQueryBuilder('r')
             ->andWhere('r.fellapp = :fellapp')
             ->andWhere('r.recLetterHashId = :hash')
             ->setParameter('fellapp', $fellappId)
