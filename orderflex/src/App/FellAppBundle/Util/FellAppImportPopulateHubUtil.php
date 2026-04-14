@@ -626,10 +626,12 @@ class FellAppImportPopulateHubUtil {
         }
 
         //create reference hash ID. Must run after fellowship is in DB and has IDs
-        $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
-        $fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication,true);
+        //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
+        //$fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication,true);
+
         if( $environment == 'live' ) {
             // send invitation email to upload recommendation letter to references
+            $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
             $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication,true);
         }
 
@@ -1051,11 +1053,12 @@ class FellAppImportPopulateHubUtil {
 
         $recommendationFirstName = $this->getValueByHeaderName($typeStr."FirstName",$rowData,$headers);
         $recommendationLastName = $this->getValueByHeaderName($typeStr."LastName",$rowData,$headers);
+        $recommendationHash = $this->getValueByHeaderName($typeStr."Hash",$rowData,$headers);
 
         //echo "recommendationFirstName=".$recommendationFirstName."<br>";
         //echo "recommendationLastName=".$recommendationLastName."<br>";
 
-        if( !$recommendationFirstName && !$recommendationLastName ) {
+        if( !$recommendationFirstName && !$recommendationLastName && !$recommendationHash ) {
             //echo "no ref<br>";
             return null;
         }
@@ -1079,6 +1082,9 @@ class FellAppImportPopulateHubUtil {
 
         //recommendation1LastName
         $reference->setName($recommendationLastName);
+
+        $recommendationHash = trim($recommendationHash);
+        $reference->setRecLetterHashId($recommendationHash);
 
         //recommendation1Degree
         $recommendationDegree = $this->getValueByHeaderName($typeStr."Degree",$rowData,$headers);
