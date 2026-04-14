@@ -379,7 +379,7 @@ class RecLetterUtil {
         if( $retrievalMethod == 'Dedicated public tandem hub server tenant instance' ) {
             //Generetae JSON here
             $data = [
-                "Application-ID" => $fellapp->getId(),
+                "Remote-Application-ID" => $fellapp->getRemoteId(), //remote application ID
                 "Reference-Letter-ID" => $reference->getRecLetterHashId(),
                 "Identification" => $identificationUploadLetterFellApp,
 
@@ -430,7 +430,7 @@ class RecLetterUtil {
 
             $uploadFormLink = $fellappRecLetterUrl . "?";
 
-            $uploadFormLink = $uploadFormLink . "Application-ID=" . $fellapp->getId();
+            $uploadFormLink = $uploadFormLink . "Remote-Application-ID=" . $fellapp->getRemoteId();
             $uploadFormLink = $uploadFormLink . "Reference-Letter-ID=" . $reference->getRecLetterHashId();
             $uploadFormLink = $uploadFormLink . "&Identification=" . $identificationUploadLetterFellApp;
             $uploadFormLink = $uploadFormLink . "&Applicant-First-Name=" . $applicant->getFirstName();

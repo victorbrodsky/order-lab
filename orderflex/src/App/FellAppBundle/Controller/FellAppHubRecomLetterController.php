@@ -120,11 +120,11 @@ class FellAppHubRecomLetterController extends ListController
         }
 
         $fellappId = null;
-        if (isset($data['Application-ID'])) {
-            $fellappId = $data['Application-ID'];
+        if (isset($data['Remote-Application-ID'])) {
+            $fellappId = $data['Remote-Application-ID'];
         }
         if( !$fellappId ) {
-            $msg = 'Something is wrong - the Application-ID is not set for '.$firstName. ' ' . $lastName . ' ' . $email;
+            $msg = 'Something is wrong - the Remote-Application-ID is not set for '.$firstName. ' ' . $lastName . ' ' . $email;
             $subject = $msg;
             $this->addFlash(
                 'warning',
@@ -148,7 +148,7 @@ class FellAppHubRecomLetterController extends ListController
         $cycle = 'new';
         //TODO: instead of creating a new Reference, find existing Reference which is attached to the existing Fellowship Application
         //$reference = new Reference();
-        //Use $recLetterHashId and Application ID $fellappId = $data['Application-ID'];
+        //Use $recLetterHashId and Application ID $fellappId = $data['Remote-Application-ID'];
         $references = $em->getRepository(Reference::class)->createQueryBuilder('r')
             ->andWhere('r.fellapp = :fellapp')
             ->andWhere('r.recLetterHashId = :hash')
