@@ -159,7 +159,7 @@ class FellAppHubRecomLetterController extends ListController
 
         if( count($references) == 1 ) {
             //perfect
-            $reference = $references->first();
+            $reference = $references[0] ?? null;
         } elseif( count($references) == 0 ) {
             return new JsonResponse([
                 'success' => false,
