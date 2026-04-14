@@ -278,7 +278,7 @@ class FellAppHubRecomLetterController extends ListController
 
             $this->addFlash('success', 'Recommendation letter submitted successfully.');
 
-            $em->persist($reference);
+            //$em->persist($reference);
             $em->flush();
 
             $emailSubject = "Recommendation Letter Submitted for {$applicantData['FirstName']} {$applicantData['LastName']}";
