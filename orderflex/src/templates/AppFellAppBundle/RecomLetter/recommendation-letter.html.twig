@@ -53,16 +53,11 @@
 
         <div id="refauthor" class="panel-collapse collapse in">
             <div class="panel-body">
-
                 <p>
                 <div class="well form-element-holder user-Reference">
                     <label class="col-xs-12 control-label">Reference Letter</label>
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
-
-                            {{ formmacros.simplefield_vertical("recommendationLetterID", form.vars.data.recLetterHashId|default(''), "", "disabled") }}
-                            {#<p>recommendationLetterID={{ form.vars.data.recLetterHashId|default('') }}</p>#}
-
                             {#{% if reference is defined %}#}
                             {#no dz-clickable ???#}
                             {#{{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Recommendation Letter in PDF format') }}#}
@@ -92,6 +87,10 @@
                     </div>
                 </div>
                 </p>
+
+                <button type="submit" class="btn btn-primary">
+                    Submit
+                </button>
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
@@ -234,10 +233,8 @@
 
     {#{% do form.setRendered %}#}
 
-    <button type="submit" class="btn btn-primary">
-        Submit
-    </button>
-
+    {{ formmacros.simplefield_vertical("Recommendation Letter ID", form.vars.data.recLetterHashId|default(''), "", "disabled") }}
+    {#<p>recommendationLetterID={{ form.vars.data.recLetterHashId|default('') }}</p>#}
     {{ form_end(form) }}
 
 {% endblock %}

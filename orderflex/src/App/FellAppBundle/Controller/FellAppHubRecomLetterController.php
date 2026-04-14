@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpClient\HttpClient;
 
 
-class FellAppRecomLetterController extends ListController
+class FellAppHubRecomLetterController extends ListController
 {
 
     //http://127.0.0.1/fellowship-applications/submit-a-letter-of-recommendation?data=eyJSZWZlcmVuY2UtTGV0dGVyLUlEIjoiMzFlOTA5YjFmMmUyMzgwNzBmZjEwNWFlOWQwZmM5MGVhZGJjZjViOCIsIklkZW50aWZpY2F0aW9uIjoid2NtcGF0aGRldiIsIkFwcGxpY2FudCI6eyJGaXJzdE5hbWUiOiJKb2huIDMiLCJMYXN0TmFtZSI6IkRvZSIsIkVtYWlsIjoiY2luYXZhMUB5YWhvby5jb20ifSwiRmVsbG93c2hpcCI6eyJUeXBlIjoiQ2xpbmljYWwgSW5mb3JtYXRpY3MiLCJTdGFydCI6IjA3XC8wMVwvMjAyNyIsIkVuZCI6IjA2XC8zMFwvMjAyOCJ9LCJSZWZlcmVuY2UiOnsiRmlyc3ROYW1lIjoiUmVmMUZpcnN0IiwiTGFzdE5hbWUiOiJSZWYxTGFzdCIsIkRlZ3JlZSI6Ik1EIiwiVGl0bGUiOiJSZWYxVGl0bGUiLCJJbnN0aXR1dGlvbiI6bnVsbCwiUGhvbmUiOm51bGwsIkVtYWlsIjoiY2luYXZhQHlhaG9vLmNvbSJ9fQ
@@ -107,8 +107,6 @@ class FellAppRecomLetterController extends ListController
 
             $logger->error($msg);
 
-
-            
             $emailUtil->sendEmail(
                 $confirmationEmailFellApp,
                 $subject,
@@ -121,6 +119,25 @@ class FellAppRecomLetterController extends ListController
             ], 500);
         }
 
+        $fellappId = null;
+        if (isset($data['Application-ID'])) {
+            $fellappId = $data['Application-ID'];
+        }
+        if( !$fellappId ) {
+            $msg = 'Something is wrong - the Application-ID is not set for '.$firstName. ' ' . $lastName . ' ' . $email;
+            $subject = $msg;
+            $this->addFlash(
+                'warning',
+                $msg
+            );
+            $logger->error($msg);
+            $emailUtil->sendEmail(
+                $confirmationEmailFellApp,
+                $subject,
+                $msg
+            );
+        }
+
         //testing
         //$refData['Reference']['Institution'] =
         $institution = '';
@@ -129,7 +146,36 @@ class FellAppRecomLetterController extends ListController
         $country = '';
 
         $cycle = 'new';
-        $reference = new Reference();
+        //TODO: instead of creating a new Reference, find existing Reference which is attached to the existing Fellowship Application
+        //$reference = new Reference();
+        //Use $recLetterHashId and Application ID $fellappId = $data['Application-ID'];
+        $references = $this->createQueryBuilder('r')
+            ->andWhere('r.fellapp = :fellapp')
+            ->andWhere('r.recLetterHashId = :hash')
+            ->setParameter('fellapp', $fellappId)
+            ->setParameter('hash', $recLetterHashId)
+            ->getQuery()
+            ->getResult();
+
+        if( count($references) == 1 ) {
+            //perfect
+            $reference = $references->first();
+        } elseif( count($references) == 0 ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => "No reference found by fellappId=$fellappId and recLetterHashId=$recLetterHashId"
+            ], 500);
+        } elseif ( count($references) > 1 ) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => "Multiple references found by fellappId=$fellappId and recLetterHashId=$recLetterHashId"
+            ], 500);
+        } else {
+            return new JsonResponse([
+                'success' => false,
+                'message' => "Logical error: references found by fellappId=$fellappId and recLetterHashId=$recLetterHashId"
+            ], 500);
+        }
 
         $reference->setRecLetterReceived(false);
 
@@ -340,6 +386,8 @@ class FellAppRecomLetterController extends ListController
 //            ['id' => 'ASC'],
 //            2 // limit testing
 //        );
+
+        //TODO: verify these conditions
         $qb = $em->getRepository(Reference::class)->createQueryBuilder('r');
         $qb->join('r.fellapp', 'f');
         $qb->andWhere('f.remoteId IS NOT NULL');

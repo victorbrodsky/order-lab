@@ -363,14 +363,17 @@ class FellAppRetrievalController extends OrderAbstractController
             'boardCertification1Board', 'boardCertification1Area', 'boardCertification1Date',
             'boardCertification2Board', 'boardCertification2Area', 'boardCertification2Date',
             'boardCertification3Board', 'boardCertification3Area', 'boardCertification3Date',
+            'recommendation1Hash',
             'recommendation1FirstName', 'recommendation1LastName', 'recommendation1Degree', 'recommendation1Phone',
             'recommendation1Title', 'recommendation1Institution', 'recommendation1Email',
             'recommendation1AddressStreet1', 'recommendation1AddressStreet2', 'recommendation1AddressCity',
             'recommendation1AddressState', 'recommendation1AddressZip', 'recommendation1AddressCountry',
+            'recommendation2Hash',
             'recommendation2FirstName', 'recommendation2LastName', 'recommendation2Degree', 'recommendation2Phone',
             'recommendation2Title', 'recommendation2Institution', 'recommendation2Email',
             'recommendation2AddressStreet1', 'recommendation2AddressStreet2', 'recommendation2AddressCity',
             'recommendation2AddressState', 'recommendation2AddressZip', 'recommendation2AddressCountry',
+            'recommendation3Hash',
             'recommendation3FirstName', 'recommendation3LastName', 'recommendation3Degree', 'recommendation3Phone',
             'recommendation3Title', 'recommendation3Institution', 'recommendation3Email',
             'recommendation3AddressStreet1', 'recommendation3AddressStreet2', 'recommendation3AddressCity',
@@ -844,6 +847,7 @@ class FellAppRetrievalController extends OrderAbstractController
 
         // Initialize recommendation fields
         for ($i = 1; $i <= 4; $i++) {
+            $data['recommendation' . $i . 'Hash'] = '';
             $data['recommendation' . $i . 'FirstName'] = '';
             $data['recommendation' . $i . 'LastName'] = '';
             $data['recommendation' . $i . 'Degree'] = '';
@@ -865,6 +869,7 @@ class FellAppRetrievalController extends OrderAbstractController
             $refNum = $refIndex + 1;
             if ($refNum > 4) break;
 
+            $data['recommendation' . $refNum . 'Hash'] = $ref->getRecLetterHashId() ?? '';
             $data['recommendation' . $refNum . 'FirstName'] = $ref->getFirstName() ?? '';
             $data['recommendation' . $refNum . 'LastName'] = $ref->getName() ?? '';
             $data['recommendation' . $refNum . 'Degree'] = $ref->getDegree() ?? '';

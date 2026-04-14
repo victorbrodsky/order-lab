@@ -3024,6 +3024,14 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        //If retrieve from HUB
+        $fellappUtil = $this->container->get('fellapp_util');
+        $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
+        //exit('$retrievalMethod='.$retrievalMethod);
+        if( $retrievalMethod == 'Dedicated public tandem hub server tenant instance' ) {
+            return $this->redirectToRoute('fellapp_retrieve_recommendation_letters');
+        }
+
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
 
         $result = $fellappRecLetterUtil->processFellRecLetterFromGoogleDrive();
