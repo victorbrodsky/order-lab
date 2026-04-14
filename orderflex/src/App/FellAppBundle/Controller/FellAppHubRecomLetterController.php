@@ -581,7 +581,7 @@ class FellAppHubRecomLetterController extends ListController
 //            return new JsonResponse(['error' => 'Secret key not configured'], 500);
 //        }
 
-        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        $apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey(); //Remote Server
         $logger->notice("Remote server: sendRecommendationLettersAction: apiHashConnectionKey=$apiHashConnectionKey");
         //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
         if( !$apiHashConnectionKey ) {
