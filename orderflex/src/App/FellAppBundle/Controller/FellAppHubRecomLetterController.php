@@ -177,7 +177,7 @@ class FellAppHubRecomLetterController extends ListController
             ], 500);
         }
 
-        if( count($reference->getDocuments()) >= 0 ) {
+        if( count($reference->getDocuments()) > 0 ) {
 //            return new JsonResponse([
 //                'success' => false,
 //                'message' => "Reference letter has been already submitted"
