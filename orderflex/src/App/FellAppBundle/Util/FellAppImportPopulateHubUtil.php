@@ -292,7 +292,7 @@ class FellAppImportPopulateHubUtil {
         }
 
         if (!$user) {
-            exit('Create new user='.$usernameCanonical);
+            //exit('Create new user='.$usernameCanonical);
             // Create new user
             $user = new User(false);
             $user->setKeytype($userkeytype);
