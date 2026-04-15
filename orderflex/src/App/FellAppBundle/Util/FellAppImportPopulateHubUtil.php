@@ -138,12 +138,11 @@ class FellAppImportPopulateHubUtil {
                 $fellowshipApplication = $this->createFellappFromRow($rowData, $headers, $systemUser);
                 if ($fellowshipApplication) {
                     $populatedFellowshipApplications->add($fellowshipApplication);
+                    $count++;
                 }
             } catch (\Exception $e) {
                 $logger->error('Error creating fellowship application from row ' . $row . ': ' . $e->getMessage());
             }
-
-            $count++;
         }//for
 
         return $populatedFellowshipApplications;
