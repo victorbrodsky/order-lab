@@ -163,12 +163,27 @@ class FellAppRetrievalController extends OrderAbstractController
                 //$fellappImportPopulateHubUtil->xlsxFileParser($filepath);
                 $populatedFellowshipApplications = $fellappImportPopulateHubUtil->populateFellappFromFile($filepath);
 
+                //get IDs
+                $ids = [];
+                foreach($populatedFellowshipApplications as $populatedFellowshipApplication) {
+                    $ids[] = $populatedFellowshipApplication->getId();
+                }
+
                 //exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
+
+                $popCount = is_array($populatedFellowshipApplications)
+                    ? count($populatedFellowshipApplications)
+                    : 0;
+
+                $idList = (is_array($ids) && count($ids) > 0)
+                    ? implode(", ", $ids)
+                    : '';
 
                 //redirect to Home page
                 $this->addFlash(
                     'notice',
-                    'Populated FellowshipApplications count='.count($populatedFellowshipApplications)
+                    'Populated FellowshipApplications count='.$popCount.
+                    '<br>'.$idList
                 );
                 return $this->redirect( $this->generateUrl('fellapp_home') );
             }

@@ -140,3 +140,6 @@ v Attached Documents > USMLE Scores (All documents will be added to the Complete
 
 HUB server can have multiple institutions with HASH: iterate for each using authenticateHmac()
 Fix: Recommendation letters retrieved successfully
+Fix: rec letter shifted
+
+
