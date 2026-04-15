@@ -178,10 +178,18 @@ class FellAppHubRecomLetterController extends ListController
         }
 
         if( count($reference->getDocuments()) >= 0 ) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => "Reference letter has been already submitted"
-            ], 500);
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => "Reference letter has been already submitted"
+//            ], 500);
+            //return $this->redirectToRoute('fellapp_recom_letter_confirmation');
+            return $this->render(
+                'AppFellAppBundle/RecomLetter/recommendation-letter-confirmation.html.twig',
+                [
+                    'note1' => "Reference letter has been already submitted",
+                    'note2' => "The fellowship application system has already received your letter of recommendation."
+                ]
+            );
         }
 
         $reference->setRecLetterReceived(false);

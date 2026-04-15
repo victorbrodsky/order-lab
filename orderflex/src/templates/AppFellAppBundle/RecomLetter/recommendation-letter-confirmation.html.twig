@@ -37,12 +37,20 @@
                     <div class="panel-body text-center">
                         <h4 class="text-success">Thank you!</h4>
                         <p class="lead">
-                            Your recommendation letter has been successfully submitted.
+                            {% if note1 is defined %}
+                                {{ note1 }}
+                            {% else %}
+                                Your recommendation letter has been successfully submitted.
+                            {% endif %}
                         </p>
                         <hr>
                         <p>
-                            The fellowship application system has received your letter of recommendation.
-                            The applicant and the fellowship program will be notified accordingly.
+                            {% if note2 is defined %}
+                                {{ note2 }}
+                            {% else %}
+                                The fellowship application system has received your letter of recommendation.
+                                The applicant and the fellowship program will be notified accordingly.
+                            {% endif %}
                         </p>
                         <p class="text-muted">
                             If you have any questions, please contact the fellowship program coordinator.
