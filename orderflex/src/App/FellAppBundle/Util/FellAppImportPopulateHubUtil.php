@@ -113,6 +113,7 @@ class FellAppImportPopulateHubUtil {
         for ($row = 2; $row <= $highestRow; $row++) {
 
             if( $count > 0 ) {
+                $logger->notice('populateFellappFromFile: testing break count=' . $count);
                 break; //testing
             }
 
