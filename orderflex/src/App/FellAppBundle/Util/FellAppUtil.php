@@ -854,15 +854,20 @@ class FellAppUtil {
     }
 
     public function findFellowshipSpeciatlyByApiHashKey( $apiHashKey ) {
+        $logger = $this->container->get('logger');
         if( !$apiHashKey ) {
+            $logger->warning('findFellowshipSpeciatlyByApiHashKey: $apiHashKey is null');
             return null;
         }
         $localSpecialties = $this->getFellowshipSpeciatliesWithApiKey();
         foreach( $localSpecialties as $localSpecialty) {
             $localApiConnectionKey = $localSpecialty->getApiConnectionKey();
+            $logger->notice('findFellowshipSpeciatlyByApiHashKey: $localApiConnectionKey='.$localApiConnectionKey);
             if( $localApiConnectionKey ) {
                 $localApiConnectionHashKey = hash('sha256', $localApiConnectionKey);
+                $logger->notice('findFellowshipSpeciatlyByApiHashKey: compare hash:'.trim($localApiConnectionHashKey).'?='.trim($apiHashKey));
                 if ($localApiConnectionHashKey && trim($localApiConnectionHashKey) === trim($apiHashKey)) {
+                    $logger->notice('findFellowshipSpeciatlyByApiHashKey: found local specialty='.$localSpecialty->getNameInstitution());
                     return $localSpecialty;
                 }
             }
