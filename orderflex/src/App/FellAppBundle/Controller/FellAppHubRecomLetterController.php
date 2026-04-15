@@ -483,12 +483,26 @@ class FellAppHubRecomLetterController extends ListController
 
             $logger->notice("Caller server: letters count=" . count($data['letters']));
 
+            $projectDir = $this->getParameter('kernel.project_dir');
+            $fellappUploadPath = $this->getParameter('fellapp.uploadpath');
+            // /public/Uploaded/fellapp/
+            $uploadPath = $projectDir .
+                DIRECTORY_SEPARATOR . 'public' .
+                DIRECTORY_SEPARATOR . 'Uploaded' .
+                DIRECTORY_SEPARATOR . $fellappUploadPath;
+
+            $noteArr = [];
             $processedCount = 0;
             foreach ($data['letters'] as $letterData) {
                 if (!isset($letterData['hashId']) || !isset($letterData['documentData'])) {
                     $logger->warning("Caller server: skip: $letterData does not have hashId and documentData");
                     continue;
                 }
+
+                //testing
+                //$filename = $letterData['hashId'] . '.pdf';
+                //$filepath = $storagePath . DIRECTORY_SEPARATOR . $filename;
+                //exit('$filepath='.$filepath);
 
                 // Find the local reference by hash ID
                 $reference = $em->getRepository(Reference::class)->findOneBy([
@@ -497,12 +511,14 @@ class FellAppHubRecomLetterController extends ListController
 
                 if (!$reference) {
                     $logger->warning("Reference not found for hash ID: " . $letterData['hashId']);
+                    $noteArr[] = "Reference not found for hash ID: " . $letterData['hashId'];
                     continue;
                 }
 
                 // Skip if already received
                 if ($reference->getRecLetterReceived()) {
-                    $logger->notice("Reference already has letter received: " . $letterData['hashId']);
+                    $logger->notice("Reference letter has already been received, hash ID: " . $letterData['hashId']);
+                    $noteArr[] = "Reference letter has already been received, hash ID: " . $letterData['hashId'];
                     continue;
                 }
 
@@ -514,9 +530,9 @@ class FellAppHubRecomLetterController extends ListController
 
                 // Decode and save file
                 $fileData = base64_decode($letterData['documentData']);
-                $uploadPath = $this->getParameter('fellapp.uploadpath');
                 $filename = $letterData['hashId'] . '.pdf';
-                $filepath = $uploadPath . '/' . $filename;
+                $filepath = $uploadPath . DIRECTORY_SEPARATOR . $filename;
+                //exit('$filepath='.$filepath);
 
                 // Ensure directory exists
                 if (!is_dir($uploadPath)) {
@@ -530,7 +546,7 @@ class FellAppHubRecomLetterController extends ListController
                 //$document->setMimeType('application/pdf');
 
                 // Generate hash
-                $document->generateDocumentHash($filepath);
+                //$document->generateDocumentHash($filepath); //TODO: ???
 
                 $em->persist($document);
                 $reference->addDocument($document);
@@ -540,13 +556,22 @@ class FellAppHubRecomLetterController extends ListController
 
                 $processedCount++;
                 $logger->notice("Caller server: Attached document to reference: " . $letterData['hashId']);
+                $noteArr[] = "Caller server: Attached document to reference: " . $letterData['hashId'];
             }//foreach
 
-            $em->flush();
+            if( $processedCount > 0 ) {
+                $em->flush();
+            }
 
             $logger->notice("Caller server: Processed $processedCount recommendation letters");
+
+            $message = 'Recommendation letters retrieved: '.$processedCount;
+            if( count($noteArr) > 0 ) {
+                $message = $message . "; " . implode(', ', $noteArr);
+            }
+
             return new JsonResponse([
-                'message' => 'Recommendation letters retrieved successfully',
+                'message' => $message,
                 'count' => $processedCount,
                 'requested' => count($hashIds)
             ]);
