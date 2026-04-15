@@ -1434,7 +1434,7 @@ class FellAppImportPopulateHubUtil {
         return $fellappImportPopulateUtil->getValueByHeaderName($keyName, $row, $headers);
     }
 
-    //Verify received $hmacHeader with the each institution's ApiHashConnectionKey
+    //Use on Remote Server: Verify received $hmacHeader with the each institution's ApiHashConnectionKey
     public function authenticateHmac( $hmacHeader, $timestampHeader ) {
         $logger = $this->container->get('logger');
         $fellappUtil = $this->container->get('fellapp_util');
@@ -1461,6 +1461,7 @@ class FellAppImportPopulateHubUtil {
         return $authenticated;
     }
 
+    //Use it only if there is only one single institution with not empty ApiHashConnectionKey, otherwise use authenticateHmac
     public function getInstitutionApiHashConnectionKey( $getInstitutions=false )
     {
         $logger = $this->container->get('logger');

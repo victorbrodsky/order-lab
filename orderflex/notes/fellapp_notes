@@ -138,7 +138,5 @@ v Board Certification
 v Attached Documents > USMLE Scores (All documents will be added to the Complete Application PDF)
 
 
-TODO: HUB server can have multiple institutions with HASH:
-=> Error retrieving apiHashConnectionKey: multiple institutions found with apiHashConnectionKey
-Line: 1504 in FellAppBundle\Util\FellAppImportPopulateHubUtil.php
-Used in sendRecommendationLettersAction
+HUB server can have multiple institutions with HASH: iterate for each using authenticateHmac()
+Fix: Recommendation letters retrieved successfully
