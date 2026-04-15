@@ -108,11 +108,12 @@ class FellAppImportPopulateHubUtil {
 
         $populatedFellowshipApplications = new ArrayCollection();
 
+        $count = 0;
         // Process each data row (starting from row 2)
         for ($row = 2; $row <= $highestRow; $row++) {
 
-            if( $row > 2 ) {
-                //break; //testing
+            if( $count > 0 ) {
+                break; //testing
             }
 
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE)[0];
@@ -140,7 +141,9 @@ class FellAppImportPopulateHubUtil {
             } catch (\Exception $e) {
                 $logger->error('Error creating fellowship application from row ' . $row . ': ' . $e->getMessage());
             }
-        }
+
+            $count++;
+        }//for
 
         return $populatedFellowshipApplications;
     }
