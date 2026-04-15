@@ -112,7 +112,7 @@ class FellAppImportPopulateHubUtil {
         for ($row = 2; $row <= $highestRow; $row++) {
 
             if( $row > 2 ) {
-                break; //testing
+                //break; //testing
             }
 
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE)[0];
