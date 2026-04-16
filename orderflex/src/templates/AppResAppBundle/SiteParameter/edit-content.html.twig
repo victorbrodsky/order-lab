@@ -57,12 +57,13 @@
                 </p>
 
                 {{ formmacros.field(form.acceptedEmailSubject) }}
-
                 {{ formmacros.field(form.acceptedEmailBody) }}
 
                 {{ formmacros.field(form.rejectedEmailSubject) }}
-
                 {{ formmacros.field(form.rejectedEmailBody) }}
+
+                {{ formmacros.field(form.refInvitationSubject) }}
+                {{ formmacros.field(form.refInvitationBody) }}
 
                 {% if form.resappAcademicYearStart is defined %}
                     {{ formmacros.dayMonthDate(form.resappAcademicYearStart,cycle) }}

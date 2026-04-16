@@ -47,6 +47,8 @@
                     Please use naming notation:
                     <br>[[LOCAL INSTITUTION NAME]] - local institution name (same as 'Local Institution')
                     <br>[[APPLICANT NAME]] - applicant name
+                    <br>[[REFEREE NAME]] - referee name
+                    <br>[[SUBMIT REFERENCE URL]] - url to submit a letter of reference
                     <br>[[START YEAR]] - start year of the training period
                     <br>[[FELLOWSHIP TYPE]] - fellowship application type
                     <br>[[INSTITUTION]] - Institution associated with specific Fellowship Specialty (use 'Local Institution' if empty)
@@ -63,12 +65,13 @@
                 {{ formmacros.field(form.bodyInvitedInterview) }}
 
                 {{ formmacros.field(form.acceptedEmailSubject) }}
-
                 {{ formmacros.field(form.acceptedEmailBody) }}
 
                 {{ formmacros.field(form.rejectedEmailSubject) }}
-
                 {{ formmacros.field(form.rejectedEmailBody) }}
+
+                {{ formmacros.field(form.refInvitationSubject) }}
+                {{ formmacros.field(form.refInvitationBody) }}
 
                 {% if form.fellappAcademicYearStart is defined %}
                     {{ formmacros.dayMonthDate(form.fellappAcademicYearStart,cycle) }}
@@ -130,6 +133,7 @@
                 {{ formmacros.field(form.hideWarning) }}
 
                 {{ formmacros.field(form.sendEmailUploadLetterFellApp) }}
+                {{ formmacros.field(form.ccAdminEmailInvite) }}
 
                 {{ formmacros.field(form.confirmationSubjectFellApp) }}
                 {{ formmacros.field(form.confirmationBodyFellApp) }}

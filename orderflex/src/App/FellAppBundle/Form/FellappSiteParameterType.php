@@ -70,6 +70,15 @@ class FellappSiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control textarea')
         ));
 
+        $builder->add('refInvitationSubject', null, array(
+            'label' => 'Subject of e-mail inviting to submit the recommendation letters:',
+            'attr' => array('class' => 'form-control textarea')
+        ));
+        $builder->add('refInvitationBody', null, array(
+            'label' => 'Body of e-mail inviting to submit the recommendation letters:',
+            'attr' => array('class' => 'form-control textarea')
+        ));
+
         $builder->add('confirmationEmailFellApp', null, array(
             'label' => 'Email address for confirmation of application submission:',
             'attr' => array('class' => 'form-control')
@@ -136,6 +145,11 @@ class FellappSiteParameterType extends AbstractType
 
         $builder->add('sendEmailUploadLetterFellApp', null, array(
             'label'=>'Automatically send invitation emails to upload recommendation letters:',
+            'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+        ));
+
+        $builder->add('ccAdminEmailInvite', null, array(
+            'label'=>'CC the Fellowship Application Site Administrator\'s email (the one sending the emails) on emails inviting to submit the recommendation letters:',
             'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
         ));
 

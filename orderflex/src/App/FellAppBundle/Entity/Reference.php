@@ -406,6 +406,21 @@ class Reference
         return implode(" ",$nameArr);
     }
 
+    public function getDegreeStr() {
+        $degreeStr = "";
+        $degreeReference = strtolower($this->getDegree());
+        if(
+            strpos((string)$degreeReference, 'md') !== false
+            || strpos((string)$degreeReference, 'm.d.') !== false
+            || strpos((string)$degreeReference, 'phd') !== false
+            || strpos((string)$degreeReference, 'ph.d') !== false
+            || strpos((string)$degreeReference, 'dr.') !== false
+        ) {
+            $degreeStr = "Dr. ";
+        }
+        return $degreeStr;
+    }
+
     public function capitalizeIfNotAllCapital($s) {
         if( !$s ) {
             return $s;

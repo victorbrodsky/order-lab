@@ -3719,7 +3719,7 @@ class FellAppUtil {
         return $warningStr;
     }
 
-    public function siteSettingsConstantReplace( $str, $fellapp ) {
+    public function siteSettingsConstantReplace( $str, $fellapp, $reference=null, $uploadFormLink=null ) {
 
         if( !$str || !$fellapp ) {
             return null;
@@ -3742,6 +3742,15 @@ class FellAppUtil {
             $startDateStr = $fellapp->getStartDate()->format('Y');
         } else {
             $startDateStr = NULL;
+        }
+
+        $refereeFullName = '';
+        $submitReferenceUrl = '';
+        if( $reference ) {
+            $refereeFullName = $reference->getDegreeStr().$reference->getFullName();
+        }
+        if( $uploadFormLink ) {
+            $submitReferenceUrl = $uploadFormLink;
         }
 
         //Temporary Exception for Clinical Chemistry
@@ -3802,6 +3811,8 @@ class FellAppUtil {
 
         $str = str_replace("[[LOCAL INSTITUTION NAME]]",$localInstitutionName,$str);
         $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
+        $str = str_replace("[[REFEREE NAME]]",$refereeFullName,$str);
+        $str = str_replace("[[SUBMIT REFERENCE URL]]",$submitReferenceUrl,$str);
         $str = str_replace("[[START YEAR]]",$startDateStr,$str);
         $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappType,$str);
         $str = str_replace("[[INSTITUTION]]",$fellappInstName,$str);

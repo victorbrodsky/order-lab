@@ -468,55 +468,97 @@ class RecLetterUtil {
 
         $uploadFormLink = '<a href="'.$uploadFormLink.'">'.$uploadFormLink.'</a>';
 
-        //ApplicantFirstName ApplicantLastName has listed you ReferenceFirstName ReferenceLastName
-        // as a reference in their FellowshipType fellowship application.
-        // Please submit your recommendation letter to Weill Cornell Medical College / New York Presbyterian Hospital.
-        $subject = $applicantFullName . " has listed you " . $referenceFullName
-            . " as a reference in their ".$fellappTypeStr." fellowship application."
-            . " Please submit your recommendation letter to $localInstitutionFellApp."
-        ;
+        if(0) {
+            //ApplicantFirstName ApplicantLastName has listed you ReferenceFirstName ReferenceLastName
+            // as a reference in their FellowshipType fellowship application.
+            // Please submit your recommendation letter to Weill Cornell Medical College / New York Presbyterian Hospital.
+            $subject = $applicantFullName . " has listed you " . $referenceFullName
+                . " as a reference in their " . $fellappTypeStr . " fellowship application."
+                . " Please submit your recommendation letter to $localInstitutionFellApp.";
 
-        //check the degree of the recommendation letter author; if it equals "MD", "md", "PhD", "m.d.", "Ph.D", "Ph.D.", or "MD/PhD", insert "Dr. "
-        $degreeStr = "";
-        $degreeReference = strtolower($reference->getDegree());
-        if(
-            strpos((string)$degreeReference, 'md') !== false
-            || strpos((string)$degreeReference, 'm.d.') !== false
-            || strpos((string)$degreeReference, 'phd') !== false
-            || strpos((string)$degreeReference, 'ph.d') !== false
-            || strpos((string)$degreeReference, 'dr.') !== false
-        ) {
-            $degreeStr = "Dr. ";
+            //check the degree of the recommendation letter author; if it equals "MD", "md", "PhD", "m.d.", "Ph.D", "Ph.D.", or "MD/PhD", insert "Dr. "
+            $degreeStr = "";
+            $degreeReference = strtolower($reference->getDegree());
+            if (
+                strpos((string)$degreeReference, 'md') !== false
+                || strpos((string)$degreeReference, 'm.d.') !== false
+                || strpos((string)$degreeReference, 'phd') !== false
+                || strpos((string)$degreeReference, 'ph.d') !== false
+                || strpos((string)$degreeReference, 'dr.') !== false
+            ) {
+                $degreeStr = "Dr. ";
+            }
+
+            $body =
+                "Dear " . $degreeStr . "$referenceFullName,"
+                . "<br><br>"
+                . "$applicantFullName has applied to the $fellappTypeStr fellowship at $localInstitutionFellApp"
+                . " for the year $startDateStr and listed you as a reference."
+                . "<br>"
+                . "We review complete applications as they are received and your timely submission of your recommendation letter will increase"
+                . " " . $applicantFullName . "'s chances of being accepted."
+                . "<br>" . "Please use the link below to submit your recommendation letter as soon as possible:"
+                . "<br><br>" . $uploadFormLink
+                . "<br><br>" . "If you have any issues with submitting your letter, please contact"
+                . " Jessica Misner (our fellowship program coordinator) at jep2018@med.cornell.edu for alternative methods of submitting your recommendation letter."
+                . "<br><br>" . "If you believe you have received this email in error please let Jessica Misner know."
+                . "<br><br><br>" . "Sincerely,"
+                . "<br><br>" . "Jessica Misner"
+                . "<br>" . "Fellowship Program Coordinator"
+                . "<br>" . "Weill Cornell Medicine Pathology and Laboratory Medicine"
+                . "<br>" . "1300 York Avenue, Room C-302"
+                . "<br>" . "New York, NY 10065  "
+                . "<br>" . "T 212.746.6464"
+                . "<br>" . "F 212.746.8192";
+        }//if(0)
+
+        $subject = $userSecUtil->getSiteSettingParameter('refInvitationSubject',$this->container->getParameter('fellapp.sitename'));
+        if( !$subject ) {
+            $subject = "[[APPLICANT NAME]] has listed you [[REFEREE NAME]] as a reference".
+                " in their [[FELLOWSHIP TYPE]] fellowship application. Please submit your recommendation".
+                " letter to [[INSTITUTION]]";
+        }
+        $body = $userSecUtil->getSiteSettingParameter('refInvitationBody',$this->container->getParameter('fellapp.sitename'));
+        if( !$body ) {
+            $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp',$this->container->getParameter('fellapp.sitename'));
+            if( $confirmationEmailFellApp ) {
+                $confirmationEmailFellApp = " at ".$confirmationEmailFellApp;
+            }
+            $body = "Dear [[REFEREE NAME]],"."<br>".
+                "[[APPLICANT NAME]] has applied to the [[FELLOWSHIP TYPE]] fellowship at ".
+                "[[INSTITUTION]] for the year [[START YEAR]] and listed you as a reference."."<br>".
+                "We review complete applications as they are received and your timely submission ".
+                "of your recommendation letter will increase [[APPLICANT NAME]]'s chances of being accepted."."<br>".
+                "Please use the link below to submit your recommendation letter as soon as possible:<br><br> 
+                [[SUBMIT REFERENCE URL]]
+                <br><br>
+                If you have any issues with submitting your letter, please contact ".
+                "our fellowship program coordinator at ".
+                "$confirmationEmailFellApp for alternative methods of submitting your recommendation letter.
+                <br><br>
+                If you believe you have received this email in error please let our fellowship program coordinator know.
+                <br><br>
+                <br><br>
+                Sincerely,
+                <br><br>
+                Fellowship Program Coordinator";
         }
 
-        $body =
-            "Dear ".$degreeStr."$referenceFullName,"
-            . "<br><br>"
-            . "$applicantFullName has applied to the $fellappTypeStr fellowship at $localInstitutionFellApp"
-            . " for the year $startDateStr and listed you as a reference."
-            . "<br>"
-            . "We review complete applications as they are received and your timely submission of your recommendation letter will increase"
-            . " " . $applicantFullName . "'s chances of being accepted."
-            . "<br>" . "Please use the link below to submit your recommendation letter as soon as possible:"
-            . "<br><br>" . $uploadFormLink
-            . "<br><br>" . "If you have any issues with submitting your letter, please contact"
-            . " Jessica Misner (our fellowship program coordinator) at jep2018@med.cornell.edu for alternative methods of submitting your recommendation letter."
-            . "<br><br>" . "If you believe you have received this email in error please let Jessica Misner know."
-            . "<br><br><br>" . "Sincerely,"
-            . "<br><br>" . "Jessica Misner"
-            . "<br>" . "Fellowship Program Coordinator"
-            . "<br>" . "Weill Cornell Medicine Pathology and Laboratory Medicine"
-            . "<br>" . "1300 York Avenue, Room C-302"
-            . "<br>" . "New York, NY 10065  "
-            . "<br>" . "T 212.746.6464"
-            . "<br>" . "F 212.746.8192"
-        ;
+        $subject = $fellappUtil->siteSettingsConstantReplace($subject,$fellapp,$reference,$uploadFormLink);
+        $body = $fellappUtil->siteSettingsConstantReplace($body,$fellapp,$reference,$uploadFormLink);
+
+        $ccAdminEmailInvite = $userSecUtil->getSiteSettingParameter('ccAdminEmailInvite',$this->container->getParameter('fellapp.sitename'));
+        if( $ccAdminEmailInvite === false ) {
+            $ccSenderEmail = null;
+        } else {
+            $ccSenderEmail = $senderEmail;
+        }
 
         $emailUtil->sendEmail(
             $email,
             $subject,
             $body,
-            $senderEmail, //$cc
+            $ccSenderEmail, //$cc
             $senderEmail
         );
 
@@ -540,26 +582,6 @@ class RecLetterUtil {
 
         //eventlog
         $eventMsg = $msg . "<br><br> Subject:<br>". $subject . "<br><br>Body:<br>" . $body;
-//        $user = NULL;
-//        if( $this->container->get('security.token_storage')->getToken() ) {
-//            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-//        }
-//        if( $user instanceof User) {
-//            //User OK - do nothing
-//        } else {
-//            $user = $userSecUtil->findSystemUser();
-//        }
-//        if( !$user ) {
-//            $user = $userSecUtil->findSystemUser();
-//        }
-//        $userSecUtil->createUserEditEvent(
-//            $this->container->getParameter('fellapp.sitename'), //$sitename
-//            $eventMsg,                                          //$event message
-//            $user,                                              //user
-//            $fellapp,                                           //$subjectEntities
-//            null,                                               //$request
-//            "Reference Invitation Email"                        //$action
-//        );
         $this->sendLetterEventLog($eventMsg,"Reference Invitation Email",$fellapp);
 
         $res = array(
