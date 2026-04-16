@@ -126,6 +126,27 @@ class FellappSiteParameter {
     #[ORM\Column(type: 'text', nullable: true)]
     private $confirmationBodyFellApp;
 
+    ///////////
+    //A B has listed you Ref1FirstName Ref1LastName as a reference in their
+    // Clinical Chemistry fellowship application.
+    // Please submit your recommendation letter to
+    // Weill Cornell Medical College / New York Presbyterian Hospital.
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $refInvitationSubject;
+
+    //...Please use the link below to submit your recommendation letter as soon as possible...
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $refInvitationBody;
+
+    /**
+     * CC the Fellowship Application Site Administrator's email
+     * (the one sending the emails) on emails inviting
+     * to submit the recommendation letters
+     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $ccAdminEmailInvite;
+    /////////
+
     /**
      * [ checkbox ] Delete successfully imported applications from Google Drive
      */
@@ -243,6 +264,7 @@ class FellappSiteParameter {
         $this->setAllowPopulateFellApp(false);
         $this->setHideWarning(false);
         $this->setSendEmailUploadLetterFellApp(false);
+        $this->setCcAdminEmailInvite(false);
         $this->setDeleteImportedAplicationsFellApp(false);
         $this->setDeleteOldAplicationsFellApp(false);
         $this->setEnablePublicFellApp(false);
@@ -537,6 +559,54 @@ class FellappSiteParameter {
     public function setSendEmailUploadLetterFellApp($sendEmailUploadLetterFellApp)
     {
         $this->sendEmailUploadLetterFellApp = $sendEmailUploadLetterFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCcAdminEmailInvite()
+    {
+        return $this->ccAdminEmailInvite;
+    }
+
+    /**
+     * @param mixed $ccAdminEmailInvite
+     */
+    public function setCcAdminEmailInvite($ccAdminEmailInvite)
+    {
+        $this->ccAdminEmailInvite = $ccAdminEmailInvite;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRefInvitationSubject()
+    {
+        return $this->refInvitationSubject;
+    }
+
+    /**
+     * @param mixed $refInvitationSubject
+     */
+    public function setRefInvitationSubject($refInvitationSubject)
+    {
+        $this->refInvitationSubject = $refInvitationSubject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRefInvitationBody()
+    {
+        return $this->refInvitationBody;
+    }
+
+    /**
+     * @param mixed $refInvitationBody
+     */
+    public function setRefInvitationBody($refInvitationBody)
+    {
+        $this->refInvitationBody = $refInvitationBody;
     }
 
     /**

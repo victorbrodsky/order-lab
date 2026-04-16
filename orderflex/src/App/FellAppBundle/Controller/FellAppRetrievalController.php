@@ -171,19 +171,30 @@ class FellAppRetrievalController extends OrderAbstractController
 
                 //exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
 
-                $popCount = is_array($populatedFellowshipApplications)
-                    ? count($populatedFellowshipApplications)
-                    : 0;
+//                $popCount = is_array($populatedFellowshipApplications)
+//                    ? count($populatedFellowshipApplications)
+//                    : 0;
+                $popCount = 0;
+                if( is_array($populatedFellowshipApplications) && count($populatedFellowshipApplications) > 0 ) {
+                    $popCount = count($populatedFellowshipApplications);
+                }
 
                 $idList = (is_array($ids) && count($ids) > 0)
                     ? implode(", ", $ids)
                     : '';
 
+//                $message = 'Application data retrieved from ' . $filename.
+//                    '<br>Populated '.$popCount.' fellowship application(s)';
+                $message = 'Populated '.$popCount.' fellowship application(s)';
+                if( $idList ) {
+                    $message = $message . ' with IDs: '.$idList;
+                }
+                $logger->notice('Application data retrieved from ' . $filename."<br>".$message);
+
                 //redirect to Home page
                 $this->addFlash(
                     'notice',
-                    'Populated FellowshipApplications count='.$popCount.
-                    '<br>'.$idList
+                    $message
                 );
                 return $this->redirect( $this->generateUrl('fellapp_home') );
             }
@@ -199,7 +210,7 @@ class FellAppRetrievalController extends OrderAbstractController
                     dump("File not found: " . $filepath);
                 }
             }
-            exit('Exit retrieveApplicationDataAction');
+            //exit('Exit retrieveApplicationDataAction');
 
             //use the HASH values for each specialty on Caller and Remote servers
             
@@ -320,7 +331,6 @@ class FellAppRetrievalController extends OrderAbstractController
         // Define all headers in the exact order requested
         $headers = [
             'ID', 'originalAppId', 'instanceId', 'primaryPublicUserId',
-            //'apiimportkey', 'apiimportkeyglobal',
             'apihashconnectionkey', 'apihashconnectionglobalkey',
             'timestamp', 'lastName', 'firstName', 'middleName',
             'uploadedPhotoUrl',
@@ -454,33 +464,6 @@ class FellAppRetrievalController extends OrderAbstractController
         $reprimandDocs = $fellapp->getReprimandDocuments();
         $lawsuitDocs = $fellapp->getLawsuitDocuments();
 
-//        //FellowshipSubspecialty api key
-//        $apiImportKeysJson = null;
-//        $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
-//        if( $fellappSpecialty ) {
-//            $apiImportKeys = $fellappSpecialty->getApiImportKeys();
-//            $values = [];
-//            foreach ($apiImportKeys as $keyObj) {
-//                //$values[] = $keyObj->getApiKeyValue();
-//                $values[] = $keyObj->getName();
-//            }
-//            $apiImportKeysJson = json_encode($values);
-//            $logger->notice($fellappSpecialty->getNameInstitution().': $apiImportKeysJson='.$apiImportKeysJson);
-//        }
-//        //GlobalFellowshipSpecialty api key
-//        $apiImportKeyGlobal = null;
-//        $globalFellappSpecialty = $fellapp->getGlobalFellowshipSpecialty();
-//        if( $globalFellappSpecialty ) {
-//            $apiImportKeyGlobals = $globalFellappSpecialty->getApiImportKeys();
-//            $values = [];
-//            foreach ($apiImportKeyGlobals as $keyObj) {
-//                $logger->notice($keyObj->getId().': getApiKeyValue getName='.$keyObj->getName());
-//                $values[] = $keyObj->getName();
-//            }
-//            $apiImportKeysGlobalJson = json_encode($values);
-//            $logger->notice($globalFellappSpecialty->getNameInstitution().': $apiImportKeysGlobalJson='.$apiImportKeysGlobalJson);
-//        }
-
         //FellowshipSubspecialty api hash key
         $apiHashConnectionKey = '';
         $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
@@ -504,8 +487,6 @@ class FellAppRetrievalController extends OrderAbstractController
         $data['instanceId'] = $instanceId;
         $data['primaryPublicUserId'] = $user ? $user->getPrimaryPublicUserId() : '';
 
-        //$data['apiimportkey'] = $apiImportKeysJson;                 //FellowshipSubspecialty api key
-        //$data['apiimportkeyglobal'] = $apiImportKeysGlobalJson;     //GlobalFellowshipSpecialty api key
         $data['apihashconnectionkey'] = $apiHashConnectionKey;     //FellowshipSubspecialty api hash key
         $data['apihashconnectionglobalkey'] = $apiHashConnectionGlobalKey;     //GlobalFellowshipSpecialty api hash key
 

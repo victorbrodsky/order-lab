@@ -109,10 +109,6 @@ class FellowshipSubspecialty extends ListAbstract
     #[ORM\Column(type: 'text', nullable: true)]
     private $screeningMessage;
 
-    //Key(s) for application import: [2lk24n2k3n4o95n4o86n4o2i3noifinof] (accept multiple new values via Select2)
-    #[ORM\OneToMany(targetEntity: 'App\FellAppBundle\Entity\FellAppImportKey', mappedBy: 'localspecialty', cascade: ['persist'])]
-    private $apiImportKeys;
-
     //API key expected in URL to enable remote connection: [l4kn5lk2nl23iron2i3n2l3inl23kn4o2i3j42fowiefw940]
     #[ORM\Column(type: 'string', nullable: true)]
     private $apiConnectionKey;
@@ -130,7 +126,6 @@ class FellowshipSubspecialty extends ListAbstract
         $this->coordinators = new ArrayCollection();
         $this->directors = new ArrayCollection();
         $this->interviewers = new ArrayCollection();
-        $this->apiImportKeys = new ArrayCollection();
         $this->setShowOption(true);
     }
 
@@ -233,29 +228,6 @@ class FellowshipSubspecialty extends ListAbstract
     public function getInterviewers()
     {
         return $this->interviewers;
-    }
-
-    public function addApiImportKey($item)
-    {
-        if( $item && !$this->apiImportKeys->contains($item) ) {
-            $this->apiImportKeys->add($item);
-            $item->setLocalspecialty($this);
-        }
-        return $this;
-    }
-    public function removeApiImportKey($item)
-    {
-        //$this->apiImportKeys->removeElement($item);
-        if ($this->apiImportKeys->removeElement($item)) {
-            if ($item->getLocalspecialty() === $this) {
-                $item->setLocalspecialty(null);
-            }
-        }
-        return $this;
-    }
-    public function getApiImportKeys()
-    {
-        return $this->apiImportKeys;
     }
 
     /**

@@ -20,9 +20,7 @@ namespace App\UserdirectoryBundle\Form;
 
 
 use App\FellAppBundle\Entity\ExpectedDegreeList;
-use App\FellAppBundle\Entity\FellAppImportKey;
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
-use App\FellAppBundle\Form\FellAppImportKeyType;
 use App\TranslationalResearchBundle\Entity\AntibodyCategoryTagList;
 use App\TranslationalResearchBundle\Entity\AntibodyLabList;
 use App\TranslationalResearchBundle\Entity\AntibodyPanelList;
@@ -650,28 +648,7 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control')
             ));
-
-//            $builder->add('apiConnectionKey', null, array(
-//                'label'=>'API key expected in URL to enable remote connection:',
-//                'required' => false,
-//                'attr' => array('class' => 'textarea form-control')
-//            ));
-
-//            $builder->add('apiImportKeys',EntityType::class,array(
-//                'class' => FellAppImportKey::class,
-//                'label' => "Key(s) for application import:",
-//                'required' => false,
-//                'choice_label' => function(FellAppImportKey $key) {
-//                    return $key->getValue();
-//                },
-//                'attr' => array('class'=>'combobox combobox-width')
-//            ));
-//            $builder->add('apiImportKeys', CustomSelectorType::class, array(
-//                'label' => 'Key(s) for application import:',
-//                'attr' => array('class' => 'combobox ajax-combobox-apiimportkey', 'type' => 'hidden'),
-//                'required' => false,
-//                'classtype' => 'apiimportkey'
-//            ));
+            
             $builder->add( 'apiConnectionKey', null, array(
                 'label'=>'API key for transmission of application data for this Fellowship Specialty program:',
                 'attr' => array('class'=>'form-control'),
@@ -689,12 +666,6 @@ class GenericListType extends AbstractType
             ));
 
             //lowestRoles linkToListId
-        }
-        if( strtolower($this->mapper['className']) == strtolower("FellAppImportKey") ) {
-            $builder->add('apiKeyValue',null,array(
-                'label'=>'Api key value:',
-                'attr' => array('class' => 'form-control')
-            ));
         }
 
         //nativeName for Language List

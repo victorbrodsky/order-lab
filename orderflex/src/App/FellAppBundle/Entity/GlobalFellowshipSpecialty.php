@@ -84,22 +84,6 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'string', nullable: true)]
     private $apiHashConnectionKey;
 
-    //Key(s) for application import: [2lk24n2k3n4o95n4o86n4o2i3noifinof] (accept multiple new values via Select2)
-    //    $entity->setApiImportKeys([
-    //    '2lk24n2k3n4o95n4o86n4o2i3noifinof',
-    //    'newkey1234567890',
-    //    'anotherKey0987654321',
-    //    ]);
-    //#[ORM\Column(type: 'json', nullable: true)]
-    //private array $apiImportKeys = [];
-    //#[ORM\Column(name: 'apiImportKeys', type: 'array')]
-    //private $apiImportKeys;
-
-    //NOT USED. TODEL
-    //Key(s) for application import: [2lk24n2k3n4o95n4o86n4o2i3noifinof] (accept multiple new values via Select2)
-    #[ORM\OneToMany(targetEntity: 'FellAppImportKey', mappedBy: 'globalspecialty', cascade: ['persist'])]
-    private $apiImportKeys;
-
     //Show an additional section with screening questions on the Fellowship Application page
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $screeningQuestions;
@@ -138,7 +122,6 @@ class GlobalFellowshipSpecialty extends ListAbstract
         $this->coordinators = new ArrayCollection();
         $this->directors = new ArrayCollection();
         $this->interviewers = new ArrayCollection();
-        $this->apiImportKeys = new ArrayCollection();
         $this->setShowOption(true);
     }
 
@@ -252,29 +235,6 @@ class GlobalFellowshipSpecialty extends ListAbstract
     public function setApiConnectionKey($apiConnectionKey)
     {
         $this->apiConnectionKey = $apiConnectionKey;
-    }
-
-    public function addApiImportKey($item)
-    {
-        if( $item && !$this->apiImportKeys->contains($item) ) {
-            $this->apiImportKeys->add($item);
-            $item->setGlobalspecialty($this);
-        }
-        return $this;
-    }
-    public function removeApiImportKey($item)
-    {
-        //$this->apiImportKeys->removeElement($item);
-        if ($this->apiImportKeys->removeElement($item)) {
-            if ($item->getGlobalspecialty() === $this) {
-                $item->setGlobalspecialty(null);
-            }
-        }
-        return $this;
-    }
-    public function getApiImportKeys()
-    {
-        return $this->apiImportKeys;
     }
 
     /**
