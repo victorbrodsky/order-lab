@@ -529,18 +529,17 @@ class RecLetterUtil {
                 "[[INSTITUTION]] for the year [[START YEAR]] and listed you as a reference."."<br>".
                 "We review complete applications as they are received and your timely submission ".
                 "of your recommendation letter will increase [[APPLICANT NAME]]'s chances of being accepted."."<br>".
-                "Please use the link below to submit your recommendation letter as soon as possible:<br><br> 
-                [[SUBMIT REFERENCE URL]]
-                <br><br>
-                If you have any issues with submitting your letter, please contact ".
+                "Please use the link below to submit your recommendation letter as soon as possible:<br><br>".
+                "[[SUBMIT REFERENCE URL]]".
+                "<br><br>".
+                "If you have any issues with submitting your letter, please contact ".
                 "our fellowship program coordinator at ".
-                "$confirmationEmailFellApp for alternative methods of submitting your recommendation letter.
-                <br><br>
-                If you believe you have received this email in error please let our fellowship program coordinator know.
-                <br><br>
-                <br><br>
-                Sincerely,
-                <br><br>
+                "$confirmationEmailFellApp for alternative methods of submitting your recommendation letter.".
+                "<br><br>".
+                "If you believe you have received this email in error please let our fellowship program coordinator know.".
+                "<br><br>".
+                "Sincerely,
+                <br>
                 Fellowship Program Coordinator";
         }
 
