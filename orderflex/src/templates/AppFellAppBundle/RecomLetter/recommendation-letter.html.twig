@@ -30,6 +30,7 @@
 
     {{ form_start(form) }}
 
+    <input type="hidden" id="disableIdleTimeout" value="1" />
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" class="form-control" id="recommendationLetterID" name="recommendationLetterID" value="{{ form.vars.data.recLetterHashId|default('') }}" placeholder="Recommendation Letter ID" readonly>
 

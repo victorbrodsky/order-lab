@@ -24,8 +24,6 @@
 
 namespace App\FellAppBundle\Util;
 
-
-
 use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
@@ -249,26 +247,6 @@ class FellAppImportPopulateHubUtil {
             }
             $logger->notice('Application data retrieved from ' . $filename."<br>".$message);
 
-            //eventlog
-//            $userSecUtil->createUserEditEvent(
-//                $this->container->getParameter('fellapp.sitename'),
-//                $event,
-//                $systemUser,
-//                $fellowshipApplication,
-//                null,
-//                'Fellowship Application Created'
-//            );
-
-            //send confirmation email
-            $emailUtil = $this->container->get('user_mailer_utility');
-            $emailUtil->sendEmail(
-                $email,
-                $confirmationSubjectFellApp,
-                $confirmationBodyFellApp,
-                null,
-                $confirmationEmailFellApp
-            );
-
 //                //redirect to Home page
 //                $this->addFlash(
 //                    'notice',
@@ -332,6 +310,279 @@ class FellAppImportPopulateHubUtil {
             ];
         }
     }
+
+    //retrieveRecommendationLettersAction
+    public function retrieveRecommendationLetters( $request=null, $testing=false ) {
+        $logger = $this->container->get('logger');
+        $em = $this->em;
+        $logger->notice("Starting retrieveRecommendationLetters");
+
+        // Get remote server URL from settings
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        //$remoteServerUrl = $userSecUtil->getSiteSettingParameter('externalServerHRecLetterUrl');
+        // Get remote server URL from site settings
+        $remoteUrl = $userSecUtil->getSiteSettingParameter(
+            'hubServerApiUrl',
+            $this->container->getParameter('fellapp.sitename'));
+        if( !$remoteUrl ) {
+            $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
+            return [
+                'success' => false,
+                'message' => 'fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.',
+            ];
+        }
+        //$remoteUrl = https://view.online/fellowship-applications/download-application-data
+        //Get $remoteBaseUrl=https://view.online
+        $parts = parse_url($remoteUrl);
+        $remoteServerUrl = $parts['scheme'] . '://' . $parts['host'];
+
+        //$apiKey = $userSecUtil->getSiteSettingParameter('apiKey');
+
+        if (!$remoteServerUrl) {
+            $logger->error("Remote server URL not configured");
+            //return new JsonResponse(['error' => 'Remote server URL not configured'], 500);
+            return [
+                'success' => false,
+                'message' => 'Remote server URL not configured',
+                'status' => 500
+            ];
+        }
+
+        // Find all references that need letters (recLetterReceived is false or null)
+        // and have a recLetterHashId
+//        $references = $em->getRepository(Reference::class)->findBy(
+//            ['recLetterReceived' => null],
+//            ['id' => 'ASC'],
+//            2 // limit testing
+//        );
+
+        //TODO: verify these conditions
+        $qb = $em->getRepository(Reference::class)->createQueryBuilder('r');
+        $qb->join('r.fellapp', 'f');
+        $qb->andWhere('f.remoteId IS NOT NULL');
+        //$qb->andWhere('r.recLetterReceived IS NOT NULL');
+        $qb->andWhere('r.recLetterReceived IS NULL OR r.recLetterReceived = FALSE');
+        $qb->orderBy('r.id', 'ASC');
+        //$qb->setMaxResults(2); //testing limit
+        $references = $qb->getQuery()->getResult();
+//        echo "ref count=".count($references)."<br>";
+//        foreach($references as $reference) {
+//            if( $reference->getRecLetterReceived() != true ) {
+//                echo "Ref ID=".$reference->getId()."<br>";
+//                echo "Fellapp ID=".$reference->getFellapp()->getId()."<br>";
+//            }
+//        }
+        //exit('111');
+
+        $referencesToProcess = [];
+        foreach ($references as $reference) {
+            if ($reference->getRecLetterHashId() && !$reference->getRecLetterReceived()) {
+                $referencesToProcess[] = $reference;
+            }
+        }
+
+        if (empty($referencesToProcess)) {
+            $logger->notice("No references need recommendation letters");
+            //return new JsonResponse(['message' => 'No references need recommendation letters', 'count' => 0]);
+            return [
+                'success' => false,
+                'message' => 'No references need recommendation letters',
+                'count' => 0
+            ];
+        }
+
+        // Prepare request to remote server
+//        $hashkey = uniqid('', true);
+//        $timestamp = time();
+//        $secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
+//        $hmac = hash_hmac('sha256', $hashkey . $timestamp, $secretKey);
+
+        //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        $apiHashConnectionKey = null;
+        $apiConnectionKey = $this->getInstitutionApiConnectionKey(); //Caller (local) server
+        //$logger->notice("Caller server: retrieveRecommendationLetters: apiHashConnectionKey=$apiHashConnectionKey");
+        //exit('$apiHashConnectionKey='.$apiHashConnectionKey);
+        if( $apiConnectionKey ) {
+            $apiHashConnectionKey = hash('sha256', $apiConnectionKey);
+        } else {
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Secret key not configured'
+//            ], 500);
+            return [
+                'success' => false,
+                'message' => 'Secret key not configured',
+                'status' => 500
+            ];
+        }
+        // Generate HMAC for authentication (include timestamp to prevent replay attacks)
+        $timestamp = time();
+        $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $apiHashConnectionKey);
+        //$logger->notice('retrieveApplicationDataAction: $hmac='.$hmac);
+        //$logger->notice('retrieveApplicationDataAction: $timestamp='.$timestamp);
+
+        // Build list of hash IDs to request
+        $hashIds = [];
+        foreach ($referencesToProcess as $ref) {
+            $hashIds[] = $ref->getRecLetterHashId();
+        }
+
+        $url = $remoteServerUrl . '/fellowship-applications/send-recommendation-letters';
+        $url .= '?hashids=' . urlencode(implode(',', $hashIds));
+
+        $logger->notice("Calling remote server: " . $url);
+
+        // Make API call
+        $client = HttpClient::create();
+        try {
+            // Send HMAC authentication headers
+            $response = $client->request('GET', $url, [
+                'timeout' => 300,
+                'verify_peer' => false,
+                'verify_host' => false,
+                'headers' => [
+                    'X-HMAC' => $hmac,
+                    'X-Timestamp' => $timestamp
+                ]
+            ]);
+            $statusCode = $response->getStatusCode();
+            $content = $response->getContent();
+
+            if ($statusCode !== 200) {
+                $logger->error("Caller server: returned status $statusCode: $content");
+                //return new JsonResponse(['error' => 'Remote server error', 'status' => $statusCode], 500);
+                return [
+                    'success' => false,
+                    'message' => 'Remote server error',
+                    'status' => $statusCode
+                ];
+            }
+
+            $data = json_decode($content, true);
+            if (!isset($data['letters']) || !is_array($data['letters'])) {
+                $logger->error("Caller server: Invalid response from remote server");
+                //return new JsonResponse(['error' => 'Invalid response from remote server'], 500);
+                return [
+                    'success' => false,
+                    'message' => 'Invalid response from remote server',
+                    'status' => 500
+                ];
+            }
+
+            $logger->notice("Caller server: letters count=" . count($data['letters']));
+
+            $systemUser = $userSecUtil->findSystemUser();
+
+            $projectDir = $this->container->getParameter('kernel.project_dir');
+            $fellappUploadPath = $this->container->getParameter('fellapp.uploadpath');
+            // /public/Uploaded/fellapp/
+            $uploadPath = $projectDir .
+                DIRECTORY_SEPARATOR . 'public' .
+                DIRECTORY_SEPARATOR . 'Uploaded' .
+                DIRECTORY_SEPARATOR . $fellappUploadPath;
+
+            $noteArr = [];
+            $processedCount = 0;
+            foreach ($data['letters'] as $letterData) {
+                if (!isset($letterData['hashId']) || !isset($letterData['documentData'])) {
+                    $logger->warning("Caller server: skip: $letterData does not have hashId and documentData");
+                    continue;
+                }
+
+                //testing
+                //$filename = $letterData['hashId'] . '.pdf';
+                //$filepath = $storagePath . DIRECTORY_SEPARATOR . $filename;
+                //exit('$filepath='.$filepath);
+
+                // Find the local reference by hash ID
+                $reference = $em->getRepository(Reference::class)->findOneBy([
+                    'recLetterHashId' => $letterData['hashId']
+                ]);
+
+                if (!$reference) {
+                    $logger->warning("Reference not found for hash ID: " . $letterData['hashId']);
+                    $noteArr[] = "Reference not found for hash ID: " . $letterData['hashId'];
+                    continue;
+                }
+
+                // Skip if already received
+                if ($reference->getRecLetterReceived()) {
+                    $logger->notice("Reference letter has already been received, hash ID: " . $letterData['hashId']);
+                    $noteArr[] = "Reference letter has already been received, hash ID: " . $letterData['hashId'];
+                    continue;
+                }
+
+                // Create and attach document
+                $document = new Document($systemUser);
+                $document->setUniqueid($letterData['hashId']);
+                $document->setOriginalname($letterData['filename'] ?? 'recommendation_letter.pdf');
+                $document->setTitle('Recommendation Letter');
+
+                // Decode and save file
+                $fileData = base64_decode($letterData['documentData']);
+                $filename = $letterData['hashId'] . '.pdf';
+                $filepath = $uploadPath . DIRECTORY_SEPARATOR . $filename;
+                //exit('$filepath='.$filepath);
+
+                // Ensure directory exists
+                if (!is_dir($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
+
+                file_put_contents($filepath, $fileData);
+                $document->setUploadDirectory($uploadPath);
+                $document->setUniquename($filename);
+                $document->setSize(strlen($fileData));
+                //$document->setMimeType('application/pdf');
+
+                // Generate hash
+                //$document->generateDocumentHash($filepath); //TODO: ???
+
+                $em->persist($document);
+                $reference->addDocument($document);
+                $reference->setRecLetterReceived(true);
+
+                //send separate API confirmation call to remote server to set $remoteReference->setRecLetterReceived(true);
+
+                $processedCount++;
+                $logger->notice("Caller server: Attached document to reference: " . $letterData['hashId']);
+                $noteArr[] = "Caller server: Attached document to reference: " . $letterData['hashId'];
+            }//foreach
+
+            if( $processedCount > 0 ) {
+                $em->flush();
+            }
+
+            $logger->notice("Caller server: Processed $processedCount recommendation letters");
+
+            $message = 'Recommendation letters retrieved: '.$processedCount;
+            if( count($noteArr) > 0 ) {
+                $message = $message . "; " . implode(', ', $noteArr);
+            }
+
+//            return new JsonResponse([
+//                'message' => $message,
+//                'count' => $processedCount,
+//                'requested' => count($hashIds)
+//            ]);
+            return [
+                'success' => true,
+                'message' => $message,
+                'count' => $processedCount,
+                'requested' => count($hashIds)
+            ];
+
+        } catch (\Exception $e) {
+            $logger->error("Error retrieving recommendation letters: " . $e->getMessage());
+            //return new JsonResponse(['error' => $e->getMessage()], 500);
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+                'status' => 500
+            ];
+        }
+    } //retrieveRecommendationLetters
 
     public function populateFellappFromFile( $file, $testing=false ) {
         $logger = $this->container->get('logger');

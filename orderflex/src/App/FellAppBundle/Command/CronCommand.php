@@ -84,10 +84,14 @@ class CronCommand extends Command {
             //exit('111');
             $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
             $response = $fellappImportPopulateHubUtil->retrieveApplicationData(null,$testing=false);
-            ////$data = json_decode($response->getContent(), true);
             $result = $response['message'];
-            //$result = 'test ok';
-            $logger->notice("Cron job processing FellApp from Google Drive finished with result=" . $result);
+            $logger->notice("Cron job processing FellApp from HUB finished with result=" . $result);
+
+            $response = $fellappImportPopulateHubUtil->retrieveRecommendationLetters(null,$testing=false);
+            $result2 = $response['message'];
+            $logger->notice("Cron job processing FellApp Recommendation Letters from HUB finished with result=" . $result2);
+
+            $result = $result . "; " . $result2;
         } else {
 
             $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
