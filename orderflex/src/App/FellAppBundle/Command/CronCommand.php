@@ -77,12 +77,16 @@ class CronCommand extends Command {
 //        $fellappRecLetterUtil->checkReferenceAlreadyHasLetter($fellapp,$reference);
 //        exit('eof test');
         //EOF testing
-
         $fellappUtil = $this->container->get('fellapp_util');
         $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
         //exit('$retrievalMethod='.$retrievalMethod);
-        if( $retrievalMethod == 'Dedicated public tandem hub server tenant instance' ) {
-            //$result = $this->redirectToRoute('fellapp_retrieve_application_data');
+        if( trim($retrievalMethod) == 'Dedicated public tandem hub server tenant instance' ) {
+            //exit('111');
+            $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+            $response = $fellappImportPopulateHubUtil->retrieveApplicationData(null,$testing=false);
+            ////$data = json_decode($response->getContent(), true);
+            $result = $response['message'];
+            //$result = 'test ok';
             $logger->notice("Cron job processing FellApp from Google Drive finished with result=" . $result);
         } else {
 

@@ -34,6 +34,7 @@ use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replac
 use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
 use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -87,7 +88,7 @@ class FellAppImportPopulateHubUtil {
     }
 
     //Called by retrieveApplicationDataAction: (path: '/retrieve-application-data', name: 'fellapp_retrieve_application_data')
-    public function retrieveApplicationData( $request ) {
+    public function retrieveApplicationData( $request=null, $testing=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
         $em = $this->em;
@@ -97,10 +98,15 @@ class FellAppImportPopulateHubUtil {
         //exit('$apiConnectionKey='.$apiConnectionKey);
 
         if( !$apiConnectionKey ) {
-            return new JsonResponse([
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Secret key not configured'
+//            ], 500);
+            return [
                 'success' => false,
-                'message' => 'Secret key not configured'
-            ], 500);
+                'message' => 'Secret key not configured',
+                'status'  => 500
+            ];
         }
 
         //On Caller (local) server, the
@@ -125,15 +131,23 @@ class FellAppImportPopulateHubUtil {
         if( !$minRemoteId ) {
             $minRemoteId = 0;
         }
-        echo "minRemoteId=$minRemoteId <br>";
+        //echo "minRemoteId=$minRemoteId <br>";
         //exit('111');
         //$remoteUrl = 'https://view.online/fellowship-applications/download-application-data?maxid=' . $minRemoteId;
         $remoteUrl = $userSecUtil->getSiteSettingParameter(
             'hubServerApiUrl',
-            $this->getParameter('fellapp.sitename'));
+            $this->container->getParameter('fellapp.sitename'));
         if( !$remoteUrl ) {
             $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
-            return false;
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.'
+//            ], 500);
+            return [
+                'success' => false,
+                'message' => 'fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.',
+                'status'  => 500
+            ];
         }
 
         $remoteUrl = $remoteUrl . '?maxid=' . $minRemoteId;
@@ -155,20 +169,30 @@ class FellAppImportPopulateHubUtil {
             $statusCode = $response->getStatusCode();
 
             if( $statusCode !== 200 ) {
-                return new JsonResponse([
+//                return new JsonResponse([
+//                    'success' => false,
+//                    'message' => 'Remote server returned error: ' . $statusCode
+//                ], 500);
+                return [
                     'success' => false,
-                    'message' => 'Remote server returned error: ' . $statusCode
-                ], 500);
+                    'message' => 'Remote server returned error: ' . $statusCode,
+                    'status'  => 500
+                ];
             }
 
             // (5) Receive JSON from Remote Server
             $data = $response->toArray();
 
             if( !$data['success'] ) {
-                return new JsonResponse([
+//                return new JsonResponse([
+//                    'success' => false,
+//                    'message' => 'Remote server error: ' . ($data['message'] ?? 'Unknown error')
+//                ], 500);
+                return [
                     'success' => false,
-                    'message' => 'Remote server error: ' . ($data['message'] ?? 'Unknown error')
-                ], 500);
+                    'message' => 'Remote server error: ' . ($data['message'] ?? 'Unknown error'),
+                    'status'  => 500
+                ];
             }
 
             // (7) Decode xlsx data and store locally
@@ -176,7 +200,7 @@ class FellAppImportPopulateHubUtil {
             $filename = $data['filename'];
 
             // Store in order-lab\orderflex\public\Uploaded\fellapp\Spreadsheets
-            $storagePath = $this->getParameter('kernel.project_dir') . '/public/Uploaded/fellapp/Spreadsheets';
+            $storagePath = $this->container->getParameter('kernel.project_dir') . '/public/Uploaded/fellapp/Spreadsheets';
 
             // Create directory if it doesn't exist
             if( !is_dir($storagePath) ) {
@@ -195,7 +219,7 @@ class FellAppImportPopulateHubUtil {
                 //Use populateSpreadsheet
                 //$this->populateSpreadsheetFromFilename($filepath);
                 //$fellappImportPopulateHubUtil->xlsxFileParser($filepath);
-                $populatedFellowshipApplications = $this->populateFellappFromFile($filepath);
+                $populatedFellowshipApplications = $this->populateFellappFromFile($filepath,$testing);
 
                 //get IDs
                 $ids = [];
@@ -225,12 +249,27 @@ class FellAppImportPopulateHubUtil {
                 }
                 $logger->notice('Application data retrieved from ' . $filename."<br>".$message);
 
-                //redirect to Home page
-                $this->addFlash(
-                    'notice',
-                    $message
-                );
-                return $this->redirect( $this->generateUrl('fellapp_home') );
+//                //redirect to Home page
+//                $this->addFlash(
+//                    'notice',
+//                    $message
+//                );
+                //return $this->redirect( $this->generateUrl('fellapp_home') );
+//                return new JsonResponse([
+//                    'success' => true,
+//                    'message' => $message,
+//                    'filename' => $filename,
+//                    'filepath' => $filepath,
+//                    'remote_response' => $data
+//                ]);
+                return [
+                    'success' => true,
+                    'message' => $message,
+                    //'filename' => $filename,
+                    //'filepath' => $filepath,
+                    //'remote_response' => $data
+                ];
+
             }
 
             //remove $filepath
@@ -248,23 +287,35 @@ class FellAppImportPopulateHubUtil {
 
             //use the HASH values for each specialty on Caller and Remote servers
 
-            return new JsonResponse([
+//            return new JsonResponse([
+//                'success' => true,
+//                'message' => 'Application data retrieved and stored successfully',
+//                'filename' => $filename,
+//                'filepath' => $filepath,
+//                'remote_response' => $data
+//            ]);
+            return [
                 'success' => true,
                 'message' => 'Application data retrieved and stored successfully',
-                'filename' => $filename,
-                'filepath' => $filepath,
-                'remote_response' => $data
-            ]);
+                //'filename' => $filename,
+                //'filepath' => $filepath,
+                //'remote_response' => $data
+            ];
 
         } catch( \Exception $e ) {
-            return new JsonResponse([
+//            return new JsonResponse([
+//                'success' => false,
+//                'message' => 'Error retrieving application data: ' . $e->getMessage()
+//            ], 500);
+            return [
                 'success' => false,
-                'message' => 'Error retrieving application data: ' . $e->getMessage()
-            ], 500);
+                'message' => 'Error retrieving application data: ' . $e->getMessage(),
+                'status'  => 500
+            ];
         }
     }
 
-    public function populateFellappFromFile( $file ) {
+    public function populateFellappFromFile( $file, $testing=false ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
@@ -313,7 +364,10 @@ class FellAppImportPopulateHubUtil {
             }
 
             try {
-                $fellowshipApplication = $this->createFellappFromRow($rowData, $headers, $systemUser);
+                $fellowshipApplication = null;
+                if( $testing === false ) {
+                    $fellowshipApplication = $this->createFellappFromRow($rowData, $headers, $systemUser);
+                }
                 if ($fellowshipApplication) {
                     //$populatedFellowshipApplications->add($fellowshipApplication);
                     $populatedFellowshipApplications[] = $fellowshipApplication;

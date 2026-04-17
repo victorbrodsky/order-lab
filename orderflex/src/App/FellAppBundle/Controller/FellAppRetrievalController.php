@@ -59,8 +59,14 @@ class FellAppRetrievalController extends OrderAbstractController
         //$em = $this->getDoctrine()->getManager();
 
         //TODO: move it to FellAppImportPopulateHubUtil
-        $result = $fellappImportPopulateHubUtil->retrieveApplicationData($request);
-        return $result;
+        $response = $fellappImportPopulateHubUtil->retrieveApplicationData($request,$testing=false);
+        //$data = json_decode($response->getContent(), true);
+        //redirect to Home page
+        $this->addFlash(
+            'notice',
+            $response['message']
+        );
+        return $this->redirect( $this->generateUrl('fellapp_home') );
 
         //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
         $apiConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiConnectionKey();
@@ -232,7 +238,7 @@ class FellAppRetrievalController extends OrderAbstractController
                 'message' => 'Error retrieving application data: ' . $e->getMessage()
             ], 500);
         }
-    }
+    }//retrieveApplicationDataAction
 
 
 

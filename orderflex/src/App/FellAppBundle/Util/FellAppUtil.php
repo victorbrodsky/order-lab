@@ -4465,7 +4465,9 @@ class FellAppUtil {
         //if fellapp does not have retrieval method then get it from fellowhsip site settings
         if( !$retrievalMethod ) {
             $fellappSiteParam = $userSecUtil->getSpecificSiteSettingParameter($this->container->getParameter('fellapp.sitename'));
-            $retrievalMethod = $fellappSiteParam->getRetrievalMethod()."";
+            if( $fellappSiteParam ) {
+                $retrievalMethod = $fellappSiteParam->getRetrievalMethod() . "";
+            }
         }
         return $retrievalMethod;
     }
