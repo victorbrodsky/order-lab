@@ -51,12 +51,16 @@ class FellAppRetrievalController extends OrderAbstractController
     public function retrieveApplicationDataAction( Request $request ) {
         
         // Get secret key for HMAC authentication
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         //$userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         //$fellappUtil = $this->container->get('fellapp_util');
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
+
+        //TODO: move it to FellAppImportPopulateHubUtil
+        $result = $fellappImportPopulateHubUtil->retrieveApplicationData($request);
+        return $result;
 
         //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
         $apiConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiConnectionKey();
