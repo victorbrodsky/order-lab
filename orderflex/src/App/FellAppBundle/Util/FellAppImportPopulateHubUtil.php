@@ -212,49 +212,69 @@ class FellAppImportPopulateHubUtil {
             // Save file locally - COMMENTED OUT: Do not save file locally, just show records
             file_put_contents($filepath, $xlsxData);
 
-            if(1) {
-                //dump($response['remote_response']);
-                //dump($xlsxData);
 
-                //Use populateSpreadsheet
-                //$this->populateSpreadsheetFromFilename($filepath);
-                //$fellappImportPopulateHubUtil->xlsxFileParser($filepath);
-                $populatedFellowshipApplications = $this->populateFellappFromFile($filepath,$testing);
+            //dump($response['remote_response']);
+            //dump($xlsxData);
 
-                //get IDs
-                $ids = [];
-                foreach($populatedFellowshipApplications as $populatedFellowshipApplication) {
-                    $ids[] = $populatedFellowshipApplication->getId();
-                }
+            //Use populateSpreadsheet
+            //$this->populateSpreadsheetFromFilename($filepath);
+            //$fellappImportPopulateHubUtil->xlsxFileParser($filepath);
+            $populatedFellowshipApplications = $this->populateFellappFromFile($filepath,$testing);
 
-                //exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
+            //get IDs
+            $ids = [];
+            foreach($populatedFellowshipApplications as $populatedFellowshipApplication) {
+                $ids[] = $populatedFellowshipApplication->getId();
+            }
+
+            //exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
 
 //                $popCount = is_array($populatedFellowshipApplications)
 //                    ? count($populatedFellowshipApplications)
 //                    : 0;
-                $popCount = 0;
-                if( is_array($populatedFellowshipApplications) && count($populatedFellowshipApplications) > 0 ) {
-                    $popCount = count($populatedFellowshipApplications);
-                }
+            $popCount = 0;
+            if( is_array($populatedFellowshipApplications) && count($populatedFellowshipApplications) > 0 ) {
+                $popCount = count($populatedFellowshipApplications);
+            }
 
-                $idList = (is_array($ids) && count($ids) > 0)
-                    ? implode(", ", $ids)
-                    : '';
+            $idList = (is_array($ids) && count($ids) > 0)
+                ? implode(", ", $ids)
+                : '';
 
 //                $message = 'Application data retrieved from ' . $filename.
 //                    '<br>Populated '.$popCount.' fellowship application(s)';
-                $message = 'Populated '.$popCount.' fellowship application(s)';
-                if( $idList ) {
-                    $message = $message . ' with IDs: '.$idList;
-                }
-                $logger->notice('Application data retrieved from ' . $filename."<br>".$message);
+            $message = 'Populated '.$popCount.' fellowship application(s)';
+            if( $idList ) {
+                $message = $message . ' with IDs: '.$idList;
+            }
+            $logger->notice('Application data retrieved from ' . $filename."<br>".$message);
+
+            //eventlog
+//            $userSecUtil->createUserEditEvent(
+//                $this->container->getParameter('fellapp.sitename'),
+//                $event,
+//                $systemUser,
+//                $fellowshipApplication,
+//                null,
+//                'Fellowship Application Created'
+//            );
+
+            //send confirmation email
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $emailUtil->sendEmail(
+                $email,
+                $confirmationSubjectFellApp,
+                $confirmationBodyFellApp,
+                null,
+                $confirmationEmailFellApp
+            );
 
 //                //redirect to Home page
 //                $this->addFlash(
 //                    'notice',
 //                    $message
 //                );
-                //return $this->redirect( $this->generateUrl('fellapp_home') );
+            //return $this->redirect( $this->generateUrl('fellapp_home') );
 //                return new JsonResponse([
 //                    'success' => true,
 //                    'message' => $message,
@@ -262,45 +282,43 @@ class FellAppImportPopulateHubUtil {
 //                    'filepath' => $filepath,
 //                    'remote_response' => $data
 //                ]);
-                return [
-                    'success' => true,
-                    'message' => $message,
-                    //'filename' => $filename,
-                    //'filepath' => $filepath,
-                    //'remote_response' => $data
-                ];
-
-            }
-
-            //remove $filepath
-            $removeFile = true;
-            $removeFile = false;
-            if( $removeFile ) {
-                if ($filepath && file_exists($filepath)) {
-                    unlink($filepath);
-                    dump("Deleted: " . $filepath);
-                } else {
-                    dump("File not found: " . $filepath);
-                }
-            }
-            //exit('Exit retrieveApplicationDataAction');
-
-            //use the HASH values for each specialty on Caller and Remote servers
-
-//            return new JsonResponse([
-//                'success' => true,
-//                'message' => 'Application data retrieved and stored successfully',
-//                'filename' => $filename,
-//                'filepath' => $filepath,
-//                'remote_response' => $data
-//            ]);
             return [
                 'success' => true,
-                'message' => 'Application data retrieved and stored successfully',
+                'message' => $message,
                 //'filename' => $filename,
                 //'filepath' => $filepath,
                 //'remote_response' => $data
             ];
+
+//            //remove $filepath
+//            $removeFile = true;
+//            $removeFile = false;
+//            if( $removeFile ) {
+//                if ($filepath && file_exists($filepath)) {
+//                    unlink($filepath);
+//                    dump("Deleted: " . $filepath);
+//                } else {
+//                    dump("File not found: " . $filepath);
+//                }
+//            }
+//            //exit('Exit retrieveApplicationDataAction');
+//
+//            //use the HASH values for each specialty on Caller and Remote servers
+//
+////            return new JsonResponse([
+////                'success' => true,
+////                'message' => 'Application data retrieved and stored successfully',
+////                'filename' => $filename,
+////                'filepath' => $filepath,
+////                'remote_response' => $data
+////            ]);
+//            return [
+//                'success' => true,
+//                'message' => 'Application data retrieved and stored successfully',
+//                //'filename' => $filename,
+//                //'filepath' => $filepath,
+//                //'remote_response' => $data
+//            ];
 
         } catch( \Exception $e ) {
 //            return new JsonResponse([
@@ -764,8 +782,10 @@ class FellAppImportPopulateHubUtil {
         $fellappRepGen->addFellAppReportToQueue( $fellowshipApplication->getId() );
 
         //send confirmation email to this applicant for prod server
+        //$force = false;
+        $force = true;
         $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == 'live' ) {
+        if( $environment == 'live' || $force ) {
             //send confirmation email to this applicant
             //$confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
             $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp',$this->container->getParameter('fellapp.sitename'));
@@ -783,7 +803,7 @@ class FellAppImportPopulateHubUtil {
 
         }//if live
 
-        if( $environment == 'live' ) {
+        if( $environment == 'live' || $force ) {
             //send confirmation email to the corresponding Fellowship director and coordinator
             $fellappUtil = $this->container->get('fellapp_util');
             $fellappUtil->sendConfirmationEmailsOnApplicationPopulation( $fellowshipApplication, $user );
@@ -793,7 +813,7 @@ class FellAppImportPopulateHubUtil {
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$fellappRecLetterUtil->generateFellappRecLetterId($fellowshipApplication,true);
 
-        if( $environment == 'live' ) {
+        if( $environment == 'live' || $force ) {
             // send invitation email to upload recommendation letter to references
             $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
             $fellappRecLetterUtil->sendInvitationEmailsToReferences($fellowshipApplication,true);
