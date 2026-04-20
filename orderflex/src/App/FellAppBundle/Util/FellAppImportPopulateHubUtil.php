@@ -621,6 +621,7 @@ class FellAppImportPopulateHubUtil {
             echo 'Processing $googleFormId=' . $googleFormId . "<br>";
             $logger->notice('Processing $googleFormId=' . $googleFormId);
             if (!$googleFormId) {
+                $logger->notice('Skip rows without $googleFormId');
                 continue; // Skip rows without ID
             }
 
