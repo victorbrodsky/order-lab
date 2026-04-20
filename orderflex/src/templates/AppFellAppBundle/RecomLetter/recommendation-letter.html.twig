@@ -260,10 +260,12 @@
             }
             dropzone.parent().tooltip('destroy');
 
+            // Cache jQuery selectors for button and message span (available to all callbacks)
+            var submitBtn = $('#submit-recommendation-btn');
+            var msgSpan = $('#upload-required-msg');
+
             // Function to check if any files are uploaded and update submit button state
             function updateSubmitButtonState() {
-                var submitBtn = $('#submit-recommendation-btn');
-                var msgSpan = $('#upload-required-msg');
 
                 // Try multiple ways to detect files
                 var fileCount = 0;
