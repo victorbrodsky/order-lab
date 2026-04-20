@@ -341,7 +341,7 @@
                     console.log('File removed from dropzone:', file.name);
                     // Use longer timeout to ensure DOM is updated after removal
                     setTimeout(function() {
-                        updateSubmitButtonState();
+                        //updateSubmitButtonState();
                         // Force check if no files remain
                         if (myDropzone.files.length === 0) {
                             submitBtn.prop('disabled', true);
