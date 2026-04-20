@@ -91,7 +91,7 @@ class FellAppImportPopulateHubUtil {
         $logger = $this->container->get('logger');
         $em = $this->em;
 
-            //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
+        //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
         $apiConnectionKey = $this->getInstitutionApiConnectionKey();
         //exit('$apiConnectionKey='.$apiConnectionKey);
 
@@ -699,6 +699,7 @@ class FellAppImportPopulateHubUtil {
             return null;
         }
 
+        $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
         $apiHashImportKeyGlobal = $this->getValueByHeaderName('apihashconnectionglobalkey', $rowData, $headers);
         if( $apiHashImportKeyGlobal ) {
             $apiHashImportKeyGlobal = trim($apiHashImportKeyGlobal);
@@ -706,11 +707,14 @@ class FellAppImportPopulateHubUtil {
             $localSpecialty = $fellappUtil->findFellowshipSpeciatlyByApiHashKey($apiHashImportKeyGlobal);
 
             if( !$localSpecialty ) {
-                $logger->warning('Local FellowshipSubspecialty not found by API Hash import key=[' . $apiHashImportKeyGlobal . ']');
+                $logger->warning('1: Local FellowshipSubspecialty not found by API Hash import key=[' .
+                    $apiHashImportKeyGlobal . '], name='.$fellowshipType.']'.
+                    ', originalAppId='.$originalAppId
+                );
                 return null;
             }
         }
-        $logger->notice('Local FellowshipSubspecialty found by API import key=[' . $apiHashImportKeyGlobal . ']');
+        $logger->notice('Local FellowshipSubspecialty found by API import key=[' . $apiHashImportKeyGlobal . '], name=['.$fellowshipType.']');
 
         // Create username
         $lastNameCap = $fellappImportPopulateUtil->capitalizeIfNotAllCapital($lastName);
@@ -806,7 +810,7 @@ class FellAppImportPopulateHubUtil {
 
         //using the HASH values for each specialty - only download applications for which the HASH value for Fellowship Specialty matches
         // Fellowship Type
-        $fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
+        //$fellowshipType = $this->getValueByHeaderName('fellowshipType', $rowData, $headers);
         if ($fellowshipType) {
             $fellowshipTypeEntity = $fellappUtil->findFellowshipSpeciatlyByApiHashKey($apiHashImportKeyGlobal);
 
@@ -820,7 +824,10 @@ class FellAppImportPopulateHubUtil {
                 $logger->notice($fellowshipType.': Found $fellowshipTypeEntity=' . $fellowshipTypeEntity->getNameInstitution() . "]");
                 $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
             } else {
-                $logger->warning('Not found matched API Hash import key=[' . $apiHashImportKeyGlobal.']');
+                $logger->warning('2: Local FellowshipSubspecialty not found by API Hash import key=[' .
+                    $apiHashImportKeyGlobal.'], name=['.$fellowshipType.']'.
+                    ', originalAppId='.$originalAppId
+                );
                 return null;
             }
         }
