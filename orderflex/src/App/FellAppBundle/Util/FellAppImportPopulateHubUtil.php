@@ -545,9 +545,16 @@ class FellAppImportPopulateHubUtil {
 
                 //send separate API confirmation call to remote server to set $remoteReference->setRecLetterReceived(true);
 
+                //get fellapp
+                $fellappId = '';
+                $fellapp = $reference->getFellapp();
+                if( $fellapp ) {
+                    $fellappId = $fellapp->getId();
+                }
+
                 $processedCount++;
                 $logger->notice("Caller server: Attached document to reference: " . $letterData['hashId']);
-                $noteArr[] = "Caller server: Attached document to reference: " . $letterData['hashId'];
+                $noteArr[] = "Caller server: Attached document to reference for the fellowship application ID# " . $fellappId;
             }//foreach
 
             if( $processedCount > 0 ) {
