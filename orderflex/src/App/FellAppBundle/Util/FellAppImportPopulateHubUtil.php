@@ -476,11 +476,13 @@ class FellAppImportPopulateHubUtil {
 
             $projectDir = $this->container->getParameter('kernel.project_dir');
             $fellappUploadPath = $this->container->getParameter('fellapp.uploadpath');
+            $logger->notice("Caller server: projectDir=$projectDir, fellappUploadPath=$fellappUploadPath");
             // /public/Uploaded/fellapp/
             $uploadPath = $projectDir .
                 DIRECTORY_SEPARATOR . 'public' .
                 DIRECTORY_SEPARATOR . 'Uploaded' .
                 DIRECTORY_SEPARATOR . $fellappUploadPath;
+            $logger->notice("Caller server: uploadPath=$uploadPath");
 
             $noteArr = [];
             $processedCount = 0;
@@ -531,6 +533,7 @@ class FellAppImportPopulateHubUtil {
                 }
 
                 file_put_contents($filepath, $fileData);
+                $logger->notice("2 Caller server: uploadPath=$uploadPath");
                 $document->setUploadDirectory($uploadPath);
                 $document->setUniquename($filename);
                 $document->setSize(strlen($fileData));
