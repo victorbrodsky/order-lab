@@ -610,10 +610,10 @@ class FellAppImportPopulateHubUtil {
         // Process each data row (starting from row 2)
         for ($row = 2; $row <= $highestRow; $row++) {
 
-            if( $count > 0 ) {
-                $logger->notice('populateFellappFromFile: testing break count=' . $count);
-                break; //testing
-            }
+//            if( $count > 0 ) {
+//                $logger->notice('populateFellappFromFile: testing break count=' . $count);
+//                break; //testing
+//            }
 
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE)[0];
 
