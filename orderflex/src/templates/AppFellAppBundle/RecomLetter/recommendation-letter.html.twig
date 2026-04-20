@@ -89,9 +89,13 @@
                 </div>
                 </p>
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" id="submit-recommendation-btn" class="btn btn-primary" disabled>
                     Submit
                 </button>
+                <span id="upload-required-msg" class="text-muted" style="margin-left: 10px;">
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                    Please upload a file to enable submission
+                </span>
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
@@ -246,15 +250,6 @@
     <script language="Javascript">
         $(document).ready(function() {
             console.log('enable dropzone');
-//            var dropzoneElement = $('.file-upload-dropzone');
-//            var dropzoneDom = dropzoneElement.get(0);
-//            var myDropzone = dropzoneDom.dropzone;
-//            dropzoneElement.addClass('dz-clickable'); // add cursor
-//            dropzoneDom.addEventListener('click', myDropzone.listeners[1].events.click);
-//            //remove tooltip
-            //if( tooltipName ) {
-            //    attachDropzoneTooltip(dropzoneElement,false,tooltipName);
-            //}
 
             var dropzone = $('.file-upload-dropzone');
             var dropzoneDom = dropzone.get(0);
@@ -265,6 +260,57 @@
             }
             dropzone.parent().tooltip('destroy');
 
+            // Function to check if any files are uploaded and update submit button state
+            function updateSubmitButtonState() {
+                var submitBtn = $('#submit-recommendation-btn');
+                var msgSpan = $('#upload-required-msg');
+                var fileCount = $('.file-upload-container').find('.file-upload-item').length;
+
+                if (fileCount > 0) {
+                    submitBtn.prop('disabled', false);
+                    msgSpan.hide();
+                } else {
+                    submitBtn.prop('disabled', true);
+                    msgSpan.show();
+                }
+            }
+
+            // Initial check
+            updateSubmitButtonState();
+
+            // Listen for Dropzone events if available
+            if (myDropzone) {
+                // File added
+                myDropzone.on('success', function(file, response) {
+                    // Wait for DOM to update then check
+                    setTimeout(updateSubmitButtonState, 100);
+                });
+
+                // File removed
+                myDropzone.on('removedfile', function(file) {
+                    setTimeout(updateSubmitButtonState, 100);
+                });
+
+                // File added to queue (before upload)
+                myDropzone.on('addedfile', function(file) {
+                    setTimeout(updateSubmitButtonState, 100);
+                });
+            }
+
+            // Also watch for manual file list changes (fallback for non-Dropzone uploads)
+            var observer = new MutationObserver(function(mutations) {
+                updateSubmitButtonState();
+            });
+
+            var fileContainer = document.querySelector('.file-upload-container');
+            if (fileContainer) {
+                observer.observe(fileContainer, { childList: true, subtree: true });
+            }
+
+            // Check on any click that might affect files
+            $(document).on('click', '.file-upload-remove, .dz-remove', function() {
+                setTimeout(updateSubmitButtonState, 100);
+            });
         });
     </script>
 
