@@ -474,9 +474,17 @@ class FellAppImportPopulateHubUtil {
 
             $systemUser = $userSecUtil->findSystemUser();
 
-            $projectDir = $this->container->getParameter('kernel.project_dir');
-            $fellappUploadPath = $this->container->getParameter('fellapp.uploadpath');
+            $projectDir = $this->container->getParameter('kernel.project_dir'); // ...\order-lab\orderflex
+            $fellappUploadPath = $this->container->getParameter('fellapp.uploadpath'); // fellapp/documents
+            //$fellappUploadPath = 'Uploaded'.'/'.'fellapp/RecommendationLetters/RecommendationLetterUploads';
             $logger->notice("Caller server: projectDir=$projectDir, fellappUploadPath=$fellappUploadPath");
+
+            //fellapp/documents
+            //$fellappUploadPath = 'Uploaded'.'/'.'fellapp/RecommendationLetters/RecommendationLetterUploads';
+            //$logger->notice("Caller server: projectDir=$projectDir, fellappUploadPath=$fellappUploadPath");
+
+            //$uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
+
             // /public/Uploaded/fellapp/
             $uploadPath = $projectDir .
                 DIRECTORY_SEPARATOR . 'public' .
@@ -534,7 +542,8 @@ class FellAppImportPopulateHubUtil {
 
                 file_put_contents($filepath, $fileData);
                 $logger->notice("2 Caller server: uploadPath=$uploadPath");
-                $document->setUploadDirectory($uploadPath);
+                //$document->setUploadDirectory($uploadPath);
+                $document->setUploadDirectory($fellappUploadPath);
                 $document->setUniquename($filename);
                 $document->setSize(strlen($fileData));
                 //$document->setMimeType('application/pdf');
