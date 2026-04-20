@@ -218,32 +218,32 @@ class FellAppImportPopulateHubUtil {
             //$this->populateSpreadsheetFromFilename($filepath);
             //$fellappImportPopulateHubUtil->xlsxFileParser($filepath);
             $populatedFellowshipApplications = $this->populateFellappFromFile($filepath,$testing);
-
-            //get IDs
-            $ids = [];
-            foreach($populatedFellowshipApplications as $populatedFellowshipApplication) {
-                $ids[] = $populatedFellowshipApplication->getId();
-            }
-
             //exit('retrieveApplicationDataAction: $populatedFellowshipApplications count='.count($populatedFellowshipApplications));
 
-//                $popCount = is_array($populatedFellowshipApplications)
-//                    ? count($populatedFellowshipApplications)
-//                    : 0;
             $popCount = 0;
             if( is_array($populatedFellowshipApplications) && count($populatedFellowshipApplications) > 0 ) {
                 $popCount = count($populatedFellowshipApplications);
             }
 
-            $idList = (is_array($ids) && count($ids) > 0)
-                ? implode(", ", $ids)
-                : '';
+//            $idList = (is_array($ids) && count($ids) > 0)
+//                ? implode(", ", $ids)
+//                : '';
+            $fellappInfoStr = '';
+            $fellappInfoArr = [];
+            foreach($populatedFellowshipApplications as $populatedFellowshipApplication) {
+                $ids[] = $populatedFellowshipApplication->getId();
+                $specialties[] = $populatedFellowshipApplication->getFellowshipSubspecialty();
+                $fellappInfoArr[] = "ID=".$populatedFellowshipApplication->getId().", type=".$populatedFellowshipApplication->getFellowshipSubspecialty();
+            }
+            if( count($fellappInfoArr) > 0 ) {
+                $fellappInfoStr = implode(";<br>",$fellappInfoArr);
+            }
 
 //                $message = 'Application data retrieved from ' . $filename.
 //                    '<br>Populated '.$popCount.' fellowship application(s)';
             $message = 'Populated '.$popCount.' fellowship application(s)';
-            if( $idList ) {
-                $message = $message . ' with IDs: '.$idList;
+            if( $fellappInfoStr ) {
+                $message = $message . ' : '.$fellappInfoStr;
             }
             $logger->notice('Application data retrieved from ' . $filename."<br>".$message);
 
