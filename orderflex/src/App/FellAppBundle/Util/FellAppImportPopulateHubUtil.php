@@ -476,6 +476,7 @@ class FellAppImportPopulateHubUtil {
 
             $projectDir = $this->container->getParameter('kernel.project_dir'); // ...\order-lab\orderflex
             $fellappUploadPath = $this->container->getParameter('fellapp.uploadpath'); // fellapp/documents
+            $fellappUploadPath = 'Uploaded' . DIRECTORY_SEPARATOR . $fellappUploadPath; // Uploaded/fellapp/documents
             //$fellappUploadPath = 'Uploaded'.'/'.'fellapp/RecommendationLetters/RecommendationLetterUploads';
             $logger->notice("Caller server: projectDir=$projectDir, fellappUploadPath=$fellappUploadPath");
 
@@ -488,7 +489,6 @@ class FellAppImportPopulateHubUtil {
             // /public/Uploaded/fellapp/
             $uploadPath = $projectDir .
                 DIRECTORY_SEPARATOR . 'public' .
-                DIRECTORY_SEPARATOR . 'Uploaded' .
                 DIRECTORY_SEPARATOR . $fellappUploadPath;
             $logger->notice("Caller server: uploadPath=$uploadPath");
 
