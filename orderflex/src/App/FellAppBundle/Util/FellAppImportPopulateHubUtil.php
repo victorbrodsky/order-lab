@@ -714,9 +714,9 @@ class FellAppImportPopulateHubUtil {
             $localSpecialty = $fellappUtil->findFellowshipSpeciatlyByApiHashKey($apiHashImportKeyGlobal);
 
             if( !$localSpecialty ) {
-                $logger->warning('1: Local FellowshipSubspecialty not found by API Hash import key=[' .
-                    $apiHashImportKeyGlobal . '], name='.$fellowshipType.']'.
-                    ', originalAppId='.$originalAppId
+                $logger->warning('1: Local FellowshipSubspecialty not found by API Hash import key, originalAppId=[' .
+                    $originalAppId . '], name=['.$fellowshipType.']'.
+                    ', apiHashImportKeyGlobal='.$apiHashImportKeyGlobal
                 );
                 return null;
             }
@@ -831,9 +831,9 @@ class FellAppImportPopulateHubUtil {
                 $logger->notice($fellowshipType.': Found $fellowshipTypeEntity=' . $fellowshipTypeEntity->getNameInstitution() . "]");
                 $fellowshipApplication->setFellowshipSubspecialty($fellowshipTypeEntity);
             } else {
-                $logger->warning('2: Local FellowshipSubspecialty not found by API Hash import key=[' .
-                    $apiHashImportKeyGlobal.'], name=['.$fellowshipType.']'.
-                    ', originalAppId='.$originalAppId
+                $logger->warning('2: Local FellowshipSubspecialty not found by API Hash import key, originalAppId=[' .
+                    $originalAppId .'], name=['.$fellowshipType.']'.
+                    ', apiHashImportKeyGlobal='.$apiHashImportKeyGlobal
                 );
                 return null;
             }
