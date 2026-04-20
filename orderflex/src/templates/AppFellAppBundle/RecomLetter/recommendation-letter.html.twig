@@ -334,9 +334,19 @@
                     setTimeout(updateSubmitButtonState, 100);
                 });
 
-                // File removed
+                // File removed - disable button and show message when file is deleted
                 myDropzone.on('removedfile', function(file) {
-                    setTimeout(updateSubmitButtonState, 100);
+                    console.log('File removed from dropzone:', file.name);
+                    // Use longer timeout to ensure DOM is updated after removal
+                    setTimeout(function() {
+                        updateSubmitButtonState();
+                        // Force check if no files remain
+                        if (myDropzone.files.length === 0) {
+                            submitBtn.prop('disabled', true);
+                            msgSpan.show();
+                            console.log('All files removed - button disabled, message shown');
+                        }
+                    }, 300);
                 });
 
                 // File added to queue (before upload)
@@ -357,7 +367,17 @@
 
             // Check on any click that might affect files
             $(document).on('click', '.file-upload-remove, .dz-remove', function() {
-                setTimeout(updateSubmitButtonState, 100);
+                console.log('Remove button clicked');
+                // Use longer timeout to ensure DOM is fully updated after removal
+                setTimeout(function() {
+                    updateSubmitButtonState();
+                    // Additional safety check - if myDropzone exists and has no files
+                    if (myDropzone && myDropzone.files && myDropzone.files.length === 0) {
+                        submitBtn.prop('disabled', true);
+                        msgSpan.show();
+                        console.log('All files removed via button click - button disabled');
+                    }
+                }, 300);
             });
         });
     </script>
