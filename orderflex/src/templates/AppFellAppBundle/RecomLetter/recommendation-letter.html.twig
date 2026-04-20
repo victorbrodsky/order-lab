@@ -264,14 +264,62 @@
             function updateSubmitButtonState() {
                 var submitBtn = $('#submit-recommendation-btn');
                 var msgSpan = $('#upload-required-msg');
-                var fileCount = $('.file-upload-container').find('.file-upload-item').length;
+
+                // Try multiple ways to detect files
+                var fileCount = 0;
+
+                // Method 1: Check Dropzone internal files
+                if (myDropzone && myDropzone.files) {
+                    fileCount = myDropzone.files.length;
+                    console.log('Dropzone files count:', fileCount);
+                }
+
+                // Method 2: Check for file items in various containers
+                if (fileCount === 0) {
+                    var selectors = [
+                        '.file-upload-container .file-upload-item',
+                        '.file-upload-container .dz-preview',
+                        '.dropzone .dz-preview',
+                        '.dz-complete',
+                        '.file-item',
+                        '[id^="file-upload-"] .file-item',
+                        '.documents-list .document-item',
+                        '.file-list .file-item'
+                    ];
+
+                    for (var i = 0; i < selectors.length; i++) {
+                        var count = $(selectors[i]).length;
+                        if (count > 0) {
+                            fileCount = count;
+                            console.log('Found files using selector:', selectors[i], 'count:', count);
+                            break;
+                        }
+                    }
+                }
+
+                // Method 3: Check for any elements with 'dz-' prefix in upload area
+                if (fileCount === 0) {
+                    var dzElements = $('.dropzone, .file-upload-container').find('[class*="dz-"]').length;
+                    if (dzElements > 0) {
+                        // Look for completed uploads specifically
+                        var completedFiles = $('.dz-complete, .dz-success').length;
+                        if (completedFiles > 0) {
+                            fileCount = completedFiles;
+                            console.log('Found completed files:', fileCount);
+                        }
+                    }
+                }
+
+                console.log('Total file count detected:', fileCount);
 
                 if (fileCount > 0) {
                     submitBtn.prop('disabled', false);
                     msgSpan.hide();
+                    console.log('Submit button enabled');
                 } else {
                     submitBtn.prop('disabled', true);
                     msgSpan.show();
+                    console.log('Submit button disabled');
                 }
             }
 
