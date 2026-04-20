@@ -443,7 +443,7 @@ function removeUploadedFileByHolder( previewElement, dropzone, confirmFlag ) {
         //}
     }).fail(function(data) {
         //console.log('remove failed, data='+data);
-        throw new Error('remove failed, data='+data);
+        throw new Error('remove failed, data='+JSON.stringify(data));
     }) ;
 
     return dropzone._updateMaxFilesReachedClass();
