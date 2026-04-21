@@ -428,7 +428,11 @@ class FellAppRetrievalController extends OrderAbstractController
             'otherExperience3Institution', 'otherExperience3City', 'otherExperience3State', 'otherExperience3Country'
         ];
         foreach ($trainingFields as $field) {
+            $logger->notice('populateRow: foreach start $field='.$field);
             $data[$field] = '';
+            //if (array_key_exists($field, $data)) {
+            //    $data[$field] = '';
+            //}
         }
 
         // Process trainings

@@ -1325,19 +1325,19 @@ class FellAppImportPopulateHubUtil {
 
         $statusCode = $response->getStatusCode();
         if ($statusCode !== 200) {
-            throw new \Exception('Remote server returned status code: ' . $statusCode);
+            throw new \Exception('downloadFileFromRemote: Remote server returned status code: ' . $statusCode);
         }
 
         $data = $response->toArray();
 
         if (!isset($data['success']) || !$data['success']) {
-            throw new \Exception('Remote server error: ' . ($data['message'] ?? 'Unknown error'));
+            throw new \Exception('downloadFileFromRemote: Remote server error: ' . ($data['message'] ?? 'Unknown error'));
         }
 
         // Decode base64 file content
         $fileContent = base64_decode($data['file_base64']);
         if ($fileContent === false) {
-            throw new \Exception('Failed to decode base64 file content');
+            throw new \Exception('downloadFileFromRemote: Failed to decode base64 file content');
         }
 
         // Create unique filename
