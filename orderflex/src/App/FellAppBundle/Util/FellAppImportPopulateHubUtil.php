@@ -667,7 +667,7 @@ class FellAppImportPopulateHubUtil {
             }
         }//for
 
-        exit('exit $populatedFellowshipApplications='.count($populatedFellowshipApplications));
+        //exit('exit $populatedFellowshipApplications='.count($populatedFellowshipApplications));
         return $populatedFellowshipApplications;
     }
 
@@ -810,7 +810,8 @@ class FellAppImportPopulateHubUtil {
             $employmentStatus->setEmploymentType($employmentType);
             $user->addEmploymentStatus($employmentStatus);
         } else {
-            echo 'Found user='.$user."<br>";
+            //echo 'Found user='.$user."<br>";
+            $logger->notice('Found user='.$user);
             //exit('Found usernameCanonical='.$usernameCanonical.', $primaryPublicUserId='.$primaryPublicUserId);
         }
 
@@ -848,6 +849,9 @@ class FellAppImportPopulateHubUtil {
                     $originalAppId .'], name=['.$fellowshipType.']'.
                     ', apiHashImportKeyGlobal='.$apiHashImportKeyGlobal
                 );
+                echo '2: Local FellowshipSubspecialty not found by API Hash import key, originalAppId=[' .
+                    $originalAppId .'], name=['.$fellowshipType.']'.
+                    ', apiHashImportKeyGlobal='.$apiHashImportKeyGlobal."<br>";
                 return null;
             }
         }
@@ -1115,6 +1119,9 @@ class FellAppImportPopulateHubUtil {
 
         $systemUser = $userSecUtil->findSystemUser();
 
+        $logger->notice('downloadRemoteDocuments:  started');
+        //echo 'downloadRemoteDocuments:  started'."<br>";
+
         // Get storage path
         $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter(
             'applicantsUploadPathFellApp',
@@ -1228,6 +1235,8 @@ class FellAppImportPopulateHubUtil {
                     //$this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, $examination);
                     $this->attachDocumentToFellowship($fellowshipApplication, $document, $docConfig, $examination);
                     $logger->notice('Downloaded and attached docType=' . $docConfig['docType'] . ' for application ID ' . $fellowshipApplication->getId());
+                } else {
+                    $logger->notice('Document is NULL.');
                 }
             } catch (\Exception $e) {
                 $logger->error('Error downloading ' . $docConfig['docType'] . ': ' . $e->getMessage());
@@ -1301,6 +1310,7 @@ class FellAppImportPopulateHubUtil {
      */
     private function downloadFileFromRemote($fileUrl, $fileHash, $documentType, $storagePath, $systemUser, $remoteBaseUrl, $secretKey) {
         $logger = $this->container->get('logger');
+        $logger->notice("downloadFileFromRemote: started");
 
         // Generate HMAC for authentication
         $timestamp = time();
@@ -1308,6 +1318,7 @@ class FellAppImportPopulateHubUtil {
 
         // Construct API URL $remoteBaseUrl=https://view.online
         $apiUrl = $remoteBaseUrl . '/fellowship-applications/download-application-file?document_hash=' . urlencode($fileHash);
+        $logger->notice("downloadFileFromRemote: apiUrl=$apiUrl");
 
         // Make API request with authentication headers
         //$httpClient = new \Symfony\Component\HttpClient\HttpClient();
@@ -1329,6 +1340,7 @@ class FellAppImportPopulateHubUtil {
             throw new \Exception('downloadFileFromRemote: Remote server returned status code: ' . $statusCode);
         }
 
+        $logger->notice("downloadFileFromRemote: start processing response");
         $data = $response->toArray();
 
         if (!isset($data['success']) || !$data['success']) {
