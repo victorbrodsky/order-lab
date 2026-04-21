@@ -334,8 +334,9 @@ class FellAppImportPopulateHubUtil {
         }
         //$remoteUrl = https://view.online/fellowship-applications/download-application-data
         //Get $remoteBaseUrl=https://view.online
-        $parts = parse_url($remoteUrl);
-        $remoteServerUrl = $parts['scheme'] . '://' . $parts['host'];
+        //$parts = parse_url($remoteUrl);
+        //$remoteServerUrl = $parts['scheme'] . '://' . $parts['host'];
+        $remoteServerUrl = strstr($remoteUrl, '/fellowship-applications', true);
 
         //$apiKey = $userSecUtil->getSiteSettingParameter('apiKey');
 
@@ -1136,14 +1137,22 @@ class FellAppImportPopulateHubUtil {
         $remoteUrl = $userSecUtil->getSiteSettingParameter(
             'hubServerApiUrl',
             $this->container->getParameter('fellapp.sitename'));
+        //$remoteUrl = https://view.online/c/test-institution/test-department/fellowship-applications/download-application-data
         if( !$remoteUrl ) {
             $logger->warning('fellappRemoteServerUrl is not defined in Site Parameters. Cannot download remote documents.');
             return false;
         }
         //$remoteUrl = https://view.online/fellowship-applications/download-application-data
         //Get $remoteBaseUrl=https://view.online
-        $parts = parse_url($remoteUrl);
-        $remoteBaseUrl = $parts['scheme'] . '://' . $parts['host'];
+        //TODO: downloadFileFromRemote: apiUrl=https://view.online/fellowship-applications/download-application-file?
+        //TODO: must contain the tenant prefix 'c/test-institution/test-department'
+        //$parts = parse_url($remoteUrl);
+        //$remoteBaseUrl = $parts['scheme'] . '://' . $parts['host'];
+        //$parts = parse_url($remoteUrl);
+        //$pathParts = explode('/', trim($parts['path'], '/')); // [c, test-institution, test-department, ...]\
+        //$basePath = implode('/', array_slice($pathParts, 0, 3)); // c/test-institution/test-department
+        //$remoteBaseUrl = $parts['scheme'] . '://' . $parts['host'] . '/' . $basePath;
+        $remoteBaseUrl = strstr($remoteUrl, '/fellowship-applications', true);
 
         $localApiConnectionHashKey = null;
         //$apiHashConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey();
@@ -1318,6 +1327,8 @@ class FellAppImportPopulateHubUtil {
 
         // Construct API URL $remoteBaseUrl=https://view.online
         $apiUrl = $remoteBaseUrl . '/fellowship-applications/download-application-file?document_hash=' . urlencode($fileHash);
+        //TODO: downloadFileFromRemote: apiUrl=https://view.online/fellowship-applications/download-application-file?
+        //TODO: must contain the tenant prefix 'c/test-institution/test-department'
         $logger->notice("downloadFileFromRemote: apiUrl=$apiUrl");
 
         // Make API request with authentication headers
