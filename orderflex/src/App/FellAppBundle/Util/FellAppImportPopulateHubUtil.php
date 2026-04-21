@@ -667,6 +667,7 @@ class FellAppImportPopulateHubUtil {
             }
         }//for
 
+        exit('exit $populatedFellowshipApplications='.count($populatedFellowshipApplications));
         return $populatedFellowshipApplications;
     }
 
