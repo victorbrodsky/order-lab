@@ -173,7 +173,7 @@ class FellAppImportPopulateHubUtil {
 //                ], 500);
                 return [
                     'success' => false,
-                    'message' => 'Remote server returned error: ' . $statusCode,
+                    'message' => 'Remote server returned error: ' . $statusCode . ", url=$remoteUrl",
                     'status'  => 500
                 ];
             }
