@@ -688,10 +688,11 @@ class FellAppController extends OrderAbstractController {
         );
 
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
         $eventtype = $em->getRepository(EventTypeList::class)->findOneByName("Import of Fellowship Applications Spreadsheet");
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
-        $lastImportTimestamps = $this->getDoctrine()->getRepository(Logger::class)->findBy(array('eventType'=>$eventtype),array('creationdate'=>'DESC'),1);
+        $lastImportTimestamps = $this->getDoctrine()->getRepository(Logger::class)->findBy(
+            array('eventType'=>$eventtype),
+            array('creationdate'=>'DESC'),1
+        );
         if( count($lastImportTimestamps) != 1 ) {
             $lastImportTimestamp = null;
         } else {

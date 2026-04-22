@@ -68,6 +68,11 @@ app_crn:
     type:     attribute
     prefix:   /critical-result-notifications
 
+#app_ctp:
+#    resource: "../src/App/CtpBundle/Controller/"
+#    type:     attribute
+#    prefix:   /center-for-translational-pathology
+
 app_orderform:
     resource: "../src/App/OrderformBundle/Controller/"
     type:     attribute
@@ -209,6 +214,11 @@ translationalresearch_login_check:
     path:   /translational-research/login_check
 translationalresearch_logout:
     path:   /translational-research/logout
+
+ctp_login_check:
+    path:   /center-for-translational-pathology/login_check
+ctp_logout:
+    path:   /center-for-translational-pathology/logout
 
 #OneupUploaderBundle  file uploader
 oneup_uploader:

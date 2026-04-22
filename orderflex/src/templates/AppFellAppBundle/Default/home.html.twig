@@ -68,8 +68,9 @@
                 ({{ time_zone_util.ago(lastImportTimestamp) }})
                 {{ acceptingApplication }}
             {% else %}
-                {#Unable to retrieve submitted applications when Google connection settings are not configured {{ acceptingApplication }}#}
-                Unable to retrieve submitted applications when connection settings are not configured {{ acceptingApplication }}
+                {#TODO: modify for HUB#}
+                {#Unable to retrieve submitted applications when connection settings are not configured {{ acceptingApplication }}#}
+                {#{{ acceptingApplication }}#}
             {% endif %}
         </i>
     </p>

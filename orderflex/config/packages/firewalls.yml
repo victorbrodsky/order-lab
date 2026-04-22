@@ -239,6 +239,26 @@ security:
                 #path:     /(%multilocales%)(%locdel%)critical-result-notifications
                 #path:     /critical-result-notifications
 
+#        ldap_ctp_firewall:
+#            pattern: ^.*/center-for-translational-pathology
+#            context: "%firewall_context_name%"
+#            switch_user: true
+#            custom_authenticators:
+#                authenticator: custom_guard_authenticator
+#            form_login:
+#                login_path: ctp_login
+#                check_path: ctp_login_check
+#            logout:
+#                path:   ctp_logout
+#                target: ctp_login
+#                invalidate_session: false
+#            lazy: true
+#            provider: users
+#            access_denied_url: ctpn_access_request_new_plain
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 28800 # 8 hours in seconds
+
         ldap_translationalresearch_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)translational-research
             pattern: ^.*/translational-research
