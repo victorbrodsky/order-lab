@@ -86,14 +86,96 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    #[Route('/', name: 'ctp_home')]
-    public function mirror(): Response
+    #[Route('/{page}', name: 'ctp_home', defaults: ['page' => 'index'])]
+    public function mirror( string $page ): Response
     {
-        $path = $this->getParameter('kernel.project_dir') . '/public/ctp_site/localhost_3000/index.html';
-        $html = file_get_contents($path);
+        $base = $this->getParameter('kernel.project_dir') . '/public/ctp_site/localhost_3000/';
+        $file = $base . $page . '.html';
+
+        if (!file_exists($file)) {
+            throw $this->createNotFoundException("Page not found: $page");
+        }
+
+        $html = file_get_contents($file);
+
+        //
+        // Helper: find real file in _next folder
+        //
+        $findRealFile = function(string $basename) use ($base) {
+            $folder = $base . '_next/';
+            $files = scandir($folder);
+
+            foreach ($files as $f) {
+                if (str_starts_with($f, pathinfo($basename, PATHINFO_FILENAME))) {
+                    return $f; // return first matching file
+                }
+            }
+
+            return $basename; // fallback
+        };
+
+        //
+        // 1. Rewrite internal links
+        //
+        $html = preg_replace(
+            '/href="([^":]+)\.html"/i',
+            'href="/center-for-translational-pathology/$1"',
+            $html
+        );
+
+        //
+        // 2. Rewrite CSS/JS paths
+        //
+        $html = preg_replace(
+            '/(src|href)="(css|js|images|assets)\//i',
+            '$1="/ctp_site/localhost_3000/$2/',
+            $html
+        );
+
+        //
+        // 3. Rewrite Next.js optimized images
+        //
+        $html = preg_replace_callback(
+            '/_next\/image\?url=%2Fimages%2F([^"&]+).*?"/i',
+            function ($matches) use ($findRealFile) {
+                $real = $findRealFile($matches[1]);
+                return '/ctp_site/localhost_3000/_next/' . $real . '"';
+            },
+            $html
+        );
+
+        //
+        // 4. Rewrite fallback Next.js JPEGs
+        //
+        $html = preg_replace_callback(
+            '/src="_next\/([^"?]+)\?url=%2Fimages%2F([^"&]+).*?"/i',
+            function ($matches) use ($findRealFile) {
+                $real = $findRealFile($matches[2]);
+                return 'src="/ctp_site/localhost_3000/_next/' . $real . '"';
+            },
+            $html
+        );
+
+        //
+        // 5. Rewrite any remaining _next/... paths
+        //
+        $html = preg_replace(
+            '/(src|srcset)="_next\//i',
+            '$1="/ctp_site/localhost_3000/_next/',
+            $html
+        );
+
+        //
+        // 6. Fix accidental leading double slashes
+        //
+        $html = preg_replace(
+            '/(src|srcset)="\/\//i',
+            '$1="/',
+            $html
+        );
 
         return $this->render('AppCtpBundle/Mirror/wrapper.html.twig', [
-            'html' => $html,
+            'site_html' => $html,
         ]);
     }
 
