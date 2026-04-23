@@ -1,0 +1,117 @@
+{% block navbar %}
+
+
+    {% if titleheadroom is defined %}
+        <div id="user-headroom-header"
+             class="text-center headroom headroom-hidden"
+             style="border-color: #ffffff; background-image:linear-gradient(to bottom,#ffffff 0,#ffffff 100%); color: #31708f;"
+        >
+            {{ titleheadroom|raw }}
+        </div>
+    {% endif %}
+
+    <nav class="navbar navbar-default" role="navigation">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% if is_granted('ROLE_CTP_USER') %}
+                <!-- this is for mobile devices - top menu -->
+                <a class="navbar-brand visible-xs visible-sm" href="{{ path(ctp_sitename~'_home') }}">Home</a>
+            {% endif %}
+        </div>
+
+        {#<br>#}
+        <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
+
+            {% if is_granted('ROLE_CTP_USER') %}
+
+                <ul class="nav navbar-nav">
+
+                    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+                    {{ usermacros.siteSwitch() }}
+
+                    <li id="nav-bar-ctphome" class="hidden-xs divider-vertical">
+                        <a href="{{ path(ctp_sitename~'_home') }}">
+                            <span class="glyphicon glyphicon-pencil"></span> Home
+                        </a>
+                    </li>
+
+                </ul>
+
+            {% endif %}
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if is_granted('ROLE_CTP_ADMIN') %}
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            <li><a href="{{ path(ctp_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(ctp_sitename~'_accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path(ctp_sitename~'_authorized_users') }}">Authorized Users</a></li>
+
+                            <li class="divider"></li>
+                            <li><a href="{{ path(ctp_sitename~'_logger') }}">Event Log</a></li>
+
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
+                                <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
+                                <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>
+                                <li><a href="{{ path(ctp_sitename~'_siteparameters') }}">Site Settings</a></li>
+                            {% endif %}
+
+                            {#Update cached values now#}
+                            <hr>
+                            <li><a
+                                    general-data-confirm="Are you sure you want to update cache? It might requires multiple re-runs."
+                                    target="_blank"
+                                    href="{{ path(ctp_sitename~'_update_cache_values_now') }}">Update cached values now
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                {% endif %}
+
+
+                {% if is_granted('ROLE_CTP_USER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(ctp_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                            {% endif %}
+
+                            {% if pendinguser is not defined %}
+                                <li><a href="{{ path(ctp_sitename~'_about_page') }}">About</a></li>
+                            {% endif %}
+
+                            <li><a href="{{ path(ctp_sitename~'_logout') }}">Log Out</a></li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+            </div>
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+    </nav>
+    
+{% endblock %}
+

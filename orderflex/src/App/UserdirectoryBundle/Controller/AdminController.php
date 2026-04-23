@@ -2096,8 +2096,58 @@ class AdminController extends OrderAbstractController
                 70,
                 "critical-result-notifications"
             ),
-
             //////////// EOF CRN roles ////////////
+
+            //////////// CTP roles ////////////
+            "ROLE_CTP_ADMIN" => array(
+                "CTP Administrator",
+                "Full access for the Center for Translational Pathology site",
+                90,
+                "center-for-translational-pathology"
+            ),
+            //CENTER_FOR_TRANSLATIONAL_PATHOLOGY_WEB_CONTENT_EDITOR
+            "ROLE_CTP_WEB_EDITOR" => array(
+                "CTP Web Content Editor",
+                "Web Editor for the Center for Translational Pathology site",
+                80,
+                "center-for-translational-pathology"
+            ),
+            //CENTER_FOR_TRANSLATIONAL_PATHOLOGY_INTERNAL_REQUEST_SUBMITTER
+            "ROLE_CTP_INTERNAL_REQUEST_SUBMITTER" => array(
+                "CTP Internal Request Submitter",
+                "Internal Request Submitter for the Center for Translational Pathology site",
+                70,
+                "center-for-translational-pathology"
+            ),
+            //CENTER_FOR_TRANSLATIONAL_PATHOLOGY_INTERNAL_REQUEST_RECIPIENT
+            "ROLE_CTP_INTERNAL_REQUEST_RECIPIENT" => array(
+                "CTP Internal Request Recipient",
+                "Request Recipient for the Center for Translational Pathology site",
+                70,
+                "center-for-translational-pathology"
+            ),
+            //CENTER_FOR_TRANSLATIONAL_PATHOLOGY_EXTERNAL_REQUEST_SUBMITTER
+            "ROLE_CTP_EXTERNAL_REQUEST_SUBMITTER" => array(
+                "CTP External Request Submitter",
+                "External Request Submitter for the Center for Translational Pathology site",
+                60,
+                "center-for-translational-pathology"
+            ),
+            //CENTER_FOR_TRANSLATIONAL_PATHOLOGY_EXTERNAL_REQUEST_RECIPIENT
+            "ROLE_CTP_EXTERNAL_REQUEST_RECIPIENT" => array(
+                "CTP External Request Recipient",
+                "External Request Recipient for the Center for Translational Pathology site",
+                60,
+                "center-for-translational-pathology"
+            ),
+            //CENTER_FOR_TRANSLATIONAL_PATHOLOGY_APPLICATION_USER
+            "ROLE_CTP_APPLICATION_USER" => array(
+                "CTP External Request Recipient",
+                "Application User for the Center for Translational Pathology site",
+                50,
+                "center-for-translational-pathology"
+            ),
+            //////////// EOF CTP roles ////////////
 
             //TRANSRES - similar to ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY - _WCM_HEMEPATH and _WCM_APCP
             "ROLE_TRANSRES_ADMIN_APCP" => array(
@@ -3063,6 +3113,7 @@ class AdminController extends OrderAbstractController
             'time-away-request' => 'vacreq',
             'call-log-book' => 'calllog',
             'critical-result-notifications' => 'crn',
+            'center-for-translational-pathology' => 'ctp',
             'translational-research' => 'translationalresearch',
             'dashboards' => 'dashboard'
         );
@@ -3109,6 +3160,8 @@ class AdminController extends OrderAbstractController
             .' providers regarding critical test results,'
             .' as well as for acknowledgement tracking confirming the'
             .' receipt of automated notifications.',
+
+            'center-for-translational-pathology' => '"Center for Translational Pathology" is a site for CTP projects',
 
             'translational-research' => '"Translational Research" is a site for specimen-associated project request submission,'
             .' multi-stage approval, subsequent work order submission and processing,'
@@ -8802,6 +8855,7 @@ class AdminController extends OrderAbstractController
             'deidentifier' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('deidentifier'),
             'vacreq' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('vacreq'),
             'calllog' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('calllog'),
+            'ctp' => $this->getDoctrine()->getRepository(SiteList::class)->findOneByAbbreviation('ctp'),
         );
 
         $count = 1;
@@ -8976,6 +9030,8 @@ class AdminController extends OrderAbstractController
 
             $resCount = $resCount + $this->addSites( $role, '_CRN_', 'critical-result-notifications' );
 
+            $resCount = $resCount + $this->addSites( $role, '_CTP_', 'center-for-translational-pathology' );
+
             $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboards' ); //Dashboard
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
@@ -9048,6 +9104,7 @@ class AdminController extends OrderAbstractController
                 $resCount = $resCount + $this->addSites($role, '_USERDIRECTORY_', 'directory');
                 $resCount = $resCount + $this->addSites($role, '_CALLLOG_', 'call-log-book');
                 $resCount = $resCount + $this->addSites($role, '_CRN_', 'critical-result-notifications');
+                $resCount = $resCount + $this->addSites($role, '_CTP_', 'center-for-translational-pathology');
                 $resCount = $resCount + $this->addSites($role, '_DASHBOARD_', 'dashboards'); //Dashboard
             }
 

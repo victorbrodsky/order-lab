@@ -111,6 +111,8 @@ $container->setParameter('calllog.uploadpath',$callloguploadpath);
 //crn
 $crnuploadpath = "crn";
 $container->setParameter('crn.uploadpath',$crnuploadpath);
+$ctpuploadpath = "ctp";
+$container->setParameter('ctp.uploadpath',$ctpuploadpath);
 //dashboard
 $dashboarduploadpath = "dashboard";
 $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
@@ -286,6 +288,7 @@ if( $conn ) {
                 $callloguploadpath = getDBParameter($row, $callloguploadpath, 'callloguploadpath');
 
                 $crnuploadpath = getDBParameter($row, $crnuploadpath, 'crnuploadpath');
+                $ctpuploadpath = getDBParameter($row, $ctpuploadpath, 'ctpuploadpath');
 
                 $dashboarduploadpath = getDBParameter($row, $dashboarduploadpath, 'dashboarduploadpath');
 
@@ -359,6 +362,8 @@ if( $conn ) {
                 $container->setParameter('calllog.uploadpath', $callloguploadpath);
             if ($crnuploadpath)
                 $container->setParameter('crn.uploadpath', $crnuploadpath);
+            if ($ctpuploadpath)
+                $container->setParameter('ctp.uploadpath', $ctpuploadpath);
             if ($dashboarduploadpath) {
                 $container->setParameter('dashboard.uploadpath', $dashboarduploadpath);
             }

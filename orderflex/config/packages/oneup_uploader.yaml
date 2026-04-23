@@ -44,6 +44,10 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: 'Uploaded/%crn.uploadpath%'
+        ctp_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%ctp.uploadpath%'
         dashboard_gallery:
             frontend: dropzone
             storage:

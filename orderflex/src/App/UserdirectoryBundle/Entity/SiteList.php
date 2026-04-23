@@ -400,6 +400,9 @@ class SiteList extends ListAbstract
         if( $abbreviation == "crn" ) {
             return "Critical Result Notification";
         }
+        if( $abbreviation == "ctp" ) {
+            return "Center for Translational Pathology";
+        }
         if( $abbreviation == "dashboard" ) {
             return "Dashboards";
         }

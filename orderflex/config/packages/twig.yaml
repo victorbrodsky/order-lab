@@ -55,6 +55,7 @@ twig:
         transres_uploadpath: 'Uploaded/%transres.uploadpath%'
         calllog_uploadpath: 'Uploaded/%calllog.uploadpath%'
         crn_uploadpath: 'Uploaded/%crn.uploadpath%'
+        ctp_uploadpath: 'Uploaded/%ctp.uploadpath%'
         dashboard_uploadpath: 'Uploaded/%dashboard.uploadpath%'
 
         #service
@@ -64,6 +65,7 @@ twig:
         user_tenant_utility: "@user_tenant_utility"
         calllog_util_form: "@calllog_util_form"
         crn_util_form: "@crn_util_form"
+#        ctp_util_form: "@ctp_util_form"
         transres_util: "@transres_util"
         transres_request_util: "@transres_request_util"
         transres_permission_util: "@transres_permission_util"

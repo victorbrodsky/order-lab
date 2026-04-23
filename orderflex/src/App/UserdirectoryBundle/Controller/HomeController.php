@@ -549,6 +549,7 @@ class HomeController extends OrderAbstractController {
             'time-away-request' => 'vacreq',
             'call-log-book' => 'calllog',
             'critical-result-notifications' => 'crn',
+            'center-for-translational-pathology' => 'ctp',
             'translational-research' => 'translationalresearch',
             'dashboards' => 'dashboard'
         );

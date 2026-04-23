@@ -547,6 +547,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ctpuploadpath' )
+            $builder->add('ctpuploadpath',null,array(
+                'label'=>'Center for Translational Pathology Upload Folder:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         //vacrequploadpath
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'vacrequploadpath' )
             $builder->add('vacrequploadpath',null,array(

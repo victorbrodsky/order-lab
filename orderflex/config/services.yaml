@@ -12,6 +12,7 @@ imports:
     - { resource: "../src/App/DeidentifierBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CallLogBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CrnBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/CtpBundle/Resources/config/services.yml" }
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DemoDbBundle/Resources/config/services.yml" }
@@ -109,6 +110,8 @@ services:
         resource: '../src/App/CallLogBundle/Controller/'
     App\CrnBundle\Controller\:
         resource: '../src/App/CrnBundle/Controller/'
+    App\CtpBundle\Controller\:
+        resource: '../src/App/CtpBundle/Controller/'
     App\FellAppBundle\Controller\:
         resource: '../src/App/FellAppBundle/Controller/'
     App\ResAppBundle\Controller\:

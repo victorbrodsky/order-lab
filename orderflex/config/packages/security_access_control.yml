@@ -231,6 +231,17 @@ security:
        - { path: ^.*/critical-result-notifications/reset-password, role: PUBLIC_ACCESS }
        - { path: ^.*/critical-result-notifications/, role: ROLE_CRN_USER }
 
+     ############################## Ctp SITE SETTINGS ##############################
+       - { path: ^.*/center-for-translational-pathology/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/, role: ROLE_CTP_USER }
+
       ############################## TranslationalResearch SITE SETTINGS ##############################
        - { path: ^.*/translational-research/access-requests/new/, role: PUBLIC_ACCESS }
        - { path: ^.*/translational-research/login, role: PUBLIC_ACCESS }

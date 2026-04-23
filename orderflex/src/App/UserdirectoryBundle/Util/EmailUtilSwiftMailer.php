@@ -188,6 +188,10 @@ class EmailUtilSwiftMailer {
                 $sitenameAbbreviation = "crn";
                 $subject = "[Critical Result Notifications] " . $subject;
             }
+            if (strpos((string)$url, "/center-for-translational-pathology/") !== false) {
+                $sitenameAbbreviation = "ctp";
+                $subject = "[Center for Translational Pathology] " . $subject;
+            }
             if (strpos((string)$url, "/time-away-request/") !== false) {
                 $sitenameAbbreviation = "vacreq";
                 $subject = "[Vacation Request] " . $subject;

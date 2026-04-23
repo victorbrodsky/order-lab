@@ -68,10 +68,10 @@ app_crn:
     type:     attribute
     prefix:   /critical-result-notifications
 
-#app_ctp:
-#    resource: "../src/App/CtpBundle/Controller/"
-#    type:     attribute
-#    prefix:   /center-for-translational-pathology
+app_ctp:
+    resource: "../src/App/CtpBundle/Controller/"
+    type:     attribute
+    prefix:   /center-for-translational-pathology
 
 app_orderform:
     resource: "../src/App/OrderformBundle/Controller/"

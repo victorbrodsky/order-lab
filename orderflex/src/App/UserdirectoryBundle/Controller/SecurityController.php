@@ -204,6 +204,9 @@ class SecurityController extends OrderAbstractController
         if( $routename == "crn_login" ) {
             $sitename = $this->getParameter('crn.sitename');
         }
+        if( $routename == "ctp_login" ) {
+            $sitename = $this->getParameter('ctp.sitename');
+        }
         if( $routename == "translationalresearch_login" ) {
             $sitename = $this->getParameter('translationalresearch.sitename');
         }
@@ -524,6 +527,9 @@ class SecurityController extends OrderAbstractController
         if( $routename == "crn_idlelogout" ) {
             $sitename = $this->getParameter('crn.sitename');
         }
+        if( $routename == "ctp_idlelogout" ) {
+            $sitename = $this->getParameter('ctp.sitename');
+        }
         if( $routename == "translationalresearch_idlelogout" ) {
             $sitename = $this->getParameter('translationalresearch.sitename');
         }
@@ -574,6 +580,9 @@ class SecurityController extends OrderAbstractController
             }
             if (strpos((string)$url, "/critical-result-notifications/") !== false) {
                 $sitename = $this->getParameter('crn.sitename');
+            }
+            if (strpos((string)$url, "/center-for-translational-pathology/") !== false) {
+                $sitename = $this->getParameter('ctp.sitename');
             }
             if (strpos((string)$url, "/time-away-request/") !== false) {
                 $sitename = $this->getParameter('vacreq.sitename');
@@ -874,6 +883,10 @@ class SecurityController extends OrderAbstractController
         if( $routename == "crn_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('crn.sitename');
             $options['event'] = "Critical Result Notification login page visit";
+        }
+        if( $routename == "ctp_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('ctp.sitename');
+            $options['event'] = "Center for Translational Pathology login page visit";
         }
         if( $routename == "translationalresearch_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('translationalresearch.sitename');

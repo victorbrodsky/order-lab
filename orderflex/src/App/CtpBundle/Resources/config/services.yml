@@ -1,0 +1,42 @@
+parameters:
+
+    ctp.sitename: ctp
+    ctp.uploadpath:
+
+
+twig:
+    globals:
+        ctp_sitename: '%ctp.sitename%'
+        #service
+        #ctp_util: "@ctp_util"
+
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+#                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
+
+    ctp_authentication_handler:
+        class: App\CtpBundle\Security\Authentication\CtpLoginSuccessHandler
+
+    ctp_role_voter:
+        class: App\CtpBundle\Security\Voter\CtpRoleVoter
+        public: false
+        tags:
+            - { name: security.voter }
+
+    ctp_permission_voter:
+        class: App\CtpBundle\Security\Voter\CtpPermissionVoter
+        public: false
+        tags:
+            - { name: security.voter }
+
+#    ctp_util:
+#        class: App\CtpBundle\Util\CtpUtil
+
+
+
+

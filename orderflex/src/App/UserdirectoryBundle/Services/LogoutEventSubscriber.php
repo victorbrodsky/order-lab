@@ -157,6 +157,9 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         if( $routename == "crn_logout" ) {
             $sitename = $this->container->getParameter('crn.sitename');
         }
+        if( $routename == "ctp_logout" ) {
+            $sitename = $this->container->getParameter('ctp.sitename');
+        }
         if( $routename == "translationalresearch_logout" ) {
             $sitename = $this->container->getParameter('translationalresearch.sitename');
         }

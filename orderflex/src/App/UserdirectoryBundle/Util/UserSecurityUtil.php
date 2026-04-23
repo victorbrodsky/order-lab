@@ -951,6 +951,10 @@ class UserSecurityUtil {
                 $roles = array("ROLE_CRN_ADMIN");
             }
 
+            if( $sitename == $this->container->getParameter('ctp.sitename') ) {
+                $roles = array("ROLE_CTP_ADMIN");
+            }
+
             if( $sitename == $this->container->getParameter('translationalresearch.sitename') ) {
                 $roles = array("ROLE_TRANSRES_ADMIN");
             }
@@ -1204,6 +1208,9 @@ class UserSecurityUtil {
         if( $sitename == 'crn' ) {
             $defaultSourceSystemName = 'ORDER Critical Result Notifications';
         }
+        if( $sitename == 'ctp' ) {
+            $defaultSourceSystemName = 'ORDER Center for Translational Pathology';
+        }
         if ($sitename == 'deidentifier' ) {
             $defaultSourceSystemName = 'ORDER Deidentifier';
         }
@@ -1257,6 +1264,9 @@ class UserSecurityUtil {
         }
         if( strpos((string)$url, $subdomain.'/critical-result-notifications/') !== false ) {
             $defaultSourceSystemName = 'ORDER Critical Result Notifications';
+        }
+        if( strpos((string)$url, $subdomain.'/center-for-translational-pathology/') !== false ) {
+            $defaultSourceSystemName = 'ORDER Center for Translational Pathology';
         }
 //        if( strpos((string)$url, '/order/deidentifier/') !== false ) {
 //            $defaultSourceSystemName = 'ORDER Deidentifier';

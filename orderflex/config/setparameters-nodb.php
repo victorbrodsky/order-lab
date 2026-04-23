@@ -51,6 +51,9 @@ $container->setParameter('calllog.uploadpath',$callloguploadpath);
 //crn
 $crnuploadpath = "crn";
 $container->setParameter('crn.uploadpath',$crnuploadpath);
+//ctp
+$ctpuploadpath = "ctp";
+$container->setParameter('ctp.uploadpath',$ctpuploadpath);
 //dashboard
 $dashboarduploadpath = "dashboard";
 $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);

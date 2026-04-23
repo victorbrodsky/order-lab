@@ -323,6 +323,9 @@ class SiteParameters {
     #[ORM\Column(type: 'string', nullable: true)]
     private $crnuploadpath;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $ctpuploadpath;
+
     //site titles and messages
     #[ORM\Column(type: 'text', nullable: true)]
     private $mainHomeTitle;
@@ -3166,6 +3169,22 @@ class SiteParameters {
     public function setCrnuploadpath($crnuploadpath)
     {
         $this->crnuploadpath = $crnuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCtpuploadpath()
+    {
+        return $this->ctpuploadpath;
+    }
+
+    /**
+     * @param mixed $ctpuploadpath
+     */
+    public function setCtpuploadpath($ctpuploadpath)
+    {
+        $this->ctpuploadpath = $ctpuploadpath;
     }
 
     /**

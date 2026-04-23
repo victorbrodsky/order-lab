@@ -131,6 +131,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/App/CrnBundle/Entity'
                         prefix: 'App\CrnBundle\Entity'
                         alias: 'AppCrnBundle'
+                    App\CtpBundle:
+                        is_bundle: false
+                        type: attribute
+                        dir: '%kernel.project_dir%/src/App/CtpBundle/Entity'
+                        prefix: 'App\CtpBundle\Entity'
+                        alias: 'AppCtpBundle'
                     App\TranslationalResearchBundle:
                         is_bundle: false
                         type: attribute

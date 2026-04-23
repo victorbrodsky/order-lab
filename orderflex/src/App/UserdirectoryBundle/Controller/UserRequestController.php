@@ -779,6 +779,9 @@ class UserRequestController extends OrderAbstractController
             case "vacreq":
                 $name = "ORDER Vacation Request";
                 break;
+            case "ctp":
+                $name = "ORDER Center for Translational Pathology";
+                break;
             default:
                 $name = "ORDER Employee Directory";
         }
