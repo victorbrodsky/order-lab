@@ -1,0 +1,34 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+    {#<meta charset="UTF-8">#}
+    {#<title>Title</title>#}
+{#</head>#}
+{#<body>#}
+
+{#</body>#}
+{#</html>#}
+
+
+
+{#{% extends 'base.html.twig' %}#}
+{#{% extends '::base.html.twig' %}#}
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{#{% block bootstrapcss %}#}
+{#{% endblock %}#}
+{#{% block maincss %}#}
+{#{% endblock %}#}
+
+{% block header %}
+    {% include 'AppCtpBundle/Default/navbar.html.twig' %}
+{% endblock %}
+
+{#{% block body %}#}
+{% block content_ctp %}
+    <base href="/ctp_site/localhost_3000/">
+    {{ html|raw }}
+    {#{{ html }}#}
+{% endblock %}
+
+

@@ -45,13 +45,15 @@ class DefaultController extends OrderAbstractController
         return array('sitename' => $this->getParameter('ctp.sitename'));
     }
 
-    #[Route(path: '/', name: 'ctp_home', methods: ['GET'])]
-    #[Template('AppctpBundle/Default/index.html.twig')]
+    #[Route(path: '/test', name: 'ctp_test_home', methods: ['GET'])]
+    #[Template('AppCtpBundle/Default/home.html.twig')]
     public function indexAction( Request $request ) {
 
         if( false == $this->isGranted('ROLE_CTP_USER') ){
             return $this->redirect( $this->generateUrl('ctp-nopermission') );
         }
+
+        $title = 'Center for Translational Pathology';
 
         //check for active access requests
         $accessreqs = $this->getActiveAccessReq();
@@ -61,11 +63,15 @@ class DefaultController extends OrderAbstractController
             $accessreqsCount = count($accessreqs);
         }
 
-        //$form = $this->createGenerateForm();
+        //echo "project dir=".$this->getParameter('kernel.project_dir')."<br>"; //C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex
+        //$path = $this->getParameter('kernel.project_dir') . '/public/static/myfile.html';
+        $path = 'C:/MyWebSites/path2path/localhost_3000/index.html';
+        $html = file_get_contents($path);
 
         return array(
+            'title' => $title,
             'accessreqs' => $accessreqsCount,
-            //'form' => $form->createView(),
+            'html' => $html,
         );
     }
 
@@ -79,31 +85,16 @@ class DefaultController extends OrderAbstractController
         return $accessreqs;
     }
 
-//    #[Route(path: '/resources/', name: 'ctp_resources')]
-//    #[Template('AppCtpBundle/Ctp/resources.html.twig')]
-//    public function resourcesAction(Request $request)
-//    {
-//        if( false === $this->isGranted('ROLE_CTP_USER') ) {
-//            return $this->redirect( $this->generateUrl('ctp-nopermission') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository(CtpSiteParameter::class)->findAll();
-//
-//        if( count($entities) != 1 ) {
-//            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
-//        }
-//
-//        $entity = $entities[0];
-//
-//        $resourcesText = $entity->getCtpResource();
-//
-//        return array(
-//            //'entity' => $entity,
-//            //'form' => $form->createView(),
-//            //'cycle' => $cycle,
-//            'title' => "Resources",
-//            'resourcesText' => $resourcesText
-//        );
-//    }
+
+    #[Route('/', name: 'ctp_home')]
+    public function mirror(): Response
+    {
+        $path = $this->getParameter('kernel.project_dir') . '/public/ctp_site/localhost_3000/index.html';
+        $html = file_get_contents($path);
+
+        return $this->render('AppCtpBundle/Mirror/wrapper.html.twig', [
+            'html' => $html,
+        ]);
+    }
+
 }

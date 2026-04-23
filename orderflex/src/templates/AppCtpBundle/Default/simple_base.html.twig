@@ -1,0 +1,98 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {#{% block stylesheets %}{% endblock %}#}
+
+    {% block stylesheets_base %}
+        {#{{ encore_entry_link_tags('dashboard_base') }}#}
+    {% endblock %}
+    {% block stylesheets %}
+        {#{{ encore_entry_link_tags('app') }}#}
+    {% endblock %}
+
+    {% block bootstrapcss %}
+        {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />#}
+        {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />#}
+        {#<link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />#}
+    {% endblock %}
+
+    {% block errorwatchjs %}
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/errorwatch.js') }}"></script>
+    {% endblock %}
+
+    {% if security is not defined %}
+        {% set security = 'true' %}
+    {% endif %}
+
+    {% block maincss %}
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/css/select2.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jasny/css/jasny-bootstrap.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/ladda/ladda-themeless.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/action.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/dropzone/css/dropzone.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/datepicker/css/bootstrap-datepicker3.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/jquery-ui-1.11.2/themes/smoothness/jquery-ui.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/typeahead.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/fengyuanchen-image-cropper/cropper.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/crop-avatar.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/vakata-jstree/themes/default/style.min.css') }}" />
+
+    {% endblock %}
+
+    {% block additionalcss %}{% endblock %}
+    {% block additionalcss2 %}{% endblock %}
+
+    {#{% block ie8fixjs %}#}
+        {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/html5-bootstrap-fix/html5shiv.min.js') }}"></script>#}
+        {#<script src="{{ asset('orderassets/AppUserdirectoryBundle/html5-bootstrap-fix/respond.min.js') }}"></script>#}
+    {#{% endblock %}#}
+
+    {% block favicon %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png') }}" />
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+
+    {% block header %}
+        {#{% include 'AppCtpBundle/Default/navbar.html.twig' %}#}
+    {% endblock %}
+
+    {% block content_ctp %}
+    {% endblock %}
+
+{% endblock %}
+
+{% block javascripts %}{% endblock %}
+
+</body>
+</html>
+
+
+
+
+{#{% block additionalcss %}#}
+    {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset('orderassets/AppUserdirectoryBundle/summernote/summernote.css') }}" />#}
+{#{% endblock %}#}
