@@ -270,6 +270,7 @@ class MaintenanceListener {
                 strpos((string)$controller,'App\VacReqBundle') !== false ||
                 strpos((string)$controller,'App\CallLogBundle') !== false ||
                 strpos((string)$controller,'App\CrnBundle') !== false ||
+                strpos((string)$controller,'App\CtpBundle') !== false ||
                 strpos((string)$controller,'App\TranslationalResearchBundle') !== false ||
                 strpos((string)$controller,'App\DashboardBundle') !== false
         ) {

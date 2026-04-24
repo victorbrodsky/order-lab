@@ -47,6 +47,10 @@
     {% set extendStr = "AppCrnBundle/Default/base.html.twig" %}
 {% endif %}
 
+{% if sitename == 'ctp' %}
+    {% set extendStr = "AppCtpBundle/Default/base.html.twig" %}
+{% endif %}
+
 {% if sitename == 'translationalresearch' %}
     {% set extendStr = 'AppTranslationalResearchBundle/Default/base.html.twig' %}
 {% endif %}
