@@ -127,6 +127,8 @@ class DefaultController extends OrderAbstractController
             return $basename; // fallback
         };
 
+        exit('$html='.$html);
+
         //
         // 1. Rewrite internal links
         //
@@ -186,8 +188,6 @@ class DefaultController extends OrderAbstractController
             '$1="/',
             $html
         );
-
-        exit('$html='.$html);
 
         return $this->render('AppCtpBundle/Mirror/wrapper.html.twig', [
             'site_html' => $html,
