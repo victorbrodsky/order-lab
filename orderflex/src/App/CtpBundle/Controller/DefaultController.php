@@ -47,45 +47,45 @@ class DefaultController extends OrderAbstractController
         return array('sitename' => $this->getParameter('ctp.sitename'));
     }
 
-    #[Route(path: '/test', name: 'ctp_test_home', methods: ['GET'])]
-    #[Template('AppCtpBundle/Default/home.html.twig')]
-    public function indexAction( Request $request ) {
-
-        if( false == $this->isGranted('ROLE_CTP_USER') ){
-            return $this->redirect( $this->generateUrl('ctp-nopermission') );
-        }
-
-        $title = 'Center for Translational Pathology';
-
-        //check for active access requests
-        $accessreqs = $this->getActiveAccessReq();
-        //echo "accessreq count=".count($accessreqs)."<br>";
-        $accessreqsCount = 0;
-        if( is_array($accessreqs) ) {
-            $accessreqsCount = count($accessreqs);
-        }
-
-        //echo "project dir=".$this->getParameter('kernel.project_dir')."<br>"; //C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex
-        //$path = $this->getParameter('kernel.project_dir') . '/public/static/myfile.html';
-        $path = 'C:/MyWebSites/path2path/localhost_3000/index.html';
-        $html = file_get_contents($path);
-
-        return array(
-            'title' => $title,
-            'accessreqs' => $accessreqsCount,
-            'html' => $html,
-        );
-    }
-
-    //check for active access requests
-    public function getActiveAccessReq() {
-        if( !$this->isGranted('ROLE_CTP_ADMIN') ) {
-            return null;
-        }
-        $userSecUtil = $this->container->get('user_security_utility');
-        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('ctp.sitename'),AccessRequest::STATUS_ACTIVE);
-        return $accessreqs;
-    }
+//    #[Route(path: '/test', name: 'ctp_test_home', methods: ['GET'])]
+//    #[Template('AppCtpBundle/Default/home.html.twig')]
+//    public function Weill Cornell Medicine( Request $request ) {
+//
+//        if( false == $this->isGranted('ROLE_CTP_USER') ){
+//            return $this->redirect( $this->generateUrl('ctp-nopermission') );
+//        }
+//
+//        $title = 'Center for Translational Pathology';
+//
+//        //check for active access requests
+//        $accessreqs = $this->getActiveAccessReq();
+//        //echo "accessreq count=".count($accessreqs)."<br>";
+//        $accessreqsCount = 0;
+//        if( is_array($accessreqs) ) {
+//            $accessreqsCount = count($accessreqs);
+//        }
+//
+//        //echo "project dir=".$this->getParameter('kernel.project_dir')."<br>"; //C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex
+//        //$path = $this->getParameter('kernel.project_dir') . '/public/static/myfile.html';
+//        $path = 'C:/MyWebSites/path2path/localhost_3000/index.html';
+//        $html = file_get_contents($path);
+//
+//        return array(
+//            'title' => $title,
+//            'accessreqs' => $accessreqsCount,
+//            'html' => $html,
+//        );
+//    }
+//
+//    //check for active access requests
+//    public function getActiveAccessReq() {
+//        if( !$this->isGranted('ROLE_CTP_ADMIN') ) {
+//            return null;
+//        }
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $accessreqs = $userSecUtil->getUserAccessRequestsByStatus($this->getParameter('ctp.sitename'),AccessRequest::STATUS_ACTIVE);
+//        return $accessreqs;
+//    }
 
 
     //1) https://view-test.med.cornell.edu/center-for-translational-pathology
@@ -93,7 +93,7 @@ class DefaultController extends OrderAbstractController
     //3) add login to footer
     //0) https://view.online/c/wcm/pathology/ -> enable https://view.online/c/wcm/pathology/center-for-translational-pathology
     //1) image Weill Cornell Medicine -> as link to $homeUrl
-    //2) image Weill Cornell Medicine -> as link to $homeUrl
+    //2) text footer Weill Cornell Medicine -> as link to https://weillcornell.org/
     //3) Center for Translational Pathology -> home of Center for Translational Pathology
     //7) External Collaboration / Project Inquiry activate the same behaviour as original site
     //8) http://localhost:3000/project-requests-public: change url to /center-for-translational-pathology/new-project-inquiry
@@ -115,10 +115,6 @@ class DefaultController extends OrderAbstractController
         if( !$page ) {
             $page = 'index';
         }
-
-        //if( $page == 'path2path-dashboard-login' ) {
-        //    return $this->redirect( $this->generateUrl('employees_login') );
-        //}
 
         $file = $base . $page . '.html';
 
@@ -212,21 +208,21 @@ class DefaultController extends OrderAbstractController
             $loginUrl = '<a href="' . $loginUrl . '">Login</a>';
         }
 
-        //Weill Cornell Medicine · Center for Translational Pathology
+//        $wcmLink = '<a href="weillcornell.org/">Weill Cornell Medicine</a>'; //weillcornell.org/
+//        //Weill Cornell Medicine · Center for Translational Pathology
         $html = str_replace(
             'Weill Cornell Medicine · Center for Translational Pathology',
-            'Weill Cornell Medicine · Center for Translational Pathology · '.$homeUrl . ' · ' . $loginUrl,
+            'Weill Cornell Medicine'.' · Center for Translational Pathology · '.$homeUrl . ' · ' . $loginUrl,
             $html
         );
 
-        //<img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"> as link https://weillcornell.org/
-        $wcmUrl = '<a href="https://weillcornell.org/"><img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"></a>';
-        $html = str_replace(
-            '<img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto">',
-            $wcmUrl,
-            $html
-        );
-
+//        //<img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"> as link https://weillcornell.org/
+//        $wcmUrl = '<a href="https://weillcornell.org/"><img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"></a>';
+//        $html = str_replace(
+//            '<img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto">',
+//            $wcmUrl,
+//            $html
+//        );
 
         //
         // 2. Rewrite CSS/JS paths
@@ -278,6 +274,22 @@ class DefaultController extends OrderAbstractController
             '$1="/',
             $html
         );
+
+//        //<img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"> as link https://weillcornell.org/
+//        $wcmUrl = '<a href="https://weillcornell.org/"><img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"></a>';
+//        $html = str_replace(
+//            '<img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto">',
+//            $wcmUrl,
+//            $html
+//        );
+
+//        $wcmLink = '<a href="weillcornell.org/">Weill Cornell Medicine</a>'; //weillcornell.org/
+//        //Weill Cornell Medicine · Center for Translational Pathology
+//        $html = str_replace(
+//            'Weill Cornell Medicine · Center for Translational Pathology',
+//            $wcmLink.' · Center for Translational Pathology · '.$homeUrl . ' · ' . $loginUrl,
+//            $html
+//        );
 
         return $this->render('AppCtpBundle/Mirror/wrapper.html.twig', [
             'site_html' => $html,
