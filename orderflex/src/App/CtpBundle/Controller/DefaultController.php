@@ -187,6 +187,8 @@ class DefaultController extends OrderAbstractController
             $html
         );
 
+        exit('$html='.$html);
+
         return $this->render('AppCtpBundle/Mirror/wrapper.html.twig', [
             'site_html' => $html,
         ]);
