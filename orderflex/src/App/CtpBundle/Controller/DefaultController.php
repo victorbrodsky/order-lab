@@ -91,6 +91,14 @@ class DefaultController extends OrderAbstractController
     //1) https://view-test.med.cornell.edu/center-for-translational-pathology
     //2) login only for dashboard
     //3) add login to footer
+    //0) https://view.online/c/wcm/pathology/ -> enable https://view.online/c/wcm/pathology/center-for-translational-pathology
+    //1) image Weill Cornell Medicine -> as link to $homeUrl
+    //2) image Weill Cornell Medicine -> as link to $homeUrl
+    //3) Center for Translational Pathology -> home of Center for Translational Pathology
+    //7) External Collaboration / Project Inquiry activate the same behaviour as original site
+    //8) http://localhost:3000/project-requests-public: change url to /center-for-translational-pathology/new-project-inquiry
+    //9) change urls for 6 squares
+    //10) http://localhost:3000/path2path-dashboard-login -> login -> http://localhost:3000/path2path-dashboard
     //#[Route('/{page}', name: 'ctp_home', defaults: ['page' => 'index'])]
     #[Route('/index', name: 'ctp_index')]
     #[Route('/{page}', name: 'ctp_home')]
@@ -208,6 +216,14 @@ class DefaultController extends OrderAbstractController
         $html = str_replace(
             'Weill Cornell Medicine · Center for Translational Pathology',
             'Weill Cornell Medicine · Center for Translational Pathology · '.$homeUrl . ' · ' . $loginUrl,
+            $html
+        );
+
+        //<img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"> as link https://weillcornell.org/
+        $wcmUrl = '<a href="https://weillcornell.org/"><img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"></a>';
+        $html = str_replace(
+            '<img src="wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto">',
+            $wcmUrl,
             $html
         );
 
