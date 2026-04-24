@@ -127,14 +127,34 @@ class DefaultController extends OrderAbstractController
             return $basename; // fallback
         };
 
-        exit('$html='.$html);
+        //exit('$html='.$html);
 
         //
         // 1. Rewrite internal links
         //
+//        $html = preg_replace(
+//            '/href="([^":]+)\.html"/i',
+//            'href="/center-for-translational-pathology/$1"',
+//            $html
+//        );
+
+        //
+        // 1. Rewrite internal links using dynamic prefix
+        //
+        $basePath = rtrim($request->getBasePath(), '/');
+        $prefix   = $basePath . '/center-for-translational-pathology';
+
+        // Case A: "people.html"
         $html = preg_replace(
             '/href="([^":]+)\.html"/i',
-            'href="/center-for-translational-pathology/$1"',
+            'href="' . $prefix . '/$1"',
+            $html
+        );
+
+        // Case B: "/center-for-translational-pathology/people"
+        $html = preg_replace(
+            '#href="/?center-for-translational-pathology/([^"]*)"#i',
+            'href="' . $prefix . '/$1"',
             $html
         );
 
