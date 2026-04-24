@@ -108,6 +108,10 @@ class DefaultController extends OrderAbstractController
             $page = 'index';
         }
 
+        //if( $page == 'path2path-dashboard-login' ) {
+        //    return $this->redirect( $this->generateUrl('employees_login') );
+        //}
+
         $file = $base . $page . '.html';
 
         if (!file_exists($file)) {
