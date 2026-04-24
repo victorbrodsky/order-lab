@@ -31,6 +31,8 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -89,7 +91,7 @@ class DefaultController extends OrderAbstractController
     //#[Route('/{page}', name: 'ctp_home', defaults: ['page' => 'index'])]
     #[Route('/index', name: 'ctp_index')]
     #[Route('/{page}', name: 'ctp_home')]
-    public function homeAction( Request $request, string $page=null ): Response
+    public function homeAction( Request $request, RouterInterface $router, string $page=null ): Response
     {
         if( $request->get('_route') == 'ctp_index' ) {
             return $this->redirect( $this->generateUrl('ctp_home') );
@@ -120,8 +122,8 @@ class DefaultController extends OrderAbstractController
         // $page = "people"
         // Remove "/people" → prefix = "/c/wcm/pathology/center-for-translational-pathology"
         //
-        $path = $request->getPathInfo();
-        $prefix = rtrim(substr($path, 0, -strlen($page)), '/');
+        //$path = $request->getPathInfo();
+        //$prefix = rtrim(substr($path, 0, -strlen($page)), '/');
 
         //
         // Helper: find real file in _next folder
@@ -169,6 +171,21 @@ class DefaultController extends OrderAbstractController
             'href="' . $prefix . '/$1"',
             $html
         );
+
+        //modify footer
+        $homeUrl = $router->generate(
+            'main_common_home',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $homeUrl = '<a href="'.$homeUrl.'">Home</a>';
+        //Weill Cornell Medicine · Center for Translational Pathology
+        $html = str_replace(
+            'Weill Cornell Medicine · Center for Translational Pathology',
+            'Weill Cornell Medicine · Center for Translational Pathology · '.$homeUrl,
+            $html
+        );
+
 
         //
         // 2. Rewrite CSS/JS paths
