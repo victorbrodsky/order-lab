@@ -1075,6 +1075,11 @@
                 <td>{{ entity.crnuploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'crnuploadpath'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Center for Translational Pathology Upload Folder (example: ctp/documents)</td>
+                <td>{{ entity.ctpuploadpath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ctpuploadpath'}) }}">Edit</a></td>
+            </tr>
 
             {#Global Academic Start/End Date#}
             <tr>
