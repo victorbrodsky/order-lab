@@ -89,7 +89,7 @@ class DefaultController extends OrderAbstractController
     //#[Route('/{page}', name: 'ctp_home', defaults: ['page' => 'index'])]
     #[Route('/index', name: 'ctp_index')]
     #[Route('/{page}', name: 'ctp_home')]
-    public function home2Action( Request $request, string $page=null ): Response
+    public function homeAction( Request $request, string $page=null ): Response
     {
         if( $request->get('_route') == 'ctp_index' ) {
             return $this->redirect( $this->generateUrl('ctp_home') );
@@ -150,25 +150,25 @@ class DefaultController extends OrderAbstractController
             $html
         );
 
-//        //
-//        // 1. Rewrite internal links using dynamic prefix
-//        //
-//        $basePath = rtrim($request->getBasePath(), '/');
-//        $prefix   = $basePath . '/center-for-translational-pathology';
-//
-//        // Case A: "people.html"
-//        $html = preg_replace(
-//            '/href="([^":]+)\.html"/i',
-//            'href="' . $prefix . '/$1"',
-//            $html
-//        );
-//
-//        // Case B: "/center-for-translational-pathology/people"
-//        $html = preg_replace(
-//            '#href="/?center-for-translational-pathology/([^"]*)"#i',
-//            'href="' . $prefix . '/$1"',
-//            $html
-//        );
+        //
+        // 1. Rewrite internal links using dynamic prefix
+        //
+        $basePath = rtrim($request->getBasePath(), '/');
+        $prefix   = $basePath . '/center-for-translational-pathology';
+
+        // Case A: "people.html"
+        $html = preg_replace(
+            '/href="([^":]+)\.html"/i',
+            'href="' . $prefix . '/$1"',
+            $html
+        );
+
+        // Case B: "/center-for-translational-pathology/people"
+        $html = preg_replace(
+            '#href="/?center-for-translational-pathology/([^"]*)"#i',
+            'href="' . $prefix . '/$1"',
+            $html
+        );
 
         //
         // 2. Rewrite CSS/JS paths
@@ -214,131 +214,6 @@ class DefaultController extends OrderAbstractController
 
         //
         // 6. Fix accidental leading double slashes
-        //
-        $html = preg_replace(
-            '/(src|srcset)="\/\//i',
-            '$1="/',
-            $html
-        );
-
-        return $this->render('AppCtpBundle/Mirror/wrapper.html.twig', [
-            'site_html' => $html,
-        ]);
-    }
-
-    #[Route('/index2', name: 'ctp_index2')]
-    #[Route('/2{page}', name: 'ctp_home2')]
-    public function homeAction(Request $request, string $page = null): Response
-    {
-        if ($request->get('_route') == 'ctp_index') {
-            return $this->redirect($this->generateUrl('ctp_home'));
-        }
-
-        $base = $this->getParameter('kernel.project_dir') .
-            '/src/App/CtpBundle/Util/ctp_site/localhost_3000/';
-
-        if (!$page) {
-            $page = 'index';
-        }
-
-        $file = $base . $page . '.html';
-
-        if (!file_exists($file)) {
-            throw $this->createNotFoundException("Page not found: $page");
-        }
-
-        $html = file_get_contents($file);
-
-        //
-        // DYNAMIC PREFIX (no hardcoding)
-        //
-        // Example request path:
-        //   /c/wcm/pathology/center-for-translational-pathology/people
-        //
-        // $page = "people"
-        // Remove "/people" → prefix = "/c/wcm/pathology/center-for-translational-pathology"
-        //
-        $path = $request->getPathInfo();
-        $prefix = rtrim(substr($path, 0, -strlen($page)), '/');
-
-        //
-        // Helper: find real file in _next folder
-        //
-        $findRealFile = function (string $basename) use ($base) {
-            $folder = $base . '_next/';
-            $files = scandir($folder);
-
-            foreach ($files as $f) {
-                if (str_starts_with($f, pathinfo($basename, PATHINFO_FILENAME))) {
-                    return $f;
-                }
-            }
-
-            return $basename;
-        };
-
-        //
-        // 1. Rewrite internal links (relative .html → dynamic prefix)
-        //
-        $html = preg_replace(
-            '/href="([^":]+)\.html"/i',
-            'href="' . $prefix . '/$1"',
-            $html
-        );
-
-        //
-        // 2. Rewrite absolute internal links (old prefix → dynamic prefix)
-        //
-        $html = preg_replace(
-            '#href="/[^"]*?/([^"/]+)"#i',
-            'href="' . $prefix . '/$1"',
-            $html
-        );
-
-        //
-        // 3. Rewrite CSS/JS paths
-        //
-        $html = preg_replace(
-            '/(src|href)="(css|js|images|assets)\//i',
-            '$1="/ctp_site/localhost_3000/$2/',
-            $html
-        );
-
-        //
-        // 4. Rewrite Next.js optimized images
-        //
-        $html = preg_replace_callback(
-            '/_next\/image\?url=%2Fimages%2F([^"&]+).*?"/i',
-            function ($matches) use ($findRealFile) {
-                $real = $findRealFile($matches[1]);
-                return '/ctp_site/localhost_3000/_next/' . $real . '"';
-            },
-            $html
-        );
-
-        //
-        // 5. Rewrite fallback Next.js JPEGs
-        //
-        $html = preg_replace_callback(
-            '/src="_next\/([^"?]+)\?url=%2Fimages%2F([^"&]+).*?"/i',
-            function ($matches) use ($findRealFile) {
-                $real = $findRealFile($matches[2]);
-                return 'src="/ctp_site/localhost_3000/_next/' . $real . '"';
-            },
-            $html
-        );
-
-        //
-        // 6. Rewrite any remaining _next/... paths
-        //
-        $html = preg_replace(
-            '/(src|srcset)="_next\//i',
-            '$1="/ctp_site/localhost_3000/_next/',
-            $html
-        );
-
-        //
-        // 7. Fix accidental leading double slashes
         //
         $html = preg_replace(
             '/(src|srcset)="\/\//i',
