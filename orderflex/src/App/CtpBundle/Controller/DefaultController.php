@@ -86,10 +86,23 @@ class DefaultController extends OrderAbstractController
     }
 
 
-    #[Route('/{page}', name: 'ctp_home', defaults: ['page' => 'index'])]
-    public function mirror( string $page ): Response
+    //#[Route('/{page}', name: 'ctp_home', defaults: ['page' => 'index'])]
+    #[Route('/index', name: 'ctp_index')]
+    #[Route('/{page}', name: 'ctp_home')]
+    public function homeAction( Request $request, string $page=null ): Response
     {
-        $base = $this->getParameter('kernel.project_dir') . '/public/ctp_site/localhost_3000/';
+        if( $request->get('_route') == 'ctp_index' ) {
+            return $this->redirect( $this->generateUrl('ctp_home') );
+        }
+
+        //$base = $this->getParameter('kernel.project_dir') . '/public/ctp_site/localhost_3000/';
+        $base = $this->getParameter('kernel.project_dir') .
+            '/src/App/CtpBundle/Util/ctp_site/localhost_3000/';
+
+        if( !$page ) {
+            $page = 'index';
+        }
+
         $file = $base . $page . '.html';
 
         if (!file_exists($file)) {
