@@ -88,6 +88,9 @@ class DefaultController extends OrderAbstractController
     }
 
 
+    //1) https://view-test.med.cornell.edu/center-for-translational-pathology
+    //2) login only for dashboard
+    //3) add login to footer
     //#[Route('/{page}', name: 'ctp_home', defaults: ['page' => 'index'])]
     #[Route('/index', name: 'ctp_index')]
     #[Route('/{page}', name: 'ctp_home')]
@@ -179,10 +182,28 @@ class DefaultController extends OrderAbstractController
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         $homeUrl = '<a href="'.$homeUrl.'">Home</a>';
+
+        //show login
+        if( $this->getUser() ) {
+            $loginUrl = $router->generate(
+                'employees_logout',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $loginUrl = '<a href="'.$loginUrl.'">Logout</a>';
+        } else {
+            $loginUrl = $router->generate(
+                'ctp_login',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $loginUrl = '<a href="' . $loginUrl . '">Login</a>';
+        }
+
         //Weill Cornell Medicine · Center for Translational Pathology
         $html = str_replace(
             'Weill Cornell Medicine · Center for Translational Pathology',
-            'Weill Cornell Medicine · Center for Translational Pathology · '.$homeUrl,
+            'Weill Cornell Medicine · Center for Translational Pathology · '.$homeUrl . ' · ' . $loginUrl,
             $html
         );
 

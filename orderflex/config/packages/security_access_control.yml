@@ -240,7 +240,9 @@ security:
        - { path: ^.*/center-for-translational-pathology/activate-account, role: PUBLIC_ACCESS }
        - { path: ^.*/center-for-translational-pathology/forgot-password, role: PUBLIC_ACCESS }
        - { path: ^.*/center-for-translational-pathology/reset-password, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/, role: ROLE_CTP_USER }
+       - { path: ^.*/center-for-translational-pathology/, role: PUBLIC_ACCESS }
+#       - { path: ^.*/center-for-translational-pathology/, role: ROLE_CTP_USER }
+       - { path: ^.*/center-for-translational-pathology/path2path-dashboard-login, role: ROLE_CTP_USER }
 
       ############################## TranslationalResearch SITE SETTINGS ##############################
        - { path: ^.*/translational-research/access-requests/new/, role: PUBLIC_ACCESS }
