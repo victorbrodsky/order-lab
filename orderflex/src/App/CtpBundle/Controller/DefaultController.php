@@ -47,36 +47,28 @@ class DefaultController extends OrderAbstractController
         return array('sitename' => $this->getParameter('ctp.sitename'));
     }
 
-//    #[Route(path: '/test', name: 'ctp_test_home', methods: ['GET'])]
-//    #[Template('AppCtpBundle/Default/home.html.twig')]
-//    public function Weill Cornell Medicine( Request $request ) {
-//
-//        if( false == $this->isGranted('ROLE_CTP_USER') ){
-//            return $this->redirect( $this->generateUrl('ctp-nopermission') );
-//        }
-//
-//        $title = 'Center for Translational Pathology';
-//
-//        //check for active access requests
-//        $accessreqs = $this->getActiveAccessReq();
-//        //echo "accessreq count=".count($accessreqs)."<br>";
-//        $accessreqsCount = 0;
-//        if( is_array($accessreqs) ) {
-//            $accessreqsCount = count($accessreqs);
-//        }
-//
-//        //echo "project dir=".$this->getParameter('kernel.project_dir')."<br>"; //C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex
-//        //$path = $this->getParameter('kernel.project_dir') . '/public/static/myfile.html';
-//        $path = 'C:/MyWebSites/path2path/localhost_3000/index.html';
-//        $html = file_get_contents($path);
-//
-//        return array(
-//            'title' => $title,
-//            'accessreqs' => $accessreqsCount,
-//            'html' => $html,
-//        );
-//    }
-//
+    //Show home page
+    #[Route(path: '/', name: 'ctp_home', methods: ['GET'])]
+    #[Template('AppCtpBundle/Default/home.html.twig')]
+    public function indexAction( Request $request ) {
+
+        if( false == $this->isGranted('ROLE_CTP_USER') ){
+            return $this->redirect( $this->generateUrl('ctp-nopermission') );
+        }
+
+        $title = 'Center for Translational Pathology';
+
+        //echo "project dir=".$this->getParameter('kernel.project_dir')."<br>"; //C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex
+        //$path = $this->getParameter('kernel.project_dir') . '/public/static/myfile.html';
+        $path = 'C:/MyWebSites/path2path/localhost_3000/index.html';
+        $html = file_get_contents($path);
+
+        return array(
+            'title' => $title,
+            'html' => $html,
+        );
+    }
+
 //    //check for active access requests
 //    public function getActiveAccessReq() {
 //        if( !$this->isGranted('ROLE_CTP_ADMIN') ) {
@@ -100,8 +92,8 @@ class DefaultController extends OrderAbstractController
     //9) change urls for 6 squares
     //10) http://localhost:3000/path2path-dashboard-login -> login -> http://localhost:3000/path2path-dashboard
     //#[Route('/{page}', name: 'ctp_home', defaults: ['page' => 'index'])]
-    #[Route('/index', name: 'ctp_index')]
-    #[Route('/{page}', name: 'ctp_home')]
+    //#[Route('/index', name: 'ctp_index')]
+    //#[Route('/{page}', name: 'ctp_home')]
     public function homeAction( Request $request, RouterInterface $router, string $page=null ): Response
     {
         if( $request->get('_route') == 'ctp_index' ) {
@@ -110,13 +102,18 @@ class DefaultController extends OrderAbstractController
 
         //$base = $this->getParameter('kernel.project_dir') . '/public/ctp_site/localhost_3000/';
         $base = $this->getParameter('kernel.project_dir') .
-            '/src/App/CtpBundle/Util/ctp_site/localhost_3000/';
+            //'/public/ctp_site/localhost_3000/';
+            '/public/orderassets/AppCtpBundle/ctp_site/localhost_3000/';
+//            '/ctp_site/localhost_3000/';
+//            '/src/App/CtpBundle/Util/ctp_site/localhost_3000/';
+//            '/src/templates/AppCtpBundle/ctp_site/localhost_3000/';
 
         if( !$page ) {
             $page = 'index';
         }
 
         $file = $base . $page . '.html';
+        //exit('$file='.$file);
 
         if (!file_exists($file)) {
             throw $this->createNotFoundException("Page not found: $page");
@@ -230,41 +227,49 @@ class DefaultController extends OrderAbstractController
         $html = preg_replace(
             '/(src|href)="(css|js|images|assets)\//i',
             '$1="/ctp_site/localhost_3000/$2/',
+            //'$1="/orderassets/AppCtpBundle/ctp_site/localhost_3000/$2/',
             $html
         );
 
-        //
-        // 3. Rewrite Next.js optimized images
-        //
-        $html = preg_replace_callback(
-            '/_next\/image\?url=%2Fimages%2F([^"&]+).*?"/i',
-            function ($matches) use ($findRealFile) {
-                $real = $findRealFile($matches[1]);
-                return '/ctp_site/localhost_3000/_next/' . $real . '"';
-            },
-            $html
-        );
+        if(1) {
+            //C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\orderassets\AppCtpBundle\ctp_site\localhost_3000\faviconbcf9.ico
+            //
+            // 3. Rewrite Next.js optimized images
+            //
+            $html = preg_replace_callback(
+                //'/_next\/image\?url=%2Fimages%2F([^"&]+).*?"/i',
+                '/_next\/image\?url=%2Fimages%2F([^"&]+).*?"/i',
+                function ($matches) use ($findRealFile) {
+                    $real = $findRealFile($matches[1]);
+                    return '/ctp_site/localhost_3000/_next/' . $real . '"';
+                    //return '/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/' . $real . '"';
+                },
+                $html
+            );
 
-        //
-        // 4. Rewrite fallback Next.js JPEGs
-        //
-        $html = preg_replace_callback(
-            '/src="_next\/([^"?]+)\?url=%2Fimages%2F([^"&]+).*?"/i',
-            function ($matches) use ($findRealFile) {
-                $real = $findRealFile($matches[2]);
-                return 'src="/ctp_site/localhost_3000/_next/' . $real . '"';
-            },
-            $html
-        );
+            //
+            // 4. Rewrite fallback Next.js JPEGs
+            //
+            $html = preg_replace_callback(
+                '/src="_next\/([^"?]+)\?url=%2Fimages%2F([^"&]+).*?"/i',
+                function ($matches) use ($findRealFile) {
+                    $real = $findRealFile($matches[2]);
+                    return 'src="/ctp_site/localhost_3000/_next/' . $real . '"';
+                    //return 'src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/' . $real . '"';
+                },
+                $html
+            );
 
-        //
-        // 5. Rewrite any remaining _next/... paths
-        //
-        $html = preg_replace(
-            '/(src|srcset)="_next\//i',
-            '$1="/ctp_site/localhost_3000/_next/',
-            $html
-        );
+            //
+            // 5. Rewrite any remaining _next/... paths
+            //
+            $html = preg_replace(
+                '/(src|srcset)="_next\//i',
+                '$1="/ctp_site/localhost_3000/_next/',
+                //'$1="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/',
+                $html
+            );
+        }
 
         //
         // 6. Fix accidental leading double slashes
@@ -291,7 +296,7 @@ class DefaultController extends OrderAbstractController
 //            $html
 //        );
 
-        return $this->render('AppCtpBundle/Mirror/wrapper.html.twig', [
+        return $this->render('AppCtpBundle/Default/index.html.twig', [
             'site_html' => $html,
         ]);
     }

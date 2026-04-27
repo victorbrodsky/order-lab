@@ -28,11 +28,18 @@ window.onerror = function( msg, url, linenumber ){
 
         var newline = "\n";
 
-        //var siteEmail = $("#siteEmail").val();
+        // //var siteEmail = $("#siteEmail").val();
         var siteEmail = document.getElementById('siteEmail').value;
         if( !siteEmail && siteEmail.length == 0 ) {
             siteEmail = "system admin email";
         }
+        //var siteEmail = "system admin email";
+        // // Safely get the element
+        // var el = document.getElementById('siteEmail');
+        // siteEmail = el && el.value ? el.value.trim() : "";
+        // if (!siteEmail) {
+        //     siteEmail = "system admin email";
+        // }
 
         alert(  'Internal system error. Please reload the page by clicking "OK" button. ' + newline +
                 'Please e-mail us at '+siteEmail+' if the problem persists. ' + newline +

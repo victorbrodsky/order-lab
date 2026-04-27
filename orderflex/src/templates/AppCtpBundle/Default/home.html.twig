@@ -14,15 +14,18 @@
     limitations under the License.
 #}
 
-{% extends "AppCtpBundle/Default/base.html.twig" %}
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
 
 
 {% block title %}
     {{ title }}
 {% endblock %}
 
+{% block header %}
+    {#{% include 'AppCtpBundle/Default/navbar.html.twig' %}#}
+{% endblock %}
 
-{% block content %}
+{% block content_ctp %}
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -34,6 +37,7 @@
     {% endif %}
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
+    <base href="/ctp_site/localhost_3000/">
     {{ html|raw }}
 
 {% endblock %}

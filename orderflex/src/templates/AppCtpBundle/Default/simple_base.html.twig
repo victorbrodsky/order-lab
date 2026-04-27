@@ -20,7 +20,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
+    <title>
+        {% block title %}
+            Welcome!
+        {% endblock %}
+    </title>
     {#{% block stylesheets %}{% endblock %}#}
 
     {% block stylesheets_base %}
@@ -68,7 +72,8 @@
     {#{% endblock %}#}
 
     {% block favicon %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png') }}" />
+        {#<link rel="icon" type="image/x-icon" href="{{ asset('orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png') }}" />#}
+        <link rel="icon" type="image/x-icon" href="{{ asset('orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico') }}" />
     {% endblock %}
 </head>
 <body>
@@ -80,6 +85,19 @@
 
 
     {% block content_ctp %}
+    {% endblock %}
+
+    {% block footer %}
+        {#<div class="order-content text-center col-xs-12">#}
+            {#<!-- footer -->#}
+            {#{% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}#}
+        {#</div>#}
+
+        <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
+            {#© <!-- -->2026<!-- --> Weill Cornell Medicine · Center for Translational Pathology#}
+            © <!-- -->2026<!-- --> <a href="weillcornell.org/">Weill Cornell Medicine</a> · Center for Translational Pathology
+        </footer>
+
     {% endblock %}
 
 {% endblock %}
