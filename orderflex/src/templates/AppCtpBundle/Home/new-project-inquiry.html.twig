@@ -1,0 +1,306 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}
+    New Project - Initial Inquiry - Center for Translational Pathology
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+    <link rel="icon" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico" sizes="256x256" type="image/x-icon">
+    <style>
+        :root {
+            --wcm-red: #b31b1b;
+            --wcm-gold: #ffc72c;
+            --wcm-orange: #ff6a00;
+            --bg: #f9fafb;
+            --ink: #1f2937;
+        }
+        .text-wcm-red { color: var(--wcm-red); }
+        .bg-wcm-red { background-color: var(--wcm-red); }
+        .bg-wcm-red\/10 { background-color: rgba(179, 27, 27, 0.1); }
+        .hover\:bg-wcm-red\/90:hover { background-color: rgba(179, 27, 27, 0.9); }
+        .focus-visible\:ring-wcm-red:focus-visible { --tw-ring-color: var(--wcm-red); }
+        .backdrop-blur-sm { backdrop-filter: blur(4px); }
+        
+        /* Tab switching */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
+    <script>
+        function switchTab(tab) {
+            const wcmBtn = document.getElementById('wcm-tab-btn');
+            const externalBtn = document.getElementById('external-tab-btn');
+            const wcmForm = document.getElementById('wcm-form');
+            const externalForm = document.getElementById('external-form');
+            
+            if (tab === 'wcm') {
+                wcmBtn.classList.add('bg-[#b31b1b]', 'text-white', 'border-[#b31b1b]');
+                wcmBtn.classList.remove('bg-white', 'text-[#b31b1b]', 'border-gray-300');
+                externalBtn.classList.remove('bg-[#b31b1b]', 'text-white', 'border-[#b31b1b]');
+                externalBtn.classList.add('bg-white', 'text-[#b31b1b]', 'border-gray-300');
+                wcmForm.classList.add('active');
+                externalForm.classList.remove('active');
+            } else {
+                externalBtn.classList.add('bg-[#b31b1b]', 'text-white', 'border-[#b31b1b]');
+                externalBtn.classList.remove('bg-white', 'text-[#b31b1b]', 'border-gray-300');
+                wcmBtn.classList.remove('bg-[#b31b1b]', 'text-white', 'border-[#b31b1b]');
+                wcmBtn.classList.add('bg-white', 'text-[#b31b1b]', 'border-gray-300');
+                externalForm.classList.add('active');
+                wcmForm.classList.remove('active');
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block header %}
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+                <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
+                    <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                </div>
+                <div>
+                    <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
+                </div>
+            </div>
+            <nav class="flex gap-3 flex-wrap">
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#b31b1b]"
+                   {#href="/ctp_site/localhost_3000/project-requests-public.html"#}
+                   href="{{ path('ctp_new-project-inquiry') }}"
+                >New Project Inquiry</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
+                   href="{{ path('ctp_people') }}"
+                >People</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
+                   href="{{ path('ctp_publications') }}"
+                >Publications</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content_ctp %}
+    <main class="min-h-screen bg-[#faf7f5] text-[#1f2937]">
+        
+        {# Decorative Background Blurs #}
+        <div class="pointer-events-none absolute inset-0 overflow-hidden">
+            <div class="absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[#b31b1b]/10 blur-3xl"></div>
+            <div class="absolute top-[280px] right-[-160px] h-[420px] w-[620px] rounded-full bg-[#f6c453]/20 blur-3xl"></div>
+        </div>
+
+        <main class="relative mx-auto max-w-3xl px-4 py-12 md:py-16 space-y-6">
+            
+            {# Page Header #}
+            <div class="space-y-2">
+                <h1 class="text-2xl font-semibold text-[#b31b1b]">New Project - Initial Inquiry</h1>
+                <p class="text-sm text-gray-700 leading-relaxed">
+                    Use this form to submit and propose a new project in collaboration with the Center for Translational Pathology. 
+                    <span class="font-medium">WCM investigators and external collaborators can submit requests here without logging in. 
+                    We will route the request to the appropriate division and respond within 48 hrs.</span> 
+                    Specific internal workflows for internal investigators are available inside the Path2Path Dashboard (login required).
+                </p>
+            </div>
+
+            {# Request Type Toggle #}
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-gray-200 pb-3">
+                <div>
+                    <h2 class="text-base font-medium text-gray-700">Request Type</h2>
+                    <p class="text-xs text-gray-500">Select the type of project request.</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" id="wcm-tab-btn" onclick="switchTab('wcm')"
+                            class="px-4 py-2 rounded-lg border transition text-sm font-medium bg-[#b31b1b] text-white border-[#b31b1b] shadow">
+                        WCM Investigator Project Inquiry
+                    </button>
+                    <button type="button" id="external-tab-btn" onclick="switchTab('external')"
+                            class="px-4 py-2 rounded-lg border transition text-sm font-medium bg-white text-[#b31b1b] border-gray-300 hover:bg-red-50">
+                        External Collaboration / Project Inquiry
+                    </button>
+                </div>
+            </div>
+
+            {# WCM Investigator Form #}
+            <form id="wcm-form" class="tab-content active space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                
+                <section class="grid gap-3 md:w-1/2">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
+                        <input type="date" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value=""/>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3 md:grid-cols-2">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Project Title <span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Glioblastoma Tissue Microarrays" value=""/>
+                    </div>
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Dr. Jane Smith" value=""/>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3 md:grid-cols-2">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Department <span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Pathology and Laboratory Medicine" value=""/>
+                    </div>
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Phone <span class="text-red-600">*</span></label>
+                        <input type="tel" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(555) 555-5555" value=""/>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Contact Name (if different from PI)</label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Lab Manager Name" value=""/>
+                    </div>
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Contact Email Address</label>
+                        <input type="email" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="contact@example.com" value=""/>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Background <span class="text-red-600">*</span></label>
+                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project..."></textarea>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Experimental Plan Summary <span class="text-red-600">*</span></label>
+                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Funding Source</label>
+                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="3" placeholder="List funding sources (if applicable)..."></textarea>
+                    </div>
+                </section>
+
+                <div class="pt-2">
+                    <button type="submit" 
+                            class="rounded-xl bg-[#b31b1b] px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-[#b31b1b]/90 focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 transition">
+                        Submit Inquiry
+                    </button>
+                </div>
+
+            </form>
+
+            {# External Collaboration Form (initially hidden) #}
+            <form id="external-form" class="tab-content space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                
+                <section class="grid gap-3 md:w-1/2">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
+                        <input type="date" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value=""/>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3 md:grid-cols-2">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Project Title <span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Glioblastoma Tissue Microarrays" value=""/>
+                    </div>
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Dr. Jane Smith" value=""/>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3 md:grid-cols-2">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Institution / Organization <span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Harvard Medical School" value=""/>
+                    </div>
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Phone <span class="text-red-600">*</span></label>
+                        <input type="tel" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(555) 555-5555" value=""/>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Contact Email Address <span class="text-red-600">*</span></label>
+                        <input type="email" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="contact@example.com" value=""/>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Background <span class="text-red-600">*</span></label>
+                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project..."></textarea>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Experimental Plan Summary <span class="text-red-600">*</span></label>
+                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
+                    </div>
+                </section>
+
+                <hr class="border-gray-200">
+
+                <section class="grid gap-3">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Funding Source</label>
+                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="3" placeholder="List funding sources (if applicable)..."></textarea>
+                    </div>
+                </section>
+
+                <div class="pt-2">
+                    <button type="submit" 
+                            class="rounded-xl bg-[#b31b1b] px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-[#b31b1b]/90 focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 transition">
+                        Submit Inquiry
+                    </button>
+                </div>
+
+            </form>
+
+        </main>
+
+    </main>
+
+{% endblock %}
+
+{% block footer %}
+    <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
+        © 2026 Weill Cornell Medicine · Center for Translational Pathology
+    </footer>
+{% endblock %}

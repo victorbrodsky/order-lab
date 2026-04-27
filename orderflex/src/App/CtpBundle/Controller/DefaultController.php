@@ -96,6 +96,15 @@ class DefaultController extends OrderAbstractController
             'title' => $title,
         );
     }
+    
+    #[Route(path: '/histocore-and-ihc-lab', name: 'ctp_histocore-and-ihc-lab', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/histocore-and-ihc-lab.html.twig')]
+    public function histocoreAndIhcLabAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
 
 
 //    //check for active access requests

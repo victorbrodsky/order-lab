@@ -1,0 +1,577 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}
+    HistoCore & IHC Lab | Center for Translational Pathology
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+    <link rel="icon" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico" sizes="256x256" type="image/x-icon">
+    <style>
+        :root {
+            --bg: #fafafa;
+            --ink: #18181b;
+        }
+        html { scroll-behavior: smooth; }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
+{% endblock %}
+
+{% block header %}
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+                <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
+                    <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                </div>
+                <div>
+                    <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
+                </div>
+            </div>
+            <nav class="flex gap-3 flex-wrap">
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_new-project-inquiry') }}">New Project Inquiry</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_people') }}">People</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_publications') }}">Publications</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content_ctp %}
+    <main class="min-h-screen bg-zinc-50" id="top">
+        
+        {# Hero Section #}
+        <div class="relative overflow-hidden border-b border-zinc-200 bg-white">
+            <div class="absolute inset-0 -z-10">
+                <div class="absolute -top-20 left-1/2 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-zinc-100 blur-3xl"></div>
+                <div class="absolute -bottom-20 left-1/3 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-zinc-100 blur-3xl"></div>
+            </div>
+            <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+                <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+                    <div class="max-w-2xl">
+                        <div class="mb-4 flex flex-wrap gap-2">
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Translational Pathology</span>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Histology &amp; IHC</span>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Shared Resource Core</span>
+                        </div>
+                        <h1 class="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">HistoCore &amp; IHC Lab</h1>
+                        <p class="mt-4 text-base leading-relaxed text-zinc-700">The <span class="font-semibold text-zinc-900">HistoCore and IHC Lab</span> is a core facility of the Center for Translational Pathology, administered by the Department of Pathology and Laboratory Medicine at NewYork-Presbyterian/Weill Cornell Medical Center. We support WCM and external investigators with high-quality morphologic workflows and project consultation to accelerate translational research.</p>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="#intake" class="rounded-xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800">Request services</a>
+                            <a href="#services" class="rounded-xl border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-50">View service menu</a>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur w-full p-5 lg:max-w-md">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M13 2L3 14h7l-1 8 12-14h-7l-1-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            What you get from PCL
+                        </div>
+                        <ul class="mt-4 space-y-3 text-sm text-zinc-700">
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Access to archival and frozen tissue resources within Pathology</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Broad menu: processing → staining → imaging → quantification</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Project tracking, research integrity monitoring, publication support</span>
+                            </li>
+                        </ul>
+                        <div class="mt-5 grid grid-cols-3 gap-3">
+                            <div class="rounded-2xl border border-zinc-200 bg-white px-5 py-4">
+                                <div class="text-xl font-semibold tracking-tight text-zinc-900">FFPE</div>
+                                <div class="mt-1 text-sm text-zinc-600">Processing</div>
+                            </div>
+                            <div class="rounded-2xl border border-zinc-200 bg-white px-5 py-4">
+                                <div class="text-xl font-semibold tracking-tight text-zinc-900">IHC</div>
+                                <div class="mt-1 text-sm text-zinc-600">Automated</div>
+                            </div>
+                            <div class="rounded-2xl border border-zinc-200 bg-white px-5 py-4">
+                                <div class="text-xl font-semibold tracking-tight text-zinc-900">TMA</div>
+                                <div class="mt-1 text-sm text-zinc-600">High-throughput</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-wrap gap-2 text-sm">
+                    <a href="#overview" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Overview</a>
+                    <a href="#services" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Services</a>
+                    <a href="#platforms" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Instrumentation</a>
+                    <a href="#resources" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Resources</a>
+                    <a href="#faculty" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Faculty</a>
+                    <a href="#intake" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Contact</a>
+                </div>
+            </div>
+        </div>
+
+        {# Overview Section #}
+        <section id="overview" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">Morphologic assays + consultation for translational research</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Core capabilities</h2>
+                </div>
+                <div class="grid gap-5 lg:grid-cols-3">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-5">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M6 20h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M9 20V10l6 3v7" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M8 8l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+                            End-to-end morphology
+                        </div>
+                        <p class="mt-3 text-sm leading-relaxed text-zinc-700">Tissue processing, sectioning, routine and special stains, IHC, and in situ hybridization—built for quality and reproducibility.</p>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-5">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M12 2l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M3 12l9 5 9-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+                            Imaging + quantification
+                        </div>
+                        <p class="mt-3 text-sm leading-relaxed text-zinc-700">Brightfield whole-slide scanning and quantitative analysis workflows to support publication-ready outputs.</p>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-5">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M13 2L3 14h7l-1 8 12-14h-7l-1-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            Study support
+                        </div>
+                        <p class="mt-3 text-sm leading-relaxed text-zinc-700">Consultation for tissue handling and experimental design, plus statistical support for analysis and manuscript preparation.</p>
+                    </div>
+                </div>
+                <div class="mt-6 rounded-2xl border border-zinc-200 bg-white p-6">
+                    <div class="text-sm font-semibold text-zinc-900">How HistoCore operates</div>
+                    <p class="mt-2 text-sm leading-relaxed text-zinc-700">Submitted projects are logged and tracked in a database to support throughput, monitor research integrity, and enable reporting of publications resulting from these investigations.</p>
+                </div>
+            </div>
+        </section>
+
+        {# Services Section #}
+        <section id="services" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">A broad menu to match how translational studies actually run</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Services</h2>
+                </div>
+                <div class="grid gap-6 lg:grid-cols-3">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6 lg:col-span-2">
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div class="flex gap-2 text-sm text-zinc-700">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Fixation, processing, embedding (FFPE) and frozen embedding (OCT)</span>
+                            </div>
+                            <div class="flex gap-2 text-sm text-zinc-700">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Sectioning, routine H&amp;E staining, and special stains</span>
+                            </div>
+                            <div class="flex gap-2 text-sm text-zinc-700">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Automated immunohistochemistry (IHC) + antibody optimization</span>
+                            </div>
+                            <div class="flex gap-2 text-sm text-zinc-700">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>RNA in situ hybridization (RNAScope chromogenic; BaseScope mutation panels)</span>
+                            </div>
+                            <div class="flex gap-2 text-sm text-zinc-700">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Tissue microarray (TMA) construction and analysis</span>
+                            </div>
+                            <div class="flex gap-2 text-sm text-zinc-700">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Brightfield whole-slide scanning + digital slide management</span>
+                            </div>
+                            <div class="flex gap-2 text-sm text-zinc-700">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Quantitative image analysis (inForm, HALO modules)</span>
+                            </div>
+                            <div class="flex gap-2 text-sm text-zinc-700">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Project consultation + study design and statistical support</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                            <div class="text-sm font-semibold text-zinc-900">Fees</div>
+                            <p class="mt-1 text-sm text-zinc-700">Fee schedules and service details are available upon request.</p>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="text-sm font-semibold text-zinc-900">Typical request flow</div>
+                        <ol class="mt-4 space-y-3 text-sm text-zinc-700">
+                            <li class="flex gap-3">
+                                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white">1</div>
+                                <span>Email CTP intake with tissue type, endpoints, and timing</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white">2</div>
+                                <span>Align on workflow, QC, and deliverables (slides, images, quant outputs)</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white">3</div>
+                                <span>Submit samples with required metadata</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white">4</div>
+                                <span>Receive outputs + optional analysis support for figures/publications</span>
+                            </li>
+                        </ol>
+                        <a href="#intake" class="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800">Start a request</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Instrumentation Section #}
+        <section id="platforms" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">Automation + throughput for reproducible results</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Instrumentation &amp; platforms</h2>
+                </div>
+                <div class="grid gap-6 lg:grid-cols-2">
+                    {# Leica ASP6025 #}
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-semibold text-zinc-900">Leica ASP6025 Vacuum Tissue Processor</div>
+                                <div class="mt-1 text-sm text-zinc-600">Fixation → dehydration → infiltration → paraffin processing</div>
+                            </div>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Processing</span>
+                        </div>
+                        <ul class="mt-5 space-y-3 text-sm text-zinc-700">
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Modular tissue processing for histologic specimens</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Supports standardized fixation and paraffin infiltration workflows</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Designed for reproducible processing across batches</span>
+                            </li>
+                        </ul>
+                    </div>
+                    {# Leica Bond #}
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-semibold text-zinc-900">Leica Bond III &amp; Bond RX Autostainers</div>
+                                <div class="mt-1 text-sm text-zinc-600">Automated IHC with customizable protocols</div>
+                            </div>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">IHC</span>
+                        </div>
+                        <ul class="mt-5 space-y-3 text-sm text-zinc-700">
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Runs multiple IHC protocols simultaneously</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Optional deparaffinization and pretreatment</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Customizable protocols and chromogen options</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Supports double and triple staining for co-expression studies</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Polymer-HRP (DAB) with hematoxylin counterstain commonly used</span>
+                            </li>
+                        </ul>
+                    </div>
+                    {# TMA #}
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-semibold text-zinc-900">Tissue Microarray (TMA)</div>
+                                <div class="mt-1 text-sm text-zinc-600">Hundreds of tissues per slide for high-throughput studies</div>
+                            </div>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">TMA</span>
+                        </div>
+                        <ul class="mt-5 space-y-3 text-sm text-zinc-700">
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Construct slides containing hundreds of individual tissues</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Improves throughput, standardization, and tissue conservation</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Compatible with histochemical and molecular detection techniques</span>
+                            </li>
+                        </ul>
+                    </div>
+                    {# Digital Pathology #}
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-semibold text-zinc-900">Digital Pathology Scanning</div>
+                                <div class="mt-1 text-sm text-zinc-600">Aperio GT450 &amp; AT Turbo + eSlide Manager</div>
+                            </div>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">WSI</span>
+                        </div>
+                        <ul class="mt-5 space-y-3 text-sm text-zinc-700">
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Scan up to ~400 slides per load (configuration dependent)</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Convert glass slides to digital files stored in a managed database</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Research and biopharma workflows supported</span>
+                            </li>
+                        </ul>
+                    </div>
+                    {# Quantitative Image Analysis - Spans 2 columns #}
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6 lg:col-span-2">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-semibold text-zinc-900">Quantitative Image Analysis</div>
+                                <div class="mt-1 text-sm text-zinc-600">inForm + HALO modules (TMA, Classifier, IHC, ISH, Highplex FL)</div>
+                            </div>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Analysis</span>
+                        </div>
+                        <ul class="mt-5 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Workstation access for independent analysis by request</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Automated visualization and quantification of biomarkers</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Modules support cytonuclear IHC, membrane IHC, ISH, and more</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Publication-ready outputs and standardized reporting</span>
+                            </li>
+                        </ul>
+                        <div class="mt-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                            <div class="text-sm font-semibold text-zinc-900">Also available via CTP</div>
+                            <p class="mt-1 text-sm text-zinc-700">For multiplex and spatial platforms (e.g., Vectra Polaris/CODEX, GeoMx DSP), see the <a class="font-semibold text-zinc-900 underline-offset-4 hover:underline" href="misi-lab.html">MISI / Multiplex Lab</a> page.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Resources Section #}
+        <section id="resources" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">Quick links for investigators</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Resources</h2>
+                </div>
+                <div class="grid gap-4 lg:grid-cols-2">
+                    <a href="#" class="group flex items-start justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left transition hover:border-zinc-300 hover:bg-zinc-50">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 font-medium text-zinc-900">
+                                <span class="truncate">Service menu</span>
+                                <span class="inline-flex items-center rounded-md border border-zinc-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-zinc-700">PDF</span>
+                            </div>
+                            <div class="mt-0.5 text-sm text-zinc-600">High-level overview of available histology and IHC services</div>
+                        </div>
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 shrink-0 text-zinc-500 transition group-hover:text-zinc-700"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </a>
+                    <a href="#" class="group flex items-start justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left transition hover:border-zinc-300 hover:bg-zinc-50">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 font-medium text-zinc-900">
+                                <span class="truncate">Fee schedule</span>
+                                <span class="inline-flex items-center rounded-md border border-zinc-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-zinc-700">PDF</span>
+                            </div>
+                            <div class="mt-0.5 text-sm text-zinc-600">Request latest pricing and billing guidance</div>
+                        </div>
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 shrink-0 text-zinc-500 transition group-hover:text-zinc-700"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </a>
+                    <a href="#" class="group flex items-start justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left transition hover:border-zinc-300 hover:bg-zinc-50">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 font-medium text-zinc-900">
+                                <span class="truncate">Sample submission checklist</span>
+                                <span class="inline-flex items-center rounded-md border border-zinc-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-zinc-700">PDF</span>
+                            </div>
+                            <div class="mt-0.5 text-sm text-zinc-600">Required metadata and pre-submission QC items</div>
+                        </div>
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 shrink-0 text-zinc-500 transition group-hover:text-zinc-700"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </a>
+                    <a href="#" class="group flex items-start justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left transition hover:border-zinc-300 hover:bg-zinc-50">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 font-medium text-zinc-900">
+                                <span class="truncate">Publications</span>
+                                <span class="inline-flex items-center rounded-md border border-zinc-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-zinc-700">PDF</span>
+                            </div>
+                            <div class="mt-0.5 text-sm text-zinc-600">Selected publications resulting from HistoCore-supported investigations</div>
+                        </div>
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 shrink-0 text-zinc-500 transition group-hover:text-zinc-700"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        {# Faculty Section #}
+        <section id="faculty" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">Scientific and clinical oversight</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Faculty leadership</h2>
+                </div>
+                <div class="grid gap-5 md:grid-cols-2">
+                    {# David Pisapia #}
+                    <a href="#" class="block transition hover:-translate-y-0.5">
+                        <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur h-full p-5">
+                            <div class="flex items-start gap-4">
+                                <div class="h-12 w-12 shrink-0 rounded-2xl bg-zinc-100 ring-1 ring-sky-200">
+                                    <div class="flex h-full w-full items-center justify-center">
+                                        <div class="h-2.5 w-2.5 rounded-full bg-sky-600"></div>
+                                    </div>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="truncate text-base font-semibold text-zinc-900">David Pisapia<span class="font-medium text-zinc-700">, MD</span></div>
+                                    <div class="mt-1 text-sm text-zinc-700">Chief of Neuropathology</div>
+                                    <div class="text-sm text-zinc-700">Associate Professor of Pathology and Laboratory Medicine</div>
+                                    <div class="mt-3 inline-flex items-center gap-2 text-sm font-medium text-zinc-900">
+                                        <span class="rounded-full bg-zinc-100 px-3 py-1">Profile</span>
+                                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-500"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {# Brian Robinson #}
+                    <a href="#" class="block transition hover:-translate-y-0.5">
+                        <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur h-full p-5">
+                            <div class="flex items-start gap-4">
+                                <div class="h-12 w-12 shrink-0 rounded-2xl bg-zinc-100 ring-1 ring-red-200">
+                                    <div class="flex h-full w-full items-center justify-center">
+                                        <div class="h-2.5 w-2.5 rounded-full bg-red-500"></div>
+                                    </div>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="truncate text-base font-semibold text-zinc-900">Brian Robinson<span class="font-medium text-zinc-700">, MD</span></div>
+                                    <div class="mt-1 text-sm text-zinc-700">Vice Chair for Anatomic Pathology</div>
+                                    <div class="text-sm text-zinc-700">Chief of Genitourinary Pathology · Professor of Pathology and Laboratory Medicine</div>
+                                    <div class="mt-3 inline-flex items-center gap-2 text-sm font-medium text-zinc-900">
+                                        <span class="rounded-full bg-zinc-100 px-3 py-1">Profile</span>
+                                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-500"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        {# Contact & Intake Section #}
+        <section id="intake" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">CTP intake coordinates core requests</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Contact &amp; intake</h2>
+                </div>
+                <div class="grid gap-6 lg:grid-cols-3">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6 lg:col-span-2">
+                        <div class="grid gap-5 sm:grid-cols-2">
+                            <div class="flex gap-3">
+                                <div class="mt-0.5">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M4 6h16v12H4V6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-zinc-900">Email</div>
+                                    <a href="mailto:ctp-intake@med.cornell.edu" class="mt-1 block text-sm text-zinc-700 underline-offset-4 hover:underline">ctp-intake@med.cornell.edu</a>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="mt-0.5">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.86 19.86 0 01-8.63-3.07A19.5 19.5 0 013.15 10.8 19.86 19.86 0 01.08 2.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.12.86.3 1.7.54 2.5a2 2 0 01-.45 2.11L6 7.09a16 16 0 006.91 6.91l.76-1.15a2 2 0 012.11-.45c.8.24 1.64.42 2.5.54A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-zinc-900">Phone</div>
+                                    <div class="mt-1 text-sm text-zinc-700">Main: (212) 746-6464</div>
+                                    <div class="text-sm text-zinc-700">Surgical Pathology: (212) 746-2700</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 sm:col-span-2">
+                                <div class="mt-0.5">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M12 22s7-4.35 7-12a7 7 0 10-14 0c0 7.65 7 12 7 12z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M12 10a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-zinc-900">Location</div>
+                                    <div class="mt-1 text-sm text-zinc-700">Weill Cornell Medical College<br/>1300 York Avenue, New York, NY 10065</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
+                            <div class="text-sm font-semibold text-zinc-900">What to include in your request</div>
+                            <div class="mt-3 grid gap-3 sm:grid-cols-2">
+                                <div class="flex gap-2 text-sm text-zinc-700">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Tissue type (human/animal), fixation state (FFPE/frozen), and sample count</span>
+                                </div>
+                                <div class="flex gap-2 text-sm text-zinc-700">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Requested stains/antibodies or targets (include vendor/catalog if available)</span>
+                                </div>
+                                <div class="flex gap-2 text-sm text-zinc-700">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Desired deliverables (slides, scans, quant outputs) and timeline</span>
+                                </div>
+                                <div class="flex gap-2 text-sm text-zinc-700">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Any constraints (limited tissue, special handling, IRB notes)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="text-sm font-semibold text-zinc-900">Related CTP pages</div>
+                        <div class="mt-4 space-y-3 text-sm">
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="misi-lab.html">MISI / Multiplex Lab</a>
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="computational-pathology.html">Computational Pathology</a>
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="project-requests-public.html">Start a New Project</a>
+                        </div>
+                        <div class="mt-6 rounded-2xl border border-zinc-200 bg-white p-5">
+                            <div class="text-sm font-semibold text-zinc-900">CTA</div>
+                            <p class="mt-2 text-sm text-zinc-700">Not sure which stain or workflow fits your study? Start with a brief intake email and we'll recommend the most efficient path.</p>
+                            <a href="mailto:ctp-intake@med.cornell.edu?subject=HistoCore%20%2F%20IHC%20Request%20-%20Project%20Intake" class="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800">Email intake</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Bottom Bar #}
+        <div class="border-t border-zinc-200 bg-white">
+            <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-zinc-600 sm:px-6 lg:px-8">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>HistoCore and IHC Lab — Center for Translational Pathology</div>
+                    <a href="#top" class="font-medium text-zinc-900 underline-offset-4 hover:underline">Back to top</a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
+        © 2026 Weill Cornell Medicine · Center for Translational Pathology
+    </footer>
+{% endblock %}
