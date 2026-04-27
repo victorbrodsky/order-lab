@@ -1,0 +1,92 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}
+    Selected Publications - Center for Translational Pathology
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+    <link rel="icon" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico" sizes="256x256" type="image/x-icon">
+    <style>
+        :root {
+            --wcm-red: #b31b1b;
+            --wcm-gold: #ffc72c;
+            --wcm-orange: #ff6a00;
+            --bg: #f9fafb;
+            --ink: #1f2937;
+        }
+        .text-wcm-red { color: var(--wcm-red); }
+        .bg-wcm-red\/10 { background-color: rgba(179, 27, 27, 0.1); }
+        .bg-wcm-yellow\/20 { background-color: rgba(246, 196, 83, 0.2); }
+        .backdrop-blur-sm { backdrop-filter: blur(4px); }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
+{% endblock %}
+
+{% block header %}
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+                <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
+                    <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                </div>
+                <div>
+                    <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
+                </div>
+            </div>
+            <nav class="flex gap-3 flex-wrap">
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/project-requests-public.html">New Project Inquiry</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
+                   {#href="/ctp_site/localhost_3000/people.html"#}
+                   href="{{ path('ctp_people') }}"
+                >People</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#b31b1b]"
+                   {#href="/ctp_site/localhost_3000/publications.html"#}
+                   href="{{ path('ctp_publications') }}"
+                >Publications</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content_ctp %}
+    <main class="min-h-screen bg-[#faf7f5] text-[#1f2937]">
+        
+        {# Decorative Background Blurs #}
+        <div class="pointer-events-none absolute inset-0 overflow-hidden">
+            <div class="absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[#b31b1b]/10 blur-3xl"></div>
+            <div class="absolute top-[280px] right-[-160px] h-[420px] w-[620px] rounded-full bg-[#f6c453]/20 blur-3xl"></div>
+        </div>
+
+        <main class="relative mx-auto max-w-6xl px-4 py-12 md:py-16 space-y-12">
+            
+            {# Page Header #}
+            <section class="space-y-4">
+                <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-[#b31b1b]">Selected Publications</h1>
+                <p class="max-w-3xl text-gray-700 leading-relaxed">
+                    Selected publications supported by the Center for Translational Pathology, highlighting our translational research.
+                </p>
+                <a class="inline-block rounded-2xl border border-gray-200 bg-white px-4 py-2 text-sm text-gray-800 shadow-sm hover:shadow transition" href="{{ path('ctp_home') }}">Back to Home</a>
+            </section>
+
+            {# Publications Content #}
+            <div class="text-center py-12 text-gray-500">No publications yet.</div>
+
+        </main>
+
+    </main>
+
+{% endblock %}
+
+{% block footer %}
+    <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
+        © 2026 Weill Cornell Medicine · Center for Translational Pathology
+    </footer>
+{% endblock %}

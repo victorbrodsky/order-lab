@@ -1,0 +1,212 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}
+    People - Center for Translational Pathology
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+    <link rel="icon" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico" sizes="256x256" type="image/x-icon">
+    <style>
+        :root {
+            --wcm-red: #b31b1b;
+            --wcm-gold: #ffc72c;
+            --wcm-orange: #ff6a00;
+            --bg: #f9fafb;
+            --ink: #1f2937;
+        }
+        .text-wcm-red { color: var(--wcm-red); }
+        .text-wcm-ink { color: var(--ink); }
+        .bg-wcm-red { background-color: var(--wcm-red); }
+        .bg-wcm-red\/90 { background-color: rgba(179, 27, 27, 0.9); }
+        .hover\:bg-wcm-red\/90:hover { background-color: rgba(179, 27, 27, 0.9); }
+        .focus-visible\:ring-wcm-red:focus-visible { --tw-ring-color: var(--wcm-red); }
+        .backdrop-blur-sm { backdrop-filter: blur(4px); }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
+{% endblock %}
+
+{% block header %}
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+                <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
+                    <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                </div>
+                <div>
+                    <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
+                </div>
+            </div>
+            <nav class="flex gap-3 flex-wrap">
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/project-requests-public.html">New Project Inquiry</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#b31b1b]"
+                   {#href="/ctp_site/localhost_3000/people.html"#}
+                   href="{{ path('ctp_people') }}"
+                >People</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/publications.html">Publications</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content_ctp %}
+    <main class="min-h-screen bg-[#faf7f5] text-[#1f2937]">
+        
+        {# Decorative Background Blurs #}
+        <div class="pointer-events-none absolute inset-0 overflow-hidden">
+            <div class="absolute -top-32 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[#b31b1b]/10 blur-3xl"></div>
+            <div class="absolute top-[280px] right-[-160px] h-[420px] w-[620px] rounded-full bg-[#f6c453]/20 blur-3xl"></div>
+        </div>
+
+        <main class="relative mx-auto max-w-6xl px-4 py-12 md:py-16 space-y-12">
+            
+            {# Page Header #}
+            <section class="space-y-4">
+                <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-[#b31b1b]">People</h1>
+                <p class="max-w-3xl text-gray-700 leading-relaxed">
+                    Leadership and operations for the Center for Translational Pathology, spanning clinical oversight, laboratory execution, and strategic growth.
+                </p>
+                <a class="inline-block rounded-2xl border border-gray-200 bg-white px-4 py-2 text-sm text-gray-800 shadow-sm hover:shadow transition" href="{{ path('ctp_home') }}">Back to Home</a>
+            </section>
+
+            {# Leadership Section #}
+            <section class="space-y-6">
+                <h2 class="text-xl md:text-2xl font-semibold text-[#2b2b2b]">CTP Leadership and Key Personnel</h2>
+                <div class="mx-auto max-w-4xl space-y-6">
+                    
+                    {# David Pisapia #}
+                    <article class="group relative rounded-3xl border border-gray-200 bg-white/85 shadow-sm hover:shadow-md transition overflow-hidden">
+                        <div class="p-6 md:p-7 flex flex-col sm:flex-row gap-6">
+                            <div class="relative h-32 w-32 md:h-40 md:w-40 shrink-0">
+                                <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#b31b1b]/15 to-[#f6c453]/25"></div>
+                                <div class="absolute inset-[3px] rounded-3xl bg-white overflow-hidden">
+                                    <img alt="David Pisapia, MD headshot" loading="lazy" decoding="async" class="object-cover object-[50%_10%] w-full h-full grayscale group-hover:grayscale-0 transition duration-300" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/headshot-pisapia7c72.jpeg"/>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-[#b31b1b]">Scientific Director</p>
+                                <h3 class="mt-1 text-lg md:text-xl font-semibold text-[#2b2b2b]">David Pisapia, MD</h3>
+                                <p class="text-sm text-gray-600 mt-1">Clinical and scientific oversight • Quality • Strategy</p>
+                                <p class="mt-3 text-sm text-gray-700 leading-relaxed">Provides physician leadership for clinical integration, governance, and translational alignment across the CTP portfolio.</p>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Clinical</span>
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Governance</span>
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Quality</span>
+                                </div>
+                                <div class="mt-4">
+                                    <a href="mailto:djp2002@med.cornell.edu" class="inline-flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm hover:shadow transition">
+                                        <span class="h-2 w-2 rounded-full bg-[#f6c453]"></span>djp2002@med.cornell.edu
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-gradient-to-r from-[#b31b1b] via-[#b31b1b]/70 to-[#f6c453]"></div>
+                    </article>
+
+                    {# Sumukh Sathnur #}
+                    <article class="group relative rounded-3xl border border-gray-200 bg-white/85 shadow-sm hover:shadow-md transition overflow-hidden">
+                        <div class="p-6 md:p-7 flex flex-col sm:flex-row gap-6">
+                            <div class="relative h-32 w-32 md:h-40 md:w-40 shrink-0">
+                                <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#b31b1b]/15 to-[#f6c453]/25"></div>
+                                <div class="absolute inset-[3px] rounded-3xl bg-white overflow-hidden">
+                                    <img alt="Sumukh Sathnur headshot" loading="lazy" decoding="async" class="object-cover object-[50%_10%] w-full h-full grayscale group-hover:grayscale-0 transition duration-300" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/headshot-sathnure9d7.jpeg"/>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-[#b31b1b]">Executive Director of Business Integration and Development</p>
+                                <h3 class="mt-1 text-lg md:text-xl font-semibold text-[#2b2b2b]">Sumukh Sathnur</h3>
+                                <p class="text-sm text-gray-600 mt-1">Operations • Partnerships • Growth</p>
+                                <p class="mt-3 text-sm text-gray-700 leading-relaxed">Leads business integration, service development, and partnerships to scale CTP offerings across research and clinical workflows.</p>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Operations</span>
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Strategy</span>
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Partnerships</span>
+                                </div>
+                                <div class="mt-4">
+                                    <a href="mailto:sus4033@med.cornell.edu" class="inline-flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm hover:shadow transition">
+                                        <span class="h-2 w-2 rounded-full bg-[#f6c453]"></span>sus4033@med.cornell.edu
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-gradient-to-r from-[#b31b1b] via-[#b31b1b]/70 to-[#f6c453]"></div>
+                    </article>
+
+                    {# Bing He #}
+                    <article class="group relative rounded-3xl border border-gray-200 bg-white/85 shadow-sm hover:shadow-md transition overflow-hidden">
+                        <div class="p-6 md:p-7 flex flex-col sm:flex-row gap-6">
+                            <div class="relative h-32 w-32 md:h-40 md:w-40 shrink-0">
+                                <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#b31b1b]/15 to-[#f6c453]/25"></div>
+                                <div class="absolute inset-[3px] rounded-3xl bg-white overflow-hidden">
+                                    <img alt="Bing He headshot" loading="lazy" decoding="async" class="object-cover object-[50%_10%] w-full h-full grayscale group-hover:grayscale-0 transition duration-300" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/headshot-bing821a.jpeg"/>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-[#b31b1b]">Associate Director, Center for Translational Pathology</p>
+                                <h3 class="mt-1 text-lg md:text-xl font-semibold text-[#2b2b2b]">Bing He</h3>
+                                <p class="text-sm text-gray-600 mt-1">Operations • Multiplex IF • HistoCore</p>
+                                <p class="mt-3 text-sm text-gray-700 leading-relaxed">Directs end-to-end lab operations for CTP including HistoCore and Multiplex Labs, emphasizing throughput, reproducibility, and advanced assay delivery.</p>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">HistoCore</span>
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">MISI</span>
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Imaging</span>
+                                </div>
+                                <div class="mt-4">
+                                    <a href="mailto:bih2004@med.cornell.edu" class="inline-flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm hover:shadow transition">
+                                        <span class="h-2 w-2 rounded-full bg-[#f6c453]"></span>bih2004@med.cornell.edu
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-gradient-to-r from-[#b31b1b] via-[#b31b1b]/70 to-[#f6c453]"></div>
+                    </article>
+
+                    {# Maneeza Bilal #}
+                    <article class="group relative rounded-3xl border border-gray-200 bg-white/85 shadow-sm hover:shadow-md transition overflow-hidden">
+                        <div class="p-6 md:p-7 flex flex-col sm:flex-row gap-6">
+                            <div class="relative h-32 w-32 md:h-40 md:w-40 shrink-0">
+                                <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#b31b1b]/15 to-[#f6c453]/25"></div>
+                                <div class="absolute inset-[3px] rounded-3xl bg-white overflow-hidden">
+                                    <img alt="Maneeza Bilal headshot" loading="lazy" decoding="async" class="object-cover object-[50%_10%] w-full h-full grayscale group-hover:grayscale-0 transition duration-300" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/person_placeholder7576.jpeg"/>
+                                </div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-[#b31b1b]">Manager of HistoCore Laboratory</p>
+                                <h3 class="mt-1 text-lg md:text-xl font-semibold text-[#2b2b2b]">Maneeza Bilal</h3>
+                                <p class="text-sm text-gray-600 mt-1">Day-to-day execution • Staffing • QA</p>
+                                <p class="mt-3 text-sm text-gray-700 leading-relaxed">Oversees daily histology operations, staffing, training, and quality control to ensure consistent, high-quality outputs.</p>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Histology</span>
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">Workflow</span>
+                                    <span class="rounded-full border border-gray-200 bg-[#faf7f5] px-3 py-1 text-xs text-gray-700">QA/QC</span>
+                                </div>
+                                <div class="mt-4">
+                                    <a href="mailto:mab4049@med.cornell.edu" class="inline-flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 shadow-sm hover:shadow transition">
+                                        <span class="h-2 w-2 rounded-full bg-[#f6c453]"></span>mab4049@med.cornell.edu
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-gradient-to-r from-[#b31b1b] via-[#b31b1b]/70 to-[#f6c453]"></div>
+                    </article>
+
+                </div>
+            </section>
+        </main>
+
+    </main>
+
+{% endblock %}
+
+{% block footer %}
+    <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
+        © 2026 Weill Cornell Medicine · Center for Translational Pathology
+    </footer>
+{% endblock %}

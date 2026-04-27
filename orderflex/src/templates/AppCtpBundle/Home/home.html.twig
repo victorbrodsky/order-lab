@@ -1,0 +1,274 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}
+    Center for Translational Pathology
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+    <link rel="icon" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico" sizes="256x256" type="image/x-icon">
+    <style>
+        /* Tailwind CSS Custom Config for WCM */
+        :root {
+            --wcm-red: #b31b1b;
+            --wcm-gold: #ffc72c;
+            --wcm-orange: #ff6a00;
+            --bg: #f9fafb;
+            --ink: #1f2937;
+        }
+        .text-wcm-red { color: var(--wcm-red); }
+        .text-wcm-ink { color: var(--ink); }
+        .bg-wcm-red { background-color: var(--wcm-red); }
+        .bg-wcm-red\/90 { background-color: rgba(179, 27, 27, 0.9); }
+        .hover\:bg-wcm-red\/90:hover { background-color: rgba(179, 27, 27, 0.9); }
+        .focus-visible\:ring-wcm-red:focus-visible { --tw-ring-color: var(--wcm-red); }
+        .clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .backdrop-blur-sm { backdrop-filter: blur(4px); }
+        .backdrop-blur-\[2px\] { backdrop-filter: blur(2px); }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
+{% endblock %}
+
+{% block header %}
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+                <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
+                    <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                </div>
+                <div>
+                    <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
+                </div>
+            </div>
+            <nav class="flex gap-3 flex-wrap">
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/project-requests-public.html">New Project Inquiry</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
+                   {#href="/ctp_site/localhost_3000/people.html"#}
+                   href="{{ path('ctp_people') }}"
+                >People</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
+                   href="{{ path('ctp_publications') }}">Publications</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content_ctp %}
+
+    <main class="min-h-screen bg-gray-50 text-wcm-ink">
+        
+        {# Hero Section #}
+        <section class="relative" id="top">
+            <div class="relative h-[300px] md:h-[420px] overflow-hidden">
+                <img alt="CTP hero — histology slide background" 
+                     class="object-cover scale-105 absolute inset-0 w-full h-full" 
+                     src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/hero481ce.jpeg"/>
+                <div class="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-white/75 via-transparent to-transparent"></div>
+            </div>
+            <div class="absolute inset-0 flex items-end">
+                <div class="mx-auto w-full max-w-6xl px-6 pb-8">
+                    <div class="max-w-3xl">
+                        <h1 class="text-2xl md:text-3xl font-semibold text-wcm-red drop-shadow-sm">Center for Translational Pathology</h1>
+                        <p class="mt-2 text-wcm-ink font-medium drop-shadow-sm">
+                            Housed within and fully integrated with the Department of Pathology & Laboratory Medicine at WCM, 
+                            the CTP bridges pathology expertise, histology, multiplex immunofluorescence, computational analytics, 
+                            cutting edge molecular assays, and clinical grade biospecimen testing to accelerate discovery in human disease. 
+                            Let's move the needle forward.
+                        </p>
+                        <div class="mt-5">
+                            <a class="inline-block rounded-xl bg-wcm-red px-5 py-3 text-white font-medium shadow hover:bg-wcm-red/90 transition" 
+                               href="/ctp_site/localhost_3000/project-requests-public.html">
+                                Submit a Project Inquiry
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Lab Cards Grid #}
+        <section class="mx-auto max-w-6xl px-6 py-12 grid gap-6 md:grid-cols-3 items-stretch">
+            
+            {# HistoCore and IHC Lab #}
+            <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
+               aria-label="Go to HistoCore and IHC Lab" 
+               href="/ctp_site/localhost_3000/histocore.html">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div class="p-6 flex flex-col gap-2 min-h-[190px]">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-microscope w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
+                                <path d="M6 18h8"></path>
+                                <path d="M3 22h18"></path>
+                                <path d="M14 22a7 7 0 1 0 0-14h-1"></path>
+                                <path d="M9 14h2"></path>
+                                <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"></path>
+                                <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">HistoCore and IHC Lab</h3>
+                        </div>
+                        <p class="text-gray-600 clamp-3">Histology, IHC, and tissue microarrays for translational projects.</p>
+                        <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
+                    </div>
+                    <div class="relative h-44 md:h-52 overflow-hidden">
+                        <img alt="Histology section" loading="lazy" class="object-cover w-full h-full transition duration-300 group-hover:scale-[1.02]" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/histo3be6c.jpeg"/>
+                    </div>
+                </div>
+            </a>
+
+            {# Multiplex Lab (MISI) #}
+            <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
+               aria-label="Go to Multiplex Lab (MISI)" 
+               href="/ctp_site/localhost_3000/misi-lab.html">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div class="p-6 flex flex-col gap-2 min-h-[190px]">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-stack w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
+                                <path d="M4 10c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2"></path>
+                                <path d="M10 16c-1.1 0-2-.9-2-2v-4c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2"></path>
+                                <rect width="8" height="8" x="14" y="14" rx="2"></rect>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">Multiplex Lab</h3>
+                        </div>
+                        <p class="text-gray-600 clamp-3">Multiplex IF, multispectral imaging, and high-throughput slide analysis.</p>
+                        <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
+                    </div>
+                    <div class="relative h-44 md:h-52 overflow-hidden">
+                        <img alt="Multiplex immunofluorescence image" loading="lazy" class="object-cover w-full h-full transition duration-300 group-hover:scale-[1.02]" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/snapshot_20251217_0950511f.png"/>
+                    </div>
+                </div>
+            </a>
+
+            {# Comp Path Lab #}
+            <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
+               aria-label="Go to Computational Path Lab" 
+               href="/ctp_site/localhost_3000/computational-pathology.html">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div class="p-6 flex flex-col gap-2 min-h-[190px]">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
+                                <path d="M12 20v2"></path>
+                                <path d="M12 2v2"></path>
+                                <path d="M17 20v2"></path>
+                                <path d="M17 2v2"></path>
+                                <path d="M2 12h2"></path>
+                                <path d="M2 17h2"></path>
+                                <path d="M2 7h2"></path>
+                                <path d="M20 12h2"></path>
+                                <path d="M20 17h2"></path>
+                                <path d="M20 7h2"></path>
+                                <path d="M7 20v2"></path>
+                                <path d="M7 2v2"></path>
+                                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                                <rect x="8" y="8" width="8" height="8" rx="1"></rect>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">Comp Path Lab</h3>
+                        </div>
+                        <p class="text-gray-600 clamp-3">Cloud storage, quantitative image analysis, and AI/ML model support.</p>
+                        <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
+                    </div>
+                    <div class="relative h-44 md:h-52 overflow-hidden">
+                        <img alt="Computational pathology illustration" loading="lazy" class="object-cover w-full h-full transition duration-300 group-hover:scale-[1.02]" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/comp379a4.jpeg"/>
+                    </div>
+                </div>
+            </a>
+
+            {# Genomics Lab #}
+            <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
+               aria-label="Go to Genomics Lab" 
+               href="/ctp_site/localhost_3000/genomics.html">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div class="p-6 flex flex-col gap-2 min-h-[190px]">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dna w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
+                                <path d="m10 16 1.5 1.5"></path>
+                                <path d="m14 8-1.5-1.5"></path>
+                                <path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"></path>
+                                <path d="m16.5 10.5 1 1"></path>
+                                <path d="m17 6-2.891-2.891"></path>
+                                <path d="M2 15c6.667-6 13.333 0 20-6"></path>
+                                <path d="m20 9 .891.891"></path>
+                                <path d="M3.109 14.109 4 15"></path>
+                                <path d="m6.5 12.5 1 1"></path>
+                                <path d="m7 18 2.891 2.891"></path>
+                                <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">Genomics Lab</h3>
+                        </div>
+                        <p class="text-gray-600 clamp-3">NGS assays, methylation array profiling, and more...</p>
+                        <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
+                    </div>
+                    <div class="relative h-44 md:h-52 overflow-hidden">
+                        <img alt="Molecular section" loading="lazy" class="object-cover w-full h-full transition duration-300 group-hover:scale-[1.02]" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/DNAf66c.jpeg"/>
+                    </div>
+                </div>
+            </a>
+
+            {# CP Research Lab #}
+            <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
+               aria-label="Go to CP Research Lab" 
+               href="/ctp_site/localhost_3000/cp-research.html">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div class="p-6 flex flex-col gap-2 min-h-[190px]">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-droplet w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
+                                <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">CP Research Lab</h3>
+                        </div>
+                        <p class="text-gray-600 clamp-3">Biomarker discovery through blood analysis, clinical chemistry, and more.</p>
+                        <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
+                    </div>
+                    <div class="relative h-44 md:h-52 overflow-hidden">
+                        <img alt="Clin_lab section" loading="lazy" class="object-cover w-full h-full transition duration-300 group-hover:scale-[1.02]" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/bloodd7a3.jpeg"/>
+                    </div>
+                </div>
+            </a>
+
+            {# Exp Cell Therapy Lab #}
+            <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
+               aria-label="Go to Experimental Cellular Therapy" 
+               href="/ctp_site/localhost_3000/ect.html">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <div class="p-6 flex flex-col gap-2 min-h-[190px]">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-conical w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
+                                <path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"></path>
+                                <path d="M6.453 15h11.094"></path>
+                                <path d="M8.5 2h7"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">Exp Cell Therapy Lab</h3>
+                        </div>
+                        <p class="text-gray-600 clamp-3">Cutting edge cGMP support to generate Experimental Cell-based therapeutic products.</p>
+                        <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
+                    </div>
+                    <div class="relative h-44 md:h-52 overflow-hidden">
+                        <img alt="ECT" loading="lazy" class="object-cover w-full h-full transition duration-300 group-hover:scale-[1.02]" src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/ect2c80.jpeg"/>
+                    </div>
+                </div>
+            </a>
+
+        </section>
+
+    </main>
+
+{% endblock %}
+
+{% block footer %}
+    <footer class="border-t border-gray-200 bg-white py-6 text-center text-sm text-gray-600">
+        © 2026 Weill Cornell Medicine · Center for Translational Pathology
+    </footer>
+{% endblock %}
+

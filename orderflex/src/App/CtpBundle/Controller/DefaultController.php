@@ -48,26 +48,55 @@ class DefaultController extends OrderAbstractController
     }
 
     //Show home page
-    #[Route(path: '/', name: 'ctp_home', methods: ['GET'])]
-    #[Template('AppCtpBundle/Default/home.html.twig')]
-    public function indexAction( Request $request ) {
+    //#[Template('AppCtpBundle/Default/home.html.twig')]
+    #[Route(path: '/people', name: 'ctp_people', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/people.html.twig')]
+    public function peopleAction( Request $request ) {
 
-        if( false == $this->isGranted('ROLE_CTP_USER') ){
-            return $this->redirect( $this->generateUrl('ctp-nopermission') );
-        }
+//        if( false == $this->isGranted('ROLE_CTP_USER') ){
+//            return $this->redirect( $this->generateUrl('ctp-nopermission') );
+//        }
 
         $title = 'Center for Translational Pathology';
 
-        //echo "project dir=".$this->getParameter('kernel.project_dir')."<br>"; //C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex
-        //$path = $this->getParameter('kernel.project_dir') . '/public/static/myfile.html';
-        $path = 'C:/MyWebSites/path2path/localhost_3000/index.html';
-        $html = file_get_contents($path);
+        return array(
+            'title' => $title,
+        );
+    }
+
+    #[Route(path: '/', name: 'ctp_home', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/home.html.twig')]
+    public function indexAction( Request $request ) {
+
+//        if( false == $this->isGranted('ROLE_CTP_USER') ){
+//            return $this->redirect( $this->generateUrl('ctp-nopermission') );
+//        }
+
+        $title = 'Center for Translational Pathology';
 
         return array(
             'title' => $title,
-            'html' => $html,
         );
     }
+
+    #[Route(path: '/publications', name: 'ctp_publications', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/publications.html.twig')]
+    public function publicationsAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    #[Route(path: '/new-project-inquiry', name: 'ctp_new-project-inquiry', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/new-project-inquiry.html.twig')]
+    public function newProjectInquiryAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
 
 //    //check for active access requests
 //    public function getActiveAccessReq() {
