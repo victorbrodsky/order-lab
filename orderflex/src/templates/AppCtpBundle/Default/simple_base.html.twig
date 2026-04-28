@@ -110,7 +110,11 @@
                     </div>
                     </a>
                     <div>
-                        <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
+                        <h1 class="text-lg font-semibold leading-tight">
+                            {#Center for Translational Pathology#}
+                            <a href="{{ path("ctp_home") }}"
+                            >Center for Translational Pathology</a>
+                        </h1>
                     </div>
                 </div>
                 <nav class="flex gap-3 flex-wrap">
@@ -143,10 +147,18 @@
             {#{% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}#}
         {#</div>#}
 
+        {% if app.user %}
+            {% set loginUrl = '<a href="' ~ path("employees_logout") ~ '">Logout</a>' %}
+        {% else %}
+            {% set loginUrl = '<a href="' ~ path("ctp_login") ~ '">Login</a>' %}
+        {% endif %}
+
         <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
             {#© <!-- -->2026<!-- --> Weill Cornell Medicine · Center for Translational Pathology#}
             {#© <!-- -->2026<!-- --> <a href="weillcornell.org/">Weill Cornell Medicine</a> · Center for Translational Pathology#}
-            © <!-- -->2026<!-- --> <a href="https://weillcornell.org/">Weill Cornell Medicine</a> · <a href="{{ path("ctp_home") }}">Center for Translational Pathology</a>
+            © <!-- -->2026<!-- --> <a href="https://weillcornell.org/"
+            >Weill Cornell Medicine</a> · <a href="{{ path("ctp_home") }}"
+            >Center for Translational Pathology</a> · {{ loginUrl|raw }}
         </footer>
 
     {% endblock %}

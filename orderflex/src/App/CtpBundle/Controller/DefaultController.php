@@ -129,7 +129,7 @@ class DefaultController extends OrderAbstractController
     //TODO:
     //HistoCore & IHC Lab - card does not have border
     //New Project - Initial Inquiry - form has blue surrounding except top - remove it
-    //
+    //New Project - Initial Inquiry - change top color
 
 //    //check for active access requests
 //    public function getActiveAccessReq() {
