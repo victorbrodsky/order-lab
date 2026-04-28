@@ -39,32 +39,32 @@
     <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
 {% endblock %}
 
-{% block header %}
-    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
-        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <div class="flex items-center gap-3">
-                <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
-                    <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
-                </div>
-                <div>
-                    <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
-                </div>
-            </div>
-            <nav class="flex gap-3 flex-wrap">
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
-                   href="{{ path('ctp_new-project-inquiry') }}">New Project Inquiry</a>
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
+{#{% block header %}#}
+    {#<header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">#}
+        {#<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">#}
+            {#<div class="flex items-center gap-3">#}
+                {#<div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">#}
+                    {#<img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>#}
+                {#</div>#}
+                {#<div>#}
+                    {#<h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>#}
+                {#</div>#}
+            {#</div>#}
+            {#<nav class="flex gap-3 flex-wrap">#}
+                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>#}
+                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"#}
+                   {#href="{{ path('ctp_new-project-inquiry') }}">New Project Inquiry</a>#}
+                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"#}
                    {#href="/ctp_site/localhost_3000/people.html"#}
-                   href="{{ path('ctp_people') }}"
-                >People</a>
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
-                   href="{{ path('ctp_publications') }}">Publications</a>
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>
-            </nav>
-        </div>
-    </header>
-{% endblock %}
+                   {#href="{{ path('ctp_people') }}"#}
+                {#>People</a>#}
+                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"#}
+                   {#href="{{ path('ctp_publications') }}">Publications</a>#}
+                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>#}
+            {#</nav>#}
+        {#</div>#}
+    {#</header>#}
+{#{% endblock %}#}
 
 {% block content_ctp %}
 
@@ -91,7 +91,8 @@
                         </p>
                         <div class="mt-5">
                             <a class="inline-block rounded-xl bg-wcm-red px-5 py-3 text-white font-medium shadow hover:bg-wcm-red/90 transition" 
-                               href="/ctp_site/localhost_3000/project-requests-public.html">
+                               {#href="/ctp_site/localhost_3000/project-requests-public.html">#}
+                               href="{{ path('ctp_new-project-inquiry') }}">
                                 Submit a Project Inquiry
                             </a>
                         </div>
@@ -107,7 +108,7 @@
             <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
                aria-label="Go to HistoCore and IHC Lab" 
                {#href="/ctp_site/localhost_3000/histocore.html">#}
-               href="{{ path('ctp_histocore-and-ihc-lab') }}">
+                href="{{ path('ctp_histocore-and-ihc-lab') }}"
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="p-6 flex flex-col gap-2 min-h-[190px]">
                         <div class="flex items-center gap-2">
@@ -133,7 +134,8 @@
             {# Multiplex Lab (MISI) #}
             <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
                aria-label="Go to Multiplex Lab (MISI)" 
-               href="/ctp_site/localhost_3000/misi-lab.html">
+               {#href="/ctp_site/localhost_3000/misi-lab.html">#}
+               href="{{ path('ctp_misi-lab') }}">
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="p-6 flex flex-col gap-2 min-h-[190px]">
                         <div class="flex items-center gap-2">
@@ -242,7 +244,8 @@
             {# Exp Cell Therapy Lab #}
             <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
                aria-label="Go to Experimental Cellular Therapy" 
-               href="/ctp_site/localhost_3000/ect.html">
+               {#href="/ctp_site/localhost_3000/ect.html">#}
+               href="{{ path('ctp_ect') }}">
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="p-6 flex flex-col gap-2 min-h-[190px]">
                         <div class="flex items-center gap-2">

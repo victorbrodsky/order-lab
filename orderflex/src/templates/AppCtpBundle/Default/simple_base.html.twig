@@ -80,7 +80,55 @@
 {% block body %}
 
     {% block header %}
-        {#{% include 'AppCtpBundle/Default/navbar.html.twig' %}#}
+        {% set ctp_home_bg = '#f8b229' %}
+        {% set ctp_newprojectinquiry_bg = '#f8b229' %}
+        {% set ctp_people_bg = '#f8b229' %}
+        {% set ctp_publications_bg = '#f8b229' %}
+        {% set ctp_applications_bg = '#f8b229' %}
+        {% if app.request.attributes.get('_route') == 'ctp_home' %}
+            {% set ctp_home_bg = '#b31b1b' %}
+        {% endif %}
+        {% if app.request.attributes.get('_route') == 'ctp_new-project-inquiry' %}
+            {% set ctp_newprojectinquiry_bg = '#b31b1b' %}
+        {% endif %}
+        {% if app.request.attributes.get('_route') == 'ctp_people' %}
+            {% set ctp_people_bg = '#b31b1b' %}
+        {% endif %}
+        {% if app.request.attributes.get('_route') == 'ctp_publications' %}
+            {% set ctp_publications_bg = '#b31b1b' %}
+        {% endif %}
+        {% if app.request.attributes.get('_route') == 'ctp_applications' %}
+            {% set ctp_applications_bg = '#b31b1b' %}
+        {% endif %}
+
+        <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
+            <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+                <div class="flex items-center gap-3">
+                    <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
+                        <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
+                    </div>
+                </div>
+                <nav class="flex gap-3 flex-wrap">
+                    <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[{{ ctp_home_bg }}] hover:bg-[#b31b1b]"
+                       href="{{ path('ctp_home') }}">Home</a>
+                    <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[{{ ctp_newprojectinquiry_bg }}] hover:bg-[#b31b1b]"
+                       href="{{ path('ctp_new-project-inquiry') }}">New Project Inquiry</a>
+                    <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[{{ ctp_people_bg }}] hover:bg-[#b31b1b]"
+                            {#href="/ctp_site/localhost_3000/people.html"#}
+                       href="{{ path('ctp_people') }}"
+                    >People</a>
+                    <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[{{ ctp_publications_bg }}] hover:bg-[#b31b1b]"
+                       href="{{ path('ctp_publications') }}">Publications</a>
+                    <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[{{ ctp_applications_bg }}] hover:bg-[#b31b1b]"
+                       {#href="/ctp_site/localhost_3000/path2path-dashboard-login.html"#}
+                       href="{{ path('ctp_applications') }}"
+                    >Path2Path Dashboard</a>
+                </nav>
+            </div>
+        </header>
     {% endblock %}
 
 

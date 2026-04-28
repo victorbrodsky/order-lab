@@ -1,0 +1,603 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}
+    Experimental Cellular Therapy | Center for Translational Pathology
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+    <link rel="icon" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico" sizes="256x256" type="image/x-icon">
+    <style>
+        :root {
+            --bg: #fafafa;
+            --ink: #18181b;
+        }
+        html { scroll-behavior: smooth; }
+    </style>
+{% endblock %}
+
+{% block header %}
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <div class="flex items-center gap-3">
+                <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
+                    <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                </div>
+                <div>
+                    <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
+                </div>
+            </div>
+            <nav class="flex gap-3 flex-wrap">
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_new-project-inquiry') }}">New Project Inquiry</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_people') }}">People</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_publications') }}">Publications</a>
+                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content_ctp %}
+    <main class="min-h-screen bg-zinc-50" id="top">
+        
+        {# Hero Section #}
+        <div class="relative overflow-hidden border-b border-zinc-200 bg-white">
+            <div class="absolute inset-0 -z-10">
+                <div class="absolute -top-20 left-1/2 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-zinc-100 blur-3xl"></div>
+                <div class="absolute -bottom-20 left-1/3 h-72 w-[60rem] -translate-x-1/2 rounded-full bg-zinc-100 blur-3xl"></div>
+            </div>
+            <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+                <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+                    <div class="max-w-2xl">
+                        <div class="mb-4 flex flex-wrap gap-2">
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Translational Pathology</span>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Cell Therapy</span>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Clinical Trials Enablement</span>
+                        </div>
+                        <h1 class="text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl">Experimental Cellular Therapy</h1>
+                        <p class="mt-4 text-base leading-relaxed text-zinc-700">Experimental Cellular Therapy within the Weill Cornell/NewYork-Presbyterian Department of Pathology and Laboratory Medicine supports the translation of cellular therapy concepts into early-stage clinical products-spanning clinical processing, investigational handling, and experimental manufacturing.</p>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="#engage" class="rounded-xl bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800">Request collaboration</a>
+                            <a href="#programs" class="rounded-xl border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-50">Explore programs</a>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur w-full p-5 lg:max-w-md">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M13 2L3 14h7l-1 8 12-14h-7l-1-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            What we support
+                        </div>
+                        <ul class="mt-4 space-y-3 text-sm text-zinc-700">
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Clinical processing for hematopoietic and cellular therapy products</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Investigational trial support for externally manufactured products</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Phase I experimental manufacturing in closed systems (e.g., CAR T)</span>
+                            </li>
+                        </ul>
+                        <div class="mt-5 grid grid-cols-3 gap-3">
+                            <div class="rounded-2xl border border-zinc-200 bg-white px-5 py-4">
+                                <div class="text-xl font-semibold tracking-tight text-zinc-900">500+</div>
+                                <div class="mt-1 text-sm text-zinc-600">Products/yr</div>
+                            </div>
+                            <div class="rounded-2xl border border-zinc-200 bg-white px-5 py-4">
+                                <div class="text-xl font-semibold tracking-tight text-zinc-900">ISO 7</div>
+                                <div class="mt-1 text-sm text-zinc-600">CTEM cleanroom</div>
+                            </div>
+                            <div class="rounded-2xl border border-zinc-200 bg-white px-5 py-4">
+                                <div class="text-xl font-semibold tracking-tight text-zinc-900">cGMP</div>
+                                <div class="mt-1 text-sm text-zinc-600">Aligned QA</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 flex flex-wrap gap-2 text-sm">
+                    <a href="#programs" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Programs</a>
+                    <a href="#ctem" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">CTEM</a>
+                    <a href="#facilities" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Facilities</a>
+                    <a href="#quality" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Quality</a>
+                    <a href="#leadership" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Leadership</a>
+                    <a href="#engage" class="rounded-full border border-zinc-200 bg-white px-4 py-2 font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-50">Engage</a>
+                </div>
+            </div>
+        </div>
+
+        {# Cellular Biotherapies Laboratory Division #}
+        <section id="programs" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">CBLD includes the Clinical Cell Therapy Laboratory and Investigational Cell Therapy Laboratory</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Cellular Biotherapies Laboratory Division</h2>
+                </div>
+                <div class="grid gap-6 lg:grid-cols-2">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-semibold text-zinc-900">Clinical Cell Therapy Laboratory (CCTL)</div>
+                                <div class="mt-1 text-sm text-zinc-600">Clinical processing facility supporting patient therapy</div>
+                            </div>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Clinical</span>
+                        </div>
+                        <p class="mt-4 text-sm leading-relaxed text-zinc-700">CCTL provides hematopoietic stem cells (HSCs) and other hematopoietic and non-hematopoietic cell types for patient therapy. Cells for hematopoietic reconstitution are derived from bone marrow, peripheral blood, and umbilical cord blood (UCB), while novel somatic cellular therapies are obtained from various tissues.</p>
+                        <div class="mt-5 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Autologous products</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Allogeneic-related products</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Allogeneic-unrelated products</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Peripheral blood stem cells</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Umbilical cord blood (UCB)</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Bone marrow and other products</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                            <div class="text-sm font-semibold text-zinc-900">Clinical scale</div>
+                            <p class="mt-1 text-sm text-zinc-700">Processes <span class="font-semibold text-zinc-900">500+ cellular products annually</span> in support of the Weill Cornell Blood and Marrow Transplant Program.</p>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-semibold text-zinc-900">Investigational Cell Therapy Laboratory (ICTL)</div>
+                                <div class="mt-1 text-sm text-zinc-600">Sponsored research + clinical trial support for external manufacturing</div>
+                            </div>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Investigational</span>
+                        </div>
+                        <p class="mt-4 text-sm leading-relaxed text-zinc-700">ICTL shares space and resources with CCTL, but focuses on clinical trials where patient/donor cells are collected and shipped for further manufacturing at an outside facility, then received and handled on return as investigational products.</p>
+                        <div class="mt-5 grid gap-3 text-sm text-zinc-700">
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Protocol laboratory / product administration manual review</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Packaging starting cellular material for further manufacture</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Receipt of manufactured investigational product (IP) for short-term storage</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Product processing for distribution (e.g., IP thaw and dosing support)</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                            <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M21 8l-9-5-9 5 9 5 9-5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M3 8v8l9 5 9-5V8" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M12 13v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+                                Logistics + feasibility
+                            </div>
+                            <p class="mt-1 text-sm text-zinc-700">Staff collaborate with investigators to assess protocol feasibility and budgeting for requested processing services.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Cellular Therapy and Experimental Manufacturing #}
+        <section id="ctem" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">CTEM supports early-phase manufacturing in closed systems</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Cellular Therapy and Experimental Manufacturing</h2>
+                </div>
+                <div class="grid gap-6 lg:grid-cols-3">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6 lg:col-span-2">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <div class="text-lg font-semibold text-zinc-900">CTEM Service</div>
+                                <div class="mt-1 text-sm text-zinc-600">ISO 7 (Class 10,000) HEPA-filtered positive pressure manufacturing space</div>
+                            </div>
+                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-700">Manufacturing</span>
+                        </div>
+                        <p class="mt-4 text-sm leading-relaxed text-zinc-700">The CTEM Service is currently located in a 400 sq ft HEPA-filtered, ISO 7 positive pressure cell manufacturing space within the CBLD facility. The cleanroom design supports unidirectional personnel and material flow, with a dedicated gowning area.</p>
+                        <div class="mt-5 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Two biological safety cabinets</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Two Miltenyi Prodigy instruments</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Cell selection, viral transduction, and expansion</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Closed-system manufacturing focus</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                            <div class="text-sm font-semibold text-zinc-900">Primary focus</div>
+                            <p class="mt-1 text-sm text-zinc-700">Supports Phase I clinical trials of <span class="font-semibold text-zinc-900">more-than-minimally manipulated</span> products manufactured in closed systems, including <span class="font-semibold text-zinc-900">CAR T</span> and other immune effector cells (IECs).</p>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="text-sm font-semibold text-zinc-900">End-to-end support</div>
+                        <p class="mt-2 text-sm text-zinc-700">CTEM partners with investigators and sponsors across the full lifecycle of a cellular therapy program.</p>
+                        <div class="mt-4 space-y-3 text-sm text-zinc-700">
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Process development, qualification, and validation</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Product manufacturing and equipment management</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Operations, materials management, and critical system control</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Quality, compliance, and document change control</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Business plan + project budget development</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Clinical trials management and project management</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Facilities & Operations #}
+        <section id="facilities" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">CBLD infrastructure and throughput</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Facilities & operations</h2>
+                </div>
+                <div class="grid gap-5 lg:grid-cols-3">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-5">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M4 21V3h10v18" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M14 8h6v13" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M8 7h2M8 11h2M8 15h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M18 12h2M18 16h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M2 21h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+                            CBLD facility
+                        </div>
+                        <p class="mt-3 text-sm leading-relaxed text-zinc-700">A state-of-the-art 3,600 sq ft facility on the ground floor of the M Building at NewYork-Presbyterian Hospital's Weill Cornell Campus (built in 2009).</p>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-5">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M10 2v6l-5 9a3 3 0 002.6 4.5h8.8A3 3 0 0019 17l-5-9V2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M8 8h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+                            Core infrastructure
+                        </div>
+                        <p class="mt-3 text-sm leading-relaxed text-zinc-700">Three processing rooms, an in-lab cryofacility, biological safety cabinets, two Miltenyi CliniMACS, hematology analyzer, and in-house flow cytometry.</p>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-5">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M13 2L3 14h7l-1 8 12-14h-7l-1-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            Operations
+                        </div>
+                        <p class="mt-3 text-sm leading-relaxed text-zinc-700">Operating hours are 8:00 am-6:00 pm, five days per week, staffed by specialized medical laboratory scientists, researchers, quality specialists, and leadership.</p>
+                    </div>
+                </div>
+                <div class="mt-6 grid gap-6 lg:grid-cols-2">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="text-sm font-semibold text-zinc-900">Key equipment</div>
+                        <div class="mt-4 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>3 biological safety cabinets (CBLD)</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>2 Miltenyi CliniMACS</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Sysmex XN10 hematology analyzer</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>2 BD FACSCanto II flow cytometers</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Cryofacility within the lab</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>CTEM: 2 biological safety cabinets</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>CTEM: 2 Miltenyi Prodigy instruments</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="text-sm font-semibold text-zinc-900">Clinical throughput</div>
+                        <p class="mt-2 text-sm text-zinc-700">The laboratory processes over <span class="font-semibold text-zinc-900">500 cellular products annually</span> across autologous and allogeneic workflows, supporting the Weill Cornell Blood and Marrow Transplant Program.</p>
+                        <div class="mt-5 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                            <div class="text-sm font-semibold text-zinc-900">Product sources</div>
+                            <div class="mt-3 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
+                                <div class="flex gap-2">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Bone marrow</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Peripheral blood</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Umbilical cord blood (UCB)</span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Other tissues</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Quality, Compliance, and Regulatory Alignment #}
+        <section id="quality" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">Designed to meet investigational manufacturing expectations</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Quality, compliance, and regulatory alignment</h2>
+                </div>
+                <div class="grid gap-6 lg:grid-cols-3">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6 lg:col-span-2">
+                        <div class="flex items-center gap-2 text-sm font-semibold text-zinc-900">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M9 12l2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            Quality framework
+                        </div>
+                        <p class="mt-3 text-sm leading-relaxed text-zinc-700">FDA regulatory requirements necessitate that investigational, more-than-minimally manipulated products be produced in accordance with current Good Manufacturing Practices (cGMP) and current Good Tissue Practices (cGTP). CTEM uses a comprehensive quality process composed of a cGMP/cGTP-based Quality Assurance Program, Product Development Process, and Risk Management to support safe and effective manufacturing of cellular therapy products.</p>
+                        <div class="mt-5 grid gap-3 text-sm text-zinc-700 sm:grid-cols-2">
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>cGMP / cGTP-aligned QA program</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Product development process</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Risk management</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Document change control</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Control of critical systems</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Equipment and materials management</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="text-sm font-semibold text-zinc-900">Accreditation & oversight</div>
+                        <p class="mt-2 text-sm text-zinc-700">The laboratory maintains accreditation and compliance with major standards and regulations.</p>
+                        <div class="mt-4 space-y-3 text-sm text-zinc-700">
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Foundation for the Accreditation of Cellular Therapy (FACT)</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>College of American Pathologists (CAP)</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>National Marrow Donor Program (NMDP)</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <span>Complies with FDA and New York State regulations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 grid gap-4 lg:grid-cols-2">
+                    <a href="#" class="group flex items-start justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left transition hover:border-zinc-300 hover:bg-zinc-50">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 font-medium text-zinc-900">
+                                <span class="truncate">Investigator engagement guide</span>
+                                <span class="inline-flex items-center rounded-md border border-zinc-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-zinc-700">DOC</span>
+                            </div>
+                            <div class="mt-0.5 text-sm text-zinc-600">Recommended information to include when initiating a collaboration</div>
+                        </div>
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 shrink-0 text-zinc-500 transition group-hover:text-zinc-700"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </a>
+                    <a href="#" class="group flex items-start justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left transition hover:border-zinc-300 hover:bg-zinc-50">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 font-medium text-zinc-900">
+                                <span class="truncate">IRB-ready workflow summary</span>
+                                <span class="inline-flex items-center rounded-md border border-zinc-200 bg-white px-2 py-0.5 text-[11px] font-semibold text-zinc-700">PDF</span>
+                            </div>
+                            <div class="mt-0.5 text-sm text-zinc-600">High-level language for protocols describing processing and handling</div>
+                        </div>
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 shrink-0 text-zinc-500 transition group-hover:text-zinc-700"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        {# Leadership #}
+        <section id="leadership" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">Program oversight and operational leadership</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Leadership</h2>
+                </div>
+                <div class="grid gap-5 md:grid-cols-2">
+                    <a href="#" class="block transition hover:-translate-y-0.5">
+                        <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur h-full p-5">
+                            <div class="flex items-start gap-4">
+                                <div class="h-12 w-12 shrink-0 rounded-2xl bg-zinc-100 ring-1 ring-red-200">
+                                    <div class="flex h-full w-full items-center justify-center">
+                                        <div class="h-2.5 w-2.5 rounded-full bg-red-500"></div>
+                                    </div>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="truncate text-base font-semibold text-zinc-900">Scott Avecilla, MD</div>
+                                    <div class="mt-1 text-sm text-zinc-700">CTEM Service Chief</div>
+                                    <div class="text-sm text-zinc-700">Experimental Manufacturing Program Leadership</div>
+                                    <div class="mt-3 inline-flex items-center gap-2 text-sm font-medium text-zinc-900">
+                                        <span class="rounded-full bg-zinc-100 px-3 py-1">Profile</span>
+                                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-500"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="transition hover:-translate-y-0.5">
+                        <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur h-full p-5">
+                            <div class="flex items-start gap-4">
+                                <div class="h-12 w-12 shrink-0 rounded-2xl bg-zinc-100 ring-1 ring-sky-200">
+                                    <div class="flex h-full w-full items-center justify-center">
+                                        <div class="h-2.5 w-2.5 rounded-full bg-sky-600"></div>
+                                    </div>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="truncate text-base font-semibold text-zinc-900">CTEM Administrative Service Line Director</div>
+                                    <div class="mt-1 text-sm text-zinc-700">Operations, resourcing, and service line management</div>
+                                    <div class="text-sm text-zinc-700">Please contact intake for routing</div>
+                                    <div class="mt-3 inline-flex items-center gap-2 text-sm font-medium text-zinc-900">
+                                        <span class="rounded-full bg-zinc-100 px-3 py-1">Leadership</span>
+                                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-500"><path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 14v7H3V3h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Engage with Experimental Cellular Therapy #}
+        <section id="engage" class="scroll-mt-28">
+            <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <div class="mb-2 text-sm font-semibold tracking-wide text-zinc-600">Contact leadership before submitting a new IRB application</div>
+                    <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Engage with Experimental Cellular Therapy</h2>
+                </div>
+                <div class="grid gap-6 lg:grid-cols-3">
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6 lg:col-span-2">
+                        <div class="grid gap-5 sm:grid-cols-2">
+                            <div class="flex gap-3">
+                                <div class="mt-0.5">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M4 6h16v12H4V6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-zinc-900">Email</div>
+                                    <a href="mailto:ctp-intake@med.cornell.edu" class="mt-1 block text-sm text-zinc-700 underline-offset-4 hover:underline">ctp-intake@med.cornell.edu</a>
+                                    <div class="mt-1 text-xs text-zinc-600">Use this address to route to the appropriate CCTL/ICTL/CTEM contacts.</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <div class="mt-0.5">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.86 19.86 0 01-8.63-3.07A19.5 19.5 0 013.15 10.8 19.86 19.86 0 01.08 2.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.12.86.3 1.7.54 2.5a2 2 0 01-.45 2.11L6 7.09a16 16 0 006.91 6.91l.76-1.15a2 2 0 012.11-.45c.8.24 1.64.42 2.5.54A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-zinc-900">Phone</div>
+                                    <div class="mt-1 text-sm text-zinc-700">Main: (212) 746-6464</div>
+                                    <div class="text-sm text-zinc-700">Surgical Pathology: (212) 746-2700</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 sm:col-span-2">
+                                <div class="mt-0.5">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 text-zinc-700"><path d="M12 22s7-4.35 7-12a7 7 0 10-14 0c0 7.65 7 12 7 12z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M12 10a2 2 0 100-4 2 2 0 000 4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-zinc-900">Location</div>
+                                    <div class="mt-1 text-sm text-zinc-700">NewYork-Presbyterian / Weill Cornell Campus<br>M Building (CBLD facility)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
+                            <div class="text-sm font-semibold text-zinc-900">What to include in your outreach</div>
+                            <div class="mt-3 grid gap-3 sm:grid-cols-2">
+                                <div class="flex gap-2 text-sm text-zinc-700">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Program type (CCTL / ICTL / CTEM) and clinical trial phase</span>
+                                </div>
+                                <div class="flex gap-2 text-sm text-zinc-700">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Cell source, intended indication, and high-level process overview</span>
+                                </div>
+                                <div class="flex gap-2 text-sm text-zinc-700">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Planned manufacturing model (in-house closed system vs. external manufacture)</span>
+                                </div>
+                                <div class="flex gap-2 text-sm text-zinc-700">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-5 w-5 mt-0.5 text-zinc-700"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    <span>Timeline, volume estimates, and sponsor/funding context</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
+                        <div class="text-sm font-semibold text-zinc-900">Related CTP pages</div>
+                        <div class="mt-4 space-y-3 text-sm">
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="{{ path('ctp_new-project-inquiry') }}">Start a New Project</a>
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="/histocore">HistoCore and IHC Lab</a>
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="{{ path('ctp_misi-lab') }}">MISI / Multiplex Lab</a>
+                        </div>
+                        <div class="mt-6 rounded-2xl border border-zinc-200 bg-white p-5">
+                            <div class="text-sm font-semibold text-zinc-900">CTA</div>
+                            <p class="mt-2 text-sm text-zinc-700">Contact laboratory leadership to discuss clinical or research collaborations prior to submitting a new IRB application.</p>
+                            <a href="mailto:ctp-intake@med.cornell.edu?subject=Experimental%20Cellular%20Therapy%20-%20Collaboration%20Inquiry" class="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800">Email intake</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Footer Bar #}
+        <div class="border-t border-zinc-200 bg-white">
+            <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-zinc-600 sm:px-6 lg:px-8">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>Experimental Cellular Therapy - Center for Translational Pathology</div>
+                    <a href="#top" class="font-medium text-zinc-900 underline-offset-4 hover:underline">Back to top</a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+{% endblock %}
+
+{% block footer %}
+    <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
+        © 2026 Weill Cornell Medicine · Center for Translational Pathology
+    </footer>
+{% endblock %}

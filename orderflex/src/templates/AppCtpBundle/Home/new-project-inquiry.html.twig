@@ -58,35 +58,6 @@
     </script>
 {% endblock %}
 
-{% block header %}
-    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
-        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <div class="flex items-center gap-3">
-                <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
-                    <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
-                </div>
-                <div>
-                    <h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>
-                </div>
-            </div>
-            <nav class="flex gap-3 flex-wrap">
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#b31b1b]"
-                   {#href="/ctp_site/localhost_3000/project-requests-public.html"#}
-                   href="{{ path('ctp_new-project-inquiry') }}"
-                >New Project Inquiry</a>
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
-                   href="{{ path('ctp_people') }}"
-                >People</a>
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"
-                   href="{{ path('ctp_publications') }}"
-                >Publications</a>
-                <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>
-            </nav>
-        </div>
-    </header>
-{% endblock %}
-
 {% block content_ctp %}
     <main class="min-h-screen bg-[#faf7f5] text-[#1f2937]">
         

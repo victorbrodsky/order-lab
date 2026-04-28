@@ -47,23 +47,6 @@ class DefaultController extends OrderAbstractController
         return array('sitename' => $this->getParameter('ctp.sitename'));
     }
 
-    //Show home page
-    //#[Template('AppCtpBundle/Default/home.html.twig')]
-    #[Route(path: '/people', name: 'ctp_people', methods: ['GET'])]
-    #[Template('AppCtpBundle/Home/people.html.twig')]
-    public function peopleAction( Request $request ) {
-
-//        if( false == $this->isGranted('ROLE_CTP_USER') ){
-//            return $this->redirect( $this->generateUrl('ctp-nopermission') );
-//        }
-
-        $title = 'Center for Translational Pathology';
-
-        return array(
-            'title' => $title,
-        );
-    }
-
     #[Route(path: '/', name: 'ctp_home', methods: ['GET'])]
     #[Template('AppCtpBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
@@ -96,6 +79,24 @@ class DefaultController extends OrderAbstractController
             'title' => $title,
         );
     }
+
+    #[Route(path: '/people', name: 'ctp_people', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/people.html.twig')]
+    public function peopleAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    #[Route(path: '/applications', name: 'ctp_applications', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/applications.html.twig')]
+    public function applicationsAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
     
     #[Route(path: '/histocore-and-ihc-lab', name: 'ctp_histocore-and-ihc-lab', methods: ['GET'])]
     #[Template('AppCtpBundle/Home/histocore-and-ihc-lab.html.twig')]
@@ -105,6 +106,25 @@ class DefaultController extends OrderAbstractController
             'title' => $title,
         );
     }
+
+    #[Route(path: '/misi-lab', name: 'ctp_misi-lab', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/misi-lab.html.twig')]
+    public function misiLabAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    #[Route(path: '/experimental-cellular-therapy-lab', name: 'ctp_ect', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/ect.html.twig')]
+    public function ectAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
 
 
 //    //check for active access requests
