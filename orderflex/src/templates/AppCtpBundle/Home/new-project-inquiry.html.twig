@@ -146,37 +146,31 @@
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Dr. Jane Smith" value=""/>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="PI name" value=""/>
                     </div>
                 </section>
-
-                <hr class="border-gray-200">
 
                 <section class="grid gap-3 md:grid-cols-2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Department <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Pathology and Laboratory Medicine" value=""/>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. Pathology and Laboratory Medicine" value=""/>
                     </div>
                     <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Phone <span class="text-red-600">*</span></label>
-                        <input type="tel" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(555) 555-5555" value=""/>
+                        <label class="text-sm text-gray-700">Phone</label>
+                        <input type="tel" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value=""/>
                     </div>
                 </section>
-
-                <hr class="border-gray-200">
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Contact Name (if different from PI)</label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Lab Manager Name" value=""/>
+                        <label class="text-sm text-gray-700">Contact Name <span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value=""/>
                     </div>
                     <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Contact Email Address</label>
-                        <input type="email" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="contact@example.com" value=""/>
+                        <label class="text-sm text-gray-700">Contact Email Address <span class="text-red-600">*</span></label>
+                        <input type="email" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. jod2034@med.cornell.edu" value=""/>
                     </div>
                 </section>
-
-                <hr class="border-gray-200">
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
@@ -185,16 +179,12 @@
                     </div>
                 </section>
 
-                <hr class="border-gray-200">
-
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Experimental Plan Summary <span class="text-red-600">*</span></label>
                         <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
                     </div>
                 </section>
-
-                <hr class="border-gray-200">
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
@@ -203,10 +193,9 @@
                     </div>
                 </section>
 
-                <div class="pt-2">
-                    <button type="submit" 
-                            class="rounded-xl bg-[#b31b1b] px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-[#b31b1b]/90 focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 transition">
-                        Submit Inquiry
+                <div class="flex items-center gap-3">
+                    <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">
+                        Submit
                     </button>
                 </div>
 
@@ -224,40 +213,41 @@
 
                 <hr class="border-gray-200">
 
-                <section class="grid gap-3 md:grid-cols-2">
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Project Title <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Glioblastoma Tissue Microarrays" value=""/>
-                    </div>
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Dr. Jane Smith" value=""/>
-                    </div>
-                </section>
+                {#<section class="grid gap-3 md:grid-cols-2">#}
+                    {#<div class="grid gap-1">#}
+                        {#<label class="text-sm text-gray-700">Project Title <span class="text-red-600">*</span></label>#}
+                        {#<input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Glioblastoma Tissue Microarrays" value=""/>#}
+                    {#</div>#}
+                    {#<div class="grid gap-1">#}
+                        {#<label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>#}
+                        {#<input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="PI name" value=""/>#}
+                    {#</div>#}
+                {#</section>#}
+                {#<hr class="border-gray-200">#}
 
-                <hr class="border-gray-200">
-
-                <section class="grid gap-3 md:grid-cols-2">
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Institution / Organization <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Harvard Medical School" value=""/>
-                    </div>
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Phone <span class="text-red-600">*</span></label>
-                        <input type="tel" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(555) 555-5555" value=""/>
-                    </div>
-                </section>
-
-                <hr class="border-gray-200">
+                {#<hr class="border-gray-200">#}
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Contact Email Address <span class="text-red-600">*</span></label>
-                        <input type="email" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="contact@example.com" value=""/>
+                        <label class="text-sm text-gray-700">External Collaborator Contact Name <span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value=""/>
+                    </div>
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700"> ExternalContact Email <span class="text-red-600">*</span></label>
+                        <input type="email" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="collaborator@institution.edu" value=""/>
                     </div>
                 </section>
 
-                <hr class="border-gray-200">
+                <section class="grid gap-3 md:grid-cols-2">
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Institution<span class="text-red-600">*</span></label>
+                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="Collaborating institution" value=""/>
+                    </div>
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Contact Phone Number (optional)</label>
+                        <input type="tel" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value=""/>
+                    </div>
+                </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
@@ -266,8 +256,6 @@
                     </div>
                 </section>
 
-                <hr class="border-gray-200">
-
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Experimental Plan Summary <span class="text-red-600">*</span></label>
@@ -275,19 +263,16 @@
                     </div>
                 </section>
 
-                <hr class="border-gray-200">
+                {#<section class="grid gap-3">#}
+                    {#<div class="grid gap-1">#}
+                        {#<label class="text-sm text-gray-700">Funding Source</label>#}
+                        {#<textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="3" placeholder="List funding sources (if applicable)..."></textarea>#}
+                    {#</div>#}
+                {#</section>#}
 
-                <section class="grid gap-3">
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Funding Source</label>
-                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="3" placeholder="List funding sources (if applicable)..."></textarea>
-                    </div>
-                </section>
-
-                <div class="pt-2">
-                    <button type="submit" 
-                            class="rounded-xl bg-[#b31b1b] px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-[#b31b1b]/90 focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 transition">
-                        Submit Inquiry
+                <div class="flex items-center gap-3">
+                    <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">
+                        Submit
                     </button>
                 </div>
 
