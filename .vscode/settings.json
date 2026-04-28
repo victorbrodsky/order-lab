@@ -2,9 +2,6 @@
     "editor.fontSize": 15,
     "editor.fontVariations": false,
     "editor.fontWeight": "normal",
-    //"editor.fontFamily": "monospace",
-    //"editor.backgroundColor": "#f6ebbc",
-    //"editor.foregroundColor": "#FFFFFF",
     "editor.fontFamily": "Monospaced",
     "editor.cursorStyle": "line",
     "editor.allowVariableFonts": true,
@@ -13,6 +10,5 @@
     },
     "php.validate.executablePath": "",
     "editor.fontLigatures": false,
-    "notebook.markup.fontFamily": "",
-    //"workbench.colorTheme": "Default Dark+ (default dark)",
+    "notebook.markup.fontFamily": ""
 }
