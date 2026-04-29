@@ -116,6 +116,7 @@ class DefaultController extends OrderAbstractController
         );
     }
 
+    //Exp Cell Therapy Lab
     #[Route(path: '/experimental-cellular-therapy-lab', name: 'ctp_ect', methods: ['GET'])]
     #[Template('AppCtpBundle/Home/ect.html.twig')]
     public function ectAction( Request $request ) {
@@ -124,6 +125,36 @@ class DefaultController extends OrderAbstractController
             'title' => $title,
         );
     }
+
+    #[Route(path: '/genomics-lab', name: 'ctp_genomiclab', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/genomics-lab.html.twig')]
+    public function genomicLabAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    //CP Research Lab
+    #[Route(path: '/clinical-pathology-research-lab', name: 'ctp_cpresearchlab', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/cp-research-lab.html.twig')]
+    public function cpResearchLabAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    //Comp Path Lab
+    #[Route(path: '/computational-pathology-lab', name: 'ctp_comppathlab', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/comppathlab.html.twig')]
+    public function expCellLabAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
 
 
     //TODO:

@@ -109,7 +109,8 @@
             <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
                aria-label="Go to HistoCore and IHC Lab" 
                {#href="/ctp_site/localhost_3000/histocore.html">#}
-                href="{{ path('ctp_histocore-and-ihc-lab') }}">
+                href="{{ path('ctp_histocore-and-ihc-lab') }}"
+            >
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="p-6 flex flex-col gap-2 min-h-[190px]">
                         <div class="flex items-center gap-2">
@@ -136,7 +137,8 @@
             <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
                aria-label="Go to Multiplex Lab (MISI)" 
                {#href="/ctp_site/localhost_3000/misi-lab.html">#}
-               href="{{ path('ctp_misi-lab') }}">
+               href="{{ path('ctp_misi-lab') }}"
+            >
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="p-6 flex flex-col gap-2 min-h-[190px]">
                         <div class="flex items-center gap-2">
@@ -159,7 +161,9 @@
             {# Comp Path Lab #}
             <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
                aria-label="Go to Computational Path Lab" 
-               href="/ctp_site/localhost_3000/computational-pathology.html">
+               {#href="/ctp_site/localhost_3000/computational-pathology.html"#}
+               href="{{ path('ctp_comppathlab') }}"
+            >
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="p-6 flex flex-col gap-2 min-h-[190px]">
                         <div class="flex items-center gap-2">
@@ -193,7 +197,9 @@
             {# Genomics Lab #}
             <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
                aria-label="Go to Genomics Lab" 
-               href="/ctp_site/localhost_3000/genomics.html">
+               {#href="/ctp_site/localhost_3000/genomics.html"#}
+               href="{{ path('ctp_genomiclab') }}"
+            >
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="p-6 flex flex-col gap-2 min-h-[190px]">
                         <div class="flex items-center gap-2">
@@ -212,7 +218,7 @@
                             </svg>
                             <h3 class="text-lg font-semibold text-wcm-red leading-snug">Genomics Lab</h3>
                         </div>
-                        <p class="text-gray-600 clamp-3">NGS assays, methylation array profiling, and more...</p>
+                        <p class="text-gray-600 clamp-3">NGS assays, methylation array profiling, and more... </p>
                         <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
                     </div>
                     <div class="relative h-44 md:h-52 overflow-hidden">
@@ -224,7 +230,9 @@
             {# CP Research Lab #}
             <a class="group block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-wcm-red focus-visible:ring-offset-2 rounded-xl" 
                aria-label="Go to CP Research Lab" 
-               href="/ctp_site/localhost_3000/cp-research.html">
+               {#href="/ctp_site/localhost_3000/cp-research.html"#}
+               href="{{ path('ctp_cpresearchlab') }}"
+            >
                 <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <div class="p-6 flex flex-col gap-2 min-h-[190px]">
                         <div class="flex items-center gap-2">
