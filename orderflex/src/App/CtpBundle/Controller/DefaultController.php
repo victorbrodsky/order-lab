@@ -90,7 +90,7 @@ class DefaultController extends OrderAbstractController
     }
 
     #[Route(path: '/applications', name: 'ctp_applications', methods: ['GET'])]
-    #[Template('AppCtpBundle/Home/applications.html.twig')]
+    #[Template('AppCtpBundle/Home/dashboard.html.twig')]
     public function applicationsAction( Request $request ) {
         $title = 'Center for Translational Pathology';
         return array(
@@ -155,7 +155,65 @@ class DefaultController extends OrderAbstractController
         );
     }
 
+    //Comp Path Lab
+    #[Route(path: '/project-requests', name: 'ctp_project_requests', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/project_requests.html.twig')]
+    public function projectRequestsAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
 
+    //ctp_dashboard_tma
+    #[Route(path: '/tissue-microarrays', name: 'ctp_dashboard_tma', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/dashboard-tma.html.twig')]
+    public function tmaAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    //ctp_dashboard_cohort_generator
+    #[Route(path: '/cohort-generator', name: 'ctp_dashboard_cohort_generator', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/dashboard-cohort-generator.html.twig')]
+    public function cohortGeneratorAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    //ctp_dashboard_regulatory_templates
+    #[Route(path: '/regulatory-templates', name: 'ctp_dashboard_regulatory_templates', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/regulatory-templates.html.twig')]
+    public function regulatoryTemplatesAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    //ctp_dashboard_publications
+    #[Route(path: '/publications-manager', name: 'ctp_dashboard_publications', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    public function publicationsManagerAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    //ctp_dashboard_spore
+    #[Route(path: '/prostate-cancer-research-data-explorer', name: 'ctp_dashboard_spore', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    public function dashboardSporeAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
 
     //TODO:
     //HistoCore & IHC Lab - card does not have border

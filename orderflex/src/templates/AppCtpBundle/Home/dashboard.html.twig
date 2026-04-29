@@ -1,0 +1,169 @@
+
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}Path2Path Dashboard | Center for Translational Pathology{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+    <style>
+        :root {
+            --wcm-red: #b31b1b;
+            --wcm-yellow: #ffc72c;
+        }
+        .bg-wcm-yellow\/20 { background-color: rgba(255, 199, 44, 0.2); }
+        .bg-wcm-yellow\/30 { background-color: rgba(255, 199, 44, 0.3); }
+        .text-wcm-red { color: #b31b1b; }
+        .hover\:bg-red-50\/40:hover { background-color: rgba(254, 226, 226, 0.4); }
+        .group:hover .group-hover\:bg-wcm-yellow\/30 { background-color: rgba(255, 199, 44, 0.3); }
+    </style>
+{% endblock %}
+
+{#{% block header %}#}
+{#<header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">#}
+    {#<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">#}
+        {#<div class="flex items-center gap-3">#}
+            {#<div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">#}
+                {#<img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>#}
+            {#</div>#}
+            {#<div>#}
+                {#<h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>#}
+            {#</div>#}
+        {#</div>#}
+        {#<nav class="flex gap-3 flex-wrap">#}
+            {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>#}
+            {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_new-project-inquiry') }}">New Project Inquiry</a>#}
+            {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_people') }}">People</a>#}
+            {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_publications') }}">Publications</a>#}
+            {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="{{ path('ctp_dashboard') }}">Path2Path Dashboard</a>#}
+        {#</nav>#}
+    {#</div>#}
+{#</header>#}
+{#{% endblock %}#}
+
+{% block content_ctp %}
+<main class="min-h-screen bg-gray-50">
+    <header class="border-b border-gray-200 bg-white">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-semibold text-[#b31b1b]">You are in Path2Path</h1>
+                <p class="text-xs text-gray-600">Internal CTP apps & research tools</p>
+            </div>
+            <a class="text-xs px-2 py-1 border rounded-md hover:bg-gray-100" href="{{ path('ctp_home') }}">Public Site</a>
+        </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-6">
+        <div class="space-y-8">
+            <section class="space-y-1">
+                <h2 class="text-2xl font-bold text-wcm-red">Dashboard</h2>
+                <p class="text-sm text-gray-600">Select an internal application below.</p>
+            </section>
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {# Project Requests #}
+                <a class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center"
+                   href="{{ path('ctp_project_requests') }}">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list h-10 w-10" aria-hidden="true">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <path d="M12 11h4"></path>
+                            <path d="M12 16h4"></path>
+                            <path d="M8 11h.01"></path>
+                            <path d="M8 16h.01"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Project Requests</h3>
+                </a>
+
+                {# Tissue Microarrays #}
+                <a class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center"
+                   href="{{ path('ctp_dashboard_tma') }}">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-grid3x3 lucide-grid-3x3 h-10 w-10" aria-hidden="true">
+                            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                            <path d="M3 9h18"></path>
+                            <path d="M3 15h18"></path>
+                            <path d="M9 3v18"></path>
+                            <path d="M15 3v18"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Tissue Microarrays</h3>
+                </a>
+
+                {# Cohort Generator #}
+                <a class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center"
+                   href="{{ path('ctp_dashboard_cohort_generator') }}">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users h-10 w-10" aria-hidden="true">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Cohort Generator</h3>
+                </a>
+
+                {# Regulatory Templates #}
+                <a class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center"
+                   href="{{ path('ctp_dashboard_regulatory_templates') }}">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-10 w-10" aria-hidden="true">
+                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                            <path d="M10 9H8"></path>
+                            <path d="M16 13H8"></path>
+                            <path d="M16 17H8"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Regulatory Templates</h3>
+                </a>
+
+                {# CTP Publication Manager #}
+                <a class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center"
+                   href="{{ path('ctp_dashboard_publications') }}">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open h-10 w-10" aria-hidden="true">
+                            <path d="M12 7v14"></path>
+                            <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">CTP Publication Manager</h3>
+                </a>
+
+                {# SPORE Dashboard #}
+                <a class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center"
+                   href="{{ path('ctp_dashboard_spore') }}">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chart-column h-10 w-10" aria-hidden="true">
+                            <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+                            <path d="M18 17V9"></path>
+                            <path d="M13 17V5"></path>
+                            <path d="M8 17v-3"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">SPORE Dashboard</h3>
+                </a>
+
+                {# Legacy TRP Site #}
+                <a href="https://view.med.cornell.edu/" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link h-10 w-10" aria-hidden="true">
+                            <path d="M15 3h6v6"></path>
+                            <path d="M10 14 21 3"></path>
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Legacy TRP Site</h3>
+                </a>
+            </section>
+        </div>
+    </main>
+</main>
+{% endblock %}
+
+{#{% block footer %}#}
+{#<footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">#}
+    {#© {{ "now"|date("Y") }} Weill Cornell Medicine · Center for Translational Pathology#}
+{#</footer>#}
+{#{% endblock %}#}

@@ -1,0 +1,56 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}Tissue Microarrays | Path2Path Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+{% endblock %}
+
+{% block content_ctp %}
+<main class="min-h-screen bg-gray-50">
+    <header class="border-b border-gray-200 bg-white">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-semibold text-[#b31b1b]">You are in Path2Path</h1>
+                <p class="text-xs text-gray-600">Internal CTP apps & research tools</p>
+            </div>
+            <a class="text-xs px-2 py-1 border rounded-md hover:bg-gray-100" href="{{ path('ctp_home') }}">Public Site</a>
+        </div>
+        <div class="border-t border-gray-100 bg-gray-50/80">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex justify-center">
+                <a class="inline-flex items-center gap-2 rounded-full bg-[#b31b1b] text-white px-4 py-2 text-xs font-medium shadow hover:bg-[#a01515] transition"
+                   href="{{ path('ctp_applications') }}">
+                    <span class="flex items-center justify-center rounded-full bg-white/15 p-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house h-4 w-4" aria-hidden="true">
+                            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+                            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                    </span>
+                    <span>Back to Dashboard</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-6">
+        <div class="max-w-6xl mx-auto px-4 py-8 space-y-6">
+            <h1 class="text-2xl md:text-3xl font-semibold text-[#b31b1b]">Tissue Microarrays</h1>
+            <p class="text-gray-600 text-sm">Select an existing TMA to view its grid layout, or upload a new TMA design CSV.</p>
+            
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-4 space-y-3">
+                <div class="text-xs font-semibold text-gray-700">Available TMAs</div>
+                <div class="text-gray-400 text-xs">No TMAs found yet. Import a CSV below.</div>
+            </div>
+            
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-4 space-y-4">
+                <h2 class="text-sm font-semibold text-gray-800">Import new TMA CSV</h2>
+                <p class="text-xs text-gray-500">Upload a CSV with required columns: <code class="font-mono">pathCaseNumber, partLetter, blockNumber, tmaPosX, tmaPosY</code>. Other columns are optional.</p>
+                <form class="space-y-3" method="post" action="{{ path('ctp_dashboard_tma') }}" enctype="multipart/form-data">
+                    <input type="file" name="tma_csv" accept=".csv,text/csv" class="block w-full text-xs text-gray-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-[#f8b229] file:text-white hover:file:bg-[#b31b1b]"/>
+                    <button type="submit" disabled class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#b31b1b] text-white hover:bg-[#8a1414] disabled:opacity-50 disabled:cursor-not-allowed transition">Upload & Import</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</main>
+{% endblock %}

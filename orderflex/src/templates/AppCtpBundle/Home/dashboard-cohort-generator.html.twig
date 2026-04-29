@@ -1,0 +1,98 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}Cohort Generator | Path2Path Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+{% endblock %}
+
+{% block content_ctp %}
+<main class="min-h-screen bg-gray-50">
+    <header class="border-b border-gray-200 bg-white">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-semibold text-[#b31b1b]">You are in Path2Path</h1>
+                <p class="text-xs text-gray-600">Internal CTP apps & research tools</p>
+            </div>
+            <a class="text-xs px-2 py-1 border rounded-md hover:bg-gray-100" href="{{ path('ctp_home') }}">Public Site</a>
+        </div>
+        <div class="border-t border-gray-100 bg-gray-50/80">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex justify-center">
+                <a class="inline-flex items-center gap-2 rounded-full bg-[#b31b1b] text-white px-4 py-2 text-xs font-medium shadow hover:bg-[#a01515] transition" href="{{ path('ctp_applications') }}">
+                    <span class="flex items-center justify-center rounded-full bg-white/15 p-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house h-4 w-4" aria-hidden="true">
+                            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+                            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                    </span>
+                    <span>Back to Dashboard</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-6">
+        <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-10 px-4">
+            <div class="max-w-5xl mx-auto">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-semibold text-[#b31b1b] mb-2">Cohort Generator</h1>
+                    <p class="text-gray-600 max-w-2xl">Define research cohorts across CTP using free-text search and structured filters. Start with a broad query, then refine by organ, diagnosis, biomarker, and more.</p>
+                </header>
+                <section class="bg-white rounded-2xl shadow-md border border-slate-100 p-6 md:p-8">
+                    <form class="space-y-6" method="post" action="{{ path('ctp_dashboard_cohort_generator') }}">
+                        <div>
+                            <label for="cohort-query" class="block text-sm font-medium text-gray-700 mb-2">Global cohort search</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search w-5 h-5 text-gray-400" aria-hidden="true">
+                                        <path d="m21 21-4.34-4.34"></path>
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                    </svg>
+                                </span>
+                                <input id="cohort-query" name="cohort_query" type="text" placeholder='e.g. "IDH-mutant gliomas with TERT promoter mutation"' class="w-full pl-11 pr-4 py-3 rounded-full border border-gray-200 bg-slate-50/80 text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#f8b229] focus:border-transparent shadow-sm" value=""/>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">Searches across available fields (diagnosis, procedures, markers, notes, etc.) once wired to the database.</p>
+                        </div>
+                        <div class="grid gap-4 md:grid-cols-3">
+                            <div class="flex flex-col">
+                                <label for="organ-type" class="text-sm font-medium text-gray-700 mb-1.5">Organ type</label>
+                                <select id="organ-type" name="organ_type" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#f8b229] focus:border-transparent shadow-sm">
+                                    <option value="" selected>All organ types</option>
+                                    <option value="brain_cns">Brain & Central Nervous System</option>
+                                    <option value="head_neck">Head & Neck</option>
+                                    <option value="lung_mediastinum">Lung & Mediastinum</option>
+                                    <option value="cardiovascular">Cardiovascular</option>
+                                    <option value="breast">Breast</option>
+                                    <option value="gi_tract">Gastrointestinal Tract</option>
+                                    <option value="hepato_pancreas">Hepatobiliary & Pancreas</option>
+                                    <option value="gu">Genitourinary (Kidney / Bladder / Prostate)</option>
+                                    <option value="gyn">Gynecologic</option>
+                                    <option value="bone_soft_tissue">Bone & Soft Tissue</option>
+                                    <option value="skin">Skin / Dermatopathology</option>
+                                    <option value="heme">Hematolymphoid System</option>
+                                    <option value="endocrine">Endocrine (Thyroid / Parathyroid / Adrenal)</option>
+                                    <option value="peds_dev">Pediatric / Developmental</option>
+                                    <option value="other">Other / Unknown Primary</option>
+                                </select>
+                                <p class="mt-1 text-xs text-gray-500">Major organ / system for the index specimen or primary site.</p>
+                            </div>
+                            <div class="flex flex-col opacity-60 pointer-events-none">
+                                <label class="text-sm font-medium text-gray-400 mb-1.5">+ Add filter (diagnosis, biomarker, etc.)</label>
+                                <div class="rounded-lg border border-dashed border-gray-200 bg-slate-50 px-3 py-2 text-xs text-gray-400 flex items-center">This slot can be wired to new schema fields (e.g. diagnosis, gene panel, trial arm).</div>
+                            </div>
+                            <div class="flex flex-col opacity-60 pointer-events-none">
+                                <label class="text-sm font-medium text-gray-400 mb-1.5">+ Add filter (timeframe, site, etc.)</label>
+                                <div class="rounded-lg border border-dashed border-gray-200 bg-slate-50 px-3 py-2 text-xs text-gray-400 flex items-center">Additional dropdowns can be added as your database grows.</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-2">
+                            <div class="text-xs text-gray-500">Results table and export options (CSV, REDCap, etc.) can appear below once the query API is implemented.</div>
+                            <button type="submit" class="px-5 py-2.5 rounded-full text-sm font-medium text-white bg-[#f8b229] hover:bg-[#b31b1b] transition shadow-sm">Generate cohort</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </main>
+</main>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+
+{% block title %}Regulatory Templates | Path2Path Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">
+{% endblock %}
+
+{% block content_ctp %}
+<main class="min-h-screen bg-gray-50">
+    <header class="border-b border-gray-200 bg-white">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-semibold text-[#b31b1b]">You are in Path2Path</h1>
+                <p class="text-xs text-gray-600">Internal CTP apps & research tools</p>
+            </div>
+            <a class="text-xs px-2 py-1 border rounded-md hover:bg-gray-100" href="{{ path('ctp_home') }}">Public Site</a>
+        </div>
+        <div class="border-t border-gray-100 bg-gray-50/80">
+            <div class="max-w-6xl mx-auto px-4 py-3 flex justify-center">
+                <a class="inline-flex items-center gap-2 rounded-full bg-[#b31b1b] text-white px-4 py-2 text-xs font-medium shadow hover:bg-[#a01515] transition" href="{{ path('ctp_applications') }}">
+                    <span class="flex items-center justify-center rounded-full bg-white/15 p-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-house h-4 w-4" aria-hidden="true">
+                            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+                            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                    </span>
+                    <span>Back to Dashboard</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-6">
+        <div class="min-h-[calc(100vh-4rem)] bg-slate-50 py-10 px-4">
+            <div class="max-w-5xl mx-auto">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-semibold text-[#b31b1b] mb-2">Regulatory Templates</h1>
+                    <p class="text-gray-600 max-w-2xl">Generate structured templates for IRB and MTA submissions related to CTP projects. Select a pathway below to get started.</p>
+                </header>
+                <section class="mb-6">
+                    <div class="flex flex-wrap gap-4">
+                        <button type="button" class="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-red shadow-sm transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text w-5 h-5" aria-hidden="true">
+                                <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                                <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                                <path d="M10 9H8"></path>
+                                <path d="M16 13H8"></path>
+                                <path d="M16 17H8"></path>
+                            </svg>
+                            <span>IRB Templates</span>
+                        </button>
+                        <button type="button" class="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-orange hover:bg-wcm-red transition shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-right w-5 h-5" aria-hidden="true">
+                                <path d="M8 3 4 7l4 4"></path>
+                                <path d="M4 7h16"></path>
+                                <path d="m16 21 4-4-4-4"></path>
+                                <path d="M20 17H4"></path>
+                            </svg>
+                            <span>MTA Templates</span>
+                        </button>
+                        <button type="button" class="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-orange hover:bg-wcm-red transition shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list w-5 h-5" aria-hidden="true">
+                                <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <path d="M12 11h4"></path>
+                                <path d="M12 16h4"></path>
+                                <path d="M8 11h.01"></path>
+                                <path d="M8 16h.01"></path>
+                            </svg>
+                            <span>Additional Study Templates</span>
+                        </button>
+                    </div>
+                </section>
+                <section class="bg-white rounded-2xl shadow-md border border-slate-100 p-6 md:p-8">
+                    <div class="space-y-6">
+                        <div class="grid gap-4 md:grid-cols-[minmax(0,1.3fr)_minmax(0,2fr)] items-start">
+                            <div class="flex flex-col">
+                                <label for="study-type" class="text-sm font-medium text-gray-900 mb-1.5">Study type</label>
+                                <select id="study-type" name="study_type" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-wcm-ink focus:outline-none focus:ring-2 focus:ring-wcm-orange focus:border-transparent shadow-sm">
+                                    <option value="" selected>Select a study type…</option>
+                                    <option value="retrospective_tissue">Retrospective tissue study</option>
+                                    <option value="retrospective_chart">Retrospective chart review</option>
+                                    <option value="in_vitro">In vitro studies</option>
+                                    <option value="digital_ai">Retrospective digital data ML/AI project</option>
+                                </select>
+                                <p class="mt-1 text-xs text-wcm-muted">Choose the regulatory pathway that best matches your project. For now, only the digital ML/AI template is fully wired to generate a Word document.</p>
+                            </div>
+                            <div class="hidden md:block text-xs text-wcm-muted bg-slate-50 border border-dashed border-slate-200 rounded-xl p-4">
+                                <p class="font-semibold mb-1 text-wcm-ink">How this will work:</p>
+                                <ul class="list-disc ml-4 space-y-1">
+                                    <li>Complete the dynamic form for the selected study type.</li>
+                                    <li>The system assembles a structured IRB template using your responses.</li>
+                                    <li>You'll be able to export a formatted Word document for submission or upload.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-wcm-muted">Select a study type to begin filling in the IRB template.</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+</main>
+{% endblock %}
