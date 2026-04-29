@@ -40,7 +40,7 @@
                 </header>
                 <section class="mb-6">
                     <div class="flex flex-wrap gap-4">
-                        <button type="button" class="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-red shadow-sm transition">
+                        <button type="button" id="btn-irb" data-tab="irb" class="tab-btn flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-red shadow-sm transition">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text w-5 h-5" aria-hidden="true">
                                 <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -50,7 +50,7 @@
                             </svg>
                             <span>IRB Templates</span>
                         </button>
-                        <button type="button" class="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-orange hover:bg-wcm-red transition shadow-sm">
+                        <button type="button" id="btn-mta" data-tab="mta" class="tab-btn flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-orange hover:bg-wcm-red transition shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-right w-5 h-5" aria-hidden="true">
                                 <path d="M8 3 4 7l4 4"></path>
                                 <path d="M4 7h16"></path>
@@ -59,7 +59,7 @@
                             </svg>
                             <span>MTA Templates</span>
                         </button>
-                        <button type="button" class="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-orange hover:bg-wcm-red transition shadow-sm">
+                        <button type="button" id="btn-additional" data-tab="additional" class="tab-btn flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-wcm-orange hover:bg-wcm-red transition shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list w-5 h-5" aria-hidden="true">
                                 <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
                                 <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
@@ -72,12 +72,13 @@
                         </button>
                     </div>
                 </section>
-                <section class="bg-white rounded-2xl shadow-md border border-slate-100 p-6 md:p-8">
+                {# IRB Templates Panel #}
+                <section id="tab-irb" class="tab-panel bg-white rounded-2xl shadow-md border border-slate-100 p-6 md:p-8">
                     <div class="space-y-6">
                         <div class="grid gap-4 md:grid-cols-[minmax(0,1.3fr)_minmax(0,2fr)] items-start">
                             <div class="flex flex-col">
-                                <label for="study-type" class="text-sm font-medium text-gray-900 mb-1.5">Study type</label>
-                                <select id="study-type" name="study_type" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-wcm-ink focus:outline-none focus:ring-2 focus:ring-wcm-orange focus:border-transparent shadow-sm">
+                                <label for="study-type-irb" class="text-sm font-medium text-gray-900 mb-1.5">Study type</label>
+                                <select id="study-type-irb" name="study_type" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-wcm-ink focus:outline-none focus:ring-2 focus:ring-wcm-orange focus:border-transparent shadow-sm">
                                     <option value="" selected>Select a study type…</option>
                                     <option value="retrospective_tissue">Retrospective tissue study</option>
                                     <option value="retrospective_chart">Retrospective chart review</option>
@@ -98,8 +99,89 @@
                         <div class="mt-4 text-sm text-wcm-muted">Select a study type to begin filling in the IRB template.</div>
                     </div>
                 </section>
+
+                {# MTA Templates Panel #}
+                <section id="tab-mta" class="tab-panel hidden bg-white rounded-2xl shadow-md border border-slate-100 p-6 md:p-8">
+                    <div class="space-y-6">
+                        <div class="grid gap-4 md:grid-cols-[minmax(0,1.3fr)_minmax(0,2fr)] items-start">
+                            <div class="flex flex-col">
+                                <label for="mta-type" class="text-sm font-medium text-gray-900 mb-1.5">MTA type</label>
+                                <select id="mta-type" name="mta_type" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-wcm-ink focus:outline-none focus:ring-2 focus:ring-wcm-orange focus:border-transparent shadow-sm">
+                                    <option value="" selected>Select an MTA type…</option>
+                                    <option value="incoming">Incoming MTA (to WCM)</option>
+                                    <option value="outgoing">Outgoing MTA (from WCM)</option>
+                                </select>
+                                <p class="mt-1 text-xs text-wcm-muted">Select the type of Material Transfer Agreement you need to process.</p>
+                            </div>
+                            <div class="hidden md:block text-xs text-wcm-muted bg-slate-50 border border-dashed border-slate-200 rounded-xl p-4">
+                                <p class="font-semibold mb-1 text-wcm-ink">MTA Process:</p>
+                                <ul class="list-disc ml-4 space-y-1">
+                                    <li>Choose whether materials are coming to or leaving WCM.</li>
+                                    <li>Complete the MTA details and material specifications.</li>
+                                    <li>The system will generate a draft MTA for legal review.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-wcm-muted">Select an MTA type to begin the template.</div>
+                    </div>
+                </section>
+
+                {# Additional Study Templates Panel #}
+                <section id="tab-additional" class="tab-panel hidden bg-white rounded-2xl shadow-md border border-slate-100 p-6 md:p-8">
+                    <div class="space-y-6">
+                        <div class="grid gap-4 md:grid-cols-[minmax(0,1.3fr)_minmax(0,2fr)] items-start">
+                            <div class="flex flex-col">
+                                <label for="additional-type" class="text-sm font-medium text-gray-900 mb-1.5">Template type</label>
+                                <select id="additional-type" name="additional_type" class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-wcm-ink focus:outline-none focus:ring-2 focus:ring-wcm-orange focus:border-transparent shadow-sm">
+                                    <option value="" selected>Select a template type…</option>
+                                    <option value="consent_form">Consent Form Template</option>
+                                    <option value="data_sharing">Data Sharing Agreement</option>
+                                    <option value="collaboration">Collaboration Agreement</option>
+                                    <option value="budget">Study Budget Template</option>
+                                </select>
+                                <p class="mt-1 text-xs text-wcm-muted">Select additional study documentation templates.</p>
+                            </div>
+                            <div class="hidden md:block text-xs text-wcm-muted bg-slate-50 border border-dashed border-slate-200 rounded-xl p-4">
+                                <p class="font-semibold mb-1 text-wcm-ink">Additional Templates:</p>
+                                <ul class="list-disc ml-4 space-y-1">
+                                    <li>Access specialized templates for research projects.</li>
+                                    <li>Customize forms for your specific study needs.</li>
+                                    <li>Export documents for institutional approval.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-wcm-muted">Select a template type to generate additional study documents.</div>
+                    </div>
+                </section>
             </div>
         </div>
     </main>
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+
+            // Update button styles
+            tabBtns.forEach(b => {
+                b.classList.remove('bg-wcm-red');
+                b.classList.add('bg-wcm-orange', 'hover:bg-wcm-red');
+            });
+            this.classList.remove('bg-wcm-orange', 'hover:bg-wcm-red');
+            this.classList.add('bg-wcm-red');
+
+            // Show/hide panels
+            tabPanels.forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            document.getElementById('tab-' + targetTab).classList.remove('hidden');
+        });
+    });
+});
+</script>
 {% endblock %}
