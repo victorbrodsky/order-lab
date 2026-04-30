@@ -103,7 +103,11 @@
             </div>
 
             {# WCM Investigator Form #}
-            <form id="wcm-form" class="tab-content active space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+            {#border caused by class 'tab-content'#}
+            <form id="wcm-form"
+                  class="tab-content active space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm"
+                  style="border: none;"
+            >
 
                 <section class="grid gap-3 md:w-1/2">
                     <div class="grid gap-1">
@@ -177,8 +181,11 @@
             </form>
 
             {# External Collaboration Form (initially hidden) #}
-            <form id="external-form" class="tab-content space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                
+            <form id="external-form"
+                  class="tab-content space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm"
+                  style="border: none;"
+            >
+
                 <section class="grid gap-3 md:w-1/2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
