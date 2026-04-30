@@ -41,16 +41,16 @@
             
             if (tab === 'wcm') {
                 wcmBtn.classList.add('bg-[#b31b1b]', 'text-white', 'border-[#b31b1b]');
-                wcmBtn.classList.remove('bg-white', 'text-[#b31b1b]', 'border-gray-300');
+                wcmBtn.classList.remove('bg-white', 'text-[#b31b1b]', 'border-gray-300', 'hover:bg-red-50');
                 externalBtn.classList.remove('bg-[#b31b1b]', 'text-white', 'border-[#b31b1b]');
-                externalBtn.classList.add('bg-white', 'text-[#b31b1b]', 'border-gray-300');
+                externalBtn.classList.add('bg-white', 'text-[#b31b1b]', 'border-gray-300', 'hover:bg-red-50');
                 wcmForm.classList.add('active');
                 externalForm.classList.remove('active');
             } else {
                 externalBtn.classList.add('bg-[#b31b1b]', 'text-white', 'border-[#b31b1b]');
-                externalBtn.classList.remove('bg-white', 'text-[#b31b1b]', 'border-gray-300');
+                externalBtn.classList.remove('bg-white', 'text-[#b31b1b]', 'border-gray-300', 'hover:bg-red-50');
                 wcmBtn.classList.remove('bg-[#b31b1b]', 'text-white', 'border-[#b31b1b]');
-                wcmBtn.classList.add('bg-white', 'text-[#b31b1b]', 'border-gray-300');
+                wcmBtn.classList.add('bg-white', 'text-[#b31b1b]', 'border-gray-300', 'hover:bg-red-50');
                 externalForm.classList.add('active');
                 wcmForm.classList.remove('active');
             }
@@ -89,15 +89,17 @@
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <button type="button" id="wcm-tab-btn" onclick="switchTab('wcm')"
-                            class="px-4 py-2 rounded-lg border transition text-sm font-medium bg-[#b31b1b] text-white border-[#b31b1b] shadow">
+                            class="px-4 py-2 rounded-lg border transition text-sm font-medium bg-[#b31b1b] text-white border-[#b31b1b] shadow"
+                    >
                         WCM Investigator Project Inquiry
                     </button>
                     <button type="button" id="external-tab-btn" onclick="switchTab('external')"
-                            class="px-4 py-2 rounded-lg border transition text-sm font-medium bg-white text-[#b31b1b] border-gray-300">
+                            class="px-4 py-2 rounded-lg border transition text-sm font-medium bg-white text-[#b31b1b] border-gray-300 hover:bg-red-50">
                         External Collaboration / Project Inquiry
                     </button>
                 </div>
             </div>
+
 
             {# WCM Investigator Form #}
             <form id="wcm-form" class="tab-content active space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
