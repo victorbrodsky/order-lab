@@ -1528,6 +1528,13 @@ class UserSecurityUtil {
         return $user;
     }
 
+    public function getUserByCwid( $cwid ) {
+        if( $cwid) {
+            return $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
+        }
+        return null;
+    }
+
     //mimic depreciated mysql_real_escape_string
     public function mysql_escape_mimic($inp) {
 

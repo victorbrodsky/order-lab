@@ -339,12 +339,18 @@
                     <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Faculty leadership</h2>
                 </div>
                 <div class="grid gap-5 md:grid-cols-2">
-                    <a href="#" class="block transition hover:-translate-y-0.5">
+                    {#user_security_utility.getUserByCwid#}
+                    <a href="https://weillcornell.org/" class="block transition hover:-translate-y-0.5">
                         <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur h-full p-5">
                             <div class="flex items-start gap-4">
                                 <div class="h-12 w-12 shrink-0 rounded-2xl bg-zinc-100 ring-1 ring-red-200" aria-hidden="true">
                                     <div class="flex h-full w-full items-center justify-center">
-                                        <div class="h-2.5 w-2.5 rounded-full bg-red-500"></div>
+                                        {#<div class="h-2.5 w-2.5 rounded-full bg-red-500"></div>#}
+                                        <img
+                                            src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/luidgi_marchionni.jpg"
+                                            alt="Luigi Marchionni headshot"
+                                            {#class="h-full w-full object-cover"#}
+                                        >
                                     </div>
                                 </div>
                                 <div class="min-w-0">
@@ -359,12 +365,17 @@
                             </div>
                         </div>
                     </a>
-                    <a href="#" class="block transition hover:-translate-y-0.5">
+                    <a href="https://weillcornell.org/" class="block transition hover:-translate-y-0.5">
                         <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur h-full p-5">
                             <div class="flex items-start gap-4">
                                 <div class="h-12 w-12 shrink-0 rounded-2xl bg-zinc-100 ring-1 ring-sky-200" aria-hidden="true">
                                     <div class="flex h-full w-full items-center justify-center">
-                                        <div class="h-2.5 w-2.5 rounded-full bg-sky-600"></div>
+                                        {#<div class="h-2.5 w-2.5 rounded-full bg-sky-600"></div>#}
+                                        <img
+                                            src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/headshot-pisapia7c72.jpeg"
+                                            alt="Pisapia headshot"
+                                            class="h-full w-full object-cover"
+                                        >
                                     </div>
                                 </div>
                                 <div class="min-w-0">
