@@ -10,6 +10,8 @@
     <link rel="icon" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico" sizes="256x256" type="image/x-icon">
     <style>
         /* Tailwind CSS Custom Config for WCM */
+        .min-h-\[220px\] { min-height: 220px; }
+        .gap-y-3 { row-gap: 0.75rem; }
         :root {
             --wcm-red: #b31b1b;
             --wcm-gold: #ffc72c;
@@ -23,6 +25,18 @@
         .bg-wcm-red\/90 { background-color: rgba(179, 27, 27, 0.9); }
         .hover\:bg-wcm-red\/90:hover { background-color: rgba(179, 27, 27, 0.9); }
         .focus-visible\:ring-wcm-red:focus-visible { --tw-ring-color: var(--wcm-red); }
+        /*.clamp-3 {*/
+            /*display: -webkit-box;*/
+            /*-webkit-line-clamp: 3;*/
+            /*-webkit-box-orient: vertical;*/
+            /*overflow: hidden;*/
+        /*}*/
+        .clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
         .clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -110,7 +124,7 @@
                {#href="/ctp_site/localhost_3000/histocore.html">#}
                 href="{{ path('ctp_histocore_and_ihc_lab') }}"
             >
-                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm h-full">
                     {#<div class="p-6 flex flex-col gap-2 min-h-[190px]">#}
                     {#<div class="p-[23px] flex flex-col gap-2 min-h-[190px]"> - Top/Bottom padding = 24px, Left/Right padding = 23px#}
                     {#<div class="py-6 px-[23px] flex flex-col gap-2 min-h-[190px]">#}
@@ -124,7 +138,7 @@
                                 <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"></path>
                                 <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path>
                             </svg>
-                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">HistoCore and IHC Lab</h3>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug clamp-2">HistoCore and IHC Lab</h3>
                         </div>
                         <p class="text-gray-600 clamp-3">Histology, IHC, and tissue microarrays for translational projects.</p>
                         <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
@@ -141,7 +155,7 @@
                {#href="/ctp_site/localhost_3000/misi-lab.html">#}
                href="{{ path('ctp_misi-lab') }}"
             >
-                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm h-full">
                     <div class="p-5 flex flex-col gap-2 min-h-[220px]">
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-stack w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
@@ -149,7 +163,7 @@
                                 <path d="M10 16c-1.1 0-2-.9-2-2v-4c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2"></path>
                                 <rect width="8" height="8" x="14" y="14" rx="2"></rect>
                             </svg>
-                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">Multiplex Lab</h3>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug clamp-2">Multiplex Lab</h3>
                         </div>
                         <p class="text-gray-600 clamp-3">Multiplex IF, multispectral imaging, and high-throughput slide analysis.</p>
                         <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
@@ -166,7 +180,7 @@
                {#href="/ctp_site/localhost_3000/computational-pathology.html"#}
                href="{{ path('ctp_comppathlab') }}"
             >
-                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm h-full">
                     <div class="p-5 flex flex-col gap-2 min-h-[220px]">
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cpu w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
@@ -185,7 +199,7 @@
                                 <rect x="4" y="4" width="16" height="16" rx="2"></rect>
                                 <rect x="8" y="8" width="8" height="8" rx="1"></rect>
                             </svg>
-                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">Comp Path Lab</h3>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug clamp-2">Comp Path Lab</h3>
                         </div>
                         <p class="text-gray-600 clamp-3">Cloud storage, quantitative image analysis, and AI/ML model support.</p>
                         <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
@@ -218,7 +232,7 @@
                                 <path d="m7 18 2.891 2.891"></path>
                                 <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"></path>
                             </svg>
-                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">Genomics Lab</h3>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug clamp-2">Genomics Lab</h3>
                         </div>
                         <p class="text-gray-600 clamp-3">NGS assays, methylation array profiling, and more...</p>
                         {#<p class="text-gray-600 clamp-3">NGS assays, methylation array profiling, and more... <br><br></p>#}
@@ -242,7 +256,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-droplet w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
                                 <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path>
                             </svg>
-                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">CP Research Lab</h3>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug clamp-2">CP Research Lab</h3>
                         </div>
                         <p class="text-gray-600 clamp-3">Biomarker discovery through blood analysis, clinical chemistry, and more.</p>
                         <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
@@ -258,7 +272,7 @@
                aria-label="Go to Experimental Cellular Therapy" 
                {#href="/ctp_site/localhost_3000/ect.html">#}
                href="{{ path('ctp_ect') }}">
-                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm h-full">
                     <div class="p-5 flex flex-col gap-2 min-h-[220px]">
                         <div class="flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-conical w-10 h-10 text-wcm-red shrink-0" aria-hidden="true">
@@ -266,7 +280,7 @@
                                 <path d="M6.453 15h11.094"></path>
                                 <path d="M8.5 2h7"></path>
                             </svg>
-                            <h3 class="text-lg font-semibold text-wcm-red leading-snug">Exp Cell Therapy Lab</h3>
+                            <h3 class="text-lg font-semibold text-wcm-red leading-snug clamp-2">Exp Cell Therapy Lab</h3>
                         </div>
                         <p class="text-gray-600 clamp-3">Cutting edge cGMP support to generate Experimental Cell-based therapeutic products.</p>
                         <p class="mt-auto text-sm font-medium text-wcm-red opacity-0 transition group-hover:opacity-100">Explore →</p>
