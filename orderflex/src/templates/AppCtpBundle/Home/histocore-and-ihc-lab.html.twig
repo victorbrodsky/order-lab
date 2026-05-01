@@ -505,8 +505,20 @@
                                 </div>
                                 <div>
                                     <div class="text-sm font-semibold text-zinc-900">Phone</div>
-                                    <div class="mt-1 text-sm text-zinc-700">Main: (212) 746-6464</div>
-                                    <div class="text-sm text-zinc-700">Surgical Pathology: (212) 746-2700</div>
+                                    <div class="mt-1 text-sm text-zinc-700">
+                                        {#Main: (212) 746-6464#}
+                                        Main:
+                                        <a href="tel:+12127466464" class="text-blue-600 hover:underline">
+                                            (212) 746-6464
+                                        </a>
+                                    </div>
+                                    <div class="text-sm text-zinc-700">
+                                        {#Surgical Pathology: (212) 746-2700#}
+                                        Surgical Pathology:
+                                        <a href="tel:+12127462700" class="text-blue-600 hover:underline">
+                                            (212) 746-2700
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex gap-3 sm:col-span-2">
@@ -565,7 +577,13 @@
         <div class="border-t border-zinc-200 bg-white">
             <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-zinc-600 sm:px-6 lg:px-8">
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <div>HistoCore and IHC Lab — Center for Translational Pathology</div>
+                    <div>
+                        {#HistoCore and IHC Lab — Center for Translational Pathology#}
+                        HistoCore and IHC Lab —
+                        <a href="{{ department_url }}" target="_blank">{{ department_name }}</a>
+                        —
+                        <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>
+                    </div>
                     <a href="#top" class="font-medium text-zinc-900 underline-offset-4 hover:underline">Back to top</a>
                 </div>
             </div>

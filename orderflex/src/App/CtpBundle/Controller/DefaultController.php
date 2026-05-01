@@ -196,7 +196,7 @@ class DefaultController extends OrderAbstractController
     }
 
     //ctp_dashboard_publications
-    #[Route(path: '/publications-manager', name: 'ctp_dashboard_publications', methods: ['GET'])]
+    #[Route(path: '/publication-manager', name: 'ctp_dashboard_publications', methods: ['GET'])]
     #[Template('AppCtpBundle/Home/empty.html.twig')]
     public function publicationsManagerAction( Request $request ) {
         $title = 'Center for Translational Pathology';

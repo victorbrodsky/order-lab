@@ -303,7 +303,8 @@
                     <h2 class="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl">Resources</h2>
                 </div>
                 <div class="grid gap-4 lg:grid-cols-2">
-                    <a href="#" class="group flex items-start justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left transition hover:border-zinc-300 hover:bg-zinc-50">
+                    <a href="{{ path('translationalresearch_antibodies_group_by_panel') }}"  target="_blank"
+                       class="group flex items-start justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-left transition hover:border-zinc-300 hover:bg-zinc-50">
                         <div class="min-w-0">
                             <div class="flex items-center gap-2 font-medium text-zinc-900">
                                 <span class="truncate">List of markers available</span>
@@ -424,8 +425,20 @@
                                 </div>
                                 <div>
                                     <div class="text-sm font-semibold text-zinc-900">Phone</div>
-                                    <div class="mt-1 text-sm text-zinc-700">Main: (212) 746-6464</div>
-                                    <div class="text-sm text-zinc-700">Surgical Pathology: (212) 746-2700</div>
+                                    <div class="mt-1 text-sm text-zinc-700">
+                                        {#Main: (212) 746-6464#}
+                                        Main:
+                                        <a href="tel:+12127466464" class="text-blue-600 hover:underline">
+                                            (212) 746-6464
+                                        </a>
+                                    </div>
+                                    <div class="text-sm text-zinc-700">
+                                        {#Surgical Pathology: (212) 746-2700#}
+                                        Surgical Pathology:
+                                        <a href="tel:+12127462700" class="text-blue-600 hover:underline">
+                                            (212) 746-2700
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex gap-3 sm:col-span-2">
@@ -463,9 +476,12 @@
                     <div class="rounded-2xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur p-6">
                         <div class="text-sm font-semibold text-zinc-900">Related CTP pages</div>
                         <div class="mt-4 space-y-3 text-sm">
-                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="{{ path('ctp_home') }}">Translational Pathology</a>
-                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="{{ path('ctp_new-project-inquiry') }}">Services & Request Intake</a>
-                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50" href="{{ path('ctp_comppathlab') }}">Computational Pathology</a>
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50"
+                               href="{{ path('ctp_home') }}">Translational Pathology</a>
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50"
+                               href="{{ path('ctp_new-project-inquiry') }}">Services & Request Intake</a>
+                            <a class="block rounded-xl border border-zinc-200 bg-white px-4 py-3 font-medium text-zinc-900 transition hover:bg-zinc-50"
+                               href="{{ path('ctp_comppathlab') }}">Computational Pathology</a>
                         </div>
                         <div class="mt-6 rounded-2xl border border-zinc-200 bg-white p-5">
                             <div class="text-sm font-semibold text-zinc-900">CTA</div>
@@ -481,7 +497,14 @@
         <div class="border-t border-zinc-200 bg-white">
             <div class="mx-auto max-w-6xl px-4 py-8 text-sm text-zinc-600 sm:px-6 lg:px-8">
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <div>Pathology and Laboratory Medicine — Weill Cornell Medical College</div>
+                    {#<div>Pathology and Laboratory Medicine — Weill Cornell Medical College</div>#}
+                    <div>
+                        {#HistoCore and IHC Lab — Center for Translational Pathology#}
+                        MISI Lab —
+                        <a href="{{ department_url }}" target="_blank">{{ department_name }}</a>
+                        —
+                        <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>
+                    </div>
                     <a href="#top" class="font-medium text-zinc-900 underline-offset-4 hover:underline">Back to top</a>
                 </div>
             </div>
