@@ -98,7 +98,7 @@ class DefaultController extends OrderAbstractController
         );
     }
     
-    #[Route(path: '/histocore-and-ihc-lab', name: 'ctp_histocore-and-ihc-lab', methods: ['GET'])]
+    #[Route(path: '/histocore-and-ihc-lab', name: 'ctp_histocore_and_ihc_lab', methods: ['GET'])]
     #[Template('AppCtpBundle/Home/histocore-and-ihc-lab.html.twig')]
     public function histocoreAndIhcLabAction( Request $request ) {
         $title = 'Center for Translational Pathology';
@@ -209,6 +209,61 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/prostate-cancer-research-data-explorer', name: 'ctp_dashboard_spore', methods: ['GET'])]
     #[Template('AppCtpBundle/Home/empty.html.twig')]
     public function dashboardSporeAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    //Investigator engagement guide
+    #[Route(path: '/experimental-cellular-therapy-lab/investigator-engagement-guide', name: 'ctp_investigator_engagement_guide', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    public function investigatorEngagementGuideAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+    
+    #[Route(path: '/experimental-cellular-therapy-lab/irb-ready-workflow-summary', name: 'ctp_irb_ready_workflow_summary', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    public function irbWorkflowSummaryAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+    
+    #[Route(path: '/experimental-cellular-therapy-lab/service-menu', name: 'ctp_ctem_service', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    public function ctemServiceAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    #[Route(path: '/histocore-and-ihc-lab/service-menu', name: 'ctp_service_menu', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    public function serviceMenuAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    #[Route(path: '/histocore-and-ihc-lab/sample-submission-checklist', name: 'ctp_sample_submission_checklist', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    public function sampleSubmissionChecklistAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+        return array(
+            'title' => $title,
+        );
+    }
+
+    #[Route(path: '/histocore-and-ihc-lab/publications', name: 'ctp_histocore_publications', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    public function histocorePublicationsAction( Request $request ) {
         $title = 'Center for Translational Pathology';
         return array(
             'title' => $title,
