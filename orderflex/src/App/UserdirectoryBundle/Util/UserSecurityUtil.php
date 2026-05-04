@@ -955,6 +955,22 @@ class UserSecurityUtil {
                 $roles = array("ROLE_CTP_ADMIN");
             }
 
+            if( $sitename == $this->container->getParameter('tma.sitename') ) {
+                $roles = array("ROLE_TMA_ADMIN");
+            }
+
+            if( $sitename == $this->container->getParameter('cohortg.sitename') ) {
+                $roles = array("ROLE_COHORTG_ADMIN");
+            }
+            
+            if( $sitename == $this->container->getParameter('regulatoryt.sitename') ) {
+                $roles = array("ROLE_REGULATORYT_ADMIN");
+            }
+            
+            if( $sitename == $this->container->getParameter('spore.sitename') ) {
+                $roles = array("ROLE_SPORE_ADMIN");
+            }
+
             if( $sitename == $this->container->getParameter('translationalresearch.sitename') ) {
                 $roles = array("ROLE_TRANSRES_ADMIN");
             }

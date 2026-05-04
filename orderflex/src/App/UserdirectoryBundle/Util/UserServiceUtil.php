@@ -975,6 +975,10 @@ class UserServiceUtil {
             "callloguploadpath" => "calllog/documents",
             "crnuploadpath" => "crn/documents",
             "ctpuploadpath" => "ctp/documents",
+            "tmauploadpath" => "tma/documents",
+            "regulatorytuploadpath" => "regulatoryt/documents",
+            "cohortguploadpath" => "cohortg/documents",
+            "sporeuploadpath" => "spore/documents",
 
             "mainHomeTitle" => "Welcome to the O R D E R platform!",
             "listManagerTitle" => "List Manager",

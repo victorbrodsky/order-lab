@@ -271,6 +271,7 @@ class MaintenanceListener {
                 strpos((string)$controller,'App\CallLogBundle') !== false ||
                 strpos((string)$controller,'App\CrnBundle') !== false ||
                 strpos((string)$controller,'App\CtpBundle') !== false ||
+                strpos((string)$controller,'App\TmaBundle') !== false ||
                 strpos((string)$controller,'App\TranslationalResearchBundle') !== false ||
                 strpos((string)$controller,'App\DashboardBundle') !== false
         ) {
@@ -409,6 +410,9 @@ class MaintenanceListener {
         }
         if( strpos((string)$controller,'App\CtpBundle') !== false ) {
             return "ctp";
+        }
+        if( strpos((string)$controller,'App\TmaBundle') !== false ) {
+            return "tma";
         }
         if( strpos((string)$controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";

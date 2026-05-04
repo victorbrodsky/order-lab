@@ -79,6 +79,10 @@
             {% set title = "Critical Result Notifications" %}
             {% set favicon = 'glyphicons-pencil.png' %}
         {% endif %}
+        {% if sitename == tma_sitename %}
+            {% set title = "Tissue Microarrays" %}
+            {% set favicon = 'glyphicons-pencil.png' %}
+        {% endif %}
 
         {% if sitename == translationalresearch_sitename %}
             {% set title = "Translational Research" %}

@@ -318,6 +318,9 @@ class ExceptionListener {
         if( strpos((string)$controller,'App\CtpBundle') !== false ) {
             return "ctp";
         }
+        if( strpos((string)$controller,'App\TmaBundle') !== false ) {
+            return "tma";
+        }
         if( strpos((string)$controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";
         }

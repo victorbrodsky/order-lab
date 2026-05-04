@@ -79,6 +79,24 @@ app_tma:
     type:     attribute
     prefix:   /tissue-microarrays
 
+#cohort-generator cohortg
+app_cohortg:
+    resource: "../src/App/CohortgBundle/Controller/"
+    type:     attribute
+    prefix:   /cohort-generator
+
+#Regulatory Templates: regulatory-templates  regulatoryt
+app_regulatoryt:
+    resource: "../src/App/RegulatorytBundle/Controller/"
+    type:     attribute
+    prefix:   /regulatory-templates
+
+#SPORE Dashboard: prostate-cancer-research-data-explorer  spore
+app_prostatec:
+    resource: "../src/App/SporeBundle/Controller/"
+    type:     attribute
+    prefix:   /prostate-cancer-research-data-explorer
+
 app_orderform:
     resource: "../src/App/OrderformBundle/Controller/"
     type:     attribute

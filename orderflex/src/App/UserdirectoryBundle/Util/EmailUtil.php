@@ -151,6 +151,22 @@ class EmailUtil {
                 $sitenameAbbreviation = "ctp";
                 $subject = "[Center for Translational Pathology] " . $subject;
             }
+            if (strpos((string)$url, "/tissue-microarrays/") !== false) {
+                $sitenameAbbreviation = "tma";
+                $subject = "[Tissue Microarrays] " . $subject;
+            }
+            if (strpos((string)$url, "/cohort-generator/") !== false) {
+                $sitenameAbbreviation = "cohortg";
+                $subject = "[Cohort Generator] " . $subject;
+            }
+            if (strpos((string)$url, "/regulatory-templates/") !== false) {
+                $sitenameAbbreviation = "regulatoryt";
+                $subject = "[Regulatory Templates] " . $subject;
+            }
+            if (strpos((string)$url, "/prostate-cancer-research-data-explorer/") !== false) {
+                $sitenameAbbreviation = "spore";
+                $subject = "[SPORE Dashboard] " . $subject;
+            }
             if (strpos((string)$url, "/time-away-request/") !== false) {
                 $sitenameAbbreviation = "vacreq";
                 $subject = "[Time Away Request] " . $subject;

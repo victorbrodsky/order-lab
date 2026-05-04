@@ -122,6 +122,7 @@
             {{ usermacros.siteSingleSwitchElement(calllog_sitename,'<span class="glyphicon glyphicon-phone-alt"></span>','Call Log Book') }}
             {{ usermacros.siteSingleSwitchElement(translationalresearch_sitename,'<span class="glyphicon glyphicon-briefcase"></span>','Translational Research') }}
             {{ usermacros.siteSingleSwitchElement(ctp_sitename,'<span class="glyphicon glyphicon-search"></span>','Center for Translational Pathology') }}
+            {{ usermacros.siteSingleSwitchElement(tma_sitename,'<span class="glyphicon glyphicon-search"></span>','Tissue Microarrays') }}
             {{ usermacros.siteSingleSwitchElement(deidentifier_sitename,'<span class="glyphicon glyphicon-retweet"></span>','Deidentifier') }}
             {{ usermacros.siteSingleSwitchElement(crn_sitename,'<span class="glyphicon glyphicon-pencil"></span>','Critical Result Notifications') }}
             {{ usermacros.siteSingleSwitchElement(dashboard_sitename,'<span class="glyphicon glyphicon-stats"></span>','Dashboards') }}
@@ -365,6 +366,9 @@
         {% endif %}
         {% if '/critical-result-notifications/' in currentPath %}
             {% set sitename = crn_sitename %}
+        {% endif %}
+        {% if '/tissue-microarrays/' in currentPath %}
+            {% set sitename = tma_sitename %}
         {% endif %}
         {% if '/translational-research/' in currentPath %}
             {% set sitename = translationalresearch_sitename %}
@@ -2550,6 +2554,12 @@
             {% endif %}
             {% if '/critical-result-notifications/' in currentPath %}
                 {% set sitename = crn_sitename %}
+            {% endif %}
+            {% if '/center-for-translational-pathology/' in currentPath %}
+                {% set sitename = ctp_sitename %}
+            {% endif %}
+            {% if '/tissue-microarrays/' in currentPath %}
+                {% set sitename = tma_sitename %}
             {% endif %}
             {% if '/translational-research/' in currentPath %}
                 {% set sitename = translationalresearch_sitename %}

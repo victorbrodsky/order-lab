@@ -326,6 +326,20 @@ class SiteParameters {
     #[ORM\Column(type: 'string', nullable: true)]
     private $ctpuploadpath;
 
+    /////////// 4 SEPARATE APPLICATIONs ///////////
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $tmauploadpath;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $cohortguploadpath;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $regulatorytuploadpath;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $sporeuploadpath;
+    /////////// EOF 4 SEPARATE APPLICATIONs ///////////
+
     //site titles and messages
     #[ORM\Column(type: 'text', nullable: true)]
     private $mainHomeTitle;
@@ -3185,6 +3199,70 @@ class SiteParameters {
     public function setCtpuploadpath($ctpuploadpath)
     {
         $this->ctpuploadpath = $ctpuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTmauploadpath()
+    {
+        return $this->tmauploadpath;
+    }
+
+    /**
+     * @param mixed $tmauploadpath
+     */
+    public function setTmauploadpath($tmauploadpath)
+    {
+        $this->tmauploadpath = $tmauploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCohortguploadpath()
+    {
+        return $this->cohortguploadpath;
+    }
+
+    /**
+     * @param mixed $cohortguploadpath
+     */
+    public function setCohortguploadpath($cohortguploadpath)
+    {
+        $this->cohortguploadpath = $cohortguploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegulatorytuploadpath()
+    {
+        return $this->regulatorytuploadpath;
+    }
+
+    /**
+     * @param mixed $regulatorytuploadpath
+     */
+    public function setRegulatorytuploadpath($regulatorytuploadpath)
+    {
+        $this->regulatorytuploadpath = $regulatorytuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSporeuploadpath()
+    {
+        return $this->sporeuploadpath;
+    }
+
+    /**
+     * @param mixed $sporeuploadpath
+     */
+    public function setSporeuploadpath($sporeuploadpath)
+    {
+        $this->sporeuploadpath = $sporeuploadpath;
     }
 
     /**
