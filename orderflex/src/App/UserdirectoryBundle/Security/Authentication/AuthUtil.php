@@ -108,7 +108,8 @@ class AuthUtil {
         }
 
         //$authUtil = $this->container->get('authenticator_utility');
-        
+
+        // App\Saml\Util\SamlConfigProvider
         $samlConfigProviderUtil = $this->container->get('saml_config_provider_util');
 
         $config = $samlConfigProviderUtil->getConfig($domain);
@@ -511,7 +512,8 @@ class AuthUtil {
             if( $identifier->getName() == $identifierKeytype->getName() ) {
 
                 $this->logger->notice("identifier match: ".$identifier);
-                $subjectUser = $this->authenticateUserByIdentifierType($username, $token->getCredentials(), $identifierKeytype->getName());
+                //$subjectUser = $this->authenticateUserByIdentifierType($username, $token->getCredentials(), $identifierKeytype->getName());
+                $subjectUser = $this->authenticateUserByIdentifierType($username, $token->getCredentials(), $identifierKeytype->getAbbreviation());
                 if( $subjectUser ) {
                     $this->addEventLog($subjectUser,$identifier);
 
@@ -536,7 +538,8 @@ class AuthUtil {
     public function authenticateUserByIdentifierType( $username, $credentials, $identifierKeytypeName ) {
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:IdentifierTypeList'] by [IdentifierTypeList::class]
-        $identifierKeytype = $this->em->getRepository(IdentifierTypeList::class)->findOneByName($identifierKeytypeName);
+        //$identifierKeytype = $this->em->getRepository(IdentifierTypeList::class)->findOneByName($identifierKeytypeName);
+        $identifierKeytype = $this->em->getRepository(IdentifierTypeList::class)->findOneByAbbreviation($identifierKeytypeName);
         if( !$identifierKeytype ) {
             $this->logger->notice('identifierKeytype not found by name='.$identifierKeytypeName);
             return NULL;
@@ -647,7 +650,8 @@ class AuthUtil {
 //        }
 
         //$identifierUsername = $usernameArr[0];
-        $identifierKeytypeName = "Local User";
+        //$identifierKeytypeName = "Local User";
+        $identifierKeytypeName = "local-user";
 
         //$this->logger->notice("identifier match: ".$identifier);
         $subjectUser = $this->authenticateUserByIdentifierType($username, $token->getCredentials(), $identifierKeytypeName);

@@ -233,7 +233,7 @@ class SamlConfigProvider
     }
 
 
-    private function getSPEntityId( $config )
+    private function getSPEntityId( $config=null )
     {
         $userTenantUtil = $this->container->get('user_tenant_utility');
         $tenantArr = $userTenantUtil->getCurrentTenantArr($this->requestStack->getCurrentRequest());
@@ -265,6 +265,7 @@ class SamlConfigProvider
 //            $scheme = 'https'; //tenants are behind haproxy, therefore, $_SERVER's schema will be http
 //        }
         $userUtil = $this->container->get('user_utility');
+        $request = $this->requestStack->getCurrentRequest();
         $scheme = $userUtil->getRealScheme($request);
         //echo "3 scheme=$scheme <br>"; //http
         //////// EOF Get scheme ///////////
