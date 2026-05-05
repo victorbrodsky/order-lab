@@ -73,7 +73,7 @@ app_ctp:
     type:     attribute
     prefix:   /center-for-translational-pathology
 
-#tissue-microarrays
+#tissue-microarrays tma
 app_tma:
     resource: "../src/App/TmaBundle/Controller/"
     type:     attribute
@@ -92,7 +92,7 @@ app_regulatoryt:
     prefix:   /regulatory-templates
 
 #SPORE Dashboard: prostate-cancer-research-data-explorer  spore
-app_prostatec:
+app_spore:
     resource: "../src/App/SporeBundle/Controller/"
     type:     attribute
     prefix:   /prostate-cancer-research-data-explorer

@@ -2561,6 +2561,15 @@
             {% if '/tissue-microarrays/' in currentPath %}
                 {% set sitename = tma_sitename %}
             {% endif %}
+            {% if '/cohort-generator/' in currentPath %}
+                {% set sitename = cohortg_sitename %}
+            {% endif %}
+            {% if '/regulatory-templates/' in currentPath %}
+                {% set sitename = regulatoryt_sitename %}
+            {% endif %}
+            {% if '/prostate-cancer-research-data-explorer/' in currentPath %}
+                {% set sitename = spore_sitename %}
+            {% endif %}
             {% if '/translational-research/' in currentPath %}
                 {% set sitename = translationalresearch_sitename %}
             {% endif %}

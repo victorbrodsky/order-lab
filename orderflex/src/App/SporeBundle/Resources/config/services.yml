@@ -1,0 +1,31 @@
+parameters:
+
+    spore.sitename: spore
+    spore.uploadpath:
+
+
+twig:
+    globals:
+        spore_sitename: '%spore.sitename%'
+
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    spore_authentication_handler:
+        class: App\SporeBundle\Security\Authentication\SporeLoginSuccessHandler
+
+    spore_role_voter:
+        class: App\SporeBundle\Security\Voter\SporeRoleVoter
+        public: false
+        tags:
+            - { name: security.voter }
+
+    spore_permission_voter:
+        class: App\SporeBundle\Security\Voter\SporePermissionVoter
+        public: false
+        tags:
+            - { name: security.voter }

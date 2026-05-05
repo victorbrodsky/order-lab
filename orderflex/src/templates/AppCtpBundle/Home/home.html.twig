@@ -1,4 +1,4 @@
-{% extends "AppCtpBundle/Default/simple_base.html.twig" %}
+{% extends "AppCtpBundle/Default/base.html.twig" %}
 
 {% block title %}
     Center for Translational Pathology
@@ -12,6 +12,9 @@
         /* Tailwind CSS Custom Config for WCM */
         .min-h-\[220px\] { min-height: 220px; }
         .gap-y-3 { row-gap: 0.75rem; }
+        @media (min-width: 48rem) {
+            .md\:h-\[420px\] { height: min(420px, 70vh); }
+        }
         :root {
             --wcm-red: #b31b1b;
             --wcm-gold: #ffc72c;
@@ -86,7 +89,8 @@
         
         {# Hero Section #}
         <section class="relative" id="top">
-            <div class="relative h-[300px] md:h-[420px] overflow-hidden">
+            {#<div class="relative h-[300px] md:h-[420px] overflow-hidden">#}
+            <div class="relative h-[440px] md:h-[420px] overflow-hidden">
                 <img alt="CTP hero — histology slide background" 
                      class="object-cover scale-105 absolute inset-0 w-full h-full" 
                      src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/hero481ce.jpeg"/>

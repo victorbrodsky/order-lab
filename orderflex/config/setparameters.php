@@ -113,6 +113,23 @@ $crnuploadpath = "crn";
 $container->setParameter('crn.uploadpath',$crnuploadpath);
 $ctpuploadpath = "ctp";
 $container->setParameter('ctp.uploadpath',$ctpuploadpath);
+
+//tma
+$tmuploadpath = "tma";
+$container->setParameter('tma.uploadpath',$tmuploadpath);
+
+//cohortg
+$cohortguploadpath = "cohortg";
+$container->setParameter('cohortg.uploadpath',$cohortguploadpath);
+
+//regulatoryt
+$regulatorytuploadpath = "regulatoryt";
+$container->setParameter('regulatoryt.uploadpath',$regulatorytuploadpath);
+
+//spore
+$sporeuploadpath = "spore";
+$container->setParameter('spore.uploadpath',$sporeuploadpath);
+
 //dashboard
 $dashboarduploadpath = "dashboard";
 $container->setParameter('dashboard.uploadpath',$dashboarduploadpath);
@@ -289,6 +306,10 @@ if( $conn ) {
 
                 $crnuploadpath = getDBParameter($row, $crnuploadpath, 'crnuploadpath');
                 $ctpuploadpath = getDBParameter($row, $ctpuploadpath, 'ctpuploadpath');
+                $tmuploadpath = getDBParameter($row, $tmuploadpath, 'tmuploadpath');
+                $cohortguploadpath = getDBParameter($row, $cohortguploadpath, 'cohortguploadpath');
+                $regulatorytuploadpath = getDBParameter($row, $regulatorytuploadpath, 'regulatorytuploadpath');
+                $sporeuploadpath = getDBParameter($row, $sporeuploadpath, 'sporeuploadpath');
 
                 $dashboarduploadpath = getDBParameter($row, $dashboarduploadpath, 'dashboarduploadpath');
 
@@ -364,6 +385,14 @@ if( $conn ) {
                 $container->setParameter('crn.uploadpath', $crnuploadpath);
             if ($ctpuploadpath)
                 $container->setParameter('ctp.uploadpath', $ctpuploadpath);
+            if ($tmuploadpath)
+                $container->setParameter('tma.uploadpath', $tmuploadpath);
+            if ($cohortguploadpath)
+                $container->setParameter('cohortg.uploadpath', $cohortguploadpath);
+            if ($regulatorytuploadpath)
+                $container->setParameter('regulatoryt.uploadpath', $regulatorytuploadpath);
+            if ($sporeuploadpath)
+                $container->setParameter('spore.uploadpath', $sporeuploadpath);
             if ($dashboarduploadpath) {
                 $container->setParameter('dashboard.uploadpath', $dashboarduploadpath);
             }

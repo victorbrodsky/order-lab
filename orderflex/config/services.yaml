@@ -13,6 +13,10 @@ imports:
     - { resource: "../src/App/CallLogBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CrnBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CtpBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/TmaBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/CohortgBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/RegulatorytBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/SporeBundle/Resources/config/services.yml" }
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DemoDbBundle/Resources/config/services.yml" }

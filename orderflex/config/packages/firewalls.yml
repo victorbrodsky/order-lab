@@ -259,7 +259,86 @@ security:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
 
-        #tissue-microarrays
+        ldap_tma_firewall:
+            pattern: ^.*/tissue-microarrays
+            context: "%firewall_context_name%"
+            switch_user: true
+            custom_authenticators:
+                authenticator: custom_guard_authenticator
+            form_login:
+                login_path: tma_login
+                check_path: tma_login_check
+            logout:
+                path:   tma_logout
+                target: tma_login
+                invalidate_session: false
+            lazy: true
+            provider: users
+            access_denied_url: tma_access_request_new_plain
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+
+        ldap_cohortg_firewall:
+            pattern: ^.*/cohort-generator
+            context: "%firewall_context_name%"
+            switch_user: true
+            custom_authenticators:
+                authenticator: custom_guard_authenticator
+            form_login:
+                login_path: cohortg_login
+                check_path: cohortg_login_check
+            logout:
+                path:   cohortg_logout
+                target: cohortg_login
+                invalidate_session: false
+            lazy: true
+            provider: users
+            access_denied_url: cohortg_access_request_new_plain
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+
+        ldap_regulatoryt_firewall:
+            pattern: ^.*/regulatory-templates
+            context: "%firewall_context_name%"
+            switch_user: true
+            custom_authenticators:
+                authenticator: custom_guard_authenticator
+            form_login:
+                login_path: regulatoryt_login
+                check_path: regulatoryt_login_check
+            logout:
+                path:   regulatoryt_logout
+                target: regulatoryt_login
+                invalidate_session: false
+            lazy: true
+            provider: users
+            access_denied_url: regulatoryt_access_request_new_plain
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+
+        ldap_spore_firewall:
+            pattern: ^.*/prostate-cancer-research-data-explorer
+            context: "%firewall_context_name%"
+            switch_user: true
+            custom_authenticators:
+                authenticator: custom_guard_authenticator
+            form_login:
+                login_path: spore_login
+                check_path: spore_login_check
+            logout:
+                path:   spore_logout
+                target: spore_login
+                invalidate_session: false
+            lazy: true
+            provider: users
+            access_denied_url: spore_access_request_new_plain
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 28800 # 8 hours in seconds
+
 
         ldap_translationalresearch_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)translational-research
