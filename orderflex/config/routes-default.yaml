@@ -68,6 +68,7 @@ app_crn:
     type:     attribute
     prefix:   /critical-result-notifications
 
+#Center for Translational Pathology: center-for-translational-pathology ctp
 app_ctp:
     resource: "../src/App/CtpBundle/Controller/"
     type:     attribute

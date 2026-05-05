@@ -184,6 +184,15 @@
         {% if user_security_utility.isSiteShowLinkNavbar(tma_sitename) %}
             <p><a href="{{ path('tma_home') }}">Tissue Microarrays</a></p>
         {% endif %}
+        {% if user_security_utility.isSiteShowLinkNavbar(cohortg_sitename) %}
+            <p><a href="{{ path('cohortg_home') }}">Cohort Generator</a></p>
+        {% endif %}
+        {% if user_security_utility.isSiteShowLinkNavbar(regulatoryt_sitename) %}
+            <p><a href="{{ path('regulatoryt_home') }}">Regulatory Templates</a></p>
+        {% endif %}
+        {% if user_security_utility.isSiteShowLinkNavbar(spore_sitename) %}
+            <p><a href="{{ path('spore_home') }}">SPORE Dashboard</a></p>
+        {% endif %}
 
         {% if user_security_utility.isSiteShowLinkNavbar(crn_sitename) %}
             <p><a href="{{ path('crn_home') }}">Critical Result Notifications</a></p>
