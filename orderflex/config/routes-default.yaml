@@ -73,25 +73,25 @@ app_ctp:
     type:     attribute
     prefix:   /center-for-translational-pathology
 
-#tissue-microarrays tma
+#Tissue Microarrays: tissue-microarrays tma
 app_tma:
     resource: "../src/App/TmaBundle/Controller/"
     type:     attribute
     prefix:   /tissue-microarrays
 
-#cohort-generator cohortg
+#Cohort Generator: cohort-generator cohortg
 app_cohortg:
     resource: "../src/App/CohortgBundle/Controller/"
     type:     attribute
     prefix:   /cohort-generator
 
-#Regulatory Templates: regulatory-templates  regulatoryt
+#Regulatory Templates: regulatory-templates regulatoryt
 app_regulatoryt:
     resource: "../src/App/RegulatorytBundle/Controller/"
     type:     attribute
     prefix:   /regulatory-templates
 
-#SPORE Dashboard: prostate-cancer-research-data-explorer  spore
+#SPORE Dashboard: prostate-cancer-research-data-explorer spore
 app_spore:
     resource: "../src/App/SporeBundle/Controller/"
     type:     attribute
