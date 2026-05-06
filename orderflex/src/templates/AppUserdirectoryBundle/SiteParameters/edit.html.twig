@@ -39,9 +39,10 @@
     {#{% set extendStr = "AppDashboardBundle/Default/base.html.twig" %}#}
 {#{% endif %}#}
 
-{% include '_extends_helper.twig' %}
-{% extends extendStr%}
+{#{% include '_extends_helper.twig' %}#}
+{#{% extends extendStr%}#}
 
+{% extends site_base_template(sitename) %}
 
 {% block title %}
     Update {{ sitesettings_title }}: {{ param }}

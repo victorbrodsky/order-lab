@@ -14,12 +14,14 @@
     limitations under the License.
 #}
 
-{% if sitename == 'employees' %}
-    {% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}
-{% else %}
-    {% set extendStr = "AppOrderformBundle/Default/base.html.twig" %}
-{% endif %}
-{% extends extendStr%}
+{#{% if sitename == 'employees' %}#}
+    {#{% set extendStr = "AppUserdirectoryBundle/Default/base.html.twig" %}#}
+{#{% else %}#}
+    {#{% set extendStr = "AppOrderformBundle/Default/base.html.twig" %}#}
+{#{% endif %}#}
+{#{% extends extendStr%}#}
+
+{% extends site_base_template(sitename) %}
 
 {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
 

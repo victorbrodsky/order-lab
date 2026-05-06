@@ -93,6 +93,9 @@ services:
             #- '../src/App/*/{DependencyInjection,Tests,Query,Repository}'
             #- '../src/App/*/{Security,Services}'
 
+    #Twig replacement for {% extends extendStr%}
+    App\Twig\SiteExtension:
+        tags: ['twig.extension']
 
     App\UserdirectoryBundle\User\Model\:
         resource: '../src/App/UserdirectoryBundle/User/Model'
