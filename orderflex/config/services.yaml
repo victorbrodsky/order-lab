@@ -119,6 +119,14 @@ services:
         resource: '../src/App/CrnBundle/Controller/'
     App\CtpBundle\Controller\:
         resource: '../src/App/CtpBundle/Controller/'
+    App\TmaBundle\Controller\:
+        resource: '../src/App/TmaBundle/Controller/'
+    App\CohortgBundle\Controller\:
+        resource: '../src/App/CohortgBundle/Controller/'
+    App\RegulatorytBundle\Controller\:
+        resource: '../src/App/RegulatorytBundle/Controller/'
+    App\SporeBundle\Controller\:
+        resource: '../src/App/SporeBundle/Controller/'
     App\FellAppBundle\Controller\:
         resource: '../src/App/FellAppBundle/Controller/'
     App\ResAppBundle\Controller\:
