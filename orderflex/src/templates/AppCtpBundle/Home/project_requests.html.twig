@@ -163,6 +163,257 @@
                         <input type="date" class="form-input" value=""/>
                     </div>
                 </section>
+
+                <br>
+                <hr class="border-gray-200"/>
+                
+                <section class="grid gap-3 md:grid-cols-2">
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Project Title <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="e.g., Glioblastoma Tissue Microarray Development" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="PI name" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Department <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="e.g. Medicine" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Phone</label>
+                        <input class="form-input" placeholder="(###) ###-####" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Institution <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="e.g. Weill Cornell Medicine" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Contact Name <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="e.g. Jane Doe" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Contact Email Address <span class="text-red-600">*</span></label>
+                        <input type="email" class="form-input" placeholder="e.g. you@med.cornell.edu" value=""/>
+                    </div>
+                </section>
+
+                <br>
+                <hr class="border-gray-200"/>
+                <br>
+
+                <section class="grid gap-2">
+                    <label class="text-sm text-gray-700">
+                        Background & Introduction (max 500 words)
+                        <span class="char-counter" id="background-counter">(0/500)</span>
+                        <span class="text-red-600"> *</span>
+                    </label>
+                    <textarea rows="6" class="form-textarea" id="background-textarea" maxlength="2500" onkeyup="updateCharCount('background-textarea', 'background-counter', 500)"></textarea>
+                </section>
+
+                <br>
+                <section class="grid gap-4">
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Experimental Plan Summary (max 500 words)
+                            <span class="char-counter" id="experimental-counter">(0/500)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="6" class="form-textarea" id="experimental-textarea" maxlength="2500" onkeyup="updateCharCount('experimental-textarea', 'experimental-counter', 500)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Funding Source (max 100 words)
+                            <span class="char-counter" id="funding-counter">(0/100)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="4" class="form-textarea" id="funding-textarea" maxlength="500" onkeyup="updateCharCount('funding-textarea', 'funding-counter', 100)"></textarea>
+                    </div>
+                </section>
+                
+                <div class="flex items-center gap-3 mt-6">
+                    <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">Submit</button>
+                </div>
+            </form>
+            
+            <!-- CTP Mini-Grant Application Form -->
+            <form class="grid gap-5 mt-4" id="ctp-form" style="display: none;">
+                <section class="grid gap-3 md:w-1/2">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
+                        <input type="date" class="form-input" value=""/>
+                    </div>
+                </section>
+
+                <br>
+                <hr class="border-gray-200"/>
+                
+                <section class="grid gap-3 md:grid-cols-2">
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Project Title <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="e.g., Glioblastoma Tissue Microarray Development" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="PI name" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Department <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="e.g. Medicine" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Phone</label>
+                        <input class="form-input" placeholder="(###) ###-####" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Institution <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="e.g. Weill Cornell Medicine" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Contact Name <span class="text-red-600">*</span></label>
+                        <input class="form-input" placeholder="e.g. Jane Doe" value=""/>
+                    </div>
+                    
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Contact Email Address <span class="text-red-600">*</span></label>
+                        <input type="email" class="form-input" placeholder="e.g. you@med.cornell.edu" value=""/>
+                    </div>
+                </section>
+                
+                <hr class="border-gray-200"/>
+                
+                <section class="grid gap-4">
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Background & Introduction (max 500 words)
+                            <span class="char-counter" id="ctp-background-counter">(0/500)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="6" class="form-textarea" id="ctp-background-textarea" maxlength="2500" onkeyup="updateCharCount('ctp-background-textarea', 'ctp-background-counter', 500)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Hypothesis & Goals (max 250 words)
+                            <span class="char-counter" id="ctp-hypothesis-counter">(0/250)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="6" class="form-textarea" id="ctp-hypothesis-textarea" maxlength="1250" onkeyup="updateCharCount('ctp-hypothesis-textarea', 'ctp-hypothesis-counter', 250)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Innovation (max 250 words)
+                            <span class="char-counter" id="ctp-innovation-counter">(0/250)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="6" class="form-textarea" id="ctp-innovation-textarea" maxlength="1250" onkeyup="updateCharCount('ctp-innovation-textarea', 'ctp-innovation-counter', 250)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Clinical Relevance and Impact (max 150 words)
+                            <span class="char-counter" id="ctp-clinical-counter">(0/150)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="4" class="form-textarea" id="ctp-clinical-textarea" maxlength="750" onkeyup="updateCharCount('ctp-clinical-textarea', 'ctp-clinical-counter', 150)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Work to Date & Preliminary Data (max 250 words)
+                            <span class="char-counter" id="ctp-work-counter">(0/250)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="6" class="form-textarea" id="ctp-work-textarea" maxlength="1250" onkeyup="updateCharCount('ctp-work-textarea', 'ctp-work-counter', 250)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Experimental Plan — Biostatistics (max 500 words)
+                            <span class="char-counter" id="ctp-experimental-counter">(0/500)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="6" class="form-textarea" id="ctp-experimental-textarea" maxlength="2500" onkeyup="updateCharCount('ctp-experimental-textarea', 'ctp-experimental-counter', 500)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Pitfalls & Alternatives (max 100 words)
+                            <span class="char-counter" id="ctp-pitfalls-counter">(0/100)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="4" class="form-textarea" id="ctp-pitfalls-textarea" maxlength="500" onkeyup="updateCharCount('ctp-pitfalls-textarea', 'ctp-pitfalls-counter', 100)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Timeline & Milestones (max 100 words)
+                            <span class="char-counter" id="ctp-timeline-counter">(0/100)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="4" class="form-textarea" id="ctp-timeline-textarea" maxlength="500" onkeyup="updateCharCount('ctp-timeline-textarea', 'ctp-timeline-counter', 100)"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-2">
+                        <label class="text-sm text-gray-700">
+                            Scope and Future Plans (max 100 words)
+                            <span class="char-counter" id="ctp-scope-counter">(0/100)</span>
+                            <span class="text-red-600"> *</span>
+                        </label>
+                        <textarea rows="4" class="form-textarea" id="ctp-scope-textarea" maxlength="500" onkeyup="updateCharCount('ctp-scope-textarea', 'ctp-scope-counter', 100)"></textarea>
+                    </div>
+                </section>
+                
+                <hr class="border-gray-200"/>
+                
+                <section class="grid gap-3 md:grid-cols-2">
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Personnel <span class="text-red-600">*</span></label>
+                        <textarea rows="4" class="form-textarea" placeholder="List personnel involved"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">Budget <span class="text-red-600">*</span></label>
+                        <textarea rows="4" class="form-textarea" placeholder="$"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">IRB and Regulatory Information <span class="text-red-600">*</span></label>
+                        <textarea rows="4" class="form-textarea" placeholder="IRB approval status and regulatory details"></textarea>
+                    </div>
+                    
+                    <div class="grid gap-1 md:col-span-2">
+                        <label class="text-sm text-gray-700">References <span class="text-red-600">*</span></label>
+                        <textarea rows="4" class="form-textarea" placeholder="Key references"></textarea>
+                    </div>
+                </section>
+                
+                <div class="flex items-center gap-3 mt-6">
+                    <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">Submit Application</button>
+                </div>
+            </form>
+            
+            <!-- Conference Project Request Form -->
+            <form class="grid gap-5 mt-4" id="conference-form" style="display: none;">
+                <section class="grid gap-3 md:w-1/2">
+                    <div class="grid gap-1">
+                        <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
+                        <input type="date" class="form-input" value=""/>
+                    </div>
+                </section>
                 
                 <hr class="border-gray-200"/>
                 
@@ -208,241 +459,34 @@
                 <section class="grid gap-2">
                     <label class="text-sm text-gray-700">
                         Background & Introduction (max 500 words)
-                        <span class="char-counter" id="background-counter">(0/500)</span>
+                        <span class="char-counter" id="conference-background-counter">(0/500)</span>
                         <span class="text-red-600"> *</span>
                     </label>
-                    <textarea rows="6" class="form-textarea" id="background-textarea" maxlength="2500" onkeyup="updateCharCount('background-textarea', 'background-counter', 500)"></textarea>
+                    <textarea rows="6" class="form-textarea" id="conference-background-textarea" maxlength="2500" onkeyup="updateCharCount('conference-background-textarea', 'conference-background-counter', 500)"></textarea>
                 </section>
                 
                 <section class="grid gap-4">
                     <div class="grid gap-2">
                         <label class="text-sm text-gray-700">
                             Experimental Plan Summary (max 500 words)
-                            <span class="char-counter" id="experimental-counter">(0/500)</span>
+                            <span class="char-counter" id="conference-experimental-counter">(0/500)</span>
                             <span class="text-red-600"> *</span>
                         </label>
-                        <textarea rows="6" class="form-textarea" id="experimental-textarea" maxlength="2500" onkeyup="updateCharCount('experimental-textarea', 'experimental-counter', 500)"></textarea>
+                        <textarea rows="6" class="form-textarea" id="conference-experimental-textarea" maxlength="2500" onkeyup="updateCharCount('conference-experimental-textarea', 'conference-experimental-counter', 500)"></textarea>
                     </div>
                     
                     <div class="grid gap-2">
                         <label class="text-sm text-gray-700">
                             Funding Source (max 100 words)
-                            <span class="char-counter" id="funding-counter">(0/100)</span>
+                            <span class="char-counter" id="conference-funding-counter">(0/100)</span>
                             <span class="text-red-600"> *</span>
                         </label>
-                        <textarea rows="4" class="form-textarea" id="funding-textarea" maxlength="500" onkeyup="updateCharCount('funding-textarea', 'funding-counter', 100)"></textarea>
+                        <textarea rows="4" class="form-textarea" id="conference-funding-textarea" maxlength="500" onkeyup="updateCharCount('conference-funding-textarea', 'conference-funding-counter', 100)"></textarea>
                     </div>
                 </section>
-                
-                <div class="flex items-center gap-3">
+
+                <div class="flex items-center gap-3 mt-6">
                     <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">Submit</button>
-                </div>
-            </form>
-            
-            <!-- CTP Mini-Grant Application Form -->
-            <form class="grid gap-5 mt-4" id="ctp-form" style="display: none;">
-                <section class="grid gap-3 md:w-1/2">
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Application Date <span class="text-red-600">*</span></label>
-                        <input type="date" class="form-input" value=""/>
-                    </div>
-                </section>
-                
-                <hr class="border-gray-200"/>
-                
-                <section class="grid gap-3 md:grid-cols-2">
-                    <div class="grid gap-1 md:col-span-2">
-                        <label class="text-sm text-gray-700">Grant Title <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="e.g., Novel Biomarker Discovery in Glioblastoma" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="PI name" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Department <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="e.g. Pathology & Laboratory Medicine" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Email <span class="text-red-600">*</span></label>
-                        <input type="email" class="form-input" placeholder="e.g. you@med.cornell.edu" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Phone <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="(###) ###-####" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Amount Requested <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="$" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Project Duration <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="e.g., 12 months" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Start Date <span class="text-red-600">*</span></label>
-                        <input type="date" class="form-input" value=""/>
-                    </div>
-                </section>
-                
-                <hr class="border-gray-200"/>
-                
-                <section class="grid gap-4">
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Project Summary (max 250 words)
-                            <span class="char-counter" id="ctp-summary-counter">(0/250)</span>
-                            <span class="text-red-600"> *</span>
-                        </label>
-                        <textarea rows="6" class="form-textarea" id="ctp-summary-textarea" maxlength="1250" onkeyup="updateCharCount('ctp-summary-textarea', 'ctp-summary-counter', 250)"></textarea>
-                    </div>
-                    
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Research Objectives (max 300 words)
-                            <span class="char-counter" id="ctp-objectives-counter">(0/300)</span>
-                            <span class="text-red-600"> *</span>
-                        </label>
-                        <textarea rows="6" class="form-textarea" id="ctp-objectives-textarea" maxlength="1500" onkeyup="updateCharCount('ctp-objectives-textarea', 'ctp-objectives-counter', 300)"></textarea>
-                    </div>
-                    
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Methods & Approach (max 400 words)
-                            <span class="char-counter" id="ctp-methods-counter">(0/400)</span>
-                            <span class="text-red-600"> *</span>
-                        </label>
-                        <textarea rows="6" class="form-textarea" id="ctp-methods-textarea" maxlength="2000" onkeyup="updateCharCount('ctp-methods-textarea', 'ctp-methods-counter', 400)"></textarea>
-                    </div>
-                    
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Expected Outcomes & Impact (max 200 words)
-                            <span class="char-counter" id="ctp-outcomes-counter">(0/200)</span>
-                            <span class="text-red-600"> *</span>
-                        </label>
-                        <textarea rows="4" class="form-textarea" id="ctp-outcomes-textarea" maxlength="1000" onkeyup="updateCharCount('ctp-outcomes-textarea', 'ctp-outcomes-counter', 200)"></textarea>
-                    </div>
-                    
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Budget Justification (max 300 words)
-                            <span class="char-counter" id="ctp-budget-counter">(0/300)</span>
-                            <span class="text-red-600"> *</span>
-                        </label>
-                        <textarea rows="4" class="form-textarea" id="ctp-budget-textarea" maxlength="1500" onkeyup="updateCharCount('ctp-budget-textarea', 'ctp-budget-counter', 300)"></textarea>
-                    </div>
-                </section>
-                
-                <div class="flex items-center gap-3">
-                    <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">Submit Application</button>
-                </div>
-            </form>
-            
-            <!-- Conference Project Request Form -->
-            <form class="grid gap-5 mt-4" id="conference-form" style="display: none;">
-                <section class="grid gap-3 md:w-1/2">
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Request Date <span class="text-red-600">*</span></label>
-                        <input type="date" class="form-input" value=""/>
-                    </div>
-                </section>
-                
-                <hr class="border-gray-200"/>
-                
-                <section class="grid gap-3 md:grid-cols-2">
-                    <div class="grid gap-1 md:col-span-2">
-                        <label class="text-sm text-gray-700">Conference Name <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="e.g., USCAP 2024 Annual Meeting" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Presenter Name <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="Presenter name" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Department <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="e.g. Pathology & Laboratory Medicine" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Email <span class="text-red-600">*</span></label>
-                        <input type="email" class="form-input" placeholder="e.g. you@med.cornell.edu" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Phone</label>
-                        <input class="form-input" placeholder="(###) ###-####" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Conference Dates <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="e.g., March 23-28, 2024" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Location <span class="text-red-600">*</span></label>
-                        <input class="form-input" placeholder="e.g., Vancouver, Canada" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Presentation Type <span class="text-red-600">*</span></label>
-                        <select class="form-input">
-                            <option value="">Select presentation type</option>
-                            <option value="oral">Oral Presentation</option>
-                            <option value="poster">Poster Presentation</option>
-                            <option value="workshop">Workshop</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                </section>
-                
-                <hr class="border-gray-200"/>
-                
-                <section class="grid gap-4">
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Presentation Title <span class="text-red-600">*</span>
-                        </label>
-                        <input class="form-input" placeholder="Presentation title" value=""/>
-                    </div>
-                    
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Abstract (max 300 words)
-                            <span class="char-counter" id="conference-abstract-counter">(0/300)</span>
-                            <span class="text-red-600"> *</span>
-                        </label>
-                        <textarea rows="6" class="form-textarea" id="conference-abstract-textarea" maxlength="1500" onkeyup="updateCharCount('conference-abstract-textarea', 'conference-abstract-counter', 300)"></textarea>
-                    </div>
-                    
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Funding Request Justification (max 200 words)
-                            <span class="char-counter" id="conference-funding-counter">(0/200)</span>
-                            <span class="text-red-600"> *</span>
-                        </label>
-                        <textarea rows="4" class="form-textarea" id="conference-funding-textarea" maxlength="1000" onkeyup="updateCharCount('conference-funding-textarea', 'conference-funding-counter', 200)"></textarea>
-                    </div>
-                    
-                    <div class="grid gap-2">
-                        <label class="text-sm text-gray-700">
-                            Amount Requested <span class="text-red-600">*</span>
-                        </label>
-                        <input class="form-input" placeholder="$" value=""/>
-                    </div>
-                </section>
-                
-                <div class="flex items-center gap-3">
-                    <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">Submit Request</button>
                 </div>
             </form>
         </div>
