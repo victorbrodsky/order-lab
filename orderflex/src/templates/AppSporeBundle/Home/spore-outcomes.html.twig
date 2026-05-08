@@ -1,153 +1,221 @@
 {% extends "AppCtpBundle/Default/base.html.twig" %}
 
 {% block title %}
-    {{ title }} - SPORE
+    {{ title|default('Outcomes Explorer') }} - SPORE
 {% endblock %}
 
 {% block content_ctp %}
     <main class="min-h-screen bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {# Path2Path Header #}
+        <div class="bg-white border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-wcm-red font-semibold">You are in Path2Path</h2>
+                        <p class="text-xs text-gray-500">Internal CTP apps & research tools</p>
+                    </div>
+                    <button class="px-3 py-1 text-sm border border-gray-300 rounded text-gray-600">Public Site</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            {# Back to Dashboard Button #}
+            <div class="text-center mb-6">
+                <a href="{{ path('spore_home') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-wcm-red text-white rounded-lg text-sm font-medium hover:bg-red-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    Back to Dashboard
+                </a>
+            </div>
+
             {# Page Header #}
-            <div class="mb-8">
-                <div class="flex items-center gap-4 mb-4">
-                    <a href="{{ path('spore_home') }}" class="text-gray-600 hover:text-gray-900">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m12 19-7-7 7-7"/>
-                            <path d="M19 12H5"/>
+            <div class="mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <a href="{{ path('spore_home') }}" class="text-wcm-red hover:underline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m12 19-7-7 7-7"/>
+                                <path d="M19 12H5"/>
+                            </svg>
+                        </a>
+                        <h1 class="text-xl font-bold text-wcm-red">Outcomes Explorer</h1>
+                    </div>
+                    <button class="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-sm text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" x2="12" y1="15" y2="3"/>
                         </svg>
-                    </a>
-                    <h1 class="text-3xl font-bold text-gray-900">Outcomes Explorer</h1>
+                        Export Report
+                    </button>
                 </div>
-                <p class="text-gray-600">Recurrence and survival analysis for prostate cancer patients</p>
+                <p class="text-sm text-gray-500 ml-8">Survival, recurrence, and metastasis analysis</p>
             </div>
 
-            {# Key Metrics #}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="bg-red-100 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
-                                <path d="m19 9-5 5-4-4-3 3"/>
-                            </svg>
-                        </div>
-                        <span class="text-sm text-gray-600">Recurrence Rate</span>
-                    </div>
-                    <p class="text-3xl font-bold text-gray-900">{{ outcomes.recurrenceRate }}%</p>
-                    <p class="text-sm text-gray-500 mt-1">Of total patient cohort</p>
+            {# Stat Cards #}
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
+                <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                    </svg>
+                    <p class="text-2xl font-bold text-gray-900">0</p>
+                    <p class="text-xs text-gray-500">Total Patients</p>
                 </div>
 
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="bg-blue-100 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12 6 12 12 16 14"/>
-                            </svg>
-                        </div>
-                        <span class="text-sm text-gray-600">Median Follow-up</span>
-                    </div>
-                    <p class="text-3xl font-bold text-gray-900">{{ outcomes.medianFollowUp }} <span class="text-lg font-normal text-gray-600">months</span></p>
-                    <p class="text-sm text-gray-500 mt-1">Since initial diagnosis</p>
+                <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    <p class="text-2xl font-bold text-gray-900">0</p>
+                    <p class="text-xs text-gray-500">Alive</p>
+                    <p class="text-xs text-gray-400">NaN%</p>
                 </div>
 
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="bg-green-100 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                            </svg>
-                        </div>
-                        <span class="text-sm text-gray-600">5-Year Survival</span>
-                    </div>
-                    <p class="text-3xl font-bold text-gray-900">{{ outcomes.fiveYearSurvival }}%</p>
-                    <p class="text-sm text-gray-500 mt-1">Overall survival rate</p>
+                <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" x2="12" y1="8" y2="12"/>
+                        <line x1="12" x2="12.01" y1="16" y2="16"/>
+                    </svg>
+                    <p class="text-2xl font-bold text-gray-900">0</p>
+                    <p class="text-xs text-gray-500">Deceased</p>
+                    <p class="text-xs text-gray-400">NaN%</p>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
+                        <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+                        <path d="m19 9-5 5-4-4-3 3"/>
+                    </svg>
+                    <p class="text-2xl font-bold text-gray-900">0</p>
+                    <p class="text-xs text-gray-500">Recurrence</p>
+                    <p class="text-xs text-gray-400">NaN%</p>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="2" x2="22" y1="12" y2="12"/>
+                    </svg>
+                    <p class="text-2xl font-bold text-gray-900">0</p>
+                    <p class="text-xs text-gray-500">Metastasis</p>
+                    <p class="text-xs text-gray-400">NaN%</p>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <p class="text-2xl font-bold text-gray-900">0.0</p>
+                    <p class="text-xs text-gray-500">Avg Follow-up</p>
+                    <p class="text-xs text-gray-400">years</p>
+                </div>
+
+                <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4"/>
+                        <path d="M12 8h.01"/>
+                    </svg>
+                    <p class="text-2xl font-bold text-gray-900">0</p>
+                    <p class="text-xs text-gray-500">Unknown Status</p>
                 </div>
             </div>
 
-            {# Survival Analysis Chart Placeholder #}
-            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-8">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Survival Analysis</h3>
-                <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
-                    <div class="text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-2 text-gray-400">
-                            <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
-                            <path d="m19 9-5 5-4-4-3 3"/>
-                        </svg>
-                        <p class="text-gray-500">Survival curve visualization</p>
-                        <p class="text-sm text-gray-400 mt-1">(Implement with Chart.js or similar library)</p>
-                    </div>
-                </div>
+            {# Tabs #}
+            <div class="border-b border-gray-200 mb-6">
+                <nav class="flex gap-6">
+                    <button class="px-1 py-2 text-sm font-medium text-wcm-red border-b-2 border-wcm-red">Survival Analysis</button>
+                    <button class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Recurrence</button>
+                    <button class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Metastasis</button>
+                </nav>
             </div>
 
-            {# Recurrence Analysis #}
+            {# Content Grid #}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recurrence by Gleason Score</h3>
-                    <div class="space-y-3">
+                {# Survival by Gleason Score #}
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Survival by Gleason Score</h3>
+                    <div class="space-y-4">
                         <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600">6 (3+3)</span>
-                                <span class="font-medium">12%</span>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">Gleason ≤6</span>
+                                <span class="text-gray-500">0/0 alive (0.0%)</span>
                             </div>
-                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
-                                <div class="bg-green-500" style="width: 12%"></div>
+                            <div class="flex h-2 rounded bg-gray-100 mb-1">
+                                <div class="bg-gray-200" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>0 alive</span>
+                                <span>0 deceased</span>
                             </div>
                         </div>
+
                         <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600">7 (3+4)</span>
-                                <span class="font-medium">22%</span>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">Gleason 7</span>
+                                <span class="text-gray-500">0/0 alive (0.0%)</span>
                             </div>
-                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
-                                <div class="bg-yellow-500" style="width: 22%"></div>
+                            <div class="flex h-2 rounded bg-gray-100 mb-1">
+                                <div class="bg-gray-200" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>0 alive</span>
+                                <span>0 deceased</span>
                             </div>
                         </div>
+
                         <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600">7 (4+3)</span>
-                                <span class="font-medium">31%</span>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">Gleason 8</span>
+                                <span class="text-gray-500">0/0 alive (0.0%)</span>
                             </div>
-                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
-                                <div class="bg-orange-500" style="width: 31%"></div>
+                            <div class="flex h-2 rounded bg-gray-100 mb-1">
+                                <div class="bg-gray-200" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>0 alive</span>
+                                <span>0 deceased</span>
                             </div>
                         </div>
+
                         <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600">8-10</span>
-                                <span class="font-medium">45%</span>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">Gleason 9-10</span>
+                                <span class="text-gray-500">0/0 alive (0.0%)</span>
                             </div>
-                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
-                                <div class="bg-red-500" style="width: 45%"></div>
+                            <div class="flex h-2 rounded bg-gray-100 mb-1">
+                                <div class="bg-gray-200" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>0 alive</span>
+                                <span>0 deceased</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Risk Stratification</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                            <div class="flex items-center gap-3">
-                                <span class="w-3 h-3 rounded-full bg-green-500"></span>
-                                <span class="font-medium text-gray-800">Low Risk</span>
-                            </div>
-                            <span class="text-green-700 font-bold">523 patients (42%)</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                            <div class="flex items-center gap-3">
-                                <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
-                                <span class="font-medium text-gray-800">Intermediate Risk</span>
-                            </div>
-                            <span class="text-yellow-700 font-bold">412 patients (33%)</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                            <div class="flex items-center gap-3">
-                                <span class="w-3 h-3 rounded-full bg-red-500"></span>
-                                <span class="font-medium text-gray-800">High Risk</span>
-                            </div>
-                            <span class="text-red-700 font-bold">312 patients (25%)</span>
-                        </div>
+                {# Outcomes by Procedure Type #}
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Outcomes by Procedure Type</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left py-2 font-medium text-gray-600">Procedure</th>
+                                    <th class="text-left py-2 font-medium text-gray-600">Total</th>
+                                    <th class="text-left py-2 font-medium text-gray-600">Recurrence</th>
+                                    <th class="text-left py-2 font-medium text-gray-600">Metastasis</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

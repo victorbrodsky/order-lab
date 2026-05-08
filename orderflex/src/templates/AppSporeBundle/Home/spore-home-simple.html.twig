@@ -7,75 +7,40 @@
 {% block content_ctp %}
     <main class="min-h-screen bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {# Page Header #}
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Prostate Cancer Research Data Explorer</h1>
-                <p class="text-gray-600">SPORE Dashboard - Comprehensive prostate cancer research data management</p>
+            {# SPORE Dashboard Header #}
+            <div class="mb-6">
+                <div class="flex items-center gap-2 mb-1">
+                    <a href="{{ path('ctp_home') }}" class="text-wcm-red hover:underline flex items-center gap-1 text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 19-7-7 7-7"/>
+                            <path d="M19 12H5"/>
+                        </svg>
+                    </a>
+                    <h1 class="text-2xl font-bold text-wcm-red">SPORE Dashboard</h1>
+                </div>
+                <p class="text-gray-600 text-sm">Prostate Cancer Research Data Explorer</p>
             </div>
 
-            {# Quick Actions #}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <a href="{{ path('spore_patients') }}" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition hover:border-wcm-red">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="bg-wcm-red/10 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                            </svg>
-                        </div>
-                        <h3 class="font-semibold text-gray-800">Patient Browser</h3>
-                    </div>
-                    <p class="text-sm text-gray-600">Search and filter patients</p>
-                </a>
-
-                <a href="{{ path('spore_specimens') }}" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition hover:border-wcm-red">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="bg-wcm-red/10 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/>
-                                <path d="m22 17.65-8.58 3.91a2 2 0 0 1-1.66 0L2.6 17.64"/>
-                                <path d="m22 12.65-8.58 3.91a2 2 0 0 1-1.66 0L2.6 12.64"/>
-                            </svg>
-                        </div>
-                        <h3 class="font-semibold text-gray-800">Specimen Lookup</h3>
-                    </div>
-                    <p class="text-sm text-gray-600">Find cases by accession</p>
-                </a>
-
-                <a href="{{ path('spore_biomarkers') }}" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition hover:border-wcm-red">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="bg-wcm-red/10 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                <path d="M10 2v7.31"/>
-                                <path d="M14 9.3V1.99"/>
-                                <path d="M8.5 2h7"/>
-                                <path d="M14 9.3a6.5 6.5 0 1 1-4 0"/>
-                                <path d="M5.52 16h12.96"/>
-                            </svg>
-                        </div>
-                        <h3 class="font-semibold text-gray-800">Biomarker Summary</h3>
-                    </div>
-                    <p class="text-sm text-gray-600">ERG, PTEN, SPOP, SPINK1</p>
-                </a>
-
-                <a href="{{ path('spore_outcomes') }}" class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition hover:border-wcm-red">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="bg-wcm-red/10 p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
-                                <path d="m19 9-5 5-4-4-3 3"/>
-                            </svg>
-                        </div>
-                        <h3 class="font-semibold text-gray-800">Outcomes Explorer</h3>
-                    </div>
-                    <p class="text-sm text-gray-600">Recurrence & survival</p>
-                </a>
+            {# Filters and Export #}
+            <div class="flex justify-end gap-3 mb-6">
+                <button class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                    </svg>
+                    Filters
+                </button>
+                <button class="flex items-center gap-2 px-4 py-2 bg-wcm-red text-white rounded-lg text-sm font-medium hover:bg-red-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" x2="12" y1="15" y2="3"/>
+                    </svg>
+                    Export Data
+                </button>
             </div>
 
-            {# Statistics Cards #}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            {# Statistics Cards - 7 cards in a row #}
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-8">
                 <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                     <div class="flex items-center gap-3 mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
@@ -95,6 +60,19 @@
                         <span class="text-sm text-gray-600">Specimens</span>
                     </div>
                     <p class="text-3xl font-bold text-gray-900">{{ dashboard.totalSpecimens|default(0)|number_format }}</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                            <path d="M8 2v4"/>
+                            <path d="M16 2v4"/>
+                            <rect width="18" height="18" x="3" y="4" rx="2"/>
+                            <path d="M3 10h18"/>
+                        </svg>
+                        <span class="text-sm text-gray-600">Procedures</span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900">{{ dashboard.totalProcedures|default(0)|number_format }}</p>
                 </div>
 
                 <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
@@ -124,6 +102,19 @@
                 <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                     <div class="flex items-center gap-3 mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                            <path d="M10 2v7.31"/>
+                            <path d="M14 9.3V1.99"/>
+                            <path d="M8.5 2h7"/>
+                            <path d="M14 9.3a6.5 6.5 0 1 1-4 0"/>
+                        </svg>
+                        <span class="text-sm text-gray-600">Biomarkers</span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900">{{ dashboard.totalBiomarkers|default(0)|number_format }}</p>
+                </div>
+
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
                             <circle cx="12" cy="12" r="10"/>
                             <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
                             <path d="M2 12h20"/>
@@ -134,8 +125,33 @@
                 </div>
             </div>
 
-            {# Main Content Grid #}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {# Main Content Grid - First Row: Survival Status, Gleason Score, Biomarker Analysis #}
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                {# Survival Status #}
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Survival Status</h3>
+                    {% if dashboard.survivalData is defined and dashboard.survivalData %}
+                        <div class="space-y-4">
+                            {% for status in dashboard.survivalData %}
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600 flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full {% if status.name == 'Alive' %}bg-green-500{% elseif status.name == 'Deceased' %}bg-red-500{% else %}bg-yellow-500{% endif %}"></span>
+                                            {{ status.name }}
+                                        </span>
+                                        <span class="font-medium">{{ status.count }} ({{ status.percentage }}%)</span>
+                                    </div>
+                                    <div class="flex h-3 rounded-full overflow-hidden bg-gray-100">
+                                        <div class="{% if status.name == 'Alive' %}bg-green-500{% elseif status.name == 'Deceased' %}bg-red-500{% else %}bg-yellow-500{% endif %}" style="width: {{ status.percentage }}%"></div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-500 text-center py-8">No survival data available</p>
+                    {% endif %}
+                </div>
+
                 {# Gleason Score Distribution #}
                 <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Gleason Score Distribution</h3>
@@ -161,26 +177,41 @@
                 {# Biomarker Analysis #}
                 <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Biomarker Analysis</h3>
-                    {% if dashboard.biomarkerData is defined and dashboard.biomarkerData %}
-                        <div class="grid grid-cols-2 gap-4">
-                            {% for marker in dashboard.biomarkerData %}
-                                <div class="bg-gray-50 rounded-lg p-4">
-                                    <h4 class="font-medium text-gray-800 mb-2">{{ marker.name }}</h4>
-                                    <div class="flex gap-2 text-xs">
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded">{{ marker.positive }}% Positive</span>
-                                        <span class="px-2 py-1 bg-gray-200 text-gray-700 rounded">{{ marker.negative }}% Negative</span>
-                                    </div>
-                                </div>
-                            {% endfor %}
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <h4 class="font-medium text-gray-700 mb-2 text-sm">ERG</h4>
+                            <div class="flex gap-2 text-xs">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded">0 Positive</span>
+                                <span class="px-2 py-1 bg-gray-200 text-gray-600 rounded">0 Negative</span>
+                            </div>
                         </div>
-                    {% else %}
-                        <p class="text-gray-500 text-center py-8">No biomarker data available</p>
-                    {% endif %}
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <h4 class="font-medium text-gray-700 mb-2 text-sm">PTEN</h4>
+                            <div class="flex gap-2 text-xs">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded">0 Positive</span>
+                                <span class="px-2 py-1 bg-gray-200 text-gray-600 rounded">0 Negative</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <h4 class="font-medium text-gray-700 mb-2 text-sm">SPOP</h4>
+                            <div class="flex gap-2 text-xs">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded">0 Positive</span>
+                                <span class="px-2 py-1 bg-gray-200 text-gray-600 rounded">0 Negative</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <h4 class="font-medium text-gray-700 mb-2 text-sm">SPINK1</h4>
+                            <div class="flex gap-2 text-xs">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded">0 Positive</span>
+                                <span class="px-2 py-1 bg-gray-200 text-gray-600 rounded">0 Negative</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {# Secondary Charts Grid #}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            {# Second Row - Procedure Types, Biomarker Summary, Race Distribution #}
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                 {# Procedure Types #}
                 <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Procedure Types</h3>
@@ -196,6 +227,54 @@
                     {% else %}
                         <p class="text-gray-500 text-center py-8">No procedure data available</p>
                     {% endif %}
+                </div>
+
+                {# Biomarker Summary #}
+                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Biomarker Summary</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">ERG</span>
+                                <span class="font-medium">0 tests</span>
+                            </div>
+                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                                <div class="bg-green-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">PTEN</span>
+                                <span class="font-medium">0 tests</span>
+                            </div>
+                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                                <div class="bg-green-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">SPOP</span>
+                                <span class="font-medium">0 tests</span>
+                            </div>
+                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                                <div class="bg-green-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">SPINK1</span>
+                                <span class="font-medium">0 tests</span>
+                            </div>
+                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                                <div class="bg-green-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 text-xs text-gray-500 mt-4 pt-3 border-t">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span>Positive</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span>Negative</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>Equivocal</span>
+                    </div>
                 </div>
 
                 {# Race Distribution #}
@@ -219,31 +298,61 @@
                         <p class="text-gray-500 text-center py-8">No race distribution data available</p>
                     {% endif %}
                 </div>
-
-                {# Survival Status #}
-                <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Survival Status</h3>
-                    {% if dashboard.survivalData is defined and dashboard.survivalData %}
-                        <div class="space-y-4">
-                            {% for status in dashboard.survivalData %}
-                                <div class="flex items-center gap-3">
-                                    <div class="w-3 h-3 rounded-full {% if status.name == 'Alive' %}bg-green-500{% elseif status.name == 'Deceased' %}bg-red-500{% else %}bg-yellow-500{% endif %}"></div>
-                                    <span class="text-gray-600">{{ status.name }}</span>
-                                    <span class="font-medium ml-auto">{{ status.count }} ({{ status.percentage }}%)</span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-gray-500 text-center py-8">No survival data available</p>
-                    {% endif %}
-                </div>
             </div>
 
-            {# Quick Search #}
-            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-8">
+            {# Quick Actions - Icon Cards at Bottom #}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <a href="{{ path('spore_patients') }}" class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition hover:border-wcm-red flex flex-col items-center text-center">
+                    <div class="bg-orange-100 p-3 rounded-lg mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 text-sm">Patient Browser</h3>
+                    <p class="text-xs text-gray-500 mt-1">Search and filter patients</p>
+                </a>
+
+                <a href="{{ path('spore_specimens') }}" class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition hover:border-wcm-red flex flex-col items-center text-center">
+                    <div class="bg-red-100 p-3 rounded-lg mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                            <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 text-sm">Specimen Lookup</h3>
+                    <p class="text-xs text-gray-500 mt-1">Find cases by accession</p>
+                </a>
+
+                <a href="{{ path('spore_biomarkers') }}" class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition hover:border-wcm-red flex flex-col items-center text-center">
+                    <div class="bg-amber-100 p-3 rounded-lg mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                            <path d="M10 2v7.31"/>
+                            <path d="M14 9.3V1.99"/>
+                            <path d="M8.5 2h7"/>
+                            <path d="M14 9.3a6.5 6.5 0 1 1-4 0"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 text-sm">Biomarker Analysis</h3>
+                    <p class="text-xs text-gray-500 mt-1">ERG, PTEN, SPOP, SPINK1</p>
+                </a>
+
+                <a href="{{ path('spore_outcomes') }}" class="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition hover:border-wcm-red flex flex-col items-center text-center">
+                    <div class="bg-rose-100 p-3 rounded-lg mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
+                            <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+                            <path d="m19 9-5 5-4-4-3 3"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 text-sm">Outcomes Explorer</h3>
+                    <p class="text-xs text-gray-500 mt-1">Recurrence & survival</p>
+                </a>
+            </div>
+
+            {# Quick Patient Search #}
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Patient Search</h3>
-                <form action="{{ path('spore_patients') }}" method="get" class="flex gap-4">
-                    <div class="flex-1 relative">
+                <form action="{{ path('spore_patients') }}" method="get">
+                    <div class="relative">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400">
                             <circle cx="11" cy="11" r="8"/>
                             <path d="m21 21-4.3-4.3"/>
@@ -251,42 +360,7 @@
                         <input type="text" name="q" placeholder="Search by WCM ID, case number, or patient ID..." 
                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wcm-red focus:border-wcm-red">
                     </div>
-                    <button type="submit" class="px-6 py-3 bg-wcm-red text-white rounded-lg hover:bg-red-700 transition">
-                        Search
-                    </button>
                 </form>
-            </div>
-
-            {# Recent Activity #}
-            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800">Recent Activity</h3>
-                    <a href="#" class="text-sm text-wcm-red hover:underline">View All</a>
-                </div>
-                {% if recentActivity is defined and recentActivity %}
-                    <div class="space-y-3">
-                        {% for activity in recentActivity %}
-                            <div class="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-                                <div class="flex items-center gap-3">
-                                    <div class="bg-gray-100 p-2 rounded-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600">
-                                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-800">{{ activity.description }}</p>
-                                        <p class="text-sm text-gray-500">{{ activity.timestamp|date('M d, Y H:i') }}</p>
-                                    </div>
-                                </div>
-                                <span class="px-2 py-1 text-xs rounded-full {% if activity.type == 'new' %}bg-green-100 text-green-800{% elseif activity.type == 'update' %}bg-blue-100 text-blue-800{% else %}bg-gray-100 text-gray-800{% endif %}">
-                                    {{ activity.type|capitalize }}
-                                </span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p class="text-gray-500 text-center py-8">No recent activity</p>
-                {% endif %}
             </div>
         </div>
     </main>

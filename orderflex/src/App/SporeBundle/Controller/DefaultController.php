@@ -47,70 +47,34 @@ class DefaultController extends OrderAbstractController
     {
         $title = 'Prostate Cancer Research Data Explorer';
         
-        // Dashboard statistics (placeholder data - replace with actual database queries)
+        // Dashboard statistics - all zeros to match original empty state
         $dashboard = [
-            'totalPatients' => 1247,
-            'totalSpecimens' => 3456,
-            'totalBlocks' => 8921,
-            'totalSlides' => 12453,
-            'totalTMACores' => 5678,
-            'gleasonData' => [
-                ['score' => '6 (3+3)', 'count' => 245, 'percentage' => 19.6],
-                ['score' => '7 (3+4)', 'count' => 412, 'percentage' => 33.0],
-                ['score' => '7 (4+3)', 'count' => 298, 'percentage' => 23.9],
-                ['score' => '8 (4+4)', 'count' => 156, 'percentage' => 12.5],
-                ['score' => '9 (4+5/5+4)', 'count' => 89, 'percentage' => 7.1],
-                ['score' => '10 (5+5)', 'count' => 47, 'percentage' => 3.8],
+            'totalPatients' => 0,
+            'totalSpecimens' => 0,
+            'totalProcedures' => 0,
+            'totalBlocks' => 0,
+            'totalSlides' => 0,
+            'totalBiomarkers' => 0,
+            'totalTMACores' => 0,
+            'biomarkerSummary' => [
+                ['name' => 'ERG', 'count' => 0, 'positivePct' => 0, 'negativePct' => 0, 'equivocalPct' => 0],
+                ['name' => 'PTEN', 'count' => 0, 'positivePct' => 0, 'negativePct' => 0, 'equivocalPct' => 0],
+                ['name' => 'SPOP', 'count' => 0, 'positivePct' => 0, 'negativePct' => 0, 'equivocalPct' => 0],
+                ['name' => 'SPINK1', 'count' => 0, 'positivePct' => 0, 'negativePct' => 0, 'equivocalPct' => 0],
             ],
-            'biomarkerData' => [
-                ['name' => 'ERG', 'positive' => 42, 'negative' => 58],
-                ['name' => 'PTEN', 'positive' => 35, 'negative' => 65],
-                ['name' => 'SPOP', 'positive' => 28, 'negative' => 72],
-                ['name' => 'SPINK1', 'positive' => 18, 'negative' => 82],
-            ],
-            'procedureTypes' => [
-                ['name' => 'Radical Prostatectomy', 'count' => 892],
-                ['name' => 'Biopsy', 'count' => 1567],
-                ['name' => 'TURP', 'count' => 423],
-                ['name' => 'Cystoprostatectomy', 'count' => 89],
-            ],
-            'raceDistribution' => [
-                ['name' => 'White', 'percentage' => 62.5],
-                ['name' => 'African American', 'percentage' => 18.3],
-                ['name' => 'Asian', 'percentage' => 8.7],
-                ['name' => 'Hispanic', 'percentage' => 7.2],
-                ['name' => 'Other', 'percentage' => 3.3],
-            ],
+            'gleasonData' => [],
+            'biomarkerData' => [],
+            'procedureTypes' => [],
+            'raceDistribution' => [],
             'survivalData' => [
-                ['name' => 'Alive', 'count' => 1089, 'percentage' => 87.3],
-                ['name' => 'Deceased', 'count' => 127, 'percentage' => 10.2],
-                ['name' => 'Unknown', 'count' => 31, 'percentage' => 2.5],
+                ['name' => 'Alive', 'count' => 0, 'percentage' => 0],
+                ['name' => 'Deceased', 'count' => 0, 'percentage' => 0],
+                ['name' => 'Unknown', 'count' => 0, 'percentage' => 0],
             ],
         ];
         
-        // Recent activity (placeholder data)
-        $recentActivity = [
-            [
-                'description' => 'New patient record added: PT-2024-0156',
-                'timestamp' => new \DateTime('-2 hours'),
-                'type' => 'new'
-            ],
-            [
-                'description' => 'Biomarker results updated: PT-2024-0142',
-                'timestamp' => new \DateTime('-5 hours'),
-                'type' => 'update'
-            ],
-            [
-                'description' => 'Specimen processed: SP-2024-0891',
-                'timestamp' => new \DateTime('-1 day'),
-                'type' => 'new'
-            ],
-            [
-                'description' => 'Slides scanned: 45 new images',
-                'timestamp' => new \DateTime('-2 days'),
-                'type' => 'update'
-            ],
-        ];
+        // Recent activity - empty to match original
+        $recentActivity = [];
         
         return [
             'title' => $title,
