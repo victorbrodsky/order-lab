@@ -1,0 +1,446 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        {#{% stylesheets#}
+            {#'bundles/appuserdirectory/pnotify/pnotify.custom.min.css'#}
+            {#'bundles/appuserdirectory/bootstrap/css/*'#}
+            {#'bundles/appuserdirectory/form/css/form.css'#}
+            {#'bundles/appuserdirectory/select2/select2.css'#}
+        {#%}#}
+            {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+        {#{% endstylesheets %}#}
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/css/bootstrap-theme.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/form.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/select2/css/select2.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css') }}" />
+
+        {#https://stackoverflow.com/questions/18156240/use-font-awesome-icon-as-favicon#}
+        {#glyphicons-39-plane.png#}
+        {#{% set favicon = 'favicon.ico' %}#}
+        {% set favicon = 'glyphicons-157-show-thumbnails.png' %}
+
+        {% if sitename == employees_sitename %}
+            {% set title = "Employee Directory" %}
+            {% set favicon = 'orderassets/AppUserdirectoryBundle/form/img/users-1-64x64.png' %}
+        {% endif %}
+
+        {% if sitename == scan_sitename %}
+            {% set title = "Scan Orders" %}
+            {% set favicon = 'favicon.ico' %}
+        {% endif %}
+
+        {% if sitename == fellapp_sitename %}
+            {% set title = "Fellowship Applications" %}
+            {% set favicon = 'glyphicons-37-file.png' %}
+        {% endif %}
+
+        {% if sitename == resapp_sitename %}
+            {% set title = "Residency Applications" %}
+            {% set favicon = 'glyphicons-37-file.png' %}
+        {% endif %}
+
+        {% if sitename == deidentifier_sitename %}
+            {% set title = "Deidentifier" %}
+            {% set favicon = 'glyphicons-81-retweet.png' %}
+        {% endif %}
+
+        {% if sitename == vacreq_sitename %}
+            {% set title = "Vacation Request" %}
+            {% set favicon = 'glyphicons-39-plane.png' %}
+        {% endif %}
+
+        {% if sitename == calllog_sitename %}
+            {% set title = "Call Log Book" %}
+            {% set favicon = 'glyphicons-442-phone-alt.png' %}
+        {% endif %}
+
+        {% if sitename == crn_sitename %}
+            {% set title = "Critical Result Notifications" %}
+            {% set favicon = 'glyphicons-pencil.png' %}
+        {% endif %}
+        {% if sitename == tma_sitename %}
+            {% set title = "Tissue Microarrays" %}
+            {% set favicon = 'glyphicons-pencil.png' %}
+        {% endif %}
+
+        {% if sitename == translationalresearch_sitename %}
+            {% set title = "Translational Research" %}
+            {% set favicon = 'glyphicons-342-briefcase.png' %}
+        {% endif %}
+
+        {% if sitename == ctp_sitename %}
+            {% set title = "Center for Translational Pathology" %}
+            {% set favicon = 'glyphicons-search.png' %}
+        {% endif %}
+
+        {% if sitename == dashboard_sitename %}
+            {% set title = "Dashboards" %}
+            {#{% set favicon = 'favicon-stats.png' %}#}
+            {% set favicon = 'bar-chart-fill.svg' %}
+        {% endif %}
+
+        <title>{{ title }}</title>
+
+        {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {#<meta name = "viewport" content = "user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"/>#}
+        {#<meta name="apple-mobile-web-app-capable" content="yes"/>#}
+
+        {#{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}#}
+        {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+        {{ usermacros.nonLiveSiteRedirect() }}
+
+        <link rel="icon" type="image/x-icon" href="{{ asset(favicon) }}" />
+
+    </head>
+
+    <body>
+
+        {#<input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />#}
+        {#<input type="hidden" id="tenantprefix" value="{{ app.request.locale }}" />#}
+        <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
+        {#{% include 'AppCtpBundle/Security/login_content.html.twig' with {'sitename': sitename, 'title': title} %}#}
+        {% include 'AppCtpBundle/Security/login_content_original.html.twig' with {'sitename': sitename, 'title': title} %}
+
+        <div class="text-center">
+            {% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}
+        </div>
+
+        {#{% javascripts#}
+            {#'@AppUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+            {#'@AppUserdirectoryBundle/Resources/public/select2/select2.full.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'#}
+            {#'@AppUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+        {#%}#}
+            {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+        {#{% endjavascripts %}#}
+
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/jquery/jquery-1.11.0.min.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/bootstrap/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/select2/js/select2.full.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/pnotify/pnotify.custom.min.js') }}"></script>
+        <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/user-common.js') }}"></script>
+
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+        <script type="text/javascript">
+//            var _ajaxTimeout = 60000;  //15000 => 15 sec
+//            //var urlBase = $("#baseurl").val();
+//            var url = getCommonBaseUrl("setloginvisit/");	//urlBase+"setloginvisit/";
+//            //console.log("url="+url);
+
+            $(document).ready(function() {
+
+
+                changeLoginInstruction();
+                userPnotifyDisplay();
+                regularCombobox();
+
+                //Issue: freshly loaded chrome browser -> click login or somewhere else -> "No matches found” in select2 field
+                //Disable autocomplete on the Select2
+                $("#display-username").attr("autocomplete", "username");
+                $("#s2id_autogen1_search").attr("autocomplete", "off");
+                $(".select2-input")
+                    .attr("autocomplete", "off")
+                    .attr("name", "select2-ignore-autocomplete");
+
+                loginTypeOnchange();
+                
+                //$("#s2id_autogen1_search").attr("autocomplete", "off");
+                //$(".select2-input").attr("autocomplete", "off");
+
+                $("#login-form").on("submit", function () {
+                    setFullUsername();
+
+                    //Add 2 cases:
+                    //1) SAML login type => user enters the user name => user exists => user domain has SAML => redirect to SAML
+                    //2) user enters the user email BEFORE ever changing authentication to SAML/SSO
+                    // => user exists => user domain has SAML => redirect to SAML
+
+                    var samlenabled = $('#samlenabled').val();
+                    //console.log("samlenabled=["+samlenabled+"]");
+                    //return false;
+                    var usesaml = false;
+                    var samlusername = null;
+                    if( Number(samlenabled) == 1 ) {
+                        //console.log("samlenabled="+samlenabled);
+                        //return false;
+                        var username = $('#display-username').val();
+                        var sitename = $('#sitename').val();
+                        //var password = $('#password').val();
+                        var lastRoute = $('#lastRoute').val();
+                        //console.log("username="+username);
+                        //return false;
+                        var url = Routing.generate('employees_user_check_custom');
+                        console.log("employees_user_check_custom: url="+url);
+                        $.ajax({
+                            url: url,
+                            timeout: 5000, // sets timeout to 5 seconds
+                            type: "POST",
+                            async: false,
+                            data: {
+                                _username: username,
+                                //_sitename: sitename,
+                                //_password: password,
+                                //_lastroute: lastRoute,
+                            }
+                        }).success(function(data) {
+                            //console.log("data="+data);
+                            if(1) {
+                                var jsonData = JSON.parse(data);
+                                //console.log("jsonData=" + jsonData);
+                                //usesaml = jsonData.usesaml;
+                                //console.log("1usesaml="+usesaml);
+                                //usesaml = jsonData['usesaml'];
+                                //console.log("2usesaml="+usesaml);
+                                if (jsonData['usesaml']) {
+                                    usesaml = true;
+                                    samlusername = jsonData['useremail'];
+                                    //console.log("samlusername=" + samlusername);
+                                }
+                            }
+                            //$('#lastRoute').val(data['lastroute']);
+                        }).fail(function(jqXHR, exception, error) {
+                            var failMsg = "employees_user_check_custom: exception="+exception+", error="+error;
+                            console.log(failMsg);
+                            //alert(failMsg);
+                        }).done(function() {
+                            //userStopBtn(btn,lbtn);
+                            console.log("employees_user_check_custom done");
+                        });
+                        //return false;
+                        //usesaml = false; //disable saml
+                    }
+
+                    if(0) {
+                        var username = $('#display-username').val();
+                        var sitename = $('#sitename').val();
+                        var password = $('#password').val();
+                        var lastRoute = $('#lastRoute').val();
+                        //var redirectUrl = Routing.generate('employees_login_check_custom');
+                        var redirectUrl = Routing.generate('employees_login_check_custom', {
+                            _username: username,
+                            _password: password,
+                            _sitename: sitename,
+                            lastRoute: lastRoute
+                        });
+                        redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
+                        //console.log("redirectUrl=" + redirectUrl);
+                        window.location.replace(redirectUrl);
+                        return false;
+                    }
+
+                    //console.log("before saml: usesaml="+usesaml);
+                    //return false;
+
+                    if( usesaml ) {
+                        var usernametypeid = $('#usernametypeid_show').val();
+                        //console.log("usesaml: usernametypeid="+usernametypeid);
+                        $('#message').html("").hide();
+
+                        if( usesaml || usernametypeid == 'saml-sso' ) {
+                            if( usernametypeid == 'saml-sso' ) {
+                                if( validateUsername() == false ) {
+                                    $('#message').html("Please enter your full email").show();
+                                    return false;
+                                }
+                            }
+
+                            //set user type to saml to enable saml authentication response
+                            //usernametypeid = 'saml-sso';
+
+                            //redirect to SAML controller (SamlController->login)
+                            var username = $('#display-username').val();
+                            if( samlusername ) {
+                                username = samlusername;
+                            }
+                            var sitename = $('#sitename').val();
+                            var lastRoute = $('#lastRoute').val();
+                            //console.log("username="+username);
+                            //console.log("lastRoute="+lastRoute);
+                            //return false;
+                            if (username) {
+                                var redirectUrl = Routing.generate('saml_login', {
+                                    client: username,
+                                    sitename: sitename,
+                                });
+                                redirectUrl = redirectUrl + "?lastroute=" + lastRoute;
+                                //console.log("redirectUrl="+redirectUrl);
+                                window.location.replace(redirectUrl);
+                                return false;
+                            }
+                        }
+                    }
+
+                    //alert("username="+document.getElementById("username").value + ", password=" + document.getElementById("password").value );
+                    //return true;
+                });
+
+                //cursor would only be moved to the password field if the user name is non-empty
+                if( $('#display-username').val() ) {
+                    //console.log('focus password field');
+                    $('#password').focus();
+                } else {
+                    //console.log('focus username field');
+                    $('#display-username').focus();
+                }
+
+//                $.ajax({
+//                    url: url,
+//                    type: 'GET',
+//                    async: true,
+//                    timeout: _ajaxTimeout,
+//                    data: { display_height: screen.height, display_width: screen.width },
+//                    success: function (data) {
+//                        //console.debug('send browser data ok');
+//                    },
+//                    error: function (x , t, m) {
+//                        if( t === "timeout" ) {
+//                            getAjaxTimeoutMsg();
+//                        }
+//                        //console.debug('send browser data error');
+//                    }
+//                });
+                //userLoginVisit();
+
+
+
+            });
+
+
+            function loginTypeOnchange() {
+                console.log('loginTypeOnchange');
+                $('#usernametypeid_show').on( 'change', function() {
+                    $('#message').html("").hide();
+                    $('#password').show();
+                    var loginType = $(this).val();
+                    console.log('loginTypeOnchange: loginType='+loginType);
+                    if( loginType == 'saml-sso' ) {
+                        $('#password').hide();
+                    }
+
+                    changeLoginInstruction(loginType);
+                });
+
+            }
+
+            //This is a questionable feature to hide the login instruction since it
+            // can be changed in the site settings and might be different than 'Please use your CWID to log in.'
+            function changeLoginInstruction( loginType ) {
+                if( loginType == null ) {
+                    loginType = $('#usernametypeid_show').val();
+                }
+                console.log('changeLoginInstruction: loginType='+loginType);
+
+                if( loginType == 'local-user' ) {
+                    $('#login-instruction').hide();
+                } else {
+                    $('#login-instruction').show();
+                }
+            }
+
+            function validateUsername() {
+                var username = $('#display-username').val();
+                if( loginValidateEmail(username) ) {
+                    return true;
+                }
+                return false;
+            }
+            function loginValidateEmail(email) {
+                return String(email)
+                        .toLowerCase()
+                        .match(
+                                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                        );
+            };
+
+//            //NOT USED
+//            function userLoginVisit() {
+//                var _ajaxTimeout = 60000;  //15000 => 15 sec
+//                //var urlBase = $("#baseurl").val();
+//                var url = getCommonBaseUrl("setloginvisit/");	//urlBase+"setloginvisit/";
+//                //console.log("url="+url);
+//
+//                $.ajax({
+//                    url: url,
+//                    type: 'GET',
+//                    async: true,
+//                    timeout: _ajaxTimeout,
+//                    data: { display_height: screen.height, display_width: screen.width },
+//                    success: function (data) {
+//                        //console.debug('send browser data ok');
+//                    },
+//                    error: function (x , t, m) {
+//                        if( t === "timeout" ) {
+//                            getAjaxTimeoutMsg();
+//                        }
+//                        //console.debug('send browser data error');
+//                    }
+//                });
+//            }
+
+            //append usernametype to username
+            function setFullUsername() {
+
+                var usertypeAbbreviation = $('#usernametypeid_show').select2('val');
+//                if( !usertypeAbbreviation || usertypeAbbreviation == "" || usertypeAbbreviation === null || typeof usertypeAbbreviation === 'object' ) {
+//                    //return;
+//                    usertypeAbbreviation = 'ldap-user';
+//                }
+
+                //console.log(usertypeAbbreviation);
+                //alert(usertypeAbbreviation);
+
+                var username = $('#display-username').val();
+                if( !username || username == "" ) {
+                    return;
+                }
+
+                var fullusername = username + "_@_" + usertypeAbbreviation;
+
+                //console.log("usertypeAbbreviation="+usertypeAbbreviation+", fullusername="+fullusername);
+
+                $('#username').val(fullusername);
+
+                return;
+            }
+
+
+
+
+
+
+        </script>
+
+
+    </body>
+         
+</html>

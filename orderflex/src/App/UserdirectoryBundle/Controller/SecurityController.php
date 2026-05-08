@@ -317,6 +317,14 @@ class SecurityController extends OrderAbstractController
 //            "Test message"
 //        );
 
+        //TODO: make it better
+        if( $routename == "ctp_login" ) {
+            return $this->render(
+                'AppCtpBundle/Security/login_new.html.twig',
+                $formArr
+            );
+        }
+        
         return $this->render(
             'AppUserdirectoryBundle/Security/login.html.twig',
             $formArr
