@@ -156,9 +156,9 @@ class DefaultController extends OrderAbstractController
     }
 
     //Comp Path Lab
-    #[Route(path: '/project-requests', name: 'ctp_project_requests', methods: ['GET'])]
-    #[Template('AppCtpBundle/Home/project_requests.html.twig')]
-    public function projectRequestsAction( Request $request ) {
+    #[Route(path: '/project-request', name: 'ctp_project_request', methods: ['GET'])]
+    #[Template('AppCtpBundle/Home/project_request.html.twig')]
+    public function projectRequestAction( Request $request ) {
         $title = 'Center for Translational Pathology';
         return array(
             'title' => $title,
