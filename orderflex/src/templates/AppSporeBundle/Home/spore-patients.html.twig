@@ -1,0 +1,76 @@
+{% extends "AppCtpBundle/Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }} - SPORE
+{% endblock %}
+
+{% block content_ctp %}
+    <main class="min-h-screen bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {# Page Header #}
+            <div class="mb-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <a href="{{ path('spore_home') }}" class="text-gray-600 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 19-7-7 7-7"/>
+                            <path d="M19 12H5"/>
+                        </svg>
+                    </a>
+                    <h1 class="text-3xl font-bold text-gray-900">Patient Browser</h1>
+                </div>
+                <p class="text-gray-600">Search and filter prostate cancer patients</p>
+            </div>
+
+            {# Search Form #}
+            <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
+                <form action="{{ path('spore_patients') }}" method="get" class="flex gap-4">
+                    <div class="flex-1 relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.3-4.3"/>
+                        </svg>
+                        <input type="text" name="q" value="{{ search }}" placeholder="Search by WCM ID, MRN, or patient name..." 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wcm-red focus:border-wcm-red">
+                    </div>
+                    <button type="submit" class="px-6 py-3 bg-wcm-red text-white rounded-lg hover:bg-red-700 transition">
+                        Search
+                    </button>
+                </form>
+            </div>
+
+            {# Results #}
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-800">Patient List</h2>
+                </div>
+                {% if patients %}
+                    <div class="divide-y divide-gray-200">
+                        {% for patient in patients %}
+                            <div class="p-6 hover:bg-gray-50">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium text-gray-900">{{ patient.name }}</p>
+                                        <p class="text-sm text-gray-500">WCM ID: {{ patient.wcmId }} | MRN: {{ patient.mrn }}</p>
+                                    </div>
+                                    <a href="#" class="text-wcm-red hover:underline text-sm">View Details</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="p-12 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-gray-300">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.3-4.3"/>
+                        </svg>
+                        <p class="text-gray-500">No patients found. Use the search above to find patients.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

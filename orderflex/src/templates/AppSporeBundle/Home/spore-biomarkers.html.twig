@@ -1,0 +1,103 @@
+{% extends "AppCtpBundle/Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }} - SPORE
+{% endblock %}
+
+{% block content_ctp %}
+    <main class="min-h-screen bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {# Page Header #}
+            <div class="mb-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <a href="{{ path('spore_home') }}" class="text-gray-600 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 19-7-7 7-7"/>
+                            <path d="M19 12H5"/>
+                        </svg>
+                    </a>
+                    <h1 class="text-3xl font-bold text-gray-900">Biomarker Summary</h1>
+                </div>
+                <p class="text-gray-600">Prostate cancer biomarker analysis: ERG, PTEN, SPOP, SPINK1</p>
+            </div>
+
+            {# Biomarker Overview Cards #}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                {% for name, data in biomarkers %}
+                    <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ name|upper }}</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-green-600 flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                                    Positive
+                                </span>
+                                <span class="font-bold">{{ data.positive }}</span>
+                            </div>
+                            <div class="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                                {% set total = data.positive + data.negative + data.equivocal %}
+                                {% set positive_pct = total > 0 ? (data.positive / total * 100) : 0 %}
+                                <div class="bg-green-500" style="width: {{ positive_pct }}%"></div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500 flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-gray-400"></span>
+                                    Negative
+                                </span>
+                                <span class="font-bold">{{ data.negative }}</span>
+                            </div>
+                            {% if data.equivocal > 0 %}
+                                <div class="flex justify-between items-center">
+                                    <span class="text-yellow-600 flex items-center gap-2">
+                                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                                        Equivocal
+                                    </span>
+                                    <span class="font-bold">{{ data.equivocal }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {# Summary Table #}
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-800">Biomarker Summary Table</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Biomarker</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Positive</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Negative</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equivocal</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Positive Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            {% for name, data in biomarkers %}
+                                {% set total = data.positive + data.negative + data.equivocal %}
+                                {% set positive_rate = total > 0 ? (data.positive / total * 100)|number_format(1) : 0 %}
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-gray-900">{{ name|upper }}</td>
+                                    <td class="px-6 py-4 text-green-600">{{ data.positive }}</td>
+                                    <td class="px-6 py-4">{{ data.negative }}</td>
+                                    <td class="px-6 py-4 text-yellow-600">{{ data.equivocal }}</td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">{{ positive_rate }}%</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
