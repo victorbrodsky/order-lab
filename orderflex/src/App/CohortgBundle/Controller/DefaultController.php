@@ -50,9 +50,7 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/', name: 'cohortg_home', methods: ['GET'])]
     #[Template('AppCohortgBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
-
         $title = 'Cohort Generator';
-
         return array(
             'title' => $title,
         );
