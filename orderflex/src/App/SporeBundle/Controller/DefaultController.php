@@ -41,7 +41,7 @@ class DefaultController extends OrderAbstractController
     }
 
     #[Route(path: '/', name: 'spore_home', methods: ['GET'])]
-    #[Template('AppSporeBundle/Home/home.html.twig')]
+    #[Template('AppSporeBundle/Home/spore-home.html.twig')]
     public function indexAction( Request $request ) {
         $title = 'Prostate Cancer Research Data Explorer';
         return array('title' => $title);
