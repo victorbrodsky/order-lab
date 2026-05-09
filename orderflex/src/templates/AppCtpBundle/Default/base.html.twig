@@ -194,7 +194,7 @@
         {#</div>#}
 
         {% if app.user %}
-            {% set loginUrl = '<a href="' ~ path("employees_logout") ~ '">Logout</a>' %}
+            {% set loginUrl = '<a href="' ~ path("ctp_logout") ~ '">Logout</a>' %}
         {% else %}
             {% set loginUrl = '<a href="' ~ path("ctp_login") ~ '">Login</a>' %}
         {% endif %}
