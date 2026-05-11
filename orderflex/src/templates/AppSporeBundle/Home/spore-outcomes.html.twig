@@ -130,14 +130,14 @@
             {# Tabs #}
             <div class="border-b border-gray-200 mb-6">
                 <nav class="flex gap-6">
-                    <button class="px-1 py-2 text-sm font-medium text-wcm-red border-b-2 border-wcm-red">Survival Analysis</button>
-                    <button class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Recurrence</button>
-                    <button class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Metastasis</button>
+                    <button id="tab-survival" class="px-1 py-2 text-sm font-medium text-wcm-red border-b-2 border-wcm-red" onclick="showTab('survival')">Survival Analysis</button>
+                    <button id="tab-recurrence" class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" onclick="showTab('recurrence')">Recurrence</button>
+                    <button id="tab-metastasis" class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" onclick="showTab('metastasis')">Metastasis</button>
                 </nav>
             </div>
 
-            {# Content Grid #}
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {# Content Grid - Survival Analysis #}
+            <div id="content-survival" class="tab-content grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {# Survival by Gleason Score #}
                 <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Survival by Gleason Score</h3>
@@ -219,10 +219,118 @@
                     </div>
                 </div>
             </div>
+
+            {# Content Grid - Recurrence #}
+            <div id="content-recurrence" class="tab-content grid grid-cols-1 lg:grid-cols-2 gap-6" style="display: none;">
+                {# Recurrence by Year #}
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    {#<h3 class="text-lg font-semibold text-gray-800 mb-4">#}
+                        {#<span class="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded mr-2">Recurrence by Year</span>#}
+                    {#</h3>#}
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recurrence by Year</h3>
+                    <div class="h-64 flex items-center justify-center text-gray-400">
+                        No recurrence data available
+                    </div>
+                </div>
+
+                {# Time to Recurrence #}
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Time to Recurrence (from procedure)</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600 w-20">&lt; 1 year</span>
+                            <div class="flex-1 h-8 bg-wcm-red rounded" style="width: 0%;"></div>
+                            <span class="text-sm text-gray-600 w-8 text-right">0</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600 w-20">1-2 years</span>
+                            <div class="flex-1 h-8 bg-wcm-red rounded" style="width: 0%;"></div>
+                            <span class="text-sm text-gray-600 w-8 text-right">0</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600 w-20">2-3 years</span>
+                            <div class="flex-1 h-8 bg-wcm-red rounded" style="width: 0%;"></div>
+                            <span class="text-sm text-gray-600 w-8 text-right">0</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600 w-20">3-5 years</span>
+                            <div class="flex-1 h-8 bg-wcm-red rounded" style="width: 0%;"></div>
+                            <span class="text-sm text-gray-600 w-8 text-right">0</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600 w-20">5-10 years</span>
+                            <div class="flex-1 h-8 bg-wcm-red rounded" style="width: 0%;"></div>
+                            <span class="text-sm text-gray-600 w-8 text-right">0</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm text-gray-600 w-20">&gt; 10 years</span>
+                            <div class="flex-1 h-8 bg-wcm-red rounded" style="width: 0%;"></div>
+                            <span class="text-sm text-gray-600 w-8 text-right">0</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4">Distribution of time from initial procedure to documented recurrence</p>
+                </div>
+            </div>
+
+            {# Content Grid - Metastasis #}
+            <div id="content-metastasis" class="tab-content grid grid-cols-1 lg:grid-cols-2 gap-6" style="display: none;">
+                {# Metastasis Locations #}
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Metastasis Locations</h3>
+                    <div class="h-64 flex items-center justify-center text-gray-400">
+                        No metastasis location data available
+                    </div>
+                </div>
+
+                {# Metastasis Summary #}
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Metastasis Summary</h3>
+                    <div class="bg-red-50 rounded-lg p-6 mb-4 text-center">
+                        <p class="text-4xl font-bold text-wcm-red mb-2">0</p>
+                        <p class="text-sm text-gray-600">patients with documented metastasis</p>
+                        <p class="text-xs text-gray-500 mt-1">NaN% of cohort</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center py-2 bg-gray-50 rounded px-3">
+                            <span class="text-sm text-gray-600">Bone metastases</span>
+                            <span class="text-sm font-medium text-gray-900">0</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 bg-gray-50 rounded px-3">
+                            <span class="text-sm text-gray-600">Lymph node metastases</span>
+                            <span class="text-sm font-medium text-gray-900">0</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 bg-gray-50 rounded px-3">
+                            <span class="text-sm text-gray-600">Visceral metastases</span>
+                            <span class="text-sm font-medium text-gray-900">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        function showTab(tabName) {
+            // Hide all content sections
+            document.querySelectorAll('.tab-content').forEach(function(el) {
+                el.style.display = 'none';
+            });
+            
+            // Show selected content
+            document.getElementById('content-' + tabName).style.display = 'grid';
+            
+            // Reset all tab buttons
+            document.querySelectorAll('[id^="tab-"]').forEach(function(el) {
+                el.classList.remove('text-wcm-red', 'border-b-2', 'border-wcm-red');
+                el.classList.add('text-gray-500');
+            });
+            
+            // Highlight active tab
+            document.getElementById('tab-' + tabName).classList.remove('text-gray-500');
+            document.getElementById('tab-' + tabName).classList.add('text-wcm-red', 'border-b-2', 'border-wcm-red');
+        }
+    </script>
 {% endblock %}

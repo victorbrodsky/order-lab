@@ -58,12 +58,15 @@
             {# Tabs #}
             <div class="border-b border-gray-200 mb-6">
                 <nav class="flex gap-6">
-                    <button class="px-1 py-2 text-sm font-medium text-wcm-red border-b-2 border-wcm-red">Overview</button>
-                    <button class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Cross-tabulation</button>
-                    <button class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">Case Details</button>
+                    <button id="tab-overview" class="px-1 py-2 text-sm font-medium text-wcm-red border-b-2 border-wcm-red" onclick="showTab('overview')">Overview</button>
+                    <button id="tab-crosstab" class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" onclick="showTab('crosstab')">Cross-tabulation</button>
+                    <button id="tab-cases" class="px-1 py-2 text-sm font-medium text-gray-500 hover:text-gray-700" onclick="showTab('cases')">Case Details</button>
                 </nav>
             </div>
 
+            <div id="biomarkers-card" class="space-y-6">
+            {# Content - Overview #}
+            <div id="content-overview" class="tab-content">
             {# Biomarker Cards #}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <div class="bg-white rounded-lg border border-gray-200 p-4">
@@ -346,10 +349,120 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            {# Content - Cross-tabulation #}
+            <div id="content-crosstab" class="tab-content" style="display: none;">
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b31b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+                            <path d="m19 9-5 5-4-4-3 3"/>
+                        </svg>
+                        Biomarker Co-occurrence Analysis
+                    </h3>
+                    <p class="text-sm text-gray-500 mb-6">Cross-tabulation showing how biomarker results correlate with each other in cases where both markers were tested.</p>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left py-3 font-medium text-gray-700">Comparison</th>
+                                    <th class="text-center py-3 font-medium text-gray-700">Both +</th>
+                                    <th class="text-center py-3 font-medium text-gray-700">Both -</th>
+                                    <th class="text-center py-3 font-medium text-gray-700">M1+ / M2-</th>
+                                    <th class="text-center py-3 font-medium text-gray-700">M1- / M2+</th>
+                                    <th class="text-center py-3 font-medium text-gray-700">Total</th>
+                                    <th class="text-center py-3 font-medium text-gray-700">Concordance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                        <div class="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                            <p class="text-sm text-blue-700">
+                                <span class="font-medium">Concordance</span> is the percentage of cases where both markers have the same result (both positive or both negative). Higher concordance suggests the markers may be detecting similar biological processes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Content - Case Details #}
+            <div id="content-cases" class="tab-content" style="display: none;">
+                <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm mb-4">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                        </svg>
+                        <span class="text-sm text-gray-600">Filter:</span>
+                        <select class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm bg-white">
+                            <option>All Markers</option>
+                        </select>
+                        <select class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm bg-white">
+                            <option>All Results</option>
+                        </select>
+                        <span class="text-sm text-gray-500">0 cases found</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Case Number</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Patient</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Marker</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Method</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Result</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Score</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Gleason</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Year</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="py-12 text-center text-gray-400">
+                        No cases found matching your criteria
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        function showTab(tabName) {
+            // Hide all content sections
+            document.querySelectorAll('.tab-content').forEach(function(el) {
+                el.style.display = 'none';
+            });
+            
+            // Show selected content
+            document.getElementById('content-' + tabName).style.display = 'block';
+            
+            // Reset all tab buttons
+            document.querySelectorAll('[id^="tab-"]').forEach(function(el) {
+                el.classList.remove('text-wcm-red', 'border-b-2', 'border-wcm-red');
+                el.classList.add('text-gray-500');
+            });
+            
+            // Highlight active tab
+            document.getElementById('tab-' + tabName).classList.remove('text-gray-500');
+            document.getElementById('tab-' + tabName).classList.add('text-wcm-red', 'border-b-2', 'border-wcm-red');
+        }
+    </script>
 {% endblock %}
