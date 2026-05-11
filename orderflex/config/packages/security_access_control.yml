@@ -306,7 +306,7 @@ security:
        - { path: ^.*/tissue-microarrays/applications, role: ROLE_TMA_USER }
        - { path: ^.*/tissue-microarrays/, role: ROLE_SPORE_USER }
 
-      ############################## Regulatoryt SITE SETTINGS ##############################
+      ############################## REGULATORYT SITE SETTINGS ##############################
        - { path: ^.*/regulatory-templates/access-requests/new/, role: PUBLIC_ACCESS }
        - { path: ^.*/regulatory-templates/login, role: PUBLIC_ACCESS }
        - { path: ^.*/regulatory-templates/setloginvisit, role: PUBLIC_ACCESS }
