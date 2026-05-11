@@ -318,7 +318,12 @@ class SecurityController extends OrderAbstractController
 //        );
 
         //TODO: make it better
-        if( $routename == "ctp_login" ) {
+        if( $routename == "ctp_login" ||
+            $routename == "tma_login" ||
+            $routename == "cohortg_login" ||
+            $routename == "regulatoryt_login" ||
+            $routename == "spore_login"
+        ) {
             return $this->render(
                 'AppCtpBundle/Security/login_new.html.twig',
                 $formArr

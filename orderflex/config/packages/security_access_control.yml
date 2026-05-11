@@ -231,20 +231,6 @@ security:
        - { path: ^.*/critical-result-notifications/reset-password, role: PUBLIC_ACCESS }
        - { path: ^.*/critical-result-notifications/, role: ROLE_CRN_USER }
 
-     ############################## Ctp SITE SETTINGS ##############################
-       - { path: ^.*/center-for-translational-pathology/access-requests/new/, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/login, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/setloginvisit, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/account-requests/, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/sign-up, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/activate-account, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/forgot-password, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/reset-password, role: PUBLIC_ACCESS }
-       - { path: ^.*/center-for-translational-pathology/applications, role: ROLE_CTP_USER }
-       - { path: ^.*/center-for-translational-pathology/, role: PUBLIC_ACCESS }
-#       - { path: ^.*/center-for-translational-pathology/path2path-dashboard-login/, role: ROLE_CTP_USER }
-#       - { path: ^.*/center-for-translational-pathology/, role: ROLE_CTP_USER }
-
       ############################## TranslationalResearch SITE SETTINGS ##############################
        - { path: ^.*/translational-research/access-requests/new/, role: PUBLIC_ACCESS }
        - { path: ^.*/translational-research/login, role: PUBLIC_ACCESS }
@@ -293,6 +279,68 @@ security:
       #https://stackoverflow.com/questions/21020550/symfony-access-control-for-site-root/21023494
 #       - { path: ^/dashboards/, role: ROLE_DASHBOARD_USER }
 #       - { path: ^/dashboards, role: PUBLIC_ACCESS }
+
+      ############################## Ctp SITE SETTINGS ##############################
+       - { path: ^.*/center-for-translational-pathology/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/center-for-translational-pathology/applications, role: ROLE_CTP_USER }
+       - { path: ^.*/center-for-translational-pathology/, role: PUBLIC_ACCESS }
+#       - { path: ^.*/center-for-translational-pathology/path2path-dashboard-login/, role: ROLE_CTP_USER }
+#       - { path: ^.*/center-for-translational-pathology/, role: ROLE_CTP_USER }
+
+      ############################## TMA SITE SETTINGS ##############################
+       - { path: ^.*/tissue-microarrays/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/tissue-microarrays/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/tissue-microarrays/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/tissue-microarrays/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/tissue-microarrays/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/tissue-microarrays/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/tissue-microarrays/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/tissue-microarrays/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/tissue-microarrays/applications, role: ROLE_TMA_USER }
+       - { path: ^.*/tissue-microarrays/, role: ROLE_SPORE_USER }
+
+      ############################## Regulatoryt SITE SETTINGS ##############################
+       - { path: ^.*/regulatory-templates/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/regulatory-templates/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/regulatory-templates/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/regulatory-templates/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/regulatory-templates/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/regulatory-templates/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/regulatory-templates/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/regulatory-templates/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/regulatory-templates/applications, role: ROLE_REGULATORYT_USER }
+       - { path: ^.*/regulatory-templates/, role: ROLE_SPORE_USER }
+
+      ############################## COHORTG SITE SETTINGS ##############################
+       - { path: ^.*/cohort-generator/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/cohort-generator/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/cohort-generator/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/cohort-generator/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/cohort-generator/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/cohort-generator/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/cohort-generator/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/cohort-generator/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/cohort-generator/applications, role: ROLE_COHORTG_USER }
+       - { path: ^.*/cohort-generator/, role: ROLE_SPORE_USER }
+
+      ############################## SPORE SITE SETTINGS ##############################
+       - { path: ^.*/prostate-cancer-research-data-explorer/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/prostate-cancer-research-data-explorer/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/prostate-cancer-research-data-explorer/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/prostate-cancer-research-data-explorer/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/prostate-cancer-research-data-explorer/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/prostate-cancer-research-data-explorer/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/prostate-cancer-research-data-explorer/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/prostate-cancer-research-data-explorer/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/prostate-cancer-research-data-explorer/applications, role: ROLE_SPORE_USER }
+       - { path: ^.*/prostate-cancer-research-data-explorer/, role: ROLE_SPORE_USER }
 
        ### SAML testing ###
        - { path: ^.*/saml/(metadata|login|acs|logout|sls), roles: PUBLIC_ACCESS }
