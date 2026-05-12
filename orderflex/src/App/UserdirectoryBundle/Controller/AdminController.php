@@ -2149,6 +2149,66 @@ class AdminController extends OrderAbstractController
             ),
             //////////// EOF CTP roles ////////////
 
+            /////////// TMA //////////////
+            "ROLE_TMA_ADMIN" => array(
+                "TMA Administrator",
+                "Full access for the TMA site",
+                90,
+                "tissue-microarrays"
+            ),
+            "ROLE_TMA_USER" => array(
+                "TMA User",
+                "Partial access for the TMA site",
+                50,
+                "tissue-microarrays"
+            ),
+            ////////////////////////////////
+
+            /////////// REGULATORYT //////////////
+            "ROLE_REGULATORYT_ADMIN" => array(
+                "RegulatoryT Administrator",
+                "Full access for the RegulatoryT site",
+                90,
+                "regulatoryt"
+            ),
+            "ROLE_REGULATORYT_USER" => array(
+                "RegulatoryT User",
+                "Partial access for the RegulatoryT site",
+                50,
+                "regulatoryt"
+            ),
+            ////////////////////////////////
+
+            /////////// COHORTG //////////////
+            "ROLE_COHORTG_ADMIN" => array(
+                "CohortG Administrator",
+                "Full access for the CohortG site",
+                90,
+                "cohortg"
+            ),
+            "ROLE_COHORTG_USER" => array(
+                "CohortG User",
+                "Partial access for the CohortG site",
+                50,
+                "cohortg"
+            ),
+            ////////////////////////////////
+
+            /////////// SPORE //////////////
+            "ROLE_SPORE_ADMIN" => array(
+                "SPORE Administrator",
+                "Full access for the SPORE site",
+                90,
+                "spore"
+            ),
+            "ROLE_SPORE_USER" => array(
+                "SPORE User",
+                "Partial access for the SPORE site",
+                50,
+                "spore"
+            ),
+            ////////////////////////////////
+
             //TRANSRES - similar to ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY - _WCM_HEMEPATH and _WCM_APCP
             "ROLE_TRANSRES_ADMIN_APCP" => array(
                 "Translational Research AP/CP Admin",
