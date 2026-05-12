@@ -154,7 +154,8 @@
                 </a>
 
                 {# Legacy TRP Site #}
-                <a href="{{ path('translationalresearch_home') }}" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center">
+                <a href="{{ path('translationalresearch_home') }}" target="_blank" rel="noopener noreferrer"
+                   class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center">
                     <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link h-10 w-10" aria-hidden="true">
                             <path d="M15 3h6v6"></path>
@@ -165,6 +166,59 @@
                     {#<h3 class="font-semibold text-wcm-red text-base">Legacy TRP Site</h3>#}
                     <h3 class="font-semibold text-wcm-red text-base">TRP Site</h3>
                 </a>
+
+                {# Access Request #}
+                <a href="{{ path('ctp_accessrequest_list') }}" target="_blank" rel="noopener noreferrer"
+                   class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link h-10 w-10" aria-hidden="true">
+                            <path d="M15 3h6v6"></path>
+                            <path d="M10 14 21 3"></path>
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Access Request</h3>
+                </a>
+
+                {# Event Log #}
+                <a href="{{ path('ctp_logger') }}" target="_blank" rel="noopener noreferrer"
+                   class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link h-10 w-10" aria-hidden="true">
+                            <path d="M15 3h6v6"></path>
+                            <path d="M10 14 21 3"></path>
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Event Log</h3>
+                </a>
+
+                {#account-requests#}
+                <a href="{{ path('ctp_accountrequest') }}" target="_blank" rel="noopener noreferrer"
+                   class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link h-10 w-10" aria-hidden="true">
+                            <path d="M15 3h6v6"></path>
+                            <path d="M10 14 21 3"></path>
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Account Requests</h3>
+                </a>
+
+                {#authorized-users#}
+                <a href="{{ path('ctp_authorized_users') }}" target="_blank" rel="noopener noreferrer"
+                   class="group flex flex-col items-center justify-center gap-3 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-red-50/40 transition p-6 text-center">
+                    <div class="p-4 rounded-xl bg-wcm-yellow/20 text-wcm-red group-hover:bg-wcm-yellow/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link h-10 w-10" aria-hidden="true">
+                            <path d="M15 3h6v6"></path>
+                            <path d="M10 14 21 3"></path>
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-wcm-red text-base">Authorized Users</h3>
+                </a>
+
             </section>
         </div>
     </main>

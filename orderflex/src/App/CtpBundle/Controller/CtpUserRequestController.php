@@ -62,7 +62,6 @@ class CtpUserRequestController extends UserRequestController
         return parent::createAction($request);
     }
 
-
     /**
      * Lists all UserRequest entities.
      */
