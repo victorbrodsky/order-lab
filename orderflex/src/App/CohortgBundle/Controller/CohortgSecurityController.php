@@ -40,7 +40,7 @@ class CohortgSecurityController extends SecurityController
         return parent::loginAction($request,$authenticationUtils);
     }
     public function getLoginTwig() {
-        return 'AppCtpBundle/Security/login_new.html.twig';
+        return 'AppCtpBundle/Security/login.html.twig';
     }
 
     #[Route(path: '/setloginvisit/', name: 'cohortg_setloginvisit', methods: ['GET'])]

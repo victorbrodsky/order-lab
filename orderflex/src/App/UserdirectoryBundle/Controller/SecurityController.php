@@ -325,7 +325,7 @@ class SecurityController extends OrderAbstractController
 //            $routename == "spore_login"
 //        ) {
 //            return $this->render(
-//                'AppCtpBundle/Security/login_new.html.twig',
+//                'AppCtpBundle/Security/login.html.twig',
 //                $formArr
 //            );
 //        }
