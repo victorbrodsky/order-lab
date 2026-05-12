@@ -40,6 +40,9 @@ class TmaSecurityController extends SecurityController
         //exit('tma: loginAction');
         return parent::loginAction($request,$authenticationUtils);
     }
+    public function getLoginTwig() {
+        return 'AppCtpBundle/Security/login_new.html.twig';
+    }
 
 
     #[Route(path: '/setloginvisit/', name: 'tma_setloginvisit', methods: ['GET'])]

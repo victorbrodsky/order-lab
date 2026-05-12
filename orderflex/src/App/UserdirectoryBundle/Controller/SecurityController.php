@@ -318,23 +318,29 @@ class SecurityController extends OrderAbstractController
 //        );
 
         //TODO: make it better
-        if( $routename == "ctp_login" ||
-            $routename == "tma_login" ||
-            $routename == "cohortg_login" ||
-            $routename == "regulatoryt_login" ||
-            $routename == "spore_login"
-        ) {
-            return $this->render(
-                'AppCtpBundle/Security/login_new.html.twig',
-                $formArr
-            );
-        }
+//        if( $routename == "ctp_login" ||
+//            $routename == "tma_login" ||
+//            $routename == "cohortg_login" ||
+//            $routename == "regulatoryt_login" ||
+//            $routename == "spore_login"
+//        ) {
+//            return $this->render(
+//                'AppCtpBundle/Security/login_new.html.twig',
+//                $formArr
+//            );
+//        }
+
+        $loginTwig = $this->getLoginTwig();
         
         return $this->render(
-            'AppUserdirectoryBundle/Security/login.html.twig',
+            //'AppUserdirectoryBundle/Security/login.html.twig',
+            $loginTwig,
             $formArr
         );
 
+    }
+    public function getLoginTwig() {
+        return 'AppUserdirectoryBundle/Security/login.html.twig';
     }
 
 //    #[Route(path: '/single/login', name: 'base_single_login')]

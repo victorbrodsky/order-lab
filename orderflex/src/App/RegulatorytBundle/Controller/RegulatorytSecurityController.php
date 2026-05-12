@@ -22,6 +22,9 @@ class RegulatorytSecurityController extends SecurityController
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
+    public function getLoginTwig() {
+        return 'AppCtpBundle/Security/login_new.html.twig';
+    }
 
     #[Route(path: '/setloginvisit/', name: 'regulatoryt_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )

@@ -40,7 +40,9 @@ class CtpSecurityController extends SecurityController
         //exit('ctp: loginAction');
         return parent::loginAction($request,$authenticationUtils);
     }
-
+    public function getLoginTwig() {
+        return 'AppCtpBundle/Security/login_new.html.twig';
+    }
 
     #[Route(path: '/setloginvisit/', name: 'ctp_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
