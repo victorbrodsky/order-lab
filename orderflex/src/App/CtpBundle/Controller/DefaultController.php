@@ -51,9 +51,9 @@ class DefaultController extends OrderAbstractController
     #[Template('AppCtpBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
 
-        if( false == $this->isGranted('ROLE_CTP_USER') ){
-            return $this->redirect( $this->generateUrl('ctp-nopermission') );
-        }
+//        if( false == $this->isGranted('ROLE_CTP_USER') ){
+//            return $this->redirect( $this->generateUrl('ctp-nopermission') );
+//        }
 
         $title = 'Center for Translational Pathology';
 
@@ -92,6 +92,10 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/applications', name: 'ctp_applications', methods: ['GET'])]
     #[Template('AppCtpBundle/Home/dashboard.html.twig')]
     public function applicationsAction( Request $request ) {
+        if( false == $this->isGranted('ROLE_CTP_USER') ){
+            return $this->redirect( $this->generateUrl('ctp-nopermission') );
+        }
+
         $title = 'Center for Translational Pathology';
         return array(
             'title' => $title,
