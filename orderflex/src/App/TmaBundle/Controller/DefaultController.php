@@ -48,9 +48,9 @@ class DefaultController extends OrderAbstractController
     #[Template('AppTmaBundle/Home/tma-home.html.twig')]
     public function indexAction( Request $request ) {
 
-//        if( false == $this->isGranted('ROLE_TMA_USER') ){
-//            return $this->redirect( $this->generateUrl('tma-nopermission') );
-//        }
+        if( false == $this->isGranted('ROLE_TMA_USER') ){
+            return $this->redirect( $this->generateUrl('tma-nopermission') );
+        }
 
         $title = 'Tissue Microarrays';
 

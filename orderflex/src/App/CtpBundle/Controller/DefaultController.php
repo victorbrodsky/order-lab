@@ -51,9 +51,9 @@ class DefaultController extends OrderAbstractController
     #[Template('AppCtpBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
 
-//        if( false == $this->isGranted('ROLE_CTP_USER') ){
-//            return $this->redirect( $this->generateUrl('ctp-nopermission') );
-//        }
+        if( false == $this->isGranted('ROLE_CTP_USER') ){
+            return $this->redirect( $this->generateUrl('ctp-nopermission') );
+        }
 
         $title = 'Center for Translational Pathology';
 

@@ -50,6 +50,10 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/', name: 'cohortg_home', methods: ['GET'])]
     #[Template('AppCohortgBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
+        if( false == $this->isGranted('ROLE_COHORTG_USER') ){
+            return $this->redirect( $this->generateUrl('cohortg-nopermission') );
+        }
+
         $title = 'Cohort Generator';
         return array(
             'title' => $title,

@@ -43,6 +43,9 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/', name: 'regulatoryt_home', methods: ['GET'])]
     #[Template('AppRegulatorytBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
+        if( false == $this->isGranted('ROLE_REGULATORYT_USER') ){
+            return $this->redirect( $this->generateUrl('regulatoryt-nopermission') );
+        }
         $title = 'Regulatory Templates';
         return array('title' => $title);
     }

@@ -45,7 +45,12 @@ class DefaultController extends OrderAbstractController
     #[Template('AppSporeBundle/Home/spore-home-simple.html.twig')]
     public function indexAction(Request $request)
     {
+        if( false == $this->isGranted('ROLE_SPORE_USER') ){
+            return $this->redirect( $this->generateUrl('spore-nopermission') );
+        }
+
         $title = 'Prostate Cancer Research Data Explorer';
+
         
         // Dashboard statistics - all zeros to match original empty state
         $dashboard = [

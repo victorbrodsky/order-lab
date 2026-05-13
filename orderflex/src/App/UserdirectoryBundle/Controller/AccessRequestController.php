@@ -781,6 +781,7 @@ class AccessRequestController extends OrderAbstractController
     public function accessRequestIndexAction(Request $request)
     {
         if( false === $this->isGranted($this->roleEditor) ) {
+            //exit("nopermission this->roleEditor=".$this->roleEditor."; user=".$this->getUser());
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
