@@ -66,13 +66,15 @@ class CtpAccessRequestController extends AccessRequestController
         return parent::accessRequestAction($request);
     }
 
+    //#[Template('AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig')]
     /**
      * Lists all Access Request.
      */
     #[Route(path: '/access-requests', name: 'ctp_accessrequest_list', methods: ['GET'])]
-    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig')]
+    #[Template('AppCtpBundle/AccessRequest/access_request_list.html.twig')]
     public function accessRequestIndexAction(Request $request)
     {
+        echo "accessRequestIndexAction <br>";
         return parent::accessRequestIndexAction($request);
     }
 

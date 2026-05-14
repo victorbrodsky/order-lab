@@ -164,6 +164,7 @@ class LoggerController extends OrderAbstractController
         //$acrossSites = ( array_key_exists('acrossSites', $params) ? $params['acrossSites'] : false);
 
         //echo "entityId=".$entityId."<br>";
+        //echo "sitename=".$sitename."<br>";
 
         $em = $this->getDoctrine()->getManager();
 
@@ -199,7 +200,7 @@ class LoggerController extends OrderAbstractController
 
         if( $sitename ) {
             if ($allsites == null || $allsites == false) {
-                //echo "sitename=".$sitename."<br>";
+                //echo "filter sitename=".$sitename."<br>";
                 //$dql->andWhere("logger.siteName = '".$sitename."'");
                 //$dql->andWhere("site.abbreviation = '".$sitename."' OR logger.siteName ='".$sitename."'");
                 $dql->andWhere("site.abbreviation = '" . $sitename . "'");
@@ -366,6 +367,7 @@ class LoggerController extends OrderAbstractController
 
         $route = $request->get('_route');
         //echo "route=".$route."<br>";
+        //echo "sitename=".$sitename."<br>";
 
         return array(
             'filterform' => $filterform,

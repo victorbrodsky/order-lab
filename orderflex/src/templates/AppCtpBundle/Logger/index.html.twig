@@ -14,15 +14,19 @@
     limitations under the License.
 #}
 
-{% extends "AppCtpBundle/Default/base.html.twig" %}
+{#{% extends "AppCtpBundle/Default/base.html.twig" %}#}
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
+
 
 
 {% block title %}
     {{ eventLogTitle }}
 {% endblock %}
 
-
+{#{% block content_ctp %}#}
 {% block content %}
+    {#sitename={{ sitename }}#}
+    {#routename={{ routename }}#}
     {% include 'AppUserdirectoryBundle/Logger/logger_common.html.twig' %}
 {% endblock %}
 
