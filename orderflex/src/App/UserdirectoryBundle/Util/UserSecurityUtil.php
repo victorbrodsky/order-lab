@@ -1225,7 +1225,8 @@ class UserSecurityUtil {
             $defaultSourceSystemName = 'ORDER Critical Result Notifications';
         }
         if( $sitename == 'ctp' ) {
-            $defaultSourceSystemName = 'ORDER Center for Translational Pathology';
+            //$defaultSourceSystemName = 'ORDER Center for Translational Pathology';
+            $defaultSourceSystemName = 'Center for Translational Pathology';
         }
         if ($sitename == 'deidentifier' ) {
             $defaultSourceSystemName = 'ORDER Deidentifier';

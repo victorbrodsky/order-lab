@@ -62,11 +62,12 @@ class CtpUserRequestController extends UserRequestController
         return parent::createAction($request);
     }
 
+//    #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     /**
      * Lists all UserRequest entities.
      */
     #[Route(path: '/account-requests', name: 'ctp_accountrequest', methods: ['GET'])]
-    #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
+    #[Template('AppCtpBundle/UserRequest/index.html.twig')]
     public function indexAction( Request $request )
     {
         return parent::indexAction($request);

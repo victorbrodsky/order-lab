@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\CtpBundle\Controller;
+namespace App\CtpTmaBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,22 +29,22 @@ use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Controller\AccessRequestController;
 
 /**
- * ctp
+ * tma
  */
-class CtpAccessRequestController extends AccessRequestController
+class TmaAccessRequestController extends AccessRequestController
 {
 
     public function __construct() {
-        $this->siteName = 'ctp';
+        $this->siteName = 'tma';
         $this->siteNameShowuser = 'employees';
-        $this->siteNameStr = 'Center for Translational Pathology';
-        $this->roleBanned = 'ROLE_CTP_BANNED';
-        $this->roleUser = 'ROLE_CTP_USER';
-        $this->roleUnapproved = 'ROLE_CTP_UNAPPROVED';
-        $this->roleEditor = 'ROLE_CTP_ADMIN';
+        $this->siteNameStr = 'Tissue Microarrays';
+        $this->roleBanned = 'ROLE_TMA_BANNED';
+        $this->roleUser = 'ROLE_TMA_USER';
+        $this->roleUnapproved = 'ROLE_TMA_UNAPPROVED';
+        $this->roleEditor = 'ROLE_TMA_ADMIN';
     }
 
-    #[Route(path: '/access-requests/new/create', name: 'ctp_access_request_new_plain', methods: ['GET'])]
+    #[Route(path: '/access-requests/new/create', name: 'tma_access_request_new_plain', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestCreatePlainAction(Request $request)
     {
@@ -52,90 +52,85 @@ class CtpAccessRequestController extends AccessRequestController
         return parent::accessRequestCreatePlain($request);
     }
 
-    #[Route(path: '/access-requests/new', name: 'ctp_access_request_new', methods: ['GET'])]
+    #[Route(path: '/access-requests/new', name: 'tma_access_request_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestCreateAction(Request $request)
     {
         return parent::accessRequestCreateAction($request);
     }
 
-    #[Route(path: '/access-requests/new/pending', name: 'ctp_access_request_create', methods: ['POST'])]
+    #[Route(path: '/access-requests/new/pending', name: 'tma_access_request_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestAction(Request $request)
     {
         return parent::accessRequestAction($request);
     }
 
-    //#[Template('AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig')]
     /**
      * Lists all Access Request.
      */
-    #[Route(path: '/access-requests', name: 'ctp_accessrequest_list', methods: ['GET'])]
-    #[Template('AppCtpBundle/AccessRequest/access_request_list.html.twig')]
+    #[Route(path: '/access-requests', name: 'tma_accessrequest_list', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig')]
     public function accessRequestIndexAction(Request $request)
     {
-        //echo "accessRequestIndexAction <br>";
         return parent::accessRequestIndexAction($request);
     }
 
-    #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'ctp_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'tma_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
         return parent::accessRequestChangeAction($request, $id, $status);
     }
 
-    //#[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
-    #[Route(path: '/access-requests/{id}', name: 'ctp_accessrequest_management', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template('AppCtpBundle/AccessRequest/access_request_management.html.twig')]
+    #[Route(path: '/access-requests/{id}', name: 'tma_accessrequest_management', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function accessRequestManagementAction(Request $request, $id )
     {
         return parent::accessRequestManagementAction($request,$id);
     }
 
-    #[Route(path: '/access-requests/submit/{id}', name: 'ctp_accessrequest_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/access-requests/submit/{id}', name: 'tma_accessrequest_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function accessRequestManagementSubmitAction(Request $request, $id )
     {
         return parent::accessRequestManagementSubmitAction($request,$id);
     }
 
-    #[Route(path: '/deny-access-request/{userId}', name: 'ctp_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    #[Route(path: '/deny-access-request/{userId}', name: 'tma_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
     public function accessRequestRemoveAction(Request $request, $userId )
     {
         return parent::accessRequestRemoveAction($request,$userId);
     }
 
-    //#[Template('AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig')]
-    #[Route(path: '/authorized-users/', name: 'ctp_authorized_users', methods: ['GET'])]
-    #[Template('AppCtpBundle/AccessRequest/authorized_users.html.twig')]
+    #[Route(path: '/authorized-users/', name: 'tma_authorized_users', methods: ['GET'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig')]
     public function authorizedUsersAction(Request $request )
     {
         return parent::authorizedUsersAction($request);
     }
 
-    //#[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
-    #[Route(path: '/authorization-user-manager/{id}', name: 'ctp_authorization_user_management', methods: ['GET'], requirements: ['id' => '\d+'])]
-    #[Template('AppCtpBundle/AccessRequest/access_request_management.html.twig')]
+    #[Route(path: '/authorization-user-manager/{id}', name: 'tma_authorization_user_management', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function authorizationManagementAction( Request $request, $id )
     {
         return parent::authorizationManagementAction($request,$id);
     }
 
-    #[Route(path: '/authorization-user-manager/submit/{id}', name: 'ctp_authorization_user_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/authorization-user-manager/submit/{id}', name: 'tma_authorization_user_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
         return parent::authorizationManagementSubmitAction($request,$id);
     }
 
-    #[Route(path: '/revoke-access-authorization/{userId}', name: 'ctp_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    #[Route(path: '/revoke-access-authorization/{userId}', name: 'tma_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
     public function authorizationRemoveAction(Request $request, $userId)
     {
         return parent::authorizationRemoveAction($request,$userId);
     }
 
 
-    #[Route(path: '/add-authorized-user/', name: 'ctp_add_authorized_user', methods: ['GET'])]
+    #[Route(path: '/add-authorized-user/', name: 'tma_add_authorized_user', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig')]
     public function addAuthorizedUserAction( Request $request )
     {

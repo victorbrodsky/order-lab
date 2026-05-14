@@ -446,9 +446,9 @@ class UserRequestController extends OrderAbstractController
 //                if (!$entity->getRequestedScanOrderInstitutionScope()) {
 //                    $failedArr[] = "organizational group is empty";
 //                }
-                if (!$entity->getRequestedInstitutionScope()) {
-                    $failedArr[] = "organizational group is empty";
-                }
+//                if (!$entity->getRequestedInstitutionScope()) {
+//                    $failedArr[] = "organizational group is empty";
+//                }
 
                 $this->addFlash(
                     'notice',
@@ -504,9 +504,9 @@ class UserRequestController extends OrderAbstractController
 //                if (!$entity->getRequestedScanOrderInstitutionScope()) {
 //                    $failedArr[] = "organizational group is empty";
 //                }
-                if (!$entity->getRequestedInstitutionScope()) {
-                    $failedArr[] = "organizational group is empty";
-                }
+//                if (!$entity->getRequestedInstitutionScope()) {
+//                    $failedArr[] = "organizational group is empty";
+//                }
 
                 $this->addFlash(
                     'notice',
@@ -780,7 +780,8 @@ class UserRequestController extends OrderAbstractController
                 $name = "ORDER Vacation Request";
                 break;
             case "ctp":
-                $name = "ORDER Center for Translational Pathology";
+//                $name = "ORDER Center for Translational Pathology";
+                $name = "Center for Translational Pathology";
                 break;
             default:
                 $name = "ORDER Employee Directory";

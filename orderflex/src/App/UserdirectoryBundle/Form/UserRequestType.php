@@ -219,7 +219,7 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        if(0) {
+        if(1) {
             $builder->add('systemAccountRequest', EntityType::class, array(
                 'label' => 'System for which the account is being requested:',
                 'required' => true,
@@ -227,6 +227,25 @@ class UserRequestType extends AbstractType
                 //'empty_value' => false,
                 'class' => SourceSystemList::class,
                 'attr' => array('class' => 'combobox combobox-width')
+            ));
+
+            $builder->add('systemAccountRequest', EntityType::class, array(
+                'class' => SourceSystemList::class,
+                //'choice_label' => 'name',
+                'label' => 'System for which the account is being requested:',
+                'required' => false,
+                //'data' => $this->params['systemRequested'],
+                'attr' => array('class' => 'combobox combobox-width'),
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->andWhere("list.name LIKE '%ORDER%' OR list.name LIKE '%External Authentication%'")
+//                        ->orderBy("list.orderinlist", "ASC")
+//                        ->setParameters(array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
             ));
         } else {
             $builder->add('systemAccountRequest', EntityType::class, array(

@@ -13,10 +13,10 @@ imports:
     - { resource: "../src/App/CallLogBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CrnBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CtpBundle/Resources/config/services.yml" }
-    - { resource: "../src/App/TmaBundle/Resources/config/services.yml" }
-    - { resource: "../src/App/CohortgBundle/Resources/config/services.yml" }
-    - { resource: "../src/App/RegulatorytBundle/Resources/config/services.yml" }
-    - { resource: "../src/App/SporeBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/CtpTmaBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/CtpCohortgBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/CtpRegulatorytBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/CtpSporeBundle/Resources/config/services.yml" }
     - { resource: "../src/App/TranslationalResearchBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DashboardBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DemoDbBundle/Resources/config/services.yml" }
@@ -119,14 +119,14 @@ services:
         resource: '../src/App/CrnBundle/Controller/'
     App\CtpBundle\Controller\:
         resource: '../src/App/CtpBundle/Controller/'
-    App\TmaBundle\Controller\:
-        resource: '../src/App/TmaBundle/Controller/'
-    App\CohortgBundle\Controller\:
-        resource: '../src/App/CohortgBundle/Controller/'
-    App\RegulatorytBundle\Controller\:
-        resource: '../src/App/RegulatorytBundle/Controller/'
-    App\SporeBundle\Controller\:
-        resource: '../src/App/SporeBundle/Controller/'
+    App\CtpTmaBundle\Controller\:
+        resource: '../src/App/CtpTmaBundle/Controller/'
+    App\CtpCohortgBundle\Controller\:
+        resource: '../src/App/CtpCohortgBundle/Controller/'
+    App\CtpRegulatorytBundle\Controller\:
+        resource: '../src/App/CtpRegulatorytBundle/Controller/'
+    App\CtpSporeBundle\Controller\:
+        resource: '../src/App/CtpSporeBundle/Controller/'
     App\FellAppBundle\Controller\:
         resource: '../src/App/FellAppBundle/Controller/'
     App\ResAppBundle\Controller\:

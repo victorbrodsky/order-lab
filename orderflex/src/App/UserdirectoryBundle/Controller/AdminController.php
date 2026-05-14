@@ -2150,60 +2150,60 @@ class AdminController extends OrderAbstractController
             //////////// EOF CTP roles ////////////
 
             /////////// TMA //////////////
-            "ROLE_TMA_ADMIN" => array(
-                "TMA Administrator",
-                "Full access for the TMA site",
+            "ROLE_CTPTMA_ADMIN" => array(
+                "CtpTma Administrator",
+                "Full access for the CtpTma site",
                 90,
                 "tissue-microarrays"
             ),
-            "ROLE_TMA_USER" => array(
-                "TMA User",
-                "Partial access for the TMA site",
+            "ROLE_CTPTMA_USER" => array(
+                "CtpTma User",
+                "Partial access for the CtpTma site",
                 50,
                 "tissue-microarrays"
             ),
             ////////////////////////////////
 
             /////////// REGULATORYT //////////////
-            "ROLE_REGULATORYT_ADMIN" => array(
-                "RegulatoryT Administrator",
-                "Full access for the RegulatoryT site",
+            "ROLE_CTPREGULATORYT_ADMIN" => array(
+                "CtpRegulatoryt Administrator",
+                "Full access for the CtpRegulatoryt site",
                 90,
                 "regulatoryt"
             ),
-            "ROLE_REGULATORYT_USER" => array(
-                "RegulatoryT User",
-                "Partial access for the RegulatoryT site",
+            "ROLE_CTPREGULATORYT_USER" => array(
+                "CtpRegulatoryt User",
+                "Partial access for the CtpRegulatoryt site",
                 50,
                 "regulatoryt"
             ),
             ////////////////////////////////
 
             /////////// COHORTG //////////////
-            "ROLE_COHORTG_ADMIN" => array(
-                "CohortG Administrator",
-                "Full access for the CohortG site",
+            "ROLE_CTPCOHORTG_ADMIN" => array(
+                "CtpCohortg Administrator",
+                "Full access for the CtpCohortg site",
                 90,
                 "cohortg"
             ),
-            "ROLE_COHORTG_USER" => array(
-                "CohortG User",
-                "Partial access for the CohortG site",
+            "ROLE_CTPCOHORTG_USER" => array(
+                "CtpCohortg User",
+                "Partial access for the CtpCohortg site",
                 50,
                 "cohortg"
             ),
             ////////////////////////////////
 
             /////////// SPORE //////////////
-            "ROLE_SPORE_ADMIN" => array(
-                "SPORE Administrator",
-                "Full access for the SPORE site",
+            "ROLE_CTPSPORE_ADMIN" => array(
+                "CtpSpore Administrator",
+                "Full access for the CtpSpore site",
                 90,
                 "spore"
             ),
-            "ROLE_SPORE_USER" => array(
-                "SPORE User",
-                "Partial access for the SPORE site",
+            "ROLE_CTPSPORE_USER" => array(
+                "CtpSpore User",
+                "Partial access for the CtpSpore site",
                 50,
                 "spore"
             ),
@@ -4219,6 +4219,7 @@ class AdminController extends OrderAbstractController
             'Fellowship Applications',
             'Vacation Request',
             'Translational Research',
+            'Center for Translational Pathology',
             'Scan Order', //used as default in getDefaultSourceSystem //'Scan Order',
             'WCM Epic Practice Management',
             'WCM Epic Ambulatory EMR',

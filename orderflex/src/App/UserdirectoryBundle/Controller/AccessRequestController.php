@@ -836,8 +836,8 @@ class AccessRequestController extends OrderAbstractController
             )
         );
 
-        echo "sitename=$sitename <br>";
-        echo "count=".count($pagination)."<br>";
+        //echo "sitename=$sitename <br>";
+        //echo "count=".count($pagination)."<br>";
 
         $sitenameFull = $this->siteNameStr;
 

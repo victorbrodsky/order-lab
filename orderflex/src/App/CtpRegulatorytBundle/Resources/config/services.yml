@@ -1,0 +1,31 @@
+parameters:
+
+    regulatoryt.sitename: regulatoryt
+    regulatoryt.uploadpath:
+
+
+twig:
+    globals:
+        regulatoryt_sitename: '%regulatoryt.sitename%'
+
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    regulatoryt_authentication_handler:
+        class: App\CtpRegulatorytBundle\Security\Authentication\RegulatorytLoginSuccessHandler
+
+    regulatoryt_role_voter:
+        class: App\CtpRegulatorytBundle\Security\Voter\RegulatorytRoleVoter
+        public: false
+        tags:
+            - { name: security.voter }
+
+    regulatoryt_permission_voter:
+        class: App\CtpRegulatorytBundle\Security\Voter\RegulatorytPermissionVoter
+        public: false
+        tags:
+            - { name: security.voter }
