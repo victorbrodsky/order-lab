@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class RegulatorytSecurityController extends SecurityController
 {
-    #[Route(path: '/login', name: 'regulatoryt_login')]
+    #[Route(path: '/login', name: 'ctpregulatoryt_login')]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
@@ -26,13 +26,13 @@ class RegulatorytSecurityController extends SecurityController
         return 'AppCtpBundle/Security/login.html.twig';
     }
 
-    #[Route(path: '/setloginvisit/', name: 'regulatoryt_setloginvisit', methods: ['GET'])]
+    #[Route(path: '/setloginvisit/', name: 'ctpregulatoryt_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
     }
 
-    #[Route(path: '/no-permission', name: 'regulatoryt-nopermission', methods: ['GET'])]
+    #[Route(path: '/no-permission', name: 'ctpregulatoryt-nopermission', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
@@ -43,8 +43,8 @@ class RegulatorytSecurityController extends SecurityController
         );
     }
 
-    #[Route(path: '/idle-log-out', name: 'regulatoryt_idlelogout')]
-    #[Route(path: '/idle-log-out/{flag}', name: 'regulatoryt_idlelogout-saveorder')]
+    #[Route(path: '/idle-log-out', name: 'ctpregulatoryt_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'ctpregulatoryt_idlelogout-saveorder')]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

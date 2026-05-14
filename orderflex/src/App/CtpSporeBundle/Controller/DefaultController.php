@@ -34,14 +34,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends OrderAbstractController
 {
-    #[Route(path: '/about', name: 'spore_about_page')]
+    #[Route(path: '/about', name: 'ctpspore_about_page')]
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction(Request $request)
     {
         return array('sitename' => $this->getParameter('spore.sitename'));
     }
 
-    #[Route(path: '/', name: 'spore_home', methods: ['GET'])]
+    #[Route(path: '/', name: 'ctpspore_home', methods: ['GET'])]
     #[Template('AppSporeBundle/Home/spore-home-simple.html.twig')]
     public function indexAction(Request $request)
     {
@@ -88,7 +88,7 @@ class DefaultController extends OrderAbstractController
         ];
     }
 
-    #[Route(path: '/patients', name: 'spore_patients', methods: ['GET'])]
+    #[Route(path: '/patients', name: 'ctpspore_patients', methods: ['GET'])]
     #[Template('AppSporeBundle/Home/spore-patients.html.twig')]
     public function patientsAction(Request $request)
     {
@@ -104,7 +104,7 @@ class DefaultController extends OrderAbstractController
         ];
     }
 
-    #[Route(path: '/specimens', name: 'spore_specimens', methods: ['GET'])]
+    #[Route(path: '/specimens', name: 'ctpspore_specimens', methods: ['GET'])]
     #[Template('AppSporeBundle/Home/spore-specimens.html.twig')]
     public function specimensAction(Request $request)
     {
@@ -120,7 +120,7 @@ class DefaultController extends OrderAbstractController
         ];
     }
 
-    #[Route(path: '/biomarkers', name: 'spore_biomarkers', methods: ['GET'])]
+    #[Route(path: '/biomarkers', name: 'ctpspore_biomarkers', methods: ['GET'])]
     #[Template('AppSporeBundle/Home/spore-biomarkers.html.twig')]
     public function biomarkersAction(Request $request)
     {
@@ -138,7 +138,7 @@ class DefaultController extends OrderAbstractController
         ];
     }
 
-    #[Route(path: '/outcomes', name: 'spore_outcomes', methods: ['GET'])]
+    #[Route(path: '/outcomes', name: 'ctpspore_outcomes', methods: ['GET'])]
     #[Template('AppSporeBundle/Home/spore-outcomes.html.twig')]
     public function outcomesAction(Request $request)
     {
@@ -155,7 +155,7 @@ class DefaultController extends OrderAbstractController
         ];
     }
 
-    #[Route(path: '/api/dashboard', name: 'spore_api_dashboard', methods: ['GET'])]
+    #[Route(path: '/api/dashboard', name: 'ctpspore_api_dashboard', methods: ['GET'])]
     public function apiDashboardAction(Request $request): JsonResponse
     {
         $dashboard = [

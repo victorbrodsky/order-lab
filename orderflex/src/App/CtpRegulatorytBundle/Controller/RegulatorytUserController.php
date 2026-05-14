@@ -12,13 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RegulatorytUserController extends UserController
 {
-    #[Route(path: '/user/{id}', name: 'regulatoryt_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Route(path: '/user/{id}', name: 'ctpregulatoryt_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
     #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->getParameter('regulatoryt.sitename'));
     }
 
-    #[Route(path: '/edit-user-profile/{id}', name: 'regulatoryt_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/edit-user-profile/{id}', name: 'ctpregulatoryt_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
@@ -33,7 +33,7 @@ class RegulatorytUserController extends UserController
         return $editUser;
     }
 
-    #[Route(path: '/edit-user-profile/{id}', name: 'regulatoryt_user_update', methods: ['PUT'])]
+    #[Route(path: '/edit-user-profile/{id}', name: 'ctpregulatoryt_user_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {

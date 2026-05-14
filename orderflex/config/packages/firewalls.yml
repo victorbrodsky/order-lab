@@ -266,15 +266,15 @@ security:
             custom_authenticators:
                 authenticator: custom_guard_authenticator
             form_login:
-                login_path: tma_login
-                check_path: tma_login_check
+                login_path: ctptma_login
+                check_path: ctptma_login_check
             logout:
-                path:   tma_logout
-                target: tma_login
+                path:   ctptma_logout
+                target: ctptma_login
                 invalidate_session: false
             lazy: true
             provider: users
-            access_denied_url: tma_access_request_new_plain
+            access_denied_url: ctptma_access_request_new_plain
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -286,15 +286,15 @@ security:
             custom_authenticators:
                 authenticator: custom_guard_authenticator
             form_login:
-                login_path: cohortg_login
-                check_path: cohortg_login_check
+                login_path: ctpcohortg_login
+                check_path: ctpcohortg_login_check
             logout:
-                path:   cohortg_logout
-                target: cohortg_login
+                path:   ctpcohortg_logout
+                target: ctpcohortg_login
                 invalidate_session: false
             lazy: true
             provider: users
-            access_denied_url: cohortg_access_request_new_plain
+            access_denied_url: ctpcohortg_access_request_new_plain
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -306,15 +306,15 @@ security:
             custom_authenticators:
                 authenticator: custom_guard_authenticator
             form_login:
-                login_path: regulatoryt_login
-                check_path: regulatoryt_login_check
+                login_path: ctpregulatoryt_login
+                check_path: ctpregulatoryt_login_check
             logout:
-                path:   regulatoryt_logout
-                target: regulatoryt_login
+                path:   ctpregulatoryt_logout
+                target: ctpregulatoryt_login
                 invalidate_session: false
             lazy: true
             provider: users
-            access_denied_url: regulatoryt_access_request_new_plain
+            access_denied_url: ctpregulatoryt_access_request_new_plain
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
@@ -326,15 +326,15 @@ security:
             custom_authenticators:
                 authenticator: custom_guard_authenticator
             form_login:
-                login_path: spore_login
-                check_path: spore_login_check
+                login_path: ctpspore_login
+                check_path: ctpspore_login_check
             logout:
-                path:   spore_logout
-                target: spore_login
+                path:   ctpspore_logout
+                target: ctpspore_login
                 invalidate_session: false
             lazy: true
             provider: users
-            access_denied_url: spore_access_request_new_plain
+            access_denied_url: ctpspore_access_request_new_plain
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds

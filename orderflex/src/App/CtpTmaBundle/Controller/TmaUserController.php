@@ -30,14 +30,14 @@ class TmaUserController extends UserController
     /**
      * Optimized show user
      */
-    #[Route(path: '/user/{id}', name: 'tma_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Route(path: '/user/{id}', name: 'ctptma_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
     #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->getParameter('tma.sitename'));
     }
 
 
-    #[Route(path: '/edit-user-profile/{id}', name: 'tma_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/edit-user-profile/{id}', name: 'ctptma_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
@@ -55,7 +55,7 @@ class TmaUserController extends UserController
         return $editUser;
     }
 
-    #[Route(path: '/edit-user-profile/{id}', name: 'tma_user_update', methods: ['PUT'])]
+    #[Route(path: '/edit-user-profile/{id}', name: 'ctptma_user_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {

@@ -33,14 +33,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends OrderAbstractController
 {
-    #[Route(path: '/about', name: 'regulatoryt_about_page')]
+    #[Route(path: '/about', name: 'ctpregulatoryt_about_page')]
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction(Request $request)
     {
         return array('sitename' => $this->getParameter('regulatoryt.sitename'));
     }
 
-    #[Route(path: '/', name: 'regulatoryt_home', methods: ['GET'])]
+    #[Route(path: '/', name: 'ctpregulatoryt_home', methods: ['GET'])]
     #[Template('AppRegulatorytBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
         if( false == $this->isGranted('ROLE_REGULATORYT_USER') ){

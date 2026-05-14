@@ -35,7 +35,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class TmaSecurityController extends SecurityController
 {
 
-    #[Route(path: '/login', name: 'tma_login')]
+    #[Route(path: '/login', name: 'ctptma_login')]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         //exit('tma: loginAction');
         return parent::loginAction($request,$authenticationUtils);
@@ -45,7 +45,7 @@ class TmaSecurityController extends SecurityController
     }
 
 
-    #[Route(path: '/setloginvisit/', name: 'tma_setloginvisit', methods: ['GET'])]
+    #[Route(path: '/setloginvisit/', name: 'ctptma_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         //exit('tma: setAjaxLoginVisit');
@@ -53,7 +53,7 @@ class TmaSecurityController extends SecurityController
     }
 
 
-    #[Route(path: '/no-permission', name: 'tma-nopermission', methods: ['GET'])]
+    #[Route(path: '/no-permission', name: 'ctptma-nopermission', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
@@ -66,8 +66,8 @@ class TmaSecurityController extends SecurityController
     }
 
 
-    #[Route(path: '/idle-log-out', name: 'tma_idlelogout')]
-    #[Route(path: '/idle-log-out/{flag}', name: 'tma_idlelogout-saveorder')]
+    #[Route(path: '/idle-log-out', name: 'ctptma_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'ctptma_idlelogout-saveorder')]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('tma: idlelogoutAction');

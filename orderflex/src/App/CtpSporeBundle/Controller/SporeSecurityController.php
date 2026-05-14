@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SporeSecurityController extends SecurityController
 {
-    #[Route(path: '/login', name: 'spore_login')]
+    #[Route(path: '/login', name: 'ctpspore_login')]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
@@ -26,13 +26,13 @@ class SporeSecurityController extends SecurityController
         return 'AppCtpBundle/Security/login.html.twig';
     }
 
-    #[Route(path: '/setloginvisit/', name: 'spore_setloginvisit', methods: ['GET'])]
+    #[Route(path: '/setloginvisit/', name: 'ctpspore_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
     }
 
-    #[Route(path: '/no-permission', name: 'spore-nopermission', methods: ['GET'])]
+    #[Route(path: '/no-permission', name: 'ctpspore-nopermission', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
@@ -43,8 +43,8 @@ class SporeSecurityController extends SecurityController
         );
     }
 
-    #[Route(path: '/idle-log-out', name: 'spore_idlelogout')]
-    #[Route(path: '/idle-log-out/{flag}', name: 'spore_idlelogout-saveorder')]
+    #[Route(path: '/idle-log-out', name: 'ctpspore_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'ctpspore_idlelogout-saveorder')]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

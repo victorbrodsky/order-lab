@@ -35,7 +35,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class CohortgSecurityController extends SecurityController
 {
 
-    #[Route(path: '/login', name: 'cohortg_login')]
+    #[Route(path: '/login', name: 'ctpcohortg_login')]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
@@ -43,13 +43,13 @@ class CohortgSecurityController extends SecurityController
         return 'AppCtpBundle/Security/login.html.twig';
     }
 
-    #[Route(path: '/setloginvisit/', name: 'cohortg_setloginvisit', methods: ['GET'])]
+    #[Route(path: '/setloginvisit/', name: 'ctpcohortg_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
     }
 
-    #[Route(path: '/no-permission', name: 'cohortg-nopermission', methods: ['GET'])]
+    #[Route(path: '/no-permission', name: 'ctpcohortg-nopermission', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
@@ -61,8 +61,8 @@ class CohortgSecurityController extends SecurityController
         );
     }
 
-    #[Route(path: '/idle-log-out', name: 'cohortg_idlelogout')]
-    #[Route(path: '/idle-log-out/{flag}', name: 'cohortg_idlelogout-saveorder')]
+    #[Route(path: '/idle-log-out', name: 'ctpcohortg_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'ctpcohortg_idlelogout-saveorder')]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

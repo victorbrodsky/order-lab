@@ -40,14 +40,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends OrderAbstractController
 {
-    #[Route(path: '/about', name: 'cohortg_about_page')]
+    #[Route(path: '/about', name: 'ctpcohortg_about_page')]
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction(Request $request)
     {
         return array('sitename' => $this->getParameter('cohortg.sitename'));
     }
 
-    #[Route(path: '/', name: 'cohortg_home', methods: ['GET'])]
+    #[Route(path: '/', name: 'ctpcohortg_home', methods: ['GET'])]
     #[Template('AppCohortgBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
         if( false == $this->isGranted('ROLE_COHORTG_USER') ){
