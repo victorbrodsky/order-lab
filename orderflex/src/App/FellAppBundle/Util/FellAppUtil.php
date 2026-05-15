@@ -4060,7 +4060,7 @@ class FellAppUtil {
 
     //recBackupTemplateFileId
 
-    //Send a confirmation email after submitting public fellapp application via /apply page
+    //Send a confirmation email to the applicant (plus cc to fellapp admin or platform admin) after submitting public fellapp application via /apply page
     public function applyConfirmationEmail( $fellowshipApplication, $applicant, $statusName ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $userTenantUtil = $this->container->get('user_tenant_utility');
@@ -4173,6 +4173,36 @@ class FellAppUtil {
             );
         }
 
+    }
+
+    //TODO:
+    //send notification email with all application data and attached uploaded documents to
+    //ALL the specified coordinators for each Global Fellowship Specialty
+    public function sendConfirmationEmailOnSubmition( $fellowshipApplication, $applicant, $statusName ) {
+        //send this email only on hub server
+        if( $this->isHubServer() === false ) {
+            //return false;
+        }
+
+        //1) get all coordinators for $fellowshipApplication's global fellowship specialty
+
+        //2) get applicant email
+
+        //3) get all attached files
+
+        //4) get all fields in application.
+        // Use generateXlsxData(array($fellowshipApplication))
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        $spreadsheet = $fellappImportPopulateHubUtil->generateXlsxData(array($fellowshipApplication),$returnSpreadsheet=true);
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
+        ob_start();
+        $writer->save('php://output');
+        $csvData = ob_get_clean();
+        //then: $email->text("Here is the data:\n\n" . $csvData);
+
+        dump($csvData);
+        exit('sendConfirmationEmailOnSubmition');
     }
 
     //TODO: replace strings by true, false, null (possible to simplify and return only user or null for all other cases)

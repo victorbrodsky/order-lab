@@ -1663,6 +1663,10 @@ class FellAppController extends OrderAbstractController {
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
 
+            //TODO: sendConfirmationEmailOnSubmition if status is switch to active - edit
+            $fellappUtil->sendConfirmationEmailOnSubmition($entity,$applicant,$initialStatusName);
+            exit('testing');
+
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
 
             //redirect to a simple confirmation page
@@ -2151,6 +2155,9 @@ class FellAppController extends OrderAbstractController {
             $userSecUtil = $this->container->get('user_security_utility');
             $event = "Fellowship Application with ID " . $fellowshipApplication->getId() . " has been created by " . $user;
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
+
+            //TODO: sendConfirmationEmailOnSubmition if status is switch to active - new POST
+            //$fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication,$applicant,$initialStatusName);
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
         }
@@ -4373,6 +4380,9 @@ class FellAppController extends OrderAbstractController {
                 $fellappUtil->applyConfirmationEmail($fellowshipApplication, $applicant,$initialStatusName);
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
                 //return $this->redirect($this->generateUrl('fellapp_login'));
+                
+                //TODO: sendConfirmationEmailOnSubmition if status is switch to active - new POST
+                $fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication,$applicant,$initialStatusName);
             }
 
             return $this->redirect($this->generateUrl('fellapp_myapplications'));
