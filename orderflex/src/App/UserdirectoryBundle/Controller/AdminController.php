@@ -3173,9 +3173,13 @@ class AdminController extends OrderAbstractController
             'time-away-request' => 'vacreq',
             'call-log-book' => 'calllog',
             'critical-result-notifications' => 'crn',
-            'center-for-translational-pathology' => 'ctp',
             'translational-research' => 'translationalresearch',
-            'dashboards' => 'dashboard'
+            'dashboards' => 'dashboard',
+            'center-for-translational-pathology' => 'ctp',
+            'tissue-microarrays' => 'tma',
+            'cohort-generator' => 'cohortg',
+            'regulatory-templates' => 'regulatoryt',
+            'prostate-cancer-research-data-explorer' => 'spore',
         );
         return $elements;
     }
