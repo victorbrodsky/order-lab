@@ -2150,13 +2150,13 @@ class AdminController extends OrderAbstractController
             //////////// EOF CTP roles ////////////
 
             /////////// TMA //////////////
-            "ROLE_CTPTMA_ADMIN" => array(
+            "ROLE_TMA_ADMIN" => array(
                 "CtpTma Administrator",
                 "Full access for the CtpTma site",
                 90,
                 "tissue-microarrays"
             ),
-            "ROLE_CTPTMA_USER" => array(
+            "ROLE_TMA_USER" => array(
                 "CtpTma User",
                 "Partial access for the CtpTma site",
                 50,
@@ -2165,13 +2165,13 @@ class AdminController extends OrderAbstractController
             ////////////////////////////////
 
             /////////// REGULATORYT //////////////
-            "ROLE_CTPREGULATORYT_ADMIN" => array(
+            "ROLE_REGULATORYT_ADMIN" => array(
                 "CtpRegulatoryt Administrator",
                 "Full access for the CtpRegulatoryt site",
                 90,
                 "regulatoryt"
             ),
-            "ROLE_CTPREGULATORYT_USER" => array(
+            "ROLE_REGULATORYT_USER" => array(
                 "CtpRegulatoryt User",
                 "Partial access for the CtpRegulatoryt site",
                 50,
@@ -2180,13 +2180,13 @@ class AdminController extends OrderAbstractController
             ////////////////////////////////
 
             /////////// COHORTG //////////////
-            "ROLE_CTPCOHORTG_ADMIN" => array(
+            "ROLE_COHORTG_ADMIN" => array(
                 "CtpCohortg Administrator",
                 "Full access for the CtpCohortg site",
                 90,
                 "cohortg"
             ),
-            "ROLE_CTPCOHORTG_USER" => array(
+            "ROLE_COHORTG_USER" => array(
                 "CtpCohortg User",
                 "Partial access for the CtpCohortg site",
                 50,
@@ -2195,13 +2195,13 @@ class AdminController extends OrderAbstractController
             ////////////////////////////////
 
             /////////// SPORE //////////////
-            "ROLE_CTPSPORE_ADMIN" => array(
+            "ROLE_SPORE_ADMIN" => array(
                 "CtpSpore Administrator",
                 "Full access for the CtpSpore site",
                 90,
                 "spore"
             ),
-            "ROLE_CTPSPORE_USER" => array(
+            "ROLE_SPORE_USER" => array(
                 "CtpSpore User",
                 "Partial access for the CtpSpore site",
                 50,

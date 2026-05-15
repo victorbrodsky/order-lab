@@ -318,16 +318,16 @@ class ExceptionListener {
         if( strpos((string)$controller,'App\CtpBundle') !== false ) {
             return "ctp";
         }
-        if( strpos((string)$controller,'App\TmaBundle') !== false ) {
+        if( strpos((string)$controller,'App\CtpTmaBundle') !== false ) {
             return "tma";
         }
-        if( strpos((string)$controller,'App\CohortgBundle') !== false ) {
+        if( strpos((string)$controller,'App\CtpCohortgBundle') !== false ) {
             return "cohortg";
         }
-        if( strpos((string)$controller,'App\RegulatorytBundle') !== false ) {
+        if( strpos((string)$controller,'App\CtpRegulatorytBundle') !== false ) {
             return "regulatoryt";
         }
-        if( strpos((string)$controller,'App\SporeBundle') !== false ) {
+        if( strpos((string)$controller,'App\CtpSporeBundle') !== false ) {
             return "spore";
         }
 

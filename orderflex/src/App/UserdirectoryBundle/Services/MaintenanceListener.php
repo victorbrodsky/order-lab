@@ -271,10 +271,10 @@ class MaintenanceListener {
                 strpos((string)$controller,'App\CallLogBundle') !== false ||
                 strpos((string)$controller,'App\CrnBundle') !== false ||
                 strpos((string)$controller,'App\CtpBundle') !== false ||
-                strpos((string)$controller,'App\TmaBundle') !== false ||
-                strpos((string)$controller,'App\CohortgBundle') !== false ||
-                strpos((string)$controller,'App\RegulatorytBundle') !== false ||
-                strpos((string)$controller,'App\SporeBundle') !== false ||
+                strpos((string)$controller,'App\CtpTmaBundle') !== false ||
+                strpos((string)$controller,'App\CtpCohortgBundle') !== false ||
+                strpos((string)$controller,'App\CtpRegulatorytBundle') !== false ||
+                strpos((string)$controller,'App\CtpSporeBundle') !== false ||
                 strpos((string)$controller,'App\TranslationalResearchBundle') !== false ||
                 strpos((string)$controller,'App\DashboardBundle') !== false
         ) {
@@ -414,9 +414,20 @@ class MaintenanceListener {
         if( strpos((string)$controller,'App\CtpBundle') !== false ) {
             return "ctp";
         }
-        if( strpos((string)$controller,'App\TmaBundle') !== false ) {
+        if( strpos((string)$controller,'App\CtpTmaBundle') !== false ) {
             return "tma";
         }
+
+        if( strpos((string)$controller,'App\CtpCohortgBundle') !== false ) {
+            return "cohortg";
+        }
+        if( strpos((string)$controller,'App\CtpRegulatorytBundle') !== false ) {
+            return "regulatoryt";
+        }
+        if( strpos((string)$controller,'App\CtpSporeBundle') !== false ) {
+            return "spore";
+        }
+
         if( strpos((string)$controller,'App\TranslationalResearchBundle') !== false ) {
             return "translationalresearch";
         }

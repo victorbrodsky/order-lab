@@ -12,13 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SporeUserController extends UserController
 {
-    #[Route(path: '/user/{id}', name: 'ctpspore_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Route(path: '/user/{id}', name: 'spore_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
     #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->getParameter('spore.sitename'));
     }
 
-    #[Route(path: '/edit-user-profile/{id}', name: 'ctpspore_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/edit-user-profile/{id}', name: 'spore_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
@@ -33,7 +33,7 @@ class SporeUserController extends UserController
         return $editUser;
     }
 
-    #[Route(path: '/edit-user-profile/{id}', name: 'ctpspore_user_update', methods: ['PUT'])]
+    #[Route(path: '/edit-user-profile/{id}', name: 'spore_user_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {

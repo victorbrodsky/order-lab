@@ -22,19 +22,19 @@ class RegulatorytSignUpController extends SignUpController
         $this->siteName = 'regulatoryt';
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Regulatory Templates';
-        $this->pathHome = 'ctpregulatoryt_home';
+        $this->pathHome = 'regulatoryt_home';
         $this->minimumRoles = array(
-            'ROLE_CTPREGULATORYT_USER'
+            'ROLE_REGULATORYT_USER'
         );
         $this->roleAdmins = array(
-            'ROLE_CTPREGULATORYT_ADMIN'
+            'ROLE_REGULATORYT_ADMIN'
         );
     }
 
     /**
      * Lists all signUp entities.
      */
-    #[Route(path: '/signup-list', name: 'ctpregulatoryt_signup_index', methods: ['GET'])]
+    #[Route(path: '/signup-list', name: 'regulatoryt_signup_index', methods: ['GET'])]
     public function indexAction()
     {
         return parent::indexAction();
@@ -44,13 +44,13 @@ class RegulatorytSignUpController extends SignUpController
      * http://localhost/order/directory/sign-up/new
      * Creates a new signUp entity.
      */
-    #[Route(path: '/sign-up', name: 'ctpregulatoryt_signup_new', methods: ['GET', 'POST'])]
+    #[Route(path: '/sign-up', name: 'regulatoryt_signup_new', methods: ['GET', 'POST'])]
     public function newSignUpAction(Request $request)
     {
         return parent::newSignUpAction($request);
     }
 
-    #[Route(path: '/activate-account/{registrationLinkID}', name: 'ctpregulatoryt_activate_account', methods: ['GET', 'POST'])]
+    #[Route(path: '/activate-account/{registrationLinkID}', name: 'regulatoryt_activate_account', methods: ['GET', 'POST'])]
     public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
     {
         return parent::activateAccountAction($request,$tokenStorage,$registrationLinkID);
@@ -59,7 +59,7 @@ class RegulatorytSignUpController extends SignUpController
     /**
      * Finds and displays a signUp entity.
      */
-    #[Route(path: '/signup-show/{id}', name: 'ctpregulatoryt_signup_show', methods: ['GET'])]
+    #[Route(path: '/signup-show/{id}', name: 'regulatoryt_signup_show', methods: ['GET'])]
     public function showAction(SignUp $signUp)
     {
         return parent::indexAction($signUp);
@@ -68,7 +68,7 @@ class RegulatorytSignUpController extends SignUpController
     /**
      * Displays a form to edit an existing signUp entity.
      */
-    #[Route(path: '/signup-edit/{id}', name: 'ctpregulatoryt_signup_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/signup-edit/{id}', name: 'regulatoryt_signup_edit', methods: ['GET', 'POST'])]
     public function editAction(Request $request, SignUp $signUp)
     {
         return parent::editAction($request,$signUp);
@@ -77,13 +77,13 @@ class RegulatorytSignUpController extends SignUpController
     /**
      * Deletes a signUp entity.
      */
-    #[Route(path: '/signup-delete/{id}', name: 'ctpregulatoryt_signup_delete', methods: ['DELETE'])]
+    #[Route(path: '/signup-delete/{id}', name: 'regulatoryt_signup_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, SignUp $signUp)
     {
         return parent::deleteAction($request,$signUp);
     }
 
-    #[Route(path: '/forgot-password', name: 'ctpregulatoryt_forgot_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/forgot-password', name: 'regulatoryt_forgot_password', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
     {
         return parent::forgotPasswordAction($request);
@@ -92,7 +92,7 @@ class RegulatorytSignUpController extends SignUpController
     /**
      * http://localhost/order/directory/reset-password
      */
-    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'ctpregulatoryt_reset_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'regulatoryt_reset_password', methods: ['GET', 'POST'])]
     public function resetPasswordAction(Request $request, $resetPasswordLinkID)
     {
         return parent::resetPasswordAction($request,$resetPasswordLinkID);

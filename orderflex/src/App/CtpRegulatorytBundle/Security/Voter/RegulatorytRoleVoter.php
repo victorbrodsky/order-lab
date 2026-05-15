@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class RegulatorytRoleVoter extends BaseRoleVoter {
 
     protected function getSiteRoleBase() {
-        return 'CTPREGULATORYT';
+        return 'REGULATORYT';
     }
 
     protected function getSitename() {

@@ -38,14 +38,14 @@ class TmaUserRequestController extends UserRequestController
         $this->siteName = 'tma';
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Tissue Microarrays';
-        $this->roleEditor = 'ROLE_CTPTMA_ADMIN';
+        $this->roleEditor = 'ROLE_TMA_ADMIN';
     }
 
 
     /**
      * Displays a form to create a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'ctptma_accountrequest_new', methods: ['GET'])]
+    #[Route(path: '/account-requests/new', name: 'tma_accountrequest_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function newAction( Request $request )
     {
@@ -55,7 +55,7 @@ class TmaUserRequestController extends UserRequestController
     /**
      * Creates a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'ctptma_accountrequest_create', methods: ['POST'])]
+    #[Route(path: '/account-requests/new', name: 'tma_accountrequest_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function createAction(Request $request)
     {
@@ -66,7 +66,7 @@ class TmaUserRequestController extends UserRequestController
     /**
      * Lists all UserRequest entities.
      */
-    #[Route(path: '/account-requests', name: 'ctptma_accountrequest', methods: ['GET'])]
+    #[Route(path: '/account-requests', name: 'tma_accountrequest', methods: ['GET'])]
     #[Template('AppCtpTmaBundle/UserRequest/index.html.twig')]
     public function indexAction( Request $request )
     {
@@ -74,7 +74,7 @@ class TmaUserRequestController extends UserRequestController
     }
 
 
-    #[Route(path: '/account-requests/{id}/{status}/status', name: 'ctptma_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/account-requests/{id}/{status}/status', name: 'tma_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function statusAction($id, $status)
     {
@@ -84,7 +84,7 @@ class TmaUserRequestController extends UserRequestController
     /**
      * Update (Approve) a new UserRequest entity.
      */
-    #[Route(path: '/account-requests-approve', name: 'ctptma_accountrequest_approve', methods: ['POST'])]
+    #[Route(path: '/account-requests-approve', name: 'tma_accountrequest_approve', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function approveUserAccountRequestAction(Request $request)
     {

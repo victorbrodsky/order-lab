@@ -22,19 +22,19 @@ class CohortgSignUpController extends SignUpController
         $this->siteName = 'cohortg';
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Cohort Generator';
-        $this->pathHome = 'ctpcohortg_home';
+        $this->pathHome = 'cohortg_home';
         $this->minimumRoles = array(
-            'ROLE_CTPCOHORTG_USER'
+            'ROLE_COHORTG_USER'
         );
         $this->roleAdmins = array(
-            'ROLE_CTPCOHORTG_ADMIN'
+            'ROLE_COHORTG_ADMIN'
         );
     }
 
     /**
      * Lists all signUp entities.
      */
-    #[Route(path: '/signup-list', name: 'ctpcohortg_signup_index', methods: ['GET'])]
+    #[Route(path: '/signup-list', name: 'cohortg_signup_index', methods: ['GET'])]
     public function indexAction()
     {
         return parent::indexAction();
@@ -44,13 +44,13 @@ class CohortgSignUpController extends SignUpController
      * http://localhost/order/directory/sign-up/new
      * Creates a new signUp entity.
      */
-    #[Route(path: '/sign-up', name: 'ctpcohortg_signup_new', methods: ['GET', 'POST'])]
+    #[Route(path: '/sign-up', name: 'cohortg_signup_new', methods: ['GET', 'POST'])]
     public function newSignUpAction(Request $request)
     {
         return parent::newSignUpAction($request);
     }
 
-    #[Route(path: '/activate-account/{registrationLinkID}', name: 'ctpcohortg_activate_account', methods: ['GET', 'POST'])]
+    #[Route(path: '/activate-account/{registrationLinkID}', name: 'cohortg_activate_account', methods: ['GET', 'POST'])]
     public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
     {
         return parent::activateAccountAction($request,$tokenStorage,$registrationLinkID);
@@ -59,7 +59,7 @@ class CohortgSignUpController extends SignUpController
     /**
      * Finds and displays a signUp entity.
      */
-    #[Route(path: '/signup-show/{id}', name: 'ctpcohortg_signup_show', methods: ['GET'])]
+    #[Route(path: '/signup-show/{id}', name: 'cohortg_signup_show', methods: ['GET'])]
     public function showAction(SignUp $signUp)
     {
         return parent::indexAction($signUp);
@@ -68,7 +68,7 @@ class CohortgSignUpController extends SignUpController
     /**
      * Displays a form to edit an existing signUp entity.
      */
-    #[Route(path: '/signup-edit/{id}', name: 'ctpcohortg_signup_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/signup-edit/{id}', name: 'cohortg_signup_edit', methods: ['GET', 'POST'])]
     public function editAction(Request $request, SignUp $signUp)
     {
         return parent::editAction($request,$signUp);
@@ -77,13 +77,13 @@ class CohortgSignUpController extends SignUpController
     /**
      * Deletes a signUp entity.
      */
-    #[Route(path: '/signup-delete/{id}', name: 'ctpcohortg_signup_delete', methods: ['DELETE'])]
+    #[Route(path: '/signup-delete/{id}', name: 'cohortg_signup_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, SignUp $signUp)
     {
         return parent::deleteAction($request,$signUp);
     }
 
-    #[Route(path: '/forgot-password', name: 'ctpcohortg_forgot_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/forgot-password', name: 'cohortg_forgot_password', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
     {
         return parent::forgotPasswordAction($request);
@@ -92,7 +92,7 @@ class CohortgSignUpController extends SignUpController
     /**
      * http://localhost/order/directory/reset-password
      */
-    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'ctpcohortg_reset_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'cohortg_reset_password', methods: ['GET', 'POST'])]
     public function resetPasswordAction(Request $request, $resetPasswordLinkID)
     {
         return parent::resetPasswordAction($request,$resetPasswordLinkID);

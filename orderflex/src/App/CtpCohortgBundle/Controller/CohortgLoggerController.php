@@ -39,12 +39,12 @@ class CohortgLoggerController extends LoggerController
     /**
      * Lists all Logger entities.
      */
-    #[Route(path: '/', name: 'ctpcohortg_logger', methods: ['GET'])]
+    #[Route(path: '/', name: 'cohortg_logger', methods: ['GET'])]
     #[Template('AppCtpCohortgBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
-        if( false == $this->isGranted("ROLE_CTPCOHORTG_ADMIN") ){
-            return $this->redirect( $this->generateUrl('ctpcohortg-nopermission') );
+        if( false == $this->isGranted("ROLE_COHORTG_ADMIN") ){
+            return $this->redirect( $this->generateUrl('cohortg-nopermission') );
         }
 
 		$params = array('sitename'=>$this->getParameter('cohortg.sitename'));
@@ -54,7 +54,7 @@ class CohortgLoggerController extends LoggerController
     }
 
 
-    #[Route(path: '/user/{id}/all', name: 'ctpcohortg_logger_user_all', methods: ['GET'])]
+    #[Route(path: '/user/{id}/all', name: 'cohortg_logger_user_all', methods: ['GET'])]
     #[Template('AppCtpCohortgBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {

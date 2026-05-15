@@ -22,19 +22,19 @@ class SporeSignUpController extends SignUpController
         $this->siteName = 'spore';
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Prostate Cancer Research Data Explorer';
-        $this->pathHome = 'ctpspore_home';
+        $this->pathHome = 'spore_home';
         $this->minimumRoles = array(
-            'ROLE_CTPSPORE_USER'
+            'ROLE_SPORE_USER'
         );
         $this->roleAdmins = array(
-            'ROLE_CTPSPORE_ADMIN'
+            'ROLE_SPORE_ADMIN'
         );
     }
 
     /**
      * Lists all signUp entities.
      */
-    #[Route(path: '/signup-list', name: 'ctpspore_signup_index', methods: ['GET'])]
+    #[Route(path: '/signup-list', name: 'spore_signup_index', methods: ['GET'])]
     public function indexAction()
     {
         return parent::indexAction();
@@ -44,13 +44,13 @@ class SporeSignUpController extends SignUpController
      * http://localhost/order/directory/sign-up/new
      * Creates a new signUp entity.
      */
-    #[Route(path: '/sign-up', name: 'ctpspore_signup_new', methods: ['GET', 'POST'])]
+    #[Route(path: '/sign-up', name: 'spore_signup_new', methods: ['GET', 'POST'])]
     public function newSignUpAction(Request $request)
     {
         return parent::newSignUpAction($request);
     }
 
-    #[Route(path: '/activate-account/{registrationLinkID}', name: 'ctpspore_activate_account', methods: ['GET', 'POST'])]
+    #[Route(path: '/activate-account/{registrationLinkID}', name: 'spore_activate_account', methods: ['GET', 'POST'])]
     public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
     {
         return parent::activateAccountAction($request,$tokenStorage,$registrationLinkID);
@@ -59,7 +59,7 @@ class SporeSignUpController extends SignUpController
     /**
      * Finds and displays a signUp entity.
      */
-    #[Route(path: '/signup-show/{id}', name: 'ctpspore_signup_show', methods: ['GET'])]
+    #[Route(path: '/signup-show/{id}', name: 'spore_signup_show', methods: ['GET'])]
     public function showAction(SignUp $signUp)
     {
         return parent::indexAction($signUp);
@@ -68,7 +68,7 @@ class SporeSignUpController extends SignUpController
     /**
      * Displays a form to edit an existing signUp entity.
      */
-    #[Route(path: '/signup-edit/{id}', name: 'ctpspore_signup_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/signup-edit/{id}', name: 'spore_signup_edit', methods: ['GET', 'POST'])]
     public function editAction(Request $request, SignUp $signUp)
     {
         return parent::editAction($request,$signUp);
@@ -77,13 +77,13 @@ class SporeSignUpController extends SignUpController
     /**
      * Deletes a signUp entity.
      */
-    #[Route(path: '/signup-delete/{id}', name: 'ctpspore_signup_delete', methods: ['DELETE'])]
+    #[Route(path: '/signup-delete/{id}', name: 'spore_signup_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, SignUp $signUp)
     {
         return parent::deleteAction($request,$signUp);
     }
 
-    #[Route(path: '/forgot-password', name: 'ctpspore_forgot_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/forgot-password', name: 'spore_forgot_password', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
     {
         return parent::forgotPasswordAction($request);
@@ -92,7 +92,7 @@ class SporeSignUpController extends SignUpController
     /**
      * http://localhost/order/directory/reset-password
      */
-    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'ctpspore_reset_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'spore_reset_password', methods: ['GET', 'POST'])]
     public function resetPasswordAction(Request $request, $resetPasswordLinkID)
     {
         return parent::resetPasswordAction($request,$resetPasswordLinkID);

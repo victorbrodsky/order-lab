@@ -39,12 +39,12 @@ class SporeLoggerController extends LoggerController
     /**
      * Lists all Logger entities.
      */
-    #[Route(path: '/', name: 'ctpspore_logger', methods: ['GET'])]
+    #[Route(path: '/', name: 'spore_logger', methods: ['GET'])]
     #[Template('AppCtpSporeBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
-        if( false == $this->isGranted("ROLE_CTPSPORE_ADMIN") ){
-            return $this->redirect( $this->generateUrl('ctpspore-nopermission') );
+        if( false == $this->isGranted("ROLE_SPORE_ADMIN") ){
+            return $this->redirect( $this->generateUrl('spore-nopermission') );
         }
 
 		$params = array('sitename'=>$this->getParameter('spore.sitename'));
@@ -54,7 +54,7 @@ class SporeLoggerController extends LoggerController
     }
 
 
-    #[Route(path: '/user/{id}/all', name: 'ctpspore_logger_user_all', methods: ['GET'])]
+    #[Route(path: '/user/{id}/all', name: 'spore_logger_user_all', methods: ['GET'])]
     #[Template('AppCtpSporeBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {

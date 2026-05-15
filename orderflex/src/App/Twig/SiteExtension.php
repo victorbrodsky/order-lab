@@ -47,10 +47,10 @@ class SiteExtension extends AbstractExtension
             'dashboard' => 'AppDashboardBundle/Default/base.html.twig',
             //CTP
             'ctp' => 'AppCtpBundle/Default/base.html.twig',
-            'tma' => 'AppTmaBundle/Default/base.html.twig',
-            'cohortg' => 'AppCohortgBundle/Default/base.html.twig',
-            'regulatoryt' => 'AppRegulatorytBundle/Default/base.html.twig',
-            'spore' => 'AppSporeBundle/Default/base.html.twig',
+            'tma' => 'AppCtpTmaBundle/Default/base.html.twig',
+            'cohortg' => 'AppCtpCohortgBundle/Default/base.html.twig',
+            'regulatoryt' => 'AppCtpRegulatorytBundle/Default/base.html.twig',
+            'spore' => 'AppCtpSporeBundle/Default/base.html.twig',
 
             default => 'AppUserdirectoryBundle/Default/base.html.twig',
         };

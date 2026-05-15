@@ -38,14 +38,14 @@ class SporeUserRequestController extends UserRequestController
         $this->siteName = 'spore';
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Prostate Cancer Research Data Explorer';
-        $this->roleEditor = 'ROLE_CTPSPORE_ADMIN';
+        $this->roleEditor = 'ROLE_SPORE_ADMIN';
     }
 
 
     /**
      * Displays a form to create a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'ctpspore_accountrequest_new', methods: ['GET'])]
+    #[Route(path: '/account-requests/new', name: 'spore_accountrequest_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function newAction( Request $request )
     {
@@ -55,7 +55,7 @@ class SporeUserRequestController extends UserRequestController
     /**
      * Creates a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'ctpspore_accountrequest_create', methods: ['POST'])]
+    #[Route(path: '/account-requests/new', name: 'spore_accountrequest_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function createAction(Request $request)
     {
@@ -66,7 +66,7 @@ class SporeUserRequestController extends UserRequestController
     /**
      * Lists all UserRequest entities.
      */
-    #[Route(path: '/account-requests', name: 'ctpspore_accountrequest', methods: ['GET'])]
+    #[Route(path: '/account-requests', name: 'spore_accountrequest', methods: ['GET'])]
     #[Template('AppCtpSporeBundle/UserRequest/index.html.twig')]
     public function indexAction( Request $request )
     {
@@ -74,7 +74,7 @@ class SporeUserRequestController extends UserRequestController
     }
 
 
-    #[Route(path: '/account-requests/{id}/{status}/status', name: 'ctpspore_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/account-requests/{id}/{status}/status', name: 'spore_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function statusAction($id, $status)
     {
@@ -84,7 +84,7 @@ class SporeUserRequestController extends UserRequestController
     /**
      * Update (Approve) a new UserRequest entity.
      */
-    #[Route(path: '/account-requests-approve', name: 'ctpspore_accountrequest_approve', methods: ['POST'])]
+    #[Route(path: '/account-requests-approve', name: 'spore_accountrequest_approve', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function approveUserAccountRequestAction(Request $request)
     {

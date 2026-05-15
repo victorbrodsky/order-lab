@@ -37,15 +37,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends OrderAbstractController
 {
-    #[Route(path: '/about', name: 'ctptma_about_page')]
+    #[Route(path: '/about', name: 'tma_about_page')]
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction(Request $request)
     {
         return array('sitename' => $this->getParameter('tma.sitename'));
     }
 
-    #[Route(path: '/', name: 'ctptma_home', methods: ['GET'])]
-    #[Template('AppTmaBundle/Home/tma-home.html.twig')]
+    #[Route(path: '/', name: 'tma_home', methods: ['GET'])]
+    #[Template('AppCtpTmaBundle/Home/tma-home.html.twig')]
     public function indexAction( Request $request ) {
 
         if( false == $this->isGranted('ROLE_TMA_USER') ){
@@ -60,8 +60,8 @@ class DefaultController extends OrderAbstractController
     }
 
 //    //tma_dashboard_tma
-//    #[Route(path: '/tissue-microarrays', name: 'ctptma_dashboard_tma', methods: ['GET'])]
-//    #[Template('AppTmaBundle/Home/dashboard-tma.html.twig')]
+//    #[Route(path: '/tissue-microarrays', name: 'tma_dashboard_tma', methods: ['GET'])]
+//    #[Template('AppCtpTmaBundle/Home/dashboard-tma.html.twig')]
 //    public function tmaAction( Request $request ) {
 //        $title = 'Tissue Microarrays';
 //        return array(

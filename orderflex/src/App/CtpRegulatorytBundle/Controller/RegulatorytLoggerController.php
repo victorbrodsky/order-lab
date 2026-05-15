@@ -39,12 +39,12 @@ class RegulatorytLoggerController extends LoggerController
     /**
      * Lists all Logger entities.
      */
-    #[Route(path: '/', name: 'ctpregulatoryt_logger', methods: ['GET'])]
+    #[Route(path: '/', name: 'regulatoryt_logger', methods: ['GET'])]
     #[Template('AppCtpRegulatorytBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
-        if( false == $this->isGranted("ROLE_CTPREGULATORYT_ADMIN") ){
-            return $this->redirect( $this->generateUrl('ctpregulatoryt-nopermission') );
+        if( false == $this->isGranted("ROLE_REGULATORYT_ADMIN") ){
+            return $this->redirect( $this->generateUrl('regulatoryt-nopermission') );
         }
 
 		$params = array('sitename'=>$this->getParameter('regulatoryt.sitename'));
@@ -54,7 +54,7 @@ class RegulatorytLoggerController extends LoggerController
     }
 
 
-    #[Route(path: '/user/{id}/all', name: 'ctpregulatoryt_logger_user_all', methods: ['GET'])]
+    #[Route(path: '/user/{id}/all', name: 'regulatoryt_logger_user_all', methods: ['GET'])]
     #[Template('AppCtpRegulatorytBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {

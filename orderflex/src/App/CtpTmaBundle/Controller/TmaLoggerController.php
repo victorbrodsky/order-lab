@@ -39,12 +39,12 @@ class TmaLoggerController extends LoggerController
     /**
      * Lists all Logger entities.
      */
-    #[Route(path: '/', name: 'ctptma_logger', methods: ['GET'])]
+    #[Route(path: '/', name: 'tma_logger', methods: ['GET'])]
     #[Template('AppCtpTmaBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
-        if( false == $this->isGranted("ROLE_CTPTMA_ADMIN") ){
-            return $this->redirect( $this->generateUrl('ctptma-nopermission') );
+        if( false == $this->isGranted("ROLE_TMA_ADMIN") ){
+            return $this->redirect( $this->generateUrl('tma-nopermission') );
         }
 
 		$params = array('sitename'=>$this->getParameter('tma.sitename'));
@@ -54,7 +54,7 @@ class TmaLoggerController extends LoggerController
     }
 
 
-    #[Route(path: '/user/{id}/all', name: 'ctptma_logger_user_all', methods: ['GET'])]
+    #[Route(path: '/user/{id}/all', name: 'tma_logger_user_all', methods: ['GET'])]
     #[Template('AppCtpTmaBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {

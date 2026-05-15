@@ -38,14 +38,14 @@ class CohortgUserRequestController extends UserRequestController
         $this->siteName = 'cohortg';
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Cohort Generator';
-        $this->roleEditor = 'ROLE_CTPCOHORTG_ADMIN';
+        $this->roleEditor = 'ROLE_COHORTG_ADMIN';
     }
 
 
     /**
      * Displays a form to create a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'ctpcohortg_accountrequest_new', methods: ['GET'])]
+    #[Route(path: '/account-requests/new', name: 'cohortg_accountrequest_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function newAction( Request $request )
     {
@@ -55,7 +55,7 @@ class CohortgUserRequestController extends UserRequestController
     /**
      * Creates a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'ctpcohortg_accountrequest_create', methods: ['POST'])]
+    #[Route(path: '/account-requests/new', name: 'cohortg_accountrequest_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function createAction(Request $request)
     {
@@ -66,7 +66,7 @@ class CohortgUserRequestController extends UserRequestController
     /**
      * Lists all UserRequest entities.
      */
-    #[Route(path: '/account-requests', name: 'ctpcohortg_accountrequest', methods: ['GET'])]
+    #[Route(path: '/account-requests', name: 'cohortg_accountrequest', methods: ['GET'])]
     #[Template('AppCtpCohortgBundle/UserRequest/index.html.twig')]
     public function indexAction( Request $request )
     {
@@ -74,7 +74,7 @@ class CohortgUserRequestController extends UserRequestController
     }
 
 
-    #[Route(path: '/account-requests/{id}/{status}/status', name: 'ctpcohortg_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/account-requests/{id}/{status}/status', name: 'cohortg_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function statusAction($id, $status)
     {
@@ -84,7 +84,7 @@ class CohortgUserRequestController extends UserRequestController
     /**
      * Update (Approve) a new UserRequest entity.
      */
-    #[Route(path: '/account-requests-approve', name: 'ctpcohortg_accountrequest_approve', methods: ['POST'])]
+    #[Route(path: '/account-requests-approve', name: 'cohortg_accountrequest_approve', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function approveUserAccountRequestAction(Request $request)
     {

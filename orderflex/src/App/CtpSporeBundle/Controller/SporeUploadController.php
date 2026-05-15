@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SporeUploadController extends UploadController {
 
-    #[Route(path: '/file-delete', name: 'ctpspore_file_delete', methods: ['GET', 'POST', 'DELETE'])]
+    #[Route(path: '/file-delete', name: 'spore_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
     }
@@ -44,7 +44,7 @@ class SporeUploadController extends UploadController {
     /**
      * $id - document id
      */
-    #[Route(path: '/file-download/{id}/{eventtype}', name: 'ctpspore_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'spore_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
         return $this->downloadFileMethod($request,$id,$this->getParameter('spore.sitename'),$eventtype);
     }
@@ -53,7 +53,7 @@ class SporeUploadController extends UploadController {
     /**
      * $id - document id
      */
-    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'ctpspore_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'spore_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         return $this->viewFileMethod($request,$id,$this->getParameter('spore.sitename'),$eventtype,$viewType);
     }

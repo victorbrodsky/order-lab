@@ -44,88 +44,88 @@ class CohortgAccessRequestController extends AccessRequestController
         $this->roleEditor = 'ROLE_COHORTG_ADMIN';
     }
 
-    #[Route(path: '/access-requests/new/create', name: 'ctpcohortg_access_request_new_plain', methods: ['GET'])]
+    #[Route(path: '/access-requests/new/create', name: 'cohortg_access_request_new_plain', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestCreatePlainAction(Request $request)
     {
         return parent::accessRequestCreatePlain($request);
     }
 
-    #[Route(path: '/access-requests/new', name: 'ctpcohortg_access_request_new', methods: ['GET'])]
+    #[Route(path: '/access-requests/new', name: 'cohortg_access_request_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestCreateAction(Request $request)
     {
         return parent::accessRequestCreateAction($request);
     }
 
-    #[Route(path: '/access-requests/new/pending', name: 'ctpcohortg_access_request_create', methods: ['POST'])]
+    #[Route(path: '/access-requests/new/pending', name: 'cohortg_access_request_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request.html.twig')]
     public function accessRequestAction(Request $request)
     {
         return parent::accessRequestAction($request);
     }
 
-    #[Route(path: '/access-requests', name: 'ctpcohortg_accessrequest_list', methods: ['GET'])]
+    #[Route(path: '/access-requests', name: 'cohortg_accessrequest_list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request_list.html.twig')]
     public function accessRequestIndexAction(Request $request)
     {
         return parent::accessRequestIndexAction($request);
     }
 
-    #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'ctpcohortg_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/access-requests/change-status/{id}/{status}', name: 'cohortg_accessrequest_change', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
         return parent::accessRequestChangeAction($request, $id, $status);
     }
 
-    #[Route(path: '/access-requests/{id}', name: 'ctpcohortg_accessrequest_management', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/access-requests/{id}', name: 'cohortg_accessrequest_management', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function accessRequestManagementAction(Request $request, $id )
     {
         return parent::accessRequestManagementAction($request,$id);
     }
 
-    #[Route(path: '/access-requests/submit/{id}', name: 'ctpcohortg_accessrequest_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/access-requests/submit/{id}', name: 'cohortg_accessrequest_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function accessRequestManagementSubmitAction(Request $request, $id )
     {
         return parent::accessRequestManagementSubmitAction($request,$id);
     }
 
-    #[Route(path: '/deny-access-request/{userId}', name: 'ctpcohortg_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    #[Route(path: '/deny-access-request/{userId}', name: 'cohortg_accessrequest_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
     public function accessRequestRemoveAction(Request $request, $userId )
     {
         return parent::accessRequestRemoveAction($request,$userId);
     }
 
-    #[Route(path: '/authorized-users/', name: 'ctpcohortg_authorized_users', methods: ['GET'])]
+    #[Route(path: '/authorized-users/', name: 'cohortg_authorized_users', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/authorized_users.html.twig')]
     public function authorizedUsersAction(Request $request )
     {
         return parent::authorizedUsersAction($request);
     }
 
-    #[Route(path: '/authorization-user-manager/{id}', name: 'ctpcohortg_authorization_user_management', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/authorization-user-manager/{id}', name: 'cohortg_authorization_user_management', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function authorizationManagementAction( Request $request, $id )
     {
         return parent::authorizationManagementAction($request,$id);
     }
 
-    #[Route(path: '/authorization-user-manager/submit/{id}', name: 'ctpcohortg_authorization_user_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/authorization-user-manager/submit/{id}', name: 'cohortg_authorization_user_management_submit', methods: ['POST'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/access_request_management.html.twig')]
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
         return parent::authorizationManagementSubmitAction($request,$id);
     }
 
-    #[Route(path: '/revoke-access-authorization/{userId}', name: 'ctpcohortg_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
+    #[Route(path: '/revoke-access-authorization/{userId}', name: 'cohortg_authorization_remove', methods: ['GET'], requirements: ['userId' => '\d+'])]
     public function authorizationRemoveAction(Request $request, $userId)
     {
         return parent::authorizationRemoveAction($request,$userId);
     }
 
-    #[Route(path: '/add-authorized-user/', name: 'ctpcohortg_add_authorized_user', methods: ['GET'])]
+    #[Route(path: '/add-authorized-user/', name: 'cohortg_add_authorized_user', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/add_authorized_user.html.twig')]
     public function addAuthorizedUserAction( Request $request )
     {

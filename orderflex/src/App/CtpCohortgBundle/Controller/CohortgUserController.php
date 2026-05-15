@@ -27,13 +27,13 @@ use Symfony\Component\HttpFoundation\Request;
 class CohortgUserController extends UserController
 {
 
-    #[Route(path: '/user/{id}', name: 'ctpcohortg_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
+    #[Route(path: '/user/{id}', name: 'cohortg_showuser', methods: ['GET'], requirements: ['id' => '\d+'], options: ['expose' => true])]
     #[Template('AppUserdirectoryBundle/Profile/show_user.html.twig')]
     public function showUserOptimizedAction( Request $request, $id ) {
         return $this->showUserOptimized($request, $id, $this->getParameter('cohortg.sitename'));
     }
 
-    #[Route(path: '/edit-user-profile/{id}', name: 'ctpcohortg_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/edit-user-profile/{id}', name: 'cohortg_user_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function editUserAction(Request $request, $id)
     {
@@ -51,7 +51,7 @@ class CohortgUserController extends UserController
         return $editUser;
     }
 
-    #[Route(path: '/edit-user-profile/{id}', name: 'ctpcohortg_user_update', methods: ['PUT'])]
+    #[Route(path: '/edit-user-profile/{id}', name: 'cohortg_user_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/Profile/edit_user.html.twig')]
     public function updateUserAction(Request $request, $id)
     {

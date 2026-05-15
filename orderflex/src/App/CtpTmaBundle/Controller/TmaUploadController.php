@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TmaUploadController extends UploadController {
 
-    #[Route(path: '/file-delete', name: 'ctptma_file_delete', methods: ['GET', 'POST', 'DELETE'])]
+    #[Route(path: '/file-delete', name: 'tma_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
     }
@@ -44,7 +44,7 @@ class TmaUploadController extends UploadController {
     /**
      * $id - document id
      */
-    #[Route(path: '/file-download/{id}/{eventtype}', name: 'ctptma_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'tma_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
         return $this->downloadFileMethod($request,$id,$this->getParameter('tma.sitename'),$eventtype);
     }
@@ -53,7 +53,7 @@ class TmaUploadController extends UploadController {
     /**
      * $id - document id
      */
-    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'ctptma_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'tma_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
         return $this->viewFileMethod($request,$id,$this->getParameter('tma.sitename'),$eventtype,$viewType);
     }

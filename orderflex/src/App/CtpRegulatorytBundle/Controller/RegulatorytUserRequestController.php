@@ -38,14 +38,14 @@ class RegulatorytUserRequestController extends UserRequestController
         $this->siteName = 'regulatoryt';
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Regulatory Templates';
-        $this->roleEditor = 'ROLE_CTPREGULATORYT_ADMIN';
+        $this->roleEditor = 'ROLE_REGULATORYT_ADMIN';
     }
 
 
     /**
      * Displays a form to create a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'ctpregulatoryt_accountrequest_new', methods: ['GET'])]
+    #[Route(path: '/account-requests/new', name: 'regulatoryt_accountrequest_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function newAction( Request $request )
     {
@@ -55,7 +55,7 @@ class RegulatorytUserRequestController extends UserRequestController
     /**
      * Creates a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'ctpregulatoryt_accountrequest_create', methods: ['POST'])]
+    #[Route(path: '/account-requests/new', name: 'regulatoryt_accountrequest_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function createAction(Request $request)
     {
@@ -66,7 +66,7 @@ class RegulatorytUserRequestController extends UserRequestController
     /**
      * Lists all UserRequest entities.
      */
-    #[Route(path: '/account-requests', name: 'ctpregulatoryt_accountrequest', methods: ['GET'])]
+    #[Route(path: '/account-requests', name: 'regulatoryt_accountrequest', methods: ['GET'])]
     #[Template('AppCtpRegulatorytBundle/UserRequest/index.html.twig')]
     public function indexAction( Request $request )
     {
@@ -74,7 +74,7 @@ class RegulatorytUserRequestController extends UserRequestController
     }
 
 
-    #[Route(path: '/account-requests/{id}/{status}/status', name: 'ctpregulatoryt_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/account-requests/{id}/{status}/status', name: 'regulatoryt_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function statusAction($id, $status)
     {
@@ -84,7 +84,7 @@ class RegulatorytUserRequestController extends UserRequestController
     /**
      * Update (Approve) a new UserRequest entity.
      */
-    #[Route(path: '/account-requests-approve', name: 'ctpregulatoryt_accountrequest_approve', methods: ['POST'])]
+    #[Route(path: '/account-requests-approve', name: 'regulatoryt_accountrequest_approve', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function approveUserAccountRequestAction(Request $request)
     {
