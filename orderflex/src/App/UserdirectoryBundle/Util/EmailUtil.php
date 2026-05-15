@@ -80,7 +80,8 @@ class EmailUtil {
         $fromEmail=null,            //5
         $attachmentData=null,       //6
         $attachmentFilename=null,   //7
-        $replyToEmail=null         //8
+        $replyToEmail=null,         //8
+        $attachmentInMemoryArray=null //attach it as an in‑memory string
         //$fromEmailDisplayName=null  //9
     ) {
 
@@ -364,6 +365,15 @@ class EmailUtil {
             }
         } else {
             $logger->notice("attachmentData is NULL");
+        }
+
+        if( $attachmentInMemoryArray ) {
+            //$message->attach($attachmentInMemoryData, 'report.csv', 'text/csv');
+            $message->attach(
+                $attachmentInMemoryArray['binary'],
+                $attachmentInMemoryArray['filename'],
+                $attachmentInMemoryArray['mimetype']
+            );
         }
 
         //In Symfony versions previous to 6.2, the methods attachFromPath() and attach() could be used to add attachments.

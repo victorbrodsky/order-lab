@@ -4184,11 +4184,64 @@ class FellAppUtil {
             //return false;
         }
 
+        $emailUtil = $this->container->get('user_mailer_utility');
+
         //1) get all coordinators for $fellowshipApplication's global fellowship specialty
+        $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellowshipApplication);
 
         //2) get applicant email
 
         //3) get all attached files
+        $avatars = $fellowshipApplication->getAvatars();
+        $cvs = $fellowshipApplication->getCvs();
+        $coverLetters = $fellowshipApplication->getCoverLetters();
+        $usmlDocs = $fellowshipApplication->getExaminationScores(); //get USML scores files
+        $reprimandDocs = $fellowshipApplication->getReprimandDocuments();
+        $lawsuitDocs = $fellowshipApplication->getLawsuitDocuments();
+
+        $attachmentData = array();
+        foreach($avatars as $attachment) {
+            $path = $attachment->getAttachmentEmailPath();
+            $attachmentFilename = $attachment->getDescriptiveFilename();
+            if( $path ) {
+                $attachmentData[] = array('path' => $path, 'name' => $attachmentFilename);
+            }
+        }
+        foreach($cvs as $attachment) {
+            $path = $attachment->getAttachmentEmailPath();
+            $attachmentFilename = $attachment->getDescriptiveFilename();
+            if( $path ) {
+                $attachmentData[] = array('path' => $path, 'name' => $attachmentFilename);
+            }
+        }
+        foreach($coverLetters as $attachment) {
+            $path = $attachment->getAttachmentEmailPath();
+            $attachmentFilename = $attachment->getDescriptiveFilename();
+            if( $path ) {
+                $attachmentData[] = array('path' => $path, 'name' => $attachmentFilename);
+            }
+        }
+        foreach($usmlDocs as $attachment) {
+            $path = $attachment->getAttachmentEmailPath();
+            $attachmentFilename = $attachment->getDescriptiveFilename();
+            if( $path ) {
+                $attachmentData[] = array('path' => $path, 'name' => $attachmentFilename);
+            }
+        }
+        foreach($reprimandDocs as $attachment) {
+            $path = $attachment->getAttachmentEmailPath();
+            $attachmentFilename = $attachment->getDescriptiveFilename();
+            if( $path ) {
+                $attachmentData[] = array('path' => $path, 'name' => $attachmentFilename);
+            }
+        }
+        foreach($lawsuitDocs as $attachment) {
+            $path = $attachment->getAttachmentEmailPath();
+            $attachmentFilename = $attachment->getDescriptiveFilename();
+            if( $path ) {
+                $attachmentData[] = array('path' => $path, 'name' => $attachmentFilename);
+            }
+        }
 
         //4) get all fields in application.
         // Use generateXlsxData(array($fellowshipApplication))
@@ -4200,6 +4253,44 @@ class FellAppUtil {
         $writer->save('php://output');
         $csvData = ob_get_clean();
         //then: $email->text("Here is the data:\n\n" . $csvData);
+
+        $date = new \DateTime(); // now
+        $formattedDate = $date->format('m-d-Y \a\t H:i');
+
+        if( $applicant ) {
+            $applicantEmail = $applicant->getSingleEmail();
+            $applicantPhone = $applicant->getSinglePhone();
+        } else {
+            $applicantEmail = null;
+            $applicantPhone = null;
+        }
+
+        $uniqueId = $fellappImportPopulateHubUtil->getFormId($fellowshipApplication);
+        $emailSubject = "Fellowship application has been submitted with unique ID " . $uniqueId;
+        $emailBody =
+            //$emailSubject . " at $institution on $formattedDate.
+            $emailSubject . " on $formattedDate."."<br>". //$fellapp->getAllFellowshipSpecialty() has $institution string
+            "Applicant's contact information:<br>".
+            "E-Mail: $applicantEmail"."<br>".
+            "Phone: $applicantPhone"."<br>"
+        ;
+
+        //$email->attach($csvData, 'report.csv', 'text/csv');
+        $emailUtil->sendEmail(
+            $coordinatorEmails,
+            $emailSubject,
+            $emailBody,
+            $applicantEmail,
+            $fromEmail=null,
+            $attachmentData,
+            $attachmentFilename=null,
+            $replyToEmail=null,
+            $attachmentInMemoryArray = array(
+                'binary'=>$csvData,
+                'filename'=>'report.csv',
+                'mimetype'=>'text/csv'
+            )
+        );
 
         dump($csvData);
         exit('sendConfirmationEmailOnSubmition');

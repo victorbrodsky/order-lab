@@ -1663,9 +1663,10 @@ class FellAppController extends OrderAbstractController {
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             //exit('event='.$event);
 
+            //testing
             //TODO: sendConfirmationEmailOnSubmition if status is switch to active - edit
             $fellappUtil->sendConfirmationEmailOnSubmition($entity,$applicant,$initialStatusName);
-            exit('testing');
+            //exit('testing');
 
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
 
