@@ -4181,7 +4181,7 @@ class FellAppUtil {
     public function sendConfirmationEmailOnSubmition( $fellowshipApplication, $applicant, $statusName ) {
         //send this email only on hub server
         if( $this->isHubServer() === false ) {
-            //return false;
+            return false;
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -4292,8 +4292,9 @@ class FellAppUtil {
             )
         );
 
-        dump($csvData);
-        exit('sendConfirmationEmailOnSubmition');
+        //dump($csvData);
+        //exit('sendConfirmationEmailOnSubmition');
+        return true;
     }
 
     //TODO: replace strings by true, false, null (possible to simplify and return only user or null for all other cases)
