@@ -3155,6 +3155,7 @@ class UserSecurityUtil {
         return false;
     }
     public function getLoginFooter( $sitename ) {
+        //echo 'getLoginFooter: $sitename='.$sitename."<br>";
         $loginFooterArr = array();
         if( $this->isShowSignUp($sitename) ) {
             try {

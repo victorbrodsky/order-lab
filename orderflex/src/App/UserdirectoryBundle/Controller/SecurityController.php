@@ -204,14 +204,26 @@ class SecurityController extends OrderAbstractController
         if( $routename == "crn_login" ) {
             $sitename = $this->getParameter('crn.sitename');
         }
-        if( $routename == "ctp_login" ) {
-            $sitename = $this->getParameter('ctp.sitename');
-        }
         if( $routename == "translationalresearch_login" ) {
             $sitename = $this->getParameter('translationalresearch.sitename');
         }
         if( $routename == "dashboard_login" ) {
             $sitename = $this->getParameter('dashboard.sitename');
+        }
+        if( $routename == "ctp_login" ) {
+            $sitename = $this->getParameter('ctp.sitename');
+        }
+        if( $routename == "tma_login" ) {
+            $sitename = $this->getParameter('tma.sitename');
+        }
+        if( $routename == "spore_login" ) {
+            $sitename = $this->getParameter('spore.sitename');
+        }
+        if( $routename == "cohortg_login" ) {
+            $sitename = $this->getParameter('cohortg.sitename');
+        }
+        if( $routename == "regulatoryt_login" ) {
+            $sitename = $this->getParameter('regulatoryt.sitename');
         }
         //exit('sitename='.$sitename);
 
