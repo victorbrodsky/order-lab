@@ -4181,12 +4181,18 @@ class FellAppUtil {
     public function sendConfirmationEmailOnSubmition( $fellowshipApplication, $applicant, $statusName ) {
         //send this email only on hub server
         if( $this->isHubServer() === false ) {
-            return array('success'=>false,'note'=>'Not a hub server');
+            return array(
+                'success'=>false,
+                'note'=>'Not a hub server'
+            );
         }
 
         //send email only if status is 'active'
         if( $statusName != "active" ) {
-            return array('success'=>false,'note'=>'Status is not active: '.$statusName);
+            return array(
+                'success'=>false,
+                'note'=>'Status is not active: '.$statusName
+            );
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -4305,10 +4311,16 @@ class FellAppUtil {
         if( count($responsibleEmails) > 0 ) {
             $emailsSent = implode(', ', $responsibleEmails);
             //return $emailsSent;
-            return array('success'=>true,'note'=>$emailsSent);
+            return array(
+                'success'=>true,
+                'note'=>$emailsSent
+            );
         }
 
-        return array('success'=>false,'note'=>'No emails');
+        return array(
+            'success'=>false,
+            'note'=>'No emails'
+        );
     }
 
     //TODO: replace strings by true, false, null (possible to simplify and return only user or null for all other cases)
