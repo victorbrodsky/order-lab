@@ -4187,6 +4187,7 @@ class FellAppUtil {
             );
         }
 
+        exit('$statusName='.$statusName);
         //send email only if status is 'active'
         if( $statusName != "active" ) {
             return array(
