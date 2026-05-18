@@ -4189,12 +4189,12 @@ class FellAppUtil {
 
         //exit('$statusName='.$statusName);
         //send email only if status is 'active'
-//        if( $statusName != "active" ) {
-//            return array(
-//                'success'=>false,
-//                'note'=>'Status is not active: '.$statusName
-//            );
-//        }
+        if( $statusName != "active" ) {
+            return array(
+                'success'=>false,
+                'note'=>'Status is not active: statusName='.$statusName
+            );
+        }
 
         $emailUtil = $this->container->get('user_mailer_utility');
 
