@@ -4300,7 +4300,13 @@ class FellAppUtil {
 
         //dump($csvData);
         //exit('sendConfirmationEmailOnSubmition');
-        return true;
+        //return true;
+
+        if( count($responsibleEmails) > 0 ) {
+            return implode(', ', $responsibleEmails);
+        }
+
+        return false;
     }
 
     //TODO: replace strings by true, false, null (possible to simplify and return only user or null for all other cases)
