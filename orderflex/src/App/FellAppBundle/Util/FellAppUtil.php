@@ -2160,6 +2160,7 @@ class FellAppUtil {
         //exit('addEmptyTrainings');
         //set TrainingType
         $this->addTrainingByType($fellowshipApplication,"Undergraduate",1);
+        //exit('addEmptyTrainings: testing');
         $this->addTrainingByType($fellowshipApplication,"Graduate",2);
         $this->addTrainingByType($fellowshipApplication,"Medical",3);
         $this->addTrainingByType($fellowshipApplication,"Residency",4);
@@ -2196,7 +2197,7 @@ class FellAppUtil {
         //add up to maxNumber
         //echo $typeName.": init maxNumber=".$maxNumber.", count=".$count."<br>";
         for( $count; $count < $maxNumber; $count++ ) {
-            //echo "maxNumber=".$maxNumber.", count=".$count."<br>";
+            //echo "addSingleTraining: maxNumber=".$maxNumber.", count=".$count."<br>";
             $this->addSingleTraining($fellowshipApplication,$typeName,$orderinlist);
         }
 

@@ -486,7 +486,7 @@
                 {#<th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>#}
 
                 <th>Medical / Graduate School</th>
-                <th>Residency / Post-graduate Education</th>
+                <th>Residency / Other GME</th>
                 <th>Preceding Fellowship</th>
 
                 {% if not applicantUser %}
@@ -843,6 +843,7 @@
                         append and show the PhD degree from the application as well followed by a dash in the same line
                         and the PhD specialty ("Biology", "Chemistry", etc), followed by institution name and
                         location in the same format as was already used by the MD degree#}
+                        {#http://127.0.0.1/fellowship-applications/show/1817#}
                         {{ entity.getMedicalSchoolDescription()|raw }}
                     </td>
                     <td>

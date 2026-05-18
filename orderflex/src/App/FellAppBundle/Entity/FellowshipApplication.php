@@ -1278,6 +1278,7 @@ class FellowshipApplication extends BaseUserAttributes {
     ) {
         $schoolName = "";
 
+        //echo "this->getTrainings() count=".count($this->getTrainings())."<br>"; //testing
         foreach( $this->getTrainings() as $item ) {
             if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
 

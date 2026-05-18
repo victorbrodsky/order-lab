@@ -1142,6 +1142,10 @@ class FellAppController extends OrderAbstractController {
         
         $fellappUtil->addEmptyFellAppFields($entity); //getShowParameters
 
+        //testing
+        //echo "education count=".count($entity->getTrainings())."<br>";
+        //exit('getShowParameters');
+
         $showOption = null;
         $captchaSiteKey = null;
 
@@ -1456,6 +1460,12 @@ class FellAppController extends OrderAbstractController {
 
         $cycle = "edit";
 
+        //TODO:
+        //testing
+        //echo "education count=".count($entity->getTrainings())."<br>";
+        //exit('editAction');
+        //$fellappUtil->addEmptyFellAppFields($entity); //getShowParameters
+
         $form = $this->createFellAppEditForm($entity,$cycle);
         $form->handleRequest($request);
 
@@ -1731,6 +1741,10 @@ class FellAppController extends OrderAbstractController {
 //        }
 
         $fellappUtil->addEmptyFellAppFields($entity); //createFellAppEditForm
+
+        //testing
+        //echo "education count=".count($entity->getTrainings())."<br>";
+        //exit('createFellAppEditForm');
 
         $fellTypes = array();
         $globalFellTypes = array();
