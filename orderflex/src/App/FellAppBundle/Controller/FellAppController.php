@@ -1488,7 +1488,7 @@ class FellAppController extends OrderAbstractController {
 
             ////// set status edit GET POST application//////
             $btnSubmit = $request->request->get('btnSubmit');
-            //echo "btnSubmit=$btnSubmit <br>";
+            echo "btnSubmit=$btnSubmit <br>";
             if ($btnSubmit === 'fellapp-draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
