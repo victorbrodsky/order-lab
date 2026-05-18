@@ -4207,9 +4207,11 @@ class FellAppUtil {
         if( $applicant ) {
             $applicantEmail = $applicant->getSingleEmail();
             $applicantPhone = $applicant->getSinglePhone();
+            $applicantName = $applicant->getUsernameOptimal();
         } else {
             $applicantEmail = null;
             $applicantPhone = null;
+            $applicantName = null;
         }
 
         //3) get all attached files
@@ -4279,11 +4281,12 @@ class FellAppUtil {
         $formattedDate = $date->format('m-d-Y \a\t H:i');
 
         $uniqueId = $fellappImportPopulateHubUtil->getFormId($fellowshipApplication);
-        $emailSubject = "Fellowship application has been submitted on Hub server with unique ID " . $uniqueId;
+        $emailSubject = "Fellowship application has been submitted on the Hub server with unique ID " . $uniqueId;
         $emailBody =
             //$emailSubject . " at $institution on $formattedDate.
             $emailSubject . " on $formattedDate."."<br>". //$fellapp->getAllFellowshipSpecialty() has $institution string
             "Applicant's contact information:<br>".
+            "Name: $applicantName"."<br>".
             "E-Mail: $applicantEmail"."<br>".
             "Phone: $applicantPhone"."<br>"
         ;
