@@ -485,7 +485,7 @@
                 {#<th>{{ knp_pagination_sortable(entities, 'C2', 'examinations.COMLEXLevel2Score') }}</th>#}
                 {#<th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>#}
 
-                <th>Medical School</th>
+                <th>Medical / Graduate School</th>
                 <th>Residency</th>
                 <th>Preceding Fellowship</th>
 
@@ -836,6 +836,7 @@
                         {#{{ c3 }}#}
                     {#</td>#}
                     <td>
+                        {#{{ entity.getDegreeByTrainingTypeName()|raw }}#}
                         {{ entity.getMedicalSchoolDescription()|raw }}
                     </td>
                     <td>

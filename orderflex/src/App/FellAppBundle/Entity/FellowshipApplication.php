@@ -1263,12 +1263,16 @@ class FellowshipApplication extends BaseUserAttributes {
  
         return $degree;
     }
+
+    //oleg_fellappbundle_fellowshipapplication_trainings_0_degree
+    //oleg_fellappbundle_fellowshipapplication_trainings_0_majors
     
     //$trainingTypeName: Medical, Residency, GME, Post-Residency Fellowship
     public function getSchoolByTrainingTypeName(
         $trainingTypeName,
         $withGeoLocation=false,
         $withResidencySpecialty=false,
+        $withDegreeMajor=false,
         $separator='<br>',
         $withAt=true
     ) {
@@ -1307,6 +1311,32 @@ class FellowshipApplication extends BaseUserAttributes {
                             $schoolName = trim($majorStr) . " " . $schoolName;
                         }
                     }
+                }
+                if( $withDegreeMajor && $item->getMajors() ) {
+                    $majorArr = array();
+                    foreach( $item->getMajors() as $major ) {
+                        $major = strtolower($major);
+                        $major = ucwords($major);
+                        $majorArr[] = $major."";
+                    }
+                    if( $schoolName && count($majorArr)>0 ) {
+                        $schoolName = $schoolName . "; ";
+                    }
+                    //$schoolName = $schoolName . implode(", ",$majorArr);
+                    $majorStr = implode(", ",$majorArr);
+                    $degree = $item->getDegree()."";
+                    if( $degree && $majorStr ) {
+                        //PhD - Specialty (e.g. "PhD - Biology")
+                        $majorStr = $degree . "-" . $majorStr;
+                    }
+                    if( trim($majorStr) ) {
+                        if( $withAt ) {
+                            $schoolName = trim($majorStr) . " at " . $schoolName;
+                        } else {
+                            $schoolName = trim($majorStr) . " " . $schoolName;
+                        }
+                    }
+
                 }
 
                 //Institution
@@ -1633,7 +1663,15 @@ class FellowshipApplication extends BaseUserAttributes {
     public function getMedicalSchoolDescription($withAt=false) {
         $resArr = array();
         //$name = $this->getSchoolByTrainingTypeName("Medical",true);
-        $name = $this->getSchoolByTrainingTypeName("Medical",true,false,'<br>',$withAt);
+        $name = $this->getSchoolByTrainingTypeName(
+            "Medical",  //$trainingTypeName
+            true,       //$withGeoLocation
+            false,      //$withResidencySpecialty
+            true,      //$withDegreeMajor
+            '<br>',     //$separator
+            $withAt     //$withAt
+        );
+
         $resArr[] = $name;
         return implode(", ",$resArr);
     }
@@ -1643,7 +1681,14 @@ class FellowshipApplication extends BaseUserAttributes {
     //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
     public function getResidencyDescription($withAt=false) {
         $resArr = array();
-        $name = $this->getSchoolByTrainingTypeName("Residency",true,true,'<br>',$withAt);
+        $name = $this->getSchoolByTrainingTypeName(
+            "Residency",
+            true,
+            true,
+            false, //$withDegreeMajor
+            '<br>',
+            $withAt
+        );
         $resArr[] = $name;
         return implode(", ",$resArr);
     }
@@ -1653,7 +1698,14 @@ class FellowshipApplication extends BaseUserAttributes {
     //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
     public function getPostResidencyFellowshipDescription($withAt=false) {
         $resArr = array();
-        $name = $this->getSchoolByTrainingTypeName("Post-Residency Fellowship",true,true,'<br>',$withAt);
+        $name = $this->getSchoolByTrainingTypeName(
+            "Post-Residency Fellowship",
+            true,
+            true,
+            false, //$withDegreeMajor
+            '<br>',
+            $withAt
+        );
         $resArr[] = $name;
         $description = implode(", ",$resArr);
         return $description;
