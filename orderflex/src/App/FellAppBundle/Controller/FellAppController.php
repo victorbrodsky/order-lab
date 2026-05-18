@@ -1666,7 +1666,7 @@ class FellAppController extends OrderAbstractController {
             //exit('event='.$event);
 
             //testing
-//            //TODO: sendConfirmationEmailOnSubmition if status is switch to active - edit
+//            //sendConfirmationEmailOnSubmition if status is switch to active - edit
 //            $emailResArr = $fellappUtil->sendConfirmationEmailOnSubmition($entity,$applicant,$initialStatusName);
 //            if( $emailResArr['success'] == true ) {
 //                $this->addFlash(
@@ -4408,8 +4408,19 @@ class FellAppController extends OrderAbstractController {
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
                 //return $this->redirect($this->generateUrl('fellapp_login'));
                 
-                //TODO: sendConfirmationEmailOnSubmition if status is switch to active - apply POST
-                $fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication,$applicant,$initialStatusName);
+                //sendConfirmationEmailOnSubmition if status is switch to active - apply POST
+                $emailResArr = $fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication,$applicant,$initialStatusName);
+                if( $emailResArr['success'] == true ) {
+                    $this->addFlash(
+                        'notice',
+                        'Confirmation email with applicant data has been sent to '.$emailResArr['note']
+                    );
+                } else {
+                    $this->addFlash(
+                        'warning',
+                        'Warning: Confirmation email with applicant data has not been sent: '.$emailResArr['note']
+                    );
+                }
             }
 
             return $this->redirect($this->generateUrl('fellapp_myapplications'));
