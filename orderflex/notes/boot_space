@@ -99,5 +99,12 @@ rm -f System.map-5.14.0-611.16.1.el9_7.x86_64
 rm -f vmlinuz-5.14.0-611.16.1.el9_7.x86_64
 rm -f symvers-5.14.0-611.16.1.el9_7.x86_64.gz
 
+18 May 2026
+sudo dnf remove kernel-5.14.0-611.47.1.el9_7.x86_64
+remove all *611.47.1*
+sudo rm -rf /lib/modules/5.14.0-611.47.1.el9_7.x86_64
 
+To prevent this in future - keep only 2 kernels:
+vim /etc/dnf/dnf.conf
+installonly_limit=2
 

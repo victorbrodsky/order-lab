@@ -4184,12 +4184,26 @@ class FellAppUtil {
             return false;
         }
 
+        //send email only if status is 'active'
+        if( $statusName != "active" ) {
+            return false;
+        }
+
         $emailUtil = $this->container->get('user_mailer_utility');
 
         //1) get all coordinators for $fellowshipApplication's global fellowship specialty
+        $directorEmails = $this->getDirectorsOfFellAppEmails($fellowshipApplication);
         $coordinatorEmails = $this->getCoordinatorsOfFellAppEmails($fellowshipApplication);
+        $responsibleEmails = array_unique (array_merge ($coordinatorEmails, $directorEmails));
 
         //2) get applicant email
+        if( $applicant ) {
+            $applicantEmail = $applicant->getSingleEmail();
+            $applicantPhone = $applicant->getSinglePhone();
+        } else {
+            $applicantEmail = null;
+            $applicantPhone = null;
+        }
 
         //3) get all attached files
         $avatars = $fellowshipApplication->getAvatars();
@@ -4257,16 +4271,8 @@ class FellAppUtil {
         $date = new \DateTime(); // now
         $formattedDate = $date->format('m-d-Y \a\t H:i');
 
-        if( $applicant ) {
-            $applicantEmail = $applicant->getSingleEmail();
-            $applicantPhone = $applicant->getSinglePhone();
-        } else {
-            $applicantEmail = null;
-            $applicantPhone = null;
-        }
-
         $uniqueId = $fellappImportPopulateHubUtil->getFormId($fellowshipApplication);
-        $emailSubject = "Fellowship application has been submitted with unique ID " . $uniqueId;
+        $emailSubject = "Fellowship application has been submitted on Hub server with unique ID " . $uniqueId;
         $emailBody =
             //$emailSubject . " at $institution on $formattedDate.
             $emailSubject . " on $formattedDate."."<br>". //$fellapp->getAllFellowshipSpecialty() has $institution string
@@ -4277,7 +4283,7 @@ class FellAppUtil {
 
         //$email->attach($csvData, 'report.csv', 'text/csv');
         $emailUtil->sendEmail(
-            $coordinatorEmails,
+            $responsibleEmails,
             $emailSubject,
             $emailBody,
             $applicantEmail,

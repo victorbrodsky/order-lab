@@ -2157,8 +2157,10 @@ class FellAppController extends OrderAbstractController {
             $event = "Fellowship Application with ID " . $fellowshipApplication->getId() . " has been created by " . $user;
             $userSecUtil->createUserEditEvent($this->getParameter('fellapp.sitename'),$event,$user,$fellowshipApplication,$request,'Fellowship Application Updated');
 
-            //TODO: sendConfirmationEmailOnSubmition if status is switch to active - new POST
-            //$fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication,$applicant,$initialStatusName);
+            //sendConfirmationEmailOnSubmition if status is switch to active - new POST
+            if( $initialStatusName == "active" ) {
+                $fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication, $applicant, $initialStatusName);
+            }
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
         }
@@ -4382,7 +4384,7 @@ class FellAppController extends OrderAbstractController {
                 //return $this->redirect($this->generateUrl('fellapp_login',array('id' => $fellowshipApplication->getId())));
                 //return $this->redirect($this->generateUrl('fellapp_login'));
                 
-                //TODO: sendConfirmationEmailOnSubmition if status is switch to active - new POST
+                //TODO: sendConfirmationEmailOnSubmition if status is switch to active - apply POST
                 $fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication,$applicant,$initialStatusName);
             }
 
