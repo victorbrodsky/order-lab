@@ -1665,16 +1665,16 @@ class FellAppController extends OrderAbstractController {
 
             //testing
             //TODO: sendConfirmationEmailOnSubmition if status is switch to active - edit
-            $emailRes = $fellappUtil->sendConfirmationEmailOnSubmition($entity,$applicant,$initialStatusName);
-            if( $emailRes ) {
+            $emailResArr = $fellappUtil->sendConfirmationEmailOnSubmition($entity,$applicant,$initialStatusName);
+            if( $emailResArr['success'] == true ) {
                 $this->addFlash(
                     'notice',
-                    'Confirmation email with applicant data has been sent to '.$emailRes
+                    'Confirmation email with applicant data has been sent to '.$emailResArr['note']
                 );
             } else {
                 $this->addFlash(
                     'warning',
-                    'Warning: Confirmation email with applicant data has not been sent'
+                    'Warning: Confirmation email with applicant data has not been sent: '.$emailResArr['note']
                 );
             }
             //exit('testing');
