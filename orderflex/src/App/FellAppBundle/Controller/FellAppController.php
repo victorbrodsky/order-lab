@@ -1665,7 +1665,7 @@ class FellAppController extends OrderAbstractController {
 
             //testing
             //TODO: sendConfirmationEmailOnSubmition if status is switch to active - edit
-            //$fellappUtil->sendConfirmationEmailOnSubmition($entity,$applicant,$initialStatusName);
+            $fellappUtil->sendConfirmationEmailOnSubmition($entity,$applicant,$initialStatusName);
             //exit('testing');
 
             //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));

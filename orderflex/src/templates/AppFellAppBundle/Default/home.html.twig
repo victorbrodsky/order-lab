@@ -486,7 +486,7 @@
                 {#<th>{{ knp_pagination_sortable(entities, 'C3', 'examinations.COMLEXLevel3Score') }}</th>#}
 
                 <th>Medical / Graduate School</th>
-                <th>Residency</th>
+                <th>Residency / Post-graduate Education</th>
                 <th>Preceding Fellowship</th>
 
                 {% if not applicantUser %}
@@ -836,7 +836,13 @@
                         {#{{ c3 }}#}
                     {#</td>#}
                     <td>
-                        {#{{ entity.getDegreeByTrainingTypeName()|raw }}#}
+                        {#B- In this "Medical / Graduate School" column, in addition to showing the medical school,
+                        add a line showing the degree name in the first line ("MD" or whatever was provided by the applicant)
+                        for the MD degree#}
+                        {#C- In this "Medical / Graduate School" column, in addition to showing the medical school,
+                        append and show the PhD degree from the application as well followed by a dash in the same line
+                        and the PhD specialty ("Biology", "Chemistry", etc), followed by institution name and
+                        location in the same format as was already used by the MD degree#}
                         {{ entity.getMedicalSchoolDescription()|raw }}
                     </td>
                     <td>
