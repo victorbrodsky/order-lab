@@ -1488,7 +1488,7 @@ class FellAppController extends OrderAbstractController {
 
             ////// set status edit GET POST application//////
             $btnSubmit = $request->request->get('btnSubmit');
-            echo "btnSubmit=$btnSubmit <br>";
+            //echo "btnSubmit=$btnSubmit <br>";
             if ($btnSubmit === 'fellapp-draft') {
                 $initialStatusName = "draft";
                 //exit("Handle draft logic: skip required fields, save partial data");
@@ -1503,7 +1503,7 @@ class FellAppController extends OrderAbstractController {
                 $initialStatusName = "draft";
             }
 
-            exit('controller $initialStatusName='.$initialStatusName);
+            //exit('controller $initialStatusName='.$initialStatusName);
 
             if( $initialStatusName ) {
                 $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
@@ -2172,7 +2172,18 @@ class FellAppController extends OrderAbstractController {
 
             //sendConfirmationEmailOnSubmition if status is switch to active - new POST
             if( $initialStatusName == "active" ) {
-                $fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication, $applicant, $initialStatusName);
+                $emailResArr = $fellappUtil->sendConfirmationEmailOnSubmition($fellowshipApplication, $applicant, $initialStatusName);
+                if( $emailResArr['success'] == true ) {
+                    $this->addFlash(
+                        'notice',
+                        'Confirmation email with applicant data has been sent to '.$emailResArr['note']
+                    );
+                } else {
+                    $this->addFlash(
+                        'warning',
+                        'Warning: Confirmation email with applicant data has not been sent: '.$emailResArr['note']
+                    );
+                }
             }
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $fellowshipApplication->getId())));
