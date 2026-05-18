@@ -1503,6 +1503,8 @@ class FellAppController extends OrderAbstractController {
                 $initialStatusName = "draft";
             }
 
+            exit('controller $initialStatusName='.$initialStatusName);
+
             if( $initialStatusName ) {
                 $initialStatus = $em->getRepository(FellAppStatus::class)->findOneByName($initialStatusName);
                 //exit("initialStatusName=$initialStatusName, initialStatus=$initialStatus");
