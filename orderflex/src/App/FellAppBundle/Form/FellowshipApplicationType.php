@@ -605,7 +605,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
         //on edit form, form.trainings={{ form.trainings|length }}<br> gives 0
-        echo "adding trainings <br>";
+        //echo "adding trainings <br>";
         $builder->add('trainings', CollectionType::class, array(
             'entry_type' => FellAppTrainingType::class,
             'entry_options' => array(

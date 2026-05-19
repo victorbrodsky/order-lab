@@ -35,7 +35,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 class TmaRoleVoter extends BaseRoleVoter {
 
     protected function getSiteRoleBase() {
-        return 'CTPTMA';
+        return 'TMA';
     }
 
     protected function getSitename() {

@@ -47,7 +47,7 @@ class FellAppTrainingType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        echo "FellAppTrainingType: adding startDate <br>";
+        //echo "FellAppTrainingType: adding startDate <br>";
         $builder->add('startDate', DateType::class, array(
             'label' => 'Start Date:',
             'widget' => 'single_text',

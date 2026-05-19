@@ -2182,11 +2182,13 @@ class FellAppUtil {
 
         $specificTraining = null;
 
-        $trainings = $user->getTrainings();
+        // BUG FIX: Check entity's trainings, not user's trainings
+        // The entity may have its own collection of trainings separate from the user's
+        $trainings = $fellowshipApplication->getTrainings();
 
         $count = 0;
 
-        //echo $typeName.": trainings=".count($trainings)."<br>";
+        //echo "addTrainingByType: ".$typeName.": trainings=".count($trainings)."<br>";
         foreach( $trainings as $training ) {
             if( $training->getTrainingType() && $training->getTrainingType()->getName()."" == $typeName ) {
                 $count++;

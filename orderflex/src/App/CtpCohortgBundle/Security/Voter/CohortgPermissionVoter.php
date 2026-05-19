@@ -12,7 +12,7 @@ class CohortgPermissionVoter extends BasePermissionVoter
 {
     protected function getSiteRoleBase() : string
     {
-        return 'CTPCOHORTG';
+        return 'COHORTG';
     }
 
     protected function getSitename() : string

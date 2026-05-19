@@ -39,7 +39,7 @@ class TmaPermissionVoter extends BasePermissionVoter //BasePermissionVoter   //P
 
     protected function getSiteRoleBase() : string
     {
-        return 'CTPTMA';
+        return 'TMA';
     }
 
     protected function getSitename() : string

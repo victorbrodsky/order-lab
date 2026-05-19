@@ -12,7 +12,7 @@ class SporePermissionVoter extends BasePermissionVoter
 {
     protected function getSiteRoleBase() : string
     {
-        return 'CTPSPORE';
+        return 'SPORE';
     }
 
     protected function getSitename() : string

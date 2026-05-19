@@ -12,7 +12,7 @@ class RegulatorytPermissionVoter extends BasePermissionVoter
 {
     protected function getSiteRoleBase() : string
     {
-        return 'CTPREGULATORYT';
+        return 'REGULATORYT';
     }
 
     protected function getSitename() : string

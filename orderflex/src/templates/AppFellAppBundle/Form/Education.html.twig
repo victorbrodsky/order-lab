@@ -34,9 +34,9 @@
 <div id="education" class="panel-collapse collapse {{ collapsein }}">
     <div class="panel-body">
 
-    form.user.id:{{ form.user.vars.value.id }}<br>
+    {#form.user.id:{{ form.user.vars.value.id }}<br>#}
     {#form.user.trainings|length:{{ form.user.trainings|length }}<br>#}
-    form.trainings={{ form.trainings|length }}<br>
+    {#form.trainings={{ form.trainings|length }}<br>#}
 
     {% for training in form.trainings %}
 

@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class SporeRoleVoter extends BaseRoleVoter {
 
     protected function getSiteRoleBase() {
-        return 'CTPSPORE';
+        return 'SPORE';
     }
 
     protected function getSitename() {

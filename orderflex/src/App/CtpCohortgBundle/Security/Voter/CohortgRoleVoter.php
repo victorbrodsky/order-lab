@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class CohortgRoleVoter extends BaseRoleVoter {
 
     protected function getSiteRoleBase() {
-        return 'CTPCOHORTG';
+        return 'COHORTG';
     }
 
     protected function getSitename() {
