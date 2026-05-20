@@ -1314,30 +1314,44 @@ class FellowshipApplication extends BaseUserAttributes {
                     }
                 }
                 if( $withDegreeMajor && $item->getMajors() ) {
-                    $majorArr = array();
-                    foreach( $item->getMajors() as $major ) {
-                        $major = strtolower($major);
-                        $major = ucwords($major);
-                        $majorArr[] = $major."";
-                    }
-                    if( $schoolName && count($majorArr)>0 ) {
+                    if ($schoolName && count($majorArr) > 0) {
                         $schoolName = $schoolName . "; ";
                     }
-                    //$schoolName = $schoolName . implode(", ",$majorArr);
-                    $majorStr = implode(", ",$majorArr);
+
                     $degree = $item->getDegree()."";
-                    if( $degree && $majorStr ) {
-                        //PhD - Specialty (e.g. "PhD - Biology")
-                        $majorStr = $degree . "-" . $majorStr;
-                    }
-                    if( trim($majorStr) ) {
-                        if( $withAt ) {
-                            $schoolName = trim($majorStr) . " at " . $schoolName;
+
+                    //never show "Major" field value after these 6 degrees: MD, DO, MBBS, MBChB, Dr.Med, Cand.med (no major for these)
+                    $noMajorDegrees = ['MD', 'DO', 'MBBS', 'MBCHB', 'DR.MED', 'CAND.MED'];
+                    $degreeNormalized = strtoupper(trim($degree));
+                    if( !in_array($degreeNormalized, $noMajorDegrees, true) ) {
+                        $majorArr = array();
+                        foreach ($item->getMajors() as $major) {
+                            $major = strtolower($major);
+                            $major = ucwords($major);
+                            $majorArr[] = $major . "";
+                        }
+
+                        //$schoolName = $schoolName . implode(", ",$majorArr);
+                        $majorStr = implode(", ", $majorArr);
+                        if ($degree && $majorStr) {
+                            //PhD - Specialty (e.g. "PhD - Biology")
+                            $majorStr = $degree . " - " . $majorStr;
+                        }
+
+                        if (trim($majorStr)) {
+                            if ($withAt) {
+                                $schoolName = trim($majorStr) . " at " . $schoolName;
+                            } else {
+                                $schoolName = trim($majorStr) . " " . $schoolName;
+                            }
+                        }
+                    } else { //if( $degree != 'MD' )
+                        if ($withAt) {
+                            $schoolName = trim($degree) . " at " . $schoolName;
                         } else {
-                            $schoolName = trim($majorStr) . " " . $schoolName;
+                            $schoolName = trim($degree) . " " . $schoolName;
                         }
                     }
-
                 }
 
                 //Institution
