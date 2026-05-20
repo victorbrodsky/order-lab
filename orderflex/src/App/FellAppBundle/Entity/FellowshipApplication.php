@@ -1768,10 +1768,6 @@ class FellowshipApplication extends BaseUserAttributes {
     }
     //Use direct without getSchoolByTrainingTypeName
     public function getResidencyGmeDescription( $trainingTypeName ) {
-        //$trainingTypeName = 'Residency';
-        //$trainingTypeName = 'Medical';
-        //$trainingTypeName = 'Other';
-
         $separator = '<br>';
         $withAt = false;
         $withGeoLocation = true;
@@ -1779,11 +1775,8 @@ class FellowshipApplication extends BaseUserAttributes {
 
         $schoolName = "";
 
-        //echo "this->getTrainings() count=".count($this->getTrainings())."<br>"; //testing
         foreach( $this->getTrainings() as $item ) {
-            //echo "name=[".$item->getTrainingType()->getName()."]<br>";
             if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
-                //echo "getResidencyGmeDescription <br>";
                 //AP, CP, AP/CP, other or Area of Training
                 if ($withResidencySpecialty && $item->getResidencySpecialty()) {
                     //$schoolName = $schoolName . $item->getResidencySpecialty();
@@ -1824,22 +1817,22 @@ class FellowshipApplication extends BaseUserAttributes {
         return $schoolName;
     }
 
-    //AP, CP, AP/CP, other
-    //Residency Institution, Finish Date
-    //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
-    public function getResidencyDescription($withAt=false) {
-        $resArr = array();
-        $name = $this->getSchoolByTrainingTypeName(
-            "Residency",
-            true,
-            $withResidencySpecialty=true,
-            $withDegreeMajor=false, //$withDegreeMajor=true, //$withDegreeMajor
-            '<br>',
-            $withAt
-        );
-        $resArr[] = $name;
-        return implode(", ",$resArr);
-    }
+//    //AP, CP, AP/CP, other
+//    //Residency Institution, Finish Date
+//    //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
+//    public function getResidencyDescription($withAt=false) {
+//        $resArr = array();
+//        $name = $this->getSchoolByTrainingTypeName(
+//            "Residency",
+//            true,
+//            $withResidencySpecialty=true,
+//            $withDegreeMajor=false, //$withDegreeMajor=true, //$withDegreeMajor
+//            '<br>',
+//            $withAt
+//        );
+//        $resArr[] = $name;
+//        return implode(", ",$resArr);
+//    }
 
     //Area of training
     //GME Institution, Finish Date
