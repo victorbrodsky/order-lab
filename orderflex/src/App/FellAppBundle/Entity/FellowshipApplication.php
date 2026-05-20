@@ -1685,8 +1685,8 @@ class FellowshipApplication extends BaseUserAttributes {
         $name = $this->getSchoolByTrainingTypeName(
             "Residency",
             true,
-            true,
-            false, //$withDegreeMajor
+            $withResidencySpecialty=true,
+            $withDegreeMajor=false, //$withDegreeMajor=true, //$withDegreeMajor
             '<br>',
             $withAt
         );
