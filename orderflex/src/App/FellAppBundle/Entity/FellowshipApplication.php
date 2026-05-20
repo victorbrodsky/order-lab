@@ -1263,9 +1263,6 @@ class FellowshipApplication extends BaseUserAttributes {
  
         return $degree;
     }
-
-    //oleg_fellappbundle_fellowshipapplication_trainings_0_degree
-    //oleg_fellappbundle_fellowshipapplication_trainings_0_majors
     
     //$trainingTypeName: Medical, Residency, GME, Post-Residency Fellowship
     public function getSchoolByTrainingTypeName(
@@ -1673,22 +1670,158 @@ class FellowshipApplication extends BaseUserAttributes {
 //    }
 
 
-    //School Name, Finish Date
-    //City, Country Abbreviation such as USA (Full name of country if not available)
-    public function getMedicalSchoolDescription($withAt=false) {
-        $resArr = array();
-        //$name = $this->getSchoolByTrainingTypeName("Medical",true);
-        $name = $this->getSchoolByTrainingTypeName(
-            "Medical",  //$trainingTypeName
-            true,       //$withGeoLocation
-            false,      //$withResidencySpecialty
-            true,      //$withDegreeMajor
-            '<br>',     //$separator
-            $withAt     //$withAt
-        );
+//    //School Name, Finish Date
+//    //City, Country Abbreviation such as USA (Full name of country if not available)
+//    public function getMedicalSchoolDescription($withAt=false) {
+//        $resArr = array();
+//        $name = $this->getSchoolByTrainingTypeName(
+//            "Medical",  //$trainingTypeName
+//            true,       //$withGeoLocation
+//            false,      //$withResidencySpecialty
+//            true,      //$withDegreeMajor
+//            '<br>',     //$separator
+//            $withAt     //$withAt
+//        );
+//
+//        $resArr[] = $name;
+//        return implode(", ",$resArr);
+//    }
+    //Use direct without getSchoolByTrainingTypeName
+    public function getMedicalGraduateSchoolDescription( $trainingTypeName ) {
+        $separator = '<br>';
+        $withAt = false;
+        $withGeoLocation = true;
+        $withDegreeMajor = true;
 
-        $resArr[] = $name;
-        return implode(", ",$resArr);
+        $schoolName = "";
+
+        //echo "this->getTrainings() count=".count($this->getTrainings())."<br>"; //testing
+        foreach( $this->getTrainings() as $item ) {
+            if ($item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName) {
+
+                if( $withDegreeMajor && $item->getMajors() ) {
+                    $degree = $item->getDegree()."";
+
+                    //never show "Major" field value after these 6 degrees: MD, DO, MBBS, MBChB, Dr.Med, Cand.med (no major for these)
+                    $noMajorDegrees = ['MD', 'DO', 'MBBS', 'MBCHB', 'DR.MED', 'CAND.MED'];
+                    $degreeNormalized = strtoupper(trim($degree));
+                    if( !in_array($degreeNormalized, $noMajorDegrees, true) ) {
+                        $majorArr = array();
+                        foreach ($item->getMajors() as $major) {
+                            $major = strtolower($major);
+                            $major = ucwords($major);
+                            $majorArr[] = $major . "";
+                        }
+
+                        //$schoolName = $schoolName . implode(", ",$majorArr);
+                        $majorStr = implode(", ", $majorArr);
+                        if ($degree && $majorStr) {
+                            //PhD - Specialty (e.g. "PhD - Biology")
+                            $majorStr = $degree . " - " . $majorStr;
+                        }
+
+                        if (trim($majorStr)) {
+                            if ($withAt) {
+                                $schoolName = trim($majorStr) . " at " . $schoolName;
+                            } else {
+                                $schoolName = trim($majorStr) . " " . $schoolName;
+                            }
+                        }
+                    } else { //if( $degree != 'MD' )
+                        if ($withAt) {
+                            $schoolName = trim($degree) . " at " . $schoolName;
+                        } else {
+                            $schoolName = trim($degree) . " " . $schoolName;
+                        }
+                    }
+                }
+
+                //Institution
+                if( $item->getInstitution() ) {
+                    //$separator = "";
+                    if( !$schoolName ) {
+                        $separator = "";
+                    }
+                    $schoolName = $schoolName . $separator .
+                        $this->capitalizeMultiIfNotAllCapital($item->getInstitution()) . "";
+                }
+
+                //Finish Date
+                if( $item->getCompletionDate() ) {
+                    $transformer = new DateTimeToStringTransformer(null,null,'Y');
+                    $schoolName = $schoolName . ", " . $transformer->transform($item->getCompletionDate());
+                }
+
+                //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
+                if( $withGeoLocation && $item->getGeoLocation() ) {
+                    $locationStr = $item->getGeoLocation()->getFullGeoLocation();
+                    if( $locationStr ) {
+                        $schoolName = $schoolName . "<br>" . $locationStr;
+                    }
+                }
+
+                break;
+            }
+        }
+
+        return $schoolName;
+    }
+    //Use direct without getSchoolByTrainingTypeName
+    public function getResidencyGmeDescription( $trainingTypeName ) {
+        //$trainingTypeName = 'Residency';
+        //$trainingTypeName = 'Medical';
+        //$trainingTypeName = 'Other';
+
+        $separator = '<br>';
+        $withAt = false;
+        $withGeoLocation = true;
+        $withResidencySpecialty = true;
+
+        $schoolName = "";
+
+        //echo "this->getTrainings() count=".count($this->getTrainings())."<br>"; //testing
+        foreach( $this->getTrainings() as $item ) {
+            //echo "name=[".$item->getTrainingType()->getName()."]<br>";
+            if( $item->getTrainingType() && $item->getTrainingType()->getName() == $trainingTypeName ) {
+                //echo "getResidencyGmeDescription <br>";
+                //AP, CP, AP/CP, other or Area of Training
+                if ($withResidencySpecialty && $item->getResidencySpecialty()) {
+                    //$schoolName = $schoolName . $item->getResidencySpecialty();
+                    if ($withAt) {
+                        $schoolName = $item->getResidencySpecialty() . " at " . $schoolName;
+                    } else {
+                        $schoolName = $item->getResidencySpecialty() . " " . $schoolName;
+                    }
+                }
+
+                //Institution
+                if ($item->getInstitution()) {
+                    //$separator = "";
+                    if (!$schoolName) {
+                        $separator = "";
+                    }
+                    $schoolName = $schoolName . $separator .
+                        $this->capitalizeMultiIfNotAllCapital($item->getInstitution()) . "";
+                }
+
+                //Finish Date
+                if ($item->getCompletionDate()) {
+                    $transformer = new DateTimeToStringTransformer(null, null, 'Y');
+                    $schoolName = $schoolName . ", " . $transformer->transform($item->getCompletionDate());
+                }
+
+                //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
+                if ($withGeoLocation && $item->getGeoLocation()) {
+                    $locationStr = $item->getGeoLocation()->getFullGeoLocation();
+                    if ($locationStr) {
+                        $schoolName = $schoolName . "<br>" . $locationStr;
+                    }
+                }
+                break;
+            }//if
+        }//foreach
+        //echo '$schoolName='.$schoolName.'<br>';
+        return $schoolName;
     }
 
     //AP, CP, AP/CP, other

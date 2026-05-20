@@ -845,11 +845,25 @@
                         and the PhD specialty ("Biology", "Chemistry", etc), followed by institution name and
                         location in the same format as was already used by the MD degree#}
                         {#http://127.0.0.1/fellowship-applications/show/1817#}
-                        {{ entity.getMedicalSchoolDescription()|raw }}
+                        {#
+                        Graduate or Medical school
+                        #}
+                        {#{{ entity.getMedicalSchoolDescription()|raw }}<br>#}
+                        {#{{ entity.getGraduateSchoolDescription()|raw }}#}
+                        {#{% set medicalSchoolDescription = entity.medicalSchoolDescription() %}#}
+                        {% set medicalSchoolDescription = entity.getMedicalGraduateSchoolDescription('Medical') %}
+                        {% set graduateSchoolDescription = entity.getMedicalGraduateSchoolDescription('Graduate') %}
+                        {{ medicalSchoolDescription|raw }}{{ medicalSchoolDescription ? ';<br>' : '' }}{{ graduateSchoolDescription|raw }}
                     </td>
                     <td>
                         {#Residency / Other GME#}
-                        {{ entity.getResidencyDescription()|raw }}
+                        {#
+                            Residency or Other GME or both
+                        #}
+                        {#{{ entity.getResidencyDescription()|raw }}#}
+                        {% set residencyDescription = entity.getResidencyGmeDescription('Residency') %}
+                        {% set gmeDescription = entity.getResidencyGmeDescription('GME') %}
+                        {{ residencyDescription|raw }}{{ residencyDescription ? ';<br>' : '' }}{{ gmeDescription|raw }}
                     </td>
                     <td>
                         {{ entity.getPostResidencyFellowshipDescription()|raw }}
