@@ -2151,13 +2151,13 @@ class AdminController extends OrderAbstractController
 
             /////////// TMA //////////////
             "ROLE_TMA_ADMIN" => array(
-                "CtpTma Administrator",
+                "Ctp Tma Administrator",
                 "Full access for the CtpTma site",
                 90,
                 "tissue-microarrays"
             ),
             "ROLE_TMA_USER" => array(
-                "CtpTma User",
+                "Ctp Tma User",
                 "Partial access for the CtpTma site",
                 50,
                 "tissue-microarrays"
@@ -2166,46 +2166,46 @@ class AdminController extends OrderAbstractController
 
             /////////// REGULATORYT //////////////
             "ROLE_REGULATORYT_ADMIN" => array(
-                "CtpRegulatoryt Administrator",
+                "Ctp Regulatoryt Administrator",
                 "Full access for the CtpRegulatoryt site",
                 90,
-                "regulatoryt"
+                "regulatory-templates"
             ),
             "ROLE_REGULATORYT_USER" => array(
-                "CtpRegulatoryt User",
+                "Ctp Regulatoryt User",
                 "Partial access for the CtpRegulatoryt site",
                 50,
-                "regulatoryt"
+                "regulatory-templates"
             ),
             ////////////////////////////////
 
             /////////// COHORTG //////////////
             "ROLE_COHORTG_ADMIN" => array(
-                "CtpCohortg Administrator",
+                "Ctp Cohortg Administrator",
                 "Full access for the CtpCohortg site",
                 90,
-                "cohortg"
+                "cohort-generator"
             ),
             "ROLE_COHORTG_USER" => array(
-                "CtpCohortg User",
+                "Ctp Cohortg User",
                 "Partial access for the CtpCohortg site",
                 50,
-                "cohortg"
+                "cohort-generator"
             ),
             ////////////////////////////////
 
             /////////// SPORE //////////////
             "ROLE_SPORE_ADMIN" => array(
-                "CtpSpore Administrator",
+                "Ctp Spore Administrator",
                 "Full access for the CtpSpore site",
                 90,
-                "spore"
+                "prostate-cancer-research-data-explorer"
             ),
             "ROLE_SPORE_USER" => array(
-                "CtpSpore User",
+                "Ctp Spore User",
                 "Partial access for the CtpSpore site",
                 50,
-                "spore"
+                "prostate-cancer-research-data-explorer"
             ),
             ////////////////////////////////
 
