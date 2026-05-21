@@ -333,6 +333,21 @@
                         &nbsp;&nbsp;
 
                         <div style="white-space: nowrap; display: inline;">
+                            {{ form_widget(fellappfilter.acceptedandnotifiedandcommitted) }}   {{ form_label(fellappfilter.acceptedandnotifiedandcommitted) }}
+                            <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
+                        <a style="color: white;" href="{{ path('fellapp_home',{'filter[acceptedandnotifiedandcommitted]':1,'filter[filter]':filter,'filter[startDates]':currentYear}) }}">
+                            {{ acceptedandnotifiedandcommitted }}
+                        </a>
+                        </span>
+                            {{ fellappmacros.addSlush() }}
+                            <span class="badge" {{ tooltipBadge }} title="Total">
+                        <a style="color: white;" href="{{ path('fellapp_home',{'filter[acceptedandnotifiedandcommitted]':1,'filter[filter]':filter}) }}">{{ acceptedandnotifiedandcommittedTotal }}</a>
+                        </span>
+                            {{ fellappmacros.addLegend('acceptedandnotifiedandcommitted') }}
+                        </div>
+                        &nbsp;&nbsp;
+
+                        <div style="white-space: nowrap; display: inline;">
                             {{ form_widget(fellappfilter.declined) }}   {{ form_label(fellappfilter.declined) }}
                             {#{{ fellappmacros.addBadge( filter, seasonStartYear, declined, declinedTotal, 'declined' ) }}#}
                             <span class="badge" {{ tooltipBadge }} title="for {{ currentYear }}">
@@ -385,6 +400,7 @@
                         {% do fellappfilter.priorityinterviewee.setRendered() %}
                         {% do fellappfilter.accepted.setRendered() %}
                         {% do fellappfilter.acceptedandnotified.setRendered() %}
+                        {% do fellappfilter.acceptedandnotifiedandcommitted.setRendered() %}
                         {% do fellappfilter.declined.setRendered() %}
                         {% do fellappfilter.reject.setRendered() %}
                         {% do fellappfilter.rejectedandnotified.setRendered() %}
@@ -587,6 +603,9 @@
                     {% endif %}
                     {% if entity.appStatus.name == 'acceptedandnotified' %}
                         {% set trclassname = "fell-app-status-legend-acceptedandnotified" %}
+                    {% endif %}
+                    {% if entity.appStatus.name == 'acceptedandnotifiedandcommitted' %}
+                        {% set trclassname = "fell-app-status-legend-acceptedandnotifiedandcommitted" %}
                     {% endif %}
                     {% if entity.appStatus.name == 'rejectedandnotified' %}
                         {% set trclassname = "fell-app-status-legend-rejectedandnotified" %}

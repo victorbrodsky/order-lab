@@ -332,6 +332,7 @@ class FellAppController extends OrderAbstractController {
 
         $accepted = $filterform['accepted']->getData();
         $acceptedandnotified = $filterform['acceptedandnotified']->getData();
+        $acceptedandnotifiedandcommitted = $filterform['acceptedandnotifiedandcommitted']->getData();
         $rejectedandnotified = $filterform['rejectedandnotified']->getData();
 
         //$page = $request->get('page');
@@ -356,6 +357,7 @@ class FellAppController extends OrderAbstractController {
                     'filter[startDates]' => $defaultStartDates, //$currentYear,
                     'filter[accepted]' => 1,
                     'filter[acceptedandnotified]' => 1,
+                    'filter[acceptedandnotifiedandcommitted]' => 1,
                     'filter[filter]' => $fellowshipTypeId,
                 )
             ));
@@ -430,6 +432,7 @@ class FellAppController extends OrderAbstractController {
                     'filter[priorityinterviewee]' => 1,
                     'filter[accepted]' => 1,
                     'filter[acceptedandnotified]' => 1,
+                    'filter[acceptedandnotifiedandcommitted]' => 1,
                     'filter[filter]' => $fellowshipTypeId,
                 )
             ) );
@@ -587,6 +590,10 @@ class FellAppController extends OrderAbstractController {
         }
         if( $acceptedandnotified ) {
             $orWhere[] = "appStatus.name = 'acceptedandnotified'";
+            $searchFlag = true;
+        }
+        if( $acceptedandnotifiedandcommitted ) {
+            $orWhere[] = "appStatus.name = 'acceptedandnotifiedandcommitted'";
             $searchFlag = true;
         }
         if( $rejectedandnotified ) {
@@ -749,6 +756,9 @@ class FellAppController extends OrderAbstractController {
         $acceptedandnotified = $fellappUtil->getFellAppByStatusAndYear('acceptedandnotified',$fellSubspecId,$startYearStr);
         $acceptedandnotifiedTotal = $fellappUtil->getFellAppByStatusAndYear('acceptedandnotified',$fellSubspecId);
 
+        $acceptedandnotifiedandcommitted = $fellappUtil->getFellAppByStatusAndYear('acceptedandnotifiedandcommitted',$fellSubspecId,$startYearStr);
+        $acceptedandnotifiedandcommittedTotal = $fellappUtil->getFellAppByStatusAndYear('acceptedandnotifiedandcommitted',$fellSubspecId);
+
         $rejectedandnotified = $fellappUtil->getFellAppByStatusAndYear('rejectedandnotified',$fellSubspecId,$startYearStr);
         $rejectedandnotifiedTotal = $fellappUtil->getFellAppByStatusAndYear('rejectedandnotified',$fellSubspecId);
 
@@ -890,6 +900,8 @@ class FellAppController extends OrderAbstractController {
             'acceptedTotal' => count($acceptedTotal),
             'acceptedandnotified' => count($acceptedandnotified),
             'acceptedandnotifiedTotal' => count($acceptedandnotifiedTotal),
+            'acceptedandnotifiedandcommitted' => count($acceptedandnotifiedandcommitted),
+            'acceptedandnotifiedandcommittedTotal' => count($acceptedandnotifiedandcommittedTotal),
             'rejectedandnotified' => count($rejectedandnotified),
             'rejectedandnotifiedTotal' => count($rejectedandnotifiedTotal),
 
@@ -2517,6 +2529,10 @@ class FellAppController extends OrderAbstractController {
 
         if( $sendEmail && $status == 'acceptedandnotified' ) {
             $fellappUtil->sendAcceptedNotificationEmail($fellapp);
+        }
+
+        if( $sendEmail && $status == 'acceptedandnotifiedandcommitted' ) {
+            //$fellappUtil->sendAcceptedNotificationEmail($fellapp);
         }
 
         if( $sendEmail && $status == 'rejectedandnotified' ) {

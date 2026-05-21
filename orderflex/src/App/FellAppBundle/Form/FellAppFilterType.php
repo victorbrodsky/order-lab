@@ -195,6 +195,11 @@ class FellAppFilterType extends AbstractType
             'label' => 'Accepted and Notified',
             'attr' => array('class' => 'filter-status-checkbox'),
         ));
+        $builder->add('acceptedandnotifiedandcommitted', CheckboxType::class, array(
+            'required'=>false,
+            'label' => 'Accepted, Notified, and Committed',
+            'attr' => array('class' => 'filter-status-checkbox'),
+        ));
         $builder->add('rejectedandnotified', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Rejected and Notified',
