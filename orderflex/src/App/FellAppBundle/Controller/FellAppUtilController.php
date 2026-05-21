@@ -68,6 +68,7 @@ class FellAppUtilController extends OrderAbstractController
 
         if( $subject && $body ) {
             $res = array(
+                'status' => $fellapp->getAppStatus()."",
                 'warning' => $warning,
                 'subject' => $subject,
                 'body' => $body

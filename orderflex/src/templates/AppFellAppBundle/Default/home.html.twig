@@ -1281,6 +1281,7 @@
                                             </li>
                                         {% endif %}
 
+                                        {% set rejectionAcceptanceEmailWarning = '' %}
                                         {% if static %}
                                             {% set rejectionAcceptanceEmailWarning = fellapp_util.getRejectionAcceptanceEmailWarning(entity) %}
                                         {% endif %}
@@ -1345,10 +1346,19 @@
                                         {% endif %}
 
                                         {% if entity.appStatus and entity.appStatus.name != 'acceptedandnotifiedandcommitted' %}
+                                            {% set dataConfirm = rejectionAcceptanceEmailWarning|raw ~
+                                                "<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                            %}
+                                            {% if entity.appStatus and entity.appStatus.name == 'acceptedandnotified' %}
+                                                {% set dataConfirm = rejectionAcceptanceEmailWarning|raw ~
+                                                    "<p style='color:green'>Would you like to change status of this Application to 'Accepted, Notified, and Committed'?</p>"
+                                                %}
+                                            {% endif %}
                                             <li>
                                                 {% if static %}
                                                     <a
-                                                            fellapp-data-confirm="{{ rejectionAcceptanceEmailWarning|raw }}<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                            {#fellapp-data-confirm="{{ rejectionAcceptanceEmailWarning|raw }}<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"#}
+                                                            fellapp-data-confirm="{{ dataConfirm }}"
                                                             fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotifiedandcommitted' }, true) }}"
                                                             fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotifiedandcommitted-noemail' }, true) }}"
                                                             fellapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
@@ -1358,7 +1368,8 @@
                                                     </a>
                                                 {% else %}
                                                     <a  data-spinner-color="{{ spinnerColor }}"
-                                                        fellapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                        {#fellapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"#}
+                                                        fellapp-data-confirm="{{ dataConfirm }}"
                                                         fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotifiedandcommitted' }, true) }}"
                                                         fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotifiedandcommitted-noemail' }, true) }}"
                                                         fellapp-data-email-fellappid="{{ entity.id }}"
