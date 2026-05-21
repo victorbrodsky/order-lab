@@ -129,6 +129,10 @@
     /*background: #1971ad;*/
     background: #3c89bd;
 }
+.fell-app-status-legend-acceptedandnotifiedandcommitted {
+    /*background: #1971ad;*/
+    background: #3c89bd;
+}
 .fell-app-status-legend-rejectedandnotified {
     background: #7C7C7C;
 }
