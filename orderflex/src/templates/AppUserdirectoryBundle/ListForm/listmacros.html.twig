@@ -1498,6 +1498,10 @@
         {{ formmacros.field(form.showOptionFellApp) }}
     {% endif %}
 
+    {% if form.sendEmailUploadLetterFellApp is defined %}
+        {{ formmacros.field(form.sendEmailUploadLetterFellApp) }}
+    {% endif %}
+
     {% if form.screeningMessage is defined %}
         {{ formmacros.field(form.screeningMessage) }}
     {% endif %}

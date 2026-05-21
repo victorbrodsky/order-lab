@@ -186,6 +186,21 @@ class RecLetterUtil {
             );
             return $res;
         }
+        //sendEmailUploadLetterFellApp by fellapp specialty
+        $fellappType = $fellapp->getFellowshipSubspecialty();
+        if( $fellappType ) {
+            $sendEmailUploadLetterFellAppPerSpecialty = $fellappType->getSendEmailUploadLetterFellApp();
+            if( !$sendEmailUploadLetterFellAppPerSpecialty ) {
+                $msg = "Automatically send invitation emails to upload recommendation letters is set to NO for the specialty $fellappType: invitation email will not be send to reference ".$reference->getFullName();
+                $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
+                $res = array(
+                    "res" => false,
+                    "msg" => $msg
+                );
+                return $res;
+            }
+        }
+
 
         //do not invite if letter already received
         if( count($reference->getDocuments()) > 0 ) {
@@ -1521,6 +1536,17 @@ class RecLetterUtil {
 
         $sendEmailUploadLetterFellApp = $userSecUtil->getSiteSettingParameter('sendEmailUploadLetterFellApp',$this->container->getParameter('fellapp.sitename'));
         if( $sendEmailUploadLetterFellApp ) {
+
+            //sendEmailUploadLetterFellApp by fellapp specialty
+            $fellappType = $fellapp->getFellowshipSubspecialty();
+            if( $fellappType ) {
+                $sendEmailUploadLetterFellAppPerSpecialty = $fellappType->getSendEmailUploadLetterFellApp();
+                if( !$sendEmailUploadLetterFellAppPerSpecialty ) {
+                    $logger = $this->container->get('logger');
+                    $logger->notice("Automatically send invitation emails to upload recommendation letters is set to NO for the specialty $fellappType: invitation email will not be send");
+                    return false;
+                }
+            }
 
             //check for duplicates or if one of the reference email is missing
             //1) check for missing email

@@ -220,6 +220,13 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( method_exists($this->params['entity'],'getSendEmailUploadLetterFellApp') ) {
+            $builder->add('screeningQuestions',null,array(
+                'label' => "Send email invitations to recommendation letter writers with a link to upload their recommendation letter after successful application import:",
+                'required' => false
+            ));
+        }
+
         //Fellapp import
         if( strtolower($this->mapper['className']) == strtolower("Institution") ) {
             $builder->add( 'apiConnectionKey', null, array(

@@ -120,13 +120,18 @@ class FellowshipSubspecialty extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $showOption;
 
+    //per fellowship specialty: Send email invitations to recommendation letter writers with a link to upload their recommendation letter after successful application import
+    //Override the site settings: Automatically send invitation emails to upload recommendation letters (sendEmailUploadLetterFellApp)
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $sendEmailUploadLetterFellApp;
+
 
     public function __construct($author=null) {
-
         $this->coordinators = new ArrayCollection();
         $this->directors = new ArrayCollection();
         $this->interviewers = new ArrayCollection();
         $this->setShowOption(true);
+        $this->setSendEmailUploadLetterFellApp(false);
     }
 
 
@@ -276,6 +281,22 @@ class FellowshipSubspecialty extends ListAbstract
     public function setShowOption($showOption)
     {
         $this->showOption = $showOption;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSendEmailUploadLetterFellApp()
+    {
+        return $this->sendEmailUploadLetterFellApp;
+    }
+
+    /**
+     * @param mixed $sendEmailUploadLetterFellApp
+     */
+    public function setSendEmailUploadLetterFellApp($sendEmailUploadLetterFellApp)
+    {
+        $this->sendEmailUploadLetterFellApp = $sendEmailUploadLetterFellApp;
     }
 
     
