@@ -30,6 +30,7 @@
 
 {% block content %}
 
+{#default in controller: 'static' => false. If static=true => dynamically load the email's warning, subject and body#}
 {% if static is not defined %}
     {% set static = 0 %}
 {% endif %}
@@ -1337,6 +1338,33 @@
                                                         fellapp-data-email-type="accepted"
                                                         fellapp-data-callback="refreshpage"
                                                         href="#">Mark as Accepted and Notify
+                                                    </a>
+                                                {% endif %}
+
+                                            </li>
+                                        {% endif %}
+
+                                        {% if entity.appStatus and entity.appStatus.name != 'acceptedandnotifiedandcommitted' %}
+                                            <li>
+                                                {% if static %}
+                                                    <a
+                                                            fellapp-data-confirm="{{ rejectionAcceptanceEmailWarning|raw }}<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                            fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotifiedandcommitted' }, true) }}"
+                                                            fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotifiedandcommitted-noemail' }, true) }}"
+                                                            fellapp-data-email-subject="{{ acceptedEmailSubjectModified }}"
+                                                            fellapp-data-email-body="{{ acceptedEmailBodyModified }}"
+                                                            fellapp-data-callback="refreshpage"
+                                                            href="#">Mark as Accepted, Notified, and Committed
+                                                    </a>
+                                                {% else %}
+                                                    <a  data-spinner-color="{{ spinnerColor }}"
+                                                        fellapp-data-confirm="<p style='color:green'>Would you like to send the following notification e-mail to the accepted applicant?</p>"
+                                                        fellapp-data-href1="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotifiedandcommitted' }, true) }}"
+                                                        fellapp-data-href2="{{ path('fellapp_status', { 'id': entity.id, 'status': 'acceptedandnotifiedandcommitted-noemail' }, true) }}"
+                                                        fellapp-data-email-fellappid="{{ entity.id }}"
+                                                        fellapp-data-email-type="accepted"
+                                                        fellapp-data-callback="refreshpage"
+                                                        href="#">Mark as Accepted, Notified, and Committed
                                                     </a>
                                                 {% endif %}
 

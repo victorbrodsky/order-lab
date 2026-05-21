@@ -2532,7 +2532,11 @@ class FellAppController extends OrderAbstractController {
         }
 
         if( $sendEmail && $status == 'acceptedandnotifiedandcommitted' ) {
-            //$fellappUtil->sendAcceptedNotificationEmail($fellapp);
+            //exit('$previousStatus='.$previousStatus);
+            //We have a choice in the modal to send or not email
+            //if( $previousStatus != 'acceptedandnotified' ) {
+                $fellappUtil->sendAcceptedNotificationEmail($fellapp);
+            //}
         }
 
         if( $sendEmail && $status == 'rejectedandnotified' ) {

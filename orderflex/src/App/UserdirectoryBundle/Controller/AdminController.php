@@ -6754,7 +6754,7 @@ class AdminController extends OrderAbstractController
             'archive'=>'Archived',
             'accepted'=>'Accepted',
             'declined'=>'Declined',
-            'acceptedandnotified'=>'Accepted and Notified',
+            'acceptedandnotified'=>'Accepted and Notified', //Mark as Accepted and Notify
             'acceptedandnotifiedandcommitted'=>'Accepted, Notified, and Committed',
             'rejectedandnotified'=>'Rejected and Notified'
 
