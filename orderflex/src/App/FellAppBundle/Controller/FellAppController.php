@@ -804,30 +804,47 @@ class FellAppController extends OrderAbstractController {
         // "accepting applications" status from json is enabled, or show "Not accepting applications now."
         $acceptingApplication = NULL;
         if( $route == "fellapp_home" ) {
-            $acceptingApplication = "Not accepting applications now";
-            $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-            $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-            //dump($configFileContent);
-            //exit('111');
-            if( $configFileContent ) {
-                $configFileContent = json_decode($configFileContent, true);
-                $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
-                if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
-                    $acceptingApplication = "Now accepting applications";
+//            $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
+//            if( $retrievalMethod ) {
+
+                $acceptingApplication = "Not accepting applications now";
+                $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+                $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+                //dump($configFileContent);
+                //exit('111');
+                if ($configFileContent) {
+                    $configFileContent = json_decode($configFileContent, true);
+                    $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
+                    if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
+                        $acceptingApplication = "Now accepting applications";
+                    }
+                } else {
+                    $environment = $userSecUtil->getSiteSettingParameter('environment');
+                    $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
+                    $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
+                    //check if $retrievalMethod is null or empty string as well: !empty($retrievalMethod)
+                    if( !empty($retrievalMethod) && $environment !== 'demo' && $hideWarning !== true ) {
+                        $this->addFlash(
+                            'warning',
+                            "Google configuration file can not be retrieved from Google Drive." .
+                            " Please verify if the 'Full path to the credential authentication JSON file for Google'" .
+                            " parameter in the site settings has been provided and exists on the server"
+                        );
+                    }
                 }
-            } else {
-                $environment = $userSecUtil->getSiteSettingParameter('environment');
-                $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning',$this->getParameter('fellapp.sitename'));
-                if( $environment != 'demo' && $hideWarning != true ) {
-                    $this->addFlash(
-                        'warning',
-                        "Google configuration file can not be retrieved from Google Drive." .
-                        " Please verify if the 'Full path to the credential authentication JSON file for Google'" .
-                        " parameter in the site settings has been provided and exists on the server"
-                    );
-                }
-            }
-            $acceptingApplication = "- ".$acceptingApplication;
+                $acceptingApplication = "- " . $acceptingApplication;
+//            } else {
+//                //replacing ALL of that text with italicised small light grey text
+//                // “Automatic application retrieval is turned off.” that is a link to
+//                // the "Edit Site Settings" page where this can be turned back on
+//                //fellapp_siteparameters_edit_specific_site_parameters
+//                $url = $this->generateUrl('fellapp_siteparameters_edit_specific_site_parameters');
+//                $link = '<a href="' . $url . '" style="font-size:0.85em; color:#999; font-style:italic;">'
+//                    . 'Automatic application retrieval is turned off.'
+//                    . '</a>';
+//
+//                $acceptingApplication = $link;
+//            }
         }
 
         //emailAcceptSubject emailAcceptBody

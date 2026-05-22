@@ -50,31 +50,42 @@
         {% endif %}
     {% endif %}
 
-    {% if allowPopulateFellApp is defined and allowPopulateFellApp == false %}
-        {% if user_security_utility.getSiteSettingParameter('environment') != 'demo'
-            and not user_security_utility.getSiteSettingParameter('hideWarning',fellapp_sitename)
-        %}
-            <div class="alert alert-danger">
-                Automatic import of fellowship applications submitted via the Google form is turned off.
-            </div>
-        {% endif %}
-    {% endif %}
+    {% if fellapp_util.getFellappRetrievalMethod() %}
 
-    <p>
-        <i>
-            {% if lastImportTimestamp %}
-                Last successful import:
-                {{ lastImportTimestamp|date('m/d/Y h:i A') }}
-                {{ serverTimeZone }}
-                ({{ time_zone_util.ago(lastImportTimestamp) }})
-                {{ acceptingApplication }}
-            {% else %}
-                {#TODO: modify for HUB#}
-                {#Unable to retrieve submitted applications when connection settings are not configured {{ acceptingApplication }}#}
-                {#{{ acceptingApplication }}#}
+        {% if allowPopulateFellApp is defined and allowPopulateFellApp == false %}
+            {% if user_security_utility.getSiteSettingParameter('environment') != 'demo'
+                and not user_security_utility.getSiteSettingParameter('hideWarning',fellapp_sitename)
+            %}
+                <div class="alert alert-danger">
+                    Automatic import of fellowship applications submitted via the Google form is turned off.
+                </div>
             {% endif %}
-        </i>
-    </p>
+        {% endif %}
+
+        <p>
+            <i>
+                {% if lastImportTimestamp %}
+                    Last successful import:
+                    {{ lastImportTimestamp|date('m/d/Y h:i A') }}
+                    {{ serverTimeZone }}
+                    ({{ time_zone_util.ago(lastImportTimestamp) }})
+                    {{ acceptingApplication }}
+                {% else %}
+                    {#TODO: modify for HUB#}
+                    {#Unable to retrieve submitted applications when connection settings are not configured {{ acceptingApplication }}#}
+                    {#{{ acceptingApplication }}#}
+                {% endif %}
+            </i>
+        </p>
+    {% else %}
+        <p>
+        <a href="{{ path('fellapp_siteparameters_edit_specific_site_parameters') }}"
+           target="_blank"
+           style="font-size: 0.85em; color: #999; font-style: italic;">
+            Automatic application retrieval is turned off.
+        </a>
+        </p>
+    {% endif %}
 
     {% set fellappTypeId = -1 %}
     {% if filter %}
