@@ -2684,7 +2684,199 @@ class FellAppUtil {
     }
 
     public function createApplicantListZip($fellappIds,$fileName) {
+        $author = $this->security->getUser();
 
+        // Create a temporary zip file
+        $tempZipPath = tempnam(sys_get_temp_dir(), 'fellapp_') . '.zip';
+        $zip = new \ZipArchive();
+
+        if ($zip->open($tempZipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+            throw new \Exception('Cannot create zip file');
+        }
+
+        foreach (explode("-", $fellappIds) as $fellappId) {
+            $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
+            if (!$fellapp) {
+                continue;
+            }
+
+            // Check if author can have access to view this applicant
+            if ($this->hasFellappPermission($author, $fellapp) == false) {
+                continue; // Skip this applicant because the current user does not have permission
+            }
+
+            // Build folder path: Institution - Department > Fellowship Program Specialty > Start Year > LastName FirstName (Application ID)
+            $folderPath = $this->buildApplicantFolderPath($fellapp);
+
+            // Add files to zip
+            $this->addApplicantFilesToZip($zip, $fellapp, $folderPath);
+        }
+
+        $zip->close();
+
+        // Send zip file to browser
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header('Content-Length: ' . filesize($tempZipPath));
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+
+        readfile($tempZipPath);
+
+        // Clean up temporary file
+        unlink($tempZipPath);
+
+        exit();
+    }
+
+    /**
+     * Build folder path for applicant in zip file
+     * Format: Institution - Department > Fellowship Program Specialty > Start Year > LastName FirstName (Application ID)
+     */
+    private function buildApplicantFolderPath($fellapp) {
+        $parts = [];
+
+        // Institution - Department (from FellowshipSubspecialty or GlobalFellowshipSpecialty)
+        $institutionDept = $this->getInstitutionDepartmentString($fellapp);
+        if ($institutionDept) {
+            $parts[] = $institutionDept;
+        }
+
+        // Fellowship Program Specialty
+        $specialty = $this->getFellowshipSpecialtyString($fellapp);
+        if ($specialty) {
+            $parts[] = $specialty;
+        }
+
+        // Start Year
+        $startDate = $fellapp->getStartDate();
+        if ($startDate) {
+            $parts[] = $startDate->format('Y');
+        } else {
+            $parts[] = 'Unknown';
+        }
+
+        // LastName FirstName (Application ID)
+        $user = $fellapp->getUser();
+        $applicantName = $user->getLastName() . ' ' . $user->getFirstName() . ' (' . $fellapp->getId() . ')';
+        $parts[] = $applicantName;
+
+        // Build path with backslashes for Windows-style paths in zip
+        return implode('\\', $parts);
+    }
+
+    /**
+     * Get Institution - Department string
+     */
+    private function getInstitutionDepartmentString($fellapp) {
+        $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
+        if ($fellowshipSubspecialty && $fellowshipSubspecialty->getInstitution()) {
+            $institution = $fellowshipSubspecialty->getInstitution();
+            $institutionName = $institution->getTreeRootAbbreviationChildName(' ');
+            if ($institutionName) {
+                return $institutionName;
+            }
+        }
+
+        // Try to get from GlobalFellowshipSpecialty
+        $globalSpecialty = $fellapp->getGlobalFellowshipSpecialty();
+        if ($globalSpecialty && $globalSpecialty->getInstitution()) {
+            $institution = $globalSpecialty->getInstitution();
+            $institutionName = $institution->getTreeRootAbbreviationChildName(' ');
+            if ($institutionName) {
+                return $institutionName;
+            }
+        }
+
+        return 'Unknown Institution';
+    }
+
+    /**
+     * Get Fellowship Specialty string
+     */
+    private function getFellowshipSpecialtyString($fellapp) {
+        $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
+        if ($fellowshipSubspecialty) {
+            return $fellowshipSubspecialty->getName();
+        }
+
+        $globalSpecialty = $fellapp->getGlobalFellowshipSpecialty();
+        if ($globalSpecialty) {
+            return $globalSpecialty->getName();
+        }
+
+        return 'Unknown Specialty';
+    }
+
+    /**
+     * Add applicant files to zip
+     */
+    private function addApplicantFilesToZip($zip, $fellapp, $folderPath) {
+        // 1. Add latest PDF from form reports
+        $formReports = $fellapp->getFormReports();
+        if (count($formReports) > 0) {
+            $latestReport = $formReports->last();
+            $this->addDocumentToZip($zip, $latestReport, $folderPath, 'Application.pdf');
+        }
+
+        // 2. Add photos/avatars
+        $avatars = $fellapp->getAvatars();
+        foreach ($avatars as $index => $avatar) {
+            $fileName = 'Photo_' . ($index + 1) . '.pdf';
+            $this->addDocumentToZip($zip, $avatar, $folderPath, $fileName);
+        }
+
+        // 3. Add reference letters
+        $references = $fellapp->getReferences();
+        $refIndex = 1;
+        foreach ($references as $reference) {
+            $refLetters = $reference->getDocuments();
+            foreach ($refLetters as $letter) {
+                $fileName = 'Reference_' . $refIndex . '.pdf';
+                $this->addDocumentToZip($zip, $letter, $folderPath, $fileName);
+                $refIndex++;
+            }
+        }
+
+        // 4. Add other documents (CVs, cover letters, etc.)
+        $cvs = $fellapp->getCvs();
+        foreach ($cvs as $index => $cv) {
+            $fileName = 'CV_' . ($index + 1) . '.pdf';
+            $this->addDocumentToZip($zip, $cv, $folderPath, $fileName);
+        }
+
+        $coverLetters = $fellapp->getCoverLetters();
+        foreach ($coverLetters as $index => $coverLetter) {
+            $fileName = 'CoverLetter_' . ($index + 1) . '.pdf';
+            $this->addDocumentToZip($zip, $coverLetter, $folderPath, $fileName);
+        }
+
+        // Add any other documents
+        $documents = $fellapp->getDocuments();
+        $docIndex = 1;
+        foreach ($documents as $document) {
+            $fileName = 'Document_' . $docIndex . '.pdf';
+            $this->addDocumentToZip($zip, $document, $folderPath, $fileName);
+            $docIndex++;
+        }
+    }
+
+    /**
+     * Add a single document to zip file
+     */
+    private function addDocumentToZip($zip, $document, $folderPath, $fileName) {
+        if (!$document) {
+            return;
+        }
+
+        $filePath = $document->getFullServerPath();
+        if (!$filePath || !file_exists($filePath)) {
+            return;
+        }
+
+        $zipPath = $folderPath . '\\' . $fileName;
+        $zip->addFile($filePath, $zipPath);
     }
 
     public function createInterviewApplicantList( $fellappids ) {

@@ -3554,7 +3554,7 @@ class FellAppController extends OrderAbstractController {
             //WashU Department of Pathology and Immunology \ Clinical Chemistry \ 2028 \ Doe John (255) \
 
             //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
-            $fileName = $currentYear." ".$institutionNameFellappName."Fellowship Candidate Data generated on ".date('m-d-Y').".xlsx";
+            $fileName = $currentYear." ".$institutionNameFellappName."Fellowship Candidate Data generated on ".date('m-d-Y').".zip";
             $fileName = str_replace("  ", " ", $fileName);
             $fileName = str_replace(" ", "-", $fileName);
             $fileName = str_replace(",", "-", $fileName);
