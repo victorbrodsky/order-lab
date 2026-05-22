@@ -629,6 +629,7 @@ class FellAppApplicantController extends OrderAbstractController {
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
         $fileName = str_replace(",", "-", $fileName);
+        $fileName = str_replace("--", "-", $fileName);
 
         //take care of authentication
         $session = $request->getSession(); //$this->container->get('session');
@@ -717,6 +718,7 @@ class FellAppApplicantController extends OrderAbstractController {
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
         $fileName = str_replace(",", "-", $fileName);
+        $fileName = str_replace("--", "-", $fileName);
 
         //get filtered fell applications
         $fellappUtil = $this->container->get('fellapp_util');

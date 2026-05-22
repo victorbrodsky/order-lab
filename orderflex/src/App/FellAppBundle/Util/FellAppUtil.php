@@ -2402,7 +2402,7 @@ class FellAppUtil {
         return $ea;
     }
     public function createApplicantListExcelSpout( $fellappids, $fileName ) {
-
+        
         $author = $this->security->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
@@ -2507,7 +2507,6 @@ class FellAppUtil {
 
         foreach( explode("-",$fellappids) as $fellappId ) {
 
-        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
             $fellapp = $this->em->getRepository(FellowshipApplication::class)->find($fellappId);
             if( !$fellapp ) {
                 continue;
@@ -2684,6 +2683,9 @@ class FellAppUtil {
         $writer->close();
     }
 
+    public function createApplicantListZip($fellappIds,$fileName) {
+
+    }
 
     public function createInterviewApplicantList( $fellappids ) {
 

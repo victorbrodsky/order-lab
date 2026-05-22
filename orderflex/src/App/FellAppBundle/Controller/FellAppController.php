@@ -3454,7 +3454,7 @@ class FellAppController extends OrderAbstractController {
     
     #[Route(path: '/download-applicants-list-excel/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_applicants_list_excel')]
     public function downloadApplicantListExcelAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
-
+        //exit('$currentYear='.$currentYear);
 //        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&
 //            false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') &&
 //            false == $this->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
@@ -3515,12 +3515,56 @@ class FellAppController extends OrderAbstractController {
             $fileName = str_replace("  ", " ", $fileName);
             $fileName = str_replace(" ", "-", $fileName);
             $fileName = str_replace(",", "-", $fileName);
+            $fileName = str_replace("--", "-", $fileName);
 
             $fellappUtil->createApplicantListExcelSpout($fellappIds,$fileName);
             exit();
         }
 
         exit();      
+    }
+
+    #[Route(path: '/download-applicants-list-zip/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_applicants_list_zip')]
+    public function downloadApplicantListZipAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+        $fellappUtil = $this->container->get('fellapp_util');
+
+        if( false == $this->isGranted("read","FellowshipApplication") &&
+            false == $fellappUtil->hasPublicApplicantRole() //plus check ROLE_FELLAPP_PUBLIC_SUBMITTER
+        ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $fellowshipSubspecialty = null;
+        $institutionNameFellappName = "";
+
+        if( $fellappTypeId && $fellappTypeId > 0 ) {
+            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:FellowshipSubspecialty'] by [FellowshipSubspecialty::class]
+            $fellowshipSubspecialty = $em->getRepository(FellowshipSubspecialty::class)->find($fellappTypeId);
+        }
+
+        if( $fellowshipSubspecialty ) {
+            $institution = $fellowshipSubspecialty->getInstitution();
+            $institutionNameFellappName = $institution." ".$fellowshipSubspecialty." ";
+        }
+
+        //Spout
+        if(1) {
+            //Institution - Department > Fellowship Program Specialty > Start Year > LastName FirstName (Application ID)
+            //WashU Department of Pathology and Immunology \ Clinical Chemistry \ 2028 \ Doe John (255) \
+
+            //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+            $fileName = $currentYear." ".$institutionNameFellappName."Fellowship Candidate Data generated on ".date('m-d-Y').".xlsx";
+            $fileName = str_replace("  ", " ", $fileName);
+            $fileName = str_replace(" ", "-", $fileName);
+            $fileName = str_replace(",", "-", $fileName);
+            $fileName = str_replace("--", "-", $fileName);
+
+            $fellappUtil->createApplicantListZip($fellappIds,$fileName);
+            exit();
+        }
+
+        exit();
     }
 
     #[Route(path: '/send-rejection-emails-action/', name: 'fellapp_send_rejection_emails_action', methods: ['POST'], options: ['expose' => true])]

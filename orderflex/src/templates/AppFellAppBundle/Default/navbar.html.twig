@@ -178,6 +178,12 @@
                                     </a>
                                 </li>
 
+                                <li>
+                                    <a href="{{ path('fellapp_download_applicants_list_zip', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}">
+                                        <i class="fa fa-file-zipper fa-lg"></i> Displayed applications as a zip file
+                                    </a>
+                                </li>
+
                             </ul>
                         </li>
                     {% endif %}

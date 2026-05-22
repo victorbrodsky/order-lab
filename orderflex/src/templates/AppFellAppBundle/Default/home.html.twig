@@ -51,7 +51,6 @@
     {% endif %}
 
     {% if fellapp_util.getFellappRetrievalMethod() %}
-
         {% if allowPopulateFellApp is defined and allowPopulateFellApp == false %}
             {% if user_security_utility.getSiteSettingParameter('environment') != 'demo'
                 and not user_security_utility.getSiteSettingParameter('hideWarning',fellapp_sitename)
@@ -107,7 +106,11 @@
             <a href="{{ path('fellapp_download_interview_applicants_list_pdf', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
                data-toggle="tooltip" title="Download displayed interviewee summaries as a PDF document">
                 {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
-                <i class="fa fa-file-pdf fa-lg"></i></a></p>
+                <i class="fa fa-file-pdf fa-lg"></i></a>
+            <a href="{{ path('fellapp_download_applicants_list_zip', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
+               data-toggle="tooltip" title="Download displayed applications as a zip file">
+                <i class="fa fa-file-zipper fa-lg"></i></a>
+        </p>
     {% endif %}
 
     {% if awaitedInterviews is not null and receivedInterviews is not null %}
