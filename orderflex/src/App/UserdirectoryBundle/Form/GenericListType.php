@@ -221,8 +221,8 @@ class GenericListType extends AbstractType
         }
 
         if( method_exists($this->params['entity'],'getSendEmailUploadLetterFellApp') ) {
-            $builder->add('screeningQuestions',null,array(
-                'label' => "Send email invitations to recommendation letter writers with a link to upload their recommendation letter after successful application import:",
+            $builder->add('sendEmailUploadLetterFellApp',null,array(
+                'label' => "Send email invitations to recommendation letter writers with a link to upload their recommendation letter after successful application import (override the site setting similar parameter):",
                 'required' => false
             ));
         }
