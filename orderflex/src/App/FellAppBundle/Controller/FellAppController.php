@@ -3928,6 +3928,32 @@ class FellAppController extends OrderAbstractController {
         $routeName = $request->get('_route');
         $args = $this->getShowParameters($routeName,$fellowshipApplication,$applicant,$institutionId,$specialtyId); //apply GET
 
+        // Check if the specified program exists (for program[]=X URL parameter)
+        // If not, show notAcceptMessage with the program info
+        $invalidProgram = null;
+        if( $institutionId && $args['programInstitution'] === null ) {
+            // Institution was specified in URL but not found in allowed list
+            $invalidProgramInstitution = $em->getRepository(Institution::class)->find($institutionId);
+            if( $invalidProgramInstitution ) {
+                $invalidProgram = $invalidProgramInstitution->getTreeRootAbbreviationChildName(' - ');
+            }
+        }
+        if( $specialtyId && $args['programSpecialty'] === null ) {
+            // Specialty was specified in URL but not found
+            $invalidProgramSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
+            if( $invalidProgramSpecialty ) {
+                $invalidProgram = $invalidProgramSpecialty->getName();
+            }
+        }
+        if( $invalidProgram ) {
+            $notAcceptMessage = $userSecUtil->getSiteSettingParameter(
+                'notAcceptMessage',
+                $this->getParameter('fellapp.sitename')
+            );
+            $args['invalidProgram'] = $invalidProgram;
+            $args['notAcceptMessage'] = $notAcceptMessage;
+        }
+
         // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
         if( count($args) == 0 ) {

@@ -1568,6 +1568,10 @@ Fellowship Program Coordinator
 Weill Cornell Medicine
 Pathology and Laboratory Medicine",
 
+            "notAcceptMessage" => "Applications for fellowship programs are not currently being accepted ".
+            "by [[INSTITUTION]] - [[DEPARTMENT]] ".
+                "via this system. Please contact the fellowship program coordinators with any questions.",
+
             //"localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)", //it's not string - it's Institution entity
             "spreadsheetsPathFellApp" => "fellapp/Spreadsheets",
             "applicantsUploadPathFellApp" => "fellapp/FellowshipApplicantUploads",

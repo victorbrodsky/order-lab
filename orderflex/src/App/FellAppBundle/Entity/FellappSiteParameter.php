@@ -258,8 +258,11 @@ class FellappSiteParameter {
     private $hubRecletterFormUrl;
     ////////////// EOF Retrieval //////////////
 
+    //8. In Fellowship Site Settings add a field titled "Message displayed to the applicant attempting to submit an application to an organization that is not accepting them" and set the default value to:
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $notAcceptMessage;
 
-    
+
     public function __construct() {
         $this->setAllowPopulateFellApp(false);
         $this->setHideWarning(false);
@@ -897,6 +900,21 @@ class FellappSiteParameter {
         $this->hubRecletterFormUrl = $hubRecletterFormUrl;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getNotAcceptMessage()
+    {
+        return $this->notAcceptMessage;
+    }
+
+    /**
+     * @param mixed $notAcceptMessage
+     */
+    public function setNotAcceptMessage($notAcceptMessage)
+    {
+        $this->notAcceptMessage = $notAcceptMessage;
+    }
 
 
 }

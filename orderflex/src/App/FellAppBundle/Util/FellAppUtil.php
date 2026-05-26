@@ -2732,21 +2732,22 @@ class FellAppUtil {
 
     /**
      * Build folder path for applicant in zip file
-     * Format: Institution - Department > Fellowship Program Specialty > Start Year > LastName FirstName (Application ID)
+     * Format: InstDept > Specialty > Year > LastName FirstName (ID)
+     * Uses short names to avoid Windows MAX_PATH (260 char) limit
      */
     private function buildApplicantFolderPath($fellapp) {
         $parts = [];
 
-        // Institution - Department (from FellowshipSubspecialty or GlobalFellowshipSpecialty)
-        $institutionDept = $this->getInstitutionDepartmentString($fellapp);
+        // Institution - Department (shortened)
+        $institutionDept = $this->getInstitutionDepartmentShortString($fellapp);
         if ($institutionDept) {
-            $parts[] = $institutionDept;
+            $parts[] = $this->sanitizeFolderName($institutionDept, 50);
         }
 
-        // Fellowship Program Specialty
+        // Fellowship Program Specialty (shortened)
         $specialty = $this->getFellowshipSpecialtyString($fellapp);
         if ($specialty) {
-            $parts[] = $specialty;
+            $parts[] = $this->sanitizeFolderName($specialty, 40);
         }
 
         // Start Year
@@ -2757,17 +2758,42 @@ class FellAppUtil {
             $parts[] = 'Unknown';
         }
 
-        // LastName FirstName (Application ID)
+        // LastName FirstName (ID) - shorter format
         $user = $fellapp->getUser();
-        $applicantName = $user->getLastName() . ' ' . $user->getFirstName() . ' (' . $fellapp->getId() . ')';
+        $lastName = $this->sanitizeFolderName($user->getLastName(), 30);
+        $firstName = $this->sanitizeFolderName($user->getFirstName(), 20);
+        $applicantName = $lastName . ' ' . $firstName . ' (' . $fellapp->getId() . ')';
         $parts[] = $applicantName;
 
-        // Build path with backslashes for Windows-style paths in zip
-        return implode('\\', $parts);
+        // Use forward slashes for ZIP format (more compatible, avoids Windows path issues)
+        return implode('/', $parts);
     }
 
     /**
-     * Get Institution - Department string
+     * Sanitize folder name: remove invalid chars and truncate if too long
+     */
+    private function sanitizeFolderName($name, $maxLength = 50) {
+        if (!$name) {
+            return 'Unknown';
+        }
+
+        // Remove invalid characters for Windows folders
+        $invalidChars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+        $name = str_replace($invalidChars, '_', $name);
+
+        // Trim whitespace
+        $name = trim($name);
+
+        // Truncate if too long
+        if (strlen($name) > $maxLength) {
+            $name = substr($name, 0, $maxLength - 3) . '...';
+        }
+
+        return $name;
+    }
+
+    /**
+     * Get Institution - Department string (full)
      */
     private function getInstitutionDepartmentString($fellapp) {
         $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
@@ -2793,6 +2819,36 @@ class FellAppUtil {
     }
 
     /**
+     * Get shortened Institution - Department string
+     */
+    private function getInstitutionDepartmentShortString($fellapp) {
+        $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
+        if ($fellowshipSubspecialty && $fellowshipSubspecialty->getInstitution()) {
+            $institution = $fellowshipSubspecialty->getInstitution();
+            // Use abbreviation if available, otherwise use short name
+            $abbr = $institution->getAbbreviation();
+            if ($abbr) {
+                return $abbr;
+            }
+            // Use name only (not full tree path)
+            return $institution->getName();
+        }
+
+        // Try to get from GlobalFellowshipSpecialty
+        $globalSpecialty = $fellapp->getGlobalFellowshipSpecialty();
+        if ($globalSpecialty && $globalSpecialty->getInstitution()) {
+            $institution = $globalSpecialty->getInstitution();
+            $abbr = $institution->getAbbreviation();
+            if ($abbr) {
+                return $abbr;
+            }
+            return $institution->getName();
+        }
+
+        return 'Unknown';
+    }
+
+    /**
      * Get Fellowship Specialty string
      */
     private function getFellowshipSpecialtyString($fellapp) {
@@ -2813,59 +2869,53 @@ class FellAppUtil {
      * Add applicant files to zip
      */
     private function addApplicantFilesToZip($zip, $fellapp, $folderPath) {
+        // Track used filenames to avoid collisions within the same folder
+        $usedFileNames = [];
+
         // 1. Add latest PDF from form reports
         $formReports = $fellapp->getFormReports();
         if (count($formReports) > 0) {
             $latestReport = $formReports->last();
-            $this->addDocumentToZip($zip, $latestReport, $folderPath, 'Application.pdf');
+            $this->addDocumentToZip($zip, $latestReport, $folderPath, $usedFileNames);
         }
 
         // 2. Add photos/avatars
         $avatars = $fellapp->getAvatars();
-        foreach ($avatars as $index => $avatar) {
-            $fileName = 'Photo_' . ($index + 1) . '.pdf';
-            $this->addDocumentToZip($zip, $avatar, $folderPath, $fileName);
+        foreach ($avatars as $avatar) {
+            $this->addDocumentToZip($zip, $avatar, $folderPath, $usedFileNames);
         }
 
         // 3. Add reference letters
         $references = $fellapp->getReferences();
-        $refIndex = 1;
         foreach ($references as $reference) {
             $refLetters = $reference->getDocuments();
             foreach ($refLetters as $letter) {
-                $fileName = 'Reference_' . $refIndex . '.pdf';
-                $this->addDocumentToZip($zip, $letter, $folderPath, $fileName);
-                $refIndex++;
+                $this->addDocumentToZip($zip, $letter, $folderPath, $usedFileNames);
             }
         }
 
         // 4. Add other documents (CVs, cover letters, etc.)
         $cvs = $fellapp->getCvs();
-        foreach ($cvs as $index => $cv) {
-            $fileName = 'CV_' . ($index + 1) . '.pdf';
-            $this->addDocumentToZip($zip, $cv, $folderPath, $fileName);
+        foreach ($cvs as $cv) {
+            $this->addDocumentToZip($zip, $cv, $folderPath, $usedFileNames);
         }
 
         $coverLetters = $fellapp->getCoverLetters();
-        foreach ($coverLetters as $index => $coverLetter) {
-            $fileName = 'CoverLetter_' . ($index + 1) . '.pdf';
-            $this->addDocumentToZip($zip, $coverLetter, $folderPath, $fileName);
+        foreach ($coverLetters as $coverLetter) {
+            $this->addDocumentToZip($zip, $coverLetter, $folderPath, $usedFileNames);
         }
 
         // Add any other documents
         $documents = $fellapp->getDocuments();
-        $docIndex = 1;
         foreach ($documents as $document) {
-            $fileName = 'Document_' . $docIndex . '.pdf';
-            $this->addDocumentToZip($zip, $document, $folderPath, $fileName);
-            $docIndex++;
+            $this->addDocumentToZip($zip, $document, $folderPath, $usedFileNames);
         }
     }
 
     /**
-     * Add a single document to zip file
+     * Add a single document to zip file using original filename
      */
-    private function addDocumentToZip($zip, $document, $folderPath, $fileName) {
+    private function addDocumentToZip($zip, $document, $folderPath, &$usedFileNames) {
         if (!$document) {
             return;
         }
@@ -2875,8 +2925,52 @@ class FellAppUtil {
             return;
         }
 
-        $zipPath = $folderPath . '\\' . $fileName;
+        // Get original filename
+        $originalFileName = $document->getOriginalname();
+        if (!$originalFileName) {
+            $originalFileName = $document->getUniquename();
+        }
+
+        // Truncate filename if too long (max 100 chars including extension)
+        $originalFileName = $this->truncateFileName($originalFileName, 100);
+
+        // Handle duplicate filenames by adding a numeric prefix
+        $finalFileName = $originalFileName;
+        $counter = 1;
+        while (in_array($finalFileName, $usedFileNames)) {
+            $pathInfo = pathinfo($originalFileName);
+            $extension = isset($pathInfo['extension']) ? '.' . $pathInfo['extension'] : '';
+            $finalFileName = $pathInfo['filename'] . '_' . $counter . $extension;
+            $counter++;
+        }
+        $usedFileNames[] = $finalFileName;
+
+        // Use forward slash for ZIP internal paths (more compatible with all systems)
+        $zipPath = $folderPath . '/' . $finalFileName;
         $zip->addFile($filePath, $zipPath);
+    }
+
+    /**
+     * Truncate filename to max length while preserving extension
+     */
+    private function truncateFileName($fileName, $maxLength = 100) {
+        if (strlen($fileName) <= $maxLength) {
+            return $fileName;
+        }
+
+        $pathInfo = pathinfo($fileName);
+        $extension = isset($pathInfo['extension']) ? '.' . $pathInfo['extension'] : '';
+        $baseName = $pathInfo['filename'];
+
+        // Reserve space for extension and ellipsis
+        $maxBaseLength = $maxLength - strlen($extension) - 3; // 3 for "..."
+
+        if ($maxBaseLength < 10) {
+            // If extension is very long, just truncate the whole thing
+            return substr($fileName, 0, $maxLength - 3) . '...';
+        }
+
+        return substr($baseName, 0, $maxBaseLength) . '...' . $extension;
     }
 
     public function createInterviewApplicantList( $fellappids ) {

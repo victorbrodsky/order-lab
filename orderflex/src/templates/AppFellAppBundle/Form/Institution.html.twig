@@ -34,6 +34,13 @@
     <div id="fellowship-institution" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
+            {# Yellow warning well for invalid/not accepting program #}
+            {% if invalidProgram is defined and invalidProgram and notAcceptMessage is defined and notAcceptMessage %}
+                <div id="not-accept-message-well" class="alert alert-warning">
+                    {{ notAcceptMessage|replace({'[[LOCAL INSTITUTION NAME]]': invalidProgram})|raw }}
+                </div>
+            {% endif %}
+
             <div class="well">
                 <div class="row">
                     <div class="col-xs-12">
@@ -47,3 +54,14 @@
         </div> <!-- panel-body -->
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-info -->
+
+{% if invalidProgram is defined and invalidProgram %}
+<script>
+    $(document).ready(function() {
+        // Hide the not-accept message when institution or fellowship specialty changes
+        $('#oleg_fellappbundle_fellowshipapplication_institution, #oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty, #oleg_fellappbundle_fellowshipapplication_globalFellowshipSpecialty').on('change', function() {
+            $('#not-accept-message-well').fadeOut();
+        });
+    });
+</script>
+{% endif %}

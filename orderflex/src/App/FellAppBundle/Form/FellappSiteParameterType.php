@@ -324,6 +324,12 @@ class FellappSiteParameterType extends AbstractType
         ));
         ////////////// EOF Retrieval //////////////
 
+        //(8) Message displayed to the applicant attempting to submit an application to an organization that is not accepting them
+        $builder->add('notAcceptMessage', null, array(
+            'label' => 'Message displayed to the applicant attempting to submit an application to an organization that is not accepting them:',
+            'attr' => array('class' => 'form-control')
+        ));
+
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(

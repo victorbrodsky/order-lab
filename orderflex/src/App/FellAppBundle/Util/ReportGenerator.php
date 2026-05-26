@@ -284,8 +284,13 @@ class ReportGenerator {
         $logger = $this->container->get('logger');
         $logger->notice("tryRun() started");
 
+        // Fix for Symfony 6.2+ lazy ghost object error: "Cannot access property starting with \" \""
+        // Clear entity manager to force fresh loading of entities and avoid lazy loading issues
+        //Clear cache to avoid lazy loading issues!
+        //$this->em->clear();
+
         $reportFileName = 'TryRun: Dummy Report File Name';
-        
+
         $queue = $this->getQueue();
 
         //reset old running process in queue
@@ -527,6 +532,10 @@ class ReportGenerator {
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
+
+        // Fix for Symfony 6.2+ lazy ghost object error: clear entity manager to force fresh loading
+        //Clear cache to avoid lazy loading issues!
+        //$this->em->clear();
 
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $entity = $this->em->getRepository(FellowshipApplication::class)->find($id);
