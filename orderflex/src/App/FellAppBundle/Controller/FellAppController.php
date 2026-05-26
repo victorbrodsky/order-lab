@@ -1415,6 +1415,8 @@ class FellAppController extends OrderAbstractController {
             'route_path' => $routeName, //getShowParameters
             'captchaSiteKey' => $captchaSiteKey,
             'screeningQuestionsHtml' => $screeningQuestionsHtml,
+            'programInstitution' => $programInstitution,
+            'institutions' => $institutions,
             //'parentFormnodeId' => $parentFormnodeId
         );
     }
@@ -3930,29 +3932,68 @@ class FellAppController extends OrderAbstractController {
 
         // Check if the specified program exists (for program[]=X URL parameter)
         // If not, show notAcceptMessage with the program info
-        $invalidProgram = null;
-        if( $institutionId && $args['programInstitution'] === null ) {
-            // Institution was specified in URL but not found in allowed list
-            $invalidProgramInstitution = $em->getRepository(Institution::class)->find($institutionId);
-            if( $invalidProgramInstitution ) {
-                $invalidProgram = $invalidProgramInstitution->getTreeRootAbbreviationChildName(' - ');
+//        $invalidProgram = null;
+//        if( $institutionId && $args['programInstitution'] === null ) {
+//            // Institution was specified in URL but not found in allowed list
+//            $invalidProgramInstitution = $em->getRepository(Institution::class)->find($institutionId);
+//            if( $invalidProgramInstitution ) {
+//                $invalidProgram = $invalidProgramInstitution->getTreeRootAbbreviationChildName(' - ');
+//            }
+//        }
+        $programInstitutionEntity = null;
+        $exists = false;
+        if( $institutionId ) {
+            $programInstitutionEntity = $em->getRepository(Institution::class)->find($institutionId);
+            if( $programInstitutionEntity ) {
+                if( $args['programInstitution'] ) {
+                    foreach ($args['institutions'] as $inst) {
+                        if ($inst->getId() === $args['programInstitution']->getId()) {
+                            $exists = true;
+                            break;
+                        }
+                    }
+                }
             }
         }
-        if( $specialtyId && $args['programSpecialty'] === null ) {
-            // Specialty was specified in URL but not found
-            $invalidProgramSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
-            if( $invalidProgramSpecialty ) {
-                $invalidProgram = $invalidProgramSpecialty->getName();
-            }
-        }
-        if( $invalidProgram ) {
+//        if( $specialtyId && $args['programSpecialty'] === null ) {
+//            // Specialty was specified in URL but not found
+//            $invalidProgramSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
+//            if( $invalidProgramSpecialty ) {
+//                $invalidProgram = $invalidProgramSpecialty->getName();
+//            }
+//        }
+//        if( $invalidProgram ) {
+//            $notAcceptMessage = $userSecUtil->getSiteSettingParameter(
+//                'notAcceptMessage',
+//                $this->getParameter('fellapp.sitename')
+//            );
+//            $args['invalidProgram'] = $invalidProgram;
+//            $args['notAcceptMessage'] = $notAcceptMessage;
+//            echo '$invalidProgram='.$invalidProgram.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
+//        }
+        if( !$exists ) {
             $notAcceptMessage = $userSecUtil->getSiteSettingParameter(
                 'notAcceptMessage',
                 $this->getParameter('fellapp.sitename')
             );
-            $args['invalidProgram'] = $invalidProgram;
+            if( $programInstitutionEntity ) {
+                $instDepStr = $programInstitutionEntity->getTreeRootAbbreviationChildName(' - ');
+            } else {
+                $instDepStr = 'institution';
+            }
+            $notAcceptMessage = str_replace("[[INSTITUTION]] - [[DEPARTMENT]]",$instDepStr,$notAcceptMessage);
+            $notAcceptMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptMessage);
+            $args['invalidProgram'] = $programInstitutionEntity;
             $args['notAcceptMessage'] = $notAcceptMessage;
+            //echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
         }
+//        foreach($args['institutions'] as $ints) {
+//            echo "institution=".$ints->getTreeRootAbbreviationChildName(' - ')."<br>";
+//        }
+        //echo "institutionId=$institutionId; "."programInstitution=".$args['programInstitution']->getTreeRootAbbreviationChildName(' - ')."<br>";
+        //dump($args['institutions']);
+        //dump($args['programInstitution']);
+        //exit('exit invalidProgram='.$programInstitutionEntity);
 
         // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
