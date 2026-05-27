@@ -1416,6 +1416,7 @@ class FellAppController extends OrderAbstractController {
             'captchaSiteKey' => $captchaSiteKey,
             'screeningQuestionsHtml' => $screeningQuestionsHtml,
             'programInstitution' => $programInstitution,
+            'programSpecialty' => $programSpecialty,
             'institutions' => $institutions,
             //'parentFormnodeId' => $parentFormnodeId
         );
@@ -4058,6 +4059,10 @@ class FellAppController extends OrderAbstractController {
             constitutes a violation of professional ethics and may result 
             in the forfeiture of all positions.";
         }
+
+        //dump($args);
+        //exit('111');
+        //echo "applyAction: programSpecialty=".$args['programSpecialty']."<br>";
 
         return $this->render('AppFellAppBundle/Form/apply.html.twig', $args);
         //$args['applicationFormNote'] = $googleFormConfig->getApplicationFormNote();

@@ -523,6 +523,9 @@
                 //isSyncing = false;
                 // update Screening Questions visibility based on selected global specialty
                 updateScreeningQuestionsVisibility(globalId); //apply working with this (global.on('change')
+
+                // Update endDate based on specialty duration
+                updateEndDateByDuration(globalId);
             });
 
             var initInst = inst.val();

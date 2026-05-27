@@ -96,9 +96,11 @@
             // Calculate endDate based on duration from programSpecialty if available
             {% if programSpecialty is defined and programSpecialty and programSpecialty.duration %}
                 var durationMonths = {{ programSpecialty.duration }};
+                console.log('document ready: durationMonths='+durationMonths);
                 var endDate = new Date(startDate);
                 endDate.setMonth(endDate.getMonth() + durationMonths);
             {% else %}
+                console.log('document ready: use default durationMonths +1 year');
                 var endDate = new Date(now.getFullYear() + 3, 5, 30);
             {% endif %}
             $(".fellapp-endDate").datepicker().datepicker("setDate", endDate);
@@ -402,7 +404,7 @@
         //Initiliaze updateScreeningQuestionsVisibility
         //render ScreeningQuestions();
         var route_path = $('#route_path').val();
-        //console.log("route_path="+route_path);
+        console.log("route_path="+route_path);
         //TODO: the listeners are executed in here and also on apply page
         //optimize them in one place (here)
         if(1) {
@@ -447,7 +449,21 @@
 
     // Fetch and update endDate based on specialty duration
     function updateEndDateByDuration(specialtyId) {
+        console.log('updateEndDateByDuration: specialtyId='+specialtyId);
+        var startDateVal = $('.fellapp-startDate').datepicker('getDate');
+        var durationMonths = 12; //default duration
+        if (!startDateVal) {
+            console.log('updateEndDateByDuration: return - no startDateVal');
+            return;
+        }
+
         if (!specialtyId) {
+            console.log('updateEndDateByDuration: return - no specialtyId');
+            if (startDateVal) {
+                var endDate = new Date(startDateVal);
+                endDate.setMonth(endDate.getMonth() + durationMonths);
+                $('.fellapp-endDate').datepicker('setDate', endDate);
+            }
             return;
         }
 
@@ -457,13 +473,29 @@
             type: 'GET',
             success: function(response) {
                 if (response.duration) {
-                    var durationMonths = parseInt(response.duration);
-                    var startDateVal = $('.fellapp-startDate').datepicker('getDate');
-                    if (startDateVal) {
-                        var endDate = new Date(startDateVal);
-                        endDate.setMonth(endDate.getMonth() + durationMonths);
-                        $('.fellapp-endDate').datepicker('setDate', endDate);
-                    }
+                    durationMonths = parseInt(response.duration);
+                    console.log('updateEndDateByDuration:  specialty durationMonths='+durationMonths);
+//                    var startDateVal = $('.fellapp-startDate').datepicker('getDate');
+//                    if (startDateVal) {
+//                        var endDate = new Date(startDateVal);
+//                        endDate.setMonth(endDate.getMonth() + durationMonths);
+//                        $('.fellapp-endDate').datepicker('setDate', endDate);
+//                    }
+                } else {
+                    //var durationMonths = 12; //default duration
+                    console.log('updateEndDateByDuration: response.duration is null => use default durationMonths='+durationMonths);
+                    //var startDateVal = $('.fellapp-startDate').datepicker('getDate');
+                    //var endDate = new Date(startDateVal);
+                    //endDate.setMonth(endDate.getMonth() + durationMonths);
+                    //$('.fellapp-endDate').datepicker('setDate', endDate);
+                }
+
+                console.log('updateEndDateByDuration: setDate with durationMonths='+durationMonths);
+                var startDateVal = $('.fellapp-startDate').datepicker('getDate');
+                if (startDateVal) {
+                    var endDate = new Date(startDateVal);
+                    endDate.setMonth(endDate.getMonth() + durationMonths);
+                    $('.fellapp-endDate').datepicker('setDate', endDate);
                 }
             },
             error: function(xhr, status, error) {
