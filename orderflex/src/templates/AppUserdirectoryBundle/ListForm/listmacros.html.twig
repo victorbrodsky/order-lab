@@ -1293,9 +1293,9 @@
     {% endif %}
 
     {#ResidencyTrackList->duration#}
-    {% if form.duration is defined %}
-        {{ formmacros.field(form.duration) }}
-    {% endif %}
+    {#{% if form.duration is defined %}#}
+        {#{{ formmacros.field(form.duration) }}#}
+    {#{% endif %}#}
 
     {#SpecialtyList#}
     {#{% if form.shortname is defined %}#}
@@ -1533,6 +1533,22 @@
 
     {% if form.showOption is defined %}
         {{ formmacros.field(form.showOption) }}
+    {% endif %}
+
+    {% if form.duration is defined %}
+        {{ formmacros.field(form.duration) }}
+    {% endif %}
+
+    {% if form.submissionStart is defined %}
+        {{ formmacros.fieldDateLabel(form.submissionStart,'allow-future-date') }}
+    {% endif %}
+
+    {% if form.submissionEnd is defined %}
+        {{ formmacros.fieldDateLabel(form.submissionEnd,'allow-future-date') }}
+    {% endif %}
+
+    {% if form.acceptingApplication is defined %}
+        {{ formmacros.field(form.acceptingApplication) }}
     {% endif %}
 
 {% endmacro %}

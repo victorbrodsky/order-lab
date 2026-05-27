@@ -667,9 +667,40 @@ class GenericListType extends AbstractType
 
 
             $builder->add('showOption', null, array(
-                'label'=>'Show as an available option on the fellowship application form (“Apply” page):',
+                'label'=>'Show as an available option on the fellowship application form:',
                 'required' => false,
                 //'attr' => array('class' => 'textarea form-control')
+            ));
+
+            $builder->add('duration', null, array(
+                'label'=>'Fellowship duration (in months):',
+                'required' => false,
+                'attr' => array('class' => 'form-control')
+            ));
+
+            $builder->add('submissionStart', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array(
+                'label'=>'Application submission start date:',
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'form-control datepicker'),
+                'html5' => false
+            ));
+
+            $builder->add('submissionEnd', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array(
+                'label'=>'Application submission end date:',
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'form-control datepicker'),
+                'html5' => false
+            ));
+
+            //showOption
+            $builder->add('acceptingApplication', null, array(
+                'label'=>'Currently accepting applications:',
+                'required' => false,
+                //'attr' => array('class' => 'form-control')
             ));
 
             //lowestRoles linkToListId

@@ -125,6 +125,30 @@ class FellowshipSubspecialty extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $sendEmailUploadLetterFellApp;
 
+    //Fellowship Duration (in months): [12]
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $duration;
+
+    //Fellowship Application Submission Period Default Start Date: [MM/DD]
+    /**
+     * Fellowship Application Submission Period Default Start Date: [MM/DD]
+     */
+    #[ORM\Column(type: 'date', nullable: true)]
+    private $submissionStart;
+
+    //Fellowship Application Submission Period Default End Date: [MM/DD]
+    /**
+     * Fellowship Application Submission Period Default End Date: [MM/DD]
+     */
+    #[ORM\Column(type: 'date', nullable: true)]
+    private $submissionEnd;
+
+    //Currently Accepting Applications: [checkmark]
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $acceptingApplication;
+    
+    
+    
 
     public function __construct($author=null) {
         $this->coordinators = new ArrayCollection();
@@ -430,5 +454,68 @@ class FellowshipSubspecialty extends ListAbstract
         return "FellowshipSubspecialty";
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param mixed $duration
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubmissionStart()
+    {
+        return $this->submissionStart;
+    }
+
+    /**
+     * @param mixed $submissionStart
+     */
+    public function setSubmissionStart($submissionStart)
+    {
+        $this->submissionStart = $submissionStart;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubmissionEnd()
+    {
+        return $this->submissionEnd;
+    }
+
+    /**
+     * @param mixed $submissionEnd
+     */
+    public function setSubmissionEnd($submissionEnd)
+    {
+        $this->submissionEnd = $submissionEnd;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcceptingApplication()
+    {
+        return $this->acceptingApplication;
+    }
+
+    /**
+     * @param mixed $acceptingApplication
+     */
+    public function setAcceptingApplication($acceptingApplication)
+    {
+        $this->acceptingApplication = $acceptingApplication;
+    }
 
 }
