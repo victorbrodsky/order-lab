@@ -90,8 +90,18 @@
         //Pre-set training period for which applying only for new form
         if( cycle == "new" ) {
             var now = new Date();
-            $(".fellapp-startDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 2, 6, 1));
-            $(".fellapp-endDate").datepicker().datepicker("setDate", new Date(now.getFullYear() + 3, 5, 30));
+            var startDate = new Date(now.getFullYear() + 2, 6, 1);
+            $(".fellapp-startDate").datepicker().datepicker("setDate", startDate);
+
+            // Calculate endDate based on duration from programSpecialty if available
+            {% if programSpecialty is defined and programSpecialty and programSpecialty.duration %}
+                var durationMonths = {{ programSpecialty.duration }};
+                var endDate = new Date(startDate);
+                endDate.setMonth(endDate.getMonth() + durationMonths);
+            {% else %}
+                var endDate = new Date(now.getFullYear() + 3, 5, 30);
+            {% endif %}
+            $(".fellapp-endDate").datepicker().datepicker("setDate", endDate);
         }
 
         //add listener on rank change
@@ -429,6 +439,36 @@
             console.log('applicant-content-js: fellowship SpecialtyListener: specialty changed:', specialtyId);
             // update Screening Questions visibility based on selected specialty
             updateScreeningQuestionsVisibility(specialtyId);
+
+            // Update endDate based on specialty duration
+            updateEndDateByDuration(specialtyId);
+        });
+    }
+
+    // Fetch and update endDate based on specialty duration
+    function updateEndDateByDuration(specialtyId) {
+        if (!specialtyId) {
+            return;
+        }
+
+        var url = Routing.generate('fellapp-specialty-duration', { id: specialtyId });
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                if (response.duration) {
+                    var durationMonths = parseInt(response.duration);
+                    var startDateVal = $('.fellapp-startDate').datepicker('getDate');
+                    if (startDateVal) {
+                        var endDate = new Date(startDateVal);
+                        endDate.setMonth(endDate.getMonth() + durationMonths);
+                        $('.fellapp-endDate').datepicker('setDate', endDate);
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching specialty duration:', error);
+            }
         });
     }
 

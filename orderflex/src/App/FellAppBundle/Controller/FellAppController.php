@@ -4129,6 +4129,27 @@ class FellAppController extends OrderAbstractController {
         return $response;
     }
 
+    #[Route(path: '/get-specialty-duration/{id}', name: 'fellapp-specialty-duration', options: ['expose' => true])]
+    public function getSpecialtyDuration($id): JsonResponse
+    {
+        $em = $this->getDoctrine()->getManager();
+        $duration = null;
+
+        // Try GlobalFellowshipSpecialty first
+        $specialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
+        if ($specialty && $specialty->getDuration()) {
+            $duration = $specialty->getDuration();
+        } else {
+            // Try FellowshipSubspecialty
+            $specialty = $em->getRepository(FellowshipSubspecialty::class)->find($id);
+            if ($specialty && $specialty->getDuration()) {
+                $duration = $specialty->getDuration();
+            }
+        }
+
+        return new JsonResponse(['duration' => $duration]);
+    }
+
     #[Route(path: '/set-notes', name: 'fellapp-set-notes', methods: ['POST'], options: ['expose' => true])]
     public function setNotesAndComments(Request $request): JsonResponse
     {
