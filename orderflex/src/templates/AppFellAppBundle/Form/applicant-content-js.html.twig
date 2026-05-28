@@ -99,6 +99,8 @@
                 console.log('document ready: durationMonths='+durationMonths);
                 var endDate = new Date(startDate);
                 endDate.setMonth(endDate.getMonth() + durationMonths);
+                // Subtract 1 day
+                endDate.setDate(endDate.getDate() - 1);
             {% else %}
                 console.log('document ready: use default durationMonths +1 year');
                 var endDate = new Date(now.getFullYear() + 3, 5, 30);
@@ -451,6 +453,8 @@
     function updateEndDateByDuration(specialtyId) {
         console.log('updateEndDateByDuration: specialtyId='+specialtyId);
         var startDateVal = $('.fellapp-startDate').datepicker('getDate');
+        console.log(startDateVal);
+        console.log(startDateVal.toISOString().slice(0, 10));
         var durationMonths = 12; //default duration
         if (!startDateVal) {
             console.log('updateEndDateByDuration: return - no startDateVal');
@@ -462,6 +466,8 @@
             if (startDateVal) {
                 var endDate = new Date(startDateVal);
                 endDate.setMonth(endDate.getMonth() + durationMonths);
+                // Subtract 1 day
+                endDate.setDate(endDate.getDate() - 1);
                 $('.fellapp-endDate').datepicker('setDate', endDate);
             }
             return;
@@ -475,19 +481,8 @@
                 if (response.duration) {
                     durationMonths = parseInt(response.duration);
                     console.log('updateEndDateByDuration:  specialty durationMonths='+durationMonths);
-//                    var startDateVal = $('.fellapp-startDate').datepicker('getDate');
-//                    if (startDateVal) {
-//                        var endDate = new Date(startDateVal);
-//                        endDate.setMonth(endDate.getMonth() + durationMonths);
-//                        $('.fellapp-endDate').datepicker('setDate', endDate);
-//                    }
                 } else {
-                    //var durationMonths = 12; //default duration
                     console.log('updateEndDateByDuration: response.duration is null => use default durationMonths='+durationMonths);
-                    //var startDateVal = $('.fellapp-startDate').datepicker('getDate');
-                    //var endDate = new Date(startDateVal);
-                    //endDate.setMonth(endDate.getMonth() + durationMonths);
-                    //$('.fellapp-endDate').datepicker('setDate', endDate);
                 }
 
                 console.log('updateEndDateByDuration: setDate with durationMonths='+durationMonths);
@@ -495,6 +490,8 @@
                 if (startDateVal) {
                     var endDate = new Date(startDateVal);
                     endDate.setMonth(endDate.getMonth() + durationMonths);
+                    // Subtract 1 day
+                    endDate.setDate(endDate.getDate() - 1);
                     $('.fellapp-endDate').datepicker('setDate', endDate);
                 }
             },
