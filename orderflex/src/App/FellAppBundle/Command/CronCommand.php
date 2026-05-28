@@ -83,18 +83,24 @@ class CronCommand extends Command {
         if( trim($retrievalMethod) == 'Dedicated public tandem hub server tenant instance' ) {
             //exit('111');
             $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+
+            //transfer parameters to the HUB
+            $result1 = $fellappImportPopulateHubUtil->transferParametersToHub();
+            $logger->notice("Cron job transfering parameters to the HUB with result=" . $result1);
+
             $response = $fellappImportPopulateHubUtil->retrieveApplicationData(null,$testing=false);
-            $result = $response['message'];
-            $logger->notice("Cron job processing FellApp from HUB finished with result=" . $result);
+            $result2 = $response['message'];
+            $logger->notice("Cron job processing FellApp from HUB finished with result=" . $result2);
 
             $response = $fellappImportPopulateHubUtil->retrieveRecommendationLetters(null,$testing=false);
-            $result2 = $response['message'];
-            $logger->notice("Cron job processing FellApp Recommendation Letters from HUB finished with result=" . $result2);
+            $result3 = $response['message'];
+            $logger->notice("Cron job processing FellApp Recommendation Letters from HUB finished with result=" . $result3);
 
-            $result = $result . "; " . $result2;
+            $result = $result1 . "; " . $result2 . "; " . $result3;
         } else {
 
             $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+
             $result = $fellappImportPopulateUtil->processFellAppFromGoogleDrive();
             $logger->notice("Cron job processing FellApp from Google Drive finished with result=" . $result);
 
