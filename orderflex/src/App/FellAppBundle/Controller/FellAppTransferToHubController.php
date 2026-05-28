@@ -42,7 +42,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 //HMAC is used to authenticate API calls between Caller and Remote servers using a shared secret key
 
 #[Route(path: '/')]
-class FellAppTransferParametersHubController extends OrderAbstractController
+class FellAppTransferToHubController extends OrderAbstractController
 {
 
     // Caller Server: Transfer parameters from FellowshipSubspecialty to Remote (HUB) Server

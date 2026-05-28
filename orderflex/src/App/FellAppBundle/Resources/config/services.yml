@@ -47,6 +47,9 @@ services:
     fellapp_importpopulate_hub_util:
         class: App\FellAppBundle\Util\FellAppImportPopulateHubUtil
 
+    fellapp_transfer_to_hub_util:
+        class: App\FellAppBundle\Util\FellAppTransferToHubUtil
+
     fellapp_role_voter:
         class: App\FellAppBundle\Security\Voter\FellAppRoleVoter
         public: false

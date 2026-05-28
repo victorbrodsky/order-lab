@@ -60,7 +60,6 @@ class CronCommand extends Command {
     //php bin/console cron:importfellapp --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-
         $logger = $this->container->get('logger');
 
         //testing
@@ -82,12 +81,16 @@ class CronCommand extends Command {
         //exit('$retrievalMethod='.$retrievalMethod);
         if( trim($retrievalMethod) == 'Dedicated public tandem hub server tenant instance' ) {
             //exit('111');
-            $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+            $fellappTransferToHubUtil = $this->container->get('fellapp_transfer_to_hub_util');
 
             //transfer parameters to the HUB
-            $result1 = $fellappImportPopulateHubUtil->transferParametersToHub();
+            $result1 = $fellappTransferToHubUtil->transferParametersToHub();
             $logger->notice("Cron job transfering parameters to the HUB with result=" . $result1);
 
+            $output->writeln($result1);
+            return Command::SUCCESS;
+
+            $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
             $response = $fellappImportPopulateHubUtil->retrieveApplicationData(null,$testing=false);
             $result2 = $response['message'];
             $logger->notice("Cron job processing FellApp from HUB finished with result=" . $result2);
