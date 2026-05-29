@@ -184,6 +184,7 @@ class FellAppTransferToHubController extends OrderAbstractController
             }
 
             //always set acceptingApplication - it will override the dates
+            //In this case it looks like the dates are not gonna be used at all, because they will always be overridden by acceptingApplication
             $globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
 
             $em->persist($globalSpecialty);
