@@ -329,7 +329,10 @@ class FellappSiteParameterType extends AbstractType
             'label' => 'Message displayed to the applicant attempting to submit an application to an organization that is not accepting them:',
             'attr' => array('class' => 'form-control')
         ));
-
+        $builder->add('notAcceptProgramMessage', null, array(
+            'label' => 'Message displayed to the applicant attempting to submit an application to a program that is not accepting them:',
+            'attr' => array('class' => 'form-control')
+        ));
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(

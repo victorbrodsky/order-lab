@@ -262,6 +262,10 @@ class FellappSiteParameter {
     #[ORM\Column(type: 'text', nullable: true)]
     private $notAcceptMessage;
 
+    //9. Message displayed to the applicant attempting to submit an application to a program that is not accepting them
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $notAcceptProgramMessage;
+
 
     public function __construct() {
         $this->setAllowPopulateFellApp(false);
@@ -914,6 +918,22 @@ class FellappSiteParameter {
     public function setNotAcceptMessage($notAcceptMessage)
     {
         $this->notAcceptMessage = $notAcceptMessage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotAcceptProgramMessage()
+    {
+        return $this->notAcceptProgramMessage;
+    }
+
+    /**
+     * @param mixed $notAcceptProgramMessage
+     */
+    public function setNotAcceptProgramMessage($notAcceptProgramMessage)
+    {
+        $this->notAcceptProgramMessage = $notAcceptProgramMessage;
     }
 
 

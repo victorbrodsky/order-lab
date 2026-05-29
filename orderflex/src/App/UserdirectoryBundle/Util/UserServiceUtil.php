@@ -1572,6 +1572,11 @@ Pathology and Laboratory Medicine",
             "by [[INSTITUTION]] - [[DEPARTMENT]] ".
                 "via this system. Please contact the fellowship program coordinators with any questions.",
 
+            "notAcceptProgramMessage" => "Applications for the ".
+                "[[INSTITUTION]] [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
+                "fellowship program are not currently being accepted via this system. ".
+                "Please contact the program coordinator with any questions.",
+
             //"localInstitutionFellApp" => "Pathology Fellowship Programs (WCM)", //it's not string - it's Institution entity
             "spreadsheetsPathFellApp" => "fellapp/Spreadsheets",
             "applicantsUploadPathFellApp" => "fellapp/FellowshipApplicantUploads",

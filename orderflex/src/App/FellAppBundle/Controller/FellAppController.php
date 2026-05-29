@@ -3959,14 +3959,29 @@ class FellAppController extends OrderAbstractController {
 //            }
 //        }
         $programInstitutionEntity = null;
-        $exists = false;
+        $institutionExists = false;
         if( $institutionId ) {
             $programInstitutionEntity = $em->getRepository(Institution::class)->find($institutionId);
             if( $programInstitutionEntity ) {
                 if( $args['programInstitution'] ) {
                     foreach ($args['institutions'] as $inst) {
                         if ($inst->getId() === $args['programInstitution']->getId()) {
-                            $exists = true;
+                            $institutionExists = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $programSpecialtyEntity = null;
+        $programSpecialtyExists = false;
+        if( $specialtyId ) {
+            $programSpecialtyEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->find($institutionId);
+            if( $programSpecialtyEntity ) {
+                if( $args['programSpecialty'] ) {
+                    foreach ($args['institutions'] as $inst) {
+                        if ($inst->getId() === $args['programSpecialty']->getId()) {
+                            $programSpecialtyExists = true;
                             break;
                         }
                     }
@@ -3989,7 +4004,7 @@ class FellAppController extends OrderAbstractController {
 //            $args['notAcceptMessage'] = $notAcceptMessage;
 //            echo '$invalidProgram='.$invalidProgram.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
 //        }
-        if( !$exists ) {
+        if( !$institutionExists ) {
             $notAcceptMessage = $userSecUtil->getSiteSettingParameter(
                 'notAcceptMessage',
                 $this->getParameter('fellapp.sitename')
@@ -4010,6 +4025,39 @@ class FellAppController extends OrderAbstractController {
             $args['notAcceptMessage'] = $notAcceptMessage;
             //echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
         }
+
+        if( !$programSpecialtyExists ) {
+            $notAcceptProgramMessage = $userSecUtil->getSiteSettingParameter(
+                'notAcceptProgramMessage',
+                $this->getParameter('fellapp.sitename')
+            );
+            if( !$notAcceptProgramMessage ) {
+                $notAcceptProgramMessage = "Applications for the ".
+                    "[[INSTITUTION]] [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
+                    "fellowship program are not currently being accepted via this system. ".
+                    "Please contact the program coordinator with any questions.";
+            }
+            if( $programInstitutionEntity ) {
+                $instDepStr = $programInstitutionEntity->getTreeRootAbbreviationChildName(' - ');
+            } else {
+                $instDepStr = 'institution';
+            }
+            $notAcceptProgramMessage = str_replace("[[INSTITUTION]] - [[DEPARTMENT]]",$instDepStr,$notAcceptProgramMessage);
+            $notAcceptProgramMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptProgramMessage);
+
+            if( $programSpecialtyEntity ) {
+                $programStr = $programSpecialtyEntity->getName();
+            } else {
+                $programStr = 'program';
+            }
+            $notAcceptProgramMessage = str_replace("[[FELLOWSHIP TYPE]]",$programStr,$notAcceptProgramMessage);
+            $notAcceptProgramMessage = str_replace("[[FELLOWSHIP TYPE]]",$programStr,$notAcceptProgramMessage);
+
+            $args['invalidProgramSpecialty'] = $programSpecialtyEntity;
+            $args['notAcceptProgramMessage'] = $notAcceptProgramMessage;
+            //echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
+        }
+
 //        foreach($args['institutions'] as $ints) {
 //            echo "institution=".$ints->getTreeRootAbbreviationChildName(' - ')."<br>";
 //        }

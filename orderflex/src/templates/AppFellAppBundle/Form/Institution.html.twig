@@ -37,7 +37,8 @@
             {# Yellow warning well for invalid/not accepting program #}
             {% if invalidProgram is defined and invalidProgram and notAcceptMessage is defined and notAcceptMessage %}
                 <div id="not-accept-message-well" class="alert alert-warning">
-                    {{ notAcceptMessage|replace({'[[LOCAL INSTITUTION NAME]]': invalidProgram})|raw }}
+                    {#{{ notAcceptMessage|replace({'[[LOCAL INSTITUTION NAME]]': invalidProgram})|raw }}#}
+                    {{ notAcceptMessage|raw }}
                 </div>
             {% endif %}
 
