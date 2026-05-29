@@ -4008,7 +4008,7 @@ class FellAppController extends OrderAbstractController {
             $notAcceptMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptMessage);
             $args['invalidProgram'] = $programInstitutionEntity;
             $args['notAcceptMessage'] = $notAcceptMessage;
-            echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
+            //echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
         }
 //        foreach($args['institutions'] as $ints) {
 //            echo "institution=".$ints->getTreeRootAbbreviationChildName(' - ')."<br>";
