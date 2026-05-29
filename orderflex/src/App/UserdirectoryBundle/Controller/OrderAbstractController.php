@@ -15,6 +15,7 @@ use App\CrnBundle\Util\CrnUtilForm;
 use App\DemoDbBundle\Util\DemoDbUtil;
 use App\FellAppBundle\Util\FellAppImportPopulateHubUtil;
 use App\FellAppBundle\Util\FellAppImportPopulateUtil;
+use App\FellAppBundle\Util\FellAppTransferToHubUtil;
 use App\FellAppBundle\Util\FellAppUtil;
 use App\FellAppBundle\Util\GoogleSheetManagement;
 use App\FellAppBundle\Util\GoogleSheetManagementV2;
@@ -115,6 +116,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['fellapp_googlesheetmanagement_v2'] = '?'.GoogleSheetManagementV2::class;
         $subscribedServices['fellapp_rec_letter_util'] = '?'.RecLetterUtil::class;
         $subscribedServices['fellapp_importpopulate_hub_util'] = '?'.FellAppImportPopulateHubUtil::class;
+        $subscribedServices['fellapp_transfer_to_hub_util'] = '?'.FellAppTransferToHubUtil::class;
 
         $subscribedServices['resapp_util'] = '?'.ResAppUtil::class;
         $subscribedServices['resapp_reportgenerator'] = '?'.\App\ResAppBundle\Util\ReportGenerator::class;

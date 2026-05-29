@@ -139,6 +139,13 @@ class GlobalFellowshipSpecialty extends ListAbstract
     private $submissionEnd;
 
     //Currently Accepting Applications: [checkmark]
+    /*
+     * Currently Accepting Applications: [checkmark] field should over-ride the default
+     * "Submission Period Default Start Date / Submission Period Default End Date" field values -
+     * if the value is NOT checked - do not accept applications (for example the program was already filled).
+     * If the value IS checked and is outside of the submission date range, STILL accept applications.
+     * This way this checkmark can be checked or unchecked for specific programs at any time.
+     */
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $acceptingApplication;
 

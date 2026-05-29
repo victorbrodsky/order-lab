@@ -17,24 +17,11 @@
 
 namespace App\FellAppBundle\Controller;
 
-use App\FellAppBundle\Entity\FellAppStatus;
-use App\FellAppBundle\Entity\FellowshipApplication;
 use App\FellAppBundle\Entity\GlobalFellowshipSpecialty;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
-use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
-
-use App\UserdirectoryBundle\Entity\Document;
-use App\UserdirectoryBundle\Entity\Institution;
-use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpClient\HttpClient;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 
 //API key $hashkey is generated on Caller and Remote servers must be the same in order for Remote server data back.
@@ -45,103 +32,37 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 class FellAppTransferToHubController extends OrderAbstractController
 {
 
+    #[Route(path: '/transfer-to-hub', name: 'fellapp_transfer_to_hub', methods: ['GET'])]
+    public function transferToHubAction( Request $request ) {
+        $logger = $this->container->get('logger');
+        $fellappTransferToHubUtil = $this->container->get('fellapp_transfer_to_hub_util');
+
+        $result = $fellappTransferToHubUtil->transferParametersToHub();
+        $logger->notice("transferToHubAction: transfering parameters to the HUB with result=" . $result['message']);
+        
+        if ($result['success']) {
+            $this->addFlash('notice', "Successfully transferred parameters to HUB: " . $result['message']);
+        } else {
+            $this->addFlash('warning', "Failed to transfer parameters to HUB: " . $result['message']);
+        }
+
+        return $this->redirect($this->generateUrl('fellapp_home'));
+    }
+
     // Caller Server: Transfer parameters from FellowshipSubspecialty to Remote (HUB) Server
     #[Route(path: '/transfer-specialty-parameters', name: 'fellapp_transfer_specialty_parameters', methods: ['GET'])]
     public function transferSpecialtyParametersAction( Request $request ) {
         $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
-        $em = $this->getDoctrine()->getManager();
+        $fellappTransferToHubUtil = $this->container->get('fellapp_transfer_to_hub_util');
 
-        // Get API connection key for HMAC authentication
-        $apiConnectionKey = $userSecUtil->getSiteSettingParameter(
-            'apiConnectionKey',
-            $this->container->getParameter('fellapp.sitename')
-        );
+        $result = $fellappTransferToHubUtil->transferParametersToHub();
 
-        if( !$apiConnectionKey ) {
-            $logger->warning('transferSpecialtyParametersAction: apiConnectionKey is not defined');
-            $this->addFlash('warning', 'API Connection Key is not defined in Site Parameters.');
-            return $this->redirect($this->generateUrl('fellapp_home'));
-        }
-
-        $apiHashConnectionKey = hash('sha256', $apiConnectionKey);
-
-        // Generate HMAC for authentication
-        $timestamp = time();
-        $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $apiHashConnectionKey);
-        $logger->notice('transferSpecialtyParametersAction: $hmac='.$hmac);
-
-        // Get all FellowshipSubspecialty entities with parameters set
-        $fellowshipSubspecialties = $em->getRepository(FellowshipSubspecialty::class)->findAll();
-
-        // Build parameters array
-        $specialtyParameters = [];
-        foreach ($fellowshipSubspecialties as $subspecialty) {
-            // Get institution and name for matching on remote server
-            $institution = $subspecialty->getInstitution();
-            $institutionId = $institution ? $institution->getId() : null;
-            $institutionName = $institution ? $institution->getName() : null;
-
-            $specialtyParameters[] = [
-                'id' => $subspecialty->getId(),
-                'name' => $subspecialty->getName(),
-                'institutionId' => $institutionId,
-                'institutionName' => $institutionName,
-                'duration' => $subspecialty->getDuration(),
-                'submissionStart' => $subspecialty->getSubmissionStart() ? $subspecialty->getSubmissionStart()->format('Y-m-d') : null,
-                'submissionEnd' => $subspecialty->getSubmissionEnd() ? $subspecialty->getSubmissionEnd()->format('Y-m-d') : null,
-                'acceptingApplication' => $subspecialty->getAcceptingApplication()
-            ];
-        }
-
-        // Get remote URL
-        $remoteUrl = $userSecUtil->getSiteSettingParameter(
-            'hubServerApiUrl',
-            $this->container->getParameter('fellapp.sitename')
-        );
-
-        if( !$remoteUrl ) {
-            $logger->warning('transferSpecialtyParametersAction: hubServerApiUrl is not defined');
-            $this->addFlash('warning', 'Hub Server API URL is not defined in Site Parameters.');
-            return $this->redirect($this->generateUrl('fellapp_home'));
-        }
-
-        // Replace the endpoint with receive-specialty-parameters
-        $remoteUrl = str_replace('download-application-data', 'receive-specialty-parameters', $remoteUrl);
-
-        try {
-            $client = HttpClient::create([
-                'verify_peer' => false,
-                'verify_host' => false
-            ]);
-
-            // Send HMAC authentication headers and POST data
-            $response = $client->request('POST', $remoteUrl, [
-                'headers' => [
-                    'X-HMAC' => $hmac,
-                    'X-Timestamp' => $timestamp,
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => [
-                    'specialtyParameters' => $specialtyParameters
-                ]
-            ]);
-
-            $statusCode = $response->getStatusCode();
-            $data = $response->toArray();
-
-            if ($statusCode === 200 && $data['success']) {
-                $logger->notice('transferSpecialtyParametersAction: Successfully transferred ' . count($specialtyParameters) . ' specialties');
-                $this->addFlash('notice', 'Successfully transferred specialty parameters to HUB. Updated: ' . ($data['updated'] ?? 0));
-            } else {
-                $logger->warning('transferSpecialtyParametersAction: Remote server error: ' . ($data['message'] ?? 'Unknown error'));
-                $this->addFlash('warning', 'Failed to transfer parameters: ' . ($data['message'] ?? 'Unknown error'));
-            }
-
-        } catch (\Exception $e) {
-            $logger->error('transferSpecialtyParametersAction: Exception: ' . $e->getMessage());
-            $this->addFlash('error', 'Error transferring parameters: ' . $e->getMessage());
+        if ($result['success']) {
+            $logger->notice('transferSpecialtyParametersAction: ' . $result['message']);
+            $this->addFlash('notice', $result['message']);
+        } else {
+            $logger->warning('transferSpecialtyParametersAction: ' . $result['message']);
+            $this->addFlash('warning', $result['message']);
         }
 
         return $this->redirect($this->generateUrl('fellapp_home'));

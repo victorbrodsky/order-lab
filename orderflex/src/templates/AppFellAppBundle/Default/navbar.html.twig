@@ -219,7 +219,12 @@
                                 <li><a href="{{ path(fellapp_sitename~'_authorized_users') }}">Authorized Users</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_import_populate') }}">Check for new applications now</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_import_populate_letters') }}">Check for new recommendation letters now</a></li>
-                                <li><a href="{{ path(fellapp_sitename~'_list_institutions_api_hash_key') }}">List institutions with api hash key</a></li>
+
+                                {% if not fellapp_util.isHubServer() %}
+                                    <li><a href="{{ path(fellapp_sitename~'_transfer_to_hub') }}">Transfer parameters to HUB</a></li>
+                                {% endif %}
+
+                                <li><a href="{{ path(fellapp_sitename~'_list_institutions_api_key') }}">List institutions with api keys</a></li>
                                 <li><a href="{{ path(fellapp_sitename~'_logger') }}">Event Log</a></li>
 
                                 <li class="divider"></li>

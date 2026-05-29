@@ -24,50 +24,11 @@
 
 namespace App\FellAppBundle\Util;
 
-use App\UserdirectoryBundle\Entity\EmploymentType; //process.py script: replaced namespace by ::class: added use line for classname=EmploymentType
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
-use App\UserdirectoryBundle\Entity\LocationTypeList; //process.py script: replaced namespace by ::class: added use line for classname=LocationTypeList
-use App\FellAppBundle\Entity\FellAppStatus; //process.py script: replaced namespace by ::class: added use line for classname=FellAppStatus
-use App\UserdirectoryBundle\Entity\TrainingTypeList; //process.py script: replaced namespace by ::class: added use line for classname=TrainingTypeList
-use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced namespace by ::class: added use line for classname=EventTypeList
-use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
-
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
-use App\FellAppBundle\Entity\DataFile;
-use App\FellAppBundle\Entity\Interview;
-use App\UserdirectoryBundle\Entity\AccessRequest;
-use App\UserdirectoryBundle\Entity\BoardCertification;
-use App\UserdirectoryBundle\Entity\Citizenship;
-use App\UserdirectoryBundle\Entity\Document;
-use App\UserdirectoryBundle\Entity\EmploymentStatus;
-use App\UserdirectoryBundle\Entity\Examination;
-use App\FellAppBundle\Entity\FellowshipApplication;
-use App\UserdirectoryBundle\Entity\GeoLocation;
-use App\UserdirectoryBundle\Entity\JobTitleList;
-use App\UserdirectoryBundle\Entity\Location;
-use App\FellAppBundle\Entity\Reference;
-use App\UserdirectoryBundle\Entity\StateLicense;
-use App\UserdirectoryBundle\Entity\Training;
-use App\UserdirectoryBundle\Entity\User;
-use App\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
-use App\UserdirectoryBundle\Util\EmailUtil;
-use App\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpClient\HttpClient;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-
-
-//$fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
 class FellAppTransferToHubUtil {
 
@@ -75,26 +36,135 @@ class FellAppTransferToHubUtil {
     protected $container;
 
     protected $uploadDir;
-    //protected $systemEmail;
-
 
     public function __construct(
         EntityManagerInterface $em,
         ContainerInterface $container
     ) {
-
         $this->em = $em;
         $this->container = $container;
-
         $this->uploadDir = 'Uploaded';
     }
 
+    /**
+     * Transfer specialty parameters from FellowshipSubspecialty (local) to GlobalFellowshipSpecialty (HUB)
+     * Uses HMAC authentication for secure API communication
+     * 
+     * @return array Result with 'success', 'message', and 'updated' keys
+     */
     public function transferParametersToHub() {
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
         $em = $this->em;
 
-        
+        // Get API connection key for HMAC authentication
+        $apiConnectionKey = $userSecUtil->getSiteSettingParameter(
+            'apiConnectionKey',
+            $this->container->getParameter('fellapp.sitename')
+        );
+
+        if( !$apiConnectionKey ) {
+            $logger->warning('transferParametersToHub: apiConnectionKey is not defined');
+            return [
+                'success' => false,
+                'message' => 'API Connection Key is not defined in Site Parameters.',
+                'updated' => 0
+            ];
+        }
+
+        $apiHashConnectionKey = hash('sha256', $apiConnectionKey);
+
+        // Generate HMAC for authentication
+        $timestamp = time();
+        $hmac = hash_hmac('sha256', 'fellapp-api:' . $timestamp, $apiHashConnectionKey);
+        $logger->notice('transferParametersToHub: $hmac='.$hmac);
+
+        // Get all FellowshipSubspecialty entities with parameters set
+        $fellowshipSubspecialties = $em->getRepository(FellowshipSubspecialty::class)->findAll();
+
+        // Build parameters array
+        $specialtyParameters = [];
+        foreach ($fellowshipSubspecialties as $subspecialty) {
+            // Get institution and name for matching on remote server
+            $institution = $subspecialty->getInstitution();
+            $institutionId = $institution ? $institution->getId() : null;
+            $institutionName = $institution ? $institution->getName() : null;
+
+            $specialtyParameters[] = [
+                'id' => $subspecialty->getId(),
+                'name' => $subspecialty->getName(),
+                'institutionId' => $institutionId,
+                'institutionName' => $institutionName,
+                'duration' => $subspecialty->getDuration(),
+                'submissionStart' => $subspecialty->getSubmissionStart() ? $subspecialty->getSubmissionStart()->format('Y-m-d') : null,
+                'submissionEnd' => $subspecialty->getSubmissionEnd() ? $subspecialty->getSubmissionEnd()->format('Y-m-d') : null,
+                'acceptingApplication' => $subspecialty->getAcceptingApplication()
+            ];
+        }
+
+        // Get remote URL
+        $remoteUrl = $userSecUtil->getSiteSettingParameter(
+            'hubServerApiUrl',
+            $this->container->getParameter('fellapp.sitename')
+        );
+
+        if( !$remoteUrl ) {
+            $logger->warning('transferParametersToHub: hubServerApiUrl is not defined');
+            return [
+                'success' => false,
+                'message' => 'Hub Server API URL is not defined in Site Parameters.',
+                'updated' => 0
+            ];
+        }
+
+        // Replace the endpoint with receive-specialty-parameters
+        $remoteUrl = str_replace('download-application-data', 'receive-specialty-parameters', $remoteUrl);
+
+        try {
+            $client = HttpClient::create([
+                'verify_peer' => false,
+                'verify_host' => false
+            ]);
+
+            // Send HMAC authentication headers and POST data
+            $response = $client->request('POST', $remoteUrl, [
+                'headers' => [
+                    'X-HMAC' => $hmac,
+                    'X-Timestamp' => $timestamp,
+                    'Content-Type' => 'application/json'
+                ],
+                'json' => [
+                    'specialtyParameters' => $specialtyParameters
+                ]
+            ]);
+
+            $statusCode = $response->getStatusCode();
+            $data = $response->toArray();
+
+            if ($statusCode === 200 && $data['success']) {
+                $logger->notice('transferParametersToHub: Successfully transferred ' . count($specialtyParameters) . ' specialties');
+                return [
+                    'success' => true,
+                    'message' => 'Successfully transferred specialty parameters to HUB. Updated: ' . ($data['updated'] ?? 0),
+                    'updated' => $data['updated'] ?? 0
+                ];
+            } else {
+                $logger->warning('transferParametersToHub: Remote server error: ' . ($data['message'] ?? 'Unknown error'));
+                return [
+                    'success' => false,
+                    'message' => 'Failed to transfer parameters: ' . ($data['message'] ?? 'Unknown error'),
+                    'updated' => 0
+                ];
+            }
+
+        } catch (\Exception $e) {
+            $logger->error('transferParametersToHub: Exception: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error transferring parameters: ' . $e->getMessage(),
+                'updated' => 0
+            ];
+        }
     }
     
 } 

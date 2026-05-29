@@ -3136,8 +3136,8 @@ class FellAppController extends OrderAbstractController {
     /**
      * List institutions with api hash key
      */
-    #[Route(path: '/list-institutions-api-hash-key', name: 'fellapp_list_institutions_api_hash_key')]
-    public function listInstitutionsApiHashKeyAction(Request $request) {
+    #[Route(path: '/list-institutions-api-key', name: 'fellapp_list_institutions_api_key')]
+    public function listInstitutionsApiKeyAction(Request $request) {
 
         if( false == $this->isGranted('ROLE_FELLAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
@@ -3145,22 +3145,39 @@ class FellAppController extends OrderAbstractController {
 
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
 
-        $institutions = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey($getInstitutions=true);
-        $institutionList = [];
-        foreach($institutions as $institution) {
+        $hashkeyInstitutions = $fellappImportPopulateHubUtil->getInstitutionApiHashConnectionKey($getInstitutions=true);
+        //exit('listInstitutionsApiKeyAction: $hashkeyInstitutions count='.count($hashkeyInstitutions));
+        $hashkeyInstitutionList = [];
+        foreach($hashkeyInstitutions as $institution) {
             //echo "institution=".$institution->getTreeName()."<br>";
-            $institutionList[] = "ID ".$institution->getId().": ".$institution->getTreeName();
+            $hashkeyInstitutionList[] = "ID ".$institution->getId().": ".$institution->getTreeName();
+        }
+        $hashkeyInstitutionListStr = "No institutions found with api HASH key";
+        if( count($hashkeyInstitutionList) > 0 ) {
+            $hashkeyInstitutionListStr = implode('<br>', $hashkeyInstitutionList);
         }
         //exit('Institutions with api hash key');
 
-        $institutionListStr = "No institutions found with api hash key";
-        if( count($institutionList) > 0 ) {
-            $institutionListStr = implode('<br>', $institutionList);
+        $connkeyInstitutions = $fellappImportPopulateHubUtil->getInstitutionApiConnectionKey($getInstitutions=true);
+        //exit('listInstitutionsApiKeyAction: $connkeyInstitutions count='.count($connkeyInstitutions));
+        $connkeyInstitutionList = [];
+        foreach($connkeyInstitutions as $institution) {
+            //echo "institution=".$institution->getTreeName()."<br>";
+            $connkeyInstitutionList[] = "ID ".$institution->getId().": ".$institution->getTreeName();
+        }
+        $connkeyInstitutionListStr = "No institutions found with api connection key";
+        if( count($connkeyInstitutionList) > 0 ) {
+            $connkeyInstitutionListStr = implode('<br>', $connkeyInstitutionList);
         }
 
         $this->addFlash(
             'notice',
-            $institutionListStr
+            "Institutions with api connection key:<br>".$connkeyInstitutionListStr
+        );
+
+        $this->addFlash(
+            'notice',
+            "Institutions with api HASH key:<br>".$hashkeyInstitutionListStr
         );
 
         return $this->redirect( $this->generateUrl('fellapp_home') );
