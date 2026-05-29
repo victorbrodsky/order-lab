@@ -3976,7 +3976,7 @@ class FellAppController extends OrderAbstractController {
         $programSpecialtyEntity = null;
         $programSpecialtyExists = false;
         if( $specialtyId ) {
-            $programSpecialtyEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->find($institutionId);
+            $programSpecialtyEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
             if( $programSpecialtyEntity ) {
                 if( $args['programSpecialty'] ) {
                     foreach ($args['institutions'] as $inst) {
@@ -4037,6 +4037,7 @@ class FellAppController extends OrderAbstractController {
                     "fellowship program are not currently being accepted via this system. ".
                     "Please contact the program coordinator with any questions.";
             }
+            //TODO: get $programInstitutionEntity from $programSpecialtyEntity
             if( $programInstitutionEntity ) {
                 $instDepStr = $programInstitutionEntity->getTreeRootAbbreviationChildName(' - ');
             } else {
