@@ -144,11 +144,13 @@ class FellAppTransferToHubController extends OrderAbstractController
 
             if (!$globalSpecialty) {
                 //$logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty not found for name=' . $params['name']);
-                $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty not found for specialtyHashConnectionKey=' . $params['specialtyHashConnectionKey']);
+                $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty not found for specialtyHashConnectionKey=' .
+                    $params['specialtyHashConnectionKey']);
                 continue;
             }
 
-            $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty found for specialtyHashConnectionKey=' . $params['specialtyHashConnectionKey'] . "!!!");
+            $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty found for specialtyHashConnectionKey=' .
+                $params['specialtyHashConnectionKey'] . "!!!");
 
             // Update parameters
             if (isset($params['duration'])) {
@@ -178,8 +180,11 @@ class FellAppTransferToHubController extends OrderAbstractController
                 }
             } elseif (isset($params['acceptingApplication'])) {
                 // Use provided value if dates are not set
-                $globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
+                //$globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
             }
+
+            //always set acceptingApplication - it will override the dates
+            $globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
 
             $em->persist($globalSpecialty);
             $updated++;
