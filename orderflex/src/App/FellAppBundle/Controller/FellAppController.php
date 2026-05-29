@@ -3994,6 +3994,11 @@ class FellAppController extends OrderAbstractController {
                 'notAcceptMessage',
                 $this->getParameter('fellapp.sitename')
             );
+            if( !$notAcceptMessage ) {
+                $notAcceptMessage = "Applications for fellowship programs are not currently being accepted".
+                    " by [[INSTITUTION]] - [[DEPARTMENT]] via this system. ".
+                    "Please contact the fellowship program coordinators with any questions.";
+            }
             if( $programInstitutionEntity ) {
                 $instDepStr = $programInstitutionEntity->getTreeRootAbbreviationChildName(' - ');
             } else {
@@ -4003,7 +4008,7 @@ class FellAppController extends OrderAbstractController {
             $notAcceptMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptMessage);
             $args['invalidProgram'] = $programInstitutionEntity;
             $args['notAcceptMessage'] = $notAcceptMessage;
-            //echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
+            echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
         }
 //        foreach($args['institutions'] as $ints) {
 //            echo "institution=".$ints->getTreeRootAbbreviationChildName(' - ')."<br>";
