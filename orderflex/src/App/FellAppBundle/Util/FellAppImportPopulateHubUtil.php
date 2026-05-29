@@ -106,7 +106,7 @@ class FellAppImportPopulateHubUtil {
 //            ], 500);
             return [
                 'success' => false,
-                'message' => 'Secret key not configured',
+                'message' => 'Retrieve error: the API Connection Key is not configured for any institution.',
                 'status'  => 500
             ];
         }

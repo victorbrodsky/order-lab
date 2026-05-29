@@ -127,8 +127,12 @@ class FellAppTransferToHubController extends OrderAbstractController
         foreach ($specialtyParameters as $params) {
             // Find GlobalFellowshipSpecialty by name and institution
             $qb = $em->getRepository(GlobalFellowshipSpecialty::class)->createQueryBuilder('g');
-            $qb->where('g.name = :name');
-            $qb->setParameter('name', $params['name']);
+
+            //$qb->where('g.name = :name');
+            //$qb->setParameter('name', $params['name']);
+
+            $qb->where('g.apiHashConnectionKey = :specialtyHashConnectionKey');
+            $qb->setParameter('specialtyHashConnectionKey', $params['specialtyHashConnectionKey']);
 
             if ($params['institutionId']) {
                 $qb->leftJoin('g.institution', 'i');
@@ -139,9 +143,12 @@ class FellAppTransferToHubController extends OrderAbstractController
             $globalSpecialty = $qb->getQuery()->getOneOrNullResult();
 
             if (!$globalSpecialty) {
-                $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty not found for name=' . $params['name']);
+                //$logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty not found for name=' . $params['name']);
+                $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty not found for specialtyHashConnectionKey=' . $params['specialtyHashConnectionKey']);
                 continue;
             }
+
+            $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty found for specialtyHashConnectionKey=' . $params['specialtyHashConnectionKey'] . "!!!");
 
             // Update parameters
             if (isset($params['duration'])) {

@@ -55,17 +55,18 @@ class FellAppTransferToHubUtil {
      */
     public function transferParametersToHub() {
         $userSecUtil = $this->container->get('user_security_utility');
+        $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         $logger = $this->container->get('logger');
         $em = $this->em;
 
         //Get API connection key for HMAC authentication
-        $apiConnectionKey = $this->getInstitutionApiConnectionKey();
+        $apiConnectionKey = $fellappImportPopulateHubUtil->getInstitutionApiConnectionKey();
 
         if( !$apiConnectionKey ) {
             $logger->warning('transferParametersToHub: apiConnectionKey is not defined');
             return [
                 'success' => false,
-                'message' => 'API Connection Key is not defined in Site Parameters.',
+                'message' => 'Transfer error: the API Connection Key is not configured for any institution.',
                 'updated' => 0
             ];
         }
@@ -88,8 +89,15 @@ class FellAppTransferToHubUtil {
             $institutionId = $institution ? $institution->getId() : null;
             $institutionName = $institution ? $institution->getName() : null;
 
+            $specialtyHashConnectionKey = null;
+            $specialtyApiConnectionKey = $subspecialty->getApiConnectionKey();
+            if( $specialtyApiConnectionKey ) {
+                $specialtyHashConnectionKey = hash('sha256', $specialtyApiConnectionKey);
+            }
+
             $specialtyParameters[] = [
                 'id' => $subspecialty->getId(),
+                'specialtyHashConnectionKey' => $specialtyHashConnectionKey,
                 'name' => $subspecialty->getName(),
                 'institutionId' => $institutionId,
                 'institutionName' => $institutionName,
