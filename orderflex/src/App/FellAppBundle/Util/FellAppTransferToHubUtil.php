@@ -49,6 +49,7 @@ class FellAppTransferToHubUtil {
     /**
      * Transfer specialty parameters from FellowshipSubspecialty (local) to GlobalFellowshipSpecialty (HUB)
      * Uses HMAC authentication for secure API communication
+     * Run on Local Server
      * 
      * @return array Result with 'success', 'message', and 'updated' keys
      */
@@ -57,11 +58,8 @@ class FellAppTransferToHubUtil {
         $logger = $this->container->get('logger');
         $em = $this->em;
 
-        // Get API connection key for HMAC authentication
-        $apiConnectionKey = $userSecUtil->getSiteSettingParameter(
-            'apiConnectionKey',
-            $this->container->getParameter('fellapp.sitename')
-        );
+        //Get API connection key for HMAC authentication
+        $apiConnectionKey = $this->getInstitutionApiConnectionKey();
 
         if( !$apiConnectionKey ) {
             $logger->warning('transferParametersToHub: apiConnectionKey is not defined');
