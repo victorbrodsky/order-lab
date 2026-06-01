@@ -1418,7 +1418,8 @@ class FellAppController extends OrderAbstractController {
             'programInstitution' => $programInstitution,
             'programSpecialty' => $programSpecialty,
             'institutions' => $institutions,
-            'specialties' => $fellTypes
+            'fellappTypes' => $fellTypes, //getShowParameters
+            'globalFellappTypes' => $globalFellTypes,
             //'parentFormnodeId' => $parentFormnodeId
         );
     }
@@ -3890,6 +3891,7 @@ class FellAppController extends OrderAbstractController {
             $institutionId = null;
         }
         //echo '$institutionId='.$institutionId.', $specialtyId='.$specialtyId.'<br>';
+        //exit('111');
 
         $applicant = $this->getUser();
         //echo "applicant=".$applicant."<br>";
@@ -3975,18 +3977,32 @@ class FellAppController extends OrderAbstractController {
                 }
             }
         }
+        echo '$institutionExists='.$institutionExists.'<br>';
         $programSpecialtyEntity = null;
         $programSpecialtyExists = false;
         if( $specialtyId ) {
             $programSpecialtyEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
             echo '$programSpecialtyEntity='.$programSpecialtyEntity.'<br>';
             if( $programSpecialtyEntity ) {
-                if( $args['programSpecialty'] ) {
-                    foreach ($args['specialties'] as $specialty) {
-                        if ($specialty->getId() === $args['programSpecialty']->getId()) {
-                            $programSpecialtyExists = true;
-                            break;
-                        }
+                // Check if specialty exists in the dropdown list (could be in 'specialties' or 'globalFellappTypes')
+                //$specialtyList = $args['specialties'] ?? [];
+                ///$globalSpecialtyList = $args['globalFellappTypes'] ?? [];
+                //$allSpecialties = array_merge($specialtyList, $globalSpecialtyList);
+                //echo "specialtyList count=". count($specialtyList) . "<br>";
+                //echo "globalSpecialtyList count=". count($globalSpecialtyList) . "<br>";
+                //echo "allSpecialties count=". count($allSpecialties) . "<br>";
+                $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+                if( $serverRole."" != 'Internet (Hub)' ) {
+                    $specialtyList = $args['fellappTypes'];
+                } else {
+                    $specialtyList = $args['globalFellappTypes'];
+                }
+
+                foreach ($specialtyList as $specialty) {
+                    echo $specialty->getId().' ?= ' . $programSpecialtyEntity->getId() . "<br>";
+                    if ($specialty->getId() === $programSpecialtyEntity->getId()) {
+                        $programSpecialtyExists = true;
+                        break;
                     }
                 }
             }
@@ -4074,8 +4090,9 @@ class FellAppController extends OrderAbstractController {
             echo 'No specialty: $programSpecialtyEntity='.$programSpecialtyEntity.'; $notAcceptProgramMessage='.$notAcceptProgramMessage.'<br>';
         }
 
-        echo 'EOF notAcceptMessage='.$args['notAcceptMessage'].'<br>';
-        echo 'EOF notAcceptProgramMessage='.$args['notAcceptProgramMessage'].'<br>';
+        echo 'EOF notAcceptMessage=['.$args['notAcceptMessage'].']<br>';
+        echo 'EOF notAcceptProgramMessage=['.$args['notAcceptProgramMessage'].']<br>';
+        //exit('222');
 
 //        foreach($args['institutions'] as $ints) {
 //            echo "institution=".$ints->getTreeRootAbbreviationChildName(' - ')."<br>";

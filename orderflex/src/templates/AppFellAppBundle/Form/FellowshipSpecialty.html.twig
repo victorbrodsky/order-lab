@@ -41,7 +41,6 @@
             {# Yellow warning well for invalid/not accepting program #}
             {#{% if invalidProgramSpecialty is defined and invalidProgramSpecialty and notAcceptProgramMessage is defined and notAcceptProgramMessage %}#}
             {% if notAcceptProgramMessage is defined and notAcceptProgramMessage %}
-                show not accept specialty<br>
                 <div id="not-accept-program-message-well" class="alert alert-warning">
                     {#{{ notAcceptProgramMessage|replace({'[[LOCAL INSTITUTION NAME]]': invalidProgramSpecialty})|raw }}#}
                     {{ notAcceptProgramMessage|raw }}
@@ -79,7 +78,7 @@
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-info -->
 
-{% if invalidProgramSpecialty is defined and invalidProgramSpecialty %}
+{% if notAcceptProgramMessage is defined and notAcceptProgramMessage %}
     <script>
         // Wait for jQuery to be available
         document.addEventListener('DOMContentLoaded', function() {
@@ -87,7 +86,7 @@
                 jQuery(function($) {
                     console.log('Hide not accept message for specialty');
                     // Hide the not-accept message when institution or fellowship specialty changes
-                    $('#oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty, #oleg_fellappbundle_fellowshipapplication_globalFellowshipSpecialty').on('change', function() {
+                    $('#oleg_fellappbundle_fellowshipapplication_institution, #oleg_fellappbundle_fellowshipapplication_fellowshipSubspecialty, #oleg_fellappbundle_fellowshipapplication_globalFellowshipSpecialty').on('change', function() {
                         $('#not-accept-program-message-well').fadeOut();
                     });
                 });

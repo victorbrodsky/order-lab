@@ -1569,7 +1569,7 @@ Weill Cornell Medicine
 Pathology and Laboratory Medicine",
 
             "notAcceptMessage" => "Applications for fellowship programs are not currently being accepted ".
-            "by [[INSTITUTION]] - [[DEPARTMENT]] ".
+            "by [[INSTITUTION]] [[DEPARTMENT]] ".
                 "via this system. Please contact the fellowship program coordinators with any questions.",
 
             "notAcceptProgramMessage" => "Applications for the ".

@@ -37,7 +37,6 @@
             {# Yellow warning well for invalid/not accepting program #}
             {#{% if invalidProgram is defined and invalidProgram and notAcceptMessage is defined and notAcceptMessage %}#}
             {% if notAcceptMessage is defined and notAcceptMessage %}
-                show not accept institution<br>
                 <div id="not-accept-message-well" class="alert alert-warning">
                     {#{{ notAcceptMessage|replace({'[[LOCAL INSTITUTION NAME]]': invalidProgram})|raw }}#}
                     {{ notAcceptMessage|raw }}
@@ -58,7 +57,7 @@
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-info -->
 
-{% if invalidProgram is defined and invalidProgram %}
+{% if notAcceptMessage is defined and notAcceptMessage %}
 <script>
     // Wait for jQuery to be available
     document.addEventListener('DOMContentLoaded', function() {
