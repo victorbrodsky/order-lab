@@ -4008,6 +4008,8 @@ class FellAppController extends OrderAbstractController {
 //            $args['notAcceptMessage'] = $notAcceptMessage;
 //            echo '$invalidProgram='.$invalidProgram.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
 //        }
+
+        $args['notAcceptMessage'] = null;
         if( $institutionId && !$institutionExists ) {
             $notAcceptMessage = $userSecUtil->getSiteSettingParameter(
                 'notAcceptMessage',
@@ -4030,6 +4032,7 @@ class FellAppController extends OrderAbstractController {
             echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
         }
 
+        $args['notAcceptProgramMessage'] = null;
         if( $specialtyId && !$programSpecialtyExists ) {
             $notAcceptProgramMessage = $userSecUtil->getSiteSettingParameter(
                 'notAcceptProgramMessage',
@@ -4060,14 +4063,19 @@ class FellAppController extends OrderAbstractController {
                 );
             } else {
                 //$programStr = 'Program';
-                $notAcceptProgramMessage = 'Applications for the specified fellowship program are not currently being accepted via this system.'.
-                "Please contact the program coordinator with any questions.";
+                $notAcceptProgramMessage =
+                    'Applications for the specified fellowship program are not currently '.
+                    'being accepted via this system. '.
+                'Please contact the program coordinator with any questions.';
             }
 
             $args['invalidProgramSpecialty'] = $programSpecialtyEntity;
             $args['notAcceptProgramMessage'] = $notAcceptProgramMessage;
             echo 'No specialty: $programSpecialtyEntity='.$programSpecialtyEntity.'; $notAcceptProgramMessage='.$notAcceptProgramMessage.'<br>';
         }
+
+        echo 'EOF notAcceptMessage='.$args['notAcceptMessage'].'<br>';
+        echo 'EOF notAcceptProgramMessage='.$args['notAcceptProgramMessage'].'<br>';
 
 //        foreach($args['institutions'] as $ints) {
 //            echo "institution=".$ints->getTreeRootAbbreviationChildName(' - ')."<br>";
