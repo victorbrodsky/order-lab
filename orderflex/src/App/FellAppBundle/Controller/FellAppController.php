@@ -1418,6 +1418,7 @@ class FellAppController extends OrderAbstractController {
             'programInstitution' => $programInstitution,
             'programSpecialty' => $programSpecialty,
             'institutions' => $institutions,
+            'specialties' => $fellTypes
             //'parentFormnodeId' => $parentFormnodeId
         );
     }
@@ -3962,6 +3963,7 @@ class FellAppController extends OrderAbstractController {
         $institutionExists = false;
         if( $institutionId ) {
             $programInstitutionEntity = $em->getRepository(Institution::class)->find($institutionId);
+            echo '$programInstitutionEntity='.$programInstitutionEntity.'<br>';
             if( $programInstitutionEntity ) {
                 if( $args['programInstitution'] ) {
                     foreach ($args['institutions'] as $inst) {
@@ -3977,10 +3979,11 @@ class FellAppController extends OrderAbstractController {
         $programSpecialtyExists = false;
         if( $specialtyId ) {
             $programSpecialtyEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
+            echo '$programSpecialtyEntity='.$programSpecialtyEntity.'<br>';
             if( $programSpecialtyEntity ) {
                 if( $args['programSpecialty'] ) {
-                    foreach ($args['institutions'] as $inst) {
-                        if ($inst->getId() === $args['programSpecialty']->getId()) {
+                    foreach ($args['specialties'] as $specialty) {
+                        if ($specialty->getId() === $args['programSpecialty']->getId()) {
                             $programSpecialtyExists = true;
                             break;
                         }
@@ -3988,6 +3991,7 @@ class FellAppController extends OrderAbstractController {
                 }
             }
         }
+        echo '$programSpecialtyExists='.$programSpecialtyExists.'<br>';
 //        if( $specialtyId && $args['programSpecialty'] === null ) {
 //            // Specialty was specified in URL but not found
 //            $invalidProgramSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
@@ -4004,7 +4008,7 @@ class FellAppController extends OrderAbstractController {
 //            $args['notAcceptMessage'] = $notAcceptMessage;
 //            echo '$invalidProgram='.$invalidProgram.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
 //        }
-        if( !$institutionExists ) {
+        if( $institutionId && !$institutionExists ) {
             $notAcceptMessage = $userSecUtil->getSiteSettingParameter(
                 'notAcceptMessage',
                 $this->getParameter('fellapp.sitename')
@@ -4017,46 +4021,52 @@ class FellAppController extends OrderAbstractController {
             if( $programInstitutionEntity ) {
                 $instDepStr = $programInstitutionEntity->getTreeRootAbbreviationChildName(' - ');
             } else {
-                $instDepStr = 'institution';
+                $instDepStr = 'specified institution';
             }
             $notAcceptMessage = str_replace("[[INSTITUTION]] - [[DEPARTMENT]]",$instDepStr,$notAcceptMessage);
             $notAcceptMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptMessage);
             $args['invalidProgram'] = $programInstitutionEntity;
             $args['notAcceptMessage'] = $notAcceptMessage;
-            //echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
+            echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
         }
 
-        if( !$programSpecialtyExists ) {
+        if( $specialtyId && !$programSpecialtyExists ) {
             $notAcceptProgramMessage = $userSecUtil->getSiteSettingParameter(
                 'notAcceptProgramMessage',
                 $this->getParameter('fellapp.sitename')
             );
             if( !$notAcceptProgramMessage ) {
                 $notAcceptProgramMessage = "Applications for the ".
-                    "[[INSTITUTION]] [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
+                    "[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
                     "fellowship program are not currently being accepted via this system. ".
                     "Please contact the program coordinator with any questions.";
             }
             //TODO: get $programInstitutionEntity from $programSpecialtyEntity
-            if( $programInstitutionEntity ) {
-                $instDepStr = $programInstitutionEntity->getTreeRootAbbreviationChildName(' - ');
-            } else {
-                $instDepStr = 'institution';
-            }
-            $notAcceptProgramMessage = str_replace("[[INSTITUTION]] - [[DEPARTMENT]]",$instDepStr,$notAcceptProgramMessage);
-            $notAcceptProgramMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptProgramMessage);
+//            if( $programInstitutionEntity ) {
+//                $instDepStr = $programInstitutionEntity->getTreeRootAbbreviationChildName(' - ');
+//            } else {
+//                $instDepStr = 'Institution';
+//            }
+//            $notAcceptProgramMessage = str_replace("[[INSTITUTION]] - [[DEPARTMENT]]",$instDepStr,$notAcceptProgramMessage);
+//            $notAcceptProgramMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptProgramMessage);
 
             if( $programSpecialtyEntity ) {
-                $programStr = $programSpecialtyEntity->getName();
+                //$programStr = $programSpecialtyEntity->getName();
+                $programStr = $programSpecialtyEntity."";
+                $notAcceptProgramMessage = str_replace(
+                    "[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]]",
+                    $programStr,
+                    $notAcceptProgramMessage
+                );
             } else {
-                $programStr = 'program';
+                //$programStr = 'Program';
+                $notAcceptProgramMessage = 'Applications for the specified fellowship program are not currently being accepted via this system.'.
+                "Please contact the program coordinator with any questions.";
             }
-            $notAcceptProgramMessage = str_replace("[[FELLOWSHIP TYPE]]",$programStr,$notAcceptProgramMessage);
-            $notAcceptProgramMessage = str_replace("[[FELLOWSHIP TYPE]]",$programStr,$notAcceptProgramMessage);
 
             $args['invalidProgramSpecialty'] = $programSpecialtyEntity;
             $args['notAcceptProgramMessage'] = $notAcceptProgramMessage;
-            //echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
+            echo 'No specialty: $programSpecialtyEntity='.$programSpecialtyEntity.'; $notAcceptProgramMessage='.$notAcceptProgramMessage.'<br>';
         }
 
 //        foreach($args['institutions'] as $ints) {
