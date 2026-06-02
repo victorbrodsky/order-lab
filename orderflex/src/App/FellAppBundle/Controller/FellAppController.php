@@ -3896,42 +3896,6 @@ class FellAppController extends OrderAbstractController {
         $applicant = $this->getUser();
         //echo "applicant=".$applicant."<br>";
 
-//        if( 0 && !($applicant instanceof User) ) {
-//            $firewall = 'ldap_fellapp_firewall';
-//            //$userSecUtil = $this->container->get('user_security_utility');
-//            //$user = $userSecUtil->findSystemUser();
-//            //fellapp_public_submitter
-//            $fellappUtil = $this->container->get('fellapp_util');
-//            $user = $fellappUtil->findFellappDefaultUser();
-//            if( $user ) {
-//                //$token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-//                $token = new UsernamePasswordToken($user, $firewall, $user->getRoles());
-//                //$this->container->get('security.token_storage')->setToken($token);
-//                $tokenStorage->setToken($token);
-//                $logger->notice("applyAction: Logged in as ldap_fellapp_firewall=".$user);
-//            } else {
-//                $logger->notice("applyAction: ldap_fellapp_firewall not found");
-//                $this->addFlash(
-//                    'warning',
-//                    "Fellowship public submitter not found. Please contact the system administrator."
-//                );
-//                return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
-//            }
-//        } else {
-//            $logger->notice("applyAction: Token user is valid security user=".$user);
-//        }
-        //testing logout
-        //$security->logout();
-        //$security->logout(false); //This will trigger onLogout event
-        //$this->tokenStorage->setToken(null);
-        //$userSecUtil = $this->container->get('user_security_utility');
-        //$userSecUtil->userLogout(null);
-
-//        if( false == $this->isGranted("create","FellowshipApplication") ){
-//            //exit('no');
-//            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-//        }
-
         if( $applicant && $applicant instanceof User ) {
             // $applicant is the current user
             $logger->notice("applyAction: already logged applicant=".$applicant);
@@ -3953,19 +3917,11 @@ class FellAppController extends OrderAbstractController {
 
         // Check if the specified program exists (for program[]=X URL parameter)
         // If not, show notAcceptMessage with the program info
-//        $invalidProgram = null;
-//        if( $institutionId && $args['programInstitution'] === null ) {
-//            // Institution was specified in URL but not found in allowed list
-//            $invalidProgramInstitution = $em->getRepository(Institution::class)->find($institutionId);
-//            if( $invalidProgramInstitution ) {
-//                $invalidProgram = $invalidProgramInstitution->getTreeRootAbbreviationChildName(' - ');
-//            }
-//        }
         $programInstitutionEntity = null;
         $institutionExists = false;
         if( $institutionId ) {
             $programInstitutionEntity = $em->getRepository(Institution::class)->find($institutionId);
-            echo '$programInstitutionEntity='.$programInstitutionEntity.'<br>';
+            //echo '$programInstitutionEntity='.$programInstitutionEntity.'<br>';
             if( $programInstitutionEntity ) {
                 if( $args['programInstitution'] ) {
                     foreach ($args['institutions'] as $inst) {
@@ -3977,20 +3933,14 @@ class FellAppController extends OrderAbstractController {
                 }
             }
         }
-        echo '$institutionExists='.$institutionExists.'<br>';
+        //echo '$institutionExists='.$institutionExists.'<br>';
         $programSpecialtyEntity = null;
         $programSpecialtyExists = false;
         if( $specialtyId ) {
             $programSpecialtyEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
-            echo '$programSpecialtyEntity='.$programSpecialtyEntity.'<br>';
+            //echo '$programSpecialtyEntity='.$programSpecialtyEntity.'<br>';
             if( $programSpecialtyEntity ) {
                 // Check if specialty exists in the dropdown list (could be in 'specialties' or 'globalFellappTypes')
-                //$specialtyList = $args['specialties'] ?? [];
-                ///$globalSpecialtyList = $args['globalFellappTypes'] ?? [];
-                //$allSpecialties = array_merge($specialtyList, $globalSpecialtyList);
-                //echo "specialtyList count=". count($specialtyList) . "<br>";
-                //echo "globalSpecialtyList count=". count($globalSpecialtyList) . "<br>";
-                //echo "allSpecialties count=". count($allSpecialties) . "<br>";
                 $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
                 if( $serverRole."" != 'Internet (Hub)' ) {
                     $specialtyList = $args['fellappTypes'];
@@ -3999,7 +3949,6 @@ class FellAppController extends OrderAbstractController {
                 }
 
                 foreach ($specialtyList as $specialty) {
-                    //echo $specialty->getId().' ?= ' . $programSpecialtyEntity->getId() . "<br>";
                     if ($specialty->getId() === $programSpecialtyEntity->getId()) {
                         $programSpecialtyExists = true;
                         break;
@@ -4007,23 +3956,6 @@ class FellAppController extends OrderAbstractController {
                 }
             }
         }
-        echo '$programSpecialtyExists='.$programSpecialtyExists.'<br>';
-//        if( $specialtyId && $args['programSpecialty'] === null ) {
-//            // Specialty was specified in URL but not found
-//            $invalidProgramSpecialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
-//            if( $invalidProgramSpecialty ) {
-//                $invalidProgram = $invalidProgramSpecialty->getName();
-//            }
-//        }
-//        if( $invalidProgram ) {
-//            $notAcceptMessage = $userSecUtil->getSiteSettingParameter(
-//                'notAcceptMessage',
-//                $this->getParameter('fellapp.sitename')
-//            );
-//            $args['invalidProgram'] = $invalidProgram;
-//            $args['notAcceptMessage'] = $notAcceptMessage;
-//            echo '$invalidProgram='.$invalidProgram.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
-//        }
 
         $args['notAcceptMessage'] = null;
         if( $institutionId && !$institutionExists ) {
@@ -4045,7 +3977,7 @@ class FellAppController extends OrderAbstractController {
             $notAcceptMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptMessage);
             $args['invalidProgram'] = $programInstitutionEntity;
             $args['notAcceptMessage'] = $notAcceptMessage;
-            echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
+            //echo '$programInstitutionEntity='.$programInstitutionEntity.'; $notAcceptMessage='.$notAcceptMessage.'<br>';
         }
 
         $args['notAcceptProgramMessage'] = null;
@@ -4060,15 +3992,6 @@ class FellAppController extends OrderAbstractController {
                     "fellowship program are not currently being accepted via this system. ".
                     "Please contact the program coordinator with any questions.";
             }
-            //TODO: get $programInstitutionEntity from $programSpecialtyEntity
-//            if( $programInstitutionEntity ) {
-//                $instDepStr = $programInstitutionEntity->getTreeRootAbbreviationChildName(' - ');
-//            } else {
-//                $instDepStr = 'Institution';
-//            }
-//            $notAcceptProgramMessage = str_replace("[[INSTITUTION]] - [[DEPARTMENT]]",$instDepStr,$notAcceptProgramMessage);
-//            $notAcceptProgramMessage = str_replace("[[INSTITUTION]]-[[DEPARTMENT]]",$instDepStr,$notAcceptProgramMessage);
-
             if( $programSpecialtyEntity ) {
                 //$programStr = $programSpecialtyEntity->getName();
                 $programStr = $programSpecialtyEntity."";
@@ -4087,22 +4010,12 @@ class FellAppController extends OrderAbstractController {
 
             $args['invalidProgramSpecialty'] = $programSpecialtyEntity;
             $args['notAcceptProgramMessage'] = $notAcceptProgramMessage;
-            echo 'No specialty: $programSpecialtyEntity='.$programSpecialtyEntity.'; $notAcceptProgramMessage='.$notAcceptProgramMessage.'<br>';
+            //echo 'No specialty: $programSpecialtyEntity='.$programSpecialtyEntity.'; $notAcceptProgramMessage='.$notAcceptProgramMessage.'<br>';
         }
 
-        echo 'EOF notAcceptMessage=['.$args['notAcceptMessage'].']<br>';
-        echo 'EOF notAcceptProgramMessage=['.$args['notAcceptProgramMessage'].']<br>';
+        //echo 'EOF notAcceptMessage=['.$args['notAcceptMessage'].']<br>';
+        //echo 'EOF notAcceptProgramMessage=['.$args['notAcceptProgramMessage'].']<br>';
         //exit('222');
-
-//        foreach($args['institutions'] as $ints) {
-//            echo "institution=".$ints->getTreeRootAbbreviationChildName(' - ')."<br>";
-//        }
-        //echo "institutionId=$institutionId; "."programInstitution=".$args['programInstitution']->getTreeRootAbbreviationChildName(' - ')."<br>";
-        //dump($args['institutions']);
-        //dump($args['programInstitution']);
-        //exit('exit invalidProgram='.$programInstitutionEntity);
-
-        // City data will be fetched via AJAX (PUBLIC_ACCESS for city generic endpoint)
 
         if( count($args) == 0 ) {
             $linkUrl = $this->generateUrl(

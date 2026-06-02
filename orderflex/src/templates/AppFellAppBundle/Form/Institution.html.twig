@@ -34,11 +34,9 @@
     <div id="fellowship-institution" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
-            {# Yellow warning well for invalid/not accepting program #}
-            {#{% if invalidProgram is defined and invalidProgram and notAcceptMessage is defined and notAcceptMessage %}#}
+            {# Yellow warning well for invalid/not accepting institution #}
             {% if notAcceptMessage is defined and notAcceptMessage %}
                 <div id="not-accept-message-well" class="alert alert-warning">
-                    {#{{ notAcceptMessage|replace({'[[LOCAL INSTITUTION NAME]]': invalidProgram})|raw }}#}
                     {{ notAcceptMessage|raw }}
                 </div>
             {% endif %}
@@ -57,21 +55,17 @@
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-info -->
 
-{#{% if notAcceptMessage is defined and notAcceptMessage or notAcceptProgramMessage is defined and notAcceptProgramMessage %}#}
-{#<script>#}
-    {#// Wait for jQuery to be available#}
-    {#document.addEventListener('DOMContentLoaded', function() {#}
-        {#if (typeof jQuery !== 'undefined') {#}
-            {#jQuery(function($) {#}
-                {#console.log('Listener to hide not accept message for institution');#}
-                {#// Hide the not-accept message when institution or fellowship specialty changes#}
-                {#$('#oleg_fellappbundle_fellowshipapplication_institution').on('change', function() {#}
-                    {#console.log('institution changed => clear message');#}
-                    {#$('#not-accept-message-well').fadeOut();#}
-                    {#//$('#not-accept-program-message-well').fadeOut();#}
-                {#});#}
-            {#});#}
-        {#}#}
-    {#});#}
-{#</script>#}
-{#{% endif %}#}
+{% if notAcceptMessage is defined and notAcceptMessage %}
+    <script>
+        // Wait for jQuery to be available
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof jQuery !== 'undefined') {
+                jQuery(function($) {
+                    console.log('Open panel institution');
+                    $('#fellowship-institution').collapse('show');
+                });
+            }
+        });
+    </script>
+{% endif %}
+

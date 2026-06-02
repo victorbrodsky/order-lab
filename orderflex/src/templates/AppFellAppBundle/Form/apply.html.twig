@@ -507,8 +507,6 @@
                 filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
                 //isSyncing = false;
 
-                //$('#not-accept-message-well').fadeOut();
-                //$('#not-accept-program-message-well').fadeOut();
                 fellappCleanNotAcceptMessage();
             }); //inst.on('change'
 
@@ -531,8 +529,6 @@
                 // Update endDate based on specialty duration
                 updateEndDateByDuration(globalId);
 
-                //$('#not-accept-message-well').fadeOut();
-                //$('#not-accept-program-message-well').fadeOut();
                 fellappCleanNotAcceptMessage();
             }); //global.on('change'
 
@@ -551,6 +547,7 @@
             }
         });
 
+        //Clear yellow warning well
         function fellappCleanNotAcceptMessage() {
             $('#not-accept-message-well').fadeOut();
             $('#not-accept-program-message-well').fadeOut();
