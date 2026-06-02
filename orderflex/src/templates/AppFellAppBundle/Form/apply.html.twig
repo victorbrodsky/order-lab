@@ -506,7 +506,11 @@
                 console.log('apply: before calling filterGlobalByInstitution');
                 filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
                 //isSyncing = false;
-            });
+
+                //$('#not-accept-message-well').fadeOut();
+                //$('#not-accept-program-message-well').fadeOut();
+                fellappCleanNotAcceptMessage();
+            }); //inst.on('change'
 
             //console.log('global=',global);
             global.on('change', function(){
@@ -526,7 +530,11 @@
 
                 // Update endDate based on specialty duration
                 updateEndDateByDuration(globalId);
-            });
+
+                //$('#not-accept-message-well').fadeOut();
+                //$('#not-accept-program-message-well').fadeOut();
+                fellappCleanNotAcceptMessage();
+            }); //global.on('change'
 
             var initInst = inst.val();
             var initGlobal = global.val();
@@ -542,6 +550,11 @@
                 filterInstitutionByGlobal(initGlobal, ()=>{syncingInst=false;});
             }
         });
+
+        function fellappCleanNotAcceptMessage() {
+            $('#not-accept-message-well').fadeOut();
+            $('#not-accept-program-message-well').fadeOut();
+        }
 
         function filterGlobalByInstitution(instId, doneCallback) {
             console.log('filter GlobalByInstitution:', 'instId=', instId);

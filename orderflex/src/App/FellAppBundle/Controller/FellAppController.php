@@ -3999,7 +3999,7 @@ class FellAppController extends OrderAbstractController {
                 }
 
                 foreach ($specialtyList as $specialty) {
-                    echo $specialty->getId().' ?= ' . $programSpecialtyEntity->getId() . "<br>";
+                    //echo $specialty->getId().' ?= ' . $programSpecialtyEntity->getId() . "<br>";
                     if ($specialty->getId() === $programSpecialtyEntity->getId()) {
                         $programSpecialtyExists = true;
                         break;
