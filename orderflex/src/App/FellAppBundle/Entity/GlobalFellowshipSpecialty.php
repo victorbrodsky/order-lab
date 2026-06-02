@@ -65,6 +65,12 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     private $interviewers;
 
+    /*
+     * Run by separate cron job, run once a day:
+     * If dates are empty - nothing changed.
+     * If $seasonYearStart not null -> check if current date = $seasonYearStart => enable $acceptingApplication
+     * If $seasonYearEnd not null -> check if current date = $seasonYearEnd => disable $acceptingApplication
+     * */
     /**
      * Application season start date
      */
@@ -112,6 +118,7 @@ class GlobalFellowshipSpecialty extends ListAbstract
     private $screeningMessage;
 
     //Show as an available option on the fellowship application form (“Apply” page)
+    //show it on apply page (on HUB server). Show yellow well if opened by url ?specialty[]=1
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $showOption;
     
@@ -124,17 +131,29 @@ class GlobalFellowshipSpecialty extends ListAbstract
     #[ORM\Column(type: 'integer', nullable: true)]
     private $duration;
 
+    /*
+     * NOT USED. Use $seasonYearStart instead
+     * Run by separate cron job, run once a day:
+     * If dates are empty - nothing changed.
+     * If start date -> check if current date = $submissionStart => enable $acceptingApplication
+     * If end date -> check if current date = $submissionStart => disable $acceptingApplication
+     *
+     * $submissionStart is similar to $seasonYearStart
+     * */
     //Fellowship Application Submission Period Default Start Date: [MM/DD]
     /**
      * Fellowship Application Submission Period Default Start Date: [MM/DD]
      */
+    //NOT USED. Use $seasonYearStart instead
     #[ORM\Column(type: 'date', nullable: true)]
     private $submissionStart;
 
     //Fellowship Application Submission Period Default End Date: [MM/DD]
     /**
+     * NOT USED. Use $seasonYearEnd instead
      * Fellowship Application Submission Period Default End Date: [MM/DD]
      */
+    //NOT USED. Use $seasonYearEnd instead
     #[ORM\Column(type: 'date', nullable: true)]
     private $submissionEnd;
 
@@ -144,7 +163,11 @@ class GlobalFellowshipSpecialty extends ListAbstract
      * "Submission Period Default Start Date / Submission Period Default End Date" field values -
      * if the value is NOT checked - do not accept applications (for example the program was already filled).
      * If the value IS checked and is outside of the submission date range, STILL accept applications.
-     * This way this checkmark can be checked or unchecked for specific programs at any time.
+     * This way this check mark can be checked or unchecked for specific programs at any time.
+     */
+    /*
+     * Show specialty on the list, but on select show yellow well saying '...not accept...'
+     * AND disable 'Submit Applicant' and show tooltip with the same message
      */
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $acceptingApplication;

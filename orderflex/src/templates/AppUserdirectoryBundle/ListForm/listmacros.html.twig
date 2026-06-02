@@ -1308,15 +1308,6 @@
         {{ formmacros.field(form.friendlyname) }}
     {% endif %}
 
-    {% if form.seasonYearStart is defined %}
-        {{ formmacros.dayMonthDate(form.seasonYearStart,cycle) }}
-        {#{{ formmacros.fieldDateLabel(form.seasonYearStart,'datepicker-only-day-month') }}#}
-    {% endif %}
-    {% if form.seasonYearStart is defined %}
-        {{ formmacros.dayMonthDate(form.seasonYearEnd,cycle) }}
-        {#{{ formmacros.fieldDateLabel(form.seasonYearStart,'datepicker-only-day-month') }}#}
-    {% endif %}
-
     {############ ChartList ###############}
     {% if form.accessRoles is defined %}
         <hr>
@@ -1539,12 +1530,22 @@
         {{ formmacros.field(form.duration) }}
     {% endif %}
 
+    {#NOT USED#}
     {% if form.submissionStart is defined %}
         {{ formmacros.fieldDateLabel(form.submissionStart,'allow-future-date') }}
     {% endif %}
-
+    {#NOT USED#}
     {% if form.submissionEnd is defined %}
         {{ formmacros.fieldDateLabel(form.submissionEnd,'allow-future-date') }}
+    {% endif %}
+
+    {% if form.seasonYearStart is defined %}
+        {{ formmacros.dayMonthDate(form.seasonYearStart,cycle) }}
+        {#{{ formmacros.fieldDateLabel(form.seasonYearStart,'datepicker-only-day-month') }}#}
+    {% endif %}
+    {% if form.seasonYearStart is defined %}
+        {{ formmacros.dayMonthDate(form.seasonYearEnd,cycle) }}
+        {#{{ formmacros.fieldDateLabel(form.seasonYearStart,'datepicker-only-day-month') }}#}
     {% endif %}
 
     {% if form.acceptingApplication is defined %}

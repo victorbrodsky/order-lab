@@ -131,6 +131,7 @@ class FellowshipSubspecialty extends ListAbstract
 
     //Fellowship Application Submission Period Default Start Date: [MM/DD]
     /**
+     * NOT USED. Use
      * Fellowship Application Submission Period Default Start Date: [MM/DD]
      */
     #[ORM\Column(type: 'date', nullable: true)]
@@ -149,7 +150,7 @@ class FellowshipSubspecialty extends ListAbstract
      * "Submission Period Default Start Date / Submission Period Default End Date" field values -
      * if the value is NOT checked - do not accept applications (for example the program was already filled).
      * If the value IS checked and is outside of the submission date range, STILL accept applications.
-     * This way this checkmark can be checked or unchecked for specific programs at any time.
+     * This way this check mark can be checked or unchecked for specific programs at any time.
      */
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $acceptingApplication;

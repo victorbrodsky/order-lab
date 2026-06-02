@@ -157,22 +157,22 @@ class FellAppTransferToHubController extends OrderAbstractController
                 $globalSpecialty->setDuration($params['duration']);
             }
 
-            if (isset($params['submissionStart'])) {
-                $submissionStart = $params['submissionStart'] ? new \DateTime($params['submissionStart']) : null;
-                $globalSpecialty->setSubmissionStart($submissionStart);
+            if (isset($params['seasonYearStart'])) {
+                $seasonYearStart = $params['seasonYearStart'] ? new \DateTime($params['seasonYearStart']) : null;
+                $globalSpecialty->setSeasonYearStart($seasonYearStart);
             }
 
-            if (isset($params['submissionEnd'])) {
-                $submissionEnd = $params['submissionEnd'] ? new \DateTime($params['submissionEnd']) : null;
-                $globalSpecialty->setSubmissionEnd($submissionEnd);
+            if (isset($params['seasonYearEnd'])) {
+                $seasonYearEnd = $params['seasonYearEnd'] ? new \DateTime($params['seasonYearEnd']) : null;
+                $globalSpecialty->setSeasonYearEnd($seasonYearEnd);
             }
 
-            // If current date is between submissionStart and submissionEnd, set acceptingApplication to true
-            $submissionStart = $globalSpecialty->getSubmissionStart();
-            $submissionEnd = $globalSpecialty->getSubmissionEnd();
+            // If current date is between seasonYearStart and seasonYearEnd, set acceptingApplication to true
+            $seasonYearStart = $globalSpecialty->getSeasonYearStart();
+            $seasonYearEnd = $globalSpecialty->getSeasonYearEnd();
 
-            if ($submissionStart && $submissionEnd) {
-                if ($currentDate >= $submissionStart && $currentDate <= $submissionEnd) {
+            if ($seasonYearStart && $seasonYearEnd) {
+                if ($currentDate >= $seasonYearStart && $currentDate <= $seasonYearEnd) {
                     $globalSpecialty->setAcceptingApplication(true);
                     $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=true for ' . $params['name']);
                 } else {

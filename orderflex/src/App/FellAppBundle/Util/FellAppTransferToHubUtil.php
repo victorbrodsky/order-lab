@@ -102,8 +102,8 @@ class FellAppTransferToHubUtil {
                 'institutionId' => $institutionId,
                 'institutionName' => $institutionName,
                 'duration' => $subspecialty->getDuration(),
-                'submissionStart' => $subspecialty->getSubmissionStart() ? $subspecialty->getSubmissionStart()->format('Y-m-d') : null,
-                'submissionEnd' => $subspecialty->getSubmissionEnd() ? $subspecialty->getSubmissionEnd()->format('Y-m-d') : null,
+                'seasonYearStart' => $subspecialty->getSeasonYearStart() ? $subspecialty->getSeasonYearStart()->format('Y-m-d') : null,
+                'seasonYearEnd' => $subspecialty->getSeasonYearEnd() ? $subspecialty->getSeasonYearEnd()->format('Y-m-d') : null,
                 'acceptingApplication' => $subspecialty->getAcceptingApplication()
             ];
         }

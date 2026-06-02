@@ -66,9 +66,16 @@
 
         {#entity.id={{ entity.id }}<br>#}
         {% if seasonYear %}
+            {#Choose global or subspecialty according to server role (authServerNetwork)#}
             <div>
+                {% if fellapp_util.isHubServer() %}
+                    {% set routeName = 'globalfellowshipspecialty_edit' %}
+                {% else %}
+                    {% set routeName = 'fellowshipsubspecialtys_edit' %}
+                {% endif %}
             {{ seasonYear }} (<a  class="btn btn-sm" style="padding: 0 !important;"
-                href="{{ path('fellowshipsubspecialtys_edit', { 'id': entity.id}) }}"
+                {#href="{{ path('fellowshipsubspecialtys_edit', { 'id': entity.id}) }}"#}
+                href="{{ path(routeName, { 'id': entity.id}) }}"
                 title="Use the fellowship’s default dates, unless overridden by the specialty’s specific dates"
             >Modify</a>)
             </div>

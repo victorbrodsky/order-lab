@@ -161,6 +161,9 @@ class GenericListType extends AbstractType
         if( strtolower($this->mapper['className']) == strtolower("FellowshipSubspecialty") ) {
             $specialtyName = "fellowship";
         }
+        if( strtolower($this->mapper['className']) == strtolower("GlobalFellowshipSpecialty") ) {
+            $specialtyName = "global fellowship";
+        }
 //        if( strtolower($this->mapper['className']) == strtolower("ResidencySpecialty") ) {
 //            $specialtyName = "residency";
 //        }
@@ -678,23 +681,25 @@ class GenericListType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
 
-            $builder->add('submissionStart', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array(
-                'label'=>'Application submission start date:',
-                'required' => false,
-                'widget' => 'single_text',
-                'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'form-control datepicker'),
-                'html5' => false
-            ));
-
-            $builder->add('submissionEnd', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array(
-                'label'=>'Application submission end date:',
-                'required' => false,
-                'widget' => 'single_text',
-                'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'form-control datepicker'),
-                'html5' => false
-            ));
+            if(0) {
+                //NOT USED. Use $seasonYearStart and $seasonYearEnd instead
+                $builder->add('submissionStart', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array(
+                    'label' => 'Application submission start date:',
+                    'required' => false,
+                    'widget' => 'single_text',
+                    'format' => 'MM/dd/yyyy',
+                    'attr' => array('class' => 'form-control datepicker'),
+                    'html5' => false
+                ));
+                $builder->add('submissionEnd', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array(
+                    'label' => 'Application submission end date:',
+                    'required' => false,
+                    'widget' => 'single_text',
+                    'format' => 'MM/dd/yyyy',
+                    'attr' => array('class' => 'form-control datepicker'),
+                    'html5' => false
+                ));
+            }
 
             //showOption
             $builder->add('acceptingApplication', null, array(

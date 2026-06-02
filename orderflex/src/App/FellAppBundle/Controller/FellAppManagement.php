@@ -76,7 +76,8 @@ class FellAppManagement extends OrderAbstractController {
         //TODO: add fellapp institution to the site settings and use it for fellapp specialties generation OR don't use institution at all
         //$fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
         //$fellowshipTypes = $fellappUtil->getValidFellowshipTypes(true);
-        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork'); //i.e. 'Internet (Hub)'
+        //echo '$serverRole='.$serverRole."<br>";
         if( $fellappUtil->isHubServer() ) {
             $fellowshipTypes = $fellappUtil->getGlobalFellowshipTypesByInstitution($institution=null,$asArray=false); //return as entities
             //echo "globalFellTypes count=".count($fellowshipTypes)."<br>";
