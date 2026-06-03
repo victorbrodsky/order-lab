@@ -165,6 +165,16 @@
                 </td>
             </tr>
             <tr>
+                <td>Transfer fellowship specialty parameters from Local to HUB server. Running on the Local server</td>
+                <td>
+                    {{ user_service_utility.getCronStatus("cron:transfertohub",false)|raw }}
+                </td>
+                <td>
+                    <a general-data-confirm="Are you sure you would like to remove this cron job?"
+                       href="{{ path('user_remove_cron_job', {'cronJobName': 'cron:transfertohub'}) }}">Remove</a>
+                </td>
+            </tr>
+            <tr>
                 <td>Unpaid Invoices Reminder Email cron</td>
                 <td>
                     {{ user_service_utility.getCronStatus("cron:invoice-reminder-emails",false)|raw }}

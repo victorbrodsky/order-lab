@@ -80,16 +80,6 @@ class CronCommand extends Command {
         $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
         //exit('$retrievalMethod='.$retrievalMethod);
         if( trim($retrievalMethod) == 'Dedicated public tandem hub server tenant instance' ) {
-            //exit('111');
-            $fellappTransferToHubUtil = $this->container->get('fellapp_transfer_to_hub_util');
-
-            //transfer parameters to the HUB
-            $result1 = $fellappTransferToHubUtil->transferParametersToHub();
-            $logger->notice("Cron job transfering parameters to the HUB with result=" . $result1);
-
-            $output->writeln($result1);
-            return Command::SUCCESS;
-
             $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
             $response = $fellappImportPopulateHubUtil->retrieveApplicationData(null,$testing=false);
             $result2 = $response['message'];
@@ -99,7 +89,7 @@ class CronCommand extends Command {
             $result3 = $response['message'];
             $logger->notice("Cron job processing FellApp Recommendation Letters from HUB finished with result=" . $result3);
 
-            $result = $result1 . "; " . $result2 . "; " . $result3;
+            $result = $result2 . "; " . $result3;
         } else {
 
             $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');

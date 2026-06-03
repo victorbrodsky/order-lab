@@ -281,6 +281,10 @@ services:
         tags:
             - { name: 'console.command', command: 'cron:importfellapp' }
 
+    App\FellAppBundle\Command\TransferToHubCommand:
+        tags:
+            - { name: 'console.command', command: 'cron:transfertohub' }
+
     App\FellAppBundle\Command\CronDeleteOldSheetCommand:
         tags:
             - { name: 'console.command', command: 'cron:deleteoldsheetfellapp' }

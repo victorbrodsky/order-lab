@@ -9965,6 +9965,7 @@ class AdminController extends OrderAbstractController
             str_contains($cronJobName, 'statustest') ||
             str_contains($cronJobName, 'swift') ||
             str_contains($cronJobName, 'importfellapp') ||
+            str_contains($cronJobName, 'transfertohub') ||
             str_contains($cronJobName, 'verifyimport') ||
             str_contains($cronJobName, 'invoice-reminder-emails') ||
             str_contains($cronJobName, 'expiration-reminder-emails') ||
