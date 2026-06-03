@@ -473,7 +473,7 @@
             return;
         }
 
-        var url = Routing.generate('fellapp-specialty-duration', { id: specialtyId });
+        var url = Routing.generate('fellapp-specialty-parameters', { id: specialtyId });
         $.ajax({
             url: url,
             type: 'GET',
@@ -493,6 +493,11 @@
                     // Subtract 1 day
                     endDate.setDate(endDate.getDate() - 1);
                     $('.fellapp-endDate').datepicker('setDate', endDate);
+                }
+
+                //show response.notacceptingmessage
+                if( response.notacceptingmessage ) {
+                    $('#not-accept-program-message-well').html(response.notacceptingmessage).fadeIn();
                 }
             },
             error: function(xhr, status, error) {
@@ -631,6 +636,9 @@
             $('#form-second-part').fadeIn();
             $('#save-submit-panel').fadeIn();
         }
+
+        //add $notAcceptProgramMessage
+        updateEndDateByDuration(globalId);
     }
     function showScreeningQuestionPanel() {
         $('#fellowship-screening-questions-panel').fadeIn();

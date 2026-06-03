@@ -3936,6 +3936,7 @@ class FellAppController extends OrderAbstractController {
         //echo '$institutionExists='.$institutionExists.'<br>';
         $programSpecialtyEntity = null;
         $programSpecialtyExists = false;
+        //$programSpecialtyAccept = false;
         if( $specialtyId ) {
             $programSpecialtyEntity = $em->getRepository(GlobalFellowshipSpecialty::class)->find($specialtyId);
             //echo '$programSpecialtyEntity='.$programSpecialtyEntity.'<br>';
@@ -3954,6 +3955,10 @@ class FellAppController extends OrderAbstractController {
                         break;
                     }
                 }
+
+//                if( $programSpecialtyExists ) {
+//
+//                }
             }
         }
 
@@ -4153,25 +4158,57 @@ class FellAppController extends OrderAbstractController {
         return $response;
     }
 
-    #[Route(path: '/get-specialty-duration/{id}', name: 'fellapp-specialty-duration', options: ['expose' => true])]
-    public function getSpecialtyDuration($id): JsonResponse
+    #[Route(path: '/get-specialty-parameters/{id}', name: 'fellapp-specialty-parameters', options: ['expose' => true])]
+    public function getSpecialtyParameters($id): JsonResponse
     {
         $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $fellappUtil = $this->container->get('fellapp_util');
+        $specialty = null;
         $duration = null;
+        $acceptingApplication = true;
+        $notAcceptProgramMessage = '';
 
-        // Try GlobalFellowshipSpecialty first
-        $specialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
-        if ($specialty && $specialty->getDuration()) {
-            $duration = $specialty->getDuration();
+//        // Try GlobalFellowshipSpecialty first
+//        $specialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
+//        if ($specialty && $specialty->getDuration()) {
+//            $duration = $specialty->getDuration();
+//        } else {
+//            // Try FellowshipSubspecialty
+//            $specialty = $em->getRepository(FellowshipSubspecialty::class)->find($id);
+//            if ($specialty && $specialty->getDuration()) {
+//                $duration = $specialty->getDuration();
+//            }
+//        }
+
+        //If HUB => GlobalFellowshipSpecialty, FellowshipSubspecialty otherwise
+        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+        if( $serverRole."" == 'Internet (Hub)' ) {
+            $specialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
         } else {
-            // Try FellowshipSubspecialty
             $specialty = $em->getRepository(FellowshipSubspecialty::class)->find($id);
-            if ($specialty && $specialty->getDuration()) {
-                $duration = $specialty->getDuration();
+        }
+
+        if( $specialty ) {
+            $duration = $specialty->getDuration();
+            $acceptingApplication = $specialty->getAcceptingApplication();
+            $showOption = $specialty->getShowOption();
+            if( $acceptingApplication !== true ) {
+                //$acceptingMessage = ''; //notAcceptProgramMessage
+                $notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
+            }
+            if( $showOption !== true ) {
+                $notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
             }
         }
 
-        return new JsonResponse(['duration' => $duration]);
+        return new JsonResponse(
+            [
+                'duration' => $duration,
+                'accepting' => $acceptingApplication,
+                'notacceptingmessage' => $notAcceptProgramMessage
+            ]
+        );
     }
 
     #[Route(path: '/set-notes', name: 'fellapp-set-notes', methods: ['POST'], options: ['expose' => true])]

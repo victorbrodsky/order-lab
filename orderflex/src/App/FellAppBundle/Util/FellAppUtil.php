@@ -4175,6 +4175,37 @@ class FellAppUtil {
         return $this->em->getRepository(FellowshipSubspecialty::class)->find($fellowshipTypeId);
     }
 
+    public function getNotAcceptProgramMessageStr( $specialty ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $notAcceptProgramMessage = $userSecUtil->getSiteSettingParameter(
+            'notAcceptProgramMessage',
+            $this->container->getParameter('fellapp.sitename')
+        );
+        if( !$notAcceptProgramMessage ) {
+            $notAcceptProgramMessage = "Applications for the ".
+                "[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
+                "fellowship program are not currently being accepted via this system. ".
+                "Please contact the program coordinator with any questions.";
+        }
+        if( $specialty ) {
+            //$programStr = $programSpecialtyEntity->getName();
+            $programStr = $specialty."";
+            $notAcceptProgramMessage = str_replace(
+                "[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]]",
+                $programStr,
+                $notAcceptProgramMessage
+            );
+        } else {
+            //$programStr = 'Program';
+            $notAcceptProgramMessage =
+                'Applications for the specified fellowship program are not currently '.
+                'being accepted via this system. '.
+                'Please contact the program coordinator with any questions.';
+        }
+
+        return $notAcceptProgramMessage;
+    }
+
     public function getInterviewInvitationSubject( $fellappId ) {
         if( !$fellappId ) {
             //echo "###getInterviewInvitationSubject return null###<br>";

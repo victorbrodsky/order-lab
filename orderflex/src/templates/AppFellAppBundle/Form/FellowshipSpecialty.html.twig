@@ -39,11 +39,11 @@
         <div class="panel-body">
 
             {# Yellow warning well for invalid/not accepting program #}
-            {% if notAcceptProgramMessage is defined and notAcceptProgramMessage %}
-                <div id="not-accept-program-message-well" class="alert alert-warning">
-                    {{ notAcceptProgramMessage|raw }}
+            {#{% if notAcceptProgramMessage is defined and notAcceptProgramMessage %}#}
+                <div id="not-accept-program-message-well" class="alert alert-warning" style="display:none;">
+                    {#{{ notAcceptProgramMessage|raw }}#}
                 </div>
-            {% endif %}
+            {#{% endif %}#}
 
             <div class="well">
                 {#<label class="col-xs-12 control-label">Applicant:</label>#}
@@ -76,16 +76,16 @@
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-info -->
 
-{% if notAcceptProgramMessage is defined and notAcceptProgramMessage %}
-    <script>
-        // Wait for jQuery to be available
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof jQuery !== 'undefined') {
-                jQuery(function($) {
-                    console.log('Open panel institution');
-                    $('#fellowshipSpecialty').collapse('show');
-                });
-            }
-        });
-    </script>
-{% endif %}
+{#{% if notAcceptProgramMessage is defined and notAcceptProgramMessage %}#}
+    {#<script>#}
+        {#// Wait for jQuery to be available#}
+        {#document.addEventListener('DOMContentLoaded', function() {#}
+            {#if (typeof jQuery !== 'undefined') {#}
+                {#jQuery(function($) {#}
+                    {#console.log('Open panel institution');#}
+                    {#$('#fellowshipSpecialty').collapse('show');#}
+                {#});#}
+            {#}#}
+        {#});#}
+    {#</script>#}
+{#{% endif %}#}

@@ -529,6 +529,9 @@
                 // Update endDate based on specialty duration
                 updateEndDateByDuration(globalId);
 
+                //Check is $acceptingApplication. If $acceptingApplication === false => show yellow message:
+                //Applications for fellowship programs are not currently being accepted
+
                 fellappCleanNotAcceptMessage();
             }); //global.on('change'
 
