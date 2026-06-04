@@ -1420,6 +1420,7 @@ class FellAppController extends OrderAbstractController {
             'institutions' => $institutions,
             'fellappTypes' => $fellTypes, //getShowParameters
             'globalFellappTypes' => $globalFellTypes,
+            'specialtyId' => $specialtyId
             //'parentFormnodeId' => $parentFormnodeId
         );
     }

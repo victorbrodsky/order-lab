@@ -409,30 +409,28 @@
         console.log("route_path="+route_path);
         //TODO: the listeners are executed in here and also on apply page
         //optimize them in one place (here)
-        if(1) {
-            if( route_path != 'fellapp_apply' && route_path != 'fellapp_apply_post' ) {
-                var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
-                var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
-                //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
-                //console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
-                if (fellowshipSubspecialty.length) {
-                    //console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
-                    fellowshipSpecialtyListener(fellowshipSubspecialty);
-                    var initFellowshipSub = fellowshipSubspecialty.val();
-                    if( initFellowshipSub ) {
-                        updateScreeningQuestionsVisibility(initFellowshipSub);
-                    }
+        if( route_path != 'fellapp_apply' && route_path != 'fellapp_apply_post' ) {
+            var fellowshipSubspecialty = $('select.fellapp-fellowshipSubspecialty').first();
+            var globalFellowshipSpecialty = $('select.fellapp-globalFellowshipSpecialty').first();
+            //console.log("1 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+            //console.log("1 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+            if (fellowshipSubspecialty.length) {
+                //console.log("2 fellowshipSubspecialty=", fellowshipSubspecialty.val());
+                fellowshipSpecialtyListener(fellowshipSubspecialty);
+                var initFellowshipSub = fellowshipSubspecialty.val();
+                if( initFellowshipSub ) {
+                    updateScreeningQuestionsVisibility(initFellowshipSub);
                 }
-                if (globalFellowshipSpecialty.length) {
-                    //console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
-                    fellowshipSpecialtyListener(globalFellowshipSpecialty);
-                    var initGlobalFell = globalFellowshipSpecialty.val();
-                    if( initGlobalFell ) {
-                        updateScreeningQuestionsVisibility(initGlobalFell);
-                    }
+            }
+            if (globalFellowshipSpecialty.length) {
+                //console.log("2 globalFellowshipSpecialty=", globalFellowshipSpecialty.val());
+                fellowshipSpecialtyListener(globalFellowshipSpecialty);
+                var initGlobalFell = globalFellowshipSpecialty.val();
+                if( initGlobalFell ) {
+                    updateScreeningQuestionsVisibility(initGlobalFell);
                 }
-            }//route_path != 'fellapp_apply'
-        }
+            }
+        }//route_path != 'fellapp_apply'
         //console.log("after fellowshipSubspecialty");
     }); //document ready
 
@@ -452,6 +450,7 @@
     // Fetch and update endDate based on specialty duration
     function updateEndDateByDuration(specialtyId) {
         console.log('update-EndDateByDuration: specialtyId='+specialtyId);
+        var urlSpecialtyId = $('#specualty_id').val();
         var startDateVal = $('.fellapp-startDate').datepicker('getDate');
         console.log(startDateVal);
         console.log(startDateVal.toISOString().slice(0, 10));
@@ -470,7 +469,10 @@
                 endDate.setDate(endDate.getDate() - 1);
                 $('.fellapp-endDate').datepicker('setDate', endDate);
             }
-            return;
+
+            if( !urlSpecialtyId ) {
+                return;
+            }
         }
 
         var url = Routing.generate('fellapp-specialty-parameters', { id: specialtyId });
