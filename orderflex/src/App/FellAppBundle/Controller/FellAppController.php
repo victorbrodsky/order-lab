@@ -4159,7 +4159,7 @@ class FellAppController extends OrderAbstractController {
     }
 
     #[Route(path: '/get-specialty-parameters/{id}', name: 'fellapp-specialty-parameters', options: ['expose' => true])]
-    public function getSpecialtyParameters($id): JsonResponse
+    public function getSpecialtyParameters( Request $request, $id=null ): JsonResponse
     {
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->container->get('user_security_utility');
@@ -4182,11 +4182,13 @@ class FellAppController extends OrderAbstractController {
 //        }
 
         //If HUB => GlobalFellowshipSpecialty, FellowshipSubspecialty otherwise
-        $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
-        if( $serverRole."" == 'Internet (Hub)' ) {
-            $specialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
-        } else {
-            $specialty = $em->getRepository(FellowshipSubspecialty::class)->find($id);
+        if( $id ) {
+            $serverRole = $userSecUtil->getSiteSettingParameter('authServerNetwork');
+            if ($serverRole . "" == 'Internet (Hub)') {
+                $specialty = $em->getRepository(GlobalFellowshipSpecialty::class)->find($id);
+            } else {
+                $specialty = $em->getRepository(FellowshipSubspecialty::class)->find($id);
+            }
         }
 
         if( $specialty ) {
@@ -4200,6 +4202,8 @@ class FellAppController extends OrderAbstractController {
             if( $showOption !== true ) {
                 $notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
             }
+        } else {
+            $notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
         }
 
         return new JsonResponse(

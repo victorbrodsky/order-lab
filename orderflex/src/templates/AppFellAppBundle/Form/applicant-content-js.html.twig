@@ -470,7 +470,7 @@
                 endDate.setDate(endDate.getDate() - 1);
                 $('.fellapp-endDate').datepicker('setDate', endDate);
             }
-            return;
+            //return;
         }
 
         var url = Routing.generate('fellapp-specialty-parameters', { id: specialtyId });
@@ -497,13 +497,24 @@
 
                 //show response.notacceptingmessage
                 if( response.notacceptingmessage ) {
+                    console.log('updateEndDateByDuration: add response.notacceptingmessage='+response.notacceptingmessage);
                     $('#not-accept-program-message-well').html(response.notacceptingmessage).fadeIn();
+                    $('#fellowshipSpecialty').collapse('show');
+                } else {
+                    console.log('updateEndDateByDuration: clear notacceptingmessage');
+                    $('#not-accept-program-message-well').html('').fadeOut();
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching specialty duration:', error);
             }
         });
+    }
+
+    //Clear yellow warning well
+    function fellappCleanNotAcceptMessage() {
+        $('#not-accept-message-well').fadeOut();
+        $('#not-accept-program-message-well').fadeOut();
     }
 
     //opt constructed in FellowshipApplicationType add('fellowshipSubspecialty'...
