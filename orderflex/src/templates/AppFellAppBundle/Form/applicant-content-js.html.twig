@@ -451,18 +451,18 @@
 
     // Fetch and update endDate based on specialty duration
     function updateEndDateByDuration(specialtyId) {
-        console.log('update EndDateByDuration: specialtyId='+specialtyId);
+        console.log('update-EndDateByDuration: specialtyId='+specialtyId);
         var startDateVal = $('.fellapp-startDate').datepicker('getDate');
         console.log(startDateVal);
         console.log(startDateVal.toISOString().slice(0, 10));
         var durationMonths = 12; //default duration
         if (!startDateVal) {
-            console.log('update EndDateByDuration: return - no startDateVal');
+            console.log('update-EndDateByDuration: return - no startDateVal');
             return;
         }
 
         if (!specialtyId) {
-            console.log('update EndDateByDuration: return - no specialtyId');
+            console.log('update-EndDateByDuration: return - no specialtyId');
             if (startDateVal) {
                 var endDate = new Date(startDateVal);
                 endDate.setMonth(endDate.getMonth() + durationMonths);
@@ -470,7 +470,7 @@
                 endDate.setDate(endDate.getDate() - 1);
                 $('.fellapp-endDate').datepicker('setDate', endDate);
             }
-            //return;
+            return;
         }
 
         var url = Routing.generate('fellapp-specialty-parameters', { id: specialtyId });
@@ -480,12 +480,12 @@
             success: function(response) {
                 if (response.duration) {
                     durationMonths = parseInt(response.duration);
-                    console.log('update EndDateByDuration:  specialty durationMonths='+durationMonths);
+                    console.log('update-EndDateByDuration:  specialty durationMonths='+durationMonths);
                 } else {
-                    console.log('update EndDateByDuration: response.duration is null => use default durationMonths='+durationMonths);
+                    console.log('update-EndDateByDuration: response.duration is null => use default durationMonths='+durationMonths);
                 }
 
-                console.log('update EndDateByDuration: setDate with durationMonths='+durationMonths);
+                console.log('update-EndDateByDuration: setDate with durationMonths='+durationMonths);
                 var startDateVal = $('.fellapp-startDate').datepicker('getDate');
                 if (startDateVal) {
                     var endDate = new Date(startDateVal);
@@ -497,11 +497,11 @@
 
                 //show response.notacceptingmessage
                 if( response.notacceptingmessage ) {
-                    console.log('update EndDateByDuration: add response.notacceptingmessage='+response.notacceptingmessage);
+                    console.log('update-EndDateByDuration: add response.notacceptingmessage='+response.notacceptingmessage);
                     $('#not-accept-program-message-well').html(response.notacceptingmessage).fadeIn();
                     $('#fellowshipSpecialty').collapse('show');
                 } else {
-                    console.log('update EndDateByDuration: clear notacceptingmessage');
+                    console.log('update-EndDateByDuration: clear notacceptingmessage');
                     $('#not-accept-program-message-well').html('').fadeOut();
                 }
             },
@@ -649,7 +649,7 @@
         }
 
         //add $notAcceptProgramMessage
-        //updateEndDateByDuration(globalId);
+        updateEndDateByDuration(globalId);
     }
     function showScreeningQuestionPanel() {
         $('#fellowship-screening-questions-panel').fadeIn();

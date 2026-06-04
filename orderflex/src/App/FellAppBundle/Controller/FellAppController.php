@@ -3842,7 +3842,8 @@ class FellAppController extends OrderAbstractController {
         //If user is logged in and does not have an Applicant role => redirect to a /new page
         //Keep apply page for admin for testing (apply page can be tested on dev if server is a HUB)
         if( $this->isGranted('IS_AUTHENTICATED_FULLY') &&
-            $fellappUtil->hasPublicApplicantRole() === false &&
+            $fellappUtil->hasPublicApplicantRole() === false
+            &&
             $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') === false
         ) {
             return $this->redirect( $this->generateUrl('fellapp_new') );
@@ -4197,7 +4198,7 @@ class FellAppController extends OrderAbstractController {
             $duration = $specialty->getDuration();
             $acceptingApplication = $specialty->getAcceptingApplication();
             $showOption = $specialty->getShowOption();
-            if( $showOption !== true ) {
+            if( $showOption === false ) {
                 //$notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
                 $notAcceptProgramMessage = "Applications for the ".
                     $specialty.
@@ -4205,7 +4206,7 @@ class FellAppController extends OrderAbstractController {
                     "fellowship program are not currently available via this system. ".
                     "Please contact the program coordinator with any questions.";
             }
-            if( !$notAcceptProgramMessage && $acceptingApplication !== true ) {
+            if( !$notAcceptProgramMessage && $acceptingApplication === false ) {
                 //$acceptingMessage = ''; //notAcceptProgramMessage
                 $notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
             }
