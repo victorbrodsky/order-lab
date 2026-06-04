@@ -4099,7 +4099,7 @@ class FellAppUtil {
 
         //HUB -> global
         if( $this->isHubServer() ) {
-            $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
+            $fellappSpecialty = $fellapp->getGlobalFellowshipSpecialty();
         } else {
             $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
         }
