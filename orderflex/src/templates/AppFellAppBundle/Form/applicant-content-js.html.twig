@@ -464,7 +464,7 @@
         }
 
         if (!specialtyId) {
-            console.log('update-EndDateByDuration: return - no specialtyId');
+            console.log('update-EndDateByDuration: no specialtyId');
             if (startDateVal) {
                 var endDate = new Date(startDateVal);
                 endDate.setMonth(endDate.getMonth() + durationMonths);
@@ -473,7 +473,9 @@
                 $('.fellapp-endDate').datepicker('setDate', endDate);
             }
 
+            console.log('update-EndDateByDuration: urlSpecialtyId='+urlSpecialtyId);
             if( !urlSpecialtyId ) {
+                console.log('update-EndDateByDuration: no urlSpecialtyId');
                 $('#not-accept-program-message-well').html('').fadeOut();
                 return;
             }
