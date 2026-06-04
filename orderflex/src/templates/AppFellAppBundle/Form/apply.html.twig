@@ -527,7 +527,10 @@
                 updateScreeningQuestionsVisibility(globalId); //apply working with this (global.on('change')
 
                 // Update endDate based on specialty duration
-                //updateEndDateByDuration(globalId);
+                //processSpecialtyParameters(globalId);
+
+                //add $notAcceptProgramMessage
+                processSpecialtyParameters(globalId);
 
                 //Check is $acceptingApplication. If $acceptingApplication === false => show yellow message:
                 //Applications for fellowship programs are not currently being accepted
