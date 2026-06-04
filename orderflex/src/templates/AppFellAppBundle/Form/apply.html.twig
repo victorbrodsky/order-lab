@@ -507,7 +507,7 @@
                 filterGlobalByInstitution(instId, ()=>{syncingGlobal=false;});
                 //isSyncing = false;
 
-                fellappCleanNotAcceptMessage();
+                //fellappCleanNotAcceptMessage();
             }); //inst.on('change'
 
             //console.log('global=',global);
@@ -527,12 +527,12 @@
                 updateScreeningQuestionsVisibility(globalId); //apply working with this (global.on('change')
 
                 // Update endDate based on specialty duration
-                updateEndDateByDuration(globalId);
+                //updateEndDateByDuration(globalId);
 
                 //Check is $acceptingApplication. If $acceptingApplication === false => show yellow message:
                 //Applications for fellowship programs are not currently being accepted
 
-                fellappCleanNotAcceptMessage();
+                //fellappCleanNotAcceptMessage();
             }); //global.on('change'
 
             var initInst = inst.val();
