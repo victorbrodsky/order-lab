@@ -3993,7 +3993,8 @@ class FellAppController extends OrderAbstractController {
             );
             if( !$notAcceptProgramMessage ) {
                 $notAcceptProgramMessage = "Applications for the ".
-                    "[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
+                    //"[[INSTITUTION DEPARTMENT FELLOWSHIP TYPE]]"." ".
+                    "[[FELLOWSHIP TYPE]]"." ".
                     "fellowship program are not currently being accepted via this system. ".
                     "Please contact the program coordinator with any questions.";
             }
@@ -4001,7 +4002,8 @@ class FellAppController extends OrderAbstractController {
                 //$programStr = $programSpecialtyEntity->getName();
                 $programStr = $programSpecialtyEntity."";
                 $notAcceptProgramMessage = str_replace(
-                    "[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]]",
+                    //"[[INSTITUTION DEPARTMENT FELLOWSHIP TYPE]]",
+                    "[[FELLOWSHIP TYPE]]",
                     $programStr,
                     $notAcceptProgramMessage
                 );
@@ -4195,15 +4197,23 @@ class FellAppController extends OrderAbstractController {
             $duration = $specialty->getDuration();
             $acceptingApplication = $specialty->getAcceptingApplication();
             $showOption = $specialty->getShowOption();
-            if( $acceptingApplication !== true ) {
+            if( $showOption !== true ) {
+                //$notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
+                $notAcceptProgramMessage = "Applications for the ".
+                    $specialty.
+                    //"[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
+                    "fellowship program are not currently available via this system. ".
+                    "Please contact the program coordinator with any questions.";
+            }
+            if( !$notAcceptProgramMessage && $acceptingApplication !== true ) {
                 //$acceptingMessage = ''; //notAcceptProgramMessage
                 $notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
             }
-            if( $showOption !== true ) {
-                $notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
-            }
         } else {
-            $notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
+            //$notAcceptProgramMessage = $fellappUtil->getNotAcceptProgramMessageStr($specialty);
+            $notAcceptProgramMessage = "The specified fellowship specialty ".
+                "is not currently available via this system. ".
+                "Please contact the program coordinator with any questions.";
         }
 
         return new JsonResponse(

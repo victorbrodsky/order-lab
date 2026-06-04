@@ -1573,7 +1573,8 @@ Pathology and Laboratory Medicine",
                 "via this system. Please contact the fellowship program coordinators with any questions.",
 
             "notAcceptProgramMessage" => "Applications for the ".
-                "[[INSTITUTION]] [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
+                //"[[INSTITUTION DEPARTMENT FELLOWSHIP TYPE]]"." ".
+                "[[FELLOWSHIP TYPE]]"." ".
                 "fellowship program are not currently being accepted via this system. ".
                 "Please contact the program coordinator with any questions.",
 

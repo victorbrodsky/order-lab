@@ -4027,7 +4027,6 @@ class FellAppUtil {
         //[[DEPARTMENT]] - Department associated with specific Fellowship Specialty (use 'Local Institution' if empty)
 
         $applicantFullName = $fellapp->getApplicantFullName();
-        $fellappType = $fellapp->getFellowshipSubspecialty()."";
         $startDate = $fellapp->getStartDate();
         if( $startDate ) {
             $startDateStr = $fellapp->getStartDate()->format('Y');
@@ -4098,6 +4097,17 @@ class FellAppUtil {
             $interviewDateStr = $interviewDate->format('m/d/Y'); //MM/DD/YYYY
         }
 
+        //HUB -> global
+        if( $this->isHubServer() ) {
+            $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
+        } else {
+            $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
+        }
+        if( $fellappSpecialty ) {
+            $fellappTypeStr = $fellappSpecialty.""; //the same as $fellappSpecialty->getNameInstitution()
+        }
+
+
         $directorsStr = $this->getProgramDirectorStr($fellapp->getFellowshipSubspecialty(),$str);
 
         $str = str_replace("[[LOCAL INSTITUTION NAME]]",$localInstitutionName,$str);
@@ -4105,7 +4115,7 @@ class FellAppUtil {
         $str = str_replace("[[REFEREE NAME]]",$refereeFullName,$str);
         $str = str_replace("[[SUBMIT REFERENCE URL]]",$submitReferenceUrl,$str);
         $str = str_replace("[[START YEAR]]",$startDateStr,$str);
-        $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappType,$str);
+        $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappTypeStr,$str);
         $str = str_replace("[[INSTITUTION]]",$fellappInstName,$str);
         $str = str_replace("[[DEPARTMENT]]",$fellappDepartmentName,$str);
         $str = str_replace("[[DIRECTOR]]",$directorsStr,$str);
@@ -4183,7 +4193,8 @@ class FellAppUtil {
         );
         if( !$notAcceptProgramMessage ) {
             $notAcceptProgramMessage = "Applications for the ".
-                "[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]] ".
+                //"[[INSTITUTION DEPARTMENT FELLOWSHIP TYPE]]"." ".
+                "[[FELLOWSHIP TYPE]]"." ".
                 "fellowship program are not currently being accepted via this system. ".
                 "Please contact the program coordinator with any questions.";
         }
@@ -4191,16 +4202,15 @@ class FellAppUtil {
             //$programStr = $programSpecialtyEntity->getName();
             $programStr = $specialty."";
             $notAcceptProgramMessage = str_replace(
-                "[[INSTITUTION]] - [[DEPARTMENT]] - [[FELLOWSHIP TYPE]]",
+                //"[[INSTITUTION DEPARTMENT FELLOWSHIP TYPE]]",
+                "[[FELLOWSHIP TYPE]]",
                 $programStr,
                 $notAcceptProgramMessage
             );
         } else {
-            //$programStr = 'Program';
-            $notAcceptProgramMessage =
-                'Applications for the specified fellowship program are not currently '.
-                'being accepted via this system. '.
-                'Please contact the program coordinator with any questions.';
+            $notAcceptProgramMessage = "The specified fellowship specialty ".
+                "is not currently available via this system. ".
+                "Please contact the program coordinator with any questions.";
         }
 
         return $notAcceptProgramMessage;
