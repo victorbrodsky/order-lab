@@ -100,6 +100,7 @@ class FellAppTransferToHubUtil {
             //If dates are empty - nothing changed.
             //If $seasonYearStart not null -> check If today == seasonYearStart => enable accepting applications
             //If $seasonYearEnd not null -> check If today == seasonYearEnd => disable accepting applications
+            $logger->notice('Run process AcceptingApplication on Local Server for ' . $subspecialty->getName());
             $fellappTransferToHubUtil->processAcceptingApplication(
                 $subspecialty,
                 $subspecialty->getSeasonYearStart(),

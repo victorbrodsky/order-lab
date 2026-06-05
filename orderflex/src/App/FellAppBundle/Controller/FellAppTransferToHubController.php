@@ -194,6 +194,7 @@ class FellAppTransferToHubController extends OrderAbstractController
 //                $globalSpecialty->setAcceptingApplication(false);
 //                $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=false for ' . $params['name']);
 //            }
+            $logger->notice('Run process AcceptingApplication on HUB for ' . $globalSpecialty->getName());
             $fellappTransferToHubUtil->processAcceptingApplication($globalSpecialty,$seasonYearStart,$seasonYearEnd);
 
             $em->persist($globalSpecialty);
