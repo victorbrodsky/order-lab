@@ -4103,6 +4103,7 @@ class FellAppUtil {
         } else {
             $fellappSpecialty = $fellapp->getFellowshipSubspecialty();
         }
+        $fellappTypeStr = NULL;
         if( $fellappSpecialty ) {
             $fellappTypeStr = $fellappSpecialty.""; //the same as $fellappSpecialty->getNameInstitution()
         }

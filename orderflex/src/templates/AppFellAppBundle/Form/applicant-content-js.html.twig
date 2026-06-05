@@ -452,19 +452,21 @@
 
     // Fetch and update endDate based on specialty duration. It was updateEndDateByDuration
     function processSpecialtyParameters(specialtyId) {
-        console.log('update-EndDateByDuration: specialtyId='+specialtyId);
+        console.log('process-SpecialtyParameters: specialtyId='+specialtyId);
+        $('#triggerSubmit').prop('disabled', false);
+
         var urlSpecialtyId = $('#specualty_id').val();
         var startDateVal = $('.fellapp-startDate').datepicker('getDate');
         console.log(startDateVal);
         console.log(startDateVal.toISOString().slice(0, 10));
         var durationMonths = 12; //default duration
         if (!startDateVal) {
-            console.log('update-EndDateByDuration: return - no startDateVal');
+            console.log('process-SpecialtyParameters: return - no startDateVal');
             return;
         }
 
         if (!specialtyId) {
-            console.log('update-EndDateByDuration: no specialtyId');
+            console.log('process-SpecialtyParameters: no specialtyId');
             if (startDateVal) {
                 var endDate = new Date(startDateVal);
                 endDate.setMonth(endDate.getMonth() + durationMonths);
@@ -476,9 +478,9 @@
             const params = new URLSearchParams(window.location.search);
             const urlSpecialtyId = params.get('specialty[]');
             console.log("urlSpecialtyId="+urlSpecialtyId); // ["1", "3"]
-            console.log('update-EndDateByDuration: urlSpecialtyId='+urlSpecialtyId);
+            console.log('process-SpecialtyParameters: urlSpecialtyId='+urlSpecialtyId);
             if( !urlSpecialtyId ) {
-                console.log('update-EndDateByDuration: no urlSpecialtyId');
+                console.log('process-SpecialtyParameters: no urlSpecialtyId');
                 $('#not-accept-program-message-well').html('').fadeOut();
                 return;
             }
@@ -491,12 +493,12 @@
             success: function(response) {
                 if (response.duration) {
                     durationMonths = parseInt(response.duration);
-                    console.log('update-EndDateByDuration:  specialty durationMonths='+durationMonths);
+                    console.log('process-SpecialtyParameters:  specialty durationMonths='+durationMonths);
                 } else {
-                    console.log('update-EndDateByDuration: response.duration is null => use default durationMonths='+durationMonths);
+                    console.log('process-SpecialtyParameters: response.duration is null => use default durationMonths='+durationMonths);
                 }
 
-                console.log('update-EndDateByDuration: setDate with durationMonths='+durationMonths);
+                console.log('process-SpecialtyParameters: setDate with durationMonths='+durationMonths);
                 var startDateVal = $('.fellapp-startDate').datepicker('getDate');
                 if (startDateVal) {
                     var endDate = new Date(startDateVal);
@@ -508,11 +510,13 @@
 
                 //show response.notacceptingmessage
                 if( response.notacceptingmessage ) {
-                    console.log('update-EndDateByDuration: add response.notacceptingmessage='+response.notacceptingmessage);
+                    console.log('process-SpecialtyParameters: add response.notacceptingmessage='+response.notacceptingmessage);
                     $('#not-accept-program-message-well').html(response.notacceptingmessage).fadeIn();
-                    //$('#panel-fellowship-specialty').collapse('show');
+                    //$('#panel-fellowship-specialty').collapse('show'); //the js show panel somewhere else (not sure were)
+                    //TODO: disable Submit button
+                    $('#triggerSubmit').prop('disabled', true);
                 } else {
-                    console.log('update-EndDateByDuration: clear notacceptingmessage');
+                    console.log('process-SpecialtyParameters: clear notacceptingmessage');
                     $('#not-accept-program-message-well').html('').fadeOut();
                 }
             },
