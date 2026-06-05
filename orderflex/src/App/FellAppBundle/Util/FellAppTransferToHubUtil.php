@@ -184,7 +184,7 @@ class FellAppTransferToHubUtil {
         }
     }
 
-    public function processAcceptingApplication($globalSpecialty, $seasonYearStart, $seasonYearEnd) {
+    public function processAcceptingApplication($specialty, $seasonYearStart, $seasonYearEnd) {
         //cron runs once per day, it cares about the calendar date, not the time
         //Doctrine’s date type stores only the date, but the timezone can still differ
         //Normalize everything to Y-m-d strings
@@ -195,14 +195,14 @@ class FellAppTransferToHubUtil {
 
         if ($seasonYearStart && $today === $seasonYearStart->format('Y-m-d')) {
             //enableAcceptingApplications();
-            $globalSpecialty->setAcceptingApplication(true);
-            $logger->notice('processAcceptingApplication: Set acceptingApplication=true for ' . $globalSpecialty->getName());
+            $specialty->setAcceptingApplication(true);
+            $logger->notice('process AcceptingApplication: Set acceptingApplication=true for ' . $specialty->getName());
         }
 
         if ($seasonYearEnd && $today === $seasonYearEnd->format('Y-m-d')) {
             //disableAcceptingApplications();
-            $globalSpecialty->setAcceptingApplication(false);
-            $logger->notice('processAcceptingApplication: Set acceptingApplication=false for ' . $globalSpecialty->getName());
+            $specialty->setAcceptingApplication(false);
+            $logger->notice('process AcceptingApplication: Set acceptingApplication=false for ' . $specialty->getName());
         }
     }
     
