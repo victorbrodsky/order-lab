@@ -515,9 +515,11 @@
                     //$('#panel-fellowship-specialty').collapse('show'); //the js show panel somewhere else (not sure were)
                     //TODO: disable Submit button
                     $('#triggerSubmit').prop('disabled', true);
+                    $('#error-box').html(response.notacceptingmessage).show();
                 } else {
                     console.log('process-SpecialtyParameters: clear notacceptingmessage');
                     $('#not-accept-program-message-well').html('').fadeOut();
+                    $('#error-box').empty().hide();
                 }
             },
             error: function(xhr, status, error) {
