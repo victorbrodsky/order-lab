@@ -454,6 +454,7 @@
     function processSpecialtyParameters(specialtyId) {
         console.log('process-SpecialtyParameters: specialtyId='+specialtyId);
         $('#triggerSubmit').prop('disabled', false);
+        $('#error-box').empty().hide();
 
         var urlSpecialtyId = $('#specualty_id').val();
         var startDateVal = $('.fellapp-startDate').datepicker('getDate');
