@@ -305,6 +305,16 @@ class FellAppTransferToHubUtil {
                 $user = $qb->getQuery()->getOneOrNullResult();
             }
 
+            //ERROR:
+            //app.NOTICE: Original exception message=Multiple non-persisted new entities were
+            // found through the given association graph:
+            //   * A new entity was found through
+            // the relationship 'App\FellAppBundle\Entity\GlobalFellowshipSpecialty#coordinators'
+            // that was not configured to cascade persist operations for entity: xxxxx.
+            // To solve this issue: Either explicitly call EntityManager#persist() on this
+            // unknown entity or configure cascade persist this association in the mapping for
+            // example @ManyToOne(..,cascade={"persist"}).
+
             if (1 || $user) {
                 // User exists, add to list
                 $createdUsers[] = $user;
