@@ -169,7 +169,7 @@ class FellAppTransferToHubController extends OrderAbstractController
             }
 
             if (isset($params['acceptingApplication'])) {
-                $logger->notice('Set AcceptingApplication on HUB for ' . $globalSpecialty->getName());
+                $logger->notice('Set AcceptingApplication on HUB to '.$params['acceptingApplication'].' for ' . $globalSpecialty->getName());
                 $globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
             }
 
