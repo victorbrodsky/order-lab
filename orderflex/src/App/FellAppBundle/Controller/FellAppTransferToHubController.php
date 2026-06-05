@@ -49,7 +49,7 @@ class FellAppTransferToHubController extends OrderAbstractController
         return $this->redirect($this->generateUrl('fellapp_home'));
     }
 
-    // Caller Server: Transfer parameters from FellowshipSubspecialty to Remote (HUB) Server
+    // Local Server: Transfer parameters from FellowshipSubspecialty to Remote (HUB) Server
     #[Route(path: '/transfer-specialty-parameters', name: 'fellapp_transfer_specialty_parameters', methods: ['GET'])]
     public function transferSpecialtyParametersAction( Request $request ) {
         $logger = $this->container->get('logger');

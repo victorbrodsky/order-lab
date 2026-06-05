@@ -96,7 +96,7 @@ class FellAppTransferToHubUtil {
                 $specialtyHashConnectionKey = hash('sha256', $specialtyApiConnectionKey);
             }
 
-            //TODO: should the 'acceptingApplication' on the local server to be set the same way as on the HUB server:
+            //Set the 'acceptingApplication' on the local server to be set the same way as on the HUB server:
             //If dates are empty - nothing changed.
             //If $seasonYearStart not null -> check If today == seasonYearStart => enable accepting applications
             //If $seasonYearEnd not null -> check If today == seasonYearEnd => disable accepting applications
@@ -110,6 +110,10 @@ class FellAppTransferToHubUtil {
             if( $processed ) {
                 $em->flush();
             }
+
+            //TODO: J- During each fellowship application download, upload/update/sync
+            // the Director and Coordinators on the Hub (view.online) to make sure
+            // the email notifications implemented in step 1 above are sent to appropriate individuals.
 
             $specialtyParameters[] = [
                 'id' => $subspecialty->getId(),
@@ -214,6 +218,10 @@ class FellAppTransferToHubUtil {
         }
 
         return $processed;
+    }
+
+    public function checkAndCreateNewUsers( $users ) {
+
     }
     
 } 

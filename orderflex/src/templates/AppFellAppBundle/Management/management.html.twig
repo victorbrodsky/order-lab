@@ -42,6 +42,7 @@
     {# entities = $fellowshipTypes #}
     {% for entity in entities %}
 
+        {#$seasonYearStart and $seasonYearEnd#}
         {% set seasonYear = "Set season start/end date" %}
         {#{% set seasonYearStart = entity.getSeasonYearStart() %}#}
         {#{% set seasonYearEnd = entity.getSeasonYearEnd() %}#}
@@ -65,6 +66,15 @@
         </h4>
 
         {#entity.id={{ entity.id }}<br>#}
+        {#Duration#}
+        Fellowship Duration (in months): {{ entity.getDuration() }}<br>
+        Currently Accepting Application:
+        {% if entity.acceptingApplication is same as(true) %}
+            Yes
+        {% else %}
+            No
+        {% endif %}
+        <br>
         {% if seasonYear %}
             {#Choose global or subspecialty according to server role (authServerNetwork)#}
             <div>
@@ -73,7 +83,7 @@
                 {% else %}
                     {% set routeName = 'fellowshipsubspecialtys_edit' %}
                 {% endif %}
-            {{ seasonYear }} (<a  class="btn btn-sm" style="padding: 0 !important;"
+            {{ seasonYear }} (<a  class="btn btn-sm" style="padding: 0 !important;" target="_blank"
                 {#href="{{ path('fellowshipsubspecialtys_edit', { 'id': entity.id}) }}"#}
                 href="{{ path(routeName, { 'id': entity.id}) }}"
                 title="Use the fellowship’s default dates, unless overridden by the specialty’s specific dates"
