@@ -305,7 +305,7 @@ class FellAppTransferToHubUtil {
                 $user = $qb->getQuery()->getOneOrNullResult();
             }
 
-            if ($user) {
+            if (1 || $user) {
                 // User exists, add to list
                 $createdUsers[] = $user;
                 $logger->notice('checkAndCreateNewUsers: Found existing user: ' . $user->getUsername());

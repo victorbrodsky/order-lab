@@ -153,7 +153,7 @@ class FellAppTransferToHubController extends OrderAbstractController
             $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty found for specialtyHashConnectionKey=' .
                 $params['specialtyHashConnectionKey'] . "!!!");
 
-            // Process coordinators - check and create users if they don't exist
+            // Process coordinators - check and create users if they don't exist (Run on Remote Server)
             if (isset($params['coordinators']) && is_array($params['coordinators'])) {
                 $coordinators = $fellappTransferToHubUtil->checkAndCreateNewUsers($params['coordinators']);
                 // Clear existing coordinators and add new ones
@@ -166,7 +166,7 @@ class FellAppTransferToHubController extends OrderAbstractController
                 }
             }
 
-            // Process directors - check and create users if they don't exist
+            // Process directors - check and create users if they don't exist (Run on Remote Server)
             if (isset($params['directors']) && is_array($params['directors'])) {
                 $directors = $fellappTransferToHubUtil->checkAndCreateNewUsers($params['directors']);
                 // Clear existing directors and add new ones
