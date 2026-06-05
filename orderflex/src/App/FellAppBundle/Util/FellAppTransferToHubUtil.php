@@ -56,6 +56,7 @@ class FellAppTransferToHubUtil {
     public function transferParametersToHub() {
         $userSecUtil = $this->container->get('user_security_utility');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        $fellappTransferToHubUtil = $this->container->get('fellapp_transfer_to_hub_util');
         $logger = $this->container->get('logger');
         $em = $this->em;
 
@@ -94,6 +95,16 @@ class FellAppTransferToHubUtil {
             if( $specialtyApiConnectionKey ) {
                 $specialtyHashConnectionKey = hash('sha256', $specialtyApiConnectionKey);
             }
+
+            //TODO: should the 'acceptingApplication' on the local server to be set the same way as on the HUB server:
+            //If dates are empty - nothing changed.
+            //If $seasonYearStart not null -> check If today == seasonYearStart => enable accepting applications
+            //If $seasonYearEnd not null -> check If today == seasonYearEnd => disable accepting applications
+            $fellappTransferToHubUtil->processAcceptingApplication(
+                $subspecialty,
+                $subspecialty->getSeasonYearStart(),
+                $subspecialty->getSeasonYearEnd()
+            );
 
             $specialtyParameters[] = [
                 'id' => $subspecialty->getId(),
@@ -170,6 +181,28 @@ class FellAppTransferToHubUtil {
                 'message' => 'Error transferring parameters: ' . $e->getMessage(),
                 'updated' => 0
             ];
+        }
+    }
+
+    public function processAcceptingApplication($globalSpecialty, $seasonYearStart, $seasonYearEnd) {
+        //cron runs once per day, it cares about the calendar date, not the time
+        //Doctrine’s date type stores only the date, but the timezone can still differ
+        //Normalize everything to Y-m-d strings
+        //Comparing Y-m-d strings is deterministic and avoids subtle bugs
+        //This is clean, safe, and works exactly as intended for whole‑day logic.
+        $logger = $this->container->get('logger');
+        $today = (new \DateTime('today'))->format('Y-m-d');
+
+        if ($seasonYearStart && $today === $seasonYearStart->format('Y-m-d')) {
+            //enableAcceptingApplications();
+            $globalSpecialty->setAcceptingApplication(true);
+            $logger->notice('processAcceptingApplication: Set acceptingApplication=true for ' . $globalSpecialty->getName());
+        }
+
+        if ($seasonYearEnd && $today === $seasonYearEnd->format('Y-m-d')) {
+            //disableAcceptingApplications();
+            $globalSpecialty->setAcceptingApplication(false);
+            $logger->notice('processAcceptingApplication: Set acceptingApplication=false for ' . $globalSpecialty->getName());
         }
     }
     

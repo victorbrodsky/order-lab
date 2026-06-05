@@ -73,6 +73,7 @@ class FellAppTransferToHubController extends OrderAbstractController
     public function receiveSpecialtyParametersAction( Request $request ) {
         $logger = $this->container->get('logger');
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
+        $fellappTransferToHubUtil = $this->container->get('fellapp_transfer_to_hub_util');
         $em = $this->getDoctrine()->getManager();
 
         // Verify HMAC authentication from headers
@@ -182,19 +183,18 @@ class FellAppTransferToHubController extends OrderAbstractController
             //Normalize everything to Y-m-d strings
             //Comparing Y-m-d strings is deterministic and avoids subtle bugs
             //This is clean, safe, and works exactly as intended for whole‑day logic.
-            $today = (new \DateTime('today'))->format('Y-m-d');
-
-            if ($seasonYearStart && $today === $seasonYearStart->format('Y-m-d')) {
-                //enableAcceptingApplications();
-                $globalSpecialty->setAcceptingApplication(true);
-                $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=true for ' . $params['name']);
-            }
-
-            if ($seasonYearEnd && $today === $seasonYearEnd->format('Y-m-d')) {
-                //disableAcceptingApplications();
-                $globalSpecialty->setAcceptingApplication(false);
-                $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=false for ' . $params['name']);
-            }
+//            $today = (new \DateTime('today'))->format('Y-m-d');
+//            if ($seasonYearStart && $today === $seasonYearStart->format('Y-m-d')) {
+//                //enableAcceptingApplications();
+//                $globalSpecialty->setAcceptingApplication(true);
+//                $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=true for ' . $params['name']);
+//            }
+//            if ($seasonYearEnd && $today === $seasonYearEnd->format('Y-m-d')) {
+//                //disableAcceptingApplications();
+//                $globalSpecialty->setAcceptingApplication(false);
+//                $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=false for ' . $params['name']);
+//            }
+            $fellappTransferToHubUtil->processAcceptingApplication($globalSpecialty,$seasonYearStart,$seasonYearEnd);
 
             $em->persist($globalSpecialty);
             $updated++;
