@@ -153,6 +153,32 @@ class FellAppTransferToHubController extends OrderAbstractController
             $logger->notice('receiveSpecialtyParametersAction: GlobalFellowshipSpecialty found for specialtyHashConnectionKey=' .
                 $params['specialtyHashConnectionKey'] . "!!!");
 
+            // Process coordinators - check and create users if they don't exist
+            if (isset($params['coordinators']) && is_array($params['coordinators'])) {
+                $coordinators = $fellappTransferToHubUtil->checkAndCreateNewUsers($params['coordinators']);
+                // Clear existing coordinators and add new ones
+                foreach ($globalSpecialty->getCoordinators() as $existingCoordinator) {
+                    $globalSpecialty->removeCoordinator($existingCoordinator);
+                }
+                foreach ($coordinators as $coordinator) {
+                    $globalSpecialty->addCoordinator($coordinator);
+                    $logger->notice('receiveSpecialtyParametersAction: Added coordinator ' . $coordinator->getUsername() . ' to ' . $globalSpecialty->getName());
+                }
+            }
+
+            // Process directors - check and create users if they don't exist
+            if (isset($params['directors']) && is_array($params['directors'])) {
+                $directors = $fellappTransferToHubUtil->checkAndCreateNewUsers($params['directors']);
+                // Clear existing directors and add new ones
+                foreach ($globalSpecialty->getDirectors() as $existingDirector) {
+                    $globalSpecialty->removeDirector($existingDirector);
+                }
+                foreach ($directors as $director) {
+                    $globalSpecialty->addDirector($director);
+                    $logger->notice('receiveSpecialtyParametersAction: Added director ' . $director->getUsername() . ' to ' . $globalSpecialty->getName());
+                }
+            }
+
             // Update parameters
             if (isset($params['duration'])) {
                 $globalSpecialty->setDuration($params['duration']);

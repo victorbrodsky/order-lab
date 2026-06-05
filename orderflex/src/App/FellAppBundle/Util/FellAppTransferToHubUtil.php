@@ -25,6 +25,7 @@
 namespace App\FellAppBundle\Util;
 
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
+use App\UserdirectoryBundle\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpClient\HttpClient;
@@ -111,9 +112,16 @@ class FellAppTransferToHubUtil {
                 $em->flush();
             }
 
-            //TODO: J- During each fellowship application download, upload/update/sync
-            // the Director and Coordinators on the Hub (view.online) to make sure
-            // the email notifications implemented in step 1 above are sent to appropriate individuals.
+            //Get coordinators and directors for this specialty
+            $coordinators = [];
+            foreach ($subspecialty->getCoordinators() as $coordinator) {
+                $coordinators[] = $this->serializeUser($coordinator);
+            }
+
+            $directors = [];
+            foreach ($subspecialty->getDirectors() as $director) {
+                $directors[] = $this->serializeUser($director);
+            }
 
             $specialtyParameters[] = [
                 'id' => $subspecialty->getId(),
@@ -124,7 +132,9 @@ class FellAppTransferToHubUtil {
                 'duration' => $subspecialty->getDuration(),
                 'seasonYearStart' => $subspecialty->getSeasonYearStart() ? $subspecialty->getSeasonYearStart()->format('Y-m-d') : null,
                 'seasonYearEnd' => $subspecialty->getSeasonYearEnd() ? $subspecialty->getSeasonYearEnd()->format('Y-m-d') : null,
-                'acceptingApplication' => $subspecialty->getAcceptingApplication()
+                'acceptingApplication' => $subspecialty->getAcceptingApplication(),
+                'coordinators' => $coordinators,
+                'directors' => $directors
             ];
         }
 
@@ -220,8 +230,156 @@ class FellAppTransferToHubUtil {
         return $processed;
     }
 
-    public function checkAndCreateNewUsers( $users ) {
+    /**
+     * Serialize user data for transmission to HUB
+     */
+    private function serializeUser($user) {
+        if (!$user) {
+            return null;
+        }
 
+        return [
+            'id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+            'emailCanonical' => $user->getEmailCanonical(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'displayName' => $user->getDisplayName(),
+            'primaryPublicUserId' => $user->getPrimaryPublicUserId(),
+            'keytype' => $user->getKeytype() ? $user->getKeytype()->getName() : null
+        ];
     }
-    
+
+    /**
+     * Check if users exist on HUB server and create them if they don't exist
+     * Returns array of created/found users
+     *
+     * @param array $usersData - Array of serialized user data from remote server
+     * @return array - Array of User entities
+     */
+    public function checkAndCreateNewUsers($usersData) {
+        $em = $this->em;
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userManager = $this->container->get('user_manager');
+        $userGenerator = $this->container->get('user_generator');
+
+        $createdUsers = [];
+
+        foreach ($usersData as $userData) {
+            if (!$userData) {
+                continue;
+            }
+
+            $user = null;
+
+            // Try to find user by username
+            if (!empty($userData['username'])) {
+                $user = $em->getRepository(User::class)->findOneByUsername($userData['username']);
+            }
+
+            // Try to find user by email if not found by username
+            if (!$user && !empty($userData['email'])) {
+                $user = $em->getRepository(User::class)->createQueryBuilder('u')
+                    ->leftJoin('u.infos', 'info')
+                    ->where('info.email = :email OR info.emailCanonical = :emailCanonical')
+                    ->setParameter('email', $userData['email'])
+                    ->setParameter('emailCanonical', $userData['emailCanonical'] ?? $userData['email'])
+                    ->getQuery()
+                    ->getOneOrNullResult();
+            }
+
+            // Try to find user by primaryPublicUserId and keytype
+            if (!$user && !empty($userData['primaryPublicUserId'])) {
+                $qb = $em->getRepository(User::class)->createQueryBuilder('u')
+                    ->where('u.primaryPublicUserId = :primaryPublicUserId')
+                    ->setParameter('primaryPublicUserId', $userData['primaryPublicUserId']);
+
+                if (!empty($userData['keytype'])) {
+                    $qb->leftJoin('u.keytype', 'kt')
+                        ->andWhere('kt.name = :keytype')
+                        ->setParameter('keytype', $userData['keytype']);
+                }
+
+                $user = $qb->getQuery()->getOneOrNullResult();
+            }
+
+            if ($user) {
+                // User exists, add to list
+                $createdUsers[] = $user;
+                $logger->notice('checkAndCreateNewUsers: Found existing user: ' . $user->getUsername());
+            } else {
+                // Create new user
+                try {
+                    $author = $userSecUtil->findSystemUser();
+                    $default_time_zone = $this->container->getParameter('default_time_zone');
+
+                    $user = $userManager->createUser();
+
+                    // Set keytype if provided
+                    if (!empty($userData['keytype'])) {
+                        $userkeytype = $userSecUtil->getUsernameTypeByName($userData['keytype']);
+                        if ($userkeytype) {
+                            $user->setKeytype($userkeytype);
+                        }
+                    }
+
+                    // Set primary public user id
+                    if (!empty($userData['primaryPublicUserId'])) {
+                        $user->setPrimaryPublicUserId($userData['primaryPublicUserId']);
+                    } elseif (!empty($userData['username'])) {
+                        // Extract primaryPublicUserId from username (remove keytype suffix if exists)
+                        $usernameParts = explode('_@_', $userData['username']);
+                        $user->setPrimaryPublicUserId($usernameParts[0]);
+                    }
+
+                    // Generate unique username
+                    $user->setUniqueUsername();
+
+                    // Set user info
+                    if (!empty($userData['firstName'])) {
+                        $user->setFirstName($userData['firstName']);
+                    }
+                    if (!empty($userData['lastName'])) {
+                        $user->setLastName($userData['lastName']);
+                    }
+                    if (!empty($userData['displayName'])) {
+                        $user->setDisplayName($userData['displayName']);
+                    }
+                    if (!empty($userData['email'])) {
+                        $user->setEmail($userData['email']);
+                        $user->setEmailCanonical($userData['emailCanonical'] ?? $userData['email']);
+                    }
+
+                    $user->setEnabled(true);
+                    $user->getPreferences()->setTimezone($default_time_zone);
+                    $user->setPassword("");
+
+                    // Set salt
+                    $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+                    $user->setSalt($salt);
+
+                    $user->setAuthor($author);
+                    $user->setCreateDate(new \DateTime());
+                    $user->setCreatedby('hub_sync');
+
+                    // Add default locations
+                    $userGenerator->addDefaultLocations($user, $author);
+
+                    //$em->persist($user); //testing
+                    //$em->flush();
+
+                    $createdUsers[] = $user;
+                    $logger->notice('checkAndCreateNewUsers: Created new user: ' . $user->getUsername());
+
+                } catch (\Exception $e) {
+                    $logger->error('checkAndCreateNewUsers: Error creating user: ' . $e->getMessage());
+                }
+            }
+        }
+
+        return $createdUsers;
+    }
+
 } 
