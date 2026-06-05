@@ -101,11 +101,14 @@ class FellAppTransferToHubUtil {
             //If $seasonYearStart not null -> check If today == seasonYearStart => enable accepting applications
             //If $seasonYearEnd not null -> check If today == seasonYearEnd => disable accepting applications
             $logger->notice('Run process AcceptingApplication on Local Server for ' . $subspecialty->getName());
-            $fellappTransferToHubUtil->processAcceptingApplication(
+            $processed = $fellappTransferToHubUtil->processAcceptingApplication(
                 $subspecialty,
                 $subspecialty->getSeasonYearStart(),
                 $subspecialty->getSeasonYearEnd()
             );
+            if( $processed ) {
+                $em->flush();
+            }
 
             $specialtyParameters[] = [
                 'id' => $subspecialty->getId(),
@@ -192,19 +195,24 @@ class FellAppTransferToHubUtil {
         //Comparing Y-m-d strings is deterministic and avoids subtle bugs
         //This is clean, safe, and works exactly as intended for whole‑day logic.
         $logger = $this->container->get('logger');
+        $processed = false;
         $today = (new \DateTime('today'))->format('Y-m-d');
 
         if ($seasonYearStart && $today === $seasonYearStart->format('Y-m-d')) {
             //enableAcceptingApplications();
             $specialty->setAcceptingApplication(true);
+            $processed = true;
             $logger->notice('process AcceptingApplication: Set acceptingApplication=true for ' . $specialty->getName());
         }
 
         if ($seasonYearEnd && $today === $seasonYearEnd->format('Y-m-d')) {
             //disableAcceptingApplications();
             $specialty->setAcceptingApplication(false);
+            $processed = true;
             $logger->notice('process AcceptingApplication: Set acceptingApplication=false for ' . $specialty->getName());
         }
+
+        return $processed;
     }
     
 } 
