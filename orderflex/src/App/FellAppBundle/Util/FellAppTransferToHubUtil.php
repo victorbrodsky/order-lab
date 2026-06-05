@@ -319,7 +319,7 @@ class FellAppTransferToHubUtil {
 
                     // Set keytype if provided
                     if (!empty($userData['keytype'])) {
-                        $userkeytype = $userSecUtil->getUsernameTypeByName($userData['keytype']);
+                        $userkeytype = $userSecUtil->getUsernameType($userData['keytype']);
                         if ($userkeytype) {
                             $user->setKeytype($userkeytype);
                         }
