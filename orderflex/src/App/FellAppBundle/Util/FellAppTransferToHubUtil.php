@@ -308,7 +308,7 @@ class FellAppTransferToHubUtil {
             if (1 || $user) {
                 // User exists, add to list
                 $createdUsers[] = $user;
-                $logger->notice('checkAndCreateNewUsers: Found existing user: ' . $user->getUsername());
+                $logger->notice('checkAndCreateNewUsers: Found existing user: ' . $user);
             } else {
                 // Create new user
                 try {
