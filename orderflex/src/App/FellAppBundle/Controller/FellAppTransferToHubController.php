@@ -156,23 +156,33 @@ class FellAppTransferToHubController extends OrderAbstractController
             // Update parameters
             if (isset($params['duration'])) {
                 $globalSpecialty->setDuration($params['duration']);
+            } else {
+                $globalSpecialty->setDuration(null);
             }
 
             if (isset($params['seasonYearStart'])) {
                 $seasonYearStart = $params['seasonYearStart'] ? new \DateTime($params['seasonYearStart']) : null;
                 $globalSpecialty->setSeasonYearStart($seasonYearStart);
                 $logger->notice('Set seasonYearStart to '.$params['seasonYearStart']);
+            } else {
+                $globalSpecialty->setSeasonYearStart(null);
+                $logger->notice('Set seasonYearStart to NULL');
             }
 
             if (isset($params['seasonYearEnd'])) {
                 $seasonYearEnd = $params['seasonYearEnd'] ? new \DateTime($params['seasonYearEnd']) : null;
                 $globalSpecialty->setSeasonYearEnd($seasonYearEnd);
                 $logger->notice('Set setSeasonYearEnd to '.$params['seasonYearEnd']);
+            } else {
+                $globalSpecialty->setSeasonYearEnd(null);
+                $logger->notice('Set setSeasonYearEnd to NULL');
             }
 
             if (isset($params['acceptingApplication'])) {
                 $logger->notice('Set AcceptingApplication on HUB to '.$params['acceptingApplication'].' for ' . $globalSpecialty->getName());
                 $globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
+            } else {
+                $globalSpecialty->setAcceptingApplication(false);
             }
 
             //If dates are empty - nothing changed.
