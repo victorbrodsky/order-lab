@@ -167,25 +167,34 @@ class FellAppTransferToHubController extends OrderAbstractController
                 $globalSpecialty->setSeasonYearEnd($seasonYearEnd);
             }
 
-            // If current date is between seasonYearStart and seasonYearEnd, set acceptingApplication to true
+            if (isset($params['acceptingApplication'])) {
+                $globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
+            }
+
+            //If dates are empty - nothing changed.
+            //If $seasonYearStart not null -> check If today == seasonYearStart => enable accepting applications
+            //If $seasonYearEnd not null -> check If today == seasonYearEnd => disable accepting applications
             $seasonYearStart = $globalSpecialty->getSeasonYearStart();
             $seasonYearEnd = $globalSpecialty->getSeasonYearEnd();
 
-            if ($seasonYearStart && $seasonYearEnd) {
-                if ($currentDate >= $seasonYearStart && $currentDate <= $seasonYearEnd) {
-                    $globalSpecialty->setAcceptingApplication(true);
-                    $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=true for ' . $params['name']);
-                } else {
-                    $globalSpecialty->setAcceptingApplication(false);
-                }
-            } elseif (isset($params['acceptingApplication'])) {
-                // Use provided value if dates are not set
-                //$globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
+            //cron runs once per day, it cares about the calendar date, not the time
+            //Doctrine’s date type stores only the date, but the timezone can still differ
+            //Normalize everything to Y-m-d strings
+            //Comparing Y-m-d strings is deterministic and avoids subtle bugs
+            //This is clean, safe, and works exactly as intended for whole‑day logic.
+            $today = (new \DateTime('today'))->format('Y-m-d');
+
+            if ($seasonYearStart && $today === $seasonYearStart->format('Y-m-d')) {
+                //enableAcceptingApplications();
+                $globalSpecialty->setAcceptingApplication(true);
+                $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=true for ' . $params['name']);
             }
 
-            //always set acceptingApplication - it will override the dates
-            //In this case it looks like the dates are not gonna be used at all, because they will always be overridden by acceptingApplication
-            $globalSpecialty->setAcceptingApplication($params['acceptingApplication']);
+            if ($seasonYearEnd && $today === $seasonYearEnd->format('Y-m-d')) {
+                //disableAcceptingApplications();
+                $globalSpecialty->setAcceptingApplication(false);
+                $logger->notice('receiveSpecialtyParametersAction: Set acceptingApplication=false for ' . $params['name']);
+            }
 
             $em->persist($globalSpecialty);
             $updated++;
