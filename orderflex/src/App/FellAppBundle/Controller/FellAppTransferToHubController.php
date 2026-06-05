@@ -161,11 +161,13 @@ class FellAppTransferToHubController extends OrderAbstractController
             if (isset($params['seasonYearStart'])) {
                 $seasonYearStart = $params['seasonYearStart'] ? new \DateTime($params['seasonYearStart']) : null;
                 $globalSpecialty->setSeasonYearStart($seasonYearStart);
+                $logger->notice('Set seasonYearStart to '.$params['seasonYearStart']);
             }
 
             if (isset($params['seasonYearEnd'])) {
                 $seasonYearEnd = $params['seasonYearEnd'] ? new \DateTime($params['seasonYearEnd']) : null;
                 $globalSpecialty->setSeasonYearEnd($seasonYearEnd);
+                $logger->notice('Set setSeasonYearEnd to '.$params['seasonYearEnd']);
             }
 
             if (isset($params['acceptingApplication'])) {
