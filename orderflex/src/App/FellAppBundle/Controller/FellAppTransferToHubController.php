@@ -162,7 +162,8 @@ class FellAppTransferToHubController extends OrderAbstractController
                 }
                 foreach ($coordinators as $coordinator) {
                     $globalSpecialty->addCoordinator($coordinator);
-                    $logger->notice('receiveSpecialtyParametersAction: Added coordinator ' . $coordinator->getUsername() . ' to ' . $globalSpecialty->getName());
+                    //$logger->notice('receiveSpecialtyParametersAction: Added coordinator ' . $coordinator->getUsername() . ' to ' . $globalSpecialty->getName());
+                    $logger->notice('receiveSpecialtyParametersAction: Added coordinator=[' . $coordinator . '] to ' . $globalSpecialty->getName());
                 }
             }
 
@@ -175,7 +176,8 @@ class FellAppTransferToHubController extends OrderAbstractController
                 }
                 foreach ($directors as $director) {
                     $globalSpecialty->addDirector($director);
-                    $logger->notice('receiveSpecialtyParametersAction: Added director ' . $director->getUsername() . ' to ' . $globalSpecialty->getName());
+                    //$logger->notice('receiveSpecialtyParametersAction: Added director ' . $director->getUsername() . ' to ' . $globalSpecialty->getName());
+                    $logger->notice('receiveSpecialtyParametersAction: Added director=[' . $director . '] to ' . $globalSpecialty->getName());
                 }
             }
 
