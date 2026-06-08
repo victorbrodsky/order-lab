@@ -20,13 +20,13 @@ namespace App\CtpBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-//#[ORM\Table(name: 'ctp_siteParameter')]
-//#[ORM\Entity]
+#[ORM\Table(name: 'ctp_siteParameter')]
+#[ORM\Entity]
 class CtpSiteParameter {
 
-    //#[ORM\Id]
-    //#[ORM\Column(type: 'integer')]
-    //#[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /*
@@ -60,12 +60,51 @@ class CtpSiteParameter {
      */
 
     //A- left upper corner Navbar logo image (Dropzone field) - field name - Site logo image
-//    #[ORM\JoinTable(name: 'ctp_ctpsiteparameters_ctplogo')]
-//    #[ORM\JoinColumn(name: 'ctpsiteparameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-//    #[ORM\InverseJoinColumn(name: 'ctplogo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-//    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
-//    #[ORM\OrderBy(['createdate' => 'DESC'])]
-//    private $ctpLogos;
+    #[ORM\JoinTable(name: 'ctp_ctpsiteparameters_ctplogo')]
+    #[ORM\JoinColumn(name: 'ctpsiteparameter_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'ctplogo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: 'App\UserdirectoryBundle\Entity\Document', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdate' => 'DESC'])]
+    private $ctpLogos;
+
+    //Is it a footer text?
+    // B- left upper corner text next to logo in the same rectangle ("Weill Cornell Medicine") -
+    // separate this field into two fields in site settings page:
+    //   "Site logo text top line": "Weill Cornell"
+    //   "Site logo text bottom line": "Medicine"
+    //#[ORM\Column(type: 'text', nullable: true)]
+    //private $transresFromHeader;
+
+    //C- left upper corner text next to logo in the same rectangle top line font color
+    // (font color for the words "Weill Cornell") - field name: Site logo text top line color
+
+    //D- left upper corner text next to logo in the same rectangle bottom line font color
+    // (font color for the word "Medicine") - field name: Site logo text bottom line color
+
+    //F- Navbar site title ("Center for Translational Pathology") - field name: Site title
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $navbarSiteTitle;
+
+    //G- Navbar button title for "Path2path Dashboard" - field name: Navigation bar applications button title
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $navbarButtonTitle;
+
+    //H- Footer institution link text (you may have it already)
+    //#[ORM\Column(type: 'text', nullable: true)]
+    //private $footerInstLinkText;
+    //I- Footer institution link URL (you may have it already)
+    //#[ORM\Column(type: 'text', nullable: true)]
+    //private $footerInstLinkUrl;
+    //Combine text and URL: '<a href="https://weillcornell.org/">Weill Cornell Medicine</a>'
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $footerInstLink;
+
+    //J- Footer department link text (you may have it already)
+    //K- Footer department link URL (you may have it already)
+    //Combine text and URL: '<a href="{{ path("ctp_home") }}">Center for Translational Pathology</a>'
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $footerDepLink;
+
 
 
     public function __construct() {

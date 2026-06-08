@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 //This handle will (independently from JS) verify if max idle time out is reached and logout user on the first page redirect or reload
 
@@ -41,12 +42,14 @@ class SessionIdleHandler
     protected $router;
     protected $maxIdleTime;
     protected $em;
+    protected $authorizationChecker;
 
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em, RouterInterface $router )
+    public function __construct(ContainerInterface $container, EntityManagerInterface $em, RouterInterface $router, AuthorizationCheckerInterface $authorizationChecker )
     {
         $this->container = $container;
         $this->router = $router;
         $this->em = $em;
+        $this->authorizationChecker = $authorizationChecker;
 
         $userSecUtil = $this->container->get('user_security_utility');
         $this->maxIdleTime = $userSecUtil->getMaxIdleTime();
@@ -67,6 +70,10 @@ class SessionIdleHandler
         $request = $event->getRequest();
         $session = $request->getSession();
 
+        if( $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY') === false ) {
+            return;
+        }
+
         //$this->maxIdleTime = 3;//sec testing
 
         if( $this->maxIdleTime > 0 ) {
@@ -82,12 +89,21 @@ class SessionIdleHandler
                 //$currentUrl = $request->getSchemeAndHttpHost() . $request->getRequestUri();
                 //$session->set('idle_last_route', $currentUrl);
 
-                $idleLogoutRouteName = $this->getIdleLogoutRouteName($request->getPathInfo());
-
                 $logger = $this->container->get('logger');
-                $logger->notice('SessionIdleHandler: $idleLogoutRouteName='.$idleLogoutRouteName);
 
-                $event->setResponse(new RedirectResponse($this->router->generate($idleLogoutRouteName)));
+                //Redirect might happen because session remembers the last logged in url
+                //Check log:
+                // onAuthenticationSuccess: target_path=http://127.0.0.1/center-for-translational-pathology/applications, referer_url=http://127.0.0.1/center-for-translational-pathology/applications
+                if(0) {
+                    $idleLogoutRouteName = $this->getIdleLogoutRouteName($request->getPathInfo());
+                    $logger->notice('SessionIdleHandler: $idleLogoutRouteName=' . $idleLogoutRouteName);
+                    $event->setResponse(new RedirectResponse($this->router->generate($idleLogoutRouteName)));
+                }
+
+                $idleLastUrl = str_replace('/','_',$request->getRequestUri());
+                $logger->notice('SessionIdleHandler: idle timeout redirect to employees_idlelogout_ref, idleLastUrl='.$idleLastUrl);
+
+                $event->setResponse(new RedirectResponse($this->router->generate('employees_idlelogout_ref', ['url' => $idleLastUrl])));
                 //$event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
                 //$event->setResponse(new RedirectResponse($this->router->generate('employees_login')));
             }

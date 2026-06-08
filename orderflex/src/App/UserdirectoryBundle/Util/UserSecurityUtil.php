@@ -410,10 +410,7 @@ class UserSecurityUtil {
         }
 
         //Regular logout
-        $this->idleRegularLogout($request,$sitename,$idelLastUrl,$flag);
-
-        //Two above logout methods will redirect, therefore, below will not be reached
-        return new RedirectResponse( $this->container->get('router')->generate($sitename.'_login') );
+        return $this->idleRegularLogout($request,$sitename,$idelLastUrl,$flag);
     }
     function idleRegularLogout( $request, $sitename, $idelLastUrl, $flag = null ) {
 
