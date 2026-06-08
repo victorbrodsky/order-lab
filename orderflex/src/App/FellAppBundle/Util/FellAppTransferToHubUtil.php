@@ -315,7 +315,8 @@ class FellAppTransferToHubUtil {
             // unknown entity or configure cascade persist this association in the mapping for
             // example @ManyToOne(..,cascade={"persist"}).
 
-            if (1 || $user) {
+            //TODO: test it
+            if(1 || $user) {
                 // User exists, add to list
                 $createdUsers[] = $user;
                 $logger->notice('checkAndCreateNewUsers: Found existing user: ' . $user);

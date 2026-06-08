@@ -561,6 +561,18 @@ class SecurityController extends OrderAbstractController
         if( $routename == "ctp_idlelogout" ) {
             $sitename = $this->getParameter('ctp.sitename');
         }
+        if( $routename == "tma_idlelogout" ) {
+            $sitename = $this->getParameter('tma.sitename');
+        }
+        if( $routename == "spore_idlelogout" ) {
+            $sitename = $this->getParameter('spore.sitename');
+        }
+        if( $routename == "cohortg_idlelogout" ) {
+            $sitename = $this->getParameter('cohortg.sitename');
+        }
+        if( $routename == "regulatoryt_idlelogout" ) {
+            $sitename = $this->getParameter('regulatoryt.sitename');
+        }
         if( $routename == "translationalresearch_idlelogout" ) {
             $sitename = $this->getParameter('translationalresearch.sitename');
         }
@@ -568,7 +580,7 @@ class SecurityController extends OrderAbstractController
             $sitename = $this->getParameter('dashboard.sitename');
         }
         $logger = $this->container->get('logger');
-        $logger->notice("idlelogoutAction: sitename=$sitename");
+        $logger->notice("idlelogoutAction: routename=$routename, sitename=$sitename");
 
 //        $request->getSession()->getFlashBag()->add(
 //            'notice',

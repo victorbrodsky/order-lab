@@ -245,6 +245,26 @@ ctp_login_check:
 ctp_logout:
     path:   /center-for-translational-pathology/logout
 
+tma_login_check:
+    path:   /tissue-microarrays/login_check
+tma_logout:
+    path:   /tissue-microarrays/logout
+
+cohortg_login_check:
+    path:   /cohort-generator/login_check
+cohortg_logout:
+    path:   /cohort-generator/logout
+
+regulatoryt_login_check:
+    path:   /regulatory-templates/login_check
+regulatoryt_logout:
+    path:   /regulatory-templates/logout
+
+spore_login_check:
+    path:   /prostate-cancer-research-data-explorer/login_check
+spore_logout:
+    path:   /prostate-cancer-research-data-explorer/logout
+
 #OneupUploaderBundle  file uploader
 oneup_uploader:
     resource: .
