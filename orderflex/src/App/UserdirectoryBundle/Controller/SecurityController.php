@@ -627,6 +627,18 @@ class SecurityController extends OrderAbstractController
             if (strpos((string)$url, "/center-for-translational-pathology/") !== false) {
                 $sitename = $this->getParameter('ctp.sitename');
             }
+            if (strpos((string)$url, "/tissue-microarrays/") !== false) {
+                $sitename = $this->getParameter('tma.sitename');
+            }
+            if (strpos((string)$url, "/cohort-generator/") !== false) {
+                $sitename = $this->getParameter('cohortg.sitename');
+            }
+            if (strpos((string)$url, "/regulatory-templates/") !== false) {
+                $sitename = $this->getParameter('regulatoryt.sitename');
+            }
+            if (strpos((string)$url, "/prostate-cancer-research-data-explorer/") !== false) {
+                $sitename = $this->getParameter('spore.sitename');
+            }
             if (strpos((string)$url, "/time-away-request/") !== false) {
                 $sitename = $this->getParameter('vacreq.sitename');
             }
@@ -639,6 +651,7 @@ class SecurityController extends OrderAbstractController
             if (strpos((string)$url, "/dashboard/") !== false) {
                 $sitename = $this->getParameter('dashboard.sitename');
             }
+
         }
         $logger = $this->container->get('logger');
         $logger->notice("idlelogoutRefAction: url=$url, sitename=$sitename");
@@ -930,6 +943,22 @@ class SecurityController extends OrderAbstractController
         if( $routename == "ctp_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('ctp.sitename');
             $options['event'] = "Center for Translational Pathology login page visit";
+        }
+        if( $routename == "tma_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('tma.sitename');
+            $options['event'] = "Tissue Microarrays login page visit";
+        }
+        if( $routename == "cohortg_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('cohortg.sitename');
+            $options['event'] = "Cohort Generator login page visit";
+        }
+        if( $routename == "regulatoryt_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('regulatoryt.sitename');
+            $options['event'] = "Regulatory Templates login page visit";
+        }
+        if( $routename == "spore_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('spore.sitename');
+            $options['event'] = "SPORE Dashboard login page visit";
         }
         if( $routename == "translationalresearch_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('translationalresearch.sitename');
