@@ -82,11 +82,68 @@ class SessionIdleHandler
                 //$currentUrl = $request->getSchemeAndHttpHost() . $request->getRequestUri();
                 //$session->set('idle_last_route', $currentUrl);
 
-                $event->setResponse(new RedirectResponse($this->router->generate('employees_idlelogout')));
+                $idleLogoutRouteName = $this->getIdleLogoutRouteName($request->getPathInfo());
+
+                $logger = $this->container->get('logger');
+                $logger->notice('SessionIdleHandler: $idleLogoutRouteName='.$idleLogoutRouteName);
+
+                $event->setResponse(new RedirectResponse($this->router->generate($idleLogoutRouteName)));
                 //$event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
                 //$event->setResponse(new RedirectResponse($this->router->generate('employees_login')));
             }
         }
+    }
+
+    public function getIdleLogoutRouteName($url) {
+        $idleLogoutRouteName = 'employees_idlelogout';
+
+        if (strpos((string)$url, "/translational-research/") !== false) {
+            $idleLogoutRouteName = 'translationalresearch_idlelogout';
+        }
+        if (strpos((string)$url, "/directory/") !== false) {
+            $idleLogoutRouteName = 'employees_idlelogout';
+        }
+        if (strpos((string)$url, "/fellowship-applications/") !== false) {
+            $idleLogoutRouteName = 'fellapp_idlelogout';
+        }
+        if (strpos((string)$url, "/residency-applications/") !== false) {
+            $idleLogoutRouteName = 'resapp_idlelogout';
+        }
+        if (strpos((string)$url, "/call-log-book/") !== false) {
+            $idleLogoutRouteName = 'calllog_idlelogout';
+        }
+        if (strpos((string)$url, "/critical-result-notifications/") !== false) {
+            $idleLogoutRouteName = 'crn_idlelogout';
+        }
+        if (strpos((string)$url, "/center-for-translational-pathology/") !== false) {
+            $idleLogoutRouteName = 'ctp_idlelogout';
+        }
+        if (strpos((string)$url, "/tissue-microarrays/") !== false) {
+            $idleLogoutRouteName = 'tma_idlelogout';
+        }
+        if (strpos((string)$url, "/cohort-generator/") !== false) {
+            $idleLogoutRouteName = 'cohortg_idlelogout';
+        }
+        if (strpos((string)$url, "/regulatory-templates/") !== false) {
+            $idleLogoutRouteName = 'regulatoryt_idlelogout';
+        }
+        if (strpos((string)$url, "/prostate-cancer-research-data-explorer/") !== false) {
+            $idleLogoutRouteName = 'spore_idlelogout';
+        }
+        if (strpos((string)$url, "/time-away-request/") !== false) {
+            $idleLogoutRouteName = 'vacreq_idlelogout';
+        }
+        if (strpos((string)$url, "/scan/") !== false) {
+            $idleLogoutRouteName = 'scan_idlelogout';
+        }
+        if (strpos((string)$url, "/deidentifier/") !== false) {
+            $idleLogoutRouteName = 'deidentifier_idlelogout';
+        }
+        if (strpos((string)$url, "/dashboard/") !== false) {
+            $idleLogoutRouteName = 'dashboard_idlelogout';
+        }
+
+        return $idleLogoutRouteName;
     }
 
 
