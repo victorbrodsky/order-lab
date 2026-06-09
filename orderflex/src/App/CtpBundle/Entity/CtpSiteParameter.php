@@ -72,29 +72,35 @@ class CtpSiteParameter {
     // separate this field into two fields in site settings page:
     //   "Site logo text top line": "Weill Cornell"
     //   "Site logo text bottom line": "Medicine"
-    //#[ORM\Column(type: 'text', nullable: true)]
-    //private $transresFromHeader;
+
+    //   "Site logo text top line": "Weill Cornell"
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $logoTopText;
+
+    //   "Site logo text bottom line": "Medicine"
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $logoBottomText;
 
     //C- left upper corner text next to logo in the same rectangle top line font color
     // (font color for the words "Weill Cornell") - field name: Site logo text top line color
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $logoTopTextColor;
 
     //D- left upper corner text next to logo in the same rectangle bottom line font color
     // (font color for the word "Medicine") - field name: Site logo text bottom line color
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $logoBottomTextColor;
 
     //F- Navbar site title ("Center for Translational Pathology") - field name: Site title
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private $navbarSiteTitle;
 
     //G- Navbar button title for "Path2path Dashboard" - field name: Navigation bar applications button title
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private $navbarButtonTitle;
 
     //H- Footer institution link text (you may have it already)
-    //#[ORM\Column(type: 'text', nullable: true)]
-    //private $footerInstLinkText;
     //I- Footer institution link URL (you may have it already)
-    //#[ORM\Column(type: 'text', nullable: true)]
-    //private $footerInstLinkUrl;
     //Combine text and URL: '<a href="https://weillcornell.org/">Weill Cornell Medicine</a>'
     #[ORM\Column(type: 'text', nullable: true)]
     private $footerInstLink;
@@ -129,6 +135,154 @@ class CtpSiteParameter {
         $this->id = $id;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCtpLogos()
+    {
+        return $this->ctpLogos;
+    }
+
+    /**
+     * @param mixed $ctpLogos
+     */
+    public function setCtpLogos($ctpLogos)
+    {
+        $this->ctpLogos = $ctpLogos;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogoTopText()
+    {
+        return $this->logoTopText;
+    }
+
+    /**
+     * @param mixed $logoTopText
+     */
+    public function setLogoTopText($logoTopText)
+    {
+        $this->logoTopText = $logoTopText;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogoBottomText()
+    {
+        return $this->logoBottomText;
+    }
+
+    /**
+     * @param mixed $logoBottomText
+     */
+    public function setLogoBottomText($logoBottomText)
+    {
+        $this->logoBottomText = $logoBottomText;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogoTopTextColor()
+    {
+        return $this->logoTopTextColor;
+    }
+
+    /**
+     * @param mixed $logoTopTextColor
+     */
+    public function setLogoTopTextColor($logoTopTextColor)
+    {
+        $this->logoTopTextColor = $logoTopTextColor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogoBottomTextColor()
+    {
+        return $this->logoBottomTextColor;
+    }
+
+    /**
+     * @param mixed $logoBottomTextColor
+     */
+    public function setLogoBottomTextColor($logoBottomTextColor)
+    {
+        $this->logoBottomTextColor = $logoBottomTextColor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNavbarSiteTitle()
+    {
+        return $this->navbarSiteTitle;
+    }
+
+    /**
+     * @param mixed $navbarSiteTitle
+     */
+    public function setNavbarSiteTitle($navbarSiteTitle)
+    {
+        $this->navbarSiteTitle = $navbarSiteTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNavbarButtonTitle()
+    {
+        return $this->navbarButtonTitle;
+    }
+
+    /**
+     * @param mixed $navbarButtonTitle
+     */
+    public function setNavbarButtonTitle($navbarButtonTitle)
+    {
+        $this->navbarButtonTitle = $navbarButtonTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFooterInstLink()
+    {
+        return $this->footerInstLink;
+    }
+
+    /**
+     * @param mixed $footerInstLink
+     */
+    public function setFooterInstLink($footerInstLink)
+    {
+        $this->footerInstLink = $footerInstLink;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFooterDepLink()
+    {
+        return $this->footerDepLink;
+    }
+
+    /**
+     * @param mixed $footerDepLink
+     */
+    public function setFooterDepLink($footerDepLink)
+    {
+        $this->footerDepLink = $footerDepLink;
+    }
+
+
+    public function __toString() {
+        return "CtpSiteParameter ID=".$this->getId();
+    }
 
 
 }

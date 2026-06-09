@@ -441,8 +441,7 @@ class UserSecurityUtil {
         }
 
         //Added for autologin: Save current URL so we can send user back here after login
-        $session = $this->requestStack->getCurrentRequest()->getSession();
-        //$session = $request->getSession();
+        $session = $request->getSession();
         $session->set('idle_last_route', $idelLastUrl);
         $logger->notice("idleRegularLogout: set idelLastUrl=$idelLastUrl");
 

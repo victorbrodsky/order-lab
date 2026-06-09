@@ -274,8 +274,26 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //Added for autologin: Fallback from idle-logout: use idle_last_route if we have it
         $idleLastRoute = $session->get('idle_last_route'); //it might be: _time-away-request_
         if( $idleLastRoute ) {
-            $this->logger->notice("onAuthenticationSuccess: idleLastRoute=$idleLastRoute");
-            $referer_url = $idleLastRoute;
+            $idleLoginPos = strpos((string)$idleLastRoute, '/login');
+            $idleNoPermPos = strpos((string)$idleLastRoute, '/no-permission');
+            $idleNoCheckPos = strpos((string)$idleLastRoute, '/check/');
+            $idleKeepAlivePos = strpos((string)$idleLastRoute, '/keepalive');
+            $idleSetServerActivePos = strpos((string)$idleLastRoute, '/setserveractive');
+            $idleLogoutPos = strpos((string)$idleLastRoute, '/idle-log-out');
+            $idleCommonPos = strpos((string)$idleLastRoute, '/common/');
+
+            if(
+                $idleLoginPos === false && $idleNoPermPos === false &&
+                $idleNoCheckPos === false && $idleKeepAlivePos === false &&
+                $idleSetServerActivePos === false && $idleLogoutPos === false &&
+                $idleCommonPos === false
+            ) {
+                $this->logger->notice("onAuthenticationSuccess: idleLastRoute=$idleLastRoute");
+                $referer_url = $idleLastRoute;
+            } else {
+                $this->logger->notice("onAuthenticationSuccess: ignore idleLastRoute=$idleLastRoute");
+            }
+
             $session->remove('idle_last_route');  // clean up
         }
 

@@ -69,8 +69,18 @@ class SessionIdleHandler
 
         $request = $event->getRequest();
         $session = $request->getSession();
+        $route = $request->attributes->get('_route');
 
         if( $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY') === false ) {
+            return;
+        }
+
+        if(
+            $route == 'setserveractive' ||
+            $route == 'keepalive' ||
+            $route == 'getmaxidletime' ||
+            $route == '_wdt'
+        ) {
             return;
         }
 
@@ -91,6 +101,9 @@ class SessionIdleHandler
 
                 $logger = $this->container->get('logger');
 
+                //Original
+                //$event->setResponse(new RedirectResponse($this->router->generate('employees_idlelogout')));
+
                 //Redirect might happen because session remembers the last logged in url
                 //Check log:
                 // onAuthenticationSuccess: target_path=http://127.0.0.1/center-for-translational-pathology/applications, referer_url=http://127.0.0.1/center-for-translational-pathology/applications
@@ -100,10 +113,12 @@ class SessionIdleHandler
                     $event->setResponse(new RedirectResponse($this->router->generate($idleLogoutRouteName)));
                 }
 
-                $idleLastUrl = str_replace('/','_',$request->getRequestUri());
-                $logger->notice('SessionIdleHandler: idle timeout redirect to employees_idlelogout_ref, idleLastUrl='.$idleLastUrl);
-
-                $event->setResponse(new RedirectResponse($this->router->generate('employees_idlelogout_ref', ['url' => $idleLastUrl])));
+                if(1) {
+                    $idleLastUrl = str_replace('/', '_', $request->getRequestUri());
+                    $logger->notice('SessionIdleHandler: idle timeout redirect to employees_idlelogout_ref, idleLastUrl=' .
+                        $idleLastUrl);
+                    $event->setResponse(new RedirectResponse($this->router->generate('employees_idlelogout_ref', ['url' => $idleLastUrl])));
+                }
                 //$event->setResponse(new RedirectResponse($this->router->generate('logout'))); //idlelogout
                 //$event->setResponse(new RedirectResponse($this->router->generate('employees_login')));
             }
