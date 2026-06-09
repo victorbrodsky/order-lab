@@ -18,6 +18,7 @@
 
 namespace App\CtpBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'ctp_siteParameter')]
@@ -114,7 +115,7 @@ class CtpSiteParameter {
 
 
     public function __construct() {
-
+        $this->ctpLogos = new ArrayCollection();
     }
 
 
@@ -149,6 +150,20 @@ class CtpSiteParameter {
     public function setCtpLogos($ctpLogos)
     {
         $this->ctpLogos = $ctpLogos;
+    }
+
+    public function addCtpLogo($item)
+    {
+        if( $item && !$this->ctpLogos->contains($item) ) {
+            $this->ctpLogos->add($item);
+            return $this;
+        }
+        return null;
+    }
+
+    public function removeCtpLogo($item)
+    {
+        $this->ctpLogos->removeElement($item);
     }
 
     /**

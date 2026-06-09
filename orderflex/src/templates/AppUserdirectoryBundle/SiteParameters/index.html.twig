@@ -1358,6 +1358,10 @@
         {% include 'AppUserdirectoryBundle/SiteParameters/dashboard-content.html.twig' %}
     {% endif %}
 
+    {% if (sitename == "employees" or sitename == "ctp") and is_granted('ROLE_CTP_ADMIN') %}
+        {% include 'AppUserdirectoryBundle/SiteParameters/ctp-content.html.twig' %}
+    {% endif %}
+
     {#Mailer Gmail settings manual#}
     {% set mailerManualUrl = user_mailer_utility.getMailerManualUrl() %}
     <div class="panel panel-primary">
