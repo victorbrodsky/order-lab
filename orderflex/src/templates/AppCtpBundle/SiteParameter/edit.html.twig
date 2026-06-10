@@ -14,7 +14,8 @@
     limitations under the License.
 #}
 
-{% extends "AppCtpBundle/Default/base.html.twig" %}
+{#{% extends "AppCtpBundle/Default/base.html.twig" %}#}
+{% extends "AppUserdirectoryBundle/Default/base.html.twig" %}
 
 {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
@@ -60,7 +61,9 @@
         {{ formmacros.field(form.logoBottomTextColor) }}
         {{ formmacros.field(form.navbarSiteTitle) }}
         {{ formmacros.field(form.navbarButtonTitle) }}
+        {{ formmacros.field(form.footerInstLinkText) }}
         {{ formmacros.field(form.footerInstLink) }}
+        {{ formmacros.field(form.footerDepLinkText) }}
         {{ formmacros.field(form.footerDepLink) }}
 
     {{ form_end(form) }}

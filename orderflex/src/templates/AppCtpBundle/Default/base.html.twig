@@ -146,20 +146,39 @@
             {% set ctp_applications_bg = '#b31b1b' %}
         {% endif %}
 
+        {% set siteParameters = user_service_utility.getSingleSiteSettingParameter() %}
+        {% set ctpSiteParameter = siteParameters ? siteParameters.getCtpSiteParameter() : null %}
+        {% set ctpLogo = null %}
+        {% set navbarSiteTitle = (ctpSiteParameter and ctpSiteParameter.getNavbarSiteTitle())
+            ? ctpSiteParameter.getNavbarSiteTitle()
+            : 'Center for Translational Pathology'
+        %}
+        {% set navbarButtonTitle = (ctpSiteParameter and ctpSiteParameter.getNavbarButtonTitle())
+            ? ctpSiteParameter.getNavbarButtonTitle()
+            : 'Path2Path Dashboard'
+        %}
+        {% if ctpSiteParameter and ctpSiteParameter.getCtpLogos()|length > 0 %}
+            {% set ctpLogo = ctpSiteParameter.getCtpLogos()|first %}
+        {% endif %}
+
         <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
             {#<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">#}
             <div class="mx-auto flex max-w-6xl items-center justify-between gap-y-3 flex-wrap px-4 py-3">
                 <div class="flex items-center gap-3">
                     <a href="{{ path('main_common_home') }}" class="block shrink-0">
                     <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
-                        <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                        {% if ctpLogo and ctpLogo.getAssetRelativePath() %}
+                            <img src="{{ asset(ctpLogo.getAssetRelativePath()) }}" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                        {% else %}
+                            <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
+                        {% endif %}
                     </div>
                     </a>
                     <div>
                         <h1 class="text-lg font-semibold leading-tight">
                             {#Center for Translational Pathology#}
                             <a href="{{ path("ctp_home") }}"
-                            >Center for Translational Pathology</a>
+                            >{{ navbarSiteTitle }}</a>
                         </h1>
                     </div>
                 </div>
@@ -177,7 +196,7 @@
                     <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[{{ ctp_applications_bg }}] hover:bg-[#b31b1b]"
                        {#href="/ctp_site/localhost_3000/path2path-dashboard-login.html"#}
                        href="{{ path('ctp_applications') }}"
-                    >Path2Path Dashboard</a>
+                    >{{ navbarButtonTitle }}</a>
                 </nav>
             </div>
         </header>
@@ -195,6 +214,25 @@
             {#{% include 'AppUserdirectoryBundle/Default/footer.html.twig' %}#}
         {#</div>#}
 
+        {% set siteParameters = user_service_utility.getSingleSiteSettingParameter() %}
+        {% set ctpSiteParameter = siteParameters ? siteParameters.getCtpSiteParameter() : null %}
+        {% set footerInstLinkText = (ctpSiteParameter and ctpSiteParameter.getFooterInstLinkText())
+            ? ctpSiteParameter.getFooterInstLinkText()
+            : 'Weill Cornell Medicine'
+        %}
+        {% set footerInstLinkUrl = (ctpSiteParameter and ctpSiteParameter.getFooterInstLink())
+            ? ctpSiteParameter.getFooterInstLink()
+            : 'https://weillcornell.org/'
+        %}
+        {% set footerDepLinkText = (ctpSiteParameter and ctpSiteParameter.getFooterDepLinkText())
+            ? ctpSiteParameter.getFooterDepLinkText()
+            : 'Center for Translational Pathology'
+        %}
+        {% set footerDepLinkUrl = (ctpSiteParameter and ctpSiteParameter.getFooterDepLink())
+            ? ctpSiteParameter.getFooterDepLink()
+            : path('ctp_home')
+        %}
+
         {% if app.user %}
             {% set loginUrl = '<a href="' ~ path("ctp_logout") ~ '">Logout</a>' %}
         {% else %}
@@ -204,9 +242,9 @@
         <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
             {#© <!-- -->2026<!-- --> Weill Cornell Medicine · Center for Translational Pathology#}
             {#© <!-- -->2026<!-- --> <a href="weillcornell.org/">Weill Cornell Medicine</a> · Center for Translational Pathology#}
-            © <!-- -->2026<!-- --> <a href="https://weillcornell.org/"
-            >Weill Cornell Medicine</a> · <a href="{{ path("ctp_home") }}"
-            >Center for Translational Pathology</a> · {{ loginUrl|raw }}
+            © <!-- -->2026<!-- --> <a href="{{ footerInstLinkUrl }}"
+            >{{ footerInstLinkText }}</a> · <a href="{{ footerDepLinkUrl }}"
+            >{{ footerDepLinkText }}</a> · {{ loginUrl|raw }}
         </footer>
 
     {% endblock %}

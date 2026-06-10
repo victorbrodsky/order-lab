@@ -103,13 +103,21 @@ class CtpSiteParameter {
     //H- Footer institution link text (you may have it already)
     //I- Footer institution link URL (you may have it already)
     //Combine text and URL: '<a href="https://weillcornell.org/">Weill Cornell Medicine</a>'
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $footerInstLinkText;
+
+    //I- Footer institution link URL (you may have it already)
+    #[ORM\Column(type: 'string', nullable: true)]
     private $footerInstLink;
 
     //J- Footer department link text (you may have it already)
     //K- Footer department link URL (you may have it already)
     //Combine text and URL: '<a href="{{ path("ctp_home") }}">Center for Translational Pathology</a>'
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $footerDepLinkText;
+
+    //K- Footer department link URL (you may have it already)
+    #[ORM\Column(type: 'string', nullable: true)]
     private $footerDepLink;
 
 
@@ -293,6 +301,40 @@ class CtpSiteParameter {
     {
         $this->footerDepLink = $footerDepLink;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFooterInstLinkText()
+    {
+        return $this->footerInstLinkText;
+    }
+
+    /**
+     * @param mixed $footerInstLinkText
+     */
+    public function setFooterInstLinkText($footerInstLinkText)
+    {
+        $this->footerInstLinkText = $footerInstLinkText;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFooterDepLinkText()
+    {
+        return $this->footerDepLinkText;
+    }
+
+    /**
+     * @param mixed $footerDepLinkText
+     */
+    public function setFooterDepLinkText($footerDepLinkText)
+    {
+        $this->footerDepLinkText = $footerDepLinkText;
+    }
+
+    
 
 
     public function __toString() {

@@ -84,15 +84,27 @@ class CtpSiteParameterType extends AbstractType
             'required' => false,
         ]);
 
+        $builder->add('footerInstLinkText', null, [
+            'label' => 'Footer institution link text:',
+            'attr' => ['class' => 'form-control'],
+            'required' => false,
+        ]);
+
         $builder->add('footerInstLink', null, [
-            'label' => 'Footer institution link (HTML):',
-            'attr' => ['class' => 'form-control textarea'],
+            'label' => 'Footer institution link URL:',
+            'attr' => ['class' => 'form-control'],
+            'required' => false,
+        ]);
+
+        $builder->add('footerDepLinkText', null, [
+            'label' => 'Footer department link text:',
+            'attr' => ['class' => 'form-control'],
             'required' => false,
         ]);
 
         $builder->add('footerDepLink', null, [
-            'label' => 'Footer department link (HTML):',
-            'attr' => ['class' => 'form-control textarea'],
+            'label' => 'Footer department link URL:',
+            'attr' => ['class' => 'form-control'],
             'required' => false,
         ]);
 
