@@ -377,6 +377,9 @@ class SiteParameters {
     #[ORM\OneToOne(targetEntity: 'App\ResAppBundle\Entity\ResappSiteParameter', cascade: ['persist', 'remove'])]
     private $resappSiteParameter;
 
+    #[ORM\OneToOne(targetEntity: 'App\CtpBundle\Entity\CtpSiteParameter', cascade: ['persist', 'remove'])]
+    private $ctpSiteParameter;
+
 //    /**
     //     * Path to the local copy of the fellowship application form
     //     * https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit
@@ -4355,6 +4358,22 @@ class SiteParameters {
     public function setResappSiteParameter($resappSiteParameter)
     {
         $this->resappSiteParameter = $resappSiteParameter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCtpSiteParameter()
+    {
+        return $this->ctpSiteParameter;
+    }
+
+    /**
+     * @param mixed $ctpSiteParameter
+     */
+    public function setCtpSiteParameter($ctpSiteParameter)
+    {
+        $this->ctpSiteParameter = $ctpSiteParameter;
     }
 
     /**

@@ -21,6 +21,7 @@ use App\CtpBundle\Entity\CtpSiteParameter;
 use App\CtpBundle\Form\CtpSiteParameterType;
 use App\UserdirectoryBundle\Controller\SiteParametersController;
 use App\UserdirectoryBundle\Entity\Document;
+use App\UserdirectoryBundle\Entity\SiteParameters;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -97,6 +98,12 @@ class CtpSiteParametersController extends SiteParametersController
 
         if( $form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
+
+            if( !$ctpSiteParameter->getId() ) {
+                $siteParameters = $this->getSingleSiteParameters();
+                $siteParameters->setCtpSiteParameter($ctpSiteParameter);
+            }
+
             $em->getRepository(Document::class)->processDocuments($ctpSiteParameter, 'ctpLogo');
             $em->persist($ctpSiteParameter);
             $em->flush();
@@ -137,16 +144,26 @@ class CtpSiteParametersController extends SiteParametersController
 
     public function getOrCreateNewCtpParameters()
     {
-        $em = $this->getDoctrine()->getManager();
+        $siteParameters = $this->getSingleSiteParameters();
 
-        $ctpSiteParameter = $em->getRepository(CtpSiteParameter::class)->findOneBy([], ['id' => 'ASC']);
+        $ctpSiteParameter = $siteParameters->getCtpSiteParameter();
 
         if( !$ctpSiteParameter ) {
             $ctpSiteParameter = new CtpSiteParameter();
-            $em->persist($ctpSiteParameter);
-            $em->flush();
         }
 
         return $ctpSiteParameter;
+    }
+
+    public function getSingleSiteParameters()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository(SiteParameters::class)->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+
+        return $entities[0];
     }
 }
