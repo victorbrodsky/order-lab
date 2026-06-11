@@ -108,7 +108,8 @@ class CtpSiteParametersController extends SiteParametersController
             $em->persist($ctpSiteParameter);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('ctp_siteparameters'));
+            //return $this->redirect($this->generateUrl('ctp_siteparameters'));
+            return $this->redirect($this->generateUrl('ctp_applications'));
         }
 
         return [

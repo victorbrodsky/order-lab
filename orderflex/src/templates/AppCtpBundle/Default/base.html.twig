@@ -76,6 +76,36 @@
             }
             .backdrop-blur-sm { backdrop-filter: blur(4px); }
             .backdrop-blur-\[2px\] { backdrop-filter: blur(2px); }
+            /*overlay map:*/
+            /*.ctp-logo-map {*/
+                /*position: relative;*/
+                /*width: clamp(170px, 22vw, 240px);*/
+            /*}*/
+            /*.ctp-logo-map-image {*/
+                /*display: block;*/
+                /*width: 100%;*/
+                /*height: auto;*/
+            /*}*/
+            /*.ctp-logo-map-overlay {*/
+                /*position: absolute;*/
+                /*left: 36%;*/
+                /*top: 14%;*/
+                /*width: 60%;*/
+                /*height: 72%;*/
+                /*display: flex;*/
+                /*flex-direction: column;*/
+                /*justify-content: center;*/
+                /*pointer-events: none;*/
+                /*line-height: 1;*/
+            /*}*/
+            /*.ctp-logo-map-top {*/
+                /*font-weight: 700;*/
+                /*font-size: clamp(0.78rem, 1.35vw, 1.18rem);*/
+            /*}*/
+            /*.ctp-logo-map-bottom {*/
+                /*font-weight: 700;*/
+                /*font-size: clamp(0.78rem, 1.35vw, 1.18rem);*/
+            /*}*/
         </style>
     {% endblock %}
 
@@ -157,6 +187,11 @@
             ? ctpSiteParameter.getNavbarButtonTitle()
             : 'Path2Path Dashboard'
         %}
+        {% set hasLogoTextOverlay = ctpSiteParameter and (ctpSiteParameter.getLogoTopText() or ctpSiteParameter.getLogoBottomText()) %}
+        {% set logoTopText = (ctpSiteParameter and ctpSiteParameter.getLogoTopText()) ? ctpSiteParameter.getLogoTopText() : '' %}
+        {% set logoBottomText = (ctpSiteParameter and ctpSiteParameter.getLogoBottomText()) ? ctpSiteParameter.getLogoBottomText() : '' %}
+        {% set logoTopTextColor = (ctpSiteParameter and ctpSiteParameter.getLogoTopTextColor()) ? ctpSiteParameter.getLogoTopTextColor() : '#b31b1b' %}
+        {% set logoBottomTextColor = (ctpSiteParameter and ctpSiteParameter.getLogoBottomTextColor()) ? ctpSiteParameter.getLogoBottomTextColor() : '#ff6a00' %}
         {% if ctpSiteParameter and ctpSiteParameter.getCtpLogos()|length > 0 %}
             {% set ctpLogo = ctpSiteParameter.getCtpLogos()|first %}
         {% endif %}
@@ -168,10 +203,26 @@
                     <a href="{{ path('main_common_home') }}" class="block shrink-0">
                     <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
                         {% if ctpLogo and ctpLogo.getAssetRelativePath() %}
+                            {#{% set ctpLogoPath = asset(ctpLogo.getAssetRelativePath()) %}#}
                             <img src="{{ asset(ctpLogo.getAssetRelativePath()) }}" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
                         {% else %}
+                            {#{% set ctpLogoPath = '/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png' %}#}
                             <img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>
                         {% endif %}
+
+                        {#<div class="ctp-logo-map">#}
+                            {#<img src="{{ ctpLogoPath }}" alt="Weill Cornell Medicine" class="ctp-logo-map-image"/>#}
+                            {#{% if hasLogoTextOverlay %}#}
+                                {#<div class="ctp-logo-map-overlay">#}
+                                    {#{% if logoTopText %}#}
+                                        {#<div class="ctp-logo-map-top" style="color: {{ logoTopTextColor }};">{{ logoTopText }}</div>#}
+                                    {#{% endif %}#}
+                                    {#{% if logoBottomText %}#}
+                                        {#<div class="ctp-logo-map-bottom" style="color: {{ logoBottomTextColor }};">{{ logoBottomText }}</div>#}
+                                    {#{% endif %}#}
+                                {#</div>#}
+                            {#{% endif %}#}
+                        {#</div>#}
                     </div>
                     </a>
                     <div>
