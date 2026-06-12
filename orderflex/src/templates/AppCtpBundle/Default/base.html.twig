@@ -76,10 +76,11 @@
             }
             .backdrop-blur-sm { backdrop-filter: blur(4px); }
             .backdrop-blur-\[2px\] { backdrop-filter: blur(2px); }
+
             /*overlay map:*/
             .ctp-logo-map {
                 position: relative;
-                width: clamp(170px, 22vw, 240px);
+                width: clamp(120px, 14vw, 170px);
             }
             .ctp-logo-map-image {
                 display: block;
@@ -93,6 +94,8 @@
                 width: 60%;
                 height: 72%;
                 z-index: 2;
+                display: block;
+                cursor: pointer;
             }
             .ctp-logo-map-label {
                 position: absolute;
@@ -123,6 +126,43 @@
                 font-weight: 700;
                 font-size: clamp(0.78rem, 1.35vw, 1.18rem);
             }
+
+            .ctp-header-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.75rem;
+                flex-wrap: nowrap;
+            }
+            .ctp-header-main {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                min-width: 0;
+            }
+            .ctp-header-title {
+                white-space: nowrap;
+            }
+            .ctp-header-nav {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: nowrap;
+                flex-shrink: 0;
+            }
+            @media (max-width: 1180px) {
+                .ctp-header-row {
+                    flex-wrap: wrap;
+                }
+                .ctp-header-nav {
+                    width: 100%;
+                    margin-top: 0.5rem;
+                    flex-wrap: wrap;
+                }
+                .ctp-header-title {
+                    white-space: normal;
+                }
+            }
+
         </style>
     {% endblock %}
 
@@ -204,9 +244,9 @@
             ? ctpSiteParameter.getNavbarButtonTitle()
             : 'Path2Path Dashboard'
         %}
-        {% set hasLogoTextOverlay = ctpSiteParameter and (ctpSiteParameter.getLogoTopText() or ctpSiteParameter.getLogoBottomText()) %}
-        {% set logoTopText = (ctpSiteParameter and ctpSiteParameter.getLogoTopText()) ? ctpSiteParameter.getLogoTopText() : '' %}
-        {% set logoBottomText = (ctpSiteParameter and ctpSiteParameter.getLogoBottomText()) ? ctpSiteParameter.getLogoBottomText() : '' %}
+        {% set logoTopText = (ctpSiteParameter and ctpSiteParameter.getLogoTopText()) ? ctpSiteParameter.getLogoTopText() : 'Weill Cornell' %}
+        {% set logoBottomText = (ctpSiteParameter and ctpSiteParameter.getLogoBottomText()) ? ctpSiteParameter.getLogoBottomText() : 'Medicine' %}
+        {% set hasLogoTextOverlay = logoTopText or logoBottomText %}
         {% set logoTopTextColor = (ctpSiteParameter and ctpSiteParameter.getLogoTopTextColor()) ? ctpSiteParameter.getLogoTopTextColor() : '#b31b1b' %}
         {% set logoBottomTextColor = (ctpSiteParameter and ctpSiteParameter.getLogoBottomTextColor()) ? ctpSiteParameter.getLogoBottomTextColor() : '#ff6a00' %}
         {% if ctpSiteParameter and ctpSiteParameter.getCtpLogos()|length > 0 %}
@@ -215,8 +255,8 @@
 
         <header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">
             {#<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">#}
-            <div class="mx-auto flex max-w-6xl items-center justify-between gap-y-3 flex-wrap px-4 py-3">
-                <div class="flex items-center gap-3">
+            <div class="mx-auto max-w-6xl px-4 py-3 ctp-header-row">
+                <div class="ctp-header-main">
                     <a href="{{ path('main_common_home') }}" class="block shrink-0">
                     <div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">
                         {% if ctpLogo and ctpLogo.getAssetRelativePath() %}
@@ -230,7 +270,7 @@
                         <div class="ctp-logo-map">
                             <img src="{{ ctpLogoPath }}" alt="Weill Cornell Medicine" class="ctp-logo-map-image"/>
                             {% if hasLogoTextOverlay %}
-                                <span class="ctp-logo-map-zone" aria-label="Weill Cornell Medicine zone"></span>
+                                <span class="ctp-logo-map-zone" tabindex="0" aria-label="Weill Cornell Medicine zone"></span>
                                 <div class="ctp-logo-map-label">
                                     {% if logoTopText %}
                                         <div class="ctp-logo-map-top" style="color: {{ logoTopTextColor }};">{{ logoTopText }}</div>
@@ -244,14 +284,14 @@
                     </div>
                     </a>
                     <div>
-                        <h1 class="text-lg font-semibold leading-tight">
+                        <h1 class="text-lg font-semibold leading-tight ctp-header-title">
                             {#Center for Translational Pathology#}
                             <a href="{{ path("ctp_home") }}"
                             >{{ navbarSiteTitle }}</a>
                         </h1>
                     </div>
                 </div>
-                <nav class="flex gap-3 flex-wrap">
+                <nav class="ctp-header-nav">
                     <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[{{ ctp_home_bg }}] hover:bg-[#b31b1b]"
                        href="{{ path('ctp_home') }}">Home</a>
                     <a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[{{ ctp_newprojectinquiry_bg }}] hover:bg-[#b31b1b]"
