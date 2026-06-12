@@ -348,6 +348,10 @@
             {% set loginUrl = '<a href="' ~ path("ctp_login") ~ '">Login</a>' %}
         {% endif %}
 
+        {% if is_granted('ROLE_CTP_ADMIN') %}
+            {#wiki-style edit of the ENTIRE HTML#}
+        {% endif %}
+
         <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
             {#© <!-- -->2026<!-- --> Weill Cornell Medicine · Center for Translational Pathology#}
             {#© <!-- -->2026<!-- --> <a href="weillcornell.org/">Weill Cornell Medicine</a> · Center for Translational Pathology#}

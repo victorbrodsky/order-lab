@@ -4,84 +4,10 @@
     Center for Translational Pathology
 {% endblock %}
 
-{#{% block stylesheets %}#}
-    {#{{ parent() }}#}
-    {#<link rel="stylesheet" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/src_app_globals_0p2ml0n.css">#}
-    {#<link rel="icon" href="/orderassets/AppCtpBundle/ctp_site/localhost_3000/faviconbcf9.ico" sizes="256x256" type="image/x-icon">#}
-    {#<style>#}
-        {#/* Tailwind CSS Custom Config for WCM */#}
-        {#.min-h-\[220px\] { min-height: 220px; }#}
-        {#.gap-y-3 { row-gap: 0.75rem; }#}
-        {#@media (min-width: 48rem) {#}
-            {#.md\:h-\[420px\] { height: min(420px, 70vh); }#}
-        {#}#}
-        {#:root {#}
-            {#--wcm-red: #b31b1b;#}
-            {#--wcm-gold: #ffc72c;#}
-            {#--wcm-orange: #ff6a00;#}
-            {#--bg: #f9fafb;#}
-            {#--ink: #1f2937;#}
-        {#}#}
-        {#.text-wcm-red { color: var(--wcm-red); }#}
-        {#.text-wcm-ink { color: var(--ink); }#}
-        {#.bg-wcm-red { background-color: var(--wcm-red); }#}
-        {#.bg-wcm-red\/90 { background-color: rgba(179, 27, 27, 0.9); }#}
-        {#.hover\:bg-wcm-red\/90:hover { background-color: rgba(179, 27, 27, 0.9); }#}
-        {#.focus-visible\:ring-wcm-red:focus-visible { --tw-ring-color: var(--wcm-red); }#}
-        {#/*.clamp-3 {*/#}
-            {#/*display: -webkit-box;*/#}
-            {#/*-webkit-line-clamp: 3;*/#}
-            {#/*-webkit-box-orient: vertical;*/#}
-            {#/*overflow: hidden;*/#}
-        {#/*}*/#}
-        {#.clamp-2 {#}
-            {#display: -webkit-box;#}
-            {#-webkit-line-clamp: 2;#}
-            {#-webkit-box-orient: vertical;#}
-            {#overflow: hidden;#}
-        {#}#}
-        {#.clamp-3 {#}
-            {#display: -webkit-box;#}
-            {#-webkit-line-clamp: 3;#}
-            {#-webkit-box-orient: vertical;#}
-            {#overflow: hidden;#}
-        {#}#}
-        {#.backdrop-blur-sm { backdrop-filter: blur(4px); }#}
-        {#.backdrop-blur-\[2px\] { backdrop-filter: blur(2px); }#}
-    {#</style>#}
-{#{% endblock %}#}
-
 {% block javascripts %}
     {{ parent() }}
     <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
 {% endblock %}
-
-{#{% block header %}#}
-    {#<header class="sticky top-0 z-50 bg-gradient-to-r from-[#ffc72c] via-[#ff6a00] to-[#b31b1b] text-white shadow border-b border-white/20 supports-[backdrop-filter]:backdrop-blur-sm">#}
-        {#<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">#}
-            {#<div class="flex items-center gap-3">#}
-                {#<div class="p-1.5 rounded-md bg-white/80 backdrop-blur-sm">#}
-                    {#<img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>#}
-                {#</div>#}
-                {#<div>#}
-                    {#<h1 class="text-lg font-semibold leading-tight">Center for Translational Pathology</h1>#}
-                {#</div>#}
-            {#</div>#}
-            {#<nav class="flex gap-3 flex-wrap">#}
-                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#b31b1b]" href="{{ path('ctp_home') }}">Home</a>#}
-                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"#}
-                   {#href="{{ path('ctp_new-project-inquiry') }}">New Project Inquiry</a>#}
-                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"#}
-                   {#href="/ctp_site/localhost_3000/people.html"#}
-                   {#href="{{ path('ctp_people') }}"#}
-                {#>People</a>#}
-                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]"#}
-                   {#href="{{ path('ctp_publications') }}">Publications</a>#}
-                {#<a class="px-3 py-2 rounded-md text-sm font-medium text-white transition bg-[#f8b229] hover:bg-[#b31b1b]" href="/ctp_site/localhost_3000/path2path-dashboard-login.html">Path2Path Dashboard</a>#}
-            {#</nav>#}
-        {#</div>#}
-    {#</header>#}
-{#{% endblock %}#}
 
 {% block content_ctp %}
 
@@ -302,9 +228,4 @@
 
 {% endblock %}
 
-{#{% block footer %}#}
-    {#<footer class="border-t border-gray-200 bg-white py-6 text-center text-sm text-gray-600">#}
-        {#© 2026 Weill Cornell Medicine · Center for Translational Pathology#}
-    {#</footer>#}
-{#{% endblock %}#}
 
