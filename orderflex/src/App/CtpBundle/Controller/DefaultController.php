@@ -21,6 +21,7 @@ namespace App\CtpBundle\Controller;
 
 
 
+use App\CtpBundle\Entity\PageContentList;
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\OrderformBundle\Entity\Message;
@@ -47,7 +48,7 @@ class DefaultController extends OrderAbstractController
         return array('sitename' => $this->getParameter('ctp.sitename'));
     }
 
-    #[Route(path: '/', name: 'ctp_home', methods: ['GET'])]
+    #[Route(path: '/', name: 'ctp_home', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/home.html.twig')]
     public function indexAction( Request $request ) {
 
@@ -57,9 +58,60 @@ class DefaultController extends OrderAbstractController
 
         $title = 'Center for Translational Pathology';
 
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getHomePageContentEntity(false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit home page content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid('ctp_home_page_content', $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP home page content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getHomePageContentEntity(true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);   
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_home');
+        }
+
         return array(
             'title' => $title,
+            'homePageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
+    }
+
+    private function getHomePageContentEntity($createIfMissing=false)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $pageName = 'ctp_home';
+        $pageContentEntity = $em->getRepository(PageContentList::class)->findOneBy(['name' => $pageName]);
+
+        if( !$pageContentEntity && $createIfMissing ) {
+            $pageContentEntity = new PageContentList($this->getUser());
+            $pageContentEntity->setName($pageName);
+            $pageContentEntity->setType('default');
+
+            if( $this->getUser() instanceof User ) {
+                $pageContentEntity->setCreator($this->getUser());
+            }
+        }
+
+        return $pageContentEntity;
     }
 
     #[Route(path: '/publications', name: 'ctp_publications', methods: ['GET'])]

@@ -348,8 +348,15 @@
             {% set loginUrl = '<a href="' ~ path("ctp_login") ~ '">Login</a>' %}
         {% endif %}
 
-        {% if is_granted('ROLE_CTP_ADMIN') %}
-            {#wiki-style edit of the ENTIRE HTML#}
+        {% if is_granted('ROLE_CTP_ADMIN') and app.request.attributes.get('_route') == 'ctp_home' %}
+            <div class="mx-auto max-w-6xl px-4 pb-2 text-right">
+                {% set isEditMode = app.request.query.getBoolean('edit') %}
+                {% if isEditMode %}
+                    <a href="{{ path('ctp_home') }}" class="inline-flex rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 transition">Close Editor</a>
+                {% else %}
+                    <a href="{{ path('ctp_home', {'edit': 1}) }}" class="inline-flex rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 transition">Edit</a>
+                {% endif %}
+            </div>
         {% endif %}
 
         <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">

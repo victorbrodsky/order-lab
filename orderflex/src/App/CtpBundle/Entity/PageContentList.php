@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\FellAppBundle\Entity;
+namespace App\CtpBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
