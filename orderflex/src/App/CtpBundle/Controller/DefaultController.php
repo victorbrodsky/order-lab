@@ -234,12 +234,47 @@ class DefaultController extends OrderAbstractController
         );
     }
 
-    #[Route(path: '/misi-lab', name: 'ctp_misi-lab', methods: ['GET'])]
+    #[Route(path: '/misi-lab', name: 'ctp_misi-lab', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/misi-lab.html.twig')]
     public function misiLabAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_misi-lab';
+        $csrfTokenId = 'ctp_misi_lab_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit MISI page content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP MISI page content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_misi-lab');
+        }
+
         return array(
             'title' => $title,
+            'misiPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 

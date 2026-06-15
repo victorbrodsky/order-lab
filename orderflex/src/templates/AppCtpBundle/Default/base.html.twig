@@ -349,13 +349,15 @@
         {% endif %}
 
         {% set currentRoute = app.request.attributes.get('_route') %}
-        {% if is_granted('ROLE_CTP_ADMIN') and currentRoute in ['ctp_home', 'ctp_people', 'ctp_histocore_and_ihc_lab'] %}
+        {% if is_granted('ROLE_CTP_ADMIN') and currentRoute in ['ctp_home', 'ctp_people', 'ctp_histocore_and_ihc_lab', 'ctp_misi-lab'] %}
             <div class="mx-auto max-w-6xl px-4 pb-2 text-right">
                 {% set isEditMode = app.request.query.getBoolean('edit') %}
                 {% if currentRoute == 'ctp_people' %}
                     {% set editRoute = 'ctp_people' %}
                 {% elseif currentRoute == 'ctp_histocore_and_ihc_lab' %}
                     {% set editRoute = 'ctp_histocore_and_ihc_lab' %}
+                {% elseif currentRoute == 'ctp_misi-lab' %}
+                    {% set editRoute = 'ctp_misi-lab' %}
                 {% else %}
                     {% set editRoute = 'ctp_home' %}
                 {% endif %}
