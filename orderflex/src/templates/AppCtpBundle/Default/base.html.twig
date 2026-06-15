@@ -349,10 +349,16 @@
         {% endif %}
 
         {% set currentRoute = app.request.attributes.get('_route') %}
-        {% if is_granted('ROLE_CTP_ADMIN') and currentRoute in ['ctp_home', 'ctp_people'] %}
+        {% if is_granted('ROLE_CTP_ADMIN') and currentRoute in ['ctp_home', 'ctp_people', 'ctp_histocore_and_ihc_lab'] %}
             <div class="mx-auto max-w-6xl px-4 pb-2 text-right">
                 {% set isEditMode = app.request.query.getBoolean('edit') %}
-                {% set editRoute = currentRoute == 'ctp_people' ? 'ctp_people' : 'ctp_home' %}
+                {% if currentRoute == 'ctp_people' %}
+                    {% set editRoute = 'ctp_people' %}
+                {% elseif currentRoute == 'ctp_histocore_and_ihc_lab' %}
+                    {% set editRoute = 'ctp_histocore_and_ihc_lab' %}
+                {% else %}
+                    {% set editRoute = 'ctp_home' %}
+                {% endif %}
                 {% if isEditMode %}
                     <a href="{{ path(editRoute) }}" class="inline-flex rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 transition">Close Editor</a>
                 {% else %}

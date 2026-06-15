@@ -20,9 +20,44 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
+    {% if is_granted('ROLE_CTP_ADMIN') and isEditMode is defined and isEditMode %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var textarea = document.getElementById('ctp-histocore-page-content');
+                if (!textarea || typeof CodeMirror === 'undefined') {
+                    return;
+                }
+
+                var editor = CodeMirror.fromTextArea(textarea, {
+                    mode: 'htmlmixed',
+                    theme: 'default',
+                    lineNumbers: true,
+                    lineWrapping: true,
+                    viewportMargin: Infinity,
+                    indentUnit: 2,
+                    tabSize: 2
+                });
+                editor.setSize(null, 520);
+
+                var form = textarea.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        editor.save();
+                    });
+                }
+            });
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block content_ctp %}
+    {% set defaultHistocorePageContent %}
     <main class="min-h-screen bg-zinc-50" id="top">
         
         {# Hero Section #}
@@ -590,6 +625,29 @@
         </div>
 
     </main>
+    {% endset %}
+
+    {% set effectiveHistocorePageContent = histocorePageContent is defined and histocorePageContent ? histocorePageContent : defaultHistocorePageContent %}
+
+    {% if is_granted('ROLE_CTP_ADMIN') and isEditMode is defined and isEditMode %}
+        <div class="mx-auto max-w-6xl px-6 py-6">
+            <h2 class="text-xl font-semibold text-wcm-red">Edit HistoCore &amp; IHC Lab Page Content</h2>
+            <p class="mt-2 text-sm text-gray-700">Update the page HTML below. Click Save to publish changes.</p>
+
+            <form method="post" action="{{ path('ctp_histocore_and_ihc_lab') }}" class="mt-4">
+                <input type="hidden" name="_token" value="{{ csrf_token('ctp_histocore_and_ihc_lab_page_content') }}">
+                <input type="hidden" name="editMode" value="1">
+                <textarea id="ctp-histocore-page-content" name="pageContent" class="form-control" style="min-height: 520px; font-family: monospace;">{{ effectiveHistocorePageContent|e }}</textarea>
+
+                <div class="mt-4 flex items-center gap-3">
+                    <button type="submit" class="inline-flex rounded-md bg-wcm-red px-4 py-2 text-white font-medium shadow hover:bg-wcm-red/90 transition">Save</button>
+                    <a href="{{ path('ctp_histocore_and_ihc_lab') }}" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-gray-700 font-medium hover:bg-gray-100 transition">Cancel</a>
+                </div>
+            </form>
+        </div>
+    {% else %}
+        {{ effectiveHistocorePageContent|raw }}
+    {% endif %}
 {% endblock %}
 
 {#{% block footer %}#}

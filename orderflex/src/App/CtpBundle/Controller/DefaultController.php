@@ -190,12 +190,47 @@ class DefaultController extends OrderAbstractController
         );
     }
     
-    #[Route(path: '/histocore-and-ihc-lab', name: 'ctp_histocore_and_ihc_lab', methods: ['GET'])]
+    #[Route(path: '/histocore-and-ihc-lab', name: 'ctp_histocore_and_ihc_lab', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/histocore-and-ihc-lab.html.twig')]
     public function histocoreAndIhcLabAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_histocore_and_ihc_lab';
+        $csrfTokenId = 'ctp_histocore_and_ihc_lab_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit histocore page content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP histocore page content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_histocore_and_ihc_lab');
+        }
+
         return array(
             'title' => $title,
+            'histocorePageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 
