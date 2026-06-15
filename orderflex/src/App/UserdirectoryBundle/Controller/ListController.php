@@ -316,6 +316,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/trainingeligibility/', name: 'trainingeligibility-list', methods: ['GET'])]
     #[Route(path: '/list/dutiescapability/', name: 'dutiescapability-list', methods: ['GET'])]
     #[Route(path: '/list/phdfield/', name: 'phdfield-list', methods: ['GET'])]
+    #[Route(path: '/list/pagecontent/', name: 'pagecontent-list', methods: ['GET'])]
     #[Route(path: '/list/expecteddegree/', name: 'expecteddegree-list', methods: ['GET'])]
     #[Route(path: '/list/retrievalmethod/', name: 'retrievalmethod-list', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/index.html.twig')]
@@ -1036,6 +1037,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/trainingeligibility/', name: 'trainingeligibility_create', methods: ['POST'])]
     #[Route(path: '/list/dutiescapability/', name: 'dutiescapability_create', methods: ['POST'])]
     #[Route(path: '/list/phdfield/', name: 'phdfield_create', methods: ['POST'])]
+    #[Route(path: '/list/pagecontent/', name: 'pagecontent_create', methods: ['POST'])]
     #[Route(path: '/list/expecteddegree/', name: 'expecteddegree_create', methods: ['POST'])]
     #[Route(path: '/list/retrievalmethod/', name: 'retrievalmethod_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
@@ -1420,6 +1422,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/trainingeligibility/new', name: 'trainingeligibility_new', methods: ['GET'])]
     #[Route(path: '/list/dutiescapability/new', name: 'dutiescapability_new', methods: ['GET'])]
     #[Route(path: '/list/phdfield/new', name: 'phdfield_new', methods: ['GET'])]
+    #[Route(path: '/list/pagecontent/new', name: 'pagecontent_new', methods: ['GET'])]
     #[Route(path: '/list/expecteddegree/new', name: 'expecteddegree_new', methods: ['GET'])]
     #[Route(path: '/list/retrievalmethod/new', name: 'retrievalmethod_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/new.html.twig')]
@@ -1749,6 +1752,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/trainingeligibility/{id}', name: 'trainingeligibility_show', methods: ['GET'])]
     #[Route(path: '/list/dutiescapability/{id}', name: 'dutiescapability_show', methods: ['GET'])]
     #[Route(path: '/list/phdfield/{id}', name: 'phdfield_show', methods: ['GET'])]
+    #[Route(path: '/list/pagecontent/{id}', name: 'pagecontent_show', methods: ['GET'])]
     #[Route(path: '/list/expecteddegree/{id}', name: 'expecteddegree_show', methods: ['GET'])]
     #[Route(path: '/list/retrievalmethod/{id}', name: 'retrievalmethod_show', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/show.html.twig')]
@@ -2067,6 +2071,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/trainingeligibility/{id}/edit', name: 'trainingeligibility_edit', methods: ['GET'])]
     #[Route(path: '/list/dutiescapability/{id}/edit', name: 'dutiescapability_edit', methods: ['GET'])]
     #[Route(path: '/list/phdfield/{id}/edit', name: 'phdfield_edit', methods: ['GET'])]
+    #[Route(path: '/list/pagecontent/{id}/edit', name: 'pagecontent_edit', methods: ['GET'])]
     #[Route(path: '/list/expecteddegree/{id}/edit', name: 'expecteddegree_edit', methods: ['GET'])]
     #[Route(path: '/list/retrievalmethod/{id}/edit', name: 'retrievalmethod_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
@@ -2439,6 +2444,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/trainingeligibility/{id}', name: 'trainingeligibility_update', methods: ['PUT'])]
     #[Route(path: '/list/dutiescapability/{id}', name: 'dutiescapability_update', methods: ['PUT'])]
     #[Route(path: '/list/phdfield/{id}', name: 'phdfield_update', methods: ['PUT'])]
+    #[Route(path: '/list/pagecontent/{id}', name: 'pagecontent_update', methods: ['PUT'])]
     #[Route(path: '/list/expecteddegree/{id}', name: 'expecteddegree_update', methods: ['PUT'])]
     #[Route(path: '/list/retrievalmethod/{id}', name: 'retrievalmethod_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/ListForm/edit.html.twig')]
@@ -3703,6 +3709,11 @@ class ListController extends OrderAbstractController
                 $displayName = "Phd Field List";
                 $bundleName = "FellAppBundle";
                 break;
+            case "pagecontent":
+                $className = "PageContentList";
+                $displayName = "Page Content List";
+                $bundleName = "CtpBundle";
+                break;
 
 
             //Dashboards (7 lists)
@@ -4496,6 +4507,7 @@ class ListController extends OrderAbstractController
     #[Route(path: '/list/trainingeligibility/{id}', name: 'trainingeligibility_delete', methods: ['DELETE'])]
     #[Route(path: '/list/dutiescapability/{id}', name: 'dutiescapability_delete', methods: ['DELETE'])]
     #[Route(path: '/list/phdfield/{id}', name: 'phdfield_delete', methods: ['DELETE'])]
+    #[Route(path: '/list/pagecontent/{id}', name: 'pagecontent_delete', methods: ['DELETE'])]
     #[Route(path: '/list/expecteddegree/{id}', name: 'expecteddegree_delete', methods: ['DELETE'])]
     #[Route(path: '/list/retrievalmethod/{id}', name: 'retrievalmethod_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, $id)

@@ -8502,6 +8502,7 @@ class AdminController extends OrderAbstractController
             "trainingeligibility" => array('TrainingEligibilityList','trainingeligibility-list','Training Eligibility List'),
             "dutiescapability" => array('DutiesCapabilityList','dutiescapability-list','Duties Capability List'),
             "phdfield" => array('PhdFieldList','phdfield-list','Phd Field List'),
+            "pagecontent" => array('PageContentList','pagecontent-list','Page Content List'),
         );
 
         if( $withcustom ) {
