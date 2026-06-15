@@ -349,24 +349,37 @@
         {% endif %}
 
         {% set currentRoute = app.request.attributes.get('_route') %}
-        {% if is_granted('ROLE_CTP_ADMIN') and currentRoute in ['ctp_home', 'ctp_people', 'ctp_histocore_and_ihc_lab', 'ctp_misi-lab'] %}
-            <div class="mx-auto max-w-6xl px-4 pb-2 text-right">
-                {% set isEditMode = app.request.query.getBoolean('edit') %}
-                {% if currentRoute == 'ctp_people' %}
-                    {% set editRoute = 'ctp_people' %}
-                {% elseif currentRoute == 'ctp_histocore_and_ihc_lab' %}
-                    {% set editRoute = 'ctp_histocore_and_ihc_lab' %}
-                {% elseif currentRoute == 'ctp_misi-lab' %}
-                    {% set editRoute = 'ctp_misi-lab' %}
-                {% else %}
-                    {% set editRoute = 'ctp_home' %}
-                {% endif %}
-                {% if isEditMode %}
-                    <a href="{{ path(editRoute) }}" class="inline-flex rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 transition">Close Editor</a>
-                {% else %}
-                    <a href="{{ path(editRoute, {'edit': 1}) }}" class="inline-flex rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 transition">Edit</a>
-                {% endif %}
-            </div>
+        {% set footerEditUrl = null %}
+        {% set footerEditLabel = null %}
+        {% if is_granted('ROLE_CTP_ADMIN') and currentRoute in ['ctp_home', 'ctp_people', 'ctp_histocore_and_ihc_lab', 'ctp_misi-lab', 'ctp_comppathlab', 'ctp_genomiclab', 'ctp_cpresearchlab', 'ctp_ect', 'ctp_investigator_engagement_guide'] %}
+            {% set isEditMode = app.request.query.getBoolean('edit') %}
+            {% if currentRoute == 'ctp_people' %}
+                {% set editRoute = 'ctp_people' %}
+            {% elseif currentRoute == 'ctp_histocore_and_ihc_lab' %}
+                {% set editRoute = 'ctp_histocore_and_ihc_lab' %}
+            {% elseif currentRoute == 'ctp_misi-lab' %}
+                {% set editRoute = 'ctp_misi-lab' %}
+            {% elseif currentRoute == 'ctp_comppathlab' %}
+                {% set editRoute = 'ctp_comppathlab' %}
+            {% elseif currentRoute == 'ctp_genomiclab' %}
+                {% set editRoute = 'ctp_genomiclab' %}
+            {% elseif currentRoute == 'ctp_cpresearchlab' %}
+                {% set editRoute = 'ctp_cpresearchlab' %}
+            {% elseif currentRoute == 'ctp_ect' %}
+                {% set editRoute = 'ctp_ect' %}
+            {% elseif currentRoute == 'ctp_investigator_engagement_guide' %}
+                {% set editRoute = 'ctp_investigator_engagement_guide' %}
+            {% else %}
+                {% set editRoute = 'ctp_home' %}
+            {% endif %}
+
+            {% if isEditMode %}
+                {% set footerEditUrl = path(editRoute) %}
+                {% set footerEditLabel = 'Close Editor' %}
+            {% else %}
+                {% set footerEditUrl = path(editRoute, {'edit': 1}) %}
+                {% set footerEditLabel = 'Edit' %}
+            {% endif %}
         {% endif %}
 
         <footer class="mt-8 border-t border-gray-200 py-4 text-center text-sm text-gray-500">
@@ -374,7 +387,7 @@
             {#© <!-- -->2026<!-- --> <a href="weillcornell.org/">Weill Cornell Medicine</a> · Center for Translational Pathology#}
             © <!-- -->2026<!-- --> <a href="{{ footerInstLinkUrl }}"
             >{{ footerInstLinkText }}</a> · <a href="{{ footerDepLinkUrl }}"
-            >{{ footerDepLinkText }}</a> · {{ loginUrl|raw }}
+            >{{ footerDepLinkText }}</a> · {{ loginUrl|raw }}{% if footerEditUrl %} · <a href="{{ footerEditUrl }}" class="inline-flex rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 transition">{{ footerEditLabel }}</a>{% endif %}
         </footer>
 
     {% endblock %}

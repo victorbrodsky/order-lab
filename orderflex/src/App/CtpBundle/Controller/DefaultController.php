@@ -279,41 +279,181 @@ class DefaultController extends OrderAbstractController
     }
 
     //Exp Cell Therapy Lab
-    #[Route(path: '/experimental-cellular-therapy-lab', name: 'ctp_ect', methods: ['GET'])]
+    #[Route(path: '/experimental-cellular-therapy-lab', name: 'ctp_ect', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/ect.html.twig')]
     public function ectAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_ect';
+        $csrfTokenId = 'ctp_ect_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit experimental cellular therapy page content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP experimental cellular therapy page content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_ect');
+        }
+
         return array(
             'title' => $title,
+            'ectPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 
-    #[Route(path: '/genomics-lab', name: 'ctp_genomiclab', methods: ['GET'])]
+    #[Route(path: '/genomics-lab', name: 'ctp_genomiclab', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/genomics-lab.html.twig')]
     public function genomicLabAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_genomiclab';
+        $csrfTokenId = 'ctp_genomiclab_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit genomics page content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP genomics page content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_genomiclab');
+        }
+
         return array(
             'title' => $title,
+            'genomiclabPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 
     //CP Research Lab
-    #[Route(path: '/clinical-pathology-research-lab', name: 'ctp_cpresearchlab', methods: ['GET'])]
+    #[Route(path: '/clinical-pathology-research-lab', name: 'ctp_cpresearchlab', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/cp-research-lab.html.twig')]
     public function cpResearchLabAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_cpresearchlab';
+        $csrfTokenId = 'ctp_cpresearchlab_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit clinical pathology research lab page content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP clinical pathology research lab page content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_cpresearchlab');
+        }
+
         return array(
             'title' => $title,
+            'cpresearchlabPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 
     //Comp Path Lab
-    #[Route(path: '/computational-pathology-lab', name: 'ctp_comppathlab', methods: ['GET'])]
+    #[Route(path: '/computational-pathology-lab', name: 'ctp_comppathlab', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/comppathlab.html.twig')]
     public function expCellLabAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_comppathlab';
+        $csrfTokenId = 'ctp_comppathlab_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit computational pathology page content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP computational pathology page content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_comppathlab');
+        }
+
         return array(
             'title' => $title,
+            'comppathlabPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 
@@ -378,12 +518,47 @@ class DefaultController extends OrderAbstractController
     }
 
     //Investigator engagement guide
-    #[Route(path: '/experimental-cellular-therapy-lab/investigator-engagement-guide', name: 'ctp_investigator_engagement_guide', methods: ['GET'])]
-    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    #[Route(path: '/experimental-cellular-therapy-lab/investigator-engagement-guide', name: 'ctp_investigator_engagement_guide', methods: ['GET', 'POST'])]
+    #[Template('AppCtpBundle/Home/investigator-engagement-guide.html.twig')]
     public function investigatorEngagementGuideAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_investigator_engagement_guide';
+        $csrfTokenId = 'ctp_investigator_engagement_guide_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit investigator engagement guide content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP investigator engagement guide content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_investigator_engagement_guide');
+        }
+
         return array(
             'title' => $title,
+            'investigatorEngagementGuidePageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
     

@@ -1,7 +1,7 @@
 {% extends "AppCtpBundle/Default/base.html.twig" %}
 
 {% block title %}
-    Computational Pathology Lab | Center for Translational Pathology
+    Investigator Engagement Guide | Center for Translational Pathology
 {% endblock %}
 
 {#{% block stylesheets %}#}
@@ -29,7 +29,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                var textarea = document.getElementById('ctp-comppathlab-page-content');
+                var textarea = document.getElementById('ctp-investigator-engagement-guide-page-content');
                 if (!textarea || typeof CodeMirror === 'undefined') {
                     return;
                 }
@@ -57,30 +57,28 @@
 {% endblock %}
 
 {% block content_ctp %}
-    {% set defaultComppathlabPageContent %}
+    {% set defaultInvestigatorEngagementGuidePageContent %}
     {% endset %}
 
-    {% set effectiveComppathlabPageContent = comppathlabPageContent is defined and comppathlabPageContent ? comppathlabPageContent : defaultComppathlabPageContent %}
+    {% set effectiveInvestigatorEngagementGuidePageContent = investigatorEngagementGuidePageContent is defined and investigatorEngagementGuidePageContent ? investigatorEngagementGuidePageContent : defaultInvestigatorEngagementGuidePageContent %}
 
     {% if is_granted('ROLE_CTP_ADMIN') and isEditMode is defined and isEditMode %}
         <div class="mx-auto max-w-6xl px-6 py-6">
-            <h2 class="text-xl font-semibold text-wcm-red">Edit Computational Pathology Lab Page Content</h2>
+            <h2 class="text-xl font-semibold text-wcm-red">Edit Investigator Engagement Guide Page Content</h2>
             <p class="mt-2 text-sm text-gray-700">Update the page HTML below. Click Save to publish changes.</p>
 
-            <form method="post" action="{{ path('ctp_comppathlab') }}" class="mt-4">
-                <input type="hidden" name="_token" value="{{ csrf_token('ctp_comppathlab_page_content') }}">
+            <form method="post" action="{{ path('ctp_investigator_engagement_guide') }}" class="mt-4">
+                <input type="hidden" name="_token" value="{{ csrf_token('ctp_investigator_engagement_guide_page_content') }}">
                 <input type="hidden" name="editMode" value="1">
-                <textarea id="ctp-comppathlab-page-content" name="pageContent" class="form-control" style="min-height: 520px; font-family: monospace;">{{ effectiveComppathlabPageContent|e }}</textarea>
+                <textarea id="ctp-investigator-engagement-guide-page-content" name="pageContent" class="form-control" style="min-height: 520px; font-family: monospace;">{{ effectiveInvestigatorEngagementGuidePageContent|e }}</textarea>
 
                 <div class="mt-4 flex items-center gap-3">
                     <button type="submit" class="inline-flex rounded-md bg-wcm-red px-4 py-2 text-white font-medium shadow hover:bg-wcm-red/90 transition">Save</button>
-                    <a href="{{ path('ctp_comppathlab') }}" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-gray-700 font-medium hover:bg-gray-100 transition">Cancel</a>
+                    <a href="{{ path('ctp_investigator_engagement_guide') }}" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-gray-700 font-medium hover:bg-gray-100 transition">Cancel</a>
                 </div>
             </form>
         </div>
     {% else %}
-        {{ effectiveComppathlabPageContent|raw }}
+        {{ effectiveInvestigatorEngagementGuidePageContent|raw }}
     {% endif %}
 {% endblock %}
-
-
