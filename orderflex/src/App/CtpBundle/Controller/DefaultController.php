@@ -57,9 +57,11 @@ class DefaultController extends OrderAbstractController
 //        }
 
         $title = 'Center for Translational Pathology';
+        $pageName = 'ctp_home';
+        $csrfTokenId = 'ctp_home_page_content';
 
         $em = $this->getDoctrine()->getManager();
-        $pageContentEntity = $this->getHomePageContentEntity(false);
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
         $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
         $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
 
@@ -69,12 +71,12 @@ class DefaultController extends OrderAbstractController
 
         if( $request->isMethod('POST') && $isAdmin ) {
             $csrfToken = $request->request->get('_token');
-            if( !$this->isCsrfTokenValid('ctp_home_page_content', $csrfToken) ) {
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
                 throw $this->createAccessDeniedException('Invalid CSRF token for CTP home page content update');
             }
 
             if( !$pageContentEntity ) {
-                $pageContentEntity = $this->getHomePageContentEntity(true);
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
             }
 
             $pageContent = $request->request->get('pageContent');
@@ -94,11 +96,10 @@ class DefaultController extends OrderAbstractController
         );
     }
 
-    private function getHomePageContentEntity($createIfMissing=false)
+    private function getPageContentEntity($pageName, $createIfMissing=false)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $pageName = 'ctp_home';
         $pageContentEntity = $em->getRepository(PageContentList::class)->findOneBy(['name' => $pageName]);
 
         if( !$pageContentEntity && $createIfMissing ) {
@@ -132,12 +133,47 @@ class DefaultController extends OrderAbstractController
         );
     }
 
-    #[Route(path: '/people', name: 'ctp_people', methods: ['GET'])]
+    #[Route(path: '/people', name: 'ctp_people', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/people.html.twig')]
     public function peopleAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_people';
+        $csrfTokenId = 'ctp_people_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit people page content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP people page content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_people');
+        }
+
         return array(
             'title' => $title,
+            'peoplePageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 
