@@ -703,21 +703,91 @@ class DefaultController extends OrderAbstractController
         );
     }
 
-    #[Route(path: '/histocore-and-ihc-lab/sample-submission-checklist', name: 'ctp_sample_submission_checklist', methods: ['GET'])]
-    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    #[Route(path: '/histocore-and-ihc-lab/sample-submission-checklist', name: 'ctp_sample_submission_checklist', methods: ['GET', 'POST'])]
+    #[Template('AppCtpBundle/Home/sample-submission-checklist.html.twig')]
     public function sampleSubmissionChecklistAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_sample_submission_checklist';
+        $csrfTokenId = 'ctp_sample_submission_checklist_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit sample submission checklist content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP sample submission checklist content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_sample_submission_checklist');
+        }
+
         return array(
             'title' => $title,
+            'sampleSubmissionChecklistPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 
-    #[Route(path: '/histocore-and-ihc-lab/publications', name: 'ctp_histocore_publications', methods: ['GET'])]
-    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    #[Route(path: '/histocore-and-ihc-lab/publications', name: 'ctp_histocore_publications', methods: ['GET', 'POST'])]
+    #[Template('AppCtpBundle/Home/histocore-publications.html.twig')]
     public function histocorePublicationsAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_histocore_publications';
+        $csrfTokenId = 'ctp_histocore_publications_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit histocore publications content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP histocore publications content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_histocore_publications');
+        }
+
         return array(
             'title' => $title,
+            'histocorePublicationsPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 

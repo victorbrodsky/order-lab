@@ -5,6 +5,10 @@
 {% endblock %}
 
 {% block javascripts %}
+    {#Textarea id='ctp_home_page_content' initialized with wiki editor,
+    and on 'Submit' on wiki editor, it saves the content back to the textarea.#}
+    {#Then the request is POST to controller 'ctp_home_page_content'.#}
+
     {{ parent() }}
     <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
     {% if is_granted('ROLE_CTP_ADMIN') and isEditMode is defined and isEditMode %}
