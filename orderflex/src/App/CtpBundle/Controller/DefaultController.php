@@ -562,12 +562,47 @@ class DefaultController extends OrderAbstractController
         );
     }
     
-    #[Route(path: '/experimental-cellular-therapy-lab/irb-ready-workflow-summary', name: 'ctp_irb_ready_workflow_summary', methods: ['GET'])]
-    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    #[Route(path: '/experimental-cellular-therapy-lab/irb-ready-workflow-summary', name: 'ctp_irb_ready_workflow_summary', methods: ['GET', 'POST'])]
+    #[Template('AppCtpBundle/Home/irb-ready-workflow-summary.html.twig')]
     public function irbWorkflowSummaryAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_irb_ready_workflow_summary';
+        $csrfTokenId = 'ctp_irb_ready_workflow_summary_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit IRB-ready workflow summary content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP IRB-ready workflow summary content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_irb_ready_workflow_summary');
+        }
+
         return array(
             'title' => $title,
+            'irbReadyWorkflowSummaryPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
     
