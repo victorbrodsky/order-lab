@@ -351,7 +351,7 @@
         {% set currentRoute = app.request.attributes.get('_route') %}
         {% set footerEditUrl = null %}
         {% set footerEditLabel = null %}
-        {% if is_granted('ROLE_CTP_ADMIN') and currentRoute in ['ctp_home', 'ctp_people', 'ctp_histocore_and_ihc_lab', 'ctp_misi-lab', 'ctp_comppathlab', 'ctp_genomiclab', 'ctp_cpresearchlab', 'ctp_ect', 'ctp_investigator_engagement_guide', 'ctp_irb_ready_workflow_summary'] %}
+        {% if is_granted('ROLE_CTP_ADMIN') and currentRoute in ['ctp_home', 'ctp_people', 'ctp_histocore_and_ihc_lab', 'ctp_misi-lab', 'ctp_comppathlab', 'ctp_genomiclab', 'ctp_cpresearchlab', 'ctp_ect', 'ctp_investigator_engagement_guide', 'ctp_irb_ready_workflow_summary', 'ctp_ctem_administrative_service_line_director_profile', 'ctp_service_menu'] %}
             {% set isEditMode = app.request.query.getBoolean('edit') %}
             {% if currentRoute == 'ctp_people' %}
                 {% set editRoute = 'ctp_people' %}
@@ -371,6 +371,10 @@
                 {% set editRoute = 'ctp_investigator_engagement_guide' %}
             {% elseif currentRoute == 'ctp_irb_ready_workflow_summary' %}
                 {% set editRoute = 'ctp_irb_ready_workflow_summary' %}
+            {% elseif currentRoute == 'ctp_ctem_administrative_service_line_director_profile' %}
+                {% set editRoute = 'ctp_ctem_administrative_service_line_director_profile' %}
+            {% elseif currentRoute == 'ctp_service_menu' %}
+                {% set editRoute = 'ctp_service_menu' %}
             {% else %}
                 {% set editRoute = 'ctp_home' %}
             {% endif %}

@@ -605,6 +605,50 @@ class DefaultController extends OrderAbstractController
             'isEditMode' => $editMode,
         );
     }
+
+    #[Route(path: '/experimental-cellular-therapy-lab/ctem-administrative-service-line-director-profile', name: 'ctp_ctem_administrative_service_line_director_profile', methods: ['GET', 'POST'])]
+    #[Template('AppCtpBundle/Home/ctem-administrative-service-line-director-profile.html.twig')]
+    public function ctemAdministrativeServiceLineDirectorProfileAction( Request $request ) {
+        $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_ctem_administrative_service_line_director_profile';
+        $csrfTokenId = 'ctp_ctem_administrative_service_line_director_profile_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit CTEM administrative service line director profile content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTEM administrative service line director profile content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_ctem_administrative_service_line_director_profile');
+        }
+
+        return array(
+            'title' => $title,
+            'ctemAdministrativeServiceLineDirectorProfilePageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
+        );
+    }
     
     #[Route(path: '/experimental-cellular-therapy-lab/service-menu', name: 'ctp_ctem_service', methods: ['GET'])]
     #[Template('AppCtpBundle/Home/empty.html.twig')]
@@ -615,12 +659,47 @@ class DefaultController extends OrderAbstractController
         );
     }
 
-    #[Route(path: '/histocore-and-ihc-lab/service-menu', name: 'ctp_service_menu', methods: ['GET'])]
-    #[Template('AppCtpBundle/Home/empty.html.twig')]
+    #[Route(path: '/histocore-and-ihc-lab/service-menu', name: 'ctp_service_menu', methods: ['GET', 'POST'])]
+    #[Template('AppCtpBundle/Home/histocore-service-menu.html.twig')]
     public function serviceMenuAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        $pageName = 'ctp_service_menu';
+        $csrfTokenId = 'ctp_service_menu_page_content';
+
+        $em = $this->getDoctrine()->getManager();
+        $pageContentEntity = $this->getPageContentEntity($pageName, false);
+        $isAdmin = $this->isGranted('ROLE_CTP_ADMIN');
+        $editMode = $isAdmin && ($request->query->getBoolean('edit') || $request->request->getBoolean('editMode'));
+
+        if( $request->isMethod('POST') && !$isAdmin ) {
+            throw $this->createAccessDeniedException('Only CTP admins can edit histocore service menu content');
+        }
+
+        if( $request->isMethod('POST') && $isAdmin ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid($csrfTokenId, $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP histocore service menu content update');
+            }
+
+            if( !$pageContentEntity ) {
+                $pageContentEntity = $this->getPageContentEntity($pageName, true);
+            }
+
+            $pageContent = $request->request->get('pageContent');
+            $pageContentEntity->setPageContent($pageContent);
+            $pageContentEntity->setUpdatedby($this->getUser());
+
+            $em->persist($pageContentEntity);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_service_menu');
+        }
+
         return array(
             'title' => $title,
+            'serviceMenuPageContent' => $pageContentEntity ? $pageContentEntity->getPageContent() : null,
+            'isEditMode' => $editMode,
         );
     }
 
