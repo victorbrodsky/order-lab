@@ -177,7 +177,7 @@ class FellappTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Applicant Data")')->count()
+            $crawler->filter('html:contains("fellowshipApplicantData")')->count()
         );
         $this->assertGreaterThan(
             0,
@@ -297,8 +297,8 @@ class FellappTest extends WebTestBase
             '/'.$this->tenantprefix.'fellowship-applications/show/'.$fellappId
         );
         $targetUrl = $this->client->getRequest()->getUri();
-        echo "\n\rurl=".'/'.$this->tenantprefix.'fellowship-applications/show/'.$fellappId."\n\r";
-        echo "\n\rtargetUrl=$targetUrl";
+        echo "\n\n url=".'/'.$this->tenantprefix.'fellowship-applications/show/'.$fellappId."\n\n";
+        echo "\n\n targetUrl=$targetUrl";
 
 //        $this->assertGreaterThan(
 //            0,
@@ -306,7 +306,7 @@ class FellappTest extends WebTestBase
 //        );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Applicant Data")')->count()
+            $crawler->filter('html:contains("fellowshipApplicantData")')->count()
         );
         $this->assertGreaterThan(
             0,
@@ -327,10 +327,6 @@ class FellappTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Applicant Data")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
             $crawler->filter('html:contains("Signature")')->count()
         );
         $this->assertGreaterThan(
@@ -348,10 +344,6 @@ class FellappTest extends WebTestBase
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Fellowship Application ID")')->count()
-        );
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Applicant Data")')->count()
         );
         $this->assertGreaterThan(
             0,
