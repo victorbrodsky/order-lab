@@ -297,8 +297,8 @@ class FellappTest extends WebTestBase
             '/'.$this->tenantprefix.'fellowship-applications/show/'.$fellappId
         );
         $targetUrl = $this->client->getRequest()->getUri();
-        echo "\n\n url=".'/'.$this->tenantprefix.'fellowship-applications/show/'.$fellappId."\n\n";
-        echo "\n\n targetUrl=$targetUrl";
+        //echo "\n\n url=".'/'.$this->tenantprefix.'fellowship-applications/show/'.$fellappId."\n\n";
+        //echo "\n\n targetUrl=$targetUrl";
 
 //        $this->assertGreaterThan(
 //            0,
