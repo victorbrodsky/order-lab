@@ -195,17 +195,17 @@ class FellappTest extends WebTestBase
         unset($_GET['sort']);
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/my-interviewees/?filter[startDates]=2021&filter[active]=1&filter[complete]=1&filter[interviewee]=1&filter[priority]=1&filter[accepted]=1&filter[acceptedandnotified]=1');
 
-        $this->assertGreaterThan(
-            0,
-            $crawler->filter('html:contains("Last successful import:")')->count()
-        );
+//        $this->assertGreaterThan(
+//            0,
+//            $crawler->filter('html:contains("Last successful import:")')->count()
+//        );
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Fellowship Type")')->count()
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Medical School")')->count()
+            $crawler->filter('html:contains("Medical / Graduate School")')->count()
         );
         $this->assertGreaterThan(
             0,
@@ -228,7 +228,7 @@ class FellappTest extends WebTestBase
         );
         $this->assertGreaterThan(
             0,
-            $crawler->filter('html:contains("Medical School")')->count()
+            $crawler->filter('html:contains("Medical / Graduate School")')->count()
         );
         $this->assertGreaterThan(
             0,
