@@ -293,6 +293,8 @@ class FellappTest extends WebTestBase
         
         //Test Show
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'fellowship-applications/show/'.$fellappId);
+        $targetUrl = $this->client->getRequest()->getUri();
+        echo "targetUrl=$targetUrl";
 
 //        $this->assertGreaterThan(
 //            0,
