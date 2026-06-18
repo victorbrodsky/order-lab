@@ -804,9 +804,8 @@ class FellAppController extends OrderAbstractController {
         // "accepting applications" status from json is enabled, or show "Not accepting applications now."
         $acceptingApplication = NULL;
         if( $route == "fellapp_home" ) {
-//            $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
-//            if( $retrievalMethod ) {
 
+            if(0) {
                 $acceptingApplication = "Not accepting applications now";
                 $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
                 $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
@@ -823,7 +822,7 @@ class FellAppController extends OrderAbstractController {
                     $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
                     $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
                     //check if $retrievalMethod is null or empty string as well: !empty($retrievalMethod)
-                    if( !empty($retrievalMethod) && $environment !== 'demo' && $hideWarning !== true ) {
+                    if (!empty($retrievalMethod) && $environment !== 'demo' && $hideWarning !== true) {
                         $this->addFlash(
                             'warning',
                             "Google configuration file can not be retrieved from Google Drive." .
@@ -833,19 +832,52 @@ class FellAppController extends OrderAbstractController {
                     }
                 }
                 $acceptingApplication = "- " . $acceptingApplication;
-//            } else {
-//                //replacing ALL of that text with italicised small light grey text
-//                // “Automatic application retrieval is turned off.” that is a link to
-//                // the "Edit Site Settings" page where this can be turned back on
-//                //fellapp_siteparameters_edit_specific_site_parameters
-//                $url = $this->generateUrl('fellapp_siteparameters_edit_specific_site_parameters');
-//                $link = '<a href="' . $url . '" style="font-size:0.85em; color:#999; font-style:italic;">'
-//                    . 'Automatic application retrieval is turned off.'
-//                    . '</a>';
-//
-//                $acceptingApplication = $link;
-//            }
-        }
+            }//if 0
+
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
+            $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
+
+            if( $retrievalMethod ) {
+                $acceptingApplication = "- ".$retrievalMethod;
+                if( $retrievalMethod == 'Dedicated public tandem hub server tenant instance' ) {
+
+                } else {
+                    //Assume for now the default retrieval method is via Google
+                    $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+                    $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+                    if ($configFileContent) {
+                        $configFileContent = json_decode($configFileContent, true);
+                        $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
+                        if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
+                            $acceptingApplication = $acceptingApplication . " " . "Now accepting applications";
+                        } else {
+                            $acceptingApplication = $acceptingApplication . " " . "Not accepting application submissions";
+                        }
+                    } else {
+                        //$environment = $userSecUtil->getSiteSettingParameter('environment');
+                        //$hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
+                        //check if $retrievalMethod is null or empty string as well: !empty($retrievalMethod)
+                        if( $environment !== 'demo' && $hideWarning !== true ) {
+                            $this->addFlash(
+                                'warning',
+                                "Google configuration file can not be retrieved from Google Drive." .
+                                " Please verify if the 'Full path to the credential authentication JSON file for Google'" .
+                                " parameter in the site settings has been provided and exists on the server"
+                            );
+                        }
+                    }
+                }
+            } else {
+                $acceptingApplication = "Not accepting applications now";
+                $this->addFlash(
+                    'warning',
+                    "The retrieval method for fellowship applications is not set"
+                );
+                $acceptingApplication = "- " . $acceptingApplication;
+            }
+
+        } //if $route == "fellapp_home"
 
         //emailAcceptSubject emailAcceptBody
         $acceptedEmailSubject = $userSecUtil->getSiteSettingParameter('acceptedEmailSubject',$this->getParameter('fellapp.sitename'));

@@ -56,7 +56,13 @@
                 and not user_security_utility.getSiteSettingParameter('hideWarning',fellapp_sitename)
             %}
                 <div class="alert alert-danger">
-                    Automatic import of fellowship applications submitted via the Google form is turned off.
+                    {#Automatic import of fellowship applications submitted via the Google form is turned off.#}
+                    {#Automatic import of fellowship applications is turned off#}
+                    <a href="{{ path('fellapp_siteparameters_edit_specific_site_parameters') }}"
+                       target="_blank"
+                       style="font-size: 0.85em; color: #999; font-style: italic;">
+                        Automatic application retrieval is turned off.
+                    </a>
                 </div>
             {% endif %}
         {% endif %}
