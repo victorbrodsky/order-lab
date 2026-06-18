@@ -190,9 +190,9 @@ class RecLetterUtil {
         $fellappType = $fellapp->getFellowshipSubspecialty();
         if( $fellappType ) {
             $sendEmailUploadLetterFellAppPerSpecialty = $fellappType->getSendEmailUploadLetterFellApp();
-            if( $sendEmailUploadLetterFellAppPerSpecialty !== true ) {
+            if( $sendEmailUploadLetterFellAppPerSpecialty === false ) {
                 $msg = "Automatically send invitation emails to upload recommendation letters is set to NO for the specialty $fellappType: invitation email will not be send to reference ".$reference->getFullName();
-                $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
+                $this->sendLetterEventLog($msg,"Disabled Specialty Email Invitation",$fellapp);
                 $res = array(
                     "res" => false,
                     "msg" => $msg
@@ -1541,7 +1541,7 @@ class RecLetterUtil {
             $fellappType = $fellapp->getFellowshipSubspecialty();
             if( $fellappType ) {
                 $sendEmailUploadLetterFellAppPerSpecialty = $fellappType->getSendEmailUploadLetterFellApp();
-                if( $sendEmailUploadLetterFellAppPerSpecialty !== true ) {
+                if( $sendEmailUploadLetterFellAppPerSpecialty === false ) {
                     $logger = $this->container->get('logger');
                     $logger->notice("Automatically send invitation emails to upload recommendation letters is set to NO for the specialty $fellappType: invitation email will not be send");
                     return false;
