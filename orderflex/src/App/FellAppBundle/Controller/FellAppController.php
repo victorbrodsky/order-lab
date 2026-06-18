@@ -850,9 +850,9 @@ class FellAppController extends OrderAbstractController {
                         $configFileContent = json_decode($configFileContent, true);
                         $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
                         if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
-                            $acceptingApplication = $acceptingApplication . " " . "Now accepting applications";
+                            $acceptingApplication = $acceptingApplication . " " . "- Now accepting applications";
                         } else {
-                            $acceptingApplication = $acceptingApplication . " " . "Not accepting application submissions";
+                            $acceptingApplication = $acceptingApplication . " " . "- Not accepting application submissions";
                         }
                     } else {
                         //$environment = $userSecUtil->getSiteSettingParameter('environment');
