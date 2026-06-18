@@ -135,6 +135,7 @@ class FellappSiteParameterType extends AbstractType
 
         $builder->add('allowPopulateFellApp',null,array(
             'label' => 'Periodically import fellowship applications and reference letters submitted via the Google form:',
+//            'label' => 'Periodically import fellowship applications and reference letters:',
             'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
         ));
 

@@ -805,34 +805,34 @@ class FellAppController extends OrderAbstractController {
         $acceptingApplication = NULL;
         if( $route == "fellapp_home" ) {
 
-            if(0) {
-                $acceptingApplication = "Not accepting applications now";
-                $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
-                $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
-                //dump($configFileContent);
-                //exit('111');
-                if ($configFileContent) {
-                    $configFileContent = json_decode($configFileContent, true);
-                    $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
-                    if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
-                        $acceptingApplication = "Now accepting applications";
-                    }
-                } else {
-                    $environment = $userSecUtil->getSiteSettingParameter('environment');
-                    $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
-                    $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
-                    //check if $retrievalMethod is null or empty string as well: !empty($retrievalMethod)
-                    if (!empty($retrievalMethod) && $environment !== 'demo' && $hideWarning !== true) {
-                        $this->addFlash(
-                            'warning',
-                            "Google configuration file can not be retrieved from Google Drive." .
-                            " Please verify if the 'Full path to the credential authentication JSON file for Google'" .
-                            " parameter in the site settings has been provided and exists on the server"
-                        );
-                    }
-                }
-                $acceptingApplication = "- " . $acceptingApplication;
-            }//if 0
+//            if(0) {
+//                $acceptingApplication = "Not accepting applications now";
+//                $googlesheetmanagement = $this->container->get('fellapp_googlesheetmanagement');
+//                $configFileContent = $googlesheetmanagement->getConfigOnGoogleDrive();
+//                //dump($configFileContent);
+//                //exit('111');
+//                if ($configFileContent) {
+//                    $configFileContent = json_decode($configFileContent, true);
+//                    $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
+//                    if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
+//                        $acceptingApplication = "Now accepting applications";
+//                    }
+//                } else {
+//                    $environment = $userSecUtil->getSiteSettingParameter('environment');
+//                    $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
+//                    $retrievalMethod = $fellappUtil->getFellappRetrievalMethod();
+//                    //check if $retrievalMethod is null or empty string as well: !empty($retrievalMethod)
+//                    if (!empty($retrievalMethod) && $environment !== 'demo' && $hideWarning !== true) {
+//                        $this->addFlash(
+//                            'warning',
+//                            "Google configuration file can not be retrieved from Google Drive." .
+//                            " Please verify if the 'Full path to the credential authentication JSON file for Google'" .
+//                            " parameter in the site settings has been provided and exists on the server"
+//                        );
+//                    }
+//                }
+//                $acceptingApplication = "- " . $acceptingApplication;
+//            }//if 0
 
             $environment = $userSecUtil->getSiteSettingParameter('environment');
             $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
