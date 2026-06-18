@@ -870,10 +870,12 @@ class FellAppController extends OrderAbstractController {
                 }
             } else {
                 $acceptingApplication = "Not accepting applications now";
-                $this->addFlash(
-                    'warning',
-                    "The retrieval method for fellowship applications is not set"
-                );
+                if( $environment !== 'demo' && $hideWarning !== true ) {
+                    $this->addFlash(
+                        'warning',
+                        "The retrieval method for fellowship applications is not set"
+                    );
+                }
                 $acceptingApplication = "- " . $acceptingApplication;
             }
 
