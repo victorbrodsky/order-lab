@@ -850,7 +850,7 @@ class FellAppController extends OrderAbstractController {
                         $configFileContent = json_decode($configFileContent, true);
                         $acceptingSubmissions = $configFileContent['acceptingSubmissions'];
                         if ($acceptingSubmissions || $acceptingSubmissions == 'true') {
-                            $acceptingApplication = $acceptingApplication . " " . "- Now accepting applications";
+                            $acceptingApplication = $acceptingApplication . " " . "- accepting applications";
                         } else {
                             $acceptingApplication = $acceptingApplication . " " . "- Not accepting application submissions";
                         }
