@@ -58,6 +58,7 @@ sudo systemctl status httpdtenantmanager
 sudo systemctl status httpdtenantapp1
 sudo systemctl status httpdtenantapp2
 sudo systemctl status httpdtenantappdemo
+sudo systemctl status httpdtenantapptest
 
 Restart all apache/php services:
 sudo systemctl restart httpdhomepagemanager
@@ -65,6 +66,7 @@ sudo systemctl restart httpdtenantmanager
 sudo systemctl restart httpdtenantapp1
 sudo systemctl restart httpdtenantapp2
 sudo systemctl restart httpdtenantappdemo
+sudo systemctl restart httpdtenantapptest
 sudo systemctl restart haproxy
 sudo systemctl restart php-fpm
 

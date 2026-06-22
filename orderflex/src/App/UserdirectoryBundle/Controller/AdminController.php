@@ -10920,7 +10920,13 @@ class AdminController extends OrderAbstractController
             "Anatomic Pathology" =>                 array("ap",             "AP",               "AP",    "AP"),    //Anatomic Pathology (prefix AP)
             "Clinical Pathology" =>                 array("cp",             "CP",               "CP",    "CP"), //Clinical Pathology (prefix CP)
 
-            "Computational & Systems Pathology" =>  array("csp",            "CSP",              "CSP",   "CSP")
+            "Computational & Systems Pathology" =>  array("csp",            "CSP",              "CSP",   "CSP"),
+
+            //TODO: internal appears in Internal, External in external
+            //Internal Investigator Initial (III) Project Inquiry
+            "Internal Investigator Initial" =>  array("iii",                "III",              "III",   "III"),
+            //External Collaboration Initial (ECI) Project Inquiry
+            "External Collaboration Initial" =>  array("eci",                "ECI",              "ECI",   "ECI"),
         );
 
         $flush = false;
