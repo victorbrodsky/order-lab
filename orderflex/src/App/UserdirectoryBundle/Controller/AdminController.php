@@ -10922,11 +10922,12 @@ class AdminController extends OrderAbstractController
 
             "Computational & Systems Pathology" =>  array("csp",            "CSP",              "CSP",   "CSP"),
 
-            //TODO: internal appears in Internal, External in external
+            //TODO: internal appears in Internal, External in external.
+            // Project has $requesterGroup (Internal WCM, External WCM, External-Non-WCM)
             //Internal Investigator Initial (III) Project Inquiry
-            "Internal Investigator Initial" =>  array("iii",                "III",              "III",   "III"),
+            //"Internal Investigator Initial" =>  array("iii",                "III",              "III",   "III"),
             //External Collaboration Initial (ECI) Project Inquiry
-            "External Collaboration Initial" =>  array("eci",                "ECI",              "ECI",   "ECI"),
+            //"External Collaboration Initial" =>  array("eci",                "ECI",              "ECI",   "ECI"),
         );
 
         $flush = false;

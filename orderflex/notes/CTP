@@ -3,3 +3,33 @@ Department *
 Background * (match to the existing field "Brief Description:")
 
 Experimental Plan Summary * (match to the existing field "Hypothesis:")
+
+Phone, Contact Name *, Contact Email Address * (match to the existing uses profile)
+
+Funding Source:
+
+We have "Has this project been funded?" -  "Yes"/"No, I am requesting all or some funding from the NYP/WCM Pathology department"
+If "Yes":
+    "If funded, please provide account number:"
+    "Project budget amount ($) (See fee schedule):"
+
+If "No, I am requesting all or some funding from the NYP/WCM Pathology department":
+"Additional Details" section:
+    "Which department(s) outside of pathology are you collaborating with?"
+    "Which outside institution(s) are you planning to collaborate with?:"
+    "If collaborations with outside institutions are planned, will you (or the principal investigator listed above) be the PI for the entire study?:"
+    "Background (essential information related to the project):"
+    "Specific aims (please provide 2 to 3):"
+    "Research strategy (provide a description of the study design, approach, and statistical methods including sample size calculation):"
+    "Expected results (2 to 3 sentences):"
+    "Is funding for this project requested from the Pathology Department?:"
+    "Please describe the planned expenses that comprise the budget for this project:"
+    "Other departmental resources requested:"
+    "If funded, please provide account number:"
+    "Project budget amount ($) (See fee schedule): *"
+
+
+
+
+
+
