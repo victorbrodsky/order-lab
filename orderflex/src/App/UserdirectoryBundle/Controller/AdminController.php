@@ -10927,7 +10927,9 @@ class AdminController extends OrderAbstractController
             //Internal Investigator Initial (III) Project Inquiry
             //"Internal Investigator Initial" =>  array("iii",                "III",              "III",   "III"),
             //External Collaboration Initial (ECI) Project Inquiry
-            //"External Collaboration Initial" =>  array("eci",                "ECI",              "ECI",   "ECI"),
+            //"External Collaboration Initial" =>  array("eci",               "ECI",              "ECI",   "ECI"),
+            //init INIT
+            "Investigator's Initial Project Inquiry" => array("init",         "INIT",           "INIT",   "INIT")
         );
 
         $flush = false;

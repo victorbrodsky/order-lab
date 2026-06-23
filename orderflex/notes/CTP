@@ -29,7 +29,28 @@ If "No, I am requesting all or some funding from the NYP/WCM Pathology departmen
     "Project budget amount ($) (See fee schedule): *"
 
 
+Vacation request:
+"Based on X percent effort, there are Y carry-over days" (there is 1 carry over day)
+"Based on Name's percent effort, there are Y carry-over days"
 
 
 
+WCM Investigator Project Inquiry
 
+* Required Fields
+Date (mm / dd / yyyy)
+Project Title
+Principal Investigator
+Department
+Contact Name
+Contact Email Address
+Background
+Experimental Plan Summary
+
+Optional Fields
+Phone ((###) ###‑####)
+Funding Source
+
+
+
+External Collaboration Project Inquiry
