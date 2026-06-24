@@ -25,10 +25,13 @@ use App\CtpBundle\Entity\PageContentList;
 use App\UserdirectoryBundle\Entity\AccessRequest;
 use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespace by ::class: added use line for classname=Roles
 use App\OrderformBundle\Entity\Message;
+use App\TranslationalResearchBundle\Entity\Project;
+use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
+use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
@@ -124,13 +127,155 @@ class DefaultController extends OrderAbstractController
         );
     }
 
-    #[Route(path: '/new-project-inquiry', name: 'ctp_new-project-inquiry', methods: ['GET'])]
+    #[Route(path: '/new-project-inquiry', name: 'ctp_new-project-inquiry', methods: ['GET', 'POST'])]
     #[Template('AppCtpBundle/Home/new-project-inquiry.html.twig')]
     public function newProjectInquiryAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+
+        if( $request->isMethod('POST') ) {
+            $csrfToken = $request->request->get('_token');
+            if( !$this->isCsrfTokenValid('ctp_new_project_inquiry_submit', $csrfToken) ) {
+                throw $this->createAccessDeniedException('Invalid CSRF token for CTP new project inquiry submission');
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $inquiryType = $this->getTrimmedRequestValue($request, 'inquiryType') ?? 'wcm';
+
+            $project = new Project($this->getUser() instanceof User ? $this->getUser() : null);
+            $project->setVersion(1);
+
+            $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['name' => "Investigator's Initial Project Inquiry"]);
+            if( !$projectSpecialty ) {
+                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['friendlyname' => "Investigator's Initial Project Inquiry"]);
+            }
+            if( $projectSpecialty ) {
+                $project->setProjectSpecialty($projectSpecialty);
+            }
+
+            $inquiryDate = $this->getTrimmedRequestValue($request, 'inquiryDate');
+            if( $inquiryDate ) {
+                try {
+                    $project->setCreateDate(new \DateTime($inquiryDate));
+                } catch( \Exception $e ) {
+                }
+            }
+
+            $projectTitle = $this->getTrimmedRequestValue($request, 'projectTitle');
+            if( $projectTitle ) {
+                $project->setTitle($projectTitle);
+            } elseif( $inquiryType === 'external' ) {
+                $project->setTitle('External Collaboration Project Inquiry');
+            }
+
+            $background = $this->getTrimmedRequestValue($request, 'background');
+            if( $background ) {
+                $project->setEssentialInfo($background);
+                $project->setDescription($background);
+            }
+
+            $experimentalPlanSummary = $this->getTrimmedRequestValue($request, 'experimentalPlanSummary');
+            if( $experimentalPlanSummary ) {
+                $project->setStrategy($experimentalPlanSummary);
+                $project->setObjective($experimentalPlanSummary);
+            }
+
+            $fundingSource = $this->getTrimmedRequestValue($request, 'fundingSource');
+            if( $fundingSource ) {
+                $project->setFundDescription($fundingSource);
+            }
+
+            $department = $this->getTrimmedRequestValue($request, 'department');
+            if( $department ) {
+                $project->setCollDepartment($department);
+
+                $institution = $em->getRepository(Institution::class)->findOneBy(['name' => $department]);
+                if( $institution ) {
+                    $project->setInstitution($institution);
+                }
+            }
+
+            $inquirySummary = array();
+            $inquirySummary[] = 'Inquiry Type: '.($inquiryType === 'external' ? 'External Collaboration Project Inquiry' : 'WCM Investigator Project Inquiry');
+
+            if( $inquiryType === 'external' ) {
+                $externalContactName = $this->getTrimmedRequestValue($request, 'externalContactName');
+                $externalContactEmail = $this->getTrimmedRequestValue($request, 'externalContactEmail');
+                $externalInstitution = $this->getTrimmedRequestValue($request, 'externalInstitution');
+                $externalPhone = $this->getTrimmedRequestValue($request, 'externalPhone');
+
+                if( $externalContactName ) {
+                    $inquirySummary[] = 'External Collaborator Contact Name: '.$externalContactName;
+                }
+                if( $externalContactEmail ) {
+                    $inquirySummary[] = 'External Contact Email: '.$externalContactEmail;
+
+                    $contactUser = $em->getRepository(User::class)->findOneUserByEmail($externalContactEmail);
+                    if( $contactUser ) {
+                        $project->addContact($contactUser);
+                        if( !$project->getSubmitter() ) {
+                            $project->setSubmitter($contactUser);
+                        }
+                    }
+                }
+                if( $externalInstitution ) {
+                    $project->setCollInst($externalInstitution);
+                    $inquirySummary[] = 'External Institution: '.$externalInstitution;
+                }
+                if( $externalPhone ) {
+                    $inquirySummary[] = 'External Contact Phone Number: '.$externalPhone;
+                }
+            } else {
+                $principalInvestigator = $this->getTrimmedRequestValue($request, 'principalInvestigator');
+                $contactName = $this->getTrimmedRequestValue($request, 'contactName');
+                $contactEmail = $this->getTrimmedRequestValue($request, 'contactEmail');
+                $phone = $this->getTrimmedRequestValue($request, 'phone');
+
+                if( $principalInvestigator ) {
+                    $inquirySummary[] = 'Principal Investigator (entered): '.$principalInvestigator;
+
+                    $principalInvestigatorUser = $em->getRepository(User::class)->findOneByAnyNameStr($principalInvestigator);
+                    if( $principalInvestigatorUser ) {
+                        $project->addPrincipalInvestigator($principalInvestigatorUser);
+                    }
+                }
+                if( $contactName ) {
+                    $inquirySummary[] = 'Contact Name: '.$contactName;
+                }
+                if( $contactEmail ) {
+                    $inquirySummary[] = 'Contact Email Address: '.$contactEmail;
+
+                    $contactUser = $em->getRepository(User::class)->findOneUserByEmail($contactEmail);
+                    if( $contactUser ) {
+                        $project->addContact($contactUser);
+                        if( !$project->getSubmitter() ) {
+                            $project->setSubmitter($contactUser);
+                        }
+                    }
+                }
+                if( $phone ) {
+                    $inquirySummary[] = 'Phone: '.$phone;
+                }
+            }
+
+            if( count($inquirySummary) > 0 ) {
+                $project->setOtherResource(implode("\n", $inquirySummary));
+            }
+
+            $em->persist($project);
+            $em->flush();
+
+            return $this->redirectToRoute('ctp_new-project-inquiry');
+        }
+
         return array(
             'title' => $title,
         );
+    }
+
+    private function getTrimmedRequestValue(Request $request, string $fieldName): ?string
+    {
+        $value = trim((string)$request->request->get($fieldName));
+        return $value !== '' ? $value : null;
     }
 
     #[Route(path: '/people', name: 'ctp_people', methods: ['GET', 'POST'])]

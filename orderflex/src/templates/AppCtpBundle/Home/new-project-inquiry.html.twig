@@ -83,13 +83,17 @@
             {#border caused by class 'tab-content'#}
             <form id="wcm-form"
                   class="tab-content space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm"
+                  method="post"
+                  action="{{ path('ctp_new-project-inquiry') }}"
                   style="border: none; display: block;"
             >
+                <input type="hidden" name="_token" value="{{ csrf_token('ctp_new_project_inquiry_submit') }}">
+                <input type="hidden" name="inquiryType" value="wcm">
 
                 <section class="grid gap-3 md:w-1/2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
-                        <input type="date" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value=""/>
+                        <input type="date" name="inquiryDate" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value=""/>
                     </div>
                 </section>
 
@@ -98,54 +102,54 @@
                 <section class="grid gap-3 md:grid-cols-2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Project Title <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Glioblastoma Tissue Microarrays" value=""/>
+                        <input name="projectTitle" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Glioblastoma Tissue Microarrays" value=""/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="PI name" value=""/>
+                        <input name="principalInvestigator" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="PI name" value=""/>
                     </div>
                 </section>
 
                 <section class="grid gap-3 md:grid-cols-2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Department <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. Pathology and Laboratory Medicine" value=""/>
+                        <input name="department" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. Pathology and Laboratory Medicine" value=""/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Phone</label>
-                        <input type="tel" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value=""/>
+                        <input type="tel" name="phone" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value=""/>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Contact Name <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value=""/>
+                        <input name="contactName" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value=""/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Contact Email Address <span class="text-red-600">*</span></label>
-                        <input type="email" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. jod2034@med.cornell.edu" value=""/>
+                        <input type="email" name="contactEmail" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. jod2034@med.cornell.edu" value=""/>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Background <span class="text-red-600">*</span></label>
-                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project..."></textarea>
+                        <textarea name="background" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project..."></textarea>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Experimental Plan Summary <span class="text-red-600">*</span></label>
-                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
+                        <textarea name="experimentalPlanSummary" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Funding Source</label>
-                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="3" placeholder="List funding sources (if applicable)..."></textarea>
+                        <textarea name="fundingSource" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="3" placeholder="List funding sources (if applicable)..."></textarea>
                     </div>
                 </section>
 
@@ -160,13 +164,17 @@
             {# External Collaboration Form (initially hidden) #}
             <form id="external-form"
                   class="tab-content space-y-5 bg-white p-4 rounded-xl border border-gray-200 shadow-sm"
+                  method="post"
+                  action="{{ path('ctp_new-project-inquiry') }}"
                   style="border: none; display: none;"
             >
+                <input type="hidden" name="_token" value="{{ csrf_token('ctp_new_project_inquiry_submit') }}">
+                <input type="hidden" name="inquiryType" value="external">
 
                 <section class="grid gap-3 md:w-1/2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
-                        <input type="date" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value=""/>
+                        <input type="date" name="inquiryDate" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value=""/>
                     </div>
                 </section>
 
@@ -189,36 +197,36 @@
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">External Collaborator Contact Name <span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value=""/>
+                        <input name="externalContactName" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value=""/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700"> ExternalContact Email <span class="text-red-600">*</span></label>
-                        <input type="email" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="collaborator@institution.edu" value=""/>
+                        <input type="email" name="externalContactEmail" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="collaborator@institution.edu" value=""/>
                     </div>
                 </section>
 
                 <section class="grid gap-3 md:grid-cols-2">
                     <div class="grid gap-1 md:col-span-2">
                         <label class="text-sm text-gray-700">Institution<span class="text-red-600">*</span></label>
-                        <input class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="Collaborating institution" value=""/>
+                        <input name="externalInstitution" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="Collaborating institution" value=""/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Contact Phone Number (optional)</label>
-                        <input type="tel" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value=""/>
+                        <input type="tel" name="externalPhone" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value=""/>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Background <span class="text-red-600">*</span></label>
-                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project..."></textarea>
+                        <textarea name="background" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project..."></textarea>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Experimental Plan Summary <span class="text-red-600">*</span></label>
-                        <textarea class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
+                        <textarea name="experimentalPlanSummary" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
                     </div>
                 </section>
 
