@@ -603,8 +603,9 @@ class SecurityController extends OrderAbstractController
         $sitename = $this->getParameter('employees.sitename');
 
         if( $url ) {
-            //_index_dev.php_c_lmh_pathology_directory_ => /index_dev.php/c/lmh/pathology/directory/
-            $url = str_replace("_","/",$url);
+            //Reconstruct url with '_' _index_dev.php_c_lmh_pathology_directory_ => /index_dev.php/c/lmh/pathology/directory/
+            //Reconstruct url with '__' __index__dev.php__c__lmh__pathology__directory_ => /index_dev.php/c/lmh/pathology/directory/ => use '__'?
+            $url = str_replace("__","/",$url);
 
             if (strpos((string)$url, "/translational-research/") !== false) {
                 $sitename = $this->getParameter('translationalresearch.sitename');
