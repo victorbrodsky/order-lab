@@ -10923,14 +10923,20 @@ class AdminController extends OrderAbstractController
             "Computational & Systems Pathology" =>  array("csp",            "CSP",              "CSP",   "CSP"),
 
             //TODO: internal appears in Internal, External in external.
-            // Project has $requesterGroup (Internal WCM, External WCM, External-Non-WCM)
+            // Project has requesterGroup (Internal WCM, External WCM, External-Non-WCM)
             //Internal Investigator Initial (III) Project Inquiry
             //"Internal Investigator Initial" =>  array("iii",                "III",              "III",   "III"),
             //External Collaboration Initial (ECI) Project Inquiry
             //"External Collaboration Initial" =>  array("eci",               "ECI",              "ECI",   "ECI"),
             //init INIT
-            "Investigator's Initial Project Inquiry" => array("init",         "INIT",           "INIT",   "INIT")
+            //"Investigator's Initial Project Inquiry" => array("init",         "INIT",           "INIT",   "INIT")
         );
+
+        //Don't show it on the live server
+        if( 0 ) {
+            $types["Investigator's Initial Project Inquiry"] = array("init", "INIT", "INIT", "INIT");
+        }
+
 
         $flush = false;
         $count = 10;
@@ -10967,6 +10973,8 @@ class AdminController extends OrderAbstractController
 
                 //add not existing _TRANSRES_ roles
                 $transresUtil->addTransresRolesBySpecialty($listEntity);
+
+                $count = $count + 10;
 
                 continue;
             }

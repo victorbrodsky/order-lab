@@ -36,8 +36,7 @@ Vacation request:
 
 
 WCM Investigator Project Inquiry
-
-* Required Fields
+* Required Fields:
 Date (mm / dd / yyyy)
 Project Title
 Principal Investigator
@@ -47,10 +46,19 @@ Contact Email Address
 Background
 Experimental Plan Summary
 
-Optional Fields
+Optional Fields:
 Phone ((###) ###‑####)
 Funding Source
 
 
-
 External Collaboration Project Inquiry
+* Required Fields:
+Date (mm / dd / yyyy)
+External Collaborator Contact Name
+External Contact Email
+Institution
+Background
+Experimental Plan Summary
+
+Optional Field:
+Contact Phone Number ((###) ###‑####)
