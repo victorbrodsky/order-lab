@@ -113,6 +113,7 @@ class SessionIdleHandler
                     $event->setResponse(new RedirectResponse($this->router->generate($idleLogoutRouteName)));
                 }
 
+                //Error: No route found for "GET http://view.med.cornell.edu/directory/idle-log-out-ref//time-away-request/my-requests/"
                 if(1) {
                     $idleLastUrl = str_replace('/', '_', $request->getRequestUri());
                     $logger->notice('SessionIdleHandler: idle timeout redirect to employees_idlelogout_ref, idleLastUrl=' .

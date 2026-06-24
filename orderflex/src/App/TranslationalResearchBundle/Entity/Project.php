@@ -3420,18 +3420,9 @@ class Project {
         $projectSpecialtyStr = "";
         $projectSpecialty = $this->getProjectSpecialty();
         if( $projectSpecialty ) {
-            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
-            if( $projectSpecialtyAbbreviation == "hematopathology" ) {
-                //$projectSpecialtyAbbreviation = "HEMEPATH";
-                $projectSpecialtyAbbreviation = "HP";
-            }
-            if( $projectSpecialtyAbbreviation == "covid19" ) {
-                //$projectSpecialtyAbbreviation = "HEMEPATH";
-                //use ShortName for this
-                $projectSpecialtyAbbreviation = "COVID";
-            }
-            $projectSpecialtyAbbreviation = str_replace("-","",$projectSpecialtyAbbreviation);
-            $projectSpecialtyStr = strtoupper($projectSpecialtyAbbreviation);
+            $projectSpecialtyShortName = $projectSpecialty->getUppercaseShortName();
+            $projectSpecialtyShortName = str_replace("-","",$projectSpecialtyShortName);
+            $projectSpecialtyStr = strtoupper($projectSpecialtyShortName);
         }
         return $projectSpecialtyStr;
     }

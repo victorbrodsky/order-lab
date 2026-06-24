@@ -144,9 +144,16 @@ class DefaultController extends OrderAbstractController
             $project = new Project($this->getUser() instanceof User ? $this->getUser() : null);
             $project->setVersion(1);
 
-            $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['name' => "Investigator's Initial Project Inquiry"]);
+            $projectSpecialtyName = "Investigator's Initial Project Inquiry";
+            $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['name' => $projectSpecialtyName]);
             if( !$projectSpecialty ) {
-                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['friendlyname' => "Investigator's Initial Project Inquiry"]);
+                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['friendlyname' => $projectSpecialtyName]);
+            }
+            if( !$projectSpecialty ) {
+                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['abbreviation' => 'init']);
+            }
+            if( !$projectSpecialty ) {
+                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['shortname' => 'INIT']);
             }
             if( $projectSpecialty ) {
                 $project->setProjectSpecialty($projectSpecialty);
@@ -262,6 +269,9 @@ class DefaultController extends OrderAbstractController
             }
 
             $em->persist($project);
+            $em->flush();
+
+            $project->generateOid();
             $em->flush();
 
             return $this->redirectToRoute('ctp_new-project-inquiry');
