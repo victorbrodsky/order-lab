@@ -131,6 +131,8 @@ class DefaultController extends OrderAbstractController
     #[Template('AppCtpBundle/Home/new-project-inquiry.html.twig')]
     public function newProjectInquiryAction( Request $request ) {
         $title = 'Center for Translational Pathology';
+        $activeInquiryType = 'wcm';
+        $validationErrors = array();
 
         if( $request->isMethod('POST') ) {
             $csrfToken = $request->request->get('_token');
@@ -140,6 +142,19 @@ class DefaultController extends OrderAbstractController
 
             $em = $this->getDoctrine()->getManager();
             $inquiryType = $this->getTrimmedRequestValue($request, 'inquiryType') ?? 'wcm';
+            if( $inquiryType !== 'external' ) {
+                $inquiryType = 'wcm';
+            }
+            $activeInquiryType = $inquiryType;
+
+            $validationErrors = $this->getRequiredInquiryFieldErrors($request, $inquiryType);
+            if( count($validationErrors) > 0 ) {
+                return array(
+                    'title' => $title,
+                    'activeInquiryType' => $activeInquiryType,
+                    'validationErrors' => $validationErrors,
+                );
+            }
 
             $project = new Project($this->getUser() instanceof User ? $this->getUser() : null);
             $project->setVersion(1);
@@ -279,7 +294,43 @@ class DefaultController extends OrderAbstractController
 
         return array(
             'title' => $title,
+            'activeInquiryType' => $activeInquiryType,
+            'validationErrors' => $validationErrors,
         );
+    }
+
+    private function getRequiredInquiryFieldErrors(Request $request, string $inquiryType): array
+    {
+        $requiredFields = array(
+            'inquiryDate' => 'Date',
+            'background' => 'Background',
+            'experimentalPlanSummary' => 'Experimental Plan Summary',
+        );
+
+        if( $inquiryType === 'external' ) {
+            $requiredFields = array_merge($requiredFields, array(
+                'externalContactName' => 'External Collaborator Contact Name',
+                'externalContactEmail' => 'External Contact Email',
+                'externalInstitution' => 'Institution',
+            ));
+        } else {
+            $requiredFields = array_merge($requiredFields, array(
+                'projectTitle' => 'Project Title',
+                'principalInvestigator' => 'Principal Investigator',
+                'department' => 'Department',
+                'contactName' => 'Contact Name',
+                'contactEmail' => 'Contact Email Address',
+            ));
+        }
+
+        $errors = array();
+        foreach( $requiredFields as $fieldName => $label ) {
+            if( !$this->getTrimmedRequestValue($request, $fieldName) ) {
+                $errors[] = $label;
+            }
+        }
+
+        return $errors;
     }
 
     private function getTrimmedRequestValue(Request $request, string $fieldName): ?string

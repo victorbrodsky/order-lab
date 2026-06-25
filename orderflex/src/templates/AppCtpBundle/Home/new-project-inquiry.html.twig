@@ -8,6 +8,12 @@
     {{ parent() }}
     <script src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/_next/static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js" nomodule></script>
     <script>
+        const initialInquiryType = '{{ activeInquiryType|default('wcm') }}';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab(initialInquiryType);
+        });
+
         function switchTab(tab) {
             const wcmBtn = document.getElementById('wcm-tab-btn');
             const externalBtn = document.getElementById('external-tab-btn');
@@ -46,6 +52,17 @@
 
         <main class="relative mx-auto max-w-3xl px-4 py-12 md:py-16 space-y-6">
         {#<main class="min-h-screen bg-[var(--bg)] text-[var(--ink)]">#}
+
+            {% if validationErrors is defined and validationErrors|length > 0 %}
+                <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+                    <p class="font-semibold">Please complete the required fields:</p>
+                    <ul class="mt-2 list-disc pl-5">
+                        {% for validationError in validationErrors %}
+                            <li>{{ validationError }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
             
             {# Page Header #}
             <div class="space-y-2">
@@ -93,7 +110,7 @@
                 <section class="grid gap-3 md:w-1/2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
-                        <input type="date" name="inquiryDate" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value=""/>
+                        <input type="date" name="inquiryDate" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value="{{ app.request.request.get('inquiryDate')|default('') }}"/>
                     </div>
                 </section>
 
@@ -102,54 +119,54 @@
                 <section class="grid gap-3 md:grid-cols-2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Project Title <span class="text-red-600">*</span></label>
-                        <input name="projectTitle" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Glioblastoma Tissue Microarrays" value=""/>
+                        <input name="projectTitle" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., Glioblastoma Tissue Microarrays" value="{{ app.request.request.get('projectTitle')|default('') }}"/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Principal Investigator <span class="text-red-600">*</span></label>
-                        <input name="principalInvestigator" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="PI name" value=""/>
+                        <input name="principalInvestigator" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="PI name" value="{{ app.request.request.get('principalInvestigator')|default('') }}"/>
                     </div>
                 </section>
 
                 <section class="grid gap-3 md:grid-cols-2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Department <span class="text-red-600">*</span></label>
-                        <input name="department" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. Pathology and Laboratory Medicine" value=""/>
+                        <input name="department" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. Pathology and Laboratory Medicine" value="{{ app.request.request.get('department')|default('') }}"/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Phone</label>
-                        <input type="tel" name="phone" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value=""/>
+                        <input type="tel" name="phone" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value="{{ app.request.request.get('phone')|default('') }}"/>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Contact Name <span class="text-red-600">*</span></label>
-                        <input name="contactName" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value=""/>
+                        <input name="contactName" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value="{{ app.request.request.get('contactName')|default('') }}"/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Contact Email Address <span class="text-red-600">*</span></label>
-                        <input type="email" name="contactEmail" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. jod2034@med.cornell.edu" value=""/>
+                        <input type="email" name="contactEmail" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g. jod2034@med.cornell.edu" value="{{ app.request.request.get('contactEmail')|default('') }}"/>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Background <span class="text-red-600">*</span></label>
-                        <textarea name="background" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project..."></textarea>
+                        <textarea name="background" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project...">{{ app.request.request.get('background')|default('') }}</textarea>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Experimental Plan Summary <span class="text-red-600">*</span></label>
-                        <textarea name="experimentalPlanSummary" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
+                        <textarea name="experimentalPlanSummary" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods...">{{ app.request.request.get('experimentalPlanSummary')|default('') }}</textarea>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Funding Source</label>
-                        <textarea name="fundingSource" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="3" placeholder="List funding sources (if applicable)..."></textarea>
+                        <textarea name="fundingSource" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="3" placeholder="List funding sources (if applicable)...">{{ app.request.request.get('fundingSource')|default('') }}</textarea>
                     </div>
                 </section>
 
@@ -174,7 +191,7 @@
                 <section class="grid gap-3 md:w-1/2">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
-                        <input type="date" name="inquiryDate" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value=""/>
+                        <input type="date" name="inquiryDate" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value="{{ app.request.request.get('inquiryDate')|default('') }}"/>
                     </div>
                 </section>
 
@@ -197,36 +214,36 @@
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">External Collaborator Contact Name <span class="text-red-600">*</span></label>
-                        <input name="externalContactName" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value=""/>
+                        <input name="externalContactName" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value="{{ app.request.request.get('externalContactName')|default('') }}"/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700"> ExternalContact Email <span class="text-red-600">*</span></label>
-                        <input type="email" name="externalContactEmail" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="collaborator@institution.edu" value=""/>
+                        <input type="email" name="externalContactEmail" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="collaborator@institution.edu" value="{{ app.request.request.get('externalContactEmail')|default('') }}"/>
                     </div>
                 </section>
 
                 <section class="grid gap-3 md:grid-cols-2">
                     <div class="grid gap-1 md:col-span-2">
                         <label class="text-sm text-gray-700">Institution<span class="text-red-600">*</span></label>
-                        <input name="externalInstitution" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="Collaborating institution" value=""/>
+                        <input name="externalInstitution" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="Collaborating institution" value="{{ app.request.request.get('externalInstitution')|default('') }}"/>
                     </div>
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Contact Phone Number (optional)</label>
-                        <input type="tel" name="externalPhone" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value=""/>
+                        <input type="tel" name="externalPhone" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="(###) ###-####" value="{{ app.request.request.get('externalPhone')|default('') }}"/>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Background <span class="text-red-600">*</span></label>
-                        <textarea name="background" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project..."></textarea>
+                        <textarea name="background" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Provide background information on the project...">{{ app.request.request.get('background')|default('') }}</textarea>
                     </div>
                 </section>
 
                 <section class="grid gap-3">
                     <div class="grid gap-1">
                         <label class="text-sm text-gray-700">Experimental Plan Summary <span class="text-red-600">*</span></label>
-                        <textarea name="experimentalPlanSummary" class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods..."></textarea>
+                        <textarea name="experimentalPlanSummary" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b] resize-none" rows="5" placeholder="Summarize the experimental plan and methods...">{{ app.request.request.get('experimentalPlanSummary')|default('') }}</textarea>
                     </div>
                 </section>
 
