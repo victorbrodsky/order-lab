@@ -118,7 +118,7 @@ class SessionIdleHandler
                     $idleLastUrl = $request->getRequestUri();
                     $logger->notice('SessionIdleHandler: idle timeout redirect to employees_idlelogout_ref, request->getRequestUri=' .
                         $idleLastUrl);
-                    $idleLastUrl = str_replace('/', '__', $request->getRequestUri()); //Why? url with '/' is not valid parameter => replace '/' by '_' then in idlelogoutRefAction reconstruct url (maybe use '__')
+                    $idleLastUrl = str_replace('/', '_', $request->getRequestUri()); //Why? url with '/' is not valid parameter => replace '/' by '_' then in idlelogoutRefAction reconstruct url (maybe use '__')
                     $logger->notice('SessionIdleHandler: idle timeout redirect to employees_idlelogout_ref, idleLastUrl=' .
                         $idleLastUrl); // idleLastUrl=_translational-research_work-requests_list_?filter%5BprojectSpecialty%5D%5B%5D=5&filter% ...
                     $event->setResponse(new RedirectResponse($this->router->generate('employees_idlelogout_ref', ['url' => $idleLastUrl])));

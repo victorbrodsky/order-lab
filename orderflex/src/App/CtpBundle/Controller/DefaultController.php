@@ -289,7 +289,13 @@ class DefaultController extends OrderAbstractController
             $project->generateOid();
             $em->flush();
 
-            return $this->redirectToRoute('ctp_new-project-inquiry');
+            $this->addFlash(
+                'notice',
+                'New project inquiry has been submitted with ID '.$project->getOid()
+            );
+
+            //return $this->redirectToRoute('ctp_new-project-inquiry');
+            return $this->redirectToRoute('ctp_home');
         }
 
         return array(
