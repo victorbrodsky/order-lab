@@ -159,6 +159,10 @@ class DefaultController extends OrderAbstractController
             $project = new Project($this->getUser() instanceof User ? $this->getUser() : null);
             $project->setVersion(1);
 
+            //Set state.
+            $project->setState('draft');
+            //$project->setState('irb_review');
+
             $projectSpecialtyName = "Investigator's Initial Project Inquiry";
             $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['name' => $projectSpecialtyName]);
             if( !$projectSpecialty ) {
@@ -218,6 +222,8 @@ class DefaultController extends OrderAbstractController
 
             $inquirySummary = array();
             $inquirySummary[] = 'Inquiry Type: '.($inquiryType === 'external' ? 'External Collaboration Project Inquiry' : 'WCM Investigator Project Inquiry');
+
+            $inquirySummary[] = "Department: ".$department;
 
             if( $inquiryType === 'external' ) {
                 $externalContactName = $this->getTrimmedRequestValue($request, 'externalContactName');

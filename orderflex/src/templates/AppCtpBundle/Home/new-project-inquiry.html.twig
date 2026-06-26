@@ -217,7 +217,7 @@
                         <input name="externalContactName" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="e.g., John Doe" value="{{ app.request.request.get('externalContactName')|default('') }}"/>
                     </div>
                     <div class="grid gap-1">
-                        <label class="text-sm text-gray-700"> ExternalContact Email <span class="text-red-600">*</span></label>
+                        <label class="text-sm text-gray-700"> External Contact Email <span class="text-red-600">*</span></label>
                         <input type="email" name="externalContactEmail" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" placeholder="collaborator@institution.edu" value="{{ app.request.request.get('externalContactEmail')|default('') }}"/>
                     </div>
                 </section>
