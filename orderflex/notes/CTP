@@ -60,3 +60,10 @@ Background
 Experimental Plan Summary
 # Optional Field:
 Contact Phone Number ((###) ###‑####)
+
+new-project-inquiry forms has ambiguous fields entered as strings:
+Institution, Department, Principal Investigator, Contact Name, Contact Email Address, Phone,
+External Collaborator Contact Name, External Contact Email.
+During project submission, the system attempts to match these entries to existing users and
+institution and ignores them if no match is found. Regardless of whether a match exists,
+all provided information is still recorded under the project’s “Other departmental resources requested:” field.

@@ -229,6 +229,9 @@ class DefaultController extends OrderAbstractController
                 $externalContactName = $this->getTrimmedRequestValue($request, 'externalContactName');
                 $externalContactEmail = $this->getTrimmedRequestValue($request, 'externalContactEmail');
                 $externalInstitution = $this->getTrimmedRequestValue($request, 'externalInstitution');
+                if( !$externalInstitution ) {
+                    $externalInstitution = $this->getTrimmedRequestValue($request, 'institution');
+                }
                 $externalPhone = $this->getTrimmedRequestValue($request, 'externalPhone');
 
                 if( $externalContactName ) {
@@ -247,6 +250,12 @@ class DefaultController extends OrderAbstractController
                 }
                 if( $externalInstitution ) {
                     $project->setCollInst($externalInstitution);
+
+                    $institution = $em->getRepository(Institution::class)->findOneBy(['name' => $externalInstitution]);
+                    if( $institution ) {
+                        $project->setInstitution($institution);
+                    }
+
                     $inquirySummary[] = 'External Institution: '.$externalInstitution;
                 }
                 if( $externalPhone ) {
@@ -337,7 +346,12 @@ class DefaultController extends OrderAbstractController
 
         $errors = array();
         foreach( $requiredFields as $fieldName => $label ) {
-            if( !$this->getTrimmedRequestValue($request, $fieldName) ) {
+            $fieldValue = $this->getTrimmedRequestValue($request, $fieldName);
+            if( $fieldName === 'externalInstitution' && !$fieldValue ) {
+                $fieldValue = $this->getTrimmedRequestValue($request, 'institution');
+            }
+
+            if( !$fieldValue ) {
                 $errors[] = $label;
             }
         }
