@@ -1044,9 +1044,12 @@ class PdfGenerator
         //exit("generateProjectPdf: before knp_snappy: pageUrl=".$pageUrl);
         //knp_snappy
         //$snappy->setTimeout(300);
+        $projectPdfTimeout = 1800; //sec
         //https://github.com/KnpLabs/KnpSnappyBundle
         //process_timeout: 20 # In seconds
-        $this->container->get('knp_snappy.pdf')->generate(
+        $snappyPdf = $this->container->get('knp_snappy.pdf');
+        $snappyPdf->setTimeout($projectPdfTimeout);
+        $snappyPdf->generate(
             $pageUrl,
             $applicationOutputFilePath,
             array(

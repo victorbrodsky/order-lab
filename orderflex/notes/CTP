@@ -67,3 +67,49 @@ External Collaborator Contact Name, External Contact Email.
 During project submission, the system attempts to match these entries to existing users and
 institution and ignores them if no match is found. Regardless of whether a match exists,
 all provided information is still recorded under the project’s “Other departmental resources requested:” field.
+
+###################### 29 July 2026 #########################
+Migrate to Symfony 7.4
+TODO:
+Add captcha
+Add to project "Other Info" text field
+Sanitize input
+Background -> Background (essential information related to the project)
+Experimental Plan Summary -> Research strategy
+http://127.0.0.1/translational-research/project/show/3573
+Remove: Previously used in the project fields (currently hidden): Objective: Experimental Plan Summary
+
+External Collaboration Project Inquiry:
+1) Auto update today's date
+2) Add above background: Project Title * (250 chars limit)
+2) Background - 5000 chars limit
+3) Experimental Plan Summary - 5000 chars limit
+
+WCM Investigator Project Inquiry:
+1) Auto update today's date
+2) Project Title * (250 chars limit)
+3) Background - 5000 chars limit
+4) Experimental Plan Summary * - 5000 chars limit
+5) Funding Source - 5000 chars limit
+6) Add email validation (Please check if the email address is correct)
+7) Principal Investigator ->
+    Principal Investigator Name,
+    Principal Investigator Email Address (New field on CTP project) - match by email
+    Contact Name
+    Contact Email Address - match by email
+    If users don't match -> create new user
+    Plus, add to "Other Info" (NEW FIELD) (PI name, Contact name, Contact Phone number)
+8) fields order:
+Contact Name *
+Contact Email Address *
+Phone
+9) Funding Source (NEW FIELD) -> add mew field "Funding Source" If funded, please provide account number:
+10) Department: select2 with option to add new entry
+
+1) remove "Project Request" from "Investigator's ..."
+2) Move it on top
+3) Add 'Internal' / 'External': 'Internal Investigator's Initial Project Inquiry Project Request'
+4) Add email validation (Please check if the email address is correct)
+
+External Collaboration Project Inquiry -> sync to: https://view.med.cornell.edu
+
