@@ -984,7 +984,7 @@ class PdfGenerator
             unlink($applicationOutputFilePath);
         }
 
-        ini_set('max_execution_time', 300); //300 sec
+        ini_set('max_execution_time', 3000); //300 sec
         //ini_set('max_execution_time', 30); //30 sec //testing
 
         //testing
