@@ -57,7 +57,8 @@ class ProjectPdfBackgroundGenerator
             if( $userServiceUtil->isWinOs() ) {
                 $this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             } else {
-                $this->runDetachedHttpCall($executeUrl, $sessionId);
+                //$this->runDetachedHttpCall($executeUrl, $sessionId);
+                $this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             }
             $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration detached launch command dispatched; projectId='.(int)$projectId);
         } catch( \Throwable $e ) {
