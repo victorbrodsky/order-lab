@@ -94,8 +94,7 @@ class ProjectPdfBackgroundGenerator
         $phpCode = '$context = stream_context_create(' . var_export($contextOptions, true) . ');' .
             '@file_get_contents(' . var_export($url, true) . ', false, $context);';
 
-        $phpBinary = defined('PHP_BINARY') && PHP_BINARY ? PHP_BINARY : 'php';
-        $command = escapeshellarg($phpBinary) . ' -r ' . escapeshellarg($phpCode);
+        $command = 'php -r ' . escapeshellarg($phpCode);
 
         //$logger->notice('[ProjectPdfFlow] runDetachedHttpCall prepared command; url='.$url.'; platform='.(DIRECTORY_SEPARATOR === '\\' ? 'windows' : 'unix'));
 //        if( DIRECTORY_SEPARATOR === '\\' ) {
@@ -108,15 +107,13 @@ class ProjectPdfBackgroundGenerator
 
         if( $userServiceUtil->isWinOs() ) {
             $logger->notice("windows: command=$command");
-            $oExec = pclose(popen('start /B "" ' . $command, 'r'));
         } else {
             $logger->notice("not windows: command=$command");
-            $oExec = exec($command . ' > /dev/null 2>&1 &');
         }
 
         $logger->notice('[ProjectPdfFlow] runDetachedHttpCall prepared command; url='.$url.'; platform='.($userServiceUtil->isWinOs() ? 'windows' : 'unix'));
 
-        //$oExec = $userServiceUtil->execInBackground($command);
+        $oExec = $userServiceUtil->execInBackground($command);
         $logger->notice('[ProjectPdfFlow] runDetachedHttpCall execInBackground returned; value='.(string)$oExec.'; url='.$url);
 
         $logger->notice('[ProjectPdfFlow] runDetachedHttpCall dispatched; url='.$url);
