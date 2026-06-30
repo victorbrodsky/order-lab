@@ -56,9 +56,11 @@ class ProjectPdfBackgroundGenerator
             $userServiceUtil = $this->container->get('user_service_utility');
             if( $userServiceUtil->isWinOs() ) {
                 $this->runDetachedHttpCall($executeUrl, $sessionId);
+                $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=windows; launcher=runDetachedHttpCall');
                 //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             } else {
-                $this->runDetachedHttpCall($executeUrl, $sessionId);
+                $this->runDetachedHttpCall_ORIG($executeUrl, $sessionId);
+                $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=unix; launcher=runDetachedHttpCall_ORIG');
                 //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             }
             $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration detached launch command dispatched; projectId='.(int)$projectId);
