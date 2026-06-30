@@ -829,6 +829,7 @@ class PdfGenerator
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
+        $logger->notice('[ProjectPdfFlow] generateAndSaveProjectPdf entered; projectId='.(int)$project->getId().'; oid='.$project->getOid());
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -838,6 +839,18 @@ class PdfGenerator
 
         if( !$authorUser ) {
             $authorUser = $userSecUtil->findSystemUser();
+        }
+
+        $logger->notice('[ProjectPdfFlow] generateAndSaveProjectPdf using author user; projectId='.(int)$project->getId().'; authorUserId='.( $authorUser ? (int)$authorUser->getId() : 0 ));
+
+        $reusableProjectPdfInfo = $this->getReusableProjectPdfInfo($project);
+        if( $reusableProjectPdfInfo ) {
+            $logger->notice(
+                "Skip generating project PDF and reuse existing file for project ID=".
+                $project->getOid()."; file=".$reusableProjectPdfInfo['filename']
+            );
+            $logger->notice('[ProjectPdfFlow] generateAndSaveProjectPdf completed by cache reuse; projectId='.(int)$project->getId().'; file='.$reusableProjectPdfInfo['filename']);
+            return $reusableProjectPdfInfo;
         }
 
         //generate file name. use PI in the pdf file name as per Ning, Jeff request.
@@ -882,11 +895,13 @@ class PdfGenerator
         //0) generate application pdf
         //$applicationFilePath = $outdir . "application_ID" . $project->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
+        $logger->notice('[ProjectPdfFlow] generateAndSaveProjectPdf calling generateProjectPdf; projectId='.(int)$project->getId().'; output='.$applicationFilePath);
 
         $applicationFilePath = $this->generateProjectPdf($project,$applicationFilePath,$request); //this does not work with https
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
         if( !$applicationFilePath ) {
+            $logger->error('[ProjectPdfFlow] generateAndSaveProjectPdf failed: generateProjectPdf returned empty path; projectId='.(int)$project->getId());
             $res = array(
                 'filename' => null,
                 'pdf' => null,
@@ -897,6 +912,7 @@ class PdfGenerator
 
         //4) add PDF to project DB
         $filesize = filesize($applicationFilePath);
+        $logger->notice('[ProjectPdfFlow] generateAndSaveProjectPdf generated file exists; projectId='.(int)$project->getId().'; size='.$filesize.'; path='.$applicationFilePath);
         //exit("filesize=$filesize; applicationFilePath=$applicationFilePath");
 
         $documentPdf = $this->createPdfDB(
@@ -939,23 +955,67 @@ class PdfGenerator
         );
 
         $logger->notice($event);
+        $logger->notice('[ProjectPdfFlow] generateAndSaveProjectPdf completed successfully; projectId='.(int)$project->getId().'; documentPdfId='.(int)$documentPdfId.'; file='.$fileFullReportUniqueName);
 
         return $res;
     }
+
+    private function getReusableProjectPdfInfo($project): ?array
+    {
+        if( !$project ) {
+            return null;
+        }
+
+        $projectPdf = $project->getSingleProjectPdf();
+        if( !$projectPdf ) {
+            return null;
+        }
+
+        $pdfPath = $projectPdf->getServerPath();
+        if( !$pdfPath || !file_exists($pdfPath) ) {
+            return null;
+        }
+
+        $projectTimestamp = null;
+        $projectUpdateDate = $project->getUpdateDate();
+        if( $projectUpdateDate ) {
+            $projectTimestamp = $projectUpdateDate->getTimestamp();
+        } elseif( $project->getCreateDate() ) {
+            $projectTimestamp = $project->getCreateDate()->getTimestamp();
+        }
+
+        $pdfMTime = filemtime($pdfPath);
+        if( $projectTimestamp && ($pdfMTime === false || $projectTimestamp > $pdfMTime) ) {
+            return null;
+        }
+
+        $filesize = filesize($pdfPath);
+        if( $filesize === false ) {
+            $filesize = null;
+        }
+
+        return array(
+            'filename' => basename($pdfPath),
+            'pdf' => $pdfPath,
+            'size' => $filesize,
+            'reused' => true,
+        );
+    }
+
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
     public function generateProjectPdf($project,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
-        $logger->notice("generateProjectPdf: Trying to generate PDF in ".$applicationOutputFilePath);
+        $logger->notice('[ProjectPdfFlow] generateProjectPdf step1 begin; projectId='.(int)$project->getId().'; output='.$applicationOutputFilePath);
         $userSecUtil = $this->container->get('user_security_utility');
 
         //wkhtmltopdf doesn't like localhost:8000, caused by the PHP built-in server
         //https://github.com/barryvdh/laravel-snappy/issues/9
         $port = $request->getPort();
-        $logger->notice("generateProjectPdf: port=".$port);
+        $logger->notice('[ProjectPdfFlow] generateProjectPdf step2 request-port; projectId='.(int)$project->getId().'; port='.$port);
         //exit('$port='.$port);
         if( $port == 8000 ) {
-            $logger->notice("generateProjectPdf: Skip PDF generation: wkhtmltopdf does not run correctly on localhost:8000");
+            $logger->notice('[ProjectPdfFlow] generateProjectPdf step2b skipped: localhost:8000 unsupported by wkhtmltopdf; projectId='.(int)$project->getId());
             return null;
         }
 
@@ -970,10 +1030,11 @@ class PdfGenerator
 
         if (file_exists($wkhtmltopdfpathClean)) {
             //echo "The file $wkhtmltopdfpath exists <br>";
+            $logger->notice('[ProjectPdfFlow] generateProjectPdf step3 wkhtmltopdf found; projectId='.(int)$project->getId().'; path='.$wkhtmltopdfpathClean);
         } else {
             //echo "The file [$wkhtmltopdfpath] does not exist <br>";
             //exit("The file [$wkhtmltopdfpath] does not exist");
-            $logger->notice("generateProjectPdf: Error - ignore PDF generation, wkhtmltopdfpath path does not exists");
+            $logger->error('[ProjectPdfFlow] generateProjectPdf step3 failed: wkhtmltopdf path missing; projectId='.(int)$project->getId().'; path='.$wkhtmltopdfpathClean);
             return null;
         }
         //exit("wkhtmltopdfpath=[$wkhtmltopdfpath]");
@@ -982,6 +1043,7 @@ class PdfGenerator
             //return;
             //$logger->notice("generateProjectPdf: unlink file already exists path=" . $applicationOutputFilePath );
             unlink($applicationOutputFilePath);
+            $logger->notice('[ProjectPdfFlow] generateProjectPdf step4 removed existing output file; projectId='.(int)$project->getId().'; output='.$applicationOutputFilePath);
         }
 
         ini_set('max_execution_time', 3000); //300 sec
@@ -1032,6 +1094,7 @@ class PdfGenerator
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
         //$logger->notice("generateProjectPdf: Page URL=".$pageUrl);
+        $logger->notice('[ProjectPdfFlow] generateProjectPdf step5 page URL ready; projectId='.(int)$project->getId().'; pageUrl='.$pageUrl);
 
 
         //take care of authentication
@@ -1039,6 +1102,7 @@ class PdfGenerator
         $session->save();
         session_write_close();
         $PHPSESSID = $session->getId();
+        $logger->notice('[ProjectPdfFlow] generateProjectPdf step6 session cookie prepared; projectId='.(int)$project->getId());
 
         //$logger->notice("generateProjectPdf: before knp_snappy: pageUrl=".$pageUrl);
         //exit("generateProjectPdf: before knp_snappy: pageUrl=".$pageUrl);
@@ -1049,6 +1113,7 @@ class PdfGenerator
         //process_timeout: 20 # In seconds
         $snappyPdf = $this->container->get('knp_snappy.pdf');
         $snappyPdf->setTimeout($projectPdfTimeout);
+        $logger->notice('[ProjectPdfFlow] generateProjectPdf step7 invoking snappy generate; projectId='.(int)$project->getId().'; timeout='.$projectPdfTimeout);
         $snappyPdf->generate(
             $pageUrl,
             $applicationOutputFilePath,
@@ -1060,6 +1125,7 @@ class PdfGenerator
         );
         //$logger->notice("generateProjectPdf: after knp_snappy");
         //exit('generateProjectPdf: after knp_snappy');
+        $logger->notice('[ProjectPdfFlow] generateProjectPdf step8 snappy generate finished; projectId='.(int)$project->getId());
 
         if( $replaceContext ) {
             //set back to original context
@@ -1069,6 +1135,7 @@ class PdfGenerator
         }
 
         //echo "generated ok! <br>";
+        $logger->notice('[ProjectPdfFlow] generateProjectPdf step9 completed; projectId='.(int)$project->getId().'; output='.$applicationOutputFilePath);
         return $applicationOutputFilePath;
     }
 

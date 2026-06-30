@@ -29,6 +29,7 @@ use App\ResAppBundle\Util\ResAppUtil;
 //use App\Routing\DBAL\MultiDbConnectionWrapper;
 use App\Saml\Util\SamlConfigProvider;
 use App\TranslationalResearchBundle\Util\PdfGenerator;
+use App\TranslationalResearchBundle\Util\ProjectPdfBackgroundGenerator;
 use App\TranslationalResearchBundle\Util\ReminderUtil;
 use App\TranslationalResearchBundle\Util\TransResFormNodeUtil;
 use App\TranslationalResearchBundle\Util\TransResImportData;
@@ -130,6 +131,7 @@ class OrderAbstractController extends AbstractController {
         $subscribedServices['transres_formnode_util'] = '?'.TransResFormNodeUtil::class;
 
         $subscribedServices['transres_pdf_generator'] = '?'.PdfGenerator::class;
+        $subscribedServices[ProjectPdfBackgroundGenerator::class] = '?'.ProjectPdfBackgroundGenerator::class;
         $subscribedServices['transres_import'] = '?'.TransResImportData::class;
         $subscribedServices['transres_reminder_util'] = '?'.ReminderUtil::class;
 
@@ -139,8 +141,6 @@ class OrderAbstractController extends AbstractController {
 
         $subscribedServices['scanorder_utility'] = '?'.OrderUtil::class;
         $subscribedServices['search_utility'] = '?'.SearchUtil::class;
-        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
-        $subscribedServices['user_generator'] = '?'.UserGenerator::class;
 
         $subscribedServices['knp_paginator'] = '?'.PaginatorInterface::class;
         $subscribedServices['kernel'] = '?'.KernelInterface::class;

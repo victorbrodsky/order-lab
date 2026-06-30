@@ -5077,8 +5077,8 @@ tracepoint:sched:sched_process_exit
 
     function execInBackground($cmd) {
         if( $this->isWinOs() ){
-            //pclose(popen("start /B ". $cmd, "r"));
-            $oExec = pclose(popen("start /B ". $cmd, "r"));
+            $wrappedCmd = 'cmd /c start "" /B ' . $cmd;
+            $oExec = pclose(popen($wrappedCmd, "r"));
         }
         else {
             //$phppath = "/opt/remi/php74/root/usr/bin/php";

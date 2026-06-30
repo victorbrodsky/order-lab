@@ -57,6 +57,9 @@ services:
         class: App\TranslationalResearchBundle\Util\PdfGenerator
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    App\TranslationalResearchBundle\Util\ProjectPdfBackgroundGenerator:
+        class: App\TranslationalResearchBundle\Util\ProjectPdfBackgroundGenerator
+
     transres_import:
         class: App\TranslationalResearchBundle\Util\TransResImportData
 #        arguments: ["@doctrine.orm.entity_manager", "@service_container"]

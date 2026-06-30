@@ -1,0 +1,123 @@
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 30px; max-width: 780px;">
+        <h3>Generating project PDF</h3>
+        <p id="project-pdf-status-text" class="text-muted">
+            {{ statusInfo.message|default('Project PDF generation is queued') }}
+        </p>
+
+        <div id="project-pdf-status-alert" class="alert alert-info" style="display:none;"></div>
+
+        <p>
+            <a id="project-pdf-download-link" class="btn btn-success" style="display:none;" href="#">
+                Download Project PDF
+            </a>
+            <a class="btn btn-default" href="{{ path('translationalresearch_project_show', {'id': project.id}) }}">
+                Back to Project
+            </a>
+        </p>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function() {
+            var startUrl = '{{ path('translationalresearch_project_pdf_generate_start', {'id': project.id}) }}';
+            var statusUrl = '{{ path('translationalresearch_project_pdf_generate_status', {'id': project.id}) }}';
+            var pollIntervalMs = 3000;
+            var statusTextEl = document.getElementById('project-pdf-status-text');
+            var statusAlertEl = document.getElementById('project-pdf-status-alert');
+            var downloadLinkEl = document.getElementById('project-pdf-download-link');
+            var pollTimer = null;
+            var startCalled = false;
+
+            function setStatus(message, isError) {
+                if( statusTextEl ) {
+                    statusTextEl.textContent = message || '';
+                }
+                if( statusAlertEl ) {
+                    statusAlertEl.style.display = message ? 'block' : 'none';
+                    statusAlertEl.className = isError ? 'alert alert-danger' : 'alert alert-info';
+                    statusAlertEl.textContent = message || '';
+                }
+            }
+
+            function markReady(data) {
+                if( pollTimer ) {
+                    window.clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+                setStatus(data.message || 'Project PDF is ready', false);
+
+                if( downloadLinkEl && data.downloadUrl ) {
+                    downloadLinkEl.href = data.downloadUrl;
+                    downloadLinkEl.style.display = 'inline-block';
+                    window.location = data.downloadUrl;
+                }
+            }
+
+            function markFailed(data) {
+                if( pollTimer ) {
+                    window.clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+                setStatus(data.message || 'Project PDF generation failed', true);
+            }
+
+            function handleStatus(data) {
+                if( !data ) {
+                    return;
+                }
+
+                if( data.status === 'ready' ) {
+                    markReady(data);
+                    return;
+                }
+
+                if( data.status === 'failed' || data.status === 'error' || data.status === 'forbidden' ) {
+                    markFailed(data);
+                    return;
+                }
+
+                setStatus(data.message || 'Project PDF generation is in progress', false);
+            }
+
+            function fetchStatus() {
+                window.fetch(statusUrl, { credentials: 'same-origin' })
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(handleStatus)
+                    .catch(function() {
+                        setStatus('Unable to get PDF generation status. Retrying ...', false);
+                    });
+            }
+
+            function startGeneration() {
+                if( startCalled ) {
+                    return;
+                }
+                startCalled = true;
+
+                window.fetch(startUrl, { credentials: 'same-origin' })
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(handleStatus)
+                    .catch(function() {
+                        setStatus('Unable to start PDF generation.', true);
+                    });
+            }
+
+            startGeneration();
+            fetchStatus();
+            pollTimer = window.setInterval(fetchStatus, pollIntervalMs);
+        })();
+    </script>
+{% endblock %}

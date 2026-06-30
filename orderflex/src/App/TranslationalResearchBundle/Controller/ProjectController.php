@@ -27,6 +27,7 @@ use App\TranslationalResearchBundle\Entity\ProjectGoal;
 use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\TranslationalResearchBundle\Form\ProjectGoalsSectionType;
 use App\TranslationalResearchBundle\Form\ProjectMisiType;
+use App\TranslationalResearchBundle\Util\ProjectPdfBackgroundGenerator;
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
 
 
@@ -1554,9 +1555,20 @@ class ProjectController extends OrderAbstractController
 
             //generate project PDF
             if( !$testing ) {
-                $transresPdfUtil = $this->container->get('transres_pdf_generator');
-                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //new
-                $em->flush();
+                $payload = array(
+                    'status' => 'queued',
+                    'message' => 'Project PDF generation has been queued',
+                    'updatedAt' => time(),
+                    'projectId' => (int)$project->getId(),
+                );
+                $this->setProjectPdfGenerationStatus((int)$project->getId(), $payload);
+
+                $projectPdfBackgroundGenerator = $this->container->get(ProjectPdfBackgroundGenerator::class);
+                $projectPdfBackgroundGenerator->queueProjectPdfGeneration( //new
+                    $request,
+                    (int)$project->getId(),
+                    $this->getCurrentUserId()
+                );
             }
 
             //process form nodes
@@ -1693,6 +1705,7 @@ class ProjectController extends OrderAbstractController
         }
 
         $transresUtil = $this->container->get('transres_util');
+        $logger = $this->container->get('logger');
 
         //$userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
@@ -1897,10 +1910,24 @@ class ProjectController extends OrderAbstractController
             }
 
             //generate project PDF
+            $logger->notice("editAction: generate project PDF");
             if( !$testing ) {
-                $transresPdfUtil = $this->container->get('transres_pdf_generator');
-                $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //edit
-                $em->flush();
+                $payload = array(
+                    'status' => 'queued',
+                    'message' => 'Project PDF generation has been queued',
+                    'updatedAt' => time(),
+                    'projectId' => (int)$project->getId(),
+                );
+                $this->setProjectPdfGenerationStatus((int)$project->getId(), $payload);
+
+                $logger->notice("editAction: Before running queueProjectPdfGeneration");
+
+                $projectPdfBackgroundGenerator = $this->container->get(ProjectPdfBackgroundGenerator::class);
+                $projectPdfBackgroundGenerator->queueProjectPdfGeneration( //edit
+                    $request,
+                    (int)$project->getId(),
+                    $this->getCurrentUserId()
+                );
             }
 
             //process form nodes
@@ -3239,8 +3266,11 @@ class ProjectController extends OrderAbstractController
      */
     #[Route(path: '/download-projects-pdf/{id}', methods: ['GET'], name: 'translationalresearch_download_projects_pdf')]
     public function downloadProjectPdfAction(Request $request, $id=null) {
+        $logger = $this->container->get('logger');
+        $logger->notice('[ProjectPdfFlow] downloadProjectPdfAction requested; projectId='.(int)$id.'; userId='.(int)$this->getCurrentUserId());
 
         if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            $logger->warning('[ProjectPdfFlow] downloadProjectPdfAction denied: user has no ROLE_TRANSRES_USER; projectId='.(int)$id);
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -3253,6 +3283,7 @@ class ProjectController extends OrderAbstractController
         $project = $em->getRepository(Project::class)->find($id);
 
         if( !$project ) {
+            $logger->error('[ProjectPdfFlow] downloadProjectPdfAction failed: project not found; projectId='.(int)$id);
             exit("Project not found by id $id");
         }
 
@@ -3272,36 +3303,260 @@ class ProjectController extends OrderAbstractController
         }
 
         $pdf = $project->getSingleProjectPdf();
-        if( $pdf ) {
-            $pdfPath = $pdf->getServerPath();
-            if( file_exists($pdfPath) ) {
-                return $this->redirect( $this->generateUrl('translationalresearch_file_download',array('id' => $pdf->getId())) );
-            }
+        if( $this->isProjectPdfReadyForDownload($project, $pdf) ) {
+            $logger->notice('[ProjectPdfFlow] downloadProjectPdfAction serving existing PDF; projectId='.(int)$project->getId().'; pdfId='.(int)$pdf->getId());
+            return $this->redirect(
+                $this->generateUrl('translationalresearch_file_download', array('id' => $pdf->getId()))
+            );
         }
 
-        $transresPdfUtil = $this->container->get('transres_pdf_generator');
-        $user = $this->getUser();
-        $res = $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request);
+        $logger->notice('[ProjectPdfFlow] downloadProjectPdfAction redirecting to wait page; projectId='.(int)$project->getId());
+        return $this->redirectToRoute('translationalresearch_project_pdf_wait', array('id' => $project->getId()));
+    }
 
-        $filename = $res['filename'];
-        $filsize = $res['size'];
-        //echo "filsize=$filsize; filename=$filename <br>";
+    #[Route(path: '/project/download-project-pdf-wait/{id}', methods: ['GET'], name: 'translationalresearch_project_pdf_wait')]
+    #[Template('AppTranslationalResearchBundle/Project/pdf-generating.html.twig')]
+    public function waitForProjectPdfAction(Request $request, $id = null)
+    {
+        $logger = $this->container->get('logger');
+        $logger->notice('[ProjectPdfFlow] waitForProjectPdfAction opened; projectId='.(int)$id.'; userId='.(int)$this->getCurrentUserId());
 
-        if( $filename && $filsize ) {
-            //exit("OK: filsize=$filsize; filename=$filename");
-            $pdf = $project->getSingleProjectPdf();
-            if( $pdf ) {
-                return $this->redirect( $this->generateUrl('translationalresearch_file_download',array('id' => $pdf->getId())) );
-            }
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            $logger->warning('[ProjectPdfFlow] waitForProjectPdfAction denied: user has no ROLE_TRANSRES_USER; projectId='.(int)$id);
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        //exit("pdf no");
-        $this->addFlash(
-            'warning',
-            "Logical error: project PDF not found"
+        if( !$id ) {
+            exit("Project id is null, no project to export to pdf");
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository(Project::class)->find($id);
+        if( !$project ) {
+            $logger->error('[ProjectPdfFlow] waitForProjectPdfAction failed: project not found; projectId='.(int)$id);
+            exit("Project not found by id $id");
+        }
+
+        $pdf = $project->getSingleProjectPdf();
+        if( $this->isProjectPdfReadyForDownload($project, $pdf) ) {
+            $logger->notice('[ProjectPdfFlow] waitForProjectPdfAction found ready PDF; projectId='.(int)$project->getId().'; pdfId='.(int)$pdf->getId());
+            return $this->redirect(
+                $this->generateUrl('translationalresearch_file_download', array('id' => $pdf->getId()))
+            );
+        }
+
+        $statusInfo = $this->getProjectPdfGenerationStatus((int)$project->getId());
+        if( !isset($statusInfo['status']) ) {
+            $statusInfo = array(
+                'status' => 'queued',
+                'message' => 'Project PDF generation is queued',
+            );
+        }
+
+        $logger->notice('[ProjectPdfFlow] waitForProjectPdfAction rendering progress page; projectId='.(int)$project->getId().'; status='.$statusInfo['status']);
+
+        return array(
+            'title' => 'Generating Project PDF',
+            'project' => $project,
+            'statusInfo' => $statusInfo,
+        );
+    }
+
+    #[Route(path: '/project/start-project-pdf-generation/{id}', methods: ['GET'], name: 'translationalresearch_project_pdf_generate_start', options: ['expose' => true])]
+    public function startProjectPdfGenerationAction(Request $request, $id = null): JsonResponse
+    {
+        $logger = $this->container->get('logger');
+        $logger->notice('[ProjectPdfFlow] startProjectPdfGenerationAction requested; projectId='.(int)$id.'; userId='.(int)$this->getCurrentUserId());
+
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            $logger->warning('[ProjectPdfFlow] startProjectPdfGenerationAction denied: user has no ROLE_TRANSRES_USER; projectId='.(int)$id);
+            return new JsonResponse(array('status' => 'forbidden', 'message' => 'No permission'), 403);
+        }
+
+        if( !$id ) {
+            return new JsonResponse(array('status' => 'error', 'message' => 'Project id is null'), 400);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository(Project::class)->find($id);
+        if( !$project ) {
+            $logger->error('[ProjectPdfFlow] startProjectPdfGenerationAction failed: project not found; projectId='.(int)$id);
+            return new JsonResponse(array('status' => 'error', 'message' => "Project not found by id $id"), 404);
+        }
+
+        $pdf = $project->getSingleProjectPdf();
+        if( $this->isProjectPdfReadyForDownload($project, $pdf) ) {
+            $payload = $this->buildProjectPdfReadyPayload($project, $pdf);
+            $this->setProjectPdfGenerationStatus((int)$project->getId(), $payload);
+            $logger->notice('[ProjectPdfFlow] startProjectPdfGenerationAction skipped: PDF already ready; projectId='.(int)$project->getId().'; pdfId='.(int)$pdf->getId());
+            return new JsonResponse($payload);
+        }
+
+        $statusInfo = $this->getProjectPdfGenerationStatus((int)$project->getId());
+        if(
+            isset($statusInfo['status']) &&
+            $statusInfo['status'] === 'running' &&
+            isset($statusInfo['updatedAt']) &&
+            (time() - (int)$statusInfo['updatedAt']) < 3600
+        ) {
+            $logger->notice('[ProjectPdfFlow] startProjectPdfGenerationAction skipped: already running; projectId='.(int)$project->getId());
+            return new JsonResponse($statusInfo);
+        }
+
+        $runningPayload = array(
+            'status' => 'running',
+            'message' => 'Project PDF generation is in progress',
+            'updatedAt' => time(),
+            'projectId' => (int)$project->getId(),
+        );
+        $this->setProjectPdfGenerationStatus((int)$project->getId(), $runningPayload);
+
+        $projectPdfBackgroundGenerator = $this->container->get(ProjectPdfBackgroundGenerator::class);
+        $projectPdfBackgroundGenerator->queueProjectPdfGeneration( //startProjectPdfGenerationAction
+            $request,
+            (int)$project->getId(),
+            $this->getCurrentUserId()
         );
 
-        return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+        $logger->notice('[ProjectPdfFlow] startProjectPdfGenerationAction queued detached generation; projectId='.(int)$project->getId());
+
+        return new JsonResponse($runningPayload, 202);
+    }
+
+    #[Route(path: '/project/execute-project-pdf-generation/{id}', methods: ['GET'], name: 'translationalresearch_project_pdf_generate_execute')]
+    public function executeProjectPdfGenerationAction(Request $request, $id = null): JsonResponse
+    {
+        $logger = $this->container->get('logger');
+        $logger->notice('[ProjectPdfFlow] executeProjectPdfGenerationAction started; projectId='.(int)$id.'; userId='.(int)$this->getCurrentUserId());
+
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            if( $id ) {
+                $this->setProjectPdfGenerationStatus((int)$id, array(
+                    'status' => 'failed',
+                    'message' => 'Project PDF generation failed: no permission',
+                    'updatedAt' => time(),
+                    'projectId' => (int)$id,
+                ));
+            }
+            $logger->warning('[ProjectPdfFlow] executeProjectPdfGenerationAction denied: user has no ROLE_TRANSRES_USER; projectId='.(int)$id);
+            return new JsonResponse(array('status' => 'forbidden', 'message' => 'No permission'), 403);
+        }
+
+        if( !$id ) {
+            return new JsonResponse(array('status' => 'error', 'message' => 'Project id is null'), 400);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository(Project::class)->find($id);
+        if( !$project ) {
+            $this->setProjectPdfGenerationStatus((int)$id, array(
+                'status' => 'failed',
+                'message' => 'Project PDF generation failed: project not found',
+                'updatedAt' => time(),
+                'projectId' => (int)$id,
+            ));
+            $logger->error('[ProjectPdfFlow] executeProjectPdfGenerationAction failed: project not found; projectId='.(int)$id);
+            return new JsonResponse(array('status' => 'error', 'message' => "Project not found by id $id"), 404);
+        }
+
+        $runningPayload = array(
+            'status' => 'running',
+            'message' => 'Project PDF generation is in progress',
+            'updatedAt' => time(),
+            'projectId' => (int)$project->getId(),
+        );
+        $this->setProjectPdfGenerationStatus((int)$project->getId(), $runningPayload);
+
+        try {
+            $transresPdfUtil = $this->container->get('transres_pdf_generator');
+            $user = $this->getUser();
+            $logger->notice('[ProjectPdfFlow] executeProjectPdfGenerationAction generating PDF now; projectId='.(int)$project->getId());
+            $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request);
+            $em->flush();
+            $logger->notice('[ProjectPdfFlow] executeProjectPdfGenerationAction generateAndSaveProjectPdf returned; projectId='.(int)$project->getId());
+
+            $pdf = $project->getSingleProjectPdf();
+            if( $this->isProjectPdfReadyForDownload($project, $pdf) ) {
+                $payload = $this->buildProjectPdfReadyPayload($project, $pdf);
+                $this->setProjectPdfGenerationStatus((int)$project->getId(), $payload);
+                $logger->notice('[ProjectPdfFlow] executeProjectPdfGenerationAction completed successfully; projectId='.(int)$project->getId().'; pdfId='.(int)$pdf->getId());
+                return new JsonResponse($payload);
+            }
+            $logger->error('[ProjectPdfFlow] executeProjectPdfGenerationAction did not produce a ready PDF; projectId='.(int)$project->getId());
+        } catch( \Throwable $e ) {
+            $logger->error('[ProjectPdfFlow] executeProjectPdfGenerationAction failed: '.$e->getMessage());
+        }
+
+        $failedPayload = array(
+            'status' => 'failed',
+            'message' => 'Project PDF generation failed',
+            'updatedAt' => time(),
+            'projectId' => (int)$project->getId(),
+        );
+        $this->setProjectPdfGenerationStatus((int)$project->getId(), $failedPayload);
+        return new JsonResponse($failedPayload, 500);
+    }
+
+    #[Route(path: '/project/project-pdf-generation-status/{id}', methods: ['GET'], name: 'translationalresearch_project_pdf_generate_status', options: ['expose' => true])]
+    public function projectPdfGenerationStatusAction(Request $request, $id = null): JsonResponse
+    {
+        $logger = $this->container->get('logger');
+        //$logger->notice('projectPdfGenerationStatusAction: start ID='.$id);
+
+        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
+            $logger->notice('projectPdfGenerationStatusAction: No permission');
+            return new JsonResponse(array('status' => 'forbidden', 'message' => 'No permission'), 403);
+        }
+
+        if( !$id ) {
+            $logger->notice('projectPdfGenerationStatusAction: Project id is null');
+            return new JsonResponse(array('status' => 'error', 'message' => 'Project id is null'), 400);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $project = $em->getRepository(Project::class)->find($id);
+        if( !$project ) {
+            $logger->notice('projectPdfGenerationStatusAction: Project not found by id='.$id);
+            return new JsonResponse(array('status' => 'error', 'message' => "Project not found by id $id"), 404);
+        }
+
+        $pdf = $project->getSingleProjectPdf();
+        if( $this->isProjectPdfReadyForDownload($project, $pdf) ) {
+            $payload = $this->buildProjectPdfReadyPayload($project, $pdf);
+            $this->setProjectPdfGenerationStatus((int)$project->getId(), $payload);
+            $logger->notice('[ProjectPdfFlow] projectPdfGenerationStatusAction: PDF ready; projectId='.(int)$project->getId().'; pdfId='.(int)$pdf->getId());
+            return new JsonResponse($payload);
+        }
+
+        $statusInfo = $this->getProjectPdfGenerationStatus((int)$project->getId());
+        if( !isset($statusInfo['status']) ) {
+            $statusInfo = array(
+                'status' => 'queued',
+                'message' => 'Project PDF generation is queued',
+                'updatedAt' => time(),
+                'projectId' => (int)$project->getId(),
+            );
+            $this->setProjectPdfGenerationStatus((int)$project->getId(), $statusInfo);
+            $logger->notice('[ProjectPdfFlow] projectPdfGenerationStatusAction: initialized status to queued; projectId='.(int)$project->getId());
+            return new JsonResponse($statusInfo);
+        }
+
+        if(
+            $statusInfo['status'] === 'running' &&
+            isset($statusInfo['updatedAt']) &&
+            (time() - (int)$statusInfo['updatedAt']) > 3600
+        ) {
+            $statusInfo = array(
+                'status' => 'failed',
+                'message' => 'Project PDF generation timed out',
+                'updatedAt' => time(),
+                'projectId' => (int)$project->getId(),
+            );
+            $this->setProjectPdfGenerationStatus((int)$project->getId(), $statusInfo);
+            $logger->error('[ProjectPdfFlow] projectPdfGenerationStatusAction: marked timed out; projectId='.(int)$project->getId());
+        }
+
+        return new JsonResponse($statusInfo);
     }
 
     /**
@@ -3350,16 +3605,25 @@ class ProjectController extends OrderAbstractController
 
         if( $project ) {
 
-            //generate project PDF
-            $transresPdfUtil = $this->container->get('transres_pdf_generator');
-            $user = $this->getUser();
-            $transresPdfUtil->generateAndSaveProjectPdf($project,$user,$request); //update_project_nobudgetlimit
-            $em->flush();
+            $payload = array(
+                'status' => 'queued',
+                'message' => 'Project PDF generation has been queued',
+                'updatedAt' => time(),
+                'projectId' => (int)$project->getId(),
+            );
+            $this->setProjectPdfGenerationStatus((int)$project->getId(), $payload);
+
+            $projectPdfBackgroundGenerator = $this->container->get(ProjectPdfBackgroundGenerator::class);
+            $projectPdfBackgroundGenerator->queueProjectPdfGeneration( //updateProjectPdfAction
+                $request,
+                (int)$project->getId(),
+                $this->getCurrentUserId()
+            );
 
             $logger = $this->container->get('logger');
-            $logger->notice("translationalresearch_update_project_pdf updated PDF");
+            $logger->notice("translationalresearch_update_project_pdf queued project PDF generation");
 
-            $res = "Project " . $project->getOid() . " PDF has been updated";
+            $res = "Project " . $project->getOid() . " PDF generation has been started in the background";
 
             $this->addFlash(
                 'notice',
@@ -3371,6 +3635,93 @@ class ProjectController extends OrderAbstractController
 
         $response = new Response($res);
         return $response;
+    }
+
+    private function isProjectPdfReadyForDownload(Project $project, ?Document $pdf): bool
+    {
+        if( !$pdf ) {
+            return false;
+        }
+
+        $pdfPath = $pdf->getServerPath();
+        if( !$pdfPath || !file_exists($pdfPath) ) {
+            return false;
+        }
+
+        $projectTimestamp = null;
+        if( $project->getUpdateDate() ) {
+            $projectTimestamp = $project->getUpdateDate()->getTimestamp();
+        } elseif( $project->getCreateDate() ) {
+            $projectTimestamp = $project->getCreateDate()->getTimestamp();
+        }
+
+        $pdfMTime = filemtime($pdfPath);
+        if( $projectTimestamp && ($pdfMTime === false || $projectTimestamp > $pdfMTime) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function buildProjectPdfReadyPayload(Project $project, Document $pdf): array
+    {
+        return array(
+            'status' => 'ready',
+            'message' => 'Project PDF is ready',
+            'updatedAt' => time(),
+            'projectId' => (int)$project->getId(),
+            'downloadUrl' => $this->generateUrl('translationalresearch_file_download', array('id' => $pdf->getId())),
+        );
+    }
+
+    private function getProjectPdfStatusFilePath(int $projectId): string
+    {
+        $statusDir = $this->getParameter('kernel.cache_dir') . DIRECTORY_SEPARATOR . 'transres_project_pdf_status';
+        if( !is_dir($statusDir) ) {
+            mkdir($statusDir, 0700, true);
+        }
+
+        return $statusDir . DIRECTORY_SEPARATOR . 'project_' . $projectId . '.json';
+    }
+
+    private function setProjectPdfGenerationStatus(int $projectId, array $statusInfo): void
+    {
+        $statusInfo['projectId'] = $projectId;
+        $statusInfo['updatedAt'] = $statusInfo['updatedAt'] ?? time();
+        $statusFilePath = $this->getProjectPdfStatusFilePath($projectId);
+        file_put_contents($statusFilePath, json_encode($statusInfo));
+
+        $logger = $this->container->get('logger');
+        $logger->notice(
+            '[ProjectPdfFlow] status updated; projectId='.(int)$projectId.
+            '; status='.(isset($statusInfo['status']) ? $statusInfo['status'] : 'n/a').
+            '; message='.(isset($statusInfo['message']) ? $statusInfo['message'] : '')
+        );
+    }
+
+    private function getProjectPdfGenerationStatus(int $projectId): array
+    {
+        $statusFilePath = $this->getProjectPdfStatusFilePath($projectId);
+        if( !file_exists($statusFilePath) ) {
+            return array();
+        }
+
+        $statusInfo = json_decode((string)file_get_contents($statusFilePath), true);
+        if( !is_array($statusInfo) ) {
+            return array();
+        }
+
+        return $statusInfo;
+    }
+
+    private function getCurrentUserId(): ?int
+    {
+        $user = $this->getUser();
+        if( !$user || !method_exists($user, 'getId') ) {
+            return null;
+        }
+
+        return (int)$user->getId();
     }
 
 }
