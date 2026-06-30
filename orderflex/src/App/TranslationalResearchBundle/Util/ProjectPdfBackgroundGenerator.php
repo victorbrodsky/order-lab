@@ -55,10 +55,11 @@ class ProjectPdfBackgroundGenerator
             $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launching detached HTTP call; projectId='.(int)$projectId.'; url='.$executeUrl);
             $userServiceUtil = $this->container->get('user_service_utility');
             if( $userServiceUtil->isWinOs() ) {
-                $this->runDetachedHttpCallV2((int)$projectId, $sessionId);
+                $this->runDetachedHttpCall($executeUrl, $sessionId);
+                //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             } else {
-                //$this->runDetachedHttpCall($executeUrl, $sessionId);
-                $this->runDetachedHttpCallV2((int)$projectId, $sessionId);
+                $this->runDetachedHttpCall($executeUrl, $sessionId);
+                //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             }
             $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration detached launch command dispatched; projectId='.(int)$projectId);
         } catch( \Throwable $e ) {
@@ -72,7 +73,7 @@ class ProjectPdfBackgroundGenerator
         }
     }
 
-    private function runDetachedHttpCall(string $url, ?string $sessionId = null): void
+    private function runDetachedHttpCall_ORIG(string $url, ?string $sessionId = null): void
     {
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -118,6 +119,105 @@ class ProjectPdfBackgroundGenerator
 
         $logger->notice('[ProjectPdfFlow] runDetachedHttpCall dispatched; url='.$url);
     }
+
+    private function runDetachedHttpCall(string $url, ?string $sessionId = null): void
+    {
+        $logger = $this->container->get('logger');
+        $parts = parse_url($url);
+
+        if( !$parts || !isset($parts['host']) ) {
+            throw new \RuntimeException('Invalid detached URL: '.$url);
+        }
+
+        $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) : 'http';
+        $isHttps = ($scheme === 'https');
+        $host = $parts['host'];
+        $port = isset($parts['port']) ? (int)$parts['port'] : ($isHttps ? 443 : 80);
+        $path = isset($parts['path']) && $parts['path'] ? $parts['path'] : '/';
+        if( isset($parts['query']) && $parts['query'] ) {
+            $path .= '?'.$parts['query'];
+        }
+
+        $transportHost = ($isHttps ? 'ssl://' : '').$host;
+        $errno = 0;
+        $errstr = '';
+
+        $socket = @fsockopen($transportHost, $port, $errno, $errstr, 2.0);
+        if( !$socket ) {
+            $logger->error('[ProjectPdfFlow] runDetachedHttpCall socket connect failed; url='.$url.'; errno='.(string)$errno.'; errstr='.$errstr.'; fallback=runDetachedHttpCall_ORIG');
+            $this->runDetachedHttpCall_ORIG($url, $sessionId);
+            return;
+        }
+
+        $hostHeader = $host;
+        if( isset($parts['port']) ) {
+            $hostHeader .= ':'.$port;
+        }
+
+        $request = "GET ".$path." HTTP/1.1\r\n";
+        $request .= "Host: ".$hostHeader."\r\n";
+        $request .= "Connection: Close\r\n";
+        if( $sessionId ) {
+            $request .= "Cookie: PHPSESSID=".$sessionId."\r\n";
+        }
+        $request .= "\r\n";
+
+        stream_set_blocking($socket, false);
+        fwrite($socket, $request);
+        fclose($socket);
+
+        $logger->notice('[ProjectPdfFlow] runDetachedHttpCall dispatched via socket; url='.$url.'; host='.$host.'; port='.(int)$port.'; hasSessionId='.( $sessionId ? 'yes' : 'no' ));
+    }
+
+    private function runDetachedHttpCall_ORIG2(string $url, ?string $sessionId = null): void
+    {
+        $logger = $this->container->get('logger');
+        $parts = parse_url($url);
+
+        if( !$parts || !isset($parts['host']) ) {
+            throw new \RuntimeException('Invalid detached URL: '.$url);
+        }
+
+        $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) : 'http';
+        $isHttps = ($scheme === 'https');
+        $host = $parts['host'];
+        $port = isset($parts['port']) ? (int)$parts['port'] : ($isHttps ? 443 : 80);
+        $path = isset($parts['path']) && $parts['path'] ? $parts['path'] : '/';
+        if( isset($parts['query']) && $parts['query'] ) {
+            $path .= '?'.$parts['query'];
+        }
+
+        $transportHost = ($isHttps ? 'ssl://' : '').$host;
+        $errno = 0;
+        $errstr = '';
+
+        $socket = @fsockopen($transportHost, $port, $errno, $errstr, 2.0);
+        if( !$socket ) {
+            $logger->error('[ProjectPdfFlow] runDetachedHttpCall socket connect failed; url='.$url.'; errno='.(string)$errno.'; errstr='.$errstr.'; fallback=runDetachedHttpCall_ORIG');
+            $this->runDetachedHttpCall_ORIG($url, $sessionId);
+            return;
+        }
+
+        $hostHeader = $host;
+        if( isset($parts['port']) ) {
+            $hostHeader .= ':'.$port;
+        }
+
+        $request = "GET ".$path." HTTP/1.1\r\n";
+        $request .= "Host: ".$hostHeader."\r\n";
+        $request .= "Connection: Close\r\n";
+        if( $sessionId ) {
+            $request .= "Cookie: PHPSESSID=".$sessionId."\r\n";
+        }
+        $request .= "\r\n";
+
+        stream_set_blocking($socket, false);
+        fwrite($socket, $request);
+        fclose($socket);
+
+        $logger->notice('[ProjectPdfFlow] runDetachedHttpCall dispatched via socket; url='.$url.'; host='.$host.'; port='.(int)$port.'; hasSessionId='.( $sessionId ? 'yes' : 'no' ));
+    }
+
 
     private function runDetachedHttpCallV2(int $projectId, ?string $sessionId = null): void
     {
