@@ -4,6 +4,7 @@ namespace App\TranslationalResearchBundle\Util;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -55,11 +56,14 @@ class ProjectPdfBackgroundGenerator
             $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launching detached HTTP call; projectId='.(int)$projectId.'; url='.$executeUrl);
             $userServiceUtil = $this->container->get('user_service_utility');
             if( $userServiceUtil->isWinOs() ) {
-                $this->runDetachedHttpCall($executeUrl, $sessionId);
+                //$this->runDetachedHttpCall($executeUrl, $sessionId); //working
+                //$this->runDetachedHttpLinux($executeUrl, $sessionId);
+                $this->runByProcessComponent($executeUrl, $sessionId);
                 $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=windows; launcher=runDetachedHttpCall');
                 //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             } else {
-                $this->runDetachedHttpLinux($executeUrl, $sessionId);
+                //$this->runDetachedHttpLinux($executeUrl, $sessionId); //working
+                $this->runByProcessComponent($executeUrl, $sessionId);
                 $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=unix; launcher=runDetachedHttpLinux');
                 //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             }
@@ -73,6 +77,44 @@ class ProjectPdfBackgroundGenerator
                 'projectId' => $projectId,
             ));
         }
+    }
+
+    private function runByProcessComponent(string $url, ?string $sessionId = null): void
+    {
+        $logger = $this->container->get('logger');
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $contextOptions = array(
+            'http' => array(
+                'method' => 'GET',
+                'timeout' => 1800,
+            )
+        );
+
+        if( $sessionId ) {
+            $contextOptions['http']['header'] = "Cookie: PHPSESSID=".$sessionId."\r\n";
+        }
+
+        $phpCode = '$context = stream_context_create(' . var_export($contextOptions, true) . ');' .
+            '@file_get_contents(' . var_export($url, true) . ', false, $context);';
+
+        $phpBinary = 'php';
+        if( !$userServiceUtil->isWinOs() ) {
+            $linuxPhpBinary = $userServiceUtil->getPhpPath();
+            if( $linuxPhpBinary ) {
+                $phpBinary = $linuxPhpBinary;
+            }
+        }
+
+        $commandArr = array($phpBinary, '-r', $phpCode);
+        $logger->notice('[ProjectPdfFlow] runByProcessComponent prepared; url='.$url.'; phpBinary='.$phpBinary.'; platform='.($userServiceUtil->isWinOs() ? 'windows' : 'unix').'; hasSessionId='.( $sessionId ? 'yes' : 'no' ));
+
+        $process = new Process($commandArr);
+        $process->setTimeout(null);
+        $process->disableOutput();
+        $process->start();
+
+        $logger->notice('[ProjectPdfFlow] runByProcessComponent started; url='.$url.'; pid='.(string)$process->getPid().'; running='.( $process->isRunning() ? 'yes' : 'no' ));
     }
 
     private function runDetachedHttpLinux(string $url, ?string $sessionId = null): void
