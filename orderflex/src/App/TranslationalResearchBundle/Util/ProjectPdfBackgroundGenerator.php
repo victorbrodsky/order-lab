@@ -59,8 +59,8 @@ class ProjectPdfBackgroundGenerator
                 $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=windows; launcher=runDetachedHttpCall');
                 //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             } else {
-                $this->runDetachedHttpCall_ORIG($executeUrl, $sessionId);
-                $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=unix; launcher=runDetachedHttpCall_ORIG');
+                $this->runDetachedHttpLinux($executeUrl, $sessionId);
+                $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=unix; launcher=runDetachedHttpLinux');
                 //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             }
             $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration detached launch command dispatched; projectId='.(int)$projectId);
@@ -75,7 +75,7 @@ class ProjectPdfBackgroundGenerator
         }
     }
 
-    private function runDetachedHttpCall_ORIG(string $url, ?string $sessionId = null): void
+    private function runDetachedHttpLinux(string $url, ?string $sessionId = null): void
     {
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -96,7 +96,7 @@ class ProjectPdfBackgroundGenerator
 
         $command = 'php -r ' . escapeshellarg($phpCode);
 
-        //$logger->notice('[ProjectPdfFlow] runDetachedHttpCall prepared command; url='.$url.'; platform='.(DIRECTORY_SEPARATOR === '\\' ? 'windows' : 'unix'));
+        //$logger->notice('[ProjectPdfFlow] runDetachedHttpLinux prepared command; url='.$url.'; platform='.(DIRECTORY_SEPARATOR === '\\' ? 'windows' : 'unix'));
 //        if( DIRECTORY_SEPARATOR === '\\' ) {
 //            $logger->notice("windows: command=$command");
 //            pclose(popen('start /B "" ' . $command, 'r'));
@@ -111,14 +111,15 @@ class ProjectPdfBackgroundGenerator
             $logger->notice("not windows: command=$command");
         }
 
-        $logger->notice('[ProjectPdfFlow] runDetachedHttpCall prepared command; url='.$url.'; platform='.($userServiceUtil->isWinOs() ? 'windows' : 'unix'));
+        $logger->notice('[ProjectPdfFlow] runDetachedHttpLinux prepared command; url='.$url.'; platform='.($userServiceUtil->isWinOs() ? 'windows' : 'unix'));
 
         $oExec = $userServiceUtil->execInBackground($command);
-        $logger->notice('[ProjectPdfFlow] runDetachedHttpCall execInBackground returned; value='.(string)$oExec.'; url='.$url);
+        $logger->notice('[ProjectPdfFlow] runDetachedHttpLinux execInBackground returned; value='.(string)$oExec.'; url='.$url);
 
-        $logger->notice('[ProjectPdfFlow] runDetachedHttpCall dispatched; url='.$url);
+        $logger->notice('[ProjectPdfFlow] runDetachedHttpLinux dispatched; url='.$url);
     }
 
+    //socket-based fire-and-forget launcher: it opens a socket, writes a raw GET request, and closes immediately (no response wait), so it is truly fire-and-forget.
     private function runDetachedHttpCall(string $url, ?string $sessionId = null): void
     {
         $logger = $this->container->get('logger');
@@ -128,6 +129,7 @@ class ProjectPdfBackgroundGenerator
             throw new \RuntimeException('Invalid detached URL: '.$url);
         }
 
+        //Parses the URL (parse_url) and extracts scheme, host, port, path, query.
         $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) : 'http';
         $isHttps = ($scheme === 'https');
         $host = $parts['host'];
@@ -141,10 +143,12 @@ class ProjectPdfBackgroundGenerator
         $errno = 0;
         $errstr = '';
 
+        //Opens a raw socket with fsockopen() to host:port (ssl://host if HTTPS), with a 2s connect timeout.
         $socket = @fsockopen($transportHost, $port, $errno, $errstr, 2.0);
         if( !$socket ) {
-            $logger->error('[ProjectPdfFlow] runDetachedHttpCall socket connect failed; url='.$url.'; errno='.(string)$errno.'; errstr='.$errstr.'; fallback=runDetachedHttpCall_ORIG');
-            $this->runDetachedHttpCall_ORIG($url, $sessionId);
+            //falls back to runDetachedHttpLinux($url, $sessionId).
+            $logger->error('[ProjectPdfFlow] runDetachedHttpCall socket connect failed; url='.$url.'; errno='.(string)$errno.'; errstr='.$errstr.'; fallback=runDetachedHttpLinux');
+            $this->runDetachedHttpLinux($url, $sessionId);
             return;
         }
 
@@ -153,6 +157,7 @@ class ProjectPdfBackgroundGenerator
             $hostHeader .= ':'.$port;
         }
 
+        //builds a raw HTTP GET request
         $request = "GET ".$path." HTTP/1.1\r\n";
         $request .= "Host: ".$hostHeader."\r\n";
         $request .= "Connection: Close\r\n";
@@ -161,14 +166,14 @@ class ProjectPdfBackgroundGenerator
         }
         $request .= "\r\n";
 
-        stream_set_blocking($socket, false);
-        fwrite($socket, $request);
-        fclose($socket);
+        stream_set_blocking($socket, false); //sets non-blocking mode
+        fwrite($socket, $request); //writes request bytes
+        fclose($socket); //immediately closes socket.
 
         $logger->notice('[ProjectPdfFlow] runDetachedHttpCall dispatched via socket; url='.$url.'; host='.$host.'; port='.(int)$port.'; hasSessionId='.( $sessionId ? 'yes' : 'no' ));
     }
 
-    private function runDetachedHttpCall_ORIG2(string $url, ?string $sessionId = null): void
+    private function runDetachedHttpCall_ORIG_2(string $url, ?string $sessionId = null): void
     {
         $logger = $this->container->get('logger');
         $parts = parse_url($url);
@@ -192,8 +197,8 @@ class ProjectPdfBackgroundGenerator
 
         $socket = @fsockopen($transportHost, $port, $errno, $errstr, 2.0);
         if( !$socket ) {
-            $logger->error('[ProjectPdfFlow] runDetachedHttpCall socket connect failed; url='.$url.'; errno='.(string)$errno.'; errstr='.$errstr.'; fallback=runDetachedHttpCall_ORIG');
-            $this->runDetachedHttpCall_ORIG($url, $sessionId);
+            $logger->error('[ProjectPdfFlow] runDetachedHttpCall socket connect failed; url='.$url.'; errno='.(string)$errno.'; errstr='.$errstr.'; fallback=runDetachedHttpCall_ORIG_2');
+            $this->runDetachedHttpCall_ORIG_2($url, $sessionId);
             return;
         }
 
