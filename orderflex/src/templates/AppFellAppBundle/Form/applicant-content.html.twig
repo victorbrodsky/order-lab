@@ -169,6 +169,10 @@
         {% set parentFormnodeId = fellapp_util.getFellappParentFormNodeId() %}
     {% endif %}
 
+    {% if specialtyId is not defined %}
+        {% set specialtyId = null %}
+    {% endif %}
+
     {#fellappParentFormNode ID={{ fellapp_util.getFellappParentFormNode().getId() }}<br>#}
 
     {#<input type="hidden" id="tenantprefix" value="{{tenantprefix}}" />#}

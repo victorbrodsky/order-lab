@@ -3423,6 +3423,9 @@ class ProjectController extends OrderAbstractController
         return new JsonResponse($runningPayload, 202);
     }
 
+    //TODO: use queueProjectPdfGeneration for other project changes
+    // e.g. src/App/TranslationalResearchBundle/Controller/RequestController.php:3030
+    //TODO: replace generateAndSaveProjectPdf
     #[Route(path: '/project/execute-project-pdf-generation/{id}', methods: ['GET'], name: 'translationalresearch_project_pdf_generate_execute')]
     public function executeProjectPdfGenerationAction(Request $request, $id = null): JsonResponse
     {

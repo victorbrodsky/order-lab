@@ -1103,76 +1103,106 @@ function expandTextarea(holder, initRows) {
     var targetidHeight = [];
 
     targetid = getElementTargetByHolder(holder,targetid);
-    //console.log("expandTextarea: targetid="+targetid);
+    console.log("expandTextarea: targetid="+targetid);
+
+    //For PDF:
+    // 1) Replace each textarea with a div containing the same text
+    // 2)
+    // .pdf-textarea {
+    //  white-space: normal;
+    //  line-height: 1.4;
+    //  padding: 6px;
+    //  border: 1px solid #ccc;
+    //  min-height: 20px;
+    //}
+    if( cycle === 'pdf' || cycle === 'download' ) {
+        $('textarea').each(function () {
+            const text = this.value;
+
+            const div = $('<div class="pdf-textarea"></div>')
+                .text(text); // preserves line breaks automatically
+
+            // match width if textarea had inline width
+            if (this.style.width) {
+                div.css('width', this.style.width);
+            }
+
+            $(this).replaceWith(div);
+        });
+        return;
+    }
 
     if( $(targetid).length == 0 ) {
         //console.log('no textarea => return');
         return;
     }
 
+    // var onchangeFunction_ORIG = function(domElement) {
+    //     console.log('onchangeFunction: cycle='+cycle);
+    //
+    //     // Keep track of the current visual height so we don't shrink below it
+    //     var minHeight = domElement.clientHeight || 0;
+    //
+    //     domElement.style.overflow = 'hidden';
+    //     domElement.style.height = 0;
+    //     var newH = domElement.scrollHeight + 10;
+    //
+    //     // If initRows was provided to expandTextarea, enforce the current height as a minimum
+    //     if( typeof initRows !== 'undefined' && initRows != null && initRows !== '' ) {
+    //         if( minHeight > 0 && newH < minHeight ) {
+    //             newH = minHeight;
+    //         }
+    //     }
+    //
+    //     //this scroll down to the end of the page - fix it
+    //     console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
+    //     domElement.style.height = newH + 'px';
+    //     //domElement.readOnly = originalReadonly; //to get correct height make it readonly
+    //
+    //     targetidHeight[domElement.id] = newH;
+    // }; //EOF onchangeFunction
+
     var onchangeFunction = function(domElement) {
-        //var originalReadonly = domElement.readOnly;
-        //console.log("originalReadonly="+originalReadonly);
-        //domElement.readOnly = true; //to get correct height make it readonly
+        console.log('onchangeFunction: cycle=' + cycle);
 
-        //expand if hidden (collapsed)
-        // if(0) {
-        //     var originalHidden = false;
-        //     var panelEl = $(domElement).closest('.panel-collapse');
-        //     console.log("panelEl-Class=" + panelEl.attr('class') + "panelEl-ID=" + panelEl.attr('id'));
-        //     //console.log(panelEl);
-        //     if (panelEl) {
-        //         if (panelEl.hasClass("in")) {
-        //             //opened
-        //             console.log("panelEl has Class in=[" + panelEl.attr('class') + "], panelEl-ID=[" + panelEl.attr('id') + "]");
-        //         } else {
-        //             //hidden
-        //             console.log("show originalHidden=" + originalHidden);
-        //             originalHidden = true;
-        //             panelEl.collapse('show');
-        //         }
-        //     }
-        //     console.log("originalHidden=" + originalHidden);
-        // }
-
-        // if( domElement.id in targetidHeight && targetidHeight[domElement.id] ) {
-        //     if( targetidHeight[domElement.id] > 40 ) {
-        //         console.log("already set="+domElement.id+", h="+targetidHeight[domElement.id]);
-        //         return null;
-        //     }
-        // }
-
-        // Keep track of the current visual height so we don't shrink below it
         var minHeight = domElement.clientHeight || 0;
 
         domElement.style.overflow = 'hidden';
-        domElement.style.height = 0;
+
+        // Save scroll position BEFORE resizing
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+        // Use auto instead of 0 to avoid layout collapse
+        domElement.style.height = 'auto';
+
         var newH = domElement.scrollHeight + 10;
 
-        // If initRows was provided to expandTextarea, enforce the current height as a minimum
-        if( typeof initRows !== 'undefined' && initRows != null && initRows !== '' ) {
-            if( minHeight > 0 && newH < minHeight ) {
+        if (typeof initRows !== 'undefined' && initRows != null && initRows !== '') {
+            if (minHeight > 0 && newH < minHeight) {
                 newH = minHeight;
             }
         }
 
-        //console.log("onchange Function: cur h="+domElement.style.height+", newH="+newH+", ID="+domElement.id);
+        console.log("onchange Function: cur h=" + domElement.style.height + ", newH=" + newH + ", ID=" + domElement.id);
         domElement.style.height = newH + 'px';
-        //domElement.readOnly = originalReadonly; //to get correct height make it readonly
+
+        // Restore scroll position AFTER resizing
+        window.scrollTo(scrollLeft, scrollTop);
 
         targetidHeight[domElement.id] = newH;
 
-        //close if panel was hidden
-        if(0) {
-            if (panelEl) {
-                if (originalHidden) {
-                    //console.log("hide originalHidden="+originalHidden);
-                    //panelEl.collapse('hide');
-                    //panelEl.removeClass('in');
-                }
-            }
-        }
-    }; //EOF onchangeFunction
+        // if( cycle == 'download' || cycle == 'pdf' ) {
+        //     // $('textarea').each(function() {
+        //     //     var h = $(this).height();
+        //     //     $(this).css({
+        //     //         height: h + 'px',
+        //     //         overflow: 'hidden'
+        //     //     });
+        //     // });
+        //     $('textarea').off('input click');
+        // }
+    };
 
     //for (var i = 0; i < elements.length; ++i) {
     //  var element = elements[i];
@@ -1183,7 +1213,7 @@ function expandTextarea(holder, initRows) {
         if( typeof initRows !== 'undefined' && initRows != null && initRows !== '' ) {
             var rowsInt = parseInt(initRows,10);
             if( !isNaN(rowsInt) && rowsInt > 0 ) {
-                //console.log('resize textarea: rowsInt='+rowsInt);
+                console.log('resize textarea: rowsInt='+rowsInt);
                 element.attr('rows', rowsInt);
             }
         }
@@ -1195,37 +1225,30 @@ function expandTextarea(holder, initRows) {
         if( full.indexOf("/event-log") !== -1 ) {
             resize = false;
         }
-        //console.log('resize='+resize);
+        console.log('resize='+resize);
 
         if( cycle != 'download' && resize ) {
             // On initial load, only auto-resize if no explicit initRows was provided.
             // If initRows is set, respect the rows-based height until user interaction.
             if( typeof initRows === 'undefined' || initRows == null || initRows === '' ) {
                 //console.log('resize textarea');
-
-                //ver1
-                //var height = $(element).prop('scrollHeight');
-                //console.log('height='+height);
-                //$(element).height(height);
-
-                //ver2
                 onchangeFunction(this);
             }
         }
 
-        //this does not work anymore (5 July 2017) => changed to on('input'
-        //addEvent('keyup', element, function() {
-        //    this.style.overflow = 'hidden';
-        //    this.style.height = 0;
-        //    var newH = this.scrollHeight + 10;
-        //    console.log("event keyup: cur h="+this.style.height+", newH="+newH);
-        //    this.style.height = newH + 'px';
-        //}, false);
+        // //On initial load, only auto-resize if no explicit initRows was provided.
+        // //If initRows is set, respect the rows-based height until user interaction.
+        // if ( (cycle != 'download' && cycle != 'pdf') && resize ) {
+        //     if (!initRows) {
+        //         onchangeFunction(this);
+        //     }
+        // }
 
-        $(element).on('input mouseenter',function(e){
-            //e.target.value
-            //console.log("on input");
-            onchangeFunction(this);
+        //trigger on text change OR click
+        $(element).on('input click', function () {
+            //if (cycle !== 'download' && cycle !== 'pdf') {
+                onchangeFunction(this);
+            //}
         });
 
         // $(element).on('mouseenter',function(e){
