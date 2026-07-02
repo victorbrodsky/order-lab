@@ -41,7 +41,7 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
         $this->numberOfDaysLabelPrefix = "Number of Work Days Off-site";
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         parent::buildForm($builder,$options);
@@ -86,7 +86,7 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
 
 
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\VacReqBundle\Entity\VacReqRequestBusiness',

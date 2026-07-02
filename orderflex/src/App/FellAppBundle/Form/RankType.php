@@ -28,7 +28,7 @@ use Symfony\Component\Form\FormEvent;
 class RankType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $builder->add('rank',null, array(
@@ -40,7 +40,7 @@ class RankType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver) : void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\FellAppBundle\Entity\Rank',

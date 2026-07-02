@@ -39,7 +39,7 @@ class ProcedureType extends AbstractType
         }
     }
     
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $this->formConstructor($options['form_custom_value']);
@@ -204,7 +204,7 @@ class ProcedureType extends AbstractType
         
     }
 
-    public function configureOptions(OptionsResolver $resolver) : void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\OrderformBundle\Entity\Procedure',

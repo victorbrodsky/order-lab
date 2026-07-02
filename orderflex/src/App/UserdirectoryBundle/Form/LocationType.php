@@ -79,7 +79,7 @@ class LocationType extends AbstractType
     /**
      * @return void
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         //echo "cycle=".$options['form_custom_value']['cycle']."<br>";
@@ -413,7 +413,7 @@ class LocationType extends AbstractType
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\UserdirectoryBundle\Entity\Location',

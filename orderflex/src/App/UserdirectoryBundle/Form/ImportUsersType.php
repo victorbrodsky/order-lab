@@ -32,7 +32,7 @@ class ImportUsersType extends AbstractType {
     /**
      * @return void
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $builder->add('file', FileType::class, array(
@@ -51,7 +51,7 @@ class ImportUsersType extends AbstractType {
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false

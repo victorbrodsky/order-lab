@@ -33,7 +33,7 @@ class CtpSiteParameterType extends AbstractType
         $this->params = $params;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->formConstructor($options['form_custom_value']);
 
@@ -116,7 +116,7 @@ class CtpSiteParameterType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => 'App\CtpBundle\Entity\CtpSiteParameter',

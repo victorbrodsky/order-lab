@@ -57,7 +57,7 @@ class ScanCustomSelectorType extends AbstractType {
         $this->serviceContainer = $serviceContainer;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         
         $username = $this->serviceContainer->get('user_utility')->getLoggedinUser();
@@ -149,7 +149,7 @@ class ScanCustomSelectorType extends AbstractType {
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver) : void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'invalid_message' => 'The selection does not exist',

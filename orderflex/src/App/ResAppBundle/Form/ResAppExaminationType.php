@@ -29,7 +29,7 @@ use Doctrine\ORM\EntityRepository;
 class ResAppExaminationType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         //USMLE
         $builder->add('USMLEStep1Score', null, array(
@@ -74,7 +74,7 @@ class ResAppExaminationType extends AbstractType
         ));
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\UserdirectoryBundle\Entity\Examination',

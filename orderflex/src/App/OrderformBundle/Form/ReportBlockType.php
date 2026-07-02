@@ -29,7 +29,7 @@ use Doctrine\ORM\EntityRepository;
 class ReportBlockType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $builder->add('issuedDate', DateType::class, array(
@@ -89,7 +89,7 @@ class ReportBlockType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver) : void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\OrderformBundle\Entity\ReportBlock',

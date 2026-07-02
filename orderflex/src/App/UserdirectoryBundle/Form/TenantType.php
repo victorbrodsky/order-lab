@@ -47,7 +47,7 @@ class TenantType extends AbstractType
     /**
      * @return void
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->formConstructor($options['form_custom_value']);
         $this->addCustomFields($builder);
@@ -56,7 +56,7 @@ class TenantType extends AbstractType
     /**
      * @return void
      */
-    //public function buildForm(FormBuilderInterface $builder, array $options)
+    //public function buildForm(FormBuilderInterface $builder, array $options): void
     public function addCustomFields($builder)
     {
         $builder->add('name',null,array(
@@ -195,7 +195,7 @@ class TenantType extends AbstractType
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\UserdirectoryBundle\Entity\TenantList',

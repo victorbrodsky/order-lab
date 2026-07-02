@@ -246,7 +246,8 @@ abstract class BasePermissionVoter extends Voter {
         }
 
         //dummy object just created with as new => can not edit dummy object
-        if( is_object($subject) && !$subject->getId() ) {
+        //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) object also has an id.
+        if( is_object($subject) && !$this->em->contains($subject) ) {
             return false;
         }
 

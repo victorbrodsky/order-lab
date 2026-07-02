@@ -296,7 +296,8 @@ class EncounterRepository extends ArrayFieldAbstractRepository
             $dataqualityObj->setDescription($msg);
             $dataqualityObj->setStatus('active');
 
-            if( $encounter && $encounter->getId() && $encounter->getId() != "" ) {
+            //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) encounter also has an id.
+            if( $encounter && $this->_em->contains($encounter) ) {
                 $dataqualityObj->setEncounter($encounter);
             } else {
                 $dataqualityObj->setEncounter($original);

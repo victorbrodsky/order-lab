@@ -252,7 +252,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //$entity->cleanEmptyArrayFields();
         $entity = $this->cleanAndProcessEmptyArrayFields($entity);
 
-        if( !$entity->getId() || $entity->getId() == "" ) {
+        //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids (ORM 3) the id is
+        //assigned at persist() time (before flush), so getId() is no longer null for new entities.
+        if( !$em->contains($entity) ) {
             //echo "set persist: persist ".$className."<br>";
             $em->persist($entity);
         } else {
@@ -776,8 +778,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             return $entity;
         }
 
-        //if field has id, check if the value is not the same. If the values are different, then create a new valid field and make status of DB existed field as invalid
-        if( $field->getId() && $field->getId() != "" ) {
+        //if field already exists in DB, check if the value is not the same. If the values are different, then create a new valid field and make status of DB existed field as invalid
+        //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) field also has an id.
+        if( $em->contains($field) ) {
             //$found = $em->getRepository('AppOrderformBundle:'.$className.$methodName)->findOneById($field->getId());
             $found = $em->getRepository('App\\OrderformBundle\\Entity\\'.$className.$methodName)->findOneById($field->getId());
             //echo "found field=".$found." compare to field=".$field."<br>";

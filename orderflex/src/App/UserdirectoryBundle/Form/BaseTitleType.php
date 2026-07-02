@@ -65,7 +65,7 @@ class BaseTitleType extends AbstractType
     /**
      * @return void
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $this->formConstructor($options['form_custom_value']);
@@ -467,7 +467,7 @@ class BaseTitleType extends AbstractType
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         //$fullClassName = $resolver->resolve('form_custom_value');
         //echo "fullClassName=".$fullClassName."<br>";

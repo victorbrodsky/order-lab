@@ -44,7 +44,7 @@ class ArrayFieldType extends AbstractType
         $this->params = $params;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->formConstructor($options['form_custom_value']);
 
@@ -263,7 +263,7 @@ class ArrayFieldType extends AbstractType
 //        return null;
 //    }
 
-    public function configureOptions(OptionsResolver $resolver) : void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'form_custom_value' => null,

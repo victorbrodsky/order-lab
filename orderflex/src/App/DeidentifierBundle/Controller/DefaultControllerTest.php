@@ -32,7 +32,9 @@ namespace App\DeidentifierBundle\Controller;
 
 
 use App\OrderformBundle\Entity\AccessionType;
+use App\TranslationalResearchBundle\Entity\Invoice;
 use App\TranslationalResearchBundle\Entity\Product;
+use App\TranslationalResearchBundle\Entity\ProductTest;
 use App\UserdirectoryBundle\Entity\Grant;
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use App\DeidentifierBundle\Form\DeidentifierSearchType;
@@ -52,7 +54,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultControllerTest extends OrderAbstractController
 {
-    
+
+    //http://127.0.0.1/deidentifier/about-test
     #[Route(path: '/about-test', name: 'deidentifier_about_test_page')]
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
@@ -65,15 +68,24 @@ class DefaultControllerTest extends OrderAbstractController
         $product = new Product($user);
         $em->persist($product);
         echo "product id (IDENTITY)=".$product->getId()."<br>";
-
+        
         $site = new SiteList($user);
         $em->persist($site);
-        echo "site id (Auto)=".$site->getId()."<br>";
+        echo "site id (AUTO)=".$site->getId()."<br>";
 
         $grant = new Grant($user);
         //$em->getRepository(Grant::class)->testGrant();
         $em->persist($grant);
-        echo "grant id (Auto)=".$grant->getId()."<br>";
+        echo "grant id (AUTO)=".$grant->getId()."<br>";
+
+        $invoice = new Invoice($user);
+        $em->persist($invoice);
+        echo "invoice id (AUTO)=".$invoice->getId()."<br>";
+
+        $productTest = new ProductTest($user);
+        //$em->getRepository(Grant::class)->testGrant();
+        $em->persist($productTest);
+        echo "productTest id (SEQUENCE)=".$productTest->getId()."<br>";
 
         //return $this->redirect( $this->generateUrl('deidentifier-nopermission') );
         //return $this->redirectToRoute('deidentifier-nopermission');

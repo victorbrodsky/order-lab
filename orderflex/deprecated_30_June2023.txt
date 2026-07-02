@@ -90,3 +90,5 @@ This strategy provides full portability.
 IDENTITY: MySQL/SQLite/SQL Anywhere (AUTO\_INCREMENT), MSSQL (IDENTITY) and PostgreSQL (SERIAL).
 SEQUENCE: Sequences are supported by Oracle, PostgreSql and SQL Anywhere.
 
+product id:
+nextval('transres_product_id_seq'::regclass)

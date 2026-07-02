@@ -32,7 +32,7 @@ class HostedGroupHolderType extends AbstractType
 
     //Use user.administrativeTitles as an example
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $builder->add('hostedUserGroup', EntityType::class, array(
@@ -103,7 +103,7 @@ class HostedGroupHolderType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\UserdirectoryBundle\Entity\HostedGroupHolder',

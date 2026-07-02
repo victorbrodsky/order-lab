@@ -34,7 +34,7 @@ class DocumentType extends AbstractType
     /**
      * @return void
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $builder->add('id', HiddenType::class, array(
@@ -55,7 +55,7 @@ class DocumentType extends AbstractType
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\UserdirectoryBundle\Entity\Document',

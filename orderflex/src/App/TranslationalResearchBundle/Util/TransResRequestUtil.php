@@ -5891,7 +5891,9 @@ class TransResRequestUtil
             if( $category ) {
 
                 //default quantity
-                $quantitiesArr = $product->calculateQuantities($priceList);
+                if( $product ) {
+                    $quantitiesArr = $product->calculateQuantities($priceList);
+                }
                 $initialQuantity = $quantitiesArr['initialQuantity'];
                 $additionalQuantity = $quantitiesArr['additionalQuantity'];
                 $initialFee = $quantitiesArr['initialFee'];

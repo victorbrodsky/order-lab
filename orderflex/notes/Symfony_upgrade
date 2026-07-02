@@ -1,0 +1,104 @@
+
+
+
+src/App/UserdirectoryBundle/Security/Voter/BasePermissionVoter.php:249:
+        if( is_object($subject) && !$subject->getId() ) {
+
+
+src/App/UserdirectoryBundle/Repository/TreeRepository.php:604
+    if( $parent->getName() && $parent->getName() != "" && !$parent->getId() ) {
+        //echo "parent does not exist in DB => this category does not exist in DB => return null<br>";
+        return null;
+    }
+
+    if( !$parent->getId() ) {
+        //exit('Logical error: parent do not exist in DB, parent id is null');
+        throw new \Exception( 'Logical error: parent do not exist in DB, parent id is null');
+    }
+
+
+
+src/App/TranslationalResearchBundle/Util/TransResRequestUtil.php:2480:
+    //detect removal (228: 8, Case C)
+    foreach( $transresRequest->getProducts() as $product ) {
+        if( !isset($invoiceItemProducts[$product->getId()]) ) {
+            //product does not exists anymore in the invoice via $invoiceItemProducts
+            $product->setNotInInvoice(true);
+        }
+    }
+
+
+Report for IDENTITY usage:
+Doctrine IDENTITY → ORM 3 Migration: getId() null-check audit
+Why this matters
+With IDENTITY on PostgreSQL, the ID is assigned after INSERT (at flush), so getId() is null for a new, unflushed entity. If you resolve the deprecation by switching to AUTO/SEQUENCE, Postgres pre-fetches the ID at persist() time (before flush), so getId() becomes non-null immediately. Every place that treats "id is null" as "entity is new/not in DB" can silently break.
+
+Confirming evidence in your code — SlideRepository.php:92-93 already documents this exact hazard:
+
+SlideRepository.php:92-93
+//this does not work on postgresql because id is set before creating a new element in DB (before flush)
+if( !$slide->getId() || $slide->getId() == "" ) {
+Entities using IDENTITY (the blast radius)
+Direct: Document, Product, InvoiceItem, Prices, ProjectGoal, VisualInfo. Mapped superclasses (propagate to all children):
+
+BaseUserAttributes → UserInfo, EmploymentStatus, Training, Lecture, Publication, Book, Credentials, PerSiteSettings, DocumentComment, BaseTitle (+title subclasses), BaseComment (+comment subclasses), FellowshipApplication, ResidencyApplication.
+ReviewBase → IrbReview, FinalReview, CommitteeReview, AdminReview.
+HIGH risk — persist/insert decisions & security voters
+These change program behavior (double-insert, wrong branch, or auth bypass) if getId() becomes non-null pre-flush.
+
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\ArrayFieldAbstractRepository.php:255 — decides whether to persist(): if( !$entity->getId() || $entity->getId() == "" ). A pre-flushed ID would skip persisting a genuinely new entity.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\ArrayFieldAbstractRepository.php:780 — if( $field->getId() && $field->getId() != "" ) treats "has id" as "exists in DB" and re-queries.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\SlideRepository.php:93 — new-slide detection (already known-broken on PG, see above).
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\EncounterRepository.php:299 — if( $encounter && $encounter->getId() && $encounter->getId() != "" ) chooses which entity to attach.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Repository\TreeRepository.php:604 — "parent does not exist in DB" via !$parent->getId().
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Repository\TreeRepository.php:609 — if( $parent && $parent->getId() && $parent->getId() != "" ).
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Repository\TreeRepository.php:653 — throws "parent do not exist in DB" on !$parent->getId().
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Security\Voter\BasePermissionVoter.php:249 — dummy/new-object detection !$subject->getId() → auth decision.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Security\Voter\BaseVoter.php:149 — same pattern, auth decision.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Security\Voter\ScanPermissionVoter.php:149 — !$subject->getId() auth decision.
+MEDIUM risk — "new entity" branches & self-checks
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\CtpBundle\Controller\CtpSiteParametersController.php:102 — if( !$ctpSiteParameter->getId() ) treats as new to wire up parent.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Controller\UserRequestController.php:399-403 and @c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Controller\UserRequestController.php:461-462 — $entity->getId() && $entity->getId() != "" gating.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Entity\Patient.php:1218 — if( !$this->getId() || $this->getId() == "" ) return "";.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UtilBundles\FOSCommentBundle\Model\Comment.php:173 — throws if parent "not persisted".
+LOW risk — guard clauses on already-loaded entities
+These entities come from DB queries, so getId() is a null-safety guard, not new/old logic. Behavior won't change, but listed for completeness:
+
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\TranslationalResearchBundle\Util\TransResRequestUtil.php:942
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\TranslationalResearchBundle\Util\TransResUtil.php:1308
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\TranslationalResearchBundle\Util\TransResUtil.php:1701
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\TranslationalResearchBundle\Util\TransResUtil.php:1724
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\FellAppBundle\Util\FellAppUtil.php:4413
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\CallLogBundle\Util\CallLogUtil.php:2859
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\CrnBundle\Util\CrnUtil.php:2842
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\PatientRepository.php:270
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\CrnBundle\Controller\CrnPatientController.php:167 and @c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\CrnBundle\Controller\CrnPatientController.php:289
+Recommended safe pattern (when you fix these)
+Replace "is id null?" with a UnitOfWork-based check that is independent of the ID strategy:
+
+New/unmanaged: !$em->contains($entity) or $em->getUnitOfWork()->isScheduledForInsert($entity).
+Or add an explicit transient boolean flag set in the constructor and cleared in a postPersist lifecycle callback.
+
+############
+All HIGH-risk locations are fixed and syntax-checked clean.
+
+Summary — HIGH-risk getId() → UnitOfWork fixes
+Replaced strategy-dependent "id is null = new" checks with $em->contains(...), which is independent of IDENTITY vs SEQUENCE/AUTO.
+
+Persist / DB-existence decisions
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\ArrayFieldAbstractRepository.php:257 — persist decision now !$em->contains($entity).
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\ArrayFieldAbstractRepository.php:783 — DB-lookup gate now $em->contains($field).
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\SlideRepository.php:62 — captured $isNewSlide = !$em->contains($slide) before the unconditional persist(), used at @c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\SlideRepository.php:95. This also fixes the previously documented Postgres breakage.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Repository\EncounterRepository.php:300 — attach existing encounter via $this->_em->contains($encounter).
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Repository\TreeRepository.php:605, :610, :655, :670 — parent/child "exists in DB" checks now use $this->_em->contains(...).
+Security voters (auth-decision risk)
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Security\Voter\BaseVoter.php:97 and @c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Security\Voter\BaseVoter.php:151.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Security\Voter\BasePermissionVoter.php:250.
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\OrderformBundle\Security\Voter\ScanPermissionVoter.php:150 — prevents a new/unsaved subject with a provider from being treated as owned.
+Notes / deliberately left as-is
+@c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\UserdirectoryBundle\Repository\TreeRepository.php:677 — this is an id-equality identity comparison between two entities, not a new/exists check, so it was not converted.
+I expanded the TreeRepository scope slightly (added :667/:670 and BaseVoter :96) since they share the exact same DB-existence hazard as the flagged lines.
+Verification
+php -l passed on all 7 modified files (no syntax errors).
+Behavioral caveat to validate in tests: $em->contains() becomes true immediately after persist() (pre-flush), whereas the old IDENTITY id-check stayed "new" until flush. For flows that persist() an entity and then re-check newness in the same request before flush, the branch now evaluates as "existing". I reviewed the edited sites and this matches intent, but the MEDIUM-risk items (controllers/utils) remain unchanged.
+

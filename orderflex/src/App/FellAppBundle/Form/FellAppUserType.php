@@ -43,7 +43,7 @@ class FellAppUserType extends UserType
 
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $this->formConstructor($options['form_custom_value']);

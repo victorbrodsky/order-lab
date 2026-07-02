@@ -601,12 +601,13 @@ class TreeRepository extends NestedTreeRepository {
         if( method_exists($category,'getParent')  ) {
 
             //echo "parent name=".$parent->getName().", id=".$parent->getId()."<br>";
-            if( $parent->getName() && $parent->getName() != "" && !$parent->getId() ) {
+            //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) parent also has an id.
+            if( $parent->getName() && $parent->getName() != "" && !$this->_em->contains($parent) ) {
                 //echo "parent does not exist in DB => this category does not exist in DB => return null<br>";
                 return null;
             }
 
-            if( $parent && $parent->getId() && $parent->getId() != "" ) {
+            if( $parent && $this->_em->contains($parent) ) {
                 $searchArr['parent'] = $parent->getId();
             }
 
@@ -650,7 +651,8 @@ class TreeRepository extends NestedTreeRepository {
         $addMethod = "add".$className;
         $setMethod = "set".$className;
 
-        if( !$parent->getId() ) {
+        //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) parent also has an id.
+        if( !$this->_em->contains($parent) ) {
             //exit('Logical error: parent do not exist in DB, parent id is null');
             throw new \Exception( 'Logical error: parent do not exist in DB, parent id is null');
         }
@@ -664,7 +666,8 @@ class TreeRepository extends NestedTreeRepository {
         //echo  "category: name=".$child->getName().", id=".$child->getId().", parentId=".$child->getParent()->getId()."<br>";
         //echo  "parent: name=".$parent->getName().", id=".$parent->getId()."<br>";
 
-        if( $child && $child->getId() ) {
+        //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) child also has an id.
+        if( $child && $this->_em->contains($child) ) {
             //echo "don't process because category exists in DB, id=".$child->getId()." <br>";
 
             if( $child->getParent() && $child->getParent()->getId() ) {

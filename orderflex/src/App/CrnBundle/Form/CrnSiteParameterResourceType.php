@@ -36,7 +36,7 @@ class CrnSiteParameterResourceType extends AbstractType
         $this->params = $params;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $this->formConstructor($options['form_custom_value']);
@@ -56,7 +56,7 @@ class CrnSiteParameterResourceType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\CrnBundle\Entity\CrnSiteParameter',

@@ -36,7 +36,7 @@ class FeeFilterType extends AbstractType
     }
 
     //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
         $this->formConstructor($options['form_custom_value']);
@@ -91,7 +91,7 @@ class FeeFilterType extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'form_custom_value' => null,

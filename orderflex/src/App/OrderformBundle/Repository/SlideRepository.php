@@ -57,6 +57,9 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $slide->cleanEmptyArrayFields();
 
         $em = $this->_em;
+        //Capture new-entity state BEFORE persist: with SEQUENCE-based ids (ORM 3) the id is
+        //assigned at persist() time, so getId() can no longer be used to detect a new slide.
+        $isNewSlide = !$em->contains($slide);
         $em->persist($slide);
 
         if( $message == null ) {
@@ -89,8 +92,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
 
         unset($original);
 
-        //this does not work on postgresql because id is set before creating a new element in DB (before flush)
-        if( !$slide->getId() || $slide->getId() == "" ) {
+        if( $isNewSlide ) {
             $message->addSlide($slide);
         }
 

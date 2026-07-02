@@ -33,7 +33,7 @@ class MedicalTitleType extends BaseTitleType
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
 
         $resolver->setDefaults(array(

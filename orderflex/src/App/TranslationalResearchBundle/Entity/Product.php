@@ -12,7 +12,10 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
+//#[ORM\GeneratedValue(strategy: 'IDENTITY')] gives id's constraints default field: nextval('transres_product_id_seq'::regclass)
+//How to test it: edit invoice and add new Invoice Item. Then click 'Update and Regenerate ..." -> error:
+//Call to a member function calculateQuantities() on null: $quantitiesArr = $product->calculateQuantities($priceList); (line 5894 in TransResRequestUtil.php)
+//Test add/remove new item for work request and invoice
 
 #[ORM\Table(name: 'transres_product')]
 #[ORM\Entity]
@@ -21,9 +24,14 @@ class Product {
     /**
      * @var integer
      */
+//    #[ORM\Column(name: 'id', type: 'integer')]
+//    #[ORM\Id]
+//    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+//    private $id;
+
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**

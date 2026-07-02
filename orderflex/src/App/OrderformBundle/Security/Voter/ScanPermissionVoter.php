@@ -146,7 +146,8 @@ class ScanPermissionVoter extends BasePermissionVoter {
             return false;
         }
 
-        if( !$subject->getId() || !$subject->getProvider() ) {
+        //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) subject also has an id.
+        if( !$this->em->contains($subject) || !$subject->getProvider() ) {
             return false;
         }
 

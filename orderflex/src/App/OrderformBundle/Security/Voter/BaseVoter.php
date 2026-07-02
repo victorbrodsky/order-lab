@@ -93,7 +93,8 @@ abstract class BaseVoter extends Voter {
         //exit('1');
         //minimum requirement: subject must be under user's permitted/collaborated institutions
         //don't perform this check for dummy, empty objects
-        if( $subject->getId() && $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions( $subject, $user, array("Union") ) == false ) {
+        //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) object also has an id.
+        if( $this->em->contains($subject) && $securityUtil->isObjectUnderUserPermittedCollaboratedInstitutions( $subject, $user, array("Union") ) == false ) {
             return false;
         }
 
@@ -146,7 +147,8 @@ abstract class BaseVoter extends Voter {
         //echo "canEdit? <br>";
 
         //dummy object just created with as new => can not edit dummy object
-        if( !$subject->getId() ) {
+        //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) object also has an id.
+        if( !$this->em->contains($subject) ) {
             return false;
         }
 

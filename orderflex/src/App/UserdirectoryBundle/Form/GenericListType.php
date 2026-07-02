@@ -97,7 +97,7 @@ class GenericListType extends AbstractType
      * @param array $options   
      * @return void
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->formConstructor($options['form_custom_value'],$options['form_custom_value_mapper']);
 
@@ -2226,7 +2226,7 @@ class GenericListType extends AbstractType
     /**
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => null,   //$this->mapper['fullClassName'],

@@ -3027,6 +3027,7 @@ class RequestController extends OrderAbstractController
                     $logger = $this->container->get('logger');
                     $logger->notice("translationalresearch_update_irb_exp_date updated PDF: updatePdf=$updatePdf");
                     $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    //TODO: replace by non-blocking queueProjectPdfGeneration
                     $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_irb_exp_date
                     $em->flush();
                 }
@@ -3120,6 +3121,7 @@ class RequestController extends OrderAbstractController
                         $logger->notice("translationalresearch_update_project_pricelist updated PDF: updatePdf=$updatePdf");
                         $transresPdfUtil = $this->container->get('transres_pdf_generator');
                         $user = $this->getUser();
+                        //TODO: replace by non-blocking queueProjectPdfGeneration
                         $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_pricelist
                         $em->flush();
                     }
@@ -3212,6 +3214,7 @@ class RequestController extends OrderAbstractController
                     $logger = $this->container->get('logger');
                     $logger->notice("translationalresearch_update_project_approvedprojectbudget updated PDF: updatePdf=$updatePdf");
                     $transresPdfUtil = $this->container->get('transres_pdf_generator');
+                    //TODO: replace by non-blocking queueProjectPdfGeneration
                     $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_approvedprojectbudget
                     $em->flush();
                 }
@@ -3296,6 +3299,7 @@ class RequestController extends OrderAbstractController
                     $logger->notice("translationalresearch_update_project_nobudgetlimit updated PDF: updatePdf=$updatePdf");
                     $transresPdfUtil = $this->container->get('transres_pdf_generator');
                     $user = $this->getUser();
+                    //TODO: replace by non-blocking queueProjectPdfGeneration
                     $transresPdfUtil->generateAndSaveProjectPdf($project, $user, $request); //update_project_nobudgetlimit
                     $em->flush();
                 }
