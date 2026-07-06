@@ -102,3 +102,5 @@ Verification
 php -l passed on all 7 modified files (no syntax errors).
 Behavioral caveat to validate in tests: $em->contains() becomes true immediately after persist() (pre-flush), whereas the old IDENTITY id-check stayed "new" until flush. For flows that persist() an entity and then re-check newness in the same request before flush, the branch now evaluates as "existing". I reviewed the edited sites and this matches intent, but the MEDIUM-risk items (controllers/utils) remain unchanged.
 
+search for any remaining strategy: 'IDENTITY' mappings to plan the actual entity-mapping change
+

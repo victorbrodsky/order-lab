@@ -99,7 +99,8 @@ class CtpSiteParametersController extends SiteParametersController
         if( $form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
 
-            if( !$ctpSiteParameter->getId() ) {
+            //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids (ORM 3) a new entity gets its id at persist() time.
+            if( !$em->contains($ctpSiteParameter) ) {
                 $siteParameters = $this->getSingleSiteParameters();
                 $siteParameters->setCtpSiteParameter($ctpSiteParameter);
             }
