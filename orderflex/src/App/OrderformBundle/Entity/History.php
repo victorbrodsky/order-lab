@@ -58,6 +58,8 @@ class History
      */
     #[ORM\Column(type: 'array', nullable: true)]
     private $roles = array();
+    //#[ORM\Column(type: 'json', nullable: true)]
+    //protected array $roles = [];
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $note;

@@ -49,8 +49,7 @@ class AdministrativeTitle extends BaseTitle
      * Overwrite institution, so we can use join to find out Supervisors for location search.
      */
     #[ORM\ManyToOne(targetEntity: 'Institution', inversedBy: 'administrativeTitles')]
-    protected $institution;
-
+    private $institution;
 
 
     function __construct($author=null)
@@ -140,6 +139,23 @@ class AdministrativeTitle extends BaseTitle
     {
         return $this->userPositions;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
 
 
 

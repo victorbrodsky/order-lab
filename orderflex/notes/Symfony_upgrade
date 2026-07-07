@@ -104,3 +104,63 @@ Behavioral caveat to validate in tests: $em->contains() becomes true immediately
 
 search for any remaining strategy: 'IDENTITY' mappings to plan the actual entity-mapping change
 
+
+composer why-not symfony/framework-bundle 7
+problem: oneup/uploader-bundle 4.0.1 requires symfony/framework-bundle (^4.4 || ^5.4 || ^6.0)
+
+composer require "symfony/framework-bundle:7" --dry-run
+
+$ composer update --dry-run
+Loading composer repositories with package information
+The "https://raw.githubusercontent.com/symfony/recipes/flex/main/index.json" file could not be downloaded (HTTP/2 404 )
+https://raw.githubusercontent.com/symfony/recipes/flex/main/index.json could not be fully loaded, package information was loaded from the local cache and may be out of date
+Restricting packages listed in "symfony/symfony" to "^7.0"
+Updating dependencies
+Your requirements could not be resolved to an installable set of packages.
+
+  Problem 1
+    - Root composer.json requires lexik/jwt-authentication-bundle ^3.1 -> satisfiable by lexik/jwt-authentication-bundle[v3.1.0, v3.1.1, v3.2.0].
+    - lcobucci/jwt 5.0.0 requires php ~8.1.0 || ~8.2.0 -> your php version (8.3.7; overridden via config.platform, same as actual) does not satisfy that requirement.
+    - lcobucci/jwt[5.1.0, ..., 5.6.0] require ext-sodium * -> it is missing from your system. Install or enable PHP's sodium extension.
+
+      Alternatively you can require one of these packages that provide the extension (or parts of it):
+      Keep in mind that the suggestions are automated and may not be valid or safe to use
+      - paragonie/sodium_compat_ext_sodium
+      - juspay/expresscheckout-php-sdk Express Checkout SDK for PHP allows easy integration with Juspay's EC payments as a service platform
+      - vufind/vufind A flexible discovery layer.
+
+    - lexik/jwt-authentication-bundle[v3.1.0, ..., v3.2.0] require lcobucci/jwt ^5.0 -> satisfiable by lcobucci/jwt[5.0.0, ..., 5.6.0].
+
+To enable extensions, verify that they are enabled in your .ini files:
+    - C:\Program Files\php-8.3.7\php.ini
+You can also run `php --ini` in a terminal to see which files are used by PHP in CLI mode.
+Alternatively, you can run Composer with `--ignore-platform-req=ext-sodium` to temporarily ignore these required extensions.
+
+Use the option --with-all-dependencies (-W) to allow upgrades, downgrades and removals for packages currently locked to specific versions.
+
+Enable in php.ini 'extension=sodium' - I don't ant to change php.ini on all servers
+Lexik is used only in SamlAuthenticator with comment "NOT USED" => Remove lexik: "lexik/jwt-authentication-bundle": "^3.1",
+Deleted App\Saml\Security\SamlAuthenticator
+Update SamlController to make $authenticator = null => test it with SAML!
+
+bin/console cache:clear
+bin/console doctrine:schema:validate
+
+ [FAIL] The entity-class App\Saml\Entity\SamlConfig mapping is invalid:
+ * The field 'App\Saml\Entity\SamlConfig#updateAuthorRoles' uses a non-existent type 'array'.
+ * The field 'App\Saml\Entity\SamlConfig#attributeMapping' uses a non-existent type 'array'.
+
+
+Database
+--------
+18:37:58 CRITICAL  [console] Error thrown while running command "doctrine:schema:validate". Message: "Unknown column type "array" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType(). You can get a list of all the known types with \Doctrine\DBAL\Types\Type::getTypesMap(). If this error occurs during database introspection then you might have forgotten to register all database types for a Doctrine Type. Use AbstractPlatform#registerDoctrineTypeMapping() or have your custom types implement Type#getMappedDatabaseTypes(). If the type name is empty you might have a problem with the cache or forgot some mapping information." ["exception" => Doctrine\DBAL\Types\Exception\UnknownColumnType^ { …},"command" => "doctrine:schema:validate","message" => "Unknown column type "array" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType(). You can get a list of all the known types with \Doctrine\DBAL\Types\Type::getTypesMap(). If this error occurs during database introspection then you might have forgotten to register all database types for a Doctrine Type. Use AbstractPlatform#registerDoctrineTypeMapping() or have your custom types implement Type#getMappedDatabaseTypes(). If the type name is empty you might have a problem with the cache or forgot some mapping information."]
+In UnknownColumnType.php line 15:
+  Unknown column type "array" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType(). You can get a list of all the known types with \Doctrine\DBAL\Types\Type::ge
+  tTypesMap(). If this error occurs during database introspection then you might have forgotten to register all database types for a Doctrine Type. Use AbstractPlatform#registerDoctrineTypeMapping() or have your
+  custom types implement Type#getMappedDatabaseTypes(). If the type name is empty you might have a problem with the cache or forgot some mapping information.
+
+If change array to json:
+1) Doctrine will detect that the column type changed and will propose a schema change.
+2) The column type will change from: text containing serialized PHP (a:11:{...}) to: jsonb (PostgreSQL) containing real JSON (["ROLE_USER", ...])
+3) data need to be converted
+

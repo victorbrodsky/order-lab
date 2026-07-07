@@ -49,6 +49,10 @@ class AppointmentTitle extends BaseTitle
     #[ORM\JoinColumn(name: 'fellowshipType_id', referencedColumnName: 'id')]
     private $fellowshipType;
 
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
+    private $institution;
+
+    
 
     public function __construct($creator=null) {
         $this->positions = new ArrayCollection();
@@ -135,6 +139,22 @@ class AppointmentTitle extends BaseTitle
     public function getPositions()
     {
         return $this->positions;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
     }
 
 

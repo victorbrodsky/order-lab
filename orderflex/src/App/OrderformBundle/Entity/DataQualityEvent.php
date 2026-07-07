@@ -30,6 +30,8 @@ class DataQualityEvent extends DataQuality
      */
     #[ORM\Column(type: 'array', nullable: true)]
     protected $roles = array();
+    //#[ORM\Column(type: 'json', nullable: true)]
+    //protected array $roles = [];
 
 
     #[ORM\ManyToOne(targetEntity: 'DataQualityEventLog', inversedBy: 'dqevents')]

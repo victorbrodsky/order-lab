@@ -47,6 +47,8 @@ class MedicalTitle extends BaseTitle
     #[ORM\ManyToMany(targetEntity: 'PositionTypeList')]
     private $userPositions;
 
+    #[ORM\ManyToOne(targetEntity: 'Institution')]
+    private $institution;
 
 
     function __construct($author=null)
@@ -123,6 +125,23 @@ class MedicalTitle extends BaseTitle
     {
         return $this->userPositions;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
 
 
     public function __toString() {

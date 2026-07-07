@@ -2,20 +2,11 @@
     "asimlqt/php-google-spreadsheet-client": {
         "version": "v3.0.2"
     },
-    "behat/transliterator": {
-        "version": "v1.3.0"
-    },
     "box/spout": {
         "version": "v3.1.0"
     },
-    "doctrine/cache": {
-        "version": "1.10.0"
-    },
     "doctrine/collections": {
         "version": "1.6.4"
-    },
-    "doctrine/common": {
-        "version": "2.12.0"
     },
     "doctrine/dbal": {
         "version": "v2.10.1"
@@ -77,9 +68,6 @@
     "fabiang/sasl": {
         "version": "v1.0.1"
     },
-    "friendsofphp/proxy-manager-lts": {
-        "version": "v1.0.7"
-    },
     "friendsofsymfony/jsrouting-bundle": {
         "version": "2.3",
         "recipe": {
@@ -130,9 +118,6 @@
     },
     "knplabs/knp-time-bundle": {
         "version": "1.17.0"
-    },
-    "laminas/laminas-code": {
-        "version": "4.5.1"
     },
     "lexik/jwt-authentication-bundle": {
         "version": "2.18",
@@ -564,9 +549,6 @@
     "symfony/polyfill-mbstring": {
         "version": "v1.13.1"
     },
-    "symfony/polyfill-php72": {
-        "version": "v1.13.1"
-    },
     "symfony/process": {
         "version": "v4.4.2"
     },
@@ -575,9 +557,6 @@
     },
     "symfony/property-info": {
         "version": "v4.4.2"
-    },
-    "symfony/proxy-manager-bridge": {
-        "version": "v4.4.20"
     },
     "symfony/routing": {
         "version": "6.0",
@@ -621,9 +600,6 @@
     },
     "symfony/string": {
         "version": "v5.4.3"
-    },
-    "symfony/templating": {
-        "version": "v4.4.2"
     },
     "symfony/translation": {
         "version": "6.0",

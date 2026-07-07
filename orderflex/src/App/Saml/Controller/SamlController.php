@@ -11,7 +11,7 @@ namespace App\Saml\Controller;
 use App\Saml\Entity\SamlConfig;
 use App\Saml\Security\SamlUserProvider;
 use App\Saml\Util\SamlConfigProvider;
-use App\Saml\Security\SamlAuthenticator;
+//use App\Saml\Security\SamlAuthenticator;
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use OneLogin\Saml2\Auth;
@@ -33,15 +33,18 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class SamlController extends OrderAbstractController //AbstractController
 {
+    private $authenticator = null;
 
     public function __construct(
         private SamlConfigProvider $samlConfigProvider,
         private UserAuthenticatorInterface $userAuthenticator,
-        private SamlAuthenticator $authenticator,
+        //private SamlAuthenticator $authenticator,
+        //private $authenticator,
         private SamlUserProvider $samlUserProvider,
         private LoggerInterface $logger
     ) {
         //empty constructor
+        //$this->authenticator = null;
     }
 
     //1) https://view.online/c/wcm/pathology/saml/login/oli2002@med.cornell.edu

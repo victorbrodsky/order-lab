@@ -34,14 +34,14 @@ class AntibodyList extends ListAbstract
     #[ORM\JoinColumn(name: 'original_id', referencedColumnName: 'id', nullable: true)]
     protected $original;
 
-    #[ORM\Column(type: 'string', nullable: true)]
-    protected $type;
+    //#[ORM\Column(type: 'string', nullable: true)]
+    //protected $type;
 
-    /**
-     * Indicates the order in the list
-     */
-    #[ORM\Column(type: 'integer', nullable: true)]
-    protected $orderinlist;
+//    /**
+//     * Indicates the order in the list
+//     */
+//    #[ORM\Column(type: 'integer', nullable: true)]
+//    protected $orderinlist;
 
 //`category` varchar(32) NOT NULL,
     //`name` varchar(255) NOT NULL,

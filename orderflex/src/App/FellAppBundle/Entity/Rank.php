@@ -61,6 +61,8 @@ class Rank {
      */
     #[ORM\Column(type: 'array', nullable: true)]
     private $userroles = array();
+    //#[ORM\Column(type: 'json', nullable: true)]
+    //private array $userroles = [];
 
     /**
      * @var \DateTime

@@ -89,6 +89,7 @@ services:
             - '../src/App/*/Tests'
             - '../src/App/*/DependencyInjection'
             - '../src/App/*/{Entity,Repository,Tests,Security,Services}'
+            - '../src/App/*/Util/ReportGeneratorManagerTODEL.php'
             #- '../src/App/*/{Entity,Repository,Tests}'
             #- '../src/App/*/{DependencyInjection,Tests,Query,Repository}'
             #- '../src/App/*/{Security,Services}'

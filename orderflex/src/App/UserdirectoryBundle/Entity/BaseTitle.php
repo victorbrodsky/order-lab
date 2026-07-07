@@ -41,8 +41,9 @@ class BaseTitle extends BaseUserAttributes
     #[ORM\ManyToOne(targetEntity: 'EffortList')]
     protected $effort;
 
-    #[ORM\ManyToOne(targetEntity: 'Institution')]
-    protected $institution;
+    //Duplicate is not allowed in symfony 7
+//    #[ORM\ManyToOne(targetEntity: 'Institution')]
+//    protected $institution;
 
     /**
      * @var \DateTime
