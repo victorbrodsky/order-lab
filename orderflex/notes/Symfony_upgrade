@@ -139,7 +139,8 @@ Alternatively, you can run Composer with `--ignore-platform-req=ext-sodium` to t
 Use the option --with-all-dependencies (-W) to allow upgrades, downgrades and removals for packages currently locked to specific versions.
 
 Enable in php.ini 'extension=sodium' - I don't ant to change php.ini on all servers
-Lexik is used only in SamlAuthenticator with comment "NOT USED" => Remove lexik: "lexik/jwt-authentication-bundle": "^3.1",
+Lexik is used only in SamlAuthenticator with comment "NOT USED" => Remove lexik from composer:
+lexik/jwt-authentication-bundle": "^3.1"
 Deleted App\Saml\Security\SamlAuthenticator
 Update SamlController to make $authenticator = null => test it with SAML!
 
