@@ -17,14 +17,36 @@
 
 namespace App\OrderformBundle\Helper;
 
+use Symfony\Component\Form\FormInterface;
+
 /**
  * Description of ErrorHelper
  *
  * @author Cina
  */
 class ErrorHelper {
-    
-    public function getErrorMessages(\Symfony\Component\Form\Form $form)
+
+    //New improved:
+    // Traverses all children automatically, Captures errors at any depth,
+    // Works for entity validation, Works for unmapped fields, Works for root‑level errors
+    public function getErrorMessages(FormInterface $form): array
+    {
+        $errors = [];
+
+        foreach ($form->getErrors(true) as $error) {
+            $origin = $error->getOrigin();
+            $field = $origin ? $origin->getName() : 'form';
+
+            $errors[] = [
+                'field' => $field,
+                'message' => $error->getMessage(),
+            ];
+        }
+
+        return $errors;
+    }
+
+    public function getErrorMessages_ORIGINAL(\Symfony\Component\Form\Form $form)
     {
         $errors = array();
 

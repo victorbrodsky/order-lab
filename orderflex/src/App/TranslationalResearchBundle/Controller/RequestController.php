@@ -256,7 +256,7 @@ class RequestController extends OrderAbstractController
                 if( is_array($errors) && count($errors) > 0 ) {
                     $errorsStr = json_encode($errors);
                 }
-                throw new \Exception("New work request: form is not valid. Error:".$errorsStr);
+                throw new \Exception("New work request: form is not valid. Error: ".$errorsStr);
             }
 
             //exit("Request submitted"); //testing
