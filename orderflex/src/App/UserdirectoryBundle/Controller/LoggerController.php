@@ -179,12 +179,14 @@ class LoggerController extends OrderAbstractController
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Roles'] by [Roles::class]
         $roles = $em->getRepository(Roles::class)->findAll();
+        //echo "Roles count=".count($roles)."<br>";
         $rolesArr = array();
         //if( $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
             foreach( $roles as $role ) {
                 $rolesArr[$role->getName()] = $role->getAlias();
             }
         //}
+        //echo "rolesArr count=".count($rolesArr)."<br>";
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Logger'] by [Logger::class]
         $repository = $this->getDoctrine()->getRepository(Logger::class);
@@ -709,6 +711,208 @@ class LoggerController extends OrderAbstractController
             'title' => "Logger Warning Message",
             'message' => $message
         );
+    }
+
+    /**
+     * One-off migration helper: back up the legacy PHP-serialized "roles" column
+     * to a file and convert every row to JSON, using raw DBAL SQL.
+     *
+     * IMPORTANT: run this BEFORE the schema migration that changes the column
+     * type from the legacy "array" (text) to "json". The raw column is read via
+     * the DBAL connection (NOT the Logger entity), because the entity is already
+     * mapped as "json" and would json_decode() the serialized text into garbage.
+     *
+     * Dry-run by default (backup only). Pass ?apply=1 to also UPDATE the rows.
+     */
+    #[Route(path: '/convert-roles-to-json/', name: 'employees_logger_convert_roles', methods: ['GET'])]
+    public function convertRolesToJsonAction(Request $request)
+    {
+        if( false == $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $apply = $request->query->getBoolean('apply');
+
+        $em = $this->getDoctrine()->getManager();
+        $connection = $em->getConnection();
+
+        //Read the RAW column values (bypass the entity/json mapping)
+        $rows = $connection->fetchAllAssociative(
+            'SELECT id, roles FROM user_logger WHERE roles IS NOT NULL ORDER BY id ASC'
+        );
+
+        //Open a dedicated CSV backup file in the log directory.
+        //CSV (via fputcsv) safely escapes quotes/commas/newlines present in the
+        //serialized values, so the file can be reliably parsed back for restore.
+        $logsDir = $this->getParameter('kernel.logs_dir');
+        $backupFile = $logsDir . DIRECTORY_SEPARATOR . 'logger_roles_backup_' . date('Ymd_His') . '.csv';
+        $handle = fopen($backupFile, 'w');
+        //Header row: id, original raw value
+        fputcsv($handle, array('id', 'roles_original'));
+
+        $total = count($rows);
+        $converted = 0;
+        $alreadyJson = 0;
+        $failed = 0;
+
+        foreach( $rows as $row ) {
+            $id = $row['id'];
+            $raw = $row['roles'];
+
+            //Backup the original value first
+            fputcsv($handle, array($id, $raw));
+
+            //Skip values that are already valid JSON (idempotent / re-runnable)
+            $decoded = json_decode($raw, true);
+            if( json_last_error() === JSON_ERROR_NONE && is_array($decoded) ) {
+                $alreadyJson++;
+                continue;
+            }
+
+            //Legacy "array" type stored PHP serialize() output
+            $value = @unserialize($raw);
+            if( $value === false && $raw !== 'b:0;' ) {
+                $failed++;
+                $value = array();
+            }
+            if( !is_array($value) ) {
+                $value = ($value === null) ? array() : array($value);
+            }
+
+            if( $apply ) {
+                $connection->executeStatement(
+                    'UPDATE user_logger SET roles = :roles WHERE id = :id',
+                    array( 'roles' => json_encode(array_values($value)), 'id' => $id )
+                );
+            }
+            $converted++;
+        }
+
+        fclose($handle);
+
+        $summary = sprintf(
+            "Logger.roles conversion %s\n".
+            "Backup file: %s\n".
+            "Total rows with roles: %d\n".
+            "Converted%s: %d\n".
+            "Already JSON (skipped): %d\n".
+            "Unserialize failures (set to []): %d\n",
+            $apply ? "APPLIED" : "DRY-RUN (no DB changes; add ?apply=1 to write)",
+            $backupFile,
+            $total,
+            $apply ? "" : " (would convert)",
+            $converted,
+            $alreadyJson,
+            $failed
+        );
+
+        return new Response('<pre>' . htmlspecialchars($summary) . '</pre>');
+    }
+
+    /**
+     * One-off migration helper: restore the "roles" column from a CSV backup
+     * produced by convertRolesToJsonAction (columns: id, roles_original).
+     *
+     * The backup file is specified via ?backupfile=<name-or-absolute-path>.
+     * A bare filename is resolved inside the log directory; an absolute path
+     * (still inside the log directory) is also accepted. Path traversal outside
+     * the log directory is rejected.
+     *
+     * NOTE: this only makes sense while the column can hold the original value
+     * (i.e. BEFORE the "TYPE JSON" migration, or after temporarily reverting the
+     * column to text). Writes use raw DBAL SQL, bypassing the entity mapping.
+     *
+     * Dry-run by default. Pass ?apply=1 to actually UPDATE the rows.
+     */
+    #[Route(path: '/restore-roles-from-csv/', name: 'employees_logger_restore_roles', methods: ['GET'])]
+    public function restoreRolesFromCsvAction(Request $request)
+    {
+        if( false == $this->isGranted('ROLE_SCANORDER_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $apply = $request->query->getBoolean('apply');
+        $backupfile = $request->query->get('backupfile');
+
+        if( !$backupfile ) {
+            return new Response('<pre>' . htmlspecialchars(
+                "Missing required parameter: backupfile\n".
+                "Usage: ?backupfile=logger_roles_backup_YYYYMMDD_HHMMSS.csv[&apply=1]\n"
+            ) . '</pre>');
+        }
+
+        //Resolve the file inside the log directory and reject path traversal
+        $logsDir = $this->getParameter('kernel.logs_dir');
+        $candidate = (strpos($backupfile, DIRECTORY_SEPARATOR) === false && strpos($backupfile, '/') === false)
+            ? $logsDir . DIRECTORY_SEPARATOR . $backupfile
+            : $backupfile;
+        $realPath = realpath($candidate);
+        $realLogsDir = realpath($logsDir);
+
+        if( $realPath === false || $realLogsDir === false || strpos($realPath, $realLogsDir) !== 0 ) {
+            return new Response('<pre>' . htmlspecialchars(
+                "Backup file not found or outside the log directory: " . $backupfile . "\n"
+            ) . '</pre>', Response::HTTP_BAD_REQUEST);
+        }
+
+        $handle = fopen($realPath, 'r');
+        if( $handle === false ) {
+            return new Response('<pre>' . htmlspecialchars(
+                "Unable to open backup file: " . $realPath . "\n"
+            ) . '</pre>', Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $connection = $em->getConnection();
+
+        //Skip the header row (id, roles_original)
+        $header = fgetcsv($handle);
+
+        $total = 0;
+        $restored = 0;
+        $skipped = 0;
+
+        while( ($row = fgetcsv($handle)) !== false ) {
+            //Ignore blank lines
+            if( $row === array(null) || count($row) < 2 ) {
+                continue;
+            }
+
+            $total++;
+            $id = $row[0];
+            $original = $row[1];
+
+            if( $id === null || $id === '' ) {
+                $skipped++;
+                continue;
+            }
+
+            if( $apply ) {
+                $connection->executeStatement(
+                    'UPDATE user_logger SET roles = :roles WHERE id = :id',
+                    array( 'roles' => $original, 'id' => $id )
+                );
+            }
+            $restored++;
+        }
+
+        fclose($handle);
+
+        $summary = sprintf(
+            "Logger.roles restore %s\n".
+            "Backup file: %s\n".
+            "Rows in file: %d\n".
+            "Restored%s: %d\n".
+            "Skipped (missing id): %d\n",
+            $apply ? "APPLIED" : "DRY-RUN (no DB changes; add ?apply=1 to write)",
+            $realPath,
+            $total,
+            $apply ? "" : " (would restore)",
+            $restored,
+            $skipped
+        );
+
+        return new Response('<pre>' . htmlspecialchars($summary) . '</pre>');
     }
 
 

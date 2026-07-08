@@ -56,11 +56,13 @@ class Rank {
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
     private $user;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $userroles = array();
+//    /**
+//     * @var array
+//     */
+//    #[ORM\Column(type: 'array', nullable: true)]
+//    private $userroles = array();
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $userroles = [];
 
     /**
      * @var \DateTime
@@ -72,11 +74,13 @@ class Rank {
     #[ORM\JoinColumn(name: 'updateuser_id', referencedColumnName: 'id', nullable: true)]
     private $updateuser;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $updateuserroles = array();
+//    /**
+//     * @var array
+//     */
+//    #[ORM\Column(type: 'array', nullable: true)]
+//    private $updateuserroles = array();
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $updateuserroles = [];
 
     /**
      * @var \DateTime
@@ -140,51 +144,103 @@ class Rank {
         $this->user = $user;
     }
 
-    /**
-     * @return array
-     */
+//    /**
+//     * @return array
+//     */
+//    public function getUserroles()
+//    {
+//        return $this->userroles;
+//    }
+//    /**
+//     * @param array $userroles
+//     */
+//    public function setUserroles($userroles)
+//    {
+//        if( $userroles ) {
+//            foreach( $userroles as $role ) {
+//                $this->addUserrole($role."");
+//            }
+//        }
+//    }
+//    public function addUserrole($role) {
+//        $this->userroles[] = $role;
+//        return $this;
+//    }
+//
+//    /**
+//     * @return array
+//     */
+//    public function getUpdateuserroles()
+//    {
+//        return $this->updateuserroles;
+//    }
+//    /**
+//     * @param array $updateuserroles
+//     */
+//    public function setUpdateuserroles($updateuserroles)
+//    {
+//        if( $updateuserroles ) {
+//            foreach( $updateuserroles as $role ) {
+//                $this->addUpdateuserrole($role."");
+//            }
+//        }
+//    }
+//    public function addUpdateuserrole($role) {
+//        $this->updateuserroles[] = $role;
+//        return $this;
+//    }
+    ///////// New json implementation //////////////
     public function getUserroles()
     {
         return $this->userroles;
     }
-    /**
-     * @param array $userroles
-     */
-    public function setUserroles($userroles)
+    public function addUserrole(string $role): self
     {
-        if( $userroles ) {
-            foreach( $userroles as $role ) {
-                $this->addUserrole($role."");
-            }
+        if (!in_array($role, $this->userroles, true)) {
+            $this->userroles[] = $role;
         }
-    }
-    public function addUserrole($role) {
-        $this->userroles[] = $role;
+
         return $this;
     }
+    public function setUserroles(array $roles): self
+    {
+        // Normalize roles to strings
+        $normalized = array_map('strval', $roles);
 
-    /**
-     * @return array
-     */
+        // Remove duplicates
+        $normalized = array_unique($normalized);
+
+        $this->userroles = $normalized;
+
+        return $this;
+    }
+    ///////// EOF: New json implementation //////////////
+    ///////// New json implementation //////////////
     public function getUpdateuserroles()
     {
         return $this->updateuserroles;
     }
-    /**
-     * @param array $updateuserroles
-     */
-    public function setUpdateuserroles($updateuserroles)
+    public function addUpdateuserrole(string $role): self
     {
-        if( $updateuserroles ) {
-            foreach( $updateuserroles as $role ) {
-                $this->addUpdateuserrole($role."");
-            }
+        if (!in_array($role, $this->updateuserroles, true)) {
+            $this->updateuserroles[] = $role;
         }
-    }
-    public function addUpdateuserrole($role) {
-        $this->updateuserroles[] = $role;
+
         return $this;
     }
+    public function setUpdateuserroles(array $roles): self
+    {
+        // Normalize roles to strings
+        $normalized = array_map('strval', $roles);
+
+        // Remove duplicates
+        $normalized = array_unique($normalized);
+
+        $this->updateuserroles = $normalized;
+
+        return $this;
+    }
+    ///////// EOF: New json implementation //////////////
 
 
     /**

@@ -154,7 +154,18 @@ bin/console doctrine:schema:validate
 
 Database
 --------
-18:37:58 CRITICAL  [console] Error thrown while running command "doctrine:schema:validate". Message: "Unknown column type "array" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType(). You can get a list of all the known types with \Doctrine\DBAL\Types\Type::getTypesMap(). If this error occurs during database introspection then you might have forgotten to register all database types for a Doctrine Type. Use AbstractPlatform#registerDoctrineTypeMapping() or have your custom types implement Type#getMappedDatabaseTypes(). If the type name is empty you might have a problem with the cache or forgot some mapping information." ["exception" => Doctrine\DBAL\Types\Exception\UnknownColumnType^ { …},"command" => "doctrine:schema:validate","message" => "Unknown column type "array" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType(). You can get a list of all the known types with \Doctrine\DBAL\Types\Type::getTypesMap(). If this error occurs during database introspection then you might have forgotten to register all database types for a Doctrine Type. Use AbstractPlatform#registerDoctrineTypeMapping() or have your custom types implement Type#getMappedDatabaseTypes(). If the type name is empty you might have a problem with the cache or forgot some mapping information."]
+18:37:58 CRITICAL  [console] Error thrown while running command "doctrine:schema:validate". Message: "Unknown column type "array" requested.
+Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType().
+You can get a list of all the known types with \Doctrine\DBAL\Types\Type::getTypesMap().
+If this error occurs during database introspection then you might have forgotten to register all database types for a Doctrine Type.
+Use AbstractPlatform#registerDoctrineTypeMapping() or have your custom types implement Type#getMappedDatabaseTypes().
+If the type name is empty you might have a problem with the cache or forgot some mapping
+information." ["exception" => Doctrine\DBAL\Types\Exception\UnknownColumnType^ { …},"command" => "doctrine:schema:validate",
+"message" => "Unknown column type "array" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType().
+You can get a list of all the known types with \Doctrine\DBAL\Types\Type::getTypesMap().
+If this error occurs during database introspection then you might have forgotten to register all database types for a Doctrine Type.
+Use AbstractPlatform#registerDoctrineTypeMapping() or have your custom types implement Type#getMappedDatabaseTypes().
+If the type name is empty you might have a problem with the cache or forgot some mapping information."]
 In UnknownColumnType.php line 15:
   Unknown column type "array" requested. Any Doctrine type that you use has to be registered with \Doctrine\DBAL\Types\Type::addType(). You can get a list of all the known types with \Doctrine\DBAL\Types\Type::ge
   tTypesMap(). If this error occurs during database introspection then you might have forgotten to register all database types for a Doctrine Type. Use AbstractPlatform#registerDoctrineTypeMapping() or have your
@@ -164,4 +175,94 @@ If change array to json:
 1) Doctrine will detect that the column type changed and will propose a schema change.
 2) The column type will change from: text containing serialized PHP (a:11:{...}) to: jsonb (PostgreSQL) containing real JSON (["ROLE_USER", ...])
 3) data need to be converted
+
+First convert data, then make migration
+
+public function up(Schema $schema): void
+{
+    $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
+    // 1) Convert legacy PHP-serialized values to JSON while column is still TEXT
+    $rows = $this->connection->fetchAllAssociative(
+        'SELECT id, roles FROM user_logger WHERE roles IS NOT NULL'
+    );
+    foreach ($rows as $row) {
+        $raw = $row['roles'];
+
+        // Skip values that are already valid JSON (in case some rows were re-saved)
+        $decoded = json_decode($raw, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            continue;
+        }
+
+        // Old 'array' type stored PHP serialize() output
+        $value = @unserialize($raw);
+        if ($value === false && $raw !== 'b:0;') {
+            $value = []; // corrupt / unexpected -> empty array
+        }
+        if (!is_array($value)) {
+            $value = $value === null ? [] : [$value];
+        }
+
+        $this->connection->executeStatement(
+            'UPDATE user_logger SET roles = :roles WHERE id = :id',
+            ['roles' => json_encode(array_values($value)), 'id' => $row['id']]
+        );
+    }
+
+    // 2) Now the ALTER cast will succeed because every row is valid JSON
+    $this->processSql('ALTER TABLE user_logger ALTER roles TYPE JSON USING roles::json');
+    $this->processSql('COMMENT ON COLUMN user_logger.roles IS NULL');
+}
+
+
+Flow:
+1) Run the backup/convert controller action:
+dry run: http://127.0.0.1/directory/event-log/convert-roles-to-json/
+apply the conversion: http://127.0.0.1/directory/event-log/convert-roles-to-json/?apply=1
+first (column still TEXT, data read raw via DBAL).
+2) It writes every original serialized value to a log/backup file, then UPDATEs each row to JSON via raw SQL.
+3) Then run the schema migration as a plain ALTER ... TYPE JSON USING roles::json — every row is already valid JSON, so it succeeds.
+
+Restore from csv log file:
+$fh = fopen($backupFile, 'r');
+fgetcsv($fh); // skip header
+while( ($row = fgetcsv($fh)) !== false ) {
+    $connection->executeStatement(
+        'UPDATE user_logger SET roles = :roles WHERE id = :id',
+        array('roles' => $row[1], 'id' => $row[0])
+    );
+}
+fclose($fh);
+
+### Flow console command:
+# 1. Dry-run: preview + CSV backup, no changes
+php bin/console app:convert-list-roles-to-json
+
+# 2. Convert data only (column stays TEXT) — optional sanity checkpoint
+php bin/console app:convert-list-roles-to-json --apply
+
+# 3. Convert data AND alter every column to native json in one pass
+php bin/console app:convert-list-roles-to-json --apply --alter-schema
+
+### Flow for other classes with type array:
+# 1. Dry-run: preview + CSV backup (var/log/array_to_json_backup_Logger_*.csv)
+php bin/console app:convert-array-to-json --class=Logger
+
+# 2. Convert data + alter the column to native json
+php bin/console app:convert-array-to-json --class=Logger --apply --alter-schema
+
+--class=Logger	Target one entity (short name or FQCN)
+--all	Target every mapped entity
+--field=roles	Restrict to one field (default: auto-detect array/json fields)
+--apply	Actually write (default is dry-run)
+--alter-schema	Also ALTER ... TYPE JSON USING col::json (requires --apply)
+
+Logger
+Rank (fellapp and resapp)
+History
+Instruction
+
+AccessRequest
+
 

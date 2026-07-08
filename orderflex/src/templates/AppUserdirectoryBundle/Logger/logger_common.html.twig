@@ -263,6 +263,7 @@
 
                 {% if hideRoles is not defined or hideRoles == false %}
                     <td>
+                        {#sitename={{ sitename }}<br>#}
                         {#{% for role in entity.roles %}#}
                             {#{% if role != "ROLE_USER" %}#}
                                 {#"{{ attribute(roles, role) }}"<br>#}

@@ -53,13 +53,13 @@ class History
     #[ORM\JoinColumn(name: 'currentstatus', referencedColumnName: 'id', nullable: true)]
     private $currentstatus;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $roles = array();
-    //#[ORM\Column(type: 'json', nullable: true)]
-    //protected array $roles = [];
+//    /**
+//     * @var array
+//     */
+//    #[ORM\Column(type: 'array', nullable: true)]
+//    private $roles = array();
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $roles = [];
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $note;
@@ -114,27 +114,63 @@ class History
         return $this->id;
     }
 
-    public function setRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addRole($role."");
-        }
-    }
-
-    public function getRoles() {
+//    public function setRoles($roles) {
+//        foreach( $roles as $role ) {
+//            $this->addRole($role."");
+//        }
+//    }
+//
+//    public function getRoles() {
+//        return $this->roles;
+//    }
+//
+//    public function addRole($role) {
+//        $this->roles[] = $role;
+//        //$this->roles->add($role);
+//    }
+    public function getRoles()
+    {
         return $this->roles;
     }
+    public function addRole(string $role): self
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
 
-    public function addRole($role) {
-        $this->roles[] = $role;
-        //$this->roles->add($role);
+        return $this;
+    }
+    public function setRoles(array $roles): self
+    {
+        // Normalize roles to strings
+        $normalized = array_map('strval', $roles);
+
+        // Remove duplicates
+        $normalized = array_unique($normalized);
+
+        $this->roles = $normalized;
+
+        return $this;
     }
 
-    public function hasProviderRole($role)
+//    public function hasProviderRole($role)
+//    {
+//        if( !is_array($this->getRoles()) ) {
+//            return false;
+//        }
+//        return in_array(strtoupper($role), $this->getRoles(), true);
+//    }
+    public function hasProviderRole(string $role): bool
     {
-        if( !is_array($this->getRoles()) ) {
-            return false;
+        $role = strtoupper($role);
+
+        foreach ($this->roles as $storedRole) {
+            if (strtoupper($storedRole) === $role) {
+                return true;
+            }
         }
-        return in_array(strtoupper($role), $this->getRoles(), true);
+
+        return false;
     }
 
     #[ORM\PrePersist]

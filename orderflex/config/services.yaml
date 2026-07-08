@@ -323,6 +323,12 @@ services:
             - { name: 'console.command', command: 'cron:demo-db-reset' }
     ################## EOF Commands ##################
 
+    ########## App Command ##########
+    App\UserdirectoryBundle\Command\ConvertArrayToJsonCommand:
+        tags:
+            - { name: 'console.command', command: 'app:convert-array-to-json' }
+    ########## EOF App Command ##########
+
     logger:
         alias: 'monolog.logger'
         public: true

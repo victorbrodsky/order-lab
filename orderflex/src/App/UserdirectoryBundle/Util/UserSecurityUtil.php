@@ -1575,12 +1575,16 @@ class UserSecurityUtil {
         $objectSiteRoles = array();
 
         $roles = $this->getRolesBySite($sitename,$associated);
+        //echo "getObjectRolesBySite: sitename=$sitename, roles=".count($roles)."<br>";
 
         foreach( $roles as $roleObject ) {
+            //echo "getObjectRolesBySite: roleObject name=".$roleObject->getName()."<br>";
             if( $roleObject && $object->hasRole($roleObject->getName()) ) {
                 $objectSiteRoles[] = $roleObject;
             }
         }
+
+        //echo "objectSiteRoles count=".count($objectSiteRoles)."<br>";
 
         return $objectSiteRoles;
     }
@@ -1692,11 +1696,13 @@ class UserSecurityUtil {
         $dql->select('roles');
         $dql->leftJoin("roles.sites", "sites");
 
-        if( $associated ) {
-            $dql->where("sites.name = :sitename OR sites.abbreviation = :sitename");
-        } else {
-            $dql->where("sites.name != :sitename AND sites.abbreviation != :sitename");
-        }
+        //if( $sitename ) {
+            if ($associated) {
+                $dql->where("sites.name = :sitename OR sites.abbreviation = :sitename");
+            } else {
+                $dql->where("sites.name != :sitename AND sites.abbreviation != :sitename");
+            }
+        //}
 
         if( $levelOnly !== false ) {
             $dql->andWhere("roles.level = " . $levelOnly);
@@ -1707,11 +1713,20 @@ class UserSecurityUtil {
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(array(
-            "sitename" => $sitename,
-            'typedef' => 'default',
-            'typeadd' => 'user-added',
-        ));
+        //if( $sitename ) {
+            $query->setParameters(array(
+                "sitename" => $sitename,
+                'typedef' => 'default',
+                'typeadd' => 'user-added',
+            ));
+//        } else {
+//            $query->setParameters(array(
+//                //"sitename" => $sitename,
+//                'typedef' => 'default',
+//                'typeadd' => 'user-added',
+//            ));
+//        }
+
 
         $roles = $query->getResult();
 
@@ -2047,6 +2062,8 @@ class UserSecurityUtil {
 
         //$token = $this->secToken->getToken();
 
+        $roles = null;
+
         if( $this->security && $this->security->getUser() ) {
 
             //$user = $this->secToken->getToken()->getUser();
@@ -2081,6 +2098,10 @@ class UserSecurityUtil {
 
             $userDb = $this->em->getRepository(User::class)->findOneByUsername($username);
             $user = $userDb;
+
+            if( $userDb ) {
+                $roles = $userDb->getRoles();
+            }
 
             $logger->setUser($userDb);
 

@@ -53,11 +53,13 @@ class Instruction
     #[Assert\NotBlank]
     private $createdate;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $creatorRoles = array();
+//    /**
+//     * @var array
+//     */
+//    #[ORM\Column(type: 'array', nullable: true)]
+//    private $creatorRoles = array();
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $creatorroles = [];
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $instruction;
@@ -144,28 +146,50 @@ class Instruction
 
 
 
-    /**
-     * @return mixed
-     */
+//    /**
+//     * @return mixed
+//     */
+//    public function getCreatorRoles()
+//    {
+//        return $this->creatorRoles;
+//    }
+//
+//    public function setCreatorRoles($roles) {
+//        foreach( $roles as $role ) {
+//            $this->addCreatorRole($role."");
+//        }
+//    }
+//
+//    public function addCreatorRole($role) {
+//        $role = strtoupper($role);
+//        if( !in_array($role, $this->creatorRoles, true) ) {
+//            $this->creatorRoles[] = $role;
+//        }
+//    }
     public function getCreatorRoles()
     {
-        return $this->creatorRoles;
+        return $this->creatorroles;
     }
-
-    public function setCreatorRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addCreatorRole($role."");
+    public function addCreatorRole(string $role): self
+    {
+        if (!in_array($role, $this->creatorroles, true)) {
+            $this->creatorroles[] = $role;
         }
+
+        return $this;
     }
+    public function setCreatorRoles(array $roles): self
+    {
+        // Normalize roles to strings
+        $normalized = array_map('strval', $roles);
 
-    public function addCreatorRole($role) {
-        $role = strtoupper($role);
-        if( !in_array($role, $this->creatorRoles, true) ) {
-            $this->creatorRoles[] = $role;
-        }
+        // Remove duplicates
+        $normalized = array_unique($normalized);
+
+        $this->creatorroles = $normalized;
+
+        return $this;
     }
-
-
 
 
 }

@@ -51,11 +51,14 @@ class Logger
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
     private $user;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $roles = array();
+//    /**
+//     * @var array
+//     */
+//    #[ORM\Column(type: 'array', nullable: true)]
+//    private $roles = array();
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $roles = [];
 
     #[ORM\Column(type: 'string', nullable: true)]
     private $username;
@@ -282,36 +285,74 @@ class Logger
         return $this->ip;
     }
 
-    /**
-     * @param array $roles
-     */
-    public function setRoles($roles)
-    {
-        if( $roles ) {
-            foreach( $roles as $role ) {
-                $this->addRole($role."");
-            }
-        }
+    ///////// Original array implementation //////////////
+//    /**
+//     * @param array $roles
+//     */
+//    public function setRoles($roles)
+//    {
+//        if( $roles ) {
+//            foreach( $roles as $role ) {
+//                $this->addRole($role."");
+//            }
+//        }
+//
+//    }
+//    /**
+//     * @return array
+//     */
+//    public function getRoles()
+//    {
+//        return $this->roles;
+//    }
+//    public function addRole($role) {
+//        $this->roles[] = $role;
+//        return $this;
+//    }
+//    public function hasRole($role)
+//    {
+//        return in_array(strtoupper($role), $this->roles, true);
+//    }
+    ///////// EOF Original array implementation //////////////
 
-    }
-
-    /**
-     * @return array
-     */
+    ///////// New json implementation //////////////
     public function getRoles()
     {
         return $this->roles;
     }
+    public function addRole(string $role): self
+    {
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
 
-    public function addRole($role) {
-        $this->roles[] = $role;
         return $this;
     }
-
-    public function hasRole($role)
+    public function setRoles(array $roles): self
     {
-        return in_array(strtoupper($role), $this->roles, true);
+        // Normalize roles to strings
+        $normalized = array_map('strval', $roles);
+
+        // Remove duplicates
+        $normalized = array_unique($normalized);
+
+        $this->roles = $normalized;
+
+        return $this;
     }
+    public function hasRole(string $role): bool
+    {
+        $role = strtoupper($role);
+
+        foreach ($this->roles as $storedRole) {
+            if (strtoupper($storedRole) === $role) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    ///////// EOF: New json implementation //////////////
 
 //    public function getSiteRoles($sitename) {
 //
