@@ -58,11 +58,8 @@ abstract class BaseUserAttributes {
     #[ORM\JoinColumn(name: 'updateAuthor', referencedColumnName: 'id', nullable: true)]
     protected $updateAuthor;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    protected $updateAuthorRoles = array();
+    #[ORM\Column(name: 'updateauthorroles', type: 'json', nullable: true)]
+    protected ?array $updateAuthorRoles = [];
 
     /**
      * type: public, private, restricted
@@ -239,26 +236,30 @@ abstract class BaseUserAttributes {
         return $this->updatedate;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUpdateAuthorRoles()
+    public function getUpdateAuthorRoles(): array
     {
-        return $this->updateAuthorRoles;
+        return $this->updateAuthorRoles ?? [];
     }
 
-
-    public function setUpdateAuthorRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addUpdateAuthorRole($role."");
+    public function setUpdateAuthorRoles(array $roles): self
+    {
+        $this->updateAuthorRoles = [];
+        foreach ($roles as $role) {
+            $this->addUpdateAuthorRole($role);
         }
+        return $this;
     }
 
-    public function addUpdateAuthorRole($role) {
+    public function addUpdateAuthorRole(string $role): self
+    {
+        if (null === $this->updateAuthorRoles) {
+            $this->updateAuthorRoles = [];
+        }
         $role = strtoupper($role);
-        if( !in_array($role, $this->updateAuthorRoles, true) ) {
+        if (!in_array($role, $this->updateAuthorRoles, true)) {
             $this->updateAuthorRoles[] = $role;
         }
+        return $this;
     }
 
 

@@ -94,19 +94,52 @@ class ConvertArrayToJsonCommand extends Command
         //Resolve target metadata
         $allMeta = $this->em->getMetadataFactory()->getAllMetadata();
         $targets = array();
+        $superclassNames = array();
+
         foreach ($allMeta as $meta) {
-            if ($meta->isMappedSuperclass) {
-                continue;
-            }
             if ($all) {
+                if ($meta->isMappedSuperclass) {
+                    continue;
+                }
                 $targets[] = $meta;
                 continue;
             }
+
             $refl = $meta->getReflectionClass();
-            if ($meta->getName() === $classOpt || ($refl && $refl->getShortName() === $classOpt)) {
+            $isRequested = $meta->getName() === $classOpt || ($refl && $refl->getShortName() === $classOpt);
+
+            if ($isRequested && !$meta->isMappedSuperclass) {
                 $targets[] = $meta;
+            } elseif ($isRequested && $meta->isMappedSuperclass) {
+                $superclassNames[] = $meta->getName();
             }
         }
+
+        //If a MappedSuperclass was requested, expand to all concrete subclasses
+        if (count($superclassNames) > 0) {
+            foreach ($allMeta as $meta) {
+                if ($meta->isMappedSuperclass) {
+                    continue;
+                }
+                foreach ($superclassNames as $superName) {
+                    if (in_array($superName, $meta->parentClasses, true) || is_subclass_of($meta->getName(), $superName)) {
+                        $targets[] = $meta;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //De-duplicate targets
+        $seen = array();
+        $uniqueTargets = array();
+        foreach ($targets as $meta) {
+            if (!isset($seen[$meta->getName()])) {
+                $seen[$meta->getName()] = true;
+                $uniqueTargets[] = $meta;
+            }
+        }
+        $targets = $uniqueTargets;
 
         if (!$all && count($targets) === 0) {
             $output->writeln(sprintf('<error>No mapped entity matched --class=%s</error>', $classOpt));

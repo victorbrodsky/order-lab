@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_objectTypeDropdown')]
+#[ORM\Table(name: 'user_objecttypedropdown')]
 #[ORM\Entity]
 class ObjectTypeDropdown extends ObjectTypeReceivingBase
 {
@@ -42,7 +42,7 @@ class ObjectTypeDropdown extends ObjectTypeReceivingBase
     /**
      * @var array
      */
-    #[ORM\Column(type: 'array', nullable: true)]
+    #[ORM\Column(name: 'idvalues', type: 'array', nullable: true)]
     private $idValues;
 
 

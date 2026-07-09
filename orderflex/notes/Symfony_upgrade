@@ -235,15 +235,15 @@ while( ($row = fgetcsv($fh)) !== false ) {
 }
 fclose($fh);
 
-### Flow console command:
+### Flow console command (NO NEED TO RUN): ###
+#app:convert-list-roles-to-json was the older, ListAbstract-specific command and is superseded by app:convert-array-to-json.
 # 1. Dry-run: preview + CSV backup, no changes
 php bin/console app:convert-list-roles-to-json
-
 # 2. Convert data only (column stays TEXT) — optional sanity checkpoint
 php bin/console app:convert-list-roles-to-json --apply
-
 # 3. Convert data AND alter every column to native json in one pass
 php bin/console app:convert-list-roles-to-json --apply --alter-schema
+##############################################
 
 ### Flow for other classes with type array:
 # 1. Dry-run: preview + CSV backup (var/log/array_to_json_backup_Logger_*.csv)
@@ -260,6 +260,26 @@ php bin/console app:convert-array-to-json --class=Logger --apply --alter-schema
 
 --apply --alter-schema
 
+###BaseUserAttributes abstract used by 14 classes
+php bin/console app:convert-array-to-json --class=BaseUserAttributes
+php bin/console app:convert-array-to-json --class=BaseUserAttributes --apply --alter-schema
+php bin/console app:convert-array-to-json --all --apply --alter-schema
+php bin/console doctrine:schema:validate
+
+####### Workflow for all (The command is idempotent: rows already valid JSON are skipped) #######
+
+# 1. Dry-run to review. This lists every table/column that will be touched: php bin/console app:convert-array-to-json --all
+php bin/console app:convert-array-to-json --all
+
+# 2. Entity code must already be updated - before running with --apply --alter-schema, every entity to be converted should already map its field as type: 'json'
+
+# 3. Apply conversion + schema change
+php bin/console app:convert-array-to-json --all --apply --alter-schema
+
+# 4. Validate
+php bin/console doctrine:schema:validate
+##################################################################################################
+
 Logger
 Rank (fellapp and resapp)
 History
@@ -272,7 +292,7 @@ UserBase - abstract used by User only
 UserPreferences (test showToRoles)
 DataQualityEvent
 
-BaseUserAttributes abstract used by 14 classes
+BaseUserAttributes abstract used by 14 classes and another abstract class BaseComment
 
 ObjectTypeCheckbox ($idValues) - critical for CallLog
 ObjectTypeDropdown ($idValues) - critical for CallLog

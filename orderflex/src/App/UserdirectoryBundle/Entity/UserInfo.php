@@ -26,7 +26,7 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'user_userInfo')]
+#[ORM\Table(name: 'user_userinfo')]
 #[ORM\Index(name: 'middleName_idx', columns: ['middleName'])]
 #[ORM\Index(name: 'firstName_idx', columns: ['firstName'])]
 #[ORM\Index(name: 'lastName_idx', columns: ['lastName'])]

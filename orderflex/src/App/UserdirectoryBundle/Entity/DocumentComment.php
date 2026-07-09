@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'user_documentComment')]
+#[ORM\Table(name: 'user_documentcomment')]
 #[ORM\Entity]
 class DocumentComment extends BaseUserAttributes {
 

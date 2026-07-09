@@ -89,7 +89,7 @@ abstract class ListAbstract
     /**
      * @var array
      */
-    #[ORM\Column(type: 'array', nullable: true)]
+    #[ORM\Column(name: 'updateauthorroles', type: 'array', nullable: true)]
     protected $updateAuthorRoles = array();
 
 

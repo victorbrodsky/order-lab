@@ -26,7 +26,7 @@ use App\UserdirectoryBundle\Entity\BaseUserAttributes;
 /**
  * Rename to "user_perSiteSettings"
  */
-#[ORM\Table(name: 'scan_perSiteSettings')]
+#[ORM\Table(name: 'scan_persitesettings')]
 #[ORM\Index(name: 'fosuser_idx', columns: ['fosuser'])]
 #[ORM\Entity]
 class PerSiteSettings extends BaseUserAttributes

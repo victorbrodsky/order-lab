@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_administrativeTitle')]
+#[ORM\Table(name: 'user_administrativetitle')]
 #[ORM\Entity]
 class AdministrativeTitle extends BaseTitle
 {

@@ -19,7 +19,7 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'user_employmentStatus')]
+#[ORM\Table(name: 'user_employmentstatus')]
 #[ORM\Entity]
 class EmploymentStatus extends BaseUserAttributes
 {

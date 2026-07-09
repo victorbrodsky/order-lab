@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_adminComment')]
+#[ORM\Table(name: 'user_admincomment')]
 #[ORM\Entity]
 class AdminComment extends BaseComment
 {
