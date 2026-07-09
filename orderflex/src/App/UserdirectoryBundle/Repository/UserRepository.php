@@ -312,7 +312,6 @@ class UserRepository extends EntityRepository {
     }
 
     public function findUserByRole_ORIG_ARRAY( $role, $orderBy="user.id", $onlyWorking=false ) {
-
         //$user = null;
         //exit("findUserByRole");
         //echo "role=".$role."<br>";
@@ -336,33 +335,40 @@ class UserRepository extends EntityRepository {
 
         return $query->getQuery()->getResult();
     }
+    public function findUserByRole($role, $orderBy="user.id", $onlyWorking=false) {
+        //$user = null;
+        //exit("findUserByRole");
+        //echo "role=".$role."<br>";
 
-    public function findUserByRole($role, $orderBy = "user.id", $onlyWorking = false)
-    {
-        $qb = $this->_em->createQueryBuilder()
-            ->from(User::class, 'user')
-            ->select('user')
-            ->leftJoin('user.infos', 'infos')
-            ->where("EXISTS (
-            SELECT 1 FROM json_array_elements_text(user.roles) AS elem
-            WHERE elem ILIKE :role
-        )")
-            ->orderBy($orderBy, "ASC")
-            ->setParameter('role', '%' . $role . '%');
+        $connection = $this->_em->getConnection();
+        $sql = "SELECT id FROM user_fosuser WHERE roles::jsonb @> :role::jsonb";
+        $rows = $connection->executeQuery($sql, ['role' => json_encode(array($role))])->fetchAllAssociative();
 
-        if ($onlyWorking) {
-            $curdate = date("Y-m-d");
-            $qb->leftJoin("user.employmentStatus", "employmentStatus");
-            $qb->andWhere("employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > :curdate")
-                ->setParameter('curdate', $curdate);
+        $ids = array_column($rows, 'id');
+        if (empty($ids)) {
+            return array();
         }
 
-        return $qb->getQuery()->getResult();
+        $query = $this->_em->createQueryBuilder()
+            ->from(User::class, 'user')
+            ->select("user")
+            ->leftJoin("user.infos","infos")
+            ->where('user.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->orderBy($orderBy,"ASC");
+
+        if( $onlyWorking ) {
+            $curdate = date("Y-m-d", time());
+            $query->leftJoin("user.employmentStatus", "employmentStatus");
+            $currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+            $query->andWhere($currentusers);
+        }
+
+        return $query->getQuery()->getResult();
     }
 
-
     //$roles: role or partial role name
-    public function findUsersByRoles($roles) {
+    public function findUsersByRoles_ORIG_ARRAY($roles) {
 
         $whereArr = array();
         foreach($roles as $role) {
@@ -378,6 +384,37 @@ class UserRepository extends EntityRepository {
         //echo "query=".$qb."<br>";
 
         return $qb->getQuery()->getResult();
+    }
+    //JSON version
+    public function findUsersByRoles($roles) {
+
+        //JSON roles column: use PostgreSQL jsonb containment instead of LIKE.
+        $connection = $this->_em->getConnection();
+        $conditions = array();
+        $params = array();
+        $i = 0;
+        foreach ($roles as $role) {
+            $conditions[] = "roles::jsonb @> :role$i::jsonb";
+            $params["role$i"] = json_encode(array($role));
+            $i++;
+        }
+
+        $where = implode(' OR ', $conditions);
+        $sql = "SELECT id FROM user_fosuser WHERE $where";
+        $rows = $connection->executeQuery($sql, $params)->fetchAllAssociative();
+
+        $ids = array_column($rows, 'id');
+        if (empty($ids)) {
+            return array();
+        }
+
+        return $this->_em->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
     }
 
     public function isUserHasPermissionObjectAction( $user, $object, $action ) {

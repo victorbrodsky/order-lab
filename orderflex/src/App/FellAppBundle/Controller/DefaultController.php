@@ -28,6 +28,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\Roles;
+use App\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -407,6 +408,21 @@ class DefaultController extends OrderAbstractController
 //        dump($screeningQuestionsArray);
 //        exit('111');
         /////////
+
+        $em = $this->getDoctrine()->getManager();
+        $roles = array("ROLE_PLATFORM_ADMIN","ROLE_PLATFORM_DEPUTY_ADMIN");
+        $users = $em->getRepository(User::class)->findUsersByRoles($roles);
+        dump($users);
+
+        $adminUsers = $em->getRepository(User::class)->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+        dump($adminUsers);
+
+        exit('111');
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $emails = $userSecUtil->getUserEmailsByRole($this->getParameter('fellapp.sitename'), "Platform Administrator");
+        dump($emails);
+        exit('111');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }
