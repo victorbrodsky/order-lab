@@ -291,9 +291,7 @@ UserRequest
 UserBase - abstract used by User only
 UserPreferences (test showToRoles)
 DataQualityEvent
-
 BaseUserAttributes abstract used by 14 classes and another abstract class BaseComment
-
 ObjectTypeCheckbox ($idValues) - critical for CallLog
 ObjectTypeDropdown ($idValues) - critical for CallLog
 

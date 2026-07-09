@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'user_researchLab')]
+#[ORM\Table(name: 'user_researchlab')]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\ResearchLabRepository')]
 class ResearchLab extends ListAbstract  //extends BaseUserAttributes
 {

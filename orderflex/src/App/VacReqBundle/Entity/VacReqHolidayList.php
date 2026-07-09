@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 //This list store -/+ 20 years holidays
-#[ORM\Table(name: 'vacreq_holidayList')]
+#[ORM\Table(name: 'vacreq_holidaylist')]
 #[ORM\Entity]
 class VacReqHolidayList extends ListAbstract {
 

@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 //use App\UserdirectoryBundle\Entity\ListAbstract;
-#[ORM\Table(name: 'user_sexList')]
+#[ORM\Table(name: 'user_sexlist')]
 #[ORM\Entity]
 class SexList extends ListAbstract
 {

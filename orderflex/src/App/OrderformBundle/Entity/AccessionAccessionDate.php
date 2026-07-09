@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-#[ORM\Table(name: 'scan_accessionDate')]
+#[ORM\Table(name: 'scan_accessiondate')]
 #[ORM\Entity]
 class AccessionAccessionDate extends AccessionArrayFieldAbstract
 {

@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 
 #[Gedmo\Tree(type: 'nested')]
-#[ORM\Table(name: 'scan_messageCategory')]
+#[ORM\Table(name: 'scan_messagecategory')]
 #[ORM\Index(name: 'messageCategory_name_idx', columns: ['name'])]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class MessageCategory extends BaseCompositeNode {

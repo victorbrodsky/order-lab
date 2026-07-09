@@ -86,11 +86,8 @@ abstract class ListAbstract
     #[Assert\NotBlank]
     protected $orderinlist;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(name: 'updateauthorroles', type: 'array', nullable: true)]
-    protected $updateAuthorRoles = array();
+    #[ORM\Column(name: 'updateauthorroles', type: 'json', nullable: true)]
+    protected ?array $updateAuthorRoles = [];
 
 
     #[ORM\Column(type: 'string', nullable: true)]
@@ -712,30 +709,30 @@ abstract class ListAbstract
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUpdateAuthorRoles()
+    public function getUpdateAuthorRoles(): array
     {
-        return $this->updateAuthorRoles;
+        return $this->updateAuthorRoles ?? [];
     }
 
-
-    public function setUpdateAuthorRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addUpdateAuthorRole($role."");
+    public function setUpdateAuthorRoles(array $roles): self
+    {
+        $this->updateAuthorRoles = [];
+        foreach ($roles as $role) {
+            $this->addUpdateAuthorRole($role);
         }
+        return $this;
     }
 
-    public function addUpdateAuthorRole($role) {
+    public function addUpdateAuthorRole(string $role): self
+    {
+        if (null === $this->updateAuthorRoles) {
+            $this->updateAuthorRoles = [];
+        }
         $role = strtoupper($role);
-        if( $this->updateAuthorRoles ) {
-            if( !in_array($role, $this->updateAuthorRoles, true) ) {
-                $this->updateAuthorRoles[] = $role;
-            }
-        } else {
+        if (!in_array($role, $this->updateAuthorRoles, true)) {
             $this->updateAuthorRoles[] = $role;
         }
+        return $this;
     }
 
     public function removeDependents($user) {

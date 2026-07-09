@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-#[ORM\Table(name: 'scan_procedureDate')]
+#[ORM\Table(name: 'scan_proceduredate')]
 #[ORM\Entity]
 class ProcedureDate extends ProcedureArrayFieldAbstract
 {

@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 //NOT USED
 ///**
 // * @ORM\Entity
-// * @ORM\Table(name="transres_invoiceAddItem")
+// * @ORM\Table(name="transres_invoiceadditem")
 // * @ORM\HasLifecycleCallbacks
 // */
 

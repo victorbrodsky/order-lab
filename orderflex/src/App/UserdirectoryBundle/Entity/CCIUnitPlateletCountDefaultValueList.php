@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_CCIUnitPlateletCountDefaultValueList')]
+#[ORM\Table(name: 'user_cciunitplateletcountdefaultvaluelist')]
 #[ORM\Entity]
 class CCIUnitPlateletCountDefaultValueList extends ListAbstract
 {

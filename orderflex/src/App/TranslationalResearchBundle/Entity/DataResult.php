@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'transres_dataResult')]
+#[ORM\Table(name: 'transres_dataresult')]
 #[ORM\Entity]
 class DataResult {
 

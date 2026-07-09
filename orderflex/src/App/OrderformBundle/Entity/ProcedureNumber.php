@@ -20,7 +20,7 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'scan_procedureNumber')]
+#[ORM\Table(name: 'scan_procedurenumber')]
 #[ORM\UniqueConstraint(name: 'procedure_unique', columns: ['procedure_id', 'field', 'keytype_id'])]
 #[ORM\Entity]
 class ProcedureNumber extends ProcedureArrayFieldAbstract

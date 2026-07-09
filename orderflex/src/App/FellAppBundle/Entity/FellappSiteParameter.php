@@ -20,7 +20,7 @@ namespace App\FellAppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'fellapp_siteParameter')]
+#[ORM\Table(name: 'fellapp_siteparameter')]
 #[ORM\Entity]
 class FellappSiteParameter {
 

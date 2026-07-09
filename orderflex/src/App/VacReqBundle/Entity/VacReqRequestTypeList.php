@@ -23,7 +23,7 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'vacreq_requestTypeList')]
+#[ORM\Table(name: 'vacreq_requesttypelist')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class VacReqRequestTypeList extends ListAbstract {

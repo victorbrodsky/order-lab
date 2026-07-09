@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_authorshipRoles')]
+#[ORM\Table(name: 'user_authorshiproles')]
 #[ORM\Entity]
 class AuthorshipRoles extends ListAbstract
 {

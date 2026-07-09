@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 //use Symfony\Component\Validator\Constraints as Assert;
-#[ORM\Table(name: 'scan_partPartname')]
+#[ORM\Table(name: 'scan_partpartname')]
 #[ORM\UniqueConstraint(name: 'part_unique', columns: ['part_id', 'field'])]
 #[ORM\Entity]
 class PartPartname extends PartArrayFieldAbstract

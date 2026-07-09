@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 //[ORM\HasLifecycleCallbacks]
 
-#[ORM\Table(name: 'scan_formVersion')]
+#[ORM\Table(name: 'scan_formversion')]
 #[ORM\Entity]
 class FormVersion {
 

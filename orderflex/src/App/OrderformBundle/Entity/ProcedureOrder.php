@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'scan_procedureOrder')]
+#[ORM\Table(name: 'scan_procedureorder')]
 #[ORM\Entity]
 class ProcedureOrder extends OrderBase {
 

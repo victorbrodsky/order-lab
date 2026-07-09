@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 //Actual observed holidays that are taking in vacation days calculations (subset of the VacReqHolidayList list)
-#[ORM\Table(name: 'vacreq_observedholidayList')]
+#[ORM\Table(name: 'vacreq_observedholidaylist')]
 #[ORM\Entity]
 class VacReqObservedHolidayList extends ListAbstract {
 

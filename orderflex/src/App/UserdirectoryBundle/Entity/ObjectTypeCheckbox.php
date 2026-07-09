@@ -40,11 +40,8 @@ class ObjectTypeCheckbox extends ObjectTypeReceivingBase
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected $value;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(name: 'idvalues', type: 'array', nullable: true)]
-    private $idValues;
+    #[ORM\Column(name: 'idvalues', type: 'json', nullable: true)]
+    private ?array $idValues = [];
 
 
 
@@ -55,28 +52,22 @@ class ObjectTypeCheckbox extends ObjectTypeReceivingBase
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getIdValues()
+    public function getIdValues(): array
     {
-        return $this->idValues;
+        return $this->idValues ?? [];
     }
-    /**
-     * @param mixed $values
-     */
-    public function setIdValues($values)
+
+    public function setIdValues(?array $values): self
     {
-//        if( $values && count($values) > 0 ) {
-//            foreach( $values as $value ) {
-//                $this->addIdValue($value);
-//            }
-//        } else {
-//            $this->idValues = array();
-//        }
         $this->idValues = $values;
+        return $this;
     }
-    public function addIdValue($value) {
+
+    public function addIdValue($value): self
+    {
+        if (null === $this->idValues) {
+            $this->idValues = [];
+        }
         $this->idValues[] = $value;
         return $this;
     }

@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_objectTypeList')]
+#[ORM\Table(name: 'user_objecttypelist')]
 #[ORM\Entity]
 class ObjectTypeList extends ListAbstract
 {

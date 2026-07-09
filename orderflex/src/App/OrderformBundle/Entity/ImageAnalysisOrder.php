@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'scan_imageAnalysisOrder')]
+#[ORM\Table(name: 'scan_imageanalysisorder')]
 #[ORM\Entity]
 class ImageAnalysisOrder extends OrderBase {
 

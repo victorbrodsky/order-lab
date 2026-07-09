@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 //TODO: turn it to BaseCompositeNode
-#[ORM\Table(name: 'user_residencySpecialty')]
+#[ORM\Table(name: 'user_residencyspecialty')]
 #[ORM\Entity]
 class ResidencySpecialty extends ListAbstract
 {

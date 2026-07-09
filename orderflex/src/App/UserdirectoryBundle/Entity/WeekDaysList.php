@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_weekDaysList')]
+#[ORM\Table(name: 'user_weekdayslist')]
 #[ORM\Entity]
 class WeekDaysList extends ListAbstract
 {

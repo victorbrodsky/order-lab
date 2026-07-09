@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'scan_blockSectionsource')]
+#[ORM\Table(name: 'scan_blocksectionsource')]
 #[ORM\Index(name: 'block_field_idx', columns: ['field'])]
 #[ORM\Entity]
 class BlockSectionsource extends BlockArrayFieldAbstract

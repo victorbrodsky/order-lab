@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_medicalTitleList')]
+#[ORM\Table(name: 'user_medicaltitlelist')]
 #[ORM\Entity]
 class MedicalTitleList extends ListAbstract
 {

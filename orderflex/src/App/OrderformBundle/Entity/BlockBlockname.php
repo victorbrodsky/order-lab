@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'scan_blockBlockname')]
+#[ORM\Table(name: 'scan_blockblockname')]
 #[ORM\UniqueConstraint(name: 'block_unique', columns: ['block_id', 'field'])]
 #[ORM\Entity]
 class BlockBlockname extends BlockArrayFieldAbstract

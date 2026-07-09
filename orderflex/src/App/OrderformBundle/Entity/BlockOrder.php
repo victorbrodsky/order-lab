@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'scan_blockOrder')]
+#[ORM\Table(name: 'scan_blockorder')]
 #[ORM\Entity]
 class BlockOrder extends OrderBase {
 

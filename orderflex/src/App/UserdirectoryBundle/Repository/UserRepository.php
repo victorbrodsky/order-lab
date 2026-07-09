@@ -311,7 +311,7 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
-    public function findUserByRole( $role, $orderBy="user.id", $onlyWorking=false ) {
+    public function findUserByRole_ORIG_ARRAY( $role, $orderBy="user.id", $onlyWorking=false ) {
 
         //$user = null;
         //exit("findUserByRole");
@@ -336,6 +336,30 @@ class UserRepository extends EntityRepository {
 
         return $query->getQuery()->getResult();
     }
+
+    public function findUserByRole($role, $orderBy = "user.id", $onlyWorking = false)
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->from(User::class, 'user')
+            ->select('user')
+            ->leftJoin('user.infos', 'infos')
+            ->where("EXISTS (
+            SELECT 1 FROM json_array_elements_text(user.roles) AS elem
+            WHERE elem ILIKE :role
+        )")
+            ->orderBy($orderBy, "ASC")
+            ->setParameter('role', '%' . $role . '%');
+
+        if ($onlyWorking) {
+            $curdate = date("Y-m-d");
+            $qb->leftJoin("user.employmentStatus", "employmentStatus");
+            $qb->andWhere("employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > :curdate")
+                ->setParameter('curdate', $curdate);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
 
     //$roles: role or partial role name
     public function findUsersByRoles($roles) {

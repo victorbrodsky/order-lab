@@ -35,7 +35,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 //use App\UserdirectoryBundle\Comment\Model\SignedCommentInterface;
 use App\UtilBundles\FOSCommentBundle\Entity\Comment as FosBaseComment;
 
-#[ORM\Table(name: 'user_fosComment')]
+#[ORM\Table(name: 'user_foscomment')]
 #[ORM\Entity]
 #[ORM\ChangeTrackingPolicy('DEFERRED_EXPLICIT')]
 class FosComment extends FosBaseComment // implements SignedCommentInterface

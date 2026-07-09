@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'scan_encounterReferringProvider')]
+#[ORM\Table(name: 'scan_encounterreferringprovider')]
 #[ORM\Entity]
 class EncounterReferringProvider extends EncounterArrayFieldAbstract
 {

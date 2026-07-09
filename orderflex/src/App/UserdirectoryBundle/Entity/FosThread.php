@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 //use App\UserdirectoryBundle\Comment\Entity\Thread as FosBaseThread;
 use App\UtilBundles\FOSCommentBundle\Entity\Thread as FosBaseThread;
 
-#[ORM\Table(name: 'user_fosThread')]
+#[ORM\Table(name: 'user_fosthread')]
 #[ORM\Entity]
 #[ORM\ChangeTrackingPolicy('DEFERRED_EXPLICIT')]
 class FosThread extends FosBaseThread

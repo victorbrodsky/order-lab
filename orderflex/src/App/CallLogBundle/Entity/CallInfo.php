@@ -33,7 +33,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 ///**
 // * @ORM\Entity
-// * @ORM\Table(name="calllog_callInfo")
+// * @ORM\Table(name="calllog_callinfo")
 // */
 
 class CallInfo {

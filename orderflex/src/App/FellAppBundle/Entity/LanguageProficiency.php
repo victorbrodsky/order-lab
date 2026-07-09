@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'fellapp_languageProficiency')]
+#[ORM\Table(name: 'fellapp_languageproficiency')]
 #[ORM\Entity]
 class LanguageProficiency extends ListAbstract
 {

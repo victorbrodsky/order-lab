@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'scan_suggestedMessageCategoriesList')]
+#[ORM\Table(name: 'scan_suggestedmessagecategorieslist')]
 #[ORM\Entity]
 class SuggestedMessageCategoriesList extends ListAbstract {
 

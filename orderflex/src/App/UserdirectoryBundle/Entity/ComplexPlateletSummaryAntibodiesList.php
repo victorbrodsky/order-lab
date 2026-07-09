@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_complexPlateletSummaryAntibodiesList')]
+#[ORM\Table(name: 'user_complexplateletsummaryantibodieslist')]
 #[ORM\Entity]
 class ComplexPlateletSummaryAntibodiesList extends ListAbstract
 {

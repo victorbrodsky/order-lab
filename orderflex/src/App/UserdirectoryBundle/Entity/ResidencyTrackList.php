@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_residencyTrackList')]
+#[ORM\Table(name: 'user_residencytracklist')]
 #[ORM\Entity]
 class ResidencyTrackList extends ListAbstract
 {

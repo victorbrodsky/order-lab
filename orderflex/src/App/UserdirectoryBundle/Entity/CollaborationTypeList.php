@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_collaborationTypeList')]
+#[ORM\Table(name: 'user_collaborationtypelist')]
 #[ORM\Entity]
 class CollaborationTypeList extends ListAbstract
 {

@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_localeList')]
+#[ORM\Table(name: 'user_localelist')]
 #[ORM\Entity]
 class LocaleList extends ListAbstract
 {

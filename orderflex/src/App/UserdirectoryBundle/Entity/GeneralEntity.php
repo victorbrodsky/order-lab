@@ -21,7 +21,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'user_generalEntity')]
+#[ORM\Table(name: 'user_generalentity')]
 #[ORM\Entity]
 class GeneralEntity
 {

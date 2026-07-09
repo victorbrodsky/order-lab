@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'scan_progressCommentsEventTypeList')]
+#[ORM\Table(name: 'scan_progresscommentseventtypelist')]
 #[ORM\Entity]
 class ProgressCommentsEventTypeList extends ListAbstract
 {

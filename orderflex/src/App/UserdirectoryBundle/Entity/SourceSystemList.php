@@ -19,7 +19,7 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'user_sourceSystemList')]
+#[ORM\Table(name: 'user_sourcesystemlist')]
 #[ORM\Entity]
 class SourceSystemList extends ListAbstract
 {

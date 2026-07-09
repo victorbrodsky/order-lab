@@ -28,7 +28,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_userPosition')]
+#[ORM\Table(name: 'user_userposition')]
 #[ORM\Entity]
 class UserPosition {
 

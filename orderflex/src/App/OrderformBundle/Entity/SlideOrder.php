@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'scan_slideOrder')]
+#[ORM\Table(name: 'scan_slideorder')]
 #[ORM\Entity]
 class SlideOrder extends OrderBase {
 

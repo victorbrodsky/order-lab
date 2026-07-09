@@ -98,7 +98,7 @@ class SamlConfig
 //    /**
 //     * @ORM\Column(type="json")
 //     */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(name: 'attributemapping', type: 'json')]
     private $attributeMapping;
 
 

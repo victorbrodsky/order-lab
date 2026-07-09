@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_objectTypeString')]
+#[ORM\Table(name: 'user_objecttypestring')]
 #[ORM\Entity]
 class ObjectTypeString extends ObjectTypeReceivingBase
 {

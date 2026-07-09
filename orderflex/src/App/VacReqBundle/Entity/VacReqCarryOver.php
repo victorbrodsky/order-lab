@@ -28,7 +28,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 
-#[ORM\Table(name: 'vacreq_carryOver')]
+#[ORM\Table(name: 'vacreq_carryover')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class VacReqCarryOver

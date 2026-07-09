@@ -20,7 +20,7 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'scan_encounterPatfirstname')]
+#[ORM\Table(name: 'scan_encounterpatfirstname')]
 #[ORM\Entity]
 class EncounterPatfirstname extends EncounterArrayFieldAbstract
 {

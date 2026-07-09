@@ -27,7 +27,7 @@ namespace App\CallLogBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'calllog_siteParameter')]
+#[ORM\Table(name: 'calllog_siteparameter')]
 #[ORM\Entity]
 class CalllogSiteParameter
 {

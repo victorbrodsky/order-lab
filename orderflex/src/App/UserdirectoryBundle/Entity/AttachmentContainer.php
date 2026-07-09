@@ -29,7 +29,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
-#[ORM\Table(name: 'user_attachmentContainer')]
+#[ORM\Table(name: 'user_attachmentcontainer')]
 #[ORM\Entity]
 class AttachmentContainer {
 

@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'scan_partDescription')]
+#[ORM\Table(name: 'scan_partdescription')]
 #[ORM\Entity]
 class PartDescription extends PartArrayFieldAbstract
 {

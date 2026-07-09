@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'scan_calllogEntryTagsList')]
+#[ORM\Table(name: 'scan_calllogentrytagslist')]
 #[ORM\Entity]
 class CalllogEntryTagsList extends ListAbstract {
 

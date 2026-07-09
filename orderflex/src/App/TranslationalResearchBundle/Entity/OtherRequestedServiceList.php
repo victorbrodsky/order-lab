@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'transres_otherRequestedServiceList')]
+#[ORM\Table(name: 'transres_otherrequestedservicelist')]
 #[ORM\Entity]
 class OtherRequestedServiceList extends ListAbstract
 {

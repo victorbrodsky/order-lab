@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'scan_embedderInstructionList')]
+#[ORM\Table(name: 'scan_embedderinstructionlist')]
 #[ORM\Entity]
 class EmbedderInstructionList extends ListAbstract
 {

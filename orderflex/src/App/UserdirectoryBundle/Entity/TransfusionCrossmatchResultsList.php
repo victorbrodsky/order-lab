@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_transfusionCrossmatchResultsList')]
+#[ORM\Table(name: 'user_transfusioncrossmatchresultslist')]
 #[ORM\Entity]
 class TransfusionCrossmatchResultsList extends ListAbstract
 {

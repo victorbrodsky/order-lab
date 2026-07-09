@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\OrderformBundle\Entity\PatientArrayFieldAbstract;
 
 
-#[ORM\Table(name: 'scan_patientType')]
+#[ORM\Table(name: 'scan_patienttype')]
 #[ORM\Entity]
 class PatientType extends PatientArrayFieldAbstract
 {

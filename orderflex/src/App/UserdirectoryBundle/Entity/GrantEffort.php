@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'user_grantEffort')]
+#[ORM\Table(name: 'user_granteffort')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class GrantEffort

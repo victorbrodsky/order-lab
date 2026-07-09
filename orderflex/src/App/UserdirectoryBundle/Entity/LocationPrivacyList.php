@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_locationPrivacyList')]
+#[ORM\Table(name: 'user_locationprivacylist')]
 #[ORM\Entity]
 class LocationPrivacyList extends ListAbstract
 {

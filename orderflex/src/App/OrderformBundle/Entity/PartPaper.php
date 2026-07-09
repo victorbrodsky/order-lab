@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 //[ORM\HasLifecycleCallbacks]
 
-#[ORM\Table(name: 'scan_partPaper')]
+#[ORM\Table(name: 'scan_partpaper')]
 #[ORM\Entity]
 class PartPaper extends PartArrayFieldAbstract
 {

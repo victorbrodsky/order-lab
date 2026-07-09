@@ -27,7 +27,7 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'transres_invoiceItem')]
+#[ORM\Table(name: 'transres_invoiceitem')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class InvoiceItem {

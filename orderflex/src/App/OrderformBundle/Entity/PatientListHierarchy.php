@@ -42,7 +42,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 
 #[Gedmo\Tree(type: 'nested')]
-#[ORM\Table(name: 'scan_patientListHierarchy')]
+#[ORM\Table(name: 'scan_patientlisthierarchy')]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class PatientListHierarchy extends BaseCompositeNode {
 

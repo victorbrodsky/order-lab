@@ -27,7 +27,7 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 
-#[ORM\Table(name: 'transres_adminReview')]
+#[ORM\Table(name: 'transres_adminreview')]
 #[ORM\Entity]
 class AdminReview extends ReviewBase
 {

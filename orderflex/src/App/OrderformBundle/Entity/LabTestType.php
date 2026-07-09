@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'scan_labTestType')]
+#[ORM\Table(name: 'scan_labtesttype')]
 #[ORM\Entity]
 class LabTestType extends ListAbstract {
 

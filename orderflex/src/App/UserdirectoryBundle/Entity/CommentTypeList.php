@@ -24,7 +24,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 //TODO: turn it to BaseCompositeNode
 /**
  * @ORM\Entity()
- * @ORM\Table(name="user_commentTypeList")
+ * @ORM\Table(name="user_commenttypelist")
  */
 /**
  * Use Composite pattern:
@@ -39,7 +39,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 #[Gedmo\Tree(type: 'nested')]
-#[ORM\Table(name: 'user_commentTypeList')]
+#[ORM\Table(name: 'user_commenttypelist')]
 #[ORM\Index(name: 'commentTypeList_name_idx', columns: ['name'])]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class CommentTypeList extends BaseCompositeNode

@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'user_honorTrainingList')]
+#[ORM\Table(name: 'user_honortraininglist')]
 #[ORM\Entity]
 class HonorTrainingList extends ListAbstract
 {

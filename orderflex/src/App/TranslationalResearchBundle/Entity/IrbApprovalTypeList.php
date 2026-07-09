@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'transres_irbApprovalTypeList')]
+#[ORM\Table(name: 'transres_irbapprovaltypelist')]
 #[ORM\Entity]
 class IrbApprovalTypeList extends ListAbstract
 {

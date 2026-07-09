@@ -21,7 +21,7 @@ use App\UserdirectoryBundle\Entity\Document;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'fellapp_dataFile')]
+#[ORM\Table(name: 'fellapp_datafile')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class DataFile {

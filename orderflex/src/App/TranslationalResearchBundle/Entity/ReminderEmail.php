@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 //NOT USED
 ///**
 // * @ORM\Entity
-// * @ORM\Table(name="transres_reminderEmail")
+// * @ORM\Table(name="transres_reminderemail")
 // */
 
 class ReminderEmail

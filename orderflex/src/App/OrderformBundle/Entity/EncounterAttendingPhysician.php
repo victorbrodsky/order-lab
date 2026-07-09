@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ORM\Table(name: 'scan_encounterAttendingPhysician')]
+#[ORM\Table(name: 'scan_encounterattendingphysician')]
 #[ORM\Entity]
 class EncounterAttendingPhysician extends EncounterArrayFieldAbstract
 {

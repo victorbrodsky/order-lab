@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 
 #[Gedmo\Tree(type: 'nested')]
-#[ORM\Table(name: 'scan_projectTitleTree')]
+#[ORM\Table(name: 'scan_projecttitletree')]
 #[ORM\Index(name: 'projectTitleTree_name_idx', columns: ['name'])]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\TreeRepository')]
 class ProjectTitleTree extends BaseCompositeNode {

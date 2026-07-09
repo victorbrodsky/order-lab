@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_lifeFormList')]
+#[ORM\Table(name: 'user_lifeformlist')]
 #[ORM\Entity]
 class LifeFormList extends ListAbstract
 {

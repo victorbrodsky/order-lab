@@ -11,7 +11,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'user_resetPassword')]
+#[ORM\Table(name: 'user_resetpassword')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class ResetPassword {

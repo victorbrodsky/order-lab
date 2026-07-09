@@ -19,7 +19,7 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'user_titlePositionType')]
+#[ORM\Table(name: 'user_titlepositiontype')]
 #[ORM\Entity]
 class TitlePositionType extends ListAbstract
 {

@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 
-#[ORM\Table(name: 'user_platformListManagerRootList')]
+#[ORM\Table(name: 'user_platformlistmanagerrootlist')]
 #[ORM\UniqueConstraint(name: 'platformlistid_unique', columns: ['linkToListId'])]
 #[ORM\UniqueConstraint(name: 'platformlist_unique', columns: ['linkToListId', 'listName'])]
 #[ORM\Entity]

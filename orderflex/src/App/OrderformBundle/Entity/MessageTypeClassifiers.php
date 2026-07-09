@@ -27,7 +27,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * "Message Type Classifiers" with a url of /list/message-type-classifiers
  */
-#[ORM\Table(name: 'scan_messageTypeClassifiers')]
+#[ORM\Table(name: 'scan_messagetypeclassifiers')]
 #[ORM\Entity]
 #[UniqueEntity(fields: ['level'], errorPath: 'level', message: 'This Default Tree Level Association Type is already associated with another tree level. Please remove that association or enter a different tree level.')]
 class MessageTypeClassifiers extends ListAbstract

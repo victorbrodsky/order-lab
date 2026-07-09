@@ -20,7 +20,7 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 //use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-#[ORM\Table(name: 'scan_blockSpecialStains')]
+#[ORM\Table(name: 'scan_blockspecialstains')]
 #[ORM\Entity]
 class BlockSpecialStains extends BlockArrayFieldAbstract
 {

@@ -20,7 +20,7 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'scan_partDiseaseType')]
+#[ORM\Table(name: 'scan_partdiseasetype')]
 #[ORM\Index(name: 'partdiseasetype_field_idx', columns: ['field'])]
 #[ORM\Entity]
 class PartDiseaseType extends PartArrayFieldAbstract

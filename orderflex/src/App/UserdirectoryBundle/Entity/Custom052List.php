@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_custom052List')]
+#[ORM\Table(name: 'user_custom052list')]
 #[ORM\Entity]
 class Custom052List extends ListAbstract
 {

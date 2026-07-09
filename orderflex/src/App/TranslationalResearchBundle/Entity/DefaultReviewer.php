@@ -27,7 +27,7 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 
-#[ORM\Table(name: 'transres_defaultReviewer')]
+#[ORM\Table(name: 'transres_defaultreviewer')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class DefaultReviewer

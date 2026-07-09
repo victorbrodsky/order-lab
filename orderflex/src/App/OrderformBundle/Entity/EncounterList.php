@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'scan_encounterList')]
+#[ORM\Table(name: 'scan_encounterlist')]
 #[ORM\Index(name: 'encounter_name_idx', columns: ['name'])]
 #[ORM\Entity]
 class EncounterList extends ListAbstract

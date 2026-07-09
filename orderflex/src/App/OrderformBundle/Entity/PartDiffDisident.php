@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'scan_partDiffDisident')]
+#[ORM\Table(name: 'scan_partdiffdisident')]
 #[ORM\Index(name: 'partdiffdisident_field_idx', columns: ['field'])]
 #[ORM\Entity]
 class PartDiffDisident extends PartArrayFieldAbstract

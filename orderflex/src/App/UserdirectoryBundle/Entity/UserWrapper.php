@@ -28,7 +28,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_userWrapper')]
+#[ORM\Table(name: 'user_userwrapper')]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\UserWrapperRepository')]
 class UserWrapper extends ListAbstract {
 

@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-#[ORM\Table(name: 'transres_siteParameters')]
+#[ORM\Table(name: 'transres_siteparameters')]
 #[ORM\UniqueConstraint(name: 'siteParameters_unique', columns: ['projectSpecialty_id'])]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]

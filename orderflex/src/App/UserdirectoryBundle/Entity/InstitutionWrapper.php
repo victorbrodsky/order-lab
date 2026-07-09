@@ -28,7 +28,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 
-#[ORM\Table(name: 'user_institutionWrapper')]
+#[ORM\Table(name: 'user_institutionwrapper')]
 #[ORM\Entity]
 class InstitutionWrapper {
 

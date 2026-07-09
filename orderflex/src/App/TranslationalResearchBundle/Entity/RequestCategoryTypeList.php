@@ -28,7 +28,7 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 /**
  * Fee Schedule
  */
-#[ORM\Table(name: 'transres_requestCategoryTypeList')]
+#[ORM\Table(name: 'transres_requestcategorytypelist')]
 #[ORM\Entity]
 class RequestCategoryTypeList extends ListAbstract
 {

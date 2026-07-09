@@ -25,7 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\UserdirectoryBundle\Entity\DocumentContainer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'crn_crnEntryMessage')]
+#[ORM\Table(name: 'crn_crnentrymessage')]
 #[ORM\Entity]
 class CrnEntryMessage extends OrderBase {
 

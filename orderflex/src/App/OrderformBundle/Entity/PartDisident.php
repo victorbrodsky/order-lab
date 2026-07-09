@@ -20,7 +20,7 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 //use disident (disease identify) as diagnosis, because diagnosis causes problem with symfony2&doctrine(?)
-#[ORM\Table(name: 'scan_partDisident')]
+#[ORM\Table(name: 'scan_partdisident')]
 #[ORM\Entity]
 class PartDisident extends PartArrayFieldAbstract
 {

@@ -36,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 
 #[Gedmo\Tree(type: 'nested')]
-#[ORM\Table(name: 'user_formNode')]
+#[ORM\Table(name: 'user_formnode')]
 #[ORM\Entity(repositoryClass: 'App\UserdirectoryBundle\Repository\FormNodeRepository')]
 class FormNode extends BaseCompositeNode {
 

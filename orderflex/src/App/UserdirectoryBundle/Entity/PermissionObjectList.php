@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'user_permissionObjectList')]
+#[ORM\Table(name: 'user_permissionobjectlist')]
 #[ORM\Entity]
 class PermissionObjectList extends ListAbstract {
 

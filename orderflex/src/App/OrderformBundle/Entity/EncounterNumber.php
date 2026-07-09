@@ -20,7 +20,7 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'scan_encounterNumber')]
+#[ORM\Table(name: 'scan_encounternumber')]
 #[ORM\UniqueConstraint(name: 'encounter_unique', columns: ['encounter_id', 'field', 'keytype_id'])]
 #[ORM\Entity]
 class EncounterNumber extends EncounterArrayFieldAbstract

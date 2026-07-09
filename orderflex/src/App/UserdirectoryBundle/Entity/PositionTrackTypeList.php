@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_positionTrackTypeList')]
+#[ORM\Table(name: 'user_positiontracktypelist')]
 #[ORM\Entity]
 class PositionTrackTypeList extends ListAbstract
 {

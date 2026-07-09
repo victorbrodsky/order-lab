@@ -20,7 +20,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'user_spotPurpose')]
+#[ORM\Table(name: 'user_spotpurpose')]
 #[ORM\Entity]
 class SpotPurpose extends ListAbstract
 {

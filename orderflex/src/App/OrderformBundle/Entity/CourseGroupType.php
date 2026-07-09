@@ -27,7 +27,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * "Organizational Group Types" with a url of /list/organizational-group-types
  */
-#[ORM\Table(name: 'scan_courseGroupType')]
+#[ORM\Table(name: 'scan_coursegrouptype')]
 #[ORM\Entity]
 #[UniqueEntity(fields: ['level'], errorPath: 'level', message: 'This Default Tree Level Association Type is already associated with another tree level. Please remove that association or enter a different tree level.')]
 class CourseGroupType extends ListAbstract

@@ -28,7 +28,7 @@ namespace App\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name: 'scan_slideText')]
+#[ORM\Table(name: 'scan_slidetext')]
 #[ORM\Entity]
 class SlideText extends ArrayFieldAbstract
 {

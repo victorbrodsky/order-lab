@@ -23,7 +23,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Table(name: 'scan_slideReturnRequest')]
+#[ORM\Table(name: 'scan_slidereturnrequest')]
 #[ORM\Entity]
 class SlideReturnRequest {
 

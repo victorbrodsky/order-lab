@@ -103,11 +103,8 @@ class SamlConfig extends ListAbstract
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $autoCreate;
 
-//    /**
-//     * @ORM\Column(type="json")
-//     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $attributeMapping;
+    #[ORM\Column(name: 'attributemapping', type: 'json', nullable: true)]
+    private ?array $attributeMapping = [];
 
 
 
@@ -255,12 +252,12 @@ class SamlConfig extends ListAbstract
         return $this;
     }
 
-    public function getAttributeMapping(): ?array
+    public function getAttributeMapping(): array
     {
-        return $this->attributeMapping;
+        return $this->attributeMapping ?? [];
     }
 
-    public function setAttributeMapping( $attributeMapping ): self
+    public function setAttributeMapping(?array $attributeMapping): self
     {
         $this->attributeMapping = $attributeMapping;
 

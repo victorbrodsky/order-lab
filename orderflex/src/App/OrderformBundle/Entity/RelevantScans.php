@@ -19,7 +19,7 @@ namespace App\OrderformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'scan_relevantScans')]
+#[ORM\Table(name: 'scan_relevantscans')]
 #[ORM\Entity]
 class RelevantScans extends SlideArrayFieldAbstract
 {

@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
 
-#[ORM\Table(name: 'scan_calllogTaskTypeList')]
+#[ORM\Table(name: 'scan_calllogtasktypelist')]
 #[ORM\Entity]
 class CalllogTaskTypeList extends ListAbstract {
 

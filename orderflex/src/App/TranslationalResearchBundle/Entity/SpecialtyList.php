@@ -26,7 +26,7 @@ use App\UserdirectoryBundle\Entity\ListAbstract;
 /**
  * Project Specialty List
  */
-#[ORM\Table(name: 'transres_specialtyList')]
+#[ORM\Table(name: 'transres_specialtylist')]
 #[ORM\Entity]
 class SpecialtyList extends ListAbstract
 {
