@@ -26,7 +26,7 @@ namespace App\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'user_modifierInfo')]
+#[ORM\Table(name: 'user_modifierinfo')]
 #[ORM\Entity]
 class ModifierInfo {
 
@@ -47,11 +47,8 @@ class ModifierInfo {
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $modifiedOn;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $modifierRoles = array();
+    #[ORM\Column(name: 'modifierroles', type: 'json', nullable: true)]
+    private ?array $modifierRoles = [];
 
 
 
@@ -74,23 +71,30 @@ class ModifierInfo {
     }
 
 
-    public function getModifierRoles()
+    public function getModifierRoles(): array
     {
-        return $this->modifierRoles;
+        return $this->modifierRoles ?? [];
     }
 
-
-    public function setModifierRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addModifierRole($role."");
+    public function setModifierRoles(array $roles): self
+    {
+        $this->modifierRoles = [];
+        foreach ($roles as $role) {
+            $this->addModifierRole($role);
         }
+        return $this;
     }
 
-    public function addModifierRole($role) {
+    public function addModifierRole(string $role): self
+    {
+        if (null === $this->modifierRoles) {
+            $this->modifierRoles = [];
+        }
         $role = strtoupper($role);
-        if( !in_array($role, $this->modifierRoles, true) ) {
+        if (!in_array($role, $this->modifierRoles, true)) {
             $this->modifierRoles[] = $role;
         }
+        return $this;
     }
 
     /**

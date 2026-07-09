@@ -66,11 +66,8 @@ class AccessRequest
     #[ORM\JoinColumn(name: 'updatedby_id', referencedColumnName: 'id', nullable: true)]
     private $updatedby;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $updateAuthorRoles = array();
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $updateauthorroles = [];
 
     /////////////////////// access request details //////////////////////////
     #[ORM\Column(type: 'string', nullable: true)]
@@ -237,23 +234,30 @@ class AccessRequest
         return $this->updatedby;
     }
 
-    public function getUpdateAuthorRoles()
+    public function getUpdateAuthorRoles(): array
     {
-        return $this->updateAuthorRoles;
+        return $this->updateauthorroles ?? [];
     }
 
-
-    public function setUpdateAuthorRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addUpdateAuthorRole($role."");
+    public function setUpdateAuthorRoles(array $roles): self
+    {
+        $this->updateauthorroles = [];
+        foreach ($roles as $role) {
+            $this->addUpdateAuthorRole($role);
         }
+        return $this;
     }
 
-    public function addUpdateAuthorRole($role) {
+    public function addUpdateAuthorRole(string $role): self
+    {
+        if (null === $this->updateauthorroles) {
+            $this->updateauthorroles = [];
+        }
         $role = strtoupper($role);
-        if( !in_array($role, $this->updateAuthorRoles, true) ) {
-            $this->updateAuthorRoles[] = $role;
+        if (!in_array($role, $this->updateauthorroles, true)) {
+            $this->updateauthorroles[] = $role;
         }
+        return $this;
     }
 
     /**

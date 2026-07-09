@@ -27,7 +27,7 @@ namespace App\UserdirectoryBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'user_organizationalGroupDefault')]
+#[ORM\Table(name: 'user_organizationalgroupdefault')]
 #[ORM\Entity]
 class OrganizationalGroupDefault
 {
@@ -53,11 +53,8 @@ class OrganizationalGroupDefault
     #[ORM\Column(type: 'string', nullable: true)]
     private $email;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $roles = array();
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $roles = [];
 
     #[ORM\Column(type: 'string', nullable: true)]
     private $timezone;
@@ -572,42 +569,46 @@ class OrganizationalGroupDefault
 
 
 
-    /**
-     * @param array $roles
-     */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles): self
     {
-        $this->roles = array();
-
+        $this->roles = [];
         foreach ($roles as $role) {
             $this->addRole($role);
         }
+        return $this;
+    }
 
+    public function getRoles(): array
+    {
+        return $this->roles ?? [];
+    }
+
+    public function addRole(string $role): self
+    {
+        if (null === $this->roles) {
+            $this->roles = [];
+        }
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
         return $this;
     }
-    /**
-     * @return array
-     */
-    public function getRoles()
+
+    public function removeRole($role): self
     {
-        return $this->roles;
-    }
-    public function addRole($role) {
-        $this->roles[] = $role."";
-        return $this;
-    }
-    public function removeRole($role)
-    {
+        if (null === $this->roles) {
+            return $this;
+        }
         if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
             unset($this->roles[$key]);
             $this->roles = array_values($this->roles);
         }
-
         return $this;
     }
-    public function hasRole($role)
+
+    public function hasRole($role): bool
     {
-        return in_array(strtoupper($role), $this->roles, true);
+        return in_array(strtoupper($role), $this->getRoles(), true);
     }
 
     

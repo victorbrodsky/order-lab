@@ -330,8 +330,8 @@ class Logger
     }
     public function setRoles(array $roles): self
     {
-        // Normalize roles to strings
-        $normalized = array_map('strval', $roles);
+        // Normalize to uppercase strings
+        $normalized = array_map(fn($r) => strtoupper((string) $r), $roles);
 
         // Remove duplicates
         $normalized = array_unique($normalized);
@@ -342,15 +342,7 @@ class Logger
     }
     public function hasRole(string $role): bool
     {
-        $role = strtoupper($role);
-
-        foreach ($this->roles as $storedRole) {
-            if (strtoupper($storedRole) === $role) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array(strtoupper($role), $this->roles, true);
     }
     ///////// EOF: New json implementation //////////////
 

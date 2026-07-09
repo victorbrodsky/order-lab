@@ -25,13 +25,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class DataQualityEvent extends DataQuality
 {
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    protected $roles = array();
-    //#[ORM\Column(type: 'json', nullable: true)]
-    //protected array $roles = [];
+    #[ORM\Column(name: 'roles', type: 'json', nullable: true)]
+    protected ?array $roles = [];
 
 
     #[ORM\ManyToOne(targetEntity: 'DataQualityEventLog', inversedBy: 'dqevents')]
@@ -41,18 +36,29 @@ class DataQualityEvent extends DataQuality
 
 
 
-    public function setRoles($roles) {
-        foreach( $roles as $role ) {
-            $this->addRole($role."");
+    public function setRoles(array $roles): self
+    {
+        $this->roles = [];
+        foreach ($roles as $role) {
+            $this->addRole($role);
         }
+        return $this;
     }
 
-    public function getRoles() {
-        return $this->roles;
+    public function getRoles(): array
+    {
+        return $this->roles ?? [];
     }
 
-    public function addRole($role) {
-        $this->roles[] = $role;
+    public function addRole(string $role): self
+    {
+        if (null === $this->roles) {
+            $this->roles = [];
+        }
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+        return $this;
     }
 
     /**

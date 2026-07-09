@@ -4614,15 +4614,17 @@ class UserController extends OrderAbstractController
 //        }
 //        exit();
         //preferences: showToRoles
-        if( $subjectuser->getPreferences()->getShowToRoles() && count($subjectuser->getPreferences()->getShowToRoles()) > 0 ) {
-            foreach( $subjectuser->getPreferences()->getShowToRoles() as $subentity ) {
-                $changeset = $uow->getEntityChangeSet($subentity);
-                //echo "role=".$subentity."<br>";
-                //exit();
-                $text = "("."Show To Roles ".$subentity.")";
-                $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
-            }
-        }
+        //showToRoles is an array of strings (role names), not entities, so there is no entity change set.
+        //Role changes are already captured in the Preferences changeset above.
+//        if( $subjectuser->getPreferences()->getShowToRoles() && count($subjectuser->getPreferences()->getShowToRoles()) > 0 ) {
+//            foreach( $subjectuser->getPreferences()->getShowToRoles() as $subentity ) {
+//                $changeset = $uow->getEntityChangeSet($subentity);
+//                //echo "role=".$subentity."<br>";
+//                //exit();
+//                $text = "("."Show To Roles ".$subentity.")";
+//                $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+//            }
+//        }
 
         //log credentials
         $credentials = $subjectuser->getCredentials();

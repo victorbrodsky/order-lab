@@ -575,20 +575,20 @@ class User extends UserBase
 }
 
 
-    public function hasRole($role): bool
-{
-    return in_array(strtoupper($role), $this->roles, true);
-}
+//    public function hasRole($role): bool
+//    {
+//        return in_array(strtoupper($role), $this->roles, true);
+//    }
 
     public function hasPartialRole($partialRoleStr)
-{
-    foreach ($this->getRoles() as $role) {
-        if (strpos((string)$role, $partialRoleStr) !== false) {
-            return true;
+    {
+        foreach ($this->getRoles() as $role) {
+            if (strpos((string)$role, $partialRoleStr) !== false) {
+                return true;
+            }
         }
+        return false;
     }
-    return false;
-}
 
     /**
      * @param mixed $preferences
@@ -2287,32 +2287,28 @@ class User extends UserBase
         return $res;
     }
 
-    public function getSiteRoles($sitename): array
+    public function getSiteRoles(string $sitename): array
     {
+        // Normalize sitename
+        $sitename = strtolower($sitename);
 
-        $roles = array();
-
-        if( $sitename == 'employees' ) {
+        // Special case mapping
+        if ($sitename === 'employees') {
             $sitename = 'userdirectory';
         }
 
-        //return $this->getRoles();
+        $matched = [];
 
-        foreach( $this->getRoles() as $role ) {
-            if( stristr($role, $sitename) ) {
-                $roles[] = $role;
+        foreach ($this->getRoles() as $role) {
+            // Roles are uppercase, so compare lowercase
+            if (stripos($role, $sitename) !== false) {
+                $matched[] = $role;
             }
         }
 
-//        foreach( $this->getRoles() as $role ) {
-//            $roleObject = $em->getRepository('AppUserdirectoryBundle:Roles')->findOneByName($role);
-//            if( $roleObject && $roleObject->hasSite( $this->siteName ) ) {
-//                $originalRoles[] = $role;
-//            }
-//        }
-
-        return $roles;
+        return $matched;
     }
+
 
     //Preferred: (646) 555-5555
     //Main Office Line: (212) 444-4444

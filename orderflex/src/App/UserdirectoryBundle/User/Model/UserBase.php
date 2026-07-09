@@ -109,11 +109,13 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     //     * @var GroupInterface[]|Collection
     //     */
     //    protected $groups;
-    /**
-     * @var array
-     */
-    #[ORM\Column(name: 'roles', type: 'array')]
-    protected $roles;
+//    /**
+//     * @var array
+//     */
+//    #[ORM\Column(name: 'roles', type: 'array')]
+//    protected $roles;
+    #[ORM\Column(type: 'json', nullable: true)]
+    protected ?array $roles = [];
 
 
     /**
@@ -131,26 +133,6 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     public function __toString(): string
     {
         return (string) $this->getUsername();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addRole($role): self
-    {
-        //echo "addRole start <br>";
-        $role = strtoupper($role);
-        if ($role === static::ROLE_DEFAULT) {
-            return $this;
-        }
-
-        if (!in_array($role, $this->roles, true)) {
-            $this->roles[] = $role;
-        }
-
-        //exit("addRole end");
-
-        return $this;
     }
 
 //    /**
@@ -354,31 +336,6 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-
-//        foreach ($this->getGroups() as $group) {
-//            $roles = array_merge($roles, $group->getRoles());
-//        }
-
-        // we need to make sure to have at least one role
-        $roles[] = static::ROLE_DEFAULT;
-
-        return array_unique($roles);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasRole($role): bool
-    {
-        return in_array(strtoupper($role), $this->getRoles(), true);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function isAccountNonExpired(): bool
     {
         return true;
@@ -413,21 +370,138 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
         return $this->hasRole(static::ROLE_SUPER_ADMIN);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function removeRole($role): bool
+    ///////// Original array implementation //////////////
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function getRoles(): array
+//    {
+//        $roles = $this->roles;
+//
+//    //        foreach ($this->getGroups() as $group) {
+//    //            $roles = array_merge($roles, $group->getRoles());
+//    //        }
+//
+//        // we need to make sure to have at least one role
+//        $roles[] = static::ROLE_DEFAULT;
+//
+//        return array_unique($roles);
+//    }
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function addRole($role): self
+//    {
+//        //echo "addRole start <br>";
+//        $role = strtoupper($role);
+//        if ($role === static::ROLE_DEFAULT) {
+//            return $this;
+//        }
+//
+//        if (!in_array($role, $this->roles, true)) {
+//            $this->roles[] = $role;
+//        }
+//
+//        //exit("addRole end");
+//
+//        return $this;
+//    }
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function removeRole($role): bool
+//    {
+//        //echo 'removeRole start <br>';
+//        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+//            unset($this->roles[$key]);
+//            $this->roles = array_values($this->roles);
+//            return true;
+//        }
+//        //exit('removeRole finish');
+//        //return $this;
+//        return false;
+//    }
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function setRoles(array $roles): self
+//    {
+//        $this->roles = array();
+//
+//        foreach ($roles as $role) {
+//            $this->addRole($role);
+//        }
+//
+//        return $this;
+//    }
+///**
+// * {@inheritdoc}
+// */
+//    public function hasRole($role): bool
+//{
+//    return in_array(strtoupper($role), $this->getRoles(), true);
+//}
+    ///////// Original array implementation //////////////
+
+    ///////// New json implementation //////////////
+    public function getRoles(): array
     {
-        //echo 'removeRole start <br>';
-        if (false !== $key = array_search(strtoupper($role), $this->roles, true)) {
+        $roles = $this->roles ?? [];
+
+        if (!in_array(self::ROLE_DEFAULT, $roles, true)) {
+            $roles[] = self::ROLE_DEFAULT;
+        }
+
+        return array_unique($roles);
+    }
+
+    public function addRole(string $role): self
+    {
+        if (null === $this->roles) {
+            $this->roles = [];
+        }
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    public function removeRole(string $role): bool
+    {
+        if (null === $this->roles) {
+            return false;
+        }
+
+        $role = strtoupper($role);
+
+        if (false !== $key = array_search($role, $this->roles, true)) {
             unset($this->roles[$key]);
             $this->roles = array_values($this->roles);
             return true;
         }
-        //exit('removeRole finish');
-        //return $this;
+
         return false;
     }
+
+    public function setRoles(array $roles): self
+    {
+        // Normalize to uppercase strings
+        $normalized = array_map(fn($r) => strtoupper((string) $r), $roles);
+
+        // Remove duplicates
+        $normalized = array_unique($normalized);
+
+        $this->roles = $normalized;
+
+        return $this;
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
+    }
+    ///////// EOF: New json implementation //////////////
 
     /**
      * {@inheritdoc}
@@ -570,20 +644,6 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
                $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRoles(array $roles): self
-    {
-        $this->roles = array();
-
-        foreach ($roles as $role) {
-            $this->addRole($role);
-        }
-
-        return $this;
     }
 
     /**

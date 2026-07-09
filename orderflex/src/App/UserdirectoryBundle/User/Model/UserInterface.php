@@ -200,7 +200,7 @@ interface UserInterface extends SymfonyUserInterface, \Serializable
      *
      * @return bool
      */
-    public function hasRole($role);
+    public function hasRole(string $role): bool;
 
     /**
      * Sets the roles of the user.
@@ -211,7 +211,7 @@ interface UserInterface extends SymfonyUserInterface, \Serializable
      *
      * @return static
      */
-    public function setRoles(array $roles);
+    public function setRoles(array $roles): self;
 
     /**
      * Adds a role to the user.
@@ -220,7 +220,7 @@ interface UserInterface extends SymfonyUserInterface, \Serializable
      *
      * @return static
      */
-    public function addRole($role);
+    public function addRole(string $role): self;
 
     /**
      * Removes a role to the user.
@@ -229,7 +229,7 @@ interface UserInterface extends SymfonyUserInterface, \Serializable
      *
      * @return static
      */
-    public function removeRole($role);
+    public function removeRole(string $role): bool;
 
 
     public function isAccountNonExpired();

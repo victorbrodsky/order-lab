@@ -72,12 +72,8 @@ class UserPreferences {
     #[ORM\ManyToMany(targetEntity: 'Institution')]
     private $showToInstitutions;
 
-    /**
-     * Only show this profile to users with the following roles
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    protected $showToRoles = array();
+    #[ORM\Column(name: 'showtoroles', type: 'json', nullable: true)]
+    protected ?array $showToRoles = [];
 
     /**
      * Do not send a notification email if listed as an "attending" in a Call Log Book Entry
@@ -215,33 +211,42 @@ class UserPreferences {
         return $this->showToInstitutions;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getShowToRoles()
+    public function getShowToRoles(): array
     {
-        return $this->showToRoles;
+        return $this->showToRoles ?? [];
     }
-    public function addShowToRole($role) {
+
+    public function addShowToRole(string $role): self
+    {
+        if (null === $this->showToRoles) {
+            $this->showToRoles = [];
+        }
         $role = strtoupper($role);
-        if( !in_array($role, $this->showToRoles, true) ) {
+        if (!in_array($role, $this->showToRoles, true)) {
             $this->showToRoles[] = $role;
         }
+        return $this;
     }
-    public function removeShowToRole($role)
+
+    public function removeShowToRole(string $role): self
     {
+        if (null === $this->showToRoles) {
+            return $this;
+        }
         if (false !== $key = array_search(strtoupper($role), $this->showToRoles, true)) {
             unset($this->showToRoles[$key]);
             $this->showToRoles = array_values($this->showToRoles);
         }
-
         return $this;
     }
-    public function setShowToRoles($roles) {
-        $this->showToRoles = array();
-        foreach( $roles as $role ) {
-            $this->addShowToRole($role."");
+
+    public function setShowToRoles(array $roles): self
+    {
+        $this->showToRoles = [];
+        foreach ($roles as $role) {
+            $this->addShowToRole($role);
         }
+        return $this;
     }
 
     /**

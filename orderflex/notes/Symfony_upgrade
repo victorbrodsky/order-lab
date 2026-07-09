@@ -258,11 +258,23 @@ php bin/console app:convert-array-to-json --class=Logger --apply --alter-schema
 --apply	Actually write (default is dry-run)
 --alter-schema	Also ALTER ... TYPE JSON USING col::json (requires --apply)
 
+--apply --alter-schema
+
 Logger
 Rank (fellapp and resapp)
 History
 Instruction
-
 AccessRequest
+ModifierInfo
+OrganizationalGroupDefault
+UserRequest
+UserBase - abstract used by User only
+UserPreferences (test showToRoles)
+DataQualityEvent
+
+BaseUserAttributes abstract used by 14 classes
+
+ObjectTypeCheckbox ($idValues) - critical for CallLog
+ObjectTypeDropdown ($idValues) - critical for CallLog
 
 

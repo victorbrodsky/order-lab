@@ -156,11 +156,8 @@ class UserRequest
     #[ORM\Column(type: 'string', nullable: true)]
     private $siteName;
 
-    /**
-     * @var array
-     */
-    #[ORM\Column(type: 'array', nullable: true)]
-    private $roles = array();
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $roles = [];
 
 
 
@@ -561,35 +558,38 @@ class UserRequest
     }
 
 
-    /**
-     * @param array $roles
-     */
-    public function setRoles($roles)
+    public function setRoles(array $roles): self
     {
-        if( $roles ) {
-            foreach( $roles as $role ) {
-                $this->addRole($role."");
-            }
-        }
+        // Normalize to uppercase strings
+        $normalized = array_map(fn($r) => strtoupper((string) $r), $roles);
 
-    }
+        // Remove duplicates
+        $normalized = array_unique($normalized);
 
-    /**
-     * @return array
-     */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
+        $this->roles = $normalized;
 
-    public function addRole($role) {
-        $this->roles[] = $role;
         return $this;
     }
 
-    public function hasRole($role)
+    public function getRoles(): array
     {
-        return in_array(strtoupper($role), $this->roles, true);
+        return $this->roles ?? [];
+    }
+
+    public function addRole(string $role): self
+    {
+        if (null === $this->roles) {
+            $this->roles = [];
+        }
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+        return $this;
+    }
+
+    public function hasRole($role): bool
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
     }
 
     /**
