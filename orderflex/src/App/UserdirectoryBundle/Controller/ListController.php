@@ -352,7 +352,7 @@ class ListController extends OrderAbstractController
 
         $dql =  $repository->createQueryBuilder("ent");
         $dql->select('ent');
-        $dql->groupBy('ent');
+        $dql->groupBy('ent.id');
 
         $dql->leftJoin("ent.creator", "creator");
         $dql->leftJoin("ent.updatedby", "updatedby");
@@ -401,32 +401,32 @@ class ListController extends OrderAbstractController
 
         if( method_exists($entityClass,'getAttributes') ) {
             $dql->leftJoin("ent.attributes", "attributes");
-            $dql->addGroupBy('attributes');
+            $dql->addGroupBy('attributes.id');
         }
 
         if( method_exists($entityClass,'getPermissionObjectList') ) {
             $dql->leftJoin("ent.permissionObjectList", "permissionObjectList");
-            $dql->addGroupBy('permissionObjectList');
+            $dql->addGroupBy('permissionObjectList.id');
         }
         if( method_exists($entityClass,'getPermissionActionList') ) {
             $dql->leftJoin("ent.permissionActionList", "permissionActionList");
-            $dql->addGroupBy('permissionActionList');
+            $dql->addGroupBy('permissionActionList.id');
         }
 
         if( method_exists($entityClass,'getInstitution') ) {
             $dql->leftJoin("ent.institution", "institution");
-            $dql->addGroupBy('institution');
+            $dql->addGroupBy('institution.id');
         }
 
         if( method_exists($entityClass,'getInstitutions') ) {
             $dql->leftJoin("ent.institutions", "institutions");
-            $dql->addGroupBy('institutions');
+            $dql->addGroupBy('institutions.id');
             $useWalker = true;
         }
 
         if( method_exists($entityClass,'getCollaborationType') ) {
             $dql->leftJoin("ent.collaborationType", "collaborationType");
-            $dql->addGroupBy('collaborationType');
+            $dql->addGroupBy('collaborationType.id');
         }
 
         if( method_exists($entityClass,'getSites') ) {
@@ -443,7 +443,7 @@ class ListController extends OrderAbstractController
         if( method_exists($entityClass,'getWorkQueues') ) {
             //echo "getWorkQueues <br>";
             $dql->leftJoin("ent.workQueues", "workQueues");
-            $dql->addGroupBy('workQueues');
+            $dql->addGroupBy('workQueues.id');
             $useWalker = true;
         }
 
@@ -551,7 +551,7 @@ class ListController extends OrderAbstractController
             //if( method_exists($entityClass, 'getDatasheet') ) {
             if( $className == 'AntibodyList' ) {
                 $dql->leftJoin("ent.categoryTags", "categoryTags");
-                $dql->addGroupBy('categoryTags');
+                $dql->addGroupBy('categoryTags.id');
                 
                 $searchStr = $searchStr . " OR LOWER(ent.category) LIKE LOWER(:search)";
                 $searchStr = $searchStr . " OR LOWER(categoryTags.name) LIKE LOWER(:search)";

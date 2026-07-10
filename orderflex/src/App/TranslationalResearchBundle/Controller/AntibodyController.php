@@ -72,7 +72,7 @@ class AntibodyController extends OrderAbstractController
 
         $dql =  $repository->createQueryBuilder("ent");
         $dql->select('ent');
-        $dql->groupBy('ent');
+        $dql->groupBy('ent.id');
 
         $dql->leftJoin("ent.creator", "creator");
         $dql->leftJoin("ent.updatedby", "updatedby");

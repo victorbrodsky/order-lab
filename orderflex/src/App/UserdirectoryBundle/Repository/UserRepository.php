@@ -46,7 +46,7 @@ class UserRepository extends EntityRepository {
             //->from('AppUserdirectoryBundle:User', 'user')
             ->from(User::class, 'user')
             ->select("user")
-            ->groupBy('user');
+            ->groupBy('user.id');
 
 
         $query->orderBy("user.primaryPublicUserId","ASC");

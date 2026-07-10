@@ -723,7 +723,7 @@ class FellAppUtil {
             //->orderBy('list.orderinlist', 'ASC')
             //->distinct()
             //->where("list.type = :typedef OR list.type = :typeadd")
-            ->groupBy('institution')
+            ->groupBy('institution.id')
         ;
 
         $parameters = [];

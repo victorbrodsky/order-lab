@@ -73,39 +73,39 @@ class ComplexListController extends OrderAbstractController
 
         $dql =  $repository->createQueryBuilder("ent");
         $dql->select('ent');
-        $dql->groupBy('ent');
+        $dql->groupBy('ent.id');
 
         if( $mapper['pathname'] == 'locations' ) {
             $dql->leftJoin("ent.geoLocation", "geoLocation");
-            $dql->addGroupBy('geoLocation');
+            $dql->addGroupBy('geoLocation.id');
             $dql->leftJoin("ent.user", "user");
-            $dql->addGroupBy('user');
+            $dql->addGroupBy('user.id');
         }
 
         if( $mapper['pathname'] == 'buildings' ) {
             $dql->leftJoin("ent.geoLocation", "geoLocation");
-            $dql->addGroupBy('geoLocation');
+            $dql->addGroupBy('geoLocation.id');
             $dql->leftJoin("ent.institutions", "institutions");
-            $dql->addGroupBy('institutions');
+            $dql->addGroupBy('institutions.id');
         }
 
         if( $mapper['pathname'] == 'researchlabs' ) {
             $dql->leftJoin("ent.user", "user");
-            $dql->addGroupBy('user');
+            $dql->addGroupBy('user.id');
             $dql->leftJoin("ent.institution", "institution");
-            $dql->addGroupBy('institution');
+            $dql->addGroupBy('institution.id');
         }
 
         if( $mapper['pathname'] == 'grants' ) {
             $dql->leftJoin("ent.user", "user");
-            $dql->addGroupBy('user');
+            $dql->addGroupBy('user.id');
             $dql->leftJoin("ent.sourceOrganization", "sourceOrganization");
-            $dql->addGroupBy('sourceOrganization');
+            $dql->addGroupBy('sourceOrganization.id');
         }
 
         if( $mapper['pathname'] == 'labtests' ) {
             $dql->leftJoin("ent.labTestType", "labTestType");
-            $dql->addGroupBy('labTestType');
+            $dql->addGroupBy('labTestType.id');
         }
 
         $dql->leftJoin("ent.creator", "creator");

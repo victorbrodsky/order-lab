@@ -383,7 +383,7 @@ class UtilController extends OrderAbstractController {
             ->from(Institution::class, 'list')
             ->select("list.id as id, list.name as text")
             ->leftJoin("list.types","types")
-            ->groupBy("list")
+            ->groupBy("list.id")
             ->orderBy("list.orderinlist","ASC");
 
         $query->where("(types.name LIKE :instTypeEducational OR types.name LIKE :instTypeMedical) AND list.level = 0");
@@ -1459,9 +1459,9 @@ class UtilController extends OrderAbstractController {
         $dql->leftJoin("employmentStatus.employmentType", "employmentType");
 
         //$dql->leftJoin("user.researchLabs", "researchLabs");
-        $dql->groupBy('user');
-        $dql->addGroupBy('keytype');
-        $dql->addGroupBy('infos');
+        $dql->groupBy('user.id');
+        $dql->addGroupBy('keytype.id');
+        $dql->addGroupBy('infos.id');
         $dql->orderBy("infos.displayName","ASC");
 
 

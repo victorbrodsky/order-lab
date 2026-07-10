@@ -301,3 +301,10 @@ CreateUserCommandTest - http://127.0.0.1/directory/admin/list-manager/
 FellappTest
 TrpTest
 UserTest
+VacationTest
+ResappTest
+DashboardTest
+CrnTest
+CalllogTest
+
+

@@ -2357,7 +2357,7 @@ class RequestController extends OrderAbstractController
         //$withMatching = true; //slower 7.5 sec
         //$withMatching = false; //twice faster 3.5 sec
         
-        $dql->groupBy("transresRequest, project, submitterInfos");
+        $dql->groupBy("transresRequest.id, project.id, submitterInfos.id");
 
         //testing
         //$dql->andWhere("transresRequest.id = 2");

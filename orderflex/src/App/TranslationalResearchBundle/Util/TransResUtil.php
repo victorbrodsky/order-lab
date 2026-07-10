@@ -2604,7 +2604,7 @@ class TransResUtil
         $repository = $this->em->getRepository('App\\TranslationalResearchBundle\\Entity\\' . $reviewObjectClassName);
         $dql =  $repository->createQueryBuilder("review");
         $dql->select('review');
-        $dql->GroupBy('review');
+        $dql->GroupBy('review.id');
         $dql->leftJoin("review.project", "project");
         $dql->leftJoin("review.reviewer", "reviewer");
         $dql->leftJoin("review.reviewerDelegate", "reviewerDelegate");

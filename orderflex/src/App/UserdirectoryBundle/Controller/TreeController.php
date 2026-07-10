@@ -538,7 +538,7 @@ class TreeController extends OrderAbstractController {
                 //////////// get max ordeinlist ////////////////////
                 $query = $treeRepository->createQueryBuilder('s');
                 $query->select('s, MAX(s.orderinlist) AS max_orderinlist');
-                $query->groupBy('s');
+                $query->groupBy('s.id');
                 $query->setMaxResults(1);
                 $query->orderBy('max_orderinlist', 'DESC');
                 $results = $query->getQuery()->getResult();

@@ -408,13 +408,13 @@ class SlideReturnRequestController extends OrderAbstractController
         $dql->leftJoin("message.proxyuser", "proxyuserWrapper");
         $dql->leftJoin("proxyuserWrapper.user", "proxyuser");
 
-        $dql->groupBy('list');
-        $dql->addGroupBy('provider');
-        $dql->addGroupBy('proxyuser');
-        $dql->addGroupBy('message');
-        $dql->addGroupBy('institution');
-        $dql->addGroupBy('associations');
-        $dql->addGroupBy('destinationslocation');
+        $dql->groupBy('list.id');
+        $dql->addGroupBy('provider.id');
+        $dql->addGroupBy('proxyuser.id');
+        $dql->addGroupBy('message.id');
+        $dql->addGroupBy('institution.id');
+        $dql->addGroupBy('associations.id');
+        $dql->addGroupBy('destinationslocation.id');
 
 		$postData = $request->query->all();
 		
@@ -521,13 +521,13 @@ class SlideReturnRequestController extends OrderAbstractController
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list, COUNT(slides) as slidecount');
 
-        $dql->groupBy('list');
-        $dql->addGroupBy('provider');
-        $dql->addGroupBy('proxyuser');
-        $dql->addGroupBy('message');
-        $dql->addGroupBy('institution');
-        $dql->addGroupBy('destinationslocation');
-        $dql->addGroupBy('associations');
+        $dql->groupBy('list.id');
+        $dql->addGroupBy('provider.id');
+        $dql->addGroupBy('proxyuser.id');
+        $dql->addGroupBy('message.id');
+        $dql->addGroupBy('institution.id');
+        $dql->addGroupBy('destinationslocation.id');
+        $dql->addGroupBy('associations.id');
 
         $dql->leftJoin('list.message','message');
         $dql->leftJoin("message.slide", "slides");
