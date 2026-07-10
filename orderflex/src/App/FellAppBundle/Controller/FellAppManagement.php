@@ -922,17 +922,26 @@ class FellAppManagement extends OrderAbstractController {
             //$users = $em->getRepository('AppUserdirectoryBundle:User')->findUsersByRoles($roleArr);
 
             //$whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
+            $roleObjs = $em->getRepository(Roles::class)
+                ->createQueryBuilder('r')
+                ->where('r.name LIKE :name')
+                ->setParameter('name', '%WCMC%')
+                ->getQuery()
+                ->getResult();
+            $roleNames = array_map(function($r) { return $r->getName(); }, $roleObjs);
+
+            $userIds = $em->getRepository(User::class)->findUserIdsByRoleNames($roleNames);
+            if (empty($userIds)) {
+                $userIds = array(-1);
+            }
+
             $repository = $em->getRepository(User::class);
             $dql = $repository->createQueryBuilder("user");
             $dql->select('user');
-            $dql->where("user.roles LIKE :name");
-
-            $parameters = array(
-                "name" => '%' . 'WCMC' . '%' //NOT USED
-            );
+            $dql->where('user.id IN (:userIds)');
+            $dql->setParameter('userIds', $userIds);
 
             $query = $dql->getQuery();
-            $query->setParameters($parameters);
 
             $users = $query->getResult();
 

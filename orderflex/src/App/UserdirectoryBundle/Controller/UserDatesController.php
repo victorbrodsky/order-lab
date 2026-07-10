@@ -164,12 +164,16 @@ class UserDatesController extends OrderAbstractController
 
             $roles = $filterform["roles"]->getData();
             if( $roles && count($roles) > 0 ) {
-                $rolesArr = array();
+                $roleNames = array();
                 foreach ($roles as $role) {
-                    $rolesArr[] = "user.roles LIKE " . "'%" . $role->getName() . "%'";
+                    $roleNames[] = $role->getName();
                 }
-                $rolesStr = implode(" OR ", $rolesArr);
-                $dql->andWhere($rolesStr);
+                $userIds = $this->getDoctrine()->getManager()->getRepository(User::class)->findUserIdsByRoleNames($roleNames);
+                if (empty($userIds)) {
+                    $userIds = array(-1);
+                }
+                $dql->andWhere('user.id IN (:userIds)');
+                $queryParameters['userIds'] = $userIds;
             }
 
             $startdate = $filterform["startdate"]->getData();

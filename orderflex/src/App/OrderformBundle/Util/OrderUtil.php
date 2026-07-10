@@ -559,7 +559,11 @@ class OrderUtil {
         if( $commentFlag && $commentFlag == 'admin' ) {
             //echo "comments to admin only!, userid=".$user->getId()." =>";
             //processor can see all histories created by user without processor role, but not for orders belonging to this processor
-            $criteriastr = $criteriastr . " AND history.roles NOT LIKE '%".$role."%' AND history.roles NOT LIKE '%".$role2."%'";
+            $roleUserIds = $this->em->getRepository(User::class)->findUserIdsByRoleNames(array($role, $role2));
+            if (empty($roleUserIds)) {
+                $roleUserIds = array(-1);
+            }
+            $criteriastr = $criteriastr . " AND history.provider NOT IN (" . implode(',', $roleUserIds) . ")";
 
             //comments to admin only: can be addressed by another admin (so any user role) and for orders created by not current user (all new comments for the orders not created by current admin)
             $criteriastr = $criteriastr . " AND history.provider != " . $user->getId() . " AND provider != " . $user->getId();

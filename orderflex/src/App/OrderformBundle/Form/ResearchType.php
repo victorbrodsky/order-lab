@@ -19,6 +19,7 @@ namespace App\OrderformBundle\Form;
 
 
 
+use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use App\UserdirectoryBundle\Entity\UserWrapper; //process.py script: replaced namespace by ::class: added use line for classname=UserWrapper
 
 
@@ -63,7 +64,13 @@ class ResearchType extends AbstractType
                 }
 
                 ///////////////////// userWrappers /////////////////////
-                $criterion = "user.roles LIKE '%ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR%'";
+                $userIds = $this->params['em']->getRepository(User::class)->findUserIdsByRoleNames(
+                    array('ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR')
+                );
+                if (empty($userIds)) {
+                    $userIds = array(-1);
+                }
+                $criterion = "user.id IN (" . implode(',', $userIds) . ")";
 
                 //add all users from UserWrappers for this research
                 foreach( $holder->getUserWrappers() as $userWrapper ) {

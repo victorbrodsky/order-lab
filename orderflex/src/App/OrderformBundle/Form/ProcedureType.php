@@ -24,6 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
+use App\UserdirectoryBundle\Repository\UserRepository;
 
 class ProcedureType extends AbstractType
 {
@@ -145,10 +146,16 @@ class ProcedureType extends AbstractType
                 'label' => 'Provider:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
+                'query_builder' => function(UserRepository $er) {
+                        $userIds = $er->findUserIdsByRoleNames(
+                            array('ROLE_SCANORDER_ORDERING_PROVIDER')
+                        );
+                        if (empty($userIds)) {
+                            $userIds = array(-1);
+                        }
                         return $er->createQueryBuilder('u')
-                            ->where('u.roles LIKE :roles OR u=:user')
-                            ->setParameters(array('roles' => '%' . 'ROLE_SCANORDER_ORDERING_PROVIDER' . '%', 'user' => $this->params['user'] ));
+                            ->where('u.id IN (:userIds) OR u=:user')
+                            ->setParameters(array('userIds' => $userIds, 'user' => $this->params['user'] ));
                     },
             ));
 

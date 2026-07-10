@@ -1663,24 +1663,18 @@ class UserSecurityUtil {
         $dql->leftJoin("user.keytype", "keytype");
 
         //roles where
-        $whereArr = array();
-        $where = "";
-        $count = 0;
+        $roleNames = array();
         foreach( $roles as $role ) {
-            //$whereArr[] = "'".$role['name']."'";
-            if( $count > 0 ) {
-                $where .= " OR ";
-            }
-            $where .= "user.roles LIKE " . "'%".$role->getName()."%'";
-            $count++;
-        }
-        //echo "where=".$where."<br>";
-
-        if( !$where ) {
-            $where = "1=0";
+            $roleNames[] = $role->getName();
         }
 
-        $dql->where($where);
+        $userIds = $this->em->getRepository(User::class)->findUserIdsByRoleNames($roleNames);
+        if (empty($userIds)) {
+            $userIds = array(-1);
+        }
+
+        $dql->where('user.id IN (:userIds)');
+        $dql->setParameter('userIds', $userIds);
 
         //Sort listed users on all /authorized-users/ pages for other sites alphabetically by last name.
         $dql->orderBy('infos.lastName', 'ASC');
@@ -1737,28 +1731,25 @@ class UserSecurityUtil {
     }
     //NOT working. Not used.
     public function getQueryUserBySite_SingleQuery( $sitename ) {
+        $roles = $this->getRolesBySite($sitename);
+        $roleNames = array();
+        foreach( $roles as $role ) {
+            $roleNames[] = $role->getName();
+        }
+
+        $userIds = $this->em->getRepository(User::class)->findUserIdsByRoleNames($roleNames);
+        if (empty($userIds)) {
+            $userIds = array(-1);
+        }
+
         $repository = $this->em->getRepository(User::class);
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
         $dql->leftJoin("user.infos", "infos");
+        $dql->where('user.id IN (:userIds)');
+        $dql->setParameter('userIds', $userIds);
 
-        //$dql->leftJoin('AppUserdirectoryBundle:Roles', 'roles');
-        //$dql->leftJoin("AppUserdirectoryBundle:Roles", "roles", "WITH", "user.roles LIKE '%roles.name%'");
-        $dql->leftJoin(Roles::class, "roles", "WITH", "user.roles LIKE '%roles.name%'");
-        $dql->leftJoin("roles.sites", "sites");
-
-        $dql->where("sites.name LIKE :sitename");
-        //$dql->where("sites IS NULL");
-        //$dql->where("sites.id=4");
-        //$dql->where("roles.name = 'ROLE_DEIDENTIFICATOR_WCM_NYP_ENQUIRER'");
-
-        //echo "dql=".$dql."<br>";
-
-        $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-
-        $query->setParameters(array(
-            "sitename" => "'%".$this->siteName."%'"
-        ));
+        $query = $dql->getQuery();
 
         return $query;
     }

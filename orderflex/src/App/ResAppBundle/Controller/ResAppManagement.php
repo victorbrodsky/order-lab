@@ -799,17 +799,26 @@ class ResAppManagement extends OrderAbstractController {
 
             //$whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+            $roleObjs = $em->getRepository(Roles::class)
+                ->createQueryBuilder('r')
+                ->where('r.name LIKE :name')
+                ->setParameter('name', '%WCMC%')
+                ->getQuery()
+                ->getResult();
+            $roleNames = array_map(function($r) { return $r->getName(); }, $roleObjs);
+
+            $userIds = $em->getRepository(User::class)->findUserIdsByRoleNames($roleNames);
+            if (empty($userIds)) {
+                $userIds = array(-1);
+            }
+
             $repository = $em->getRepository(User::class);
             $dql = $repository->createQueryBuilder("user");
             $dql->select('user');
-            $dql->where("user.roles LIKE :name");
-
-            $parameters = array(
-                "name" => '%' . 'WCMC' . '%'
-            );
+            $dql->where('user.id IN (:userIds)');
+            $dql->setParameter('userIds', $userIds);
 
             $query = $dql->getQuery();
-            $query->setParameters($parameters);
 
             $users = $query->getResult();
 

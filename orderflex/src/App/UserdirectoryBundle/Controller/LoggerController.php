@@ -558,18 +558,20 @@ class LoggerController extends OrderAbstractController
         }
 
         if( $roles && count($roles)>0 ) {
-            $where = "";
+            $roleNames = array();
             foreach( $roles as $role ) {
                 if( $role->getId() ) {
-                    if( $where != "" ) {
-                        $where .= " OR ";
-                    }
-                    //$where .= 'eventType.roles LIKE %"'.$role->getName().'"%';
-                    //$where .= "logger.roles LIKE '%land%'";
-                    $where .= "logger.roles LIKE " . "'%".$role->getName()."%'";
+                    $roleNames[] = $role->getName();
                 }
             }
-            $dql->andWhere($where);
+            if( count($roleNames) > 0 ) {
+                $userIds = $this->getDoctrine()->getManager()->getRepository(User::class)->findUserIdsByRoleNames($roleNames);
+                if (empty($userIds)) {
+                    $userIds = array(-1);
+                }
+                $dql->andWhere('logger.user IN (:userIds)');
+                $dqlParameters['userIds'] = $userIds;
+            }
 
             $filtered = true;
         }

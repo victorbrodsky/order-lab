@@ -409,20 +409,19 @@ class DefaultController extends OrderAbstractController
 //        exit('111');
         /////////
 
-        $em = $this->getDoctrine()->getManager();
-        $roles = array("ROLE_PLATFORM_ADMIN","ROLE_PLATFORM_DEPUTY_ADMIN");
-        $users = $em->getRepository(User::class)->findUsersByRoles($roles);
-        dump($users);
-
-        $adminUsers = $em->getRepository(User::class)->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
-        dump($adminUsers);
-
-        exit('111');
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $emails = $userSecUtil->getUserEmailsByRole($this->getParameter('fellapp.sitename'), "Platform Administrator");
-        dump($emails);
-        exit('111');
+        //Test some json logic if json $roles DB's field has role
+//        $em = $this->getDoctrine()->getManager();
+//        $roles = array("ROLE_PLATFORM_ADMIN","ROLE_PLATFORM_DEPUTY_ADMIN");
+//        $users = $em->getRepository(User::class)->findUsersByRoles($roles);
+//        dump($users);
+//
+//        $adminUsers = $em->getRepository(User::class)->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+//        dump($adminUsers);
+//        exit('111');
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $emails = $userSecUtil->getUserEmailsByRole($this->getParameter('fellapp.sitename'), "Platform Administrator");
+//        dump($emails);
+//        exit('111');
 
         return array('sitename'=>$this->getParameter('fellapp.sitename'));
     }

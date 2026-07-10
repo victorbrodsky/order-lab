@@ -295,4 +295,9 @@ BaseUserAttributes abstract used by 14 classes and another abstract class BaseCo
 ObjectTypeCheckbox ($idValues) - critical for CallLog
 ObjectTypeDropdown ($idValues) - critical for CallLog
 
-
+Tests:
+$ ./vendor/bin/phpunit tests/App/TestBundle/UserTest.php
+CreateUserCommandTest - http://127.0.0.1/directory/admin/list-manager/
+FellappTest
+TrpTest
+UserTest

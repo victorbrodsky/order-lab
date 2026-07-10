@@ -24,6 +24,7 @@ use App\OrderformBundle\Entity\OrderDelivery; //process.py script: replaced name
 use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 use Doctrine\ORM\EntityRepository;
+use App\UserdirectoryBundle\Repository\UserRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -1295,9 +1296,16 @@ class SiteParametersType extends AbstractType
                 'required'=> false,
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
-                'query_builder' => function(EntityRepository $er) {
+                'query_builder' => function(UserRepository $er) {
+                    $userIds = $er->findUserIdsByRoleNames(
+                        array('ROLE_PLATFORM_ADMIN', 'ROLE_PLATFORM_DEPUTY_ADMIN')
+                    );
+                    if (empty($userIds)) {
+                        $userIds = array(-1);
+                    }
                     return $er->createQueryBuilder('user')
-                        ->where("user.roles LIKE '%ROLE_PLATFORM_ADMIN%' OR user.roles LIKE '%ROLE_PLATFORM_DEPUTY_ADMIN%'")
+                        ->where('user.id IN (:userIds)')
+                        ->setParameter('userIds', $userIds)
                         ->orderBy("user.primaryPublicUserId","ASC");
                 },
             ));

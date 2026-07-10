@@ -1473,13 +1473,32 @@ class AccessRequestController extends OrderAbstractController
         $dql = $userSecUtil->getDqlUserBySite($this->siteName);
 
         if( $roles && count($roles) > 0 ) {
-            $rolesArr = array();
+            $roleNames = array();
             foreach ($roles as $role) {
-                $rolesArr[] = "user.roles LIKE " . "'%" . $role->getName() . "%'";
+                $roleNames[] = $role->getName();
             }
-            //$rolesStr = implode(" OR ",$rolesArr);
-            $rolesStr = implode(" $condition ", $rolesArr);
-            $dql->andWhere($rolesStr);
+
+            $userRepository = $this->getDoctrine()->getManager()->getRepository(User::class);
+            if( $condition == 'AND' ) {
+                $userIds = null;
+                foreach( $roleNames as $roleName ) {
+                    $ids = $userRepository->findUserIdsByRoleNames(array($roleName));
+                    if( $userIds === null ) {
+                        $userIds = $ids;
+                    } else {
+                        $userIds = array_intersect($userIds, $ids);
+                    }
+                }
+                $userIds = array_values($userIds);
+            } else {
+                $userIds = $userRepository->findUserIdsByRoleNames($roleNames);
+            }
+            if (empty($userIds)) {
+                $userIds = array(-1);
+            }
+
+            $dql->andWhere('user.id IN (:userIds)');
+            $dql->setParameter('userIds', $userIds);
         }
 
         if( $search ) {

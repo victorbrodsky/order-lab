@@ -67,6 +67,7 @@ use Symfony\Component\Cache\Exception\LogicException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+use App\UserdirectoryBundle\Repository\UserRepository;
 use Doctrine\ORM\Query;
 use App\TranslationalResearchBundle\Entity\AdminReview;
 use App\TranslationalResearchBundle\Entity\CommitteeReview;
@@ -6857,16 +6858,20 @@ class TransResUtil
     public function userQueryBuilder( $cycle=NULL ) {
         //echo "cycle=$cycle <br>";
         if( $cycle && $cycle == "new" ) {
-            return function(EntityRepository $er) {
-                $roles = "list.roles NOT LIKE '%ROLE_TESTER%' OR
-                (
-                    list.roles LIKE '%ROLE_TESTER%' AND
-                    (
-                    list.roles LIKE '%ROLE_PLATFORM_ADMIN%' OR
-                    list.roles LIKE '%ROLE_PLATFORM_DEPUTY_ADMIN%' OR
-                    list.roles LIKE '%ROLE_SUPER_DEPUTY_ADMIN%'
-                    )
-                )";
+            return function(UserRepository $er) {
+                $testerIds = $er->findUserIdsByRoleNames(array('ROLE_TESTER'));
+                if (empty($testerIds)) {
+                    $testerIds = array(-1);
+                }
+
+                $adminIds = $er->findUserIdsByRoleNames(
+                    array('ROLE_PLATFORM_ADMIN', 'ROLE_PLATFORM_DEPUTY_ADMIN', 'ROLE_SUPER_DEPUTY_ADMIN')
+                );
+                if (empty($adminIds)) {
+                    $adminIds = array(-1);
+                }
+
+                $roles = "list.id NOT IN (:testerIds) OR list.id IN (:adminIds)";
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
@@ -6884,6 +6889,8 @@ class TransResUtil
 //                    list.roles != 'ROLE_PLATFORM_DEPUTY_ADMIN' AND
 //                    list.roles != 'ROLE_SUPER_DEPUTY_ADMIN')")
                     ->andWhere($roles)
+                    ->setParameter('testerIds', $testerIds)
+                    ->setParameter('adminIds', $adminIds)
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
             };

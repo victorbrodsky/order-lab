@@ -680,14 +680,18 @@ class ScanUtilController extends UtilController {
         //var_dump($output);
 
         //2) add users with ROLE_SCANORDER_COURSE_DIRECTOR and ROLE_SCANORDER_PRINCIPAL_INVESTIGATOR
+        $userIds = $em->getRepository(User::class)->findUserIdsByRoleNames(array($role));
+        if (empty($userIds)) {
+            $userIds = array(-1);
+        }
         $query = $em->createQueryBuilder()
             ->from(User::class, 'list')
             //->select("list.id as id, list.username as text")
             ->select("list")
-            ->where("list.roles LIKE :role")
+            ->where('list.id IN (:userIds)')
             //->andWhere("list.testingAccount = 0 OR list.testingAccount IS NULL")
             ->orderBy("list.id","ASC")
-            ->setParameter('role', '%' . $role . '%');
+            ->setParameter('userIds', $userIds);
 
         $users = $query->getQuery()->getResult();
 

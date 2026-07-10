@@ -776,6 +776,39 @@ class UserRepository extends EntityRepository {
 
         $roles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename);
 
+        $roleNames = array();
+        foreach( $roles as $role ) {
+            $roleNames[] = $role->getName();
+        }
+
+        $userIds = $this->findUserIdsByRoleNames($roleNames);
+        if (empty($userIds)) {
+            $userIds = array(-1);
+        }
+
+        $query = $this->_em->createQueryBuilder()->from(User::class, 'user');
+        $query->select("user");
+
+        $query->where('user.id IN (:userIds)');
+        $query->setParameter('userIds', $userIds);
+
+        if( $onlyWorking ) {
+            $curdate = date("Y-m-d", time());
+            $query->leftJoin("user.employmentStatus", "employmentStatus");
+            $currentusers = "employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '".$curdate."'";
+            $query->andWhere($currentusers);
+        }
+
+        $query->orderBy("user.primaryPublicUserId","ASC");
+
+        $users = $query->getQuery()->getResult();
+
+        return $users;
+    }    
+    public function findUsersBySitePermissionObjectActionInstitution_ARRAY( $sitename, $objectStr, $actionStr, $institutionId, $onlyWorking=false ) {
+
+        $roles = $this->findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename);
+
         //construct with "user.roles LIKE '%ROLE_VACREQ_SUBMITTER_CLINICALPATHOLOGY%'"
         $withLikes = array();
         foreach( $roles as $role ) {
@@ -921,6 +954,31 @@ class UserRepository extends EntityRepository {
         ;
         //return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)->getResult();
         return $query->getQuery()->getResult();
+    }
+
+    //Helper function to find user IDs by role names using JSONB containment
+    //Then update each query to use user.id IN (:ids) instead of user.roles LIKE 
+    public function findUserIdsByRoleNames(array $roleNames): array
+    {
+        if (empty($roleNames)) {
+            return array();
+        }
+
+        $connection = $this->_em->getConnection();
+        $conditions = array();
+        $params = array();
+        $i = 0;
+        foreach ($roleNames as $roleName) {
+            $conditions[] = "roles::jsonb @> :role$i::jsonb";
+            $params["role$i"] = json_encode(array($roleName));
+            $i++;
+        }
+
+        $where = implode(' OR ', $conditions);
+        $sql = "SELECT id FROM user_fosuser WHERE $where";
+        $rows = $connection->executeQuery($sql, $params)->fetchAllAssociative();
+
+        return array_column($rows, 'id');
     }
     
 //    public function getPendingAdminReview() {
