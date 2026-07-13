@@ -231,7 +231,7 @@ class TreeRepository extends NestedTreeRepository {
         }
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-        $repository = $this->_em->getRepository(Institution::class);
+        $repository = $this->getEntityManager()->getRepository(Institution::class);
         $dql = $repository->createQueryBuilder("institution");
         $dql->select("institution");
         $dql->leftJoin("institution.collaborationInstitutions","collaborationInstitutions");
@@ -349,7 +349,7 @@ class TreeRepository extends NestedTreeRepository {
         }
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+        $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.parent","parent");
@@ -398,7 +398,7 @@ class TreeRepository extends NestedTreeRepository {
         $foundEntity = null;
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+        $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where('LOWER(list.name) LIKE LOWER(:name)');
@@ -443,7 +443,7 @@ class TreeRepository extends NestedTreeRepository {
         }
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+        $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.name = :nameStr AND list.root=:rootNodeId");
@@ -506,7 +506,7 @@ class TreeRepository extends NestedTreeRepository {
         //echo "rep=".$mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']."<br>";
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+        $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.parent","parent");
@@ -602,12 +602,12 @@ class TreeRepository extends NestedTreeRepository {
 
             //echo "parent name=".$parent->getName().", id=".$parent->getId()."<br>";
             //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) parent also has an id.
-            if( $parent->getName() && $parent->getName() != "" && !$this->_em->contains($parent) ) {
+            if( $parent->getName() && $parent->getName() != "" && !$this->getEntityManager()->contains($parent) ) {
                 //echo "parent does not exist in DB => this category does not exist in DB => return null<br>";
                 return null;
             }
 
-            if( $parent && $this->_em->contains($parent) ) {
+            if( $parent && $this->getEntityManager()->contains($parent) ) {
                 $searchArr['parent'] = $parent->getId();
             }
 
@@ -617,7 +617,7 @@ class TreeRepository extends NestedTreeRepository {
         //print_r($searchArr);
         //echo "<br>";
 
-        $foundCategory = $this->_em->getRepository('App\\UserdirectoryBundle\\Entity\\'.$className)->findOneBy($searchArr);
+        $foundCategory = $this->getEntityManager()->getRepository('App\\UserdirectoryBundle\\Entity\\'.$className)->findOneBy($searchArr);
 
         return $foundCategory;
     }
@@ -652,7 +652,7 @@ class TreeRepository extends NestedTreeRepository {
         $setMethod = "set".$className;
 
         //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) parent also has an id.
-        if( !$this->_em->contains($parent) ) {
+        if( !$this->getEntityManager()->contains($parent) ) {
             //exit('Logical error: parent do not exist in DB, parent id is null');
             throw new \Exception( 'Logical error: parent do not exist in DB, parent id is null');
         }
@@ -667,7 +667,7 @@ class TreeRepository extends NestedTreeRepository {
         //echo  "parent: name=".$parent->getName().", id=".$parent->getId()."<br>";
 
         //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) child also has an id.
-        if( $child && $this->_em->contains($child) ) {
+        if( $child && $this->getEntityManager()->contains($child) ) {
             //echo "don't process because category exists in DB, id=".$child->getId()." <br>";
 
             if( $child->getParent() && $child->getParent()->getId() ) {
@@ -694,7 +694,7 @@ class TreeRepository extends NestedTreeRepository {
 
         //echo 'check <br>';
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         $name = $child->getName();
 
@@ -726,9 +726,9 @@ class TreeRepository extends NestedTreeRepository {
             //echo "final category to create: name=".$newChild->getName().", id=".$newChild->getId().", parentId=".$newChild->getParent()->getId()."<br>";
             //exit();
 
-            $this->_em->persist($newChild);
+            $this->getEntityManager()->persist($newChild);
             //$this->_em->flush($newChild);
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
 
             return $newChild;
 
@@ -846,7 +846,7 @@ class TreeRepository extends NestedTreeRepository {
         //echo "<br>get labels for ".$mapper['className']."<br>";
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+        $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->leftJoin("list.organizationalGroupType","organizationalGroupType");
@@ -973,7 +973,7 @@ class TreeRepository extends NestedTreeRepository {
         //echo "<br>get labels for ".$mapper['className']."<br>";
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+        $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
 
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('DISTINCT(organizationalGroupType.name) AS levelLabel');
@@ -1091,7 +1091,7 @@ class TreeRepository extends NestedTreeRepository {
         }
 
         //$organizationalGroupTypes = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
-        $organizationalGroupTypes = $this->_em->getRepository($mapper['entityNamespace'].'\\'.$mapper['organizationalGroupType'])->findBy(
+        $organizationalGroupTypes = $this->getEntityManager()->getRepository($mapper['entityNamespace'].'\\'.$mapper['organizationalGroupType'])->findBy(
             array(
                 "level" => $level,
                 "type" => array('default','user-added')
@@ -1123,7 +1123,7 @@ class TreeRepository extends NestedTreeRepository {
         }
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+        $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $treeNode = $treeRepository->find($id);
 
         if( !$treeNode ) {
@@ -1137,14 +1137,14 @@ class TreeRepository extends NestedTreeRepository {
             $count = $this->removeTreeNodeAndAllChildrenById( $child->getId(), $mapper, $count );
 
             $treeRepository->removeFromTree($child);
-            $this->_em->clear(); // clear cached nodes
+            $this->getEntityManager()->clear(); // clear cached nodes
 
             $count++;
         }
 
         if( count($children) == 0 ) {
             $treeRepository->removeFromTree($treeNode);
-            $this->_em->clear(); // clear cached nodes
+            $this->getEntityManager()->clear(); // clear cached nodes
             $count++;
         }
 
@@ -1164,7 +1164,7 @@ class TreeRepository extends NestedTreeRepository {
         }
 
         //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        $treeRepository = $this->_em->getRepository($mapper['fullClassName']);
+        $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
 
         //$nodes = $treeRepository->findByLevel(-1);
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -1187,7 +1187,7 @@ class TreeRepository extends NestedTreeRepository {
                     if( $parentLevel > 0 ) {
                         $node->setLevel(intval($parentLevel) + 1);
                         $count++;
-                        $this->_em->flush();
+                        $this->getEntityManager()->flush();
                     }
                 }
             }

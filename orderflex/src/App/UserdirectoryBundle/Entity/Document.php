@@ -49,6 +49,12 @@ use Symfony\Component\Mime\MimeTypes;
 class Document {
 
 
+    //Document id strategy: 'IDENTITY' => constrains: Default: nextval('user_document_id_seq'::regclass)
+    //InvoiceItem id strategy: 'IDENTITY' => constrains: Default: nextval('transres_invoiceitem_id_seq'::regclass)
+    //VisualInfo id strategy: 'IDENTITY' => constrains: Default: nextval('transres_visualinfo_id_seq'::regclass)
+    //Logger id strategy: 'AUTO' => constrains: Default: empty
+    //ProductTest id strategy: 'SEQUENCE' => constrains: Default: empty
+
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -66,7 +72,8 @@ class Document {
     #[ORM\Column(type: 'string', nullable: true)]
     private  $uploadDirectory;
 
-    #[ORM\Column(type: 'decimal', nullable: true)]
+    //#[ORM\Column(type: 'decimal', nullable: true)] but DBAL 4 no longer allows decimal without precision.
+    #[ORM\Column(type: 'decimal', precision: 20, scale: 0, nullable: true)]
     private  $size;
 
     /**

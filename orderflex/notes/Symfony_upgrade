@@ -109,6 +109,9 @@ composer why-not symfony/framework-bundle 7
 problem: oneup/uploader-bundle 4.0.1 requires symfony/framework-bundle (^4.4 || ^5.4 || ^6.0)
 
 composer require "symfony/framework-bundle:7" --dry-run
+composer require "symfony/framework-bundle:^7.4" --dry-run
+composer require symfony/framework-bundle:^7.4 --update-with-all-dependencies
+
 
 $ composer update --dry-run
 Loading composer repositories with package information
@@ -144,13 +147,65 @@ lexik/jwt-authentication-bundle": "^3.1"
 Deleted App\Saml\Security\SamlAuthenticator
 Update SamlController to make $authenticator = null => test it with SAML!
 
+oneup/uploader-bundle does not support Symfony 7 at all — not even in version 5.x.
+composer require symfony/ux-dropzone
+composer require vich/uploader-bundle
+
+
 bin/console cache:clear
 bin/console doctrine:schema:validate
+bin/console debug:container --deprecations
+
 
  [FAIL] The entity-class App\Saml\Entity\SamlConfig mapping is invalid:
  * The field 'App\Saml\Entity\SamlConfig#updateAuthorRoles' uses a non-existent type 'array'.
  * The field 'App\Saml\Entity\SamlConfig#attributeMapping' uses a non-existent type 'array'.
 
+
+IDENTITY:
+User Deprecated: Context: Loading metadata for class App\UserdirectoryBundle\Entity\Document Problem:
+Using the IDENTITY generator strategy with platform "Doctrine\DBAL\Platforms\PostgreSQL120Platform"
+is deprecated and will not be possible in Doctrine ORM 3.0. Solution: Use the SEQUENCE generator strategy instead.
+(ClassMetadataFactory.php:632 called by ClassMetadataFactory.php:150, https://github.com/doctrine/orm/issues/8850, package doctrine/orm)
+
+In Doctrine ORM 2.x:
+AUTO → Doctrine chooses the best strategy for the platform.
+On PostgreSQL, Doctrine chooses IDENTITY (identity columns).
+
+ORM 3:
+Replace AUTO with SEQUENCE?
+#[ORM\Id]
+#[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+#[ORM\Column(type: 'integer')]
+private ?int $id = null;
+OR Explicit version (recommended for large apps)
+#[ORM\Id]
+#[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+#[ORM\SequenceGenerator(sequenceName: 'document_id_seq', allocationSize: 1)]
+#[ORM\Column(type: 'integer')]
+private ?int $id = null;
+
+In DBAL 3 and older, the AUTO strategy defaults to SEQUENCE for Postgresql
+because it was considered better than the SERIAL implementation of IDENTITY.
+
+In Symfony 7.4 with Doctrine ORM 3.x, the default: #[ORM\GeneratedValue] produces IDENTITY, which is deprecated on PostgreSQL.
+=> switch to #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+
+Symfony 6.4:
+product id (IDENTITY, now AUTO)=8241
+site id (AUTO)=63
+grant id (AUTO)=45
+invoice id (AUTO)=4794
+Null in ORM 2, InvoiceItem id (IDENTITY)=
+productTest id (SEQUENCE)=12
+
+Symfony 7:
+product id (IDENTITY, now AUTO)=
+site id (AUTO)=
+grant id (AUTO)=
+invoice id (AUTO)=
+Null in ORM 2, InvoiceItem id (IDENTITY)=
+productTest id (SEQUENCE)=14
 
 Database
 --------

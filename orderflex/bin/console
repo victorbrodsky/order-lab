@@ -1,5 +1,8 @@
 #!/usr/bin/env php
 <?php
+//added ob_start(); right after <?php to buffer stray output before the native session handler initializes. 
+// This is a workaround for the Symfony 7/DBAL 4 console bootstrap issue.
+ob_start();
 
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;

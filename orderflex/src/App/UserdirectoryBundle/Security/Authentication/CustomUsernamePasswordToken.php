@@ -55,7 +55,7 @@ class CustomUsernamePasswordToken extends AbstractToken //UsernamePasswordToken
     /**
      * {@inheritdoc}
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         parent::eraseCredentials();
 

@@ -12,6 +12,7 @@ namespace App\TranslationalResearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+//ProductTest id strategy: 'SEQUENCE' => constrains: Default: empty
 
 #[ORM\Table(name: 'transres_producttest')]
 #[ORM\Entity]

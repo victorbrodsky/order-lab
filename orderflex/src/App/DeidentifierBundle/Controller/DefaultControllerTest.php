@@ -33,6 +33,7 @@ namespace App\DeidentifierBundle\Controller;
 
 use App\OrderformBundle\Entity\AccessionType;
 use App\TranslationalResearchBundle\Entity\Invoice;
+use App\TranslationalResearchBundle\Entity\InvoiceItem;
 use App\TranslationalResearchBundle\Entity\Product;
 use App\TranslationalResearchBundle\Entity\ProductTest;
 use App\UserdirectoryBundle\Entity\Grant;
@@ -67,7 +68,7 @@ class DefaultControllerTest extends OrderAbstractController
 
         $product = new Product($user);
         $em->persist($product);
-        echo "product id (IDENTITY)=".$product->getId()."<br>";
+        echo "product id (IDENTITY, now AUTO)=".$product->getId()."<br>";
         
         $site = new SiteList($user);
         $em->persist($site);
@@ -81,6 +82,10 @@ class DefaultControllerTest extends OrderAbstractController
         $invoice = new Invoice($user);
         $em->persist($invoice);
         echo "invoice id (AUTO)=".$invoice->getId()."<br>";
+
+        $invoiceItem = new InvoiceItem($user);
+        $em->persist($invoiceItem);
+        echo "Null in ORM 2, InvoiceItem id (IDENTITY)=".$invoiceItem->getId()."<br>";
 
         $productTest = new ProductTest($user);
         //$em->getRepository(Grant::class)->testGrant();
