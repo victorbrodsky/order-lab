@@ -118,7 +118,7 @@ class UserCommentUtil {
         //$query = $this->em->createQuery($dql);
         $query = $dql->getQuery($dql);
 
-        $query->setParameters(array('threadId'=>$thread->getId()));
+        $query        ->setParameter('threadId', $thread->getId());
 
         $comments = $query->getResult();
 

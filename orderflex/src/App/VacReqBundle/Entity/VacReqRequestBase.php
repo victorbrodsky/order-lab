@@ -37,7 +37,7 @@ class VacReqRequestBase
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     protected $id;
 
     #[ORM\Column(type: 'date', nullable: true)]

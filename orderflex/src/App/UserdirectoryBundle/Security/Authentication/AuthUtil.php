@@ -577,13 +577,11 @@ class AuthUtil {
 //            "; identifierEnableAccess=".$identifierEnableAccess
 //        );
 
-        $query->setParameters(array(
-            'username' => $username,
-            'identifierKeytype' => $identifierKeytype->getId(),
-            'identifierField' => $credentials,
-            'identifierStatus' => $identifierStatus,
-            'identifierEnableAccess' => $identifierEnableAccess,
-        ));
+        $query        ->setParameter('username', $username)
+        ->setParameter('identifierKeytype', $identifierKeytype->getId())
+        ->setParameter('identifierField', $credentials)
+        ->setParameter('identifierStatus', $identifierStatus)
+        ->setParameter('identifierEnableAccess', $identifierEnableAccess);
 
         $users = $query->getResult();
 

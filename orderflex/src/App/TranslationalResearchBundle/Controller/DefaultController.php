@@ -558,7 +558,8 @@ class DefaultController extends OrderAbstractController
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        $query->where("list.type = :typedef OR list.type = :typeadd")        ->setParameter('typedef', 'default')
+        ->setParameter('typeadd', 'user-added');
 
         $categories = $query->getQuery()->getResult();
 

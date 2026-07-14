@@ -848,10 +848,8 @@ class SiteParametersType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -871,10 +869,8 @@ class SiteParametersType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -894,10 +890,8 @@ class SiteParametersType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -914,10 +908,8 @@ class SiteParametersType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -990,10 +982,8 @@ class SiteParametersType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -1078,12 +1068,10 @@ class SiteParametersType extends AbstractType
                         ->leftJoin("list.organizationalGroupType","organizationalGroupType")
                         ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level AND organizationalGroupType.name = :inst")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'level' => 0,
-                            'inst' => 'Institution'
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added')
+                        ->setParameter('level', 0)
+                        ->setParameter('inst', 'Institution');
                 },
             ));
         }
@@ -1104,12 +1092,10 @@ class SiteParametersType extends AbstractType
                         ->leftJoin("list.organizationalGroupType","organizationalGroupType")
                         ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level AND organizationalGroupType.name = :inst")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'level' => 0,
-                            'inst' => 'Institution'
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added')
+                        ->setParameter('level', 0)
+                        ->setParameter('inst', 'Institution');
                 },
             ));
         }
@@ -1338,10 +1324,8 @@ class SiteParametersType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -1357,10 +1341,8 @@ class SiteParametersType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -1376,10 +1358,8 @@ class SiteParametersType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }

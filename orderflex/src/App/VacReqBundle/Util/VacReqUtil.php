@@ -4209,9 +4209,7 @@ class VacReqUtil
 
             $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-            $query->setParameters(array(
-                'userId' => $user->getId(),
-            ));
+            $query            ->setParameter('userId', $user->getId());
 
             $requests = $query->getResult();
 
@@ -4235,9 +4233,7 @@ class VacReqUtil
 
             $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-            $query->setParameters(array(
-                'userId' => $user->getId(),
-            ));
+            $query            ->setParameter('userId', $user->getId());
 
             $requests = $query->getResult();
 

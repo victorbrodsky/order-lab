@@ -260,10 +260,8 @@ class UserRequestType extends AbstractType
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->andWhere("list.name LIKE '%ORDER%' OR list.name LIKE '%External Authentication%'")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }

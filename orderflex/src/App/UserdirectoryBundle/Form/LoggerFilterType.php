@@ -82,10 +82,8 @@ class LoggerFilterType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.name", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -142,10 +140,8 @@ class LoggerFilterType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.name", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -170,10 +166,8 @@ class LoggerFilterType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.name", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -197,10 +191,8 @@ class LoggerFilterType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.name", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }

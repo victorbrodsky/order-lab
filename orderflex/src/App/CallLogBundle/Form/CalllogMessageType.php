@@ -375,10 +375,8 @@ class CalllogMessageType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -398,11 +396,9 @@ class CalllogMessageType extends AbstractType
                             ->where("list.type = :typedef OR list.type = :typeadd")
                             ->andWhere("tagTypes.id = :defaultTagType")
                             ->orderBy("list.orderinlist", "ASC")
-                            ->setParameters(array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                                'defaultTagType' => $this->params['defaultTagType']
-                            ));
+                                                        ->setParameter('typedef', 'default')
+                            ->setParameter('typeadd', 'user-added')
+                            ->setParameter('defaultTagType', $this->params['defaultTagType']);
                     },
                 ));
             } else {
@@ -417,10 +413,8 @@ class CalllogMessageType extends AbstractType
                         return $er->createQueryBuilder('list')
                             ->where("list.type = :typedef OR list.type = :typeadd")
                             ->orderBy("list.orderinlist", "ASC")
-                            ->setParameters(array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added'
-                            ));
+                                                        ->setParameter('typedef', 'default')
+                            ->setParameter('typeadd', 'user-added');
                     },
                 ));
             }

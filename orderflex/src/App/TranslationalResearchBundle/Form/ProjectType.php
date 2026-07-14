@@ -166,10 +166,8 @@ class ProjectType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -192,10 +190,8 @@ class ProjectType extends AbstractType
                             return $er->createQueryBuilder('list')
                                 ->where("list.type = :typedef OR list.type = :typeadd")
                                 ->orderBy("list.orderinlist", "ASC")
-                                ->setParameters(array(
-                                    'typedef' => 'default',
-                                    'typeadd' => 'user-added',
-                                ));
+                                                                ->setParameter('typedef', 'default')
+                                ->setParameter('typeadd', 'user-added');
                         },
                     ));
                 } else {
@@ -415,10 +411,8 @@ class ProjectType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         } else {
@@ -449,10 +443,8 @@ class ProjectType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -466,10 +458,8 @@ class ProjectType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -839,10 +829,8 @@ class ProjectType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             }
         ));
 
@@ -862,10 +850,8 @@ class ProjectType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             }
         ));
 //        }
@@ -883,10 +869,8 @@ class ProjectType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             }
         ));
 
@@ -905,10 +889,8 @@ class ProjectType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             },
         ));
         $builder->add('irbStatusExplain', null, array(
@@ -1096,10 +1078,8 @@ class ProjectType extends AbstractType
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")
                         ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                                                ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -1115,10 +1095,8 @@ class ProjectType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             }
         ));
 

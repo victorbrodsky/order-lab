@@ -46,10 +46,8 @@ class HostedGroupHolderType extends AbstractType
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
                     ->orderBy("list.orderinlist", "ASC")
-                    ->setParameters(array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                                        ->setParameter('typedef', 'default')
+                    ->setParameter('typeadd', 'user-added');
             },
         ));
 

@@ -27,7 +27,7 @@ class CodeNYPH
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     private $id;
 
     #[ORM\Column(type: 'string', nullable: true)]

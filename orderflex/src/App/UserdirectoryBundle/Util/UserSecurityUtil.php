@@ -698,7 +698,7 @@ class UserSecurityUtil {
 
         $limit = 30;
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-        $query->setParameters(array('delay'=>$delay));
+        $query        ->setParameter('delay', $delay);
         $paginator  = $this->container->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -747,7 +747,7 @@ class UserSecurityUtil {
         //$dql->where("list.lastActivity > :delay");
 
         $query = $dql->getQuery();
-        $query->setParameters(array('delay'=>$delay));
+        $query        ->setParameter('delay', $delay);
         $users = $query->getResult();
 
         //dump($users);
@@ -811,7 +811,7 @@ class UserSecurityUtil {
         $dql->where("list.name = :sitename OR list.abbreviation = :sitename");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(array('sitename'=>$sitename));
+        $query        ->setParameter('sitename', $sitename);
 
         $sitenameObject = $query->getSingleResult();
 
@@ -1510,9 +1510,7 @@ class UserSecurityUtil {
                     ->select("user")
                     ->leftJoin("user.infos", "infos")
                     ->where("infos.displayName=:name")
-                    ->setParameters(array(
-                        'name' => $displayName
-                    ));
+                                        ->setParameter('name', $displayName);
 
                 $users = $query->getQuery()->getResult();
 
@@ -1708,11 +1706,9 @@ class UserSecurityUtil {
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         //if( $sitename ) {
-            $query->setParameters(array(
-                "sitename" => $sitename,
-                'typedef' => 'default',
-                'typeadd' => 'user-added',
-            ));
+            $query            ->setParameter('sitename', $sitename)
+            ->setParameter('typedef', 'default')
+            ->setParameter('typeadd', 'user-added');
 //        } else {
 //            $query->setParameters(array(
 //                //"sitename" => $sitename,

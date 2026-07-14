@@ -216,6 +216,37 @@ class PostgresMigration extends AbstractMigration
         //    exit("exit: ".$sql);
         //}
 
+        //After upgade to ORM3/DBAL4: ORM2->ORM3:
+        //ORM2->ORM3: $this->addSql('DROP INDEX pk__');
+        //Multiple similar errors: cannot drop index pk__ because constraint pk__ on table scan_message_encounter requires it
+        if( strpos((string)$sql, 'DROP INDEX pk__') !== false ) {
+            echo $this->counter.":###Ignore7 (all DROP INDEX pk__) ".$sql.$newline;
+            return; // FALSE;
+        }
+
+//        //DROP INDEX pk__fellapp___1e656710b5f511b5
+//        //An exception occurred while executing a query: SQLSTATE[2BP01]: Dependent objects still exist: 7 ERROR:  cannot dro
+//        //p index pk__fellapp___1e656710b5f511b5 because constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_c
+//        //overletter requires it
+//        //HINT:  You can drop constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_coverletter instead.
+//        //Doctrine ORM 3’s schema diff sometimes misinterprets PRIMARY KEY backing indexes created under ORM 2.
+//        if( strpos((string)$sql, 'DROP INDEX pk__fellapp___') !== false ) {
+//            echo $this->counter.":###Ignore7 ".$sql.$newline;
+//            return; // FALSE;
+//        }
+//
+//        //ORM2->ORM3: $this->addSql('DROP INDEX pk__calllog___d2d9006cd26843c2');
+//        if( strpos((string)$sql, 'DROP INDEX pk__calllog___') !== false ) {
+//            echo $this->counter.":###Ignore8 ".$sql.$newline;
+//            return; // FALSE;
+//        }
+//
+//        //ORM2->ORM3: $this->addSql('DROP INDEX pk__scan_mes__e7607da6e5168bbc');
+//        //cannot drop index pk__scan_mes__e7607da6e5168bbc because constraint pk__scan_mes__e7607da6e5168bbc on table scan_message_encounter requires it
+//        if( strpos((string)$sql, 'DROP INDEX pk__scan_mes__') !== false ) {
+//            echo $this->counter.":###Ignore9 ".$sql.$newline;
+//            return; // FALSE;
+//        }
 
         $this->processedCounter ++;
         $msg = $this->counter."; processedCounter=".$this->processedCounter.": Process sql=".$sql;

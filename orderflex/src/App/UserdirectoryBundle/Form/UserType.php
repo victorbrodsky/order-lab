@@ -386,19 +386,15 @@ class UserType extends AbstractType
             $queryBuilder
                 ->where("list.type = :typedef OR list.type = :typeadd")
                 ->orderBy("list.orderinlist", "ASC")
-                ->setParameters(array(
-                    'typedef' => 'default',
-                    'typeadd' => 'user-added',
-                ));
+                                ->setParameter('typedef', 'default')
+                ->setParameter('typeadd', 'user-added');
         } else {
             $queryBuilder
                 ->where("list.type = :typedef OR list.type = :typeadd OR list.type = :typedisabled")
                 ->orderBy("list.orderinlist", "ASC")
-                ->setParameters(array(
-                    'typedef' => 'default',
-                    'typeadd' => 'user-added',
-                    'typedisabled' => 'disabled'
-                ));
+                                ->setParameter('typedef', 'default')
+                ->setParameter('typeadd', 'user-added')
+                ->setParameter('typedisabled', 'disabled');
         }
         return $queryBuilder;
     }

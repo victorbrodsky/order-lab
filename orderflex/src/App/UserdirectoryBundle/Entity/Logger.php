@@ -30,10 +30,14 @@ class Logger
     /**
      * @var integer
      */
-    #[ORM\Column(name: 'id', type: 'integer')]
+//    #[ORM\Column(name: 'id', type: 'integer')]
+//    #[ORM\Id]
+//    #[ORM\GeneratedValue]
+//    private $id;
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
     #[ORM\Column(name: 'siteName', type: 'string', nullable: true)]
     private $siteName;

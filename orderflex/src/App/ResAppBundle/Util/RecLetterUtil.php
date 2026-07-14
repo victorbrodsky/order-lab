@@ -1370,11 +1370,9 @@ class RecLetterUtil {
 
             $query = $dql->getQuery();
 
-            $query->setParameters(array(
-                "residencyTrackId" => $resapp->getResidencyTrack()->getId(),
-                "applicantEmail" => $applicantEmail,
-                "resappId" => $resapp->getId()
-            ));
+            $query            ->setParameter('residencyTrackId', $resapp->getResidencyTrack()->getId())
+            ->setParameter('applicantEmail', $applicantEmail)
+            ->setParameter('resappId', $resapp->getId());
 
             $duplicateResapps = $query->getResult();
             if( count($duplicateResapps) > 0 ) {

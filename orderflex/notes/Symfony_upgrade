@@ -168,10 +168,20 @@ Using the IDENTITY generator strategy with platform "Doctrine\DBAL\Platforms\Pos
 is deprecated and will not be possible in Doctrine ORM 3.0. Solution: Use the SEQUENCE generator strategy instead.
 (ClassMetadataFactory.php:632 called by ClassMetadataFactory.php:150, https://github.com/doctrine/orm/issues/8850, package doctrine/orm)
 
+"name": "doctrine/orm",
+"version": "2.15.5",
+"name": "doctrine/dbal",
+"version": "3.10.5",
 In Doctrine ORM 2.x:
 AUTO → Doctrine chooses the best strategy for the platform.
-On PostgreSQL, Doctrine chooses IDENTITY (identity columns).
+On PostgreSQL, Doctrine chooses SEQUENCE (or IDENTITY?) (identity columns).
+TYPE: NONE (was set by #[ORM\GeneratedValue(strategy: 'AUTO')])
 
+"name": "doctrine/orm",
+"version": "3.6.7",
+"name": "doctrine/dbal",
+"version": "4.4.3",
+TYPE: IDENTITY (was set by #[ORM\GeneratedValue])
 ORM 3:
 Replace AUTO with SEQUENCE?
 #[ORM\Id]
@@ -185,11 +195,48 @@ OR Explicit version (recommended for large apps)
 #[ORM\Column(type: 'integer')]
 private ?int $id = null;
 
+upgrade to DBAL 3 (AUTO=>SEQUENCE or SERIAL)
+deploy and monitor
+upgrade to ORM 3
+deploy and monitor
+upgrade to DBAL 4 (AUTO=>IDENTITY)
+deploy and monitor
+
 In DBAL 3 and older, the AUTO strategy defaults to SEQUENCE for Postgresql
 because it was considered better than the SERIAL implementation of IDENTITY.
 
 In Symfony 7.4 with Doctrine ORM 3.x, the default: #[ORM\GeneratedValue] produces IDENTITY, which is deprecated on PostgreSQL.
 => switch to #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+
+########### replace AUTO id with this for doctrine orm 3 ###############
+#[ORM\Id]
+#[ORM\GeneratedValue]
+#[ORM\Column(type: 'integer')]
+private ?int $id = null;
+In Doctrine ORM 3, #[ORM\GeneratedValue] (no explicit strategy) defaults to AUTO, and on PostgreSQL AUTO resolves to SEQUENCE
+###########################################################################
+
+Workflow:
+1) Update AUTO to GeneratedValue
+2) Back up the database before re-running.
+3) Run the migration: php orderflex\bin\console doctrine:migrations:migrate --all-or-nothing
+4) After it succeeds, run setval for every migrated table that has existing rows,
+because the new identity sequences start at 1 and will conflict with existing data.
+Rerun  the very last migration:  php bin/console doctrine:migrations:migrate prev
+php bin/console doctrine:migrations:execute DoctrineMigrations\\Version20260713211847 --up --dry-run
+
+SELECT setval(pg_get_serial_sequence('table_name', 'id'), COALESCE(MAX(id), 0) + 1, false)
+FROM table_name;
+
+How to run it on other servers
+Copy orderflex\src\Migrations\setval_identity_columns.sql to the other server.
+Run it with psql:
+bash
+psql "postgresql://user:pass@host:port/dbname" -f setval_identity_columns.sql
+Or use the same PHP runner (orderflex\run_setval_sql.php) if psql is not available.
+
+php orderflex\bin\console doctrine:query:sql "SELECT table_name, column_name, is_identity, identity_generation FROM information_schema.columns WHERE table_name = 'user_logger' AND column_name = 'id';" --force-fetch
+php bin/console doctrine:query:sql "SELECT MAX(id) AS max_id, COUNT(*) AS cnt FROM user_logger;" --force-fetch
 
 Symfony 6.4:
 product id (IDENTITY, now AUTO)=8241
@@ -206,6 +253,29 @@ grant id (AUTO)=
 invoice id (AUTO)=
 Null in ORM 2, InvoiceItem id (IDENTITY)=
 productTest id (SEQUENCE)=14
+
+Doctrine ORM 3 no longer supports:
+strategy: 'AUTO'
+strategy: 'IDENTITY'
+strategy: 'SEQUENCE'
+strategy: 'TABLE'
+These strategies were removed.
+When Doctrine ORM 3 sees AUTO, it silently does not generate an ID, so the insert query tries to insert NULL → PostgreSQL throws:
+null value in column "id" violates not-null constraint
+In symfony 7.4 with doctrine orm 3: Error null value in column "id" of relation "user_logger" violates not-null constraint
+
+For auto‑increment integer IDs, the correct mapping is
+Doctrine ORM 3 (doctrine/orm "3.6.7") automatically selects the correct generator for your database:
+#[ORM\Id]
+#[ORM\GeneratedValue]
+#[ORM\Column(type: 'integer')]
+private ?int $id = null;
+
+Check generation strategy:
+php bin/console doctrine:query:sql "SELECT column_name, data_type, column_default, is_identity FROM information_schema.columns WHERE table_name = 'user_logger';"
+php bin/console dbal:run-sql "SELECT column_default, is_identity, identity_generation FROM information_schema.columns WHERE table_name = 'user_logger' AND column_name = 'id';"
+
+
 
 Database
 --------
@@ -326,7 +396,8 @@ php bin/console doctrine:schema:validate
 # 1. Dry-run to review. This lists every table/column that will be touched: php bin/console app:convert-array-to-json --all
 php bin/console app:convert-array-to-json --all
 
-# 2. Entity code must already be updated - before running with --apply --alter-schema, every entity to be converted should already map its field as type: 'json'
+# 2. Entity code must already be updated - before running with --apply --alter-schema,
+every entity to be converted should already map its field as type: 'json'
 
 # 3. Apply conversion + schema change
 php bin/console app:convert-array-to-json --all --apply --alter-schema
@@ -361,5 +432,53 @@ ResappTest
 DashboardTest
 CrnTest
 CalllogTest
+
+
+Id Strategy:
+Added to migration to sync id:
+$this->addSql('DO $$
+        DECLARE
+            r RECORD;
+            max_id bigint;
+            seq_name text;
+            full_table_name text;
+        BEGIN
+            FOR r IN
+                SELECT c.table_schema,
+                       c.table_name,
+                       c.column_name
+                FROM information_schema.columns c
+                JOIN information_schema.tables t
+                    ON t.table_schema = c.table_schema
+                   AND t.table_name = c.table_name
+                WHERE c.table_schema = \'public\'
+                  AND c.is_identity = \'YES\'
+                  AND t.table_type = \'BASE TABLE\'
+                ORDER BY c.table_schema, c.table_name
+            LOOP
+                full_table_name := quote_ident(r.table_schema) || \'.\' || quote_ident(r.table_name);
+                seq_name := pg_get_serial_sequence(full_table_name, r.column_name);
+
+                IF seq_name IS NOT NULL THEN
+                    EXECUTE format(\'SELECT COALESCE(MAX(%I), 0) FROM %s\', r.column_name, full_table_name)
+                        INTO max_id;
+
+                    PERFORM setval(seq_name, max_id + 1, false);
+
+                    RAISE NOTICE \'Set % to % (max % in %.%=%)\',
+                        seq_name, max_id + 1, max_id, r.table_schema, r.table_name, r.column_name;
+                ELSE
+                    RAISE NOTICE \'No sequence found for %.%\', full_table_name, r.column_name;
+                END IF;
+            END LOOP;
+        END $$;');
+
+Result: I got two sequences: user_logger_id_seq (with correct Current Value) and user_logger_id_seq1 (incorrect current value set to 1)
+
+Check which sequence is actually used:
+php bin/console dbal:run-sql "SELECT pg_get_serial_sequence('public.user_logger', 'id');"
+Result: public.user_logger_id_seq
+php bin/console dbal:run-sql "SELECT MAX(id) FROM user_logger;"
+php bin/console dbal:run-sql "SELECT column_default FROM information_schema.columns WHERE table_name = 'user_logger' AND column_name = 'id';"
 
 

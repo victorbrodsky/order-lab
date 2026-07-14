@@ -12936,10 +12936,8 @@ class AdminController extends OrderAbstractController
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
-        $query->setParameters(array(
-            'degreeMd' => 'MD',
-            'fellappType' => "'Pathology Fellowship Applicant'"
-        ));
+        $query        ->setParameter('degreeMd', 'MD')
+        ->setParameter('fellappType', "'Pathology Fellowship Applicant'");
 
         $users = $query->getResult();
         //$count = count($users);

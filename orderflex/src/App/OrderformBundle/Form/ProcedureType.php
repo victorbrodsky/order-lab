@@ -155,7 +155,8 @@ class ProcedureType extends AbstractType
                         }
                         return $er->createQueryBuilder('u')
                             ->where('u.id IN (:userIds) OR u=:user')
-                            ->setParameters(array('userIds' => $userIds, 'user' => $this->params['user'] ));
+                                                        ->setParameter('userIds', $userIds)
+                            ->setParameter('user', $this->params['user']);
                     },
             ));
 

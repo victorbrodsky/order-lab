@@ -101,10 +101,8 @@ class DefaultReviewerController extends OrderAbstractController
         $limit = 30;
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
-        $query->setParameters(array(
-            "state" => $stateStr,
-            "specialty" => $specialty->getId()
-        ));
+        $query        ->setParameter('state', $stateStr)
+        ->setParameter('specialty', $specialty->getId());
 
         $paginationParams = array(
             'defaultSortFieldName' => 'defaultReviewer.id',

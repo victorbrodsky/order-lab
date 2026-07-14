@@ -32,7 +32,7 @@ class Identifier
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: 'IdentifierTypeList')]

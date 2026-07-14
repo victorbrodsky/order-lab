@@ -30,7 +30,7 @@ class GoogleFormConfig {
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     private $id;
 
     #[ORM\Column(type: 'datetime', nullable: true)]

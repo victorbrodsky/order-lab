@@ -157,9 +157,10 @@ class UtilController extends OrderAbstractController {
 
                     //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
                     if( $newCycle && $filterType ) {
-                        $query->andWhere("list.type = :typedef")->setParameters(array('typedef' => 'default'));
+                        $query->andWhere("list.type = :typedef")                        ->setParameter('typedef', 'default');
                     } else {
-                        $query->andWhere("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+                        $query->andWhere("list.type = :typedef OR list.type = :typeadd")                        ->setParameter('typedef', 'default')
+                        ->setParameter('typeadd', 'user-added');
                     }
 
                     $output = $query->getQuery()->getResult();
@@ -257,7 +258,9 @@ class UtilController extends OrderAbstractController {
                 //->select("list.name as id, list.name as text")
                 ->orderBy("list.name","ASC");
 
-            $query->where("parent = :pid AND (list.type = :typedef OR list.type = :typeadd)")->setParameters(array('typedef' => 'default','typeadd' => 'user-added','pid'=>$pid));
+            $query->where("parent = :pid AND (list.type = :typedef OR list.type = :typeadd)")            ->setParameter('typedef', 'default')
+            ->setParameter('typeadd', 'user-added')
+            ->setParameter('pid', $pid);
 
             $output = $query->getQuery()->getResult();
         } else {
@@ -427,7 +430,8 @@ class UtilController extends OrderAbstractController {
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        $query->where("list.type = :typedef OR list.type = :typeadd")        ->setParameter('typedef', 'default')
+        ->setParameter('typeadd', 'user-added');
 
         $output = $query->getQuery()->getResult();
 
@@ -449,7 +453,8 @@ class UtilController extends OrderAbstractController {
             //->select("list.name as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        $query->where("list.type = :typedef OR list.type = :typeadd")        ->setParameter('typedef', 'default')
+        ->setParameter('typeadd', 'user-added');
 
         $output = $query->getQuery()->getResult();
 
@@ -669,9 +674,10 @@ class UtilController extends OrderAbstractController {
         //$user = $this->getUser();
 
         if( $newCycle ) {
-            $query->where("list.type = :typedef")->setParameters(array('typedef' => 'default'));
+            $query->where("list.type = :typedef")            ->setParameter('typedef', 'default');
         } else {
-            $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+            $query->where("list.type = :typedef OR list.type = :typeadd")            ->setParameter('typedef', 'default')
+            ->setParameter('typeadd', 'user-added');
         }
 
         $buildings = $query->getQuery()->getResult();
@@ -724,7 +730,8 @@ class UtilController extends OrderAbstractController {
             ->select("list")
             ->orderBy("list.id","ASC");
 
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        $query->where("list.type = :typedef OR list.type = :typeadd")        ->setParameter('typedef', 'default')
+        ->setParameter('typeadd', 'user-added');
 
         //Exclude from the list locations of type "Patient Contact Information", "Medical Office", and "Inpatient location".
         $andWhere = "locationTypes.name IS NULL OR ".
@@ -777,7 +784,8 @@ class UtilController extends OrderAbstractController {
             ->select("list")
             ->orderBy("list.id","ASC");
 
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        $query->where("list.type = :typedef OR list.type = :typeadd")        ->setParameter('typedef', 'default')
+        ->setParameter('typeadd', 'user-added');
 
         $query->leftJoin("list.locationTypes", "locationTypes");
         //$query->leftJoin("list.user", "user");

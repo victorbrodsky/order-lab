@@ -1596,11 +1596,9 @@ class RecLetterUtil {
 
             $query = $dql->getQuery();
 
-            $query->setParameters(array(
-                "fellowshipSubspecialtyId" => $fellapp->getFellowshipSubspecialty()->getId(),
-                "applicantEmail" => $applicantEmail,
-                "fellappId" => $fellapp->getId()
-            ));
+            $query            ->setParameter('fellowshipSubspecialtyId', $fellapp->getFellowshipSubspecialty()->getId())
+            ->setParameter('applicantEmail', $applicantEmail)
+            ->setParameter('fellappId', $fellapp->getId());
 
             $duplicateFellapps = $query->getResult();
             //echo "duplicateFellapps=".count($duplicateFellapps)."<br>";

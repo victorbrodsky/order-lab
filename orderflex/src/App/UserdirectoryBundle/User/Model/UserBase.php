@@ -47,7 +47,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     protected $id;
 
     #[ORM\Column(name: 'username', type: 'string', length: 180)]

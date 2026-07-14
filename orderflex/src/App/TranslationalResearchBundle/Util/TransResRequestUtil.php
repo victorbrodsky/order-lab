@@ -3529,9 +3529,7 @@ class TransResRequestUtil
             $transresRequestId = $transresRequest->getId();
         }
 
-        $query->setParameters(array(
-            "transresRequestId" => $transresRequestId
-        ));
+        $query        ->setParameter('transresRequestId', $transresRequestId);
 
         $invoices = $query->getResult();
 
@@ -3807,9 +3805,7 @@ class TransResRequestUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(array(
-            "searchStr" => "%".$searchStr."%",
-        ));
+        $query        ->setParameter('searchStr', "%".$searchStr."%");
 
         $comments = $query->getResult();
         //echo "comments count=".count($comments)."<br>";

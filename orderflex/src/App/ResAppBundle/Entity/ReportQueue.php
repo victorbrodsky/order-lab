@@ -30,7 +30,7 @@ class ReportQueue {
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     private $id;           
     
     #[ORM\OneToMany(targetEntity: 'Process', mappedBy: 'reportQueue', cascade: ['persist', 'remove'])]

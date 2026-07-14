@@ -27,7 +27,7 @@ class DashboardSiteParameter {
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     private $id;
 
     

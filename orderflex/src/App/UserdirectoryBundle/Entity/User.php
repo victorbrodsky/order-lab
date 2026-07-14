@@ -95,7 +95,7 @@ class User extends UserBase
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     protected $id;
 
 //    /**

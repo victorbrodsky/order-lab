@@ -35,7 +35,7 @@ abstract class ArrayFieldAbstract {
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\GeneratedValue]
     protected $id;
 
      #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]

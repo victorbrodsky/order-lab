@@ -810,7 +810,8 @@ class ScanUtilController extends UtilController {
             ->orderBy("user.username","ASC")
             ->addOrderBy("list.name","ASC");
 
-        $query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
+        $query->where("list.type = :typedef OR list.type = :typeadd")        ->setParameter('typedef', 'default')
+        ->setParameter('typeadd', 'user-added');
 
         //Exclude from the list locations of type "Patient Contact Information", "Medical Office", and "Inpatient location".
         $andWhere = "locationTypes.name IS NULL OR ".

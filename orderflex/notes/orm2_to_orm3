@@ -1,0 +1,22 @@
+In ExceptionConverter.php line 85:
+
+  An exception occurred while executing a query: SQLSTATE[2BP01]: Dependent objects still exist: 7 ERROR:  cannot dro
+  p index pk__fellapp___1e656710b5f511b5 because constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_c
+  overletter requires it
+  HINT:  You can drop constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_coverletter instead.
+
+
+In Exception.php line 24:
+
+  SQLSTATE[2BP01]: Dependent objects still exist: 7 ERROR:  cannot drop index pk__fellapp___1e656710b5f511b5 because
+  constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_coverletter requires it
+  HINT:  You can drop constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_coverletter instead.
+
+
+In Connection.php line 57:
+
+  SQLSTATE[2BP01]: Dependent objects still exist: 7 ERROR:  cannot drop index pk__fellapp___1e656710b5f511b5 because
+  constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_coverletter requires it
+  HINT:  You can drop constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_coverletter instead.
+
+

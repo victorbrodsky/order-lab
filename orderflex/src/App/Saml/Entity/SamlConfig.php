@@ -27,7 +27,7 @@ class SamlConfig extends ListAbstract
 //    private $id;
 //    #[ORM\Id]
 //    #[ORM\Column(type: 'integer')]
-//    #[ORM\GeneratedValue(strategy: 'AUTO')]
+//    #[ORM\GeneratedValue]
 //    private $id;
 
     #[ORM\OneToMany(targetEntity: 'SamlConfig', mappedBy: 'original', cascade: ['persist'])]
