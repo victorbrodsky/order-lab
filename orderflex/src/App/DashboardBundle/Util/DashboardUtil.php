@@ -105,7 +105,10 @@ class DashboardUtil
         //$dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -145,7 +148,10 @@ class DashboardUtil
         $dql->orderBy("logger.entityId","DESC");
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $chartIds = $query->getResult();
 
@@ -218,7 +224,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
 
@@ -258,7 +267,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
 
@@ -347,7 +359,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
 
@@ -375,7 +390,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $query->setMaxResults(1);
 
@@ -405,7 +423,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
 
@@ -446,7 +467,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
 
@@ -483,7 +507,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
 
@@ -662,7 +689,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
         //echo "charts count=".count($charts)."<br>";
@@ -710,7 +740,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
         //dump($charts);
@@ -742,7 +775,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
         //echo "charts count=".count($charts)."<br>";
@@ -773,7 +809,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
         //echo "charts count=".count($charts)."<br>";
@@ -1776,7 +1815,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "query=".$query->getSql()."<br>";
 
         $projects = $query->getResult();
@@ -1831,7 +1873,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "query=".$query->getSql()."<br>";
 
         $projects = $query->getResult();
@@ -1901,7 +1946,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "query=".$query->getSql()."<br>";
 
         $projects = $query->getResult();
@@ -2000,7 +2048,10 @@ class DashboardUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "query=".$query->getSql()."<br>";
 
         $invoices = $query->getResult();
@@ -2278,12 +2329,7 @@ class DashboardUtil
         //$search = "";
         //$search = "status changed to ";
         //$search2 = "status changed to 'Unpaid/Issued'";
-        $query->setParameters(
-            array(
-                'eventStr' => '%'.$search.'%',
-                //'eventStr2' => '%'.$search2.'%'
-            )
-        );
+        $query->setParameter('eventStr', '%' . $search . '%');
 
         $loggers = $query->getResult();
 
@@ -2298,11 +2344,7 @@ class DashboardUtil
             $query2 = $dql2->getQuery();
 
             $search2 = "Invoice ".$invoice->getOid()." PDF has been sent by email";
-            $query2->setParameters(
-                array(
-                    'eventStr' => '%'.$search2.'%',
-                )
-            );
+            $query2->setParameter('eventStr', '%' . $search2 . '%');
 
             $loggers = $query2->getResult();
         }

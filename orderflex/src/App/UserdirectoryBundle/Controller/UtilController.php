@@ -407,7 +407,10 @@ class UtilController extends OrderAbstractController {
             $paramArr['typeadd'] = 'user-added';
         }
 
-        $query->setParameters($paramArr);
+        foreach ($paramArr as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $output = $query->getQuery()->getResult();
 
@@ -1626,11 +1629,7 @@ class UtilController extends OrderAbstractController {
         $query->setMaxResults($limit);
 
         if( str_contains($criteriastr,':search') ) {
-            $query->setParameters(
-                array(
-                    ':search' => '%'.$search.'%',
-                )
-            );
+            $query->setParameter(':search', '%' . $search . '%');
         }
 
         $output = $query->getResult();
@@ -1671,13 +1670,7 @@ class UtilController extends OrderAbstractController {
 //        $patientDb = $em->getRepository('AppOrderformBundle:Patient')->findUniqueByKey($patient);
 
 
-        $query = $em->createQueryBuilder()
-            //->from('AppOrderformBundle:Patient', 'patient')
-            ->from(Patient::class, 'patient')
-            ->select("patient")
-            ->leftJoin("patient.mrn", "mrn")
-            ->where("mrn.keytype = :keytype AND mrn.field = :field")
-            ->setParameters( array('keytype'=>$mrntype,'field'=>$identifier) )
+        $query = $em->createQueryBuilder()->from(Patient::class, 'patient')->select("patient")->leftJoin("patient.mrn", "mrn")->where("mrn.keytype = :keytype AND mrn.field = :field")->setParameter('keytype', $mrntype)->setParameter('field', $identifier)
             ->getQuery();
 
         $patients = $query->getResult();
@@ -1825,13 +1818,7 @@ class UtilController extends OrderAbstractController {
             //$query->andWhere("list.type=:default");
             //echo "cycle=".$cycle."<br>";
             if( $cycle != "show" && $cycle != "edit" && $cycle != "amend" ) {
-                $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameters(
-                    array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        'loggedUser' => $loggedUser->getId()
-                    )
-                );
+                $query->where("list.type = :typedef OR (list.type = :typeadd AND creator.id=:loggedUser)")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('loggedUser', $loggedUser->getId());
             }
 
             if( $sourceSystem ) {

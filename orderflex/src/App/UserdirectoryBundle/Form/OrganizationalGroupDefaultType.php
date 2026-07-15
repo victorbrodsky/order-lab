@@ -81,13 +81,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -126,13 +120,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'choice_label' => 'fulltitle',
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -145,13 +133,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'choice_label' => 'fulltitle',
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -166,14 +148,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             //'empty_value' => false,
             'attr' => array('class' => 'combobox combobox-width user-preferences-showToInstitutions'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        'level' => 0
-                    ));
+                return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('level', 0);
             },
         ));
 
@@ -193,16 +168,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.types","institutiontype")
-                    //->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        //'medicalInstitution' => 'Medical'
-                    ));
+                return $er->createQueryBuilder('list')->leftJoin("list.types", "institutiontype")->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -220,11 +186,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width'),
             'required' => false,
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where('list.type != :disabletype AND list.type != :drafttype')
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
-                    );
+                return $er->createQueryBuilder('list')->where('list.type != :disabletype AND list.type != :drafttype')->orderBy("list.orderinlist", "ASC")->setParameter('disabletype', 'disabled')->setParameter('drafttype', 'draft');
             }
         ));
 
@@ -247,13 +209,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'data' => $this->params['em']->getRepository(States::class)->findOneByName('New York'),
             'attr' => array('class'=>'combobox combobox-width geo-field-state'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -276,13 +232,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'preferred_choices' => $this->params['em']->getRepository(Countries::class)->findByName(array('United States')),
             'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -295,13 +245,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -319,13 +263,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'preferred_choices' => $this->params['em']->getRepository(Countries::class)->findByName(array('United States')),
             'attr' => array('class'=>'combobox combobox-width geo-field-country'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -338,13 +276,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 

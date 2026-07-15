@@ -113,7 +113,10 @@ class SectionUserController extends UserController
             $parameters['userId'] = $userid;
             $dql->orderBy("patient.id","ASC"); //show latest first
             $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             //echo "sql=".$query->getSql()."<br>";
             $patients = $query->getResult();
 
@@ -129,7 +132,10 @@ class SectionUserController extends UserController
             $parameters['userId'] = $userid;
             $dql->orderBy("wrapper.id","ASC"); //show latest first
             $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             //echo "sql=".$query->getSql()."<br>";
             $userWrappers = $query->getResult();
         }

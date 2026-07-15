@@ -277,15 +277,7 @@ class GenericListType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.children","children")
-                            //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
-                            ->where($this->where)
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
+                        return $er->createQueryBuilder('list')->leftJoin("list.children", "children")->where($this->where)->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                     },
             ));
 
@@ -366,14 +358,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.children","children")
-                            ->where("list.type = :typedef OR list.type = :typeadd")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
+                        return $er->createQueryBuilder('list')->leftJoin("list.children", "children")->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                     },
             ));
         }
@@ -405,14 +390,7 @@ class GenericListType extends AbstractType
                     'multiple' => true,
                     'attr' => array('class'=>'combobox combobox-width'),
                     'query_builder' => function(EntityRepository $er) {
-                            return $er->createQueryBuilder('list')
-                                ->leftJoin("list.children","children")
-                                ->where("list.type = :typedef OR list.type = :typeadd")
-                                ->orderBy("list.orderinlist","ASC")
-                                ->setParameters( array(
-                                    'typedef' => 'default',
-                                    'typeadd' => 'user-added',
-                                ));
+                            return $er->createQueryBuilder('list')->leftJoin("list.children", "children")->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                         },
                 ));
 
@@ -425,13 +403,7 @@ class GenericListType extends AbstractType
                     'multiple' => false,
                     'attr' => array('class'=>'combobox combobox-width'),
                     'query_builder' => function(EntityRepository $er) {
-                            return $er->createQueryBuilder('list')
-                                ->where("list.type = :typedef OR list.type = :typeadd")
-                                ->orderBy("list.orderinlist","ASC")
-                                ->setParameters( array(
-                                    'typedef' => 'default',
-                                    'typeadd' => 'user-added',
-                                ));
+                            return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                         },
                 ));
 
@@ -776,13 +748,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -949,13 +915,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd)")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -967,13 +927,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd)")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
         }
@@ -1209,13 +1163,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd)")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -1227,13 +1175,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd)")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
             $builder->add('antibodyPanels', EntityType::class, array(
@@ -1244,13 +1186,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd)")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -1588,14 +1524,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.children","children")
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level>0")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->leftJoin("list.children", "children")->where("(list.type = :typedef OR list.type = :typeadd) AND list.level>0")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -1607,13 +1536,7 @@ class GenericListType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -1625,13 +1548,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -1643,13 +1560,7 @@ class GenericListType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -1662,13 +1573,7 @@ class GenericListType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -1732,13 +1637,7 @@ class GenericListType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -1860,13 +1759,7 @@ class GenericListType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class'=>'combobox'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -2085,15 +1978,7 @@ class GenericListType extends AbstractType
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.children","children")
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    //->orderBy("list.orderinlist, list.level","ASC")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->leftJoin("list.children", "children")->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -2109,17 +1994,7 @@ class GenericListType extends AbstractType
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.sites","sites")
-                    //->where("(list.type = :typedef OR list.type = :typeadd) AND list.level=1")
-                    ->where("(list.type = :typedef OR list.type = :typeadd)")
-                    ->andWhere("sites.abbreviation = :siteAbbreviation")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        'siteAbbreviation' => 'dashboard'
-                    ));
+                return $er->createQueryBuilder('list')->leftJoin("list.sites", "sites")->where("(list.type = :typedef OR list.type = :typeadd)")->andWhere("sites.abbreviation = :siteAbbreviation")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('siteAbbreviation', 'dashboard');
             },
         ));
 
@@ -2133,16 +2008,7 @@ class GenericListType extends AbstractType
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.sites","sites")
-                    ->where("(list.type = :typedef OR list.type = :typeadd)")
-                    ->andWhere("sites.abbreviation = :siteAbbreviation")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        'siteAbbreviation' => 'dashboard'
-                    ));
+                return $er->createQueryBuilder('list')->leftJoin("list.sites", "sites")->where("(list.type = :typedef OR list.type = :typeadd)")->andWhere("sites.abbreviation = :siteAbbreviation")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('siteAbbreviation', 'dashboard');
             },
         ));
 
@@ -2182,16 +2048,7 @@ class GenericListType extends AbstractType
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.sites","sites")
-                    ->where("(list.type = :typedef OR list.type = :typeadd)")
-                    ->andWhere("sites.abbreviation = :siteAbbreviation")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        'siteAbbreviation' => 'dashboard'
-                    ));
+                return $er->createQueryBuilder('list')->leftJoin("list.sites", "sites")->where("(list.type = :typedef OR list.type = :typeadd)")->andWhere("sites.abbreviation = :siteAbbreviation")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('siteAbbreviation', 'dashboard');
             },
         ));
 

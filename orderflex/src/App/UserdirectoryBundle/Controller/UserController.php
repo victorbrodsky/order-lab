@@ -834,11 +834,7 @@ class UserController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
         if( str_contains($totalcriteriastr,':search') ) {
-            $query->setParameters(
-                array(
-                    ':search' => '%'.$search.'%',
-                )
-            );
+            $query->setParameter(':search', '%' . $search . '%');
         }
 
         //$limitFlag = null;//testing

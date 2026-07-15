@@ -31,15 +31,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         $config = NULL;
 
-        $query = $this->_em->createQueryBuilder()
-            ->from(SamlConfig::class, 'config')
-            ->select("config")
-            ->where('config.client = :client AND config.type IN (:type)')
-            ->orderBy("config.id","ASC")
-            ->setParameters( array(
-                'client' => $domain,
-                'type' => array('default','user-added'),
-            ))
+        $query = $this->_em->createQueryBuilder()->from(SamlConfig::class, 'config')->select("config")->where('config.client = :client AND config.type IN (:type)')->orderBy("config.id", "ASC")->setParameter('client', $domain)->setParameter('type', array('default', 'user-added'))
         ;
 
         $configs = $query->getQuery()->getResult();
@@ -141,14 +133,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
     public function findAnyEnabledOne() {
         $config = NULL;
 
-        $query = $this->_em->createQueryBuilder()
-            ->from(SamlConfig::class, 'config')
-            ->select("config")
-            ->where('config.type IN (:type)')
-            ->orderBy("config.id","ASC")
-            ->setParameters( array(
-                'type' => array('default','user-added'),
-            ))
+        $query = $this->_em->createQueryBuilder()->from(SamlConfig::class, 'config')->select("config")->where('config.type IN (:type)')->orderBy("config.id", "ASC")->setParameter('type', array('default', 'user-added'))
         ;
 
         $configs = $query->getQuery()->getResult();

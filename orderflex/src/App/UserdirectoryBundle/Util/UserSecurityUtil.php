@@ -1414,14 +1414,7 @@ class UserSecurityUtil {
             return NULL;
         }
 
-        $query = $this->em->createQueryBuilder()
-            ->from(User::class, 'user')
-            ->select("user")
-            ->leftJoin("user.infos", "infos")
-            ->where("infos.email LIKE :cwid OR infos.displayName LIKE :cwid")
-            ->setParameters( array(
-                'cwid' => $cwid
-            ));
+        $query = $this->em->createQueryBuilder()->from(User::class, 'user')->select("user")->leftJoin("user.infos", "infos")->where("infos.email LIKE :cwid OR infos.displayName LIKE :cwid")->setParameter('cwid', $cwid);
 
         $users = $query->getQuery()->getResult();
 
@@ -1472,14 +1465,7 @@ class UserSecurityUtil {
         //3) try full name
         if( !$user ) {
 
-            $query = $this->em->createQueryBuilder()
-                ->from(User::class, 'user')
-                ->select("user")
-                ->leftJoin("user.infos", "infos")
-                ->where("infos.email=:name OR infos.displayName=:name")
-                ->setParameters( array(
-                    'name' => $name
-                ));
+            $query = $this->em->createQueryBuilder()->from(User::class, 'user')->select("user")->leftJoin("user.infos", "infos")->where("infos.email=:name OR infos.displayName=:name")->setParameter('name', $name);
 
             $users = $query->getQuery()->getResult();
 
@@ -1853,7 +1839,10 @@ class UserSecurityUtil {
 
         //echo "query=".$query->getSql()."<br>";
 
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $documents = $query->getResult();
 
@@ -3086,14 +3075,7 @@ class UserSecurityUtil {
 
         //echo "query=".$query->getSql()."<br>";
 
-        $query->setParameters(
-            array(
-                'entityName' => $className,
-                'entityNamespace' => $classNamespace,
-                //'entityId' => "'".$object->getId()."'"
-                'entityId' => $object->getId().""
-            )
-        );
+        $query->setParameter('entityName', $className)->setParameter('entityNamespace', $classNamespace)->setParameter('entityId', $object->getId() . "");
 
         $results = $query->getResult();
         //echo "count=".count($results)."<br>";

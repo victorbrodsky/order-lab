@@ -773,7 +773,10 @@ class ResAppManagement extends OrderAbstractController {
             );
 
             $query = $dql->getQuery();
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
 
             $roles = $query->getResult();
 

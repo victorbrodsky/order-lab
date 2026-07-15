@@ -98,12 +98,7 @@ abstract class BasePermissionVoter extends Voter {
         $dql->where("(list.name = :objectname OR list.abbreviation = :objectname) AND (sites.name = :sitename OR sites.abbreviation = :sitename)");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(
-            array(
-                'objectname' => $className,
-                'sitename' => $sitename
-            )
-        );
+        $query->setParameter('objectname', $className)->setParameter('sitename', $sitename);
 
         $permissionObjects = $query->getResult();
         //echo "permissionObjects count=".count($permissionObjects)."<br>";

@@ -103,13 +103,7 @@ class CalllogSiteParameterType extends AbstractType
             //'multiple' => false,
             'attr' => array('class'=>'combobox'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -126,13 +120,7 @@ class CalllogSiteParameterType extends AbstractType
             'required'=> false,
             'attr' => array('class'=>'combobox'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -151,13 +139,7 @@ class CalllogSiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -166,13 +148,7 @@ class CalllogSiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -203,13 +179,7 @@ class CalllogSiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -242,13 +212,7 @@ class CalllogSiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -257,13 +221,7 @@ class CalllogSiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -375,13 +333,7 @@ class CalllogSiteParameterType extends AbstractType
                 'choice_label' => 'getTreeNameReverse',
                 'attr' => array('class' => 'combobox'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
         }

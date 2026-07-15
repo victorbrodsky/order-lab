@@ -147,16 +147,7 @@ class ResearchLabType extends AbstractType
             //'choice_label' => 'getTreeName', //getNodeNameWithRoot
             'attr' => array('class'=>'combobox combobox-width ajax-combobox-researchlab'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.organizationalGroupType","organizationalGroupType")
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->andWhere("organizationalGroupType.name = :organizationalGroupTypeName")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        'organizationalGroupTypeName' => 'Research Lab'
-                    ));
+                return $er->createQueryBuilder('list')->leftJoin("list.organizationalGroupType", "organizationalGroupType")->where("list.type = :typedef OR list.type = :typeadd")->andWhere("organizationalGroupType.name = :organizationalGroupTypeName")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('organizationalGroupTypeName', 'Research Lab');
             },
         ));
 

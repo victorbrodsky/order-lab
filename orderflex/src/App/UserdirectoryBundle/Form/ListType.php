@@ -170,9 +170,7 @@ class ListType extends AbstractType
             //'by_reference' => false,
             'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where( "list.type != :disabletype AND list.type != :drafttype AND list.type != :hiddentype" . $this->addwhere )
-                    ->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft','hiddentype'=>'hidden') );
+                return $er->createQueryBuilder('list')->where("list.type != :disabletype AND list.type != :drafttype AND list.type != :hiddentype" . $this->addwhere)->setParameter('disabletype', 'disabled')->setParameter('drafttype', 'draft')->setParameter('hiddentype', 'hidden');
             },
         ));
 

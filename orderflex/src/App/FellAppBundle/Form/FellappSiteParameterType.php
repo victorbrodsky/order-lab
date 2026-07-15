@@ -109,17 +109,7 @@ class FellappSiteParameterType extends AbstractType
             //'empty_value' => false,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.parent","department")
-                    //->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        //'pname' => 'Pathology and Laboratory Medicine'
-                        //'medicalInstitution' => 'Medical'
-                    ));
+                return $er->createQueryBuilder('list')->leftJoin("list.parent", "department")->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -272,13 +262,7 @@ class FellappSiteParameterType extends AbstractType
             'multiple' => false,
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 

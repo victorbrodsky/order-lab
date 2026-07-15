@@ -162,11 +162,7 @@ class LocationType extends AbstractType
             'attr' => $locationTypesAttr,   //array('class'=>'combobox combobox-width user-location-locationTypes'),
             'required' => false,
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where('list.type != :disabletype AND list.type != :drafttype')
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
-                );
+                return $er->createQueryBuilder('list')->where('list.type != :disabletype AND list.type != :drafttype')->orderBy("list.orderinlist", "ASC")->setParameter('disabletype', 'disabled')->setParameter('drafttype', 'draft');
             }
         ));
 
@@ -281,13 +277,7 @@ class LocationType extends AbstractType
                     'attr' => array('class'=>'combobox combobox-width'),
                     'query_builder' => function(EntityRepository $er) {
                         if( array_key_exists('subjectUser', $this->params) ) {
-                            return $er->createQueryBuilder('list')
-                                ->leftJoin("list.employmentStatus", "employmentStatus")
-                                ->leftJoin("employmentStatus.employmentType", "employmentType")
-                                ->where("list.id != :userid AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                                ->leftJoin("list.infos", "infos")
-                                ->orderBy("infos.displayName","ASC")
-                                ->setParameters( array('userid' => $this->params['subjectUser']->getId()) );
+                            return $er->createQueryBuilder('list')->leftJoin("list.employmentStatus", "employmentStatus")->leftJoin("employmentStatus.employmentType", "employmentType")->where("list.id != :userid AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")->leftJoin("list.infos", "infos")->orderBy("infos.displayName", "ASC")->setParameter('userid', $this->params['subjectUser']->getId());
                         } else {
                             return $er->createQueryBuilder('list')
                                 ->leftJoin("list.infos", "infos")

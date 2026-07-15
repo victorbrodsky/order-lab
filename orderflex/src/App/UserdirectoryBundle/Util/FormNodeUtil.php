@@ -698,15 +698,7 @@ class FormNodeUtil
 
         $mapper = $this->getMapper($holderEntity);
 
-        $query->setParameters(
-            array(
-                'entityName' => $mapper['entityName'],              //Project
-                'entityNamespace' => $mapper['entityNamespace'],    //App\TranslationalResearchBundle\Entity
-                //'entityId' => "'".$mapper['entityId']."'",                  //project ID
-                'entityId' => $mapper['entityId']."",
-                'formNodeId' => $formNode->getId()
-            )
-        );
+        $query->setParameter('entityName', $mapper['entityName'])->setParameter('entityNamespace', $mapper['entityNamespace'])->setParameter('entityId', $mapper['entityId'] . "")->setParameter('formNodeId', $formNode->getId());
 
         $listElements = $query->getResult();
 
@@ -792,7 +784,10 @@ class FormNodeUtil
 //                'value' => $parameterValue,  //$holderEntity->getId()
 //            )
 //        );
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $objectTypeDropdowns = $query->getResult();
 
@@ -2513,7 +2508,10 @@ class FormNodeUtil
             }
 
             if( count($parameters) > 0 ) {
-                $query->setParameters($parameters);
+                foreach ($parameters as $__setParamKey => $__setParamValue) {
+                    $query->setParameter($__setParamKey, $__setParamValue);
+                }
+
             }
 
             $output = $query->getQuery()->getResult();
@@ -2647,15 +2645,7 @@ class FormNodeUtil
 
         //echo "query=".$query->getSql()."<br>";
 
-        $query->setParameters(
-            array(
-                'entityName' => $mapper['entityName'],
-                'entityNamespace' => $mapper['entityNamespace'],
-                //'entityId' => "'".$mapper['entityId']."'", //this does not found any results
-                'entityId' => $mapper['entityId']."",
-                'formNodeId' => $formNode->getId()
-            )
-        );
+        $query->setParameter('entityName', $mapper['entityName'])->setParameter('entityNamespace', $mapper['entityNamespace'])->setParameter('entityId', $mapper['entityId'] . "")->setParameter('formNodeId', $formNode->getId());
         $results = $query->getResult();
 
         if(0) {

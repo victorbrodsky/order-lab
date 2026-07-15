@@ -1850,7 +1850,10 @@ class PdfUtil {
             $dql->where("resapp.erasApplicantId = :erasApplicantId");
             $parameters["erasApplicantId"] = $erasApplicantId;
             $query = $dql->getQuery();
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             $resapps = $query->getResult();
             $logger->notice("getDuplicateDbResApps: A: resapps  count=".count($resapps));
             return $resapps;
@@ -1890,7 +1893,10 @@ class PdfUtil {
         $query = $dql->getQuery();
         //$query->setMaxResults(10);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $resapps = $query->getResult();
 
         //echo "sql=".$query->getSql()."<br>";

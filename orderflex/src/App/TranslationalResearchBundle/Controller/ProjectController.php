@@ -1186,7 +1186,10 @@ class ProjectController extends OrderAbstractController
 //        }
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
 
 //            if( $withMatching ) {
 //                $query2->setParameters($dqlParameters);

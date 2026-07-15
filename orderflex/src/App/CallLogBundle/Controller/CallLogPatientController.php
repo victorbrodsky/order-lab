@@ -868,7 +868,10 @@ class CallLogPatientController extends PatientController {
         $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
@@ -969,7 +972,10 @@ class CallLogPatientController extends PatientController {
         $parameters['hours96Ago'] = $hours96Ago;
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
@@ -1031,7 +1037,10 @@ class CallLogPatientController extends PatientController {
         $parameters['patientId'] = $patientId;
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $patients = $query->getResult();
 
         $msgArr = array();
@@ -1280,7 +1289,10 @@ class CallLogPatientController extends PatientController {
         // Clicking "Re-enter patient" in the Patient Info accordion should re-set the title of the accordion to "Previous Entries" (remove the patient name/info).
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $limit = 10;
         //$query->setMaxResults($limit);
@@ -1544,7 +1556,10 @@ class CallLogPatientController extends PatientController {
         }
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         //$limit = 10;
 

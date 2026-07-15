@@ -85,13 +85,7 @@ class ResAppGeoLocationType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width geo-field-state'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             );
             if( $this->params['cycle'] == 'new_standalone' ) {
@@ -111,13 +105,7 @@ class ResAppGeoLocationType extends AbstractType
                 //'preferred_choices' => $preferredCountries,
                 'attr' => array('class'=>'combobox combobox-width geo-field-country'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Countries'] by [Countries::class]

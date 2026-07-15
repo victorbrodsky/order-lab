@@ -1261,7 +1261,10 @@ class AuthUtil {
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($params) > 0 ) {
-            $query->setParameters($params);
+            foreach ($params as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         if( $limit ) {

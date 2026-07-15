@@ -519,7 +519,10 @@ class VacReqCalendarUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $holidays = $query->getResult();
@@ -633,7 +636,10 @@ class VacReqCalendarUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $observedHolidays = $query->getResult();
@@ -701,7 +707,10 @@ class VacReqCalendarUtil
         //$endDateStr = $endDate->format('Y-m-d');
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $holidays = $query->getResult();
@@ -817,7 +826,10 @@ class VacReqCalendarUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $holidays = $query->getResult();

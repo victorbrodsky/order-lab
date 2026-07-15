@@ -620,7 +620,10 @@ class UserServiceUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $comments = $query->getResult();
 
@@ -5246,7 +5249,10 @@ tracepoint:sched:sched_process_exit
         $dql->orderBy("logger.id","DESC");
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-        $query->setParameters( $queryParameters );
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $query->setMaxResults(1);
         $log = $query->getOneOrNullResult();
@@ -5378,7 +5384,10 @@ tracepoint:sched:sched_process_exit
         );
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-        $query->setParameters( $queryParameters );
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $userinfos = $query->getResult();
 
@@ -5499,7 +5508,10 @@ tracepoint:sched:sched_process_exit
         $queryParameters = array('mobilePhoneVerifyCode'=>$verificationCode);
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-        $query->setParameters( $queryParameters );
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $users = $query->getResult();
         //echo "users count=".count($users)."<br>";
@@ -5548,7 +5560,10 @@ tracepoint:sched:sched_process_exit
         );
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-        $query->setParameters( $queryParameters );
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $userrequests = $query->getResult();
 
@@ -6248,7 +6263,10 @@ tracepoint:sched:sched_process_exit
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $entities = $query->getResult();
@@ -6781,7 +6799,10 @@ tracepoint:sched:sched_process_exit
         );
 
         $query = $dql->getQuery();
-        $query->setParameters( $queryParameters );
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $users = $query->getResult();
 

@@ -663,7 +663,10 @@ class WorkQueueController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         //echo "query=".$query->getSql()."<br>";

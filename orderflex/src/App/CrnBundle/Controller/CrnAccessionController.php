@@ -115,7 +115,10 @@ class CrnAccessionController extends OrderAbstractController {
         $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
@@ -212,7 +215,10 @@ class CrnAccessionController extends OrderAbstractController {
         }
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
@@ -333,7 +339,10 @@ class CrnAccessionController extends OrderAbstractController {
         $parameters['accessionId'] = $accessionId;
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $accessions = $query->getResult();
 
         $msgArr = array();

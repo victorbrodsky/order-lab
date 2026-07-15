@@ -132,11 +132,7 @@ class CrnLocationType extends AbstractType
             'attr' => $locationTypesAttr,   //array('class'=>'combobox combobox-width user-location-locationTypes'),
             'required' => false,
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where('list.type != :disabletype AND list.type != :drafttype')
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
-                );
+                return $er->createQueryBuilder('list')->where('list.type != :disabletype AND list.type != :drafttype')->orderBy("list.orderinlist", "ASC")->setParameter('disabletype', 'disabled')->setParameter('drafttype', 'draft');
             }
         ));
 
@@ -211,11 +207,7 @@ class CrnLocationType extends AbstractType
                 'choice_label' => 'getNameShortName',
                 'attr' => array('class' => 'combobox'),
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        //->leftJoin("list.locationTypes", "locationTypes")
-                        ->where("list.level=0")
-                        ->andWhere('list.type = :default')
-                        ->setParameters( array('default'=>'default'))
+                    return $er->createQueryBuilder('list')->where("list.level=0")->andWhere('list.type = :default')->setParameter('default', 'default')
                         ->orderBy("list.orderinlist", "ASC");
                 },
             ));

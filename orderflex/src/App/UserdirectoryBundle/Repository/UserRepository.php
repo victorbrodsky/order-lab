@@ -56,7 +56,7 @@ class UserRepository extends EntityRepository {
         $query->leftJoin("user.researchLabs", "researchLabs");
         $query->where("administrativeTitles.institution = :nodeid OR appointmentTitles.institution = :nodeid OR medicalTitles.institution = :nodeid");
         $query->orWhere("researchLabs.institution = :nodeid");
-        $query->setParameters( array("nodeid"=>$nodeid) );
+        $query->setParameter("nodeid", $nodeid);
 
         if( $onlyWorking ) {
             $curdate = date("Y-m-d", time());
@@ -126,7 +126,7 @@ class UserRepository extends EntityRepository {
         $query->leftJoin("user.infos", "infos");
 
         $query->where("infos.firstName = :firstName ".$orAnd." infos.lastName = :lastName");
-        $query->setParameters( array("firstName"=>$firstName, "lastName"=>$lastName) );
+        $query->setParameter("firstName", $firstName)->setParameter("lastName", $lastName);
 
         $users = $query->getQuery()->getResult();
 
@@ -173,7 +173,7 @@ class UserRepository extends EntityRepository {
         $query->leftJoin("user.infos", "infos");
 
         $query->where("infos.firstName = :firstName ".$orAnd." infos.lastName = :lastName");
-        $query->setParameters( array("firstName"=>$nameStr, "lastName"=>$nameStr) );
+        $query->setParameter("firstName", $nameStr)->setParameter("lastName", $nameStr);
 
         $users = $query->getQuery()->getResult();
 
@@ -231,19 +231,7 @@ class UserRepository extends EntityRepository {
             return $user;
         }
 
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->from(User::class, 'user')
-            ->select("user")
-            ->leftJoin("user.infos","infos")
-            ->where('user.primaryPublicUserId = :primaryPublicUserId')
-            ->andWhere("(infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail)")
-            ->orderBy("user.id","ASC") //Use the last created
-            //->orderBy("user.lastActivity","ASC")
-            //->setParameter('userInfoEmail', $email)
-            ->setParameters( array(
-                'userInfoEmail' => $email,
-                'primaryPublicUserId' => $cwid,
-            ))
+        $query = $this->getEntityManager()->createQueryBuilder()->from(User::class, 'user')->select("user")->leftJoin("user.infos", "infos")->where('user.primaryPublicUserId = :primaryPublicUserId')->andWhere("(infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail)")->orderBy("user.id", "ASC")->setParameter('userInfoEmail', $email)->setParameter('primaryPublicUserId', $cwid)
         ;
 
         $users = $query->getQuery()->getResult();
@@ -266,17 +254,7 @@ class UserRepository extends EntityRepository {
             return $user;
         }
 
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->from(User::class, 'user')
-            ->select("user")
-            ->leftJoin("user.infos","infos")
-            ->where("(infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail)")
-            ->orderBy("user.id","ASC") //Use the last created
-            //->orderBy("user.lastActivity","DESC")
-            //->setParameter('userInfoEmail', $email)
-            ->setParameters( array(
-                'userInfoEmail' => $email
-            ))
+        $query = $this->getEntityManager()->createQueryBuilder()->from(User::class, 'user')->select("user")->leftJoin("user.infos", "infos")->where("(infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail)")->orderBy("user.id", "ASC")->setParameter('userInfoEmail', $email)
         ;
 
         $users = $query->getQuery()->getResult();
@@ -442,21 +420,7 @@ class UserRepository extends EntityRepository {
     //check if user has direct permission
     public function isUserHasDirectPermissionObjectAction( $user, $object, $action ) {
 
-        $query = $this->getEntityManager()->createQueryBuilder()
-            //->from('AppUserdirectoryBundle:Permission', 'permissions')
-            ->from(Permission::class, 'permissions')
-            ->select("permissions")
-            ->leftJoin("permissions.user","user")
-            ->leftJoin("permissions.permission","permission")
-            ->leftJoin("permission.permissionObjectList","permissionObjectList")
-            ->leftJoin("permission.permissionActionList","permissionActionList")
-            ->where("user.id = :user AND (permissionObjectList.name = :permissionObject OR permissionObjectList.abbreviation = :permissionObject) AND permissionActionList.name = :permissionAction")
-            ->orderBy("permissions.id","ASC")
-            ->setParameters( array(
-                'user' => $user->getId(),
-                'permissionObject' => $object,
-                'permissionAction' => $action
-            ));
+        $query = $this->getEntityManager()->createQueryBuilder()->from(Permission::class, 'permissions')->select("permissions")->leftJoin("permissions.user", "user")->leftJoin("permissions.permission", "permission")->leftJoin("permission.permissionObjectList", "permissionObjectList")->leftJoin("permission.permissionActionList", "permissionActionList")->where("user.id = :user AND (permissionObjectList.name = :permissionObject OR permissionObjectList.abbreviation = :permissionObject) AND permissionActionList.name = :permissionAction")->orderBy("permissions.id", "ASC")->setParameter('user', $user->getId())->setParameter('permissionObject', $object)->setParameter('permissionAction', $action);
         //->setParameter('permissionAction', $action);
 
         //echo "sql=".$query->getQuery()->getSql()."<br>";
@@ -498,20 +462,7 @@ class UserRepository extends EntityRepository {
         //echo "find RolesByObjectAction: object=".$object."; action=".$action."<br>";
 
         //check if user's roles have permission
-        $query = $this->getEntityManager()->createQueryBuilder()
-            //->from('AppUserdirectoryBundle:Roles', 'list')
-            ->from(Roles::class, 'list')
-            ->select("list")
-            ->leftJoin("list.permissions","permissions")
-            ->leftJoin("permissions.permission","permission")
-            ->leftJoin("permission.permissionObjectList","permissionObjectList")
-            ->leftJoin("permission.permissionActionList","permissionActionList")
-            ->where("(permissionObjectList.name = :permissionObject OR permissionObjectList.abbreviation = :permissionObject) AND permissionActionList.name = :permissionAction")
-            ->orderBy("list.id","ASC")
-            ->setParameters( array(
-                'permissionObject' => $object,
-                'permissionAction' => $action
-            ));
+        $query = $this->getEntityManager()->createQueryBuilder()->from(Roles::class, 'list')->select("list")->leftJoin("list.permissions", "permissions")->leftJoin("permissions.permission", "permission")->leftJoin("permission.permissionObjectList", "permissionObjectList")->leftJoin("permission.permissionActionList", "permissionActionList")->where("(permissionObjectList.name = :permissionObject OR permissionObjectList.abbreviation = :permissionObject) AND permissionActionList.name = :permissionAction")->orderBy("list.id", "ASC")->setParameter('permissionObject', $object)->setParameter('permissionAction', $action);
         //->setParameter('permissionAction', $action);
 
         //echo "sql=".$query->getQuery()->getSql()."<br>";
@@ -591,7 +542,10 @@ class UserRepository extends EntityRepository {
             $query->orderBy($entity.'.'.$field,$direction);
         }
 
-        $query->setParameters( $parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         //echo "sql=".$query."<br>";
 
@@ -770,7 +724,10 @@ class UserRepository extends EntityRepository {
 
         $query->orderBy("list.id","ASC");
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         //echo "sql=".$query->getQuery()->getSql()."<br>";
 
@@ -902,14 +859,7 @@ class UserRepository extends EntityRepository {
         //$query->leftJoin("user.institution", "institution");
         //$query->groupBy('user');
 
-        $query->setParameters(
-            array(
-                //"institutionId" => $institutionId,
-                "permission" => $permission->getId(),
-                "sitename" => $sitename,
-                //'rolename' => '%"roles.name"%'
-            )
-        );
+        $query->setParameter("permission", $permission->getId())->setParameter("sitename", $sitename);
 
         //echo "query=".$query."<br>";
 
@@ -922,20 +872,7 @@ class UserRepository extends EntityRepository {
     //check if user has direct permission
     public function findPermissionByObjectAction( $objectStr, $actionStr, $single=true ) {
 
-        $query = $this->getEntityManager()->createQueryBuilder()
-            //->from('AppUserdirectoryBundle:Permission', 'permissions')
-            ->from(Permission::class, 'permissions')
-            ->select("permissions")
-            ->leftJoin("permissions.permission","permission")
-            ->leftJoin("permission.permissionObjectList","permissionObjectList")
-            ->leftJoin("permission.permissionActionList","permissionActionList")
-            ->where("permissionActionList.name = :permissionActionStr")
-            ->andWhere("permissionObjectList.name = :permissionObjectStr OR permissionObjectList.abbreviation = :permissionObjectStr")
-            ->orderBy("permissions.id","ASC")
-            ->setParameters( array(
-                'permissionObjectStr' => $objectStr,
-                'permissionActionStr' => $actionStr
-            ));
+        $query = $this->getEntityManager()->createQueryBuilder()->from(Permission::class, 'permissions')->select("permissions")->leftJoin("permissions.permission", "permission")->leftJoin("permission.permissionObjectList", "permissionObjectList")->leftJoin("permission.permissionActionList", "permissionActionList")->where("permissionActionList.name = :permissionActionStr")->andWhere("permissionObjectList.name = :permissionObjectStr OR permissionObjectList.abbreviation = :permissionObjectStr")->orderBy("permissions.id", "ASC")->setParameter('permissionObjectStr', $objectStr)->setParameter('permissionActionStr', $actionStr);
         //->setParameter('permissionAction', $action);
 
         //echo "sql=".$query->getQuery()->getSql()."<br>";

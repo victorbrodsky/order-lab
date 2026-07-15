@@ -114,7 +114,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $requests = $query->getResult();
@@ -2582,7 +2585,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $existingInvoices = $query->getResult();
@@ -3212,7 +3218,10 @@ class TransResRequestUtil
             $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
             if( count($dqlParameters) > 0 ) {
-                $query->setParameters($dqlParameters);
+                foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                    $query->setParameter($__setParamKey, $__setParamValue);
+                }
+
             }
 
             $loggers = $query->getResult();
@@ -3865,9 +3874,10 @@ class TransResRequestUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(
-            $params
-        );
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $invoices = $query->getResult();
         //echo "$projectSpecialty count invoices=".count($invoices)."$newline";
@@ -3890,7 +3900,10 @@ class TransResRequestUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         if( $eco ) {
@@ -4127,9 +4140,10 @@ class TransResRequestUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters(
-            $params
-        );
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $invoices = $query->getResult();
 
@@ -4154,7 +4168,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $requests = $query->getResult();
@@ -5166,7 +5183,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $fees = $query->getResult();
@@ -5246,7 +5266,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         if( $max ) {
@@ -5384,7 +5407,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $categories = $query->getResult();
@@ -5457,7 +5483,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $categories = $query->getResult();
@@ -6777,7 +6806,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $invoiceItems = $query->getResult();
@@ -6840,7 +6872,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $products = $query->getResult();
@@ -7334,7 +7369,10 @@ class TransResRequestUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $entities = $query->getResult();

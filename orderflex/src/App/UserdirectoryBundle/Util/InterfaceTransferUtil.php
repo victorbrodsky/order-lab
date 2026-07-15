@@ -681,11 +681,7 @@ class InterfaceTransferUtil {
         $dql->where('LOWER(transferStatus.name) = LOWER(:transferStatus)');
 
         $query = $dql->getQuery();
-        $query->setParameters(
-            array(
-                'transferStatus' => $statusStr
-            )
-        );
+        $query->setParameter('transferStatus', $statusStr);
 
         if( $paginator === true && $request ) {
             $limit = 20;
@@ -736,13 +732,7 @@ class InterfaceTransferUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters(
-            array(
-                'entityId' => $entity->getId(),
-                'className' => $className,
-                'transferStatus' => $statusStr
-            )
-        );
+        $query->setParameter('entityId', $entity->getId())->setParameter('className', $className)->setParameter('transferStatus', $statusStr);
 
         $transfers = $query->getResult();
 
@@ -802,12 +792,7 @@ class InterfaceTransferUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters(
-            array(
-                'localId' => $localId,
-                'className' => $className,
-            )
-        );
+        $query->setParameter('localId', $localId)->setParameter('className', $className);
 
         $transfers = $query->getResult();
 
@@ -838,12 +823,7 @@ class InterfaceTransferUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
         //$instanceId = $uploadPath = $userSecUtil->getSiteSettingParameter('instanceId');
 
-        $query->setParameters(
-            array(
-                'globalId' => $globalId,
-                'className' => $className,
-            )
-        );
+        $query->setParameter('globalId', $globalId)->setParameter('className', $className);
 
         $transfers = $query->getResult();
 
@@ -872,12 +852,7 @@ class InterfaceTransferUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters(
-            array(
-                'className' => $className,
-                'transferStatus' => $statusStr
-            )
-        );
+        $query->setParameter('className', $className)->setParameter('transferStatus', $statusStr);
 
         $transfers = $query->getResult();
 
@@ -895,12 +870,7 @@ class InterfaceTransferUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters(
-            array(
-                'localId' => $localId,
-                'className' => $className,
-            )
-        );
+        $query->setParameter('localId', $localId)->setParameter('className', $className);
 
         $transfers = $query->getResult();
 
@@ -1458,7 +1428,10 @@ class InterfaceTransferUtil {
         $query = $dql->getQuery();
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $entities = $query->getResult();

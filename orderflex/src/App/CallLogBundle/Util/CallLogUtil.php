@@ -294,7 +294,10 @@ class CallLogUtil
         $dql->orderBy("patient.id","ASC"); //show latest first
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo $mergeId.":sql=".$query->getSql()."<br>";
         $patients = $query->getResult();
         //echo "merged patients = ".count($patients)."<br>";
@@ -1489,7 +1492,10 @@ class CallLogUtil
 
                         if (count($parameters) > 0) {
                             //print_r($parameters);
-                            $query->setParameters($parameters);
+                            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                                $query->setParameter($__setParamKey, $__setParamValue);
+                            }
+
                         }
 
                         $locations = $query->getResult();
@@ -1866,7 +1872,10 @@ class CallLogUtil
         $parameters['typeadd'] = 'user-added';
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $patients = $query->getResult();
         if( count($patients) > 0 ) {
             return $patients;
@@ -2318,7 +2327,10 @@ class CallLogUtil
         $queryParameters['eventStr2'] = '%'.$eventStr2.'%';
 
         $query = $dql->getQuery();
-        $query->setParameters( $queryParameters );
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $logs = $query->getResult();
         //echo $oid."[".$statusName."]: logs count=".count($logs)."<br>";
 
@@ -2567,11 +2579,7 @@ class CallLogUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'userId' => $user->getId(),
-            'monday' => $mondayDBStr,
-            'sunday' => $sundayDBStr
-        ));
+        $query->setParameter('userId', $user->getId())->setParameter('monday', $mondayDBStr)->setParameter('sunday', $sundayDBStr);
 
         $results = $query->getResult();
         //echo "count=".count($results)."<br>";
@@ -2652,10 +2660,7 @@ class CallLogUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'patientId' => $patient->getId(),
-            'deletedMessageStatus' => "Deleted"
-        ));
+        $query->setParameter('patientId', $patient->getId())->setParameter('deletedMessageStatus', "Deleted");
 
         $messages = $query->getResult();
 
@@ -2698,10 +2703,7 @@ class CallLogUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'accessionId' => $accession->getId(),
-            'deletedMessageStatus' => "Deleted"
-        ));
+        $query->setParameter('accessionId', $accession->getId())->setParameter('deletedMessageStatus', "Deleted");
 
         $messages = $query->getResult();
 
@@ -2819,7 +2821,10 @@ class CallLogUtil
         $dql->orderBy('message.version','ASC');
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $messages = $query->getResult();
 
         if( count($messages) > 0 ) {
@@ -4561,7 +4566,10 @@ class CallLogUtil
         if( $where ) {
 
             $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             $patients = $query->getResult();
 
             //log search action
@@ -5016,7 +5024,10 @@ class CallLogUtil
         if( $where ) {
 
             $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             //dump($parameters);
             //echo "sql=".$query->getSql()."<br>";
             //exit('test');
@@ -5114,7 +5125,10 @@ class CallLogUtil
         $parameters['statusAlias'] = 'alias';
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $accessions = $query->getResult();
 
         if( $returnAccessions ) {
@@ -5231,7 +5245,10 @@ class CallLogUtil
         $parameters['patientId'] = $patient->getId();
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $accessions = $query->getResult();
 
         if( $asHtml ) {
@@ -5368,7 +5385,10 @@ class CallLogUtil
         //$dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -5471,7 +5491,10 @@ class CallLogUtil
         //$dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $messages = $query->getResult();
 
@@ -5511,7 +5534,10 @@ class CallLogUtil
         //$dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $patients = $query->getResult();
 

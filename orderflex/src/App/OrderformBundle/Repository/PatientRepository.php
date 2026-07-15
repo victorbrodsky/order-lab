@@ -230,7 +230,10 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
         $query = $dql->getQuery();
 
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $patients = $query->getResult();
         //echo "patient count=".count($patients)."<br>";
@@ -246,13 +249,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
     public function findByMrntypeString($mrntypeStr) {
 
-        $query = $this->_em->createQueryBuilder()
-            ->from(Patient::class, 'patient')
-            ->select("patient")
-            ->leftJoin("patient.mrn", "mrn")
-            ->leftJoin("mrn.keytype", "keytype")
-            ->where("keytype.name = :keytypeStr")
-            ->setParameters( array('keytypeStr'=>$mrntypeStr) )
+        $query = $this->_em->createQueryBuilder()->from(Patient::class, 'patient')->select("patient")->leftJoin("patient.mrn", "mrn")->leftJoin("mrn.keytype", "keytype")->where("keytype.name = :keytypeStr")->setParameter('keytypeStr', $mrntypeStr)
             ->getQuery();
 
         $patients = $query->getResult();
@@ -312,15 +309,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
         $fieldlc = strtolower($fieldStr);
 
         //include latest updated or created
-        $query = $this->_em->createQueryBuilder()
-            //->from('AppOrderformBundle:EncounterPat'.$fieldlc, 'commonfield')
-            ->from('App\\OrderformBundle\\Entity\\EncounterPat'.$fieldlc, 'commonfield')
-            ->select("commonfield")
-            ->leftJoin("commonfield.encounter", "encounter")
-            ->leftJoin("encounter.patient", "patient")
-            ->where("patient.id = :patientId AND commonfield.status = 'valid' AND commonfield.field IS NOT NULL")
-            ->orderBy("commonfield.updateDate","DESC")
-            ->setParameters( array('patientId'=>$patient->getId()) )
+        $query = $this->_em->createQueryBuilder()->from('App\OrderformBundle\Entity\EncounterPat' . $fieldlc, 'commonfield')->select("commonfield")->leftJoin("commonfield.encounter", "encounter")->leftJoin("encounter.patient", "patient")->where("patient.id = :patientId AND commonfield.status = 'valid' AND commonfield.field IS NOT NULL")->orderBy("commonfield.updateDate", "DESC")->setParameter('patientId', $patient->getId())
             ->getQuery();
 
         $commonfields = $query->getResult();

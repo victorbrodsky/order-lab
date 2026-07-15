@@ -67,16 +67,7 @@ class PerSiteSettingsType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.types","institutiontype")
-                        //->where("(list.type = :typedef OR list.type = :typeadd) AND institutiontype.name = :medicalInstitution")
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            //'medicalInstitution' => 'Medical'
-                        ));
+                    return $er->createQueryBuilder('list')->leftJoin("list.types", "institutiontype")->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 
@@ -104,16 +95,7 @@ class PerSiteSettingsType extends AbstractType
                 //'empty_value' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.parent","department")
-                            ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                                'pname' => 'Pathology and Laboratory Medicine'
-                                //'medicalInstitution' => 'Medical'
-                            ));
+                        return $er->createQueryBuilder('list')->leftJoin("list.parent", "department")->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('pname', 'Pathology and Laboratory Medicine');
                     },
             ));
 
@@ -129,16 +111,7 @@ class PerSiteSettingsType extends AbstractType
                 //'empty_value' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.parent","department")
-                            ->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                                'pname' => 'Pathology and Laboratory Medicine'
-                                //'medicalInstitution' => 'Medical'
-                            ));
+                        return $er->createQueryBuilder('list')->leftJoin("list.parent", "department")->where("(list.type = :typedef OR list.type = :typeadd) AND department.name = :pname")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('pname', 'Pathology and Laboratory Medicine');
                     },
             ));
 

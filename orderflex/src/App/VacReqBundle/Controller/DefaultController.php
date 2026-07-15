@@ -581,7 +581,10 @@ class DefaultController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
-            $query->setParameters($params);
+            foreach ($params as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $requests = $query->getResult();
@@ -773,7 +776,10 @@ class DefaultController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
-            $query->setParameters($params);
+            foreach ($params as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $requests = $query->getResult();
@@ -879,7 +885,10 @@ class DefaultController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
-            $query->setParameters($params);
+            foreach ($params as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $requests = $query->getResult();

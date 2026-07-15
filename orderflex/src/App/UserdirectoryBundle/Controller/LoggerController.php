@@ -246,7 +246,10 @@ class LoggerController extends OrderAbstractController
 
                 //$query2 = $em->createQuery($dql2);
                 $query2 = $dql2->getQuery();
-                $query2->setParameters( $queryParameters );
+                foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+                    $query2->setParameter($__setParamKey, $__setParamValue);
+                }
+
                 $query2->setMaxResults(1);
 
                 $loggers = $query2->getResult();
@@ -265,7 +268,10 @@ class LoggerController extends OrderAbstractController
 
                 //$query3 = $em->createQuery($dql3);
                 $query3 = $dql3->getQuery();
-                $query3->setParameters( $queryParameters );
+                foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+                    $query3->setParameter($__setParamKey, $__setParamValue);
+                }
+
                 $query3->setMaxResults(1);
                 $loggers = $query3->getResult();
                 //echo "logger count=".count($loggers)."<br>";
@@ -336,7 +342,10 @@ class LoggerController extends OrderAbstractController
         }
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         //dump($dqlParameters);

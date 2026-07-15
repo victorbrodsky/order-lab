@@ -527,12 +527,7 @@ class DefaultController extends OrderAbstractController
         $search = "User account for ";
         $search2 = "has been created by";
 
-        $query->setParameters(
-            array(
-                'eventStr' => '%'.$search.'%',
-                'eventStr2' => '%'.$search2.'%'
-            )
-        );
+        $query->setParameter('eventStr', '%' . $search . '%')->setParameter('eventStr2', '%' . $search2 . '%');
 
         $loggers = $query->getResult();
 

@@ -519,9 +519,7 @@ class FellAppUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'fellowshipName' => trim($fellowshipName),
-        ));
+        $query->setParameter('fellowshipName', trim($fellowshipName));
 
         $fellTypes = $query->getResult();
         //echo "fellTypes count=".count($fellTypes)."<br>";
@@ -559,7 +557,10 @@ class FellAppUtil {
 //            'typeadd' => 'user-added',
 //            'showOption' => $showOption
 //        ));
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $fellTypes = $query->getResult();
         //echo "getValidFellowshipTypes: fellTypes count=".count($fellTypes)."<br>";
@@ -627,7 +628,10 @@ class FellAppUtil {
         $query = $dql->getQuery();
 
         if( $parameters && count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $fellTypes = $query->getResult();
@@ -752,7 +756,10 @@ class FellAppUtil {
         $query = $dql->getQuery();
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $results = $query->getResult();
@@ -778,7 +785,10 @@ class FellAppUtil {
         }
         $instQuery = $instDql->getQuery();
         if( count($instParameters) > 0 ) {
-            $instQuery->setParameters($instParameters);
+            foreach ($instParameters as $__setParamKey => $__setParamValue) {
+                $instQuery->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
         $institutions = $instQuery->getResult();
 
@@ -1370,10 +1380,7 @@ class FellAppUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'typedef' => 'default',
-            'typeadd' => 'user-added',
-        ));
+        $query->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
 
         $fellTypes = $query->getResult();
         //echo "fellTypes count=".count($fellTypes)."<br>";
@@ -1697,7 +1704,10 @@ class FellAppUtil {
         }
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $roles = $query->getResult();
         //echo "roles=" . count($roles) . "<br>";
@@ -1750,7 +1760,10 @@ class FellAppUtil {
         }
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $roles = $query->getResult();
         //echo "roles=" . count($roles) . "<br>";
@@ -3857,12 +3870,7 @@ class FellAppUtil {
 
         $rejectionEventType = "FellApp Rejected Notification Email Sent";
         $acceptanceEventType = "FellApp Accepted Notification Email Sent";
-        $query->setParameters(
-            array(
-                'eventTypeRejectionStr' => $rejectionEventType,
-                'eventTypeAcceptanceStr' => $acceptanceEventType
-            )
-        );
+        $query->setParameter('eventTypeRejectionStr', $rejectionEventType)->setParameter('eventTypeAcceptanceStr', $acceptanceEventType);
 
         $loggers = $query->getResult();
 
@@ -4339,12 +4347,7 @@ class FellAppUtil {
         //$search = "Please review the FELLOWSHIP INTERVIEW SCHEDULE for the candidate";
         $search = "Invited interviewers to rate fellowship application ID";
         $eventType = "Fellowship Application Rating Invitation Emails Resent";
-        $query->setParameters(
-            array(
-                'eventType' => $eventType,
-                'eventStr' => '%'.$search.'%',
-            )
-        );
+        $query->setParameter('eventType', $eventType)->setParameter('eventStr', '%' . $search . '%');
 
         $loggers = $query->getResult();
 

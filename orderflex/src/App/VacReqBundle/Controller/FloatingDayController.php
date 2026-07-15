@@ -229,7 +229,10 @@ class FloatingDayController extends OrderAbstractController
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $paginationParams = array(
@@ -2022,7 +2025,10 @@ class FloatingDayController extends OrderAbstractController
         $parameters['typeadd'] = 'user-added';
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
         $floatingDayTypes = $query->getResult();
         if( count($floatingDayTypes) > 0 ) {

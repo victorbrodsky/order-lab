@@ -150,35 +150,9 @@ class ProductType extends AbstractType
         //if( $workRequest && count($projectSpecialtyIdsArr) > 0 ) {
         if( $workRequest && $projectSpecialtyId ) {
             //AppTranslationalResearchBundle:RequestCategoryTypeList
-            $queryBuilder = $er->createQueryBuilder('list')
-                ->leftJoin('list.projectSpecialties','projectSpecialties')
-                ->leftJoin('list.prices','prices')
-                ->leftJoin('prices.priceList','priceList')
-                ->where("list.type = :typedef OR list.type = :typeadd")
-                //->andWhere("projectSpecialties.id IN (:projectSpecialtyIdsArr)") //show categories with this specialty only
-                //->andWhere("projectSpecialties.id NOT IN (:projectSpecialtyIdsArr)") //do show categories with this specialty only
-                //->andWhere("projectSpecialties.id IS NULL")
-                ->andWhere("(projectSpecialties.id IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr))")
-                //->andWhere("(projectSpecialties.id IS NULL OR projectSpecialties != :projectSpecialtyIdsArr)")
-                ->andWhere($feeRestriction)
-                ->orderBy("list.orderinlist","ASC")
-                //->setMaxResults( 1 )
-                ->setParameters( array(
-                    'typedef' => 'default',
-                    'typeadd' => 'user-added',
-                    'projectSpecialtyIdsArr' => $projectSpecialtyIdsArr
-                ));
+            $queryBuilder = $er->createQueryBuilder('list')->leftJoin('list.projectSpecialties', 'projectSpecialties')->leftJoin('list.prices', 'prices')->leftJoin('prices.priceList', 'priceList')->where("list.type = :typedef OR list.type = :typeadd")->andWhere("(projectSpecialties.id IS NULL OR projectSpecialties.id NOT IN (:projectSpecialtyIdsArr))")->andWhere($feeRestriction)->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('projectSpecialtyIdsArr', $projectSpecialtyIdsArr);
         } else {
-            $queryBuilder = $er->createQueryBuilder('list')
-                ->leftJoin('list.prices','prices')
-                ->leftJoin('prices.priceList','priceList')
-                ->where("list.type = :typedef OR list.type = :typeadd")
-                ->andWhere($feeRestriction)
-                ->orderBy("list.orderinlist","ASC")
-                ->setParameters( array(
-                    'typedef' => 'default',
-                    'typeadd' => 'user-added',
-                ));
+            $queryBuilder = $er->createQueryBuilder('list')->leftJoin('list.prices', 'prices')->leftJoin('prices.priceList', 'priceList')->where("list.type = :typedef OR list.type = :typeadd")->andWhere($feeRestriction)->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
         }
 
         return $queryBuilder;

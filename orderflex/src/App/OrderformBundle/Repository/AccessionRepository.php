@@ -389,14 +389,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
 
     public function findByAccessiontypeString($typeStr) {
-        $query = $this->_em->createQueryBuilder()
-            //->from('AppOrderformBundle:Accession', 'entity')
-            ->from(Accession::class, 'entity')
-            ->select("entity")
-            ->leftJoin("entity.accession", "accession")
-            ->leftJoin("accession.keytype", "keytype")
-            ->where("keytype.name = :keytypeStr")
-            ->setParameters( array('keytypeStr'=>$typeStr) )
+        $query = $this->_em->createQueryBuilder()->from(Accession::class, 'entity')->select("entity")->leftJoin("entity.accession", "accession")->leftJoin("accession.keytype", "keytype")->where("keytype.name = :keytypeStr")->setParameter('keytypeStr', $typeStr)
             ->getQuery();
 
         $accessions = $query->getResult();

@@ -38,19 +38,14 @@ class UserWrapperRepository extends EntityRepository {
         if( $userStr && $userStr != "" ) {
             //echo "userStr=".$userStr."<br>";
             $query->where("list.user=:user OR list.name=:userStr");
-            $query->setParameters( array(
-                'user' => $user,
-                'userStr' => $userStr
-            ));
+            $query->setParameter('user', $user)->setParameter('userStr', $userStr);
         } else {
 
             if( $user ) {
                 $userId = $user->getId();
                 //echo "use userId=".$userId."<br>";
                 $query->where("list.user=:user");
-                $query->setParameters( array(
-                    'user' => $userId
-                ));
+                $query->setParameter('user', $userId);
             } else {
                 $query->where("1=0");
             }

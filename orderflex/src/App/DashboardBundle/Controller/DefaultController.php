@@ -554,7 +554,10 @@ class DefaultController extends OrderAbstractController
 
         $query = $dql->getQuery();
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
         echo "loggers=".count($loggers)."<br>";

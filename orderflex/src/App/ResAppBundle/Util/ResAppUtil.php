@@ -383,12 +383,7 @@ class ResAppUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters(
-            array(
-                'typedef' => 'default',
-                'typeadd' => 'user-added',
-            )
-        );
+        $query->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
 
         $resTypes = $query->getResult();
         //echo "resTypes count=".count($resTypes)."<br>";
@@ -420,10 +415,7 @@ class ResAppUtil {
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'typedef' => 'default',
-            'typeadd' => 'user-added',
-        ));
+        $query->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
 
         $resTypes = $query->getResult();
         //echo "resTypes count=".count($resTypes)."<br>";
@@ -2037,11 +2029,7 @@ class ResAppUtil {
 
         //The status of the work request APCP668-REQ16553 has been changed from 'Pending Histology' to 'Completed and Notified' by Susanna Mirabelli - sum2029 (WCM CWID)
 
-        $query->setParameters(
-            array(
-                'eventTypeStr' => "ResApp Rejected Notification Email Sent"
-            )
-        );
+        $query->setParameter('eventTypeStr', "ResApp Rejected Notification Email Sent");
 
         $loggers = $query->getResult();
 
@@ -2082,12 +2070,7 @@ class ResAppUtil {
 
         $rejectionEventType = "ResApp Rejected Notification Email Sent";
         $acceptanceEventType = "ResApp Accepted Notification Email Sent";
-        $query->setParameters(
-            array(
-                'eventTypeRejectionStr' => $rejectionEventType,
-                'eventTypeAcceptanceStr' => $acceptanceEventType
-            )
-        );
+        $query->setParameter('eventTypeRejectionStr', $rejectionEventType)->setParameter('eventTypeAcceptanceStr', $acceptanceEventType);
 
         $loggers = $query->getResult();
 
@@ -2720,12 +2703,7 @@ class ResAppUtil {
         //$search = "Please review the FELLOWSHIP INTERVIEW SCHEDULE for the candidate";
         $search = "Invited interviewers to rate residency application ID";
         $eventType = "Residency Application Rating Invitation Emails Resent";
-        $query->setParameters(
-            array(
-                'eventType' => $eventType,
-                'eventStr' => '%'.$search.'%',
-            )
-        );
+        $query->setParameter('eventType', $eventType)->setParameter('eventStr', '%' . $search . '%');
 
         $loggers = $query->getResult();
 

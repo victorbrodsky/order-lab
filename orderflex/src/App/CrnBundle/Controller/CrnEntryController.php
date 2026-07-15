@@ -1096,7 +1096,10 @@ class CrnEntryController extends OrderAbstractController
 
         //$limit = 10;
         $query = $dql->getQuery();
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         //$logger = $this->container->get('logger');
         //$logger->notice("setMaxResults limit=".$limit);

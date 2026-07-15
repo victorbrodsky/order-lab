@@ -360,10 +360,7 @@ class ImportFromOldSystem {
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'resappId' => $residencyApplicationDb->getId(),
-            'interviewerId' => $interviewer->getId(),
-        ));
+        $query->setParameter('resappId', $residencyApplicationDb->getId())->setParameter('interviewerId', $interviewer->getId());
 
         $interviews = $query->getResult();
 
@@ -1511,12 +1508,7 @@ class ImportFromOldSystem {
             $dql->where("list.name = :name AND institution.id = :institutionId");
 
             $query = $dql->getQuery();
-            $query->setParameters(
-                array(
-                    'name' => $residencySpecialtyStr,
-                    'institutionId' => $pathologyInstitutionId
-                )
-            );
+            $query->setParameter('name', $residencySpecialtyStr)->setParameter('institutionId', $pathologyInstitutionId);
 
             $residencySpecialtyEntity = NULL;
             $residencySpecialties = $query->getResult();

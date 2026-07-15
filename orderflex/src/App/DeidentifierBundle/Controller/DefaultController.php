@@ -754,11 +754,7 @@ class DefaultController extends OrderAbstractController
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-                //'accessionId' => $accessionId,
-                'accessionType' => $deidentifierType->getId()
-            )
-        );
+        $query->setParameter('accessionType', $deidentifierType->getId());
         $accessionAccessions = $query->getResult();
         //echo "accessionAccessions count=".count($accessionAccessions)."<br>";
         ////////////////////////////////////////////////

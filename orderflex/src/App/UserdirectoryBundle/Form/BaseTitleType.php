@@ -303,13 +303,7 @@ class BaseTitleType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeAction(this)'),
                 'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->where("list.type = :typedef OR list.type = :typeadd")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
+                        return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                     },
             ));
 
@@ -322,13 +316,7 @@ class BaseTitleType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->where("list.type = :typedef OR list.type = :typeadd")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
+                        return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                     },
             ));
 
@@ -441,13 +429,7 @@ class BaseTitleType extends AbstractType
                 'multiple' => true,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->where("list.type = :typedef OR list.type = :typeadd")
-                            ->orderBy("list.orderinlist","ASC")
-                            ->setParameters( array(
-                                'typedef' => 'default',
-                                'typeadd' => 'user-added',
-                            ));
+                        return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                     },
             ));
 

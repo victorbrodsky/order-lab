@@ -272,7 +272,10 @@ class UserDatesController extends OrderAbstractController
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         //$query->setMaxResults(30);
         //$totalUsers = $query->getResult();

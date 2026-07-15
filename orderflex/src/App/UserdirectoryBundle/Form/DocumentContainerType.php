@@ -187,13 +187,7 @@ class DocumentContainerType extends AbstractType
                                     $where = "i.type != :typedef OR i.type = :typeadd";
                                 }
 
-                                return $er->createQueryBuilder('i')
-                                    ->leftJoin('i.keytype','keytype')
-                                    ->where($where)
-                                    ->setParameters( array(
-                                        'typedef' => 'default',
-                                        'typeadd' => 'user-added',
-                                    ));
+                                return $er->createQueryBuilder('i')->leftJoin('i.keytype', 'keytype')->where($where)->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                             },
                     ));
                 }

@@ -220,15 +220,10 @@ class ReminderUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(
-//            array(
-//                "unpaid" => "Unpaid/Issued",
-//                "overDueDate" => $overDueDate->format('Y-m-d H:i:s'),
-//                "overDueReminderDate" => $overDueReminderDate->format('Y-m-d H:i:s'),
-//                "maxReminderCount" => $maxReminderCount
-//            )
-            $params
-        );
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $invoices = $query->getResult();
         //echo "$projectSpecialty count invoices=".count($invoices)."<br>";
@@ -546,9 +541,10 @@ class ReminderUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(
-            $params
-        );
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $projects = $query->getResult();
         //echo "$projectSpecialty count projects=".count($projects)."$newline";
@@ -695,7 +691,10 @@ class ReminderUtil
         $dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -886,9 +885,10 @@ class ReminderUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(
-            $params
-        );
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $requests = $query->getResult();
 //        echo "$projectSpecialty count requests($stateStr)=".count($requests)."$newline"."<br>";
@@ -993,7 +993,10 @@ class ReminderUtil
         $dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -1098,9 +1101,10 @@ class ReminderUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(
-            $params
-        );
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $projects = $query->getResult();
         if( $testing ) {
@@ -1285,9 +1289,10 @@ class ReminderUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(
-            $params
-        );
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $projects = $query->getResult();
         if( $testing ) {
@@ -1491,9 +1496,10 @@ class ReminderUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters(
-            $params
-        );
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $projects = $query->getResult();
         if( $testing ) {

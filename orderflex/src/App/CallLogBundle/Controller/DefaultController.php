@@ -976,7 +976,10 @@ class DefaultController extends OrderAbstractController
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $patients = $query->getResult();
 
@@ -1084,7 +1087,10 @@ class DefaultController extends OrderAbstractController
 
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $patients = $query->getResult();
 

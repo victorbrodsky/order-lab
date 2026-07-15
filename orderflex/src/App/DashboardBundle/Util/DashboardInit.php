@@ -1074,7 +1074,10 @@ class DashboardInit
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $charts = $query->getResult();
 

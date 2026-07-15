@@ -2374,7 +2374,10 @@ class RequestController extends OrderAbstractController
         //}
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             //if($withMatching) {
                 //$query2->setParameters($dqlParameters);
             //}
@@ -3480,7 +3483,10 @@ class RequestController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         if(0) {

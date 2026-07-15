@@ -1604,7 +1604,10 @@ class DefaultController extends OrderAbstractController
             'externalPriceList' => $externalPriceList->getId(),
         );
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
-        $query->setParameters($params);
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "query=".$query->getSql()."<br>";
         $projects = $query->getResult();
         echo "projects=".count($projects)."<br>";
@@ -1934,7 +1937,10 @@ class DefaultController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
-            $query->setParameters($params);
+            foreach ($params as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $invoices = $query->getResult();
@@ -2159,7 +2165,10 @@ class DefaultController extends OrderAbstractController
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($params) > 0 ) {
-            $query->setParameters($params);
+            foreach ($params as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $projects = $query->getResult();
@@ -3536,7 +3545,10 @@ class DefaultController extends OrderAbstractController
 
         $query = $dql->getQuery();
 
-        $query->setParameters($params);
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "query=".$query->getSql()."<br>";
 
         $antibodies = $query->getResult();

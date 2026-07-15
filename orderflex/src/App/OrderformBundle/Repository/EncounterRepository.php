@@ -514,7 +514,10 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $dql->orderBy("encounter.version","DESC"); //show latest first
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $encounters = $query->getResult();
         //echo "encounters count=".count($encounters)."<br>";
@@ -572,7 +575,10 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $parameters['keytype'] = $encounterTypeId;
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $maxVersions = $query->getResult();
         //echo "maxVersions count=".count($maxVersions)."<br>";
@@ -614,7 +620,10 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $parameters['keytype'] = $encounterTypeId;
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $query->setMaxResults(1);
 
         $encounters = $query->getResult();

@@ -562,11 +562,7 @@ class UserUtil {
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);    //->setParameter('now', date("Y-m-d", time()));
 
         if( str_contains($criteriastr,':search') ) {
-            $query->setParameters(
-                array(
-                    ':search' => '%'.$search.'%',
-                )
-            );
+            $query->setParameter(':search', '%' . $search . '%');
         }
 
         $limitFlag = true;

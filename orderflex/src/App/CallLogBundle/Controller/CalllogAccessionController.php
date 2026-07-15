@@ -117,7 +117,10 @@ class CalllogAccessionController extends OrderAbstractController {
 
         //$query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
@@ -215,7 +218,10 @@ class CalllogAccessionController extends OrderAbstractController {
 
         //$query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
@@ -337,7 +343,10 @@ class CalllogAccessionController extends OrderAbstractController {
 
         //$query = $dql->getQuery(); //$query = $em->createQuery($dql);
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $accessions = $query->getResult();
 
         $msgArr = array();

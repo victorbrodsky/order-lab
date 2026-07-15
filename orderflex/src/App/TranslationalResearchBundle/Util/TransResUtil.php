@@ -2629,7 +2629,10 @@ class TransResUtil
         //echo "reviewId=".$reviewId."<br>";
         //echo "query=".$query->getSql()."<br>";
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $reviewObjects = $query->getResult();
 
@@ -4028,7 +4031,10 @@ class TransResUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $projects = $query->getResult();
@@ -4107,7 +4113,10 @@ class TransResUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $labs = $query->getResult();
 
@@ -4156,7 +4165,10 @@ class TransResUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $panels = $query->getResult();
 
@@ -4186,7 +4198,10 @@ class TransResUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $antibodies = $query->getResult();
 
@@ -4644,7 +4659,10 @@ class TransResUtil
         
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $specialties = $query->getResult();
 
@@ -4804,7 +4822,10 @@ class TransResUtil
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $projects = $query->getResult();
@@ -4967,7 +4988,10 @@ class TransResUtil
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         //$query->setMaxResults(5);
@@ -7185,7 +7209,10 @@ class TransResUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $requests = $query->getResult();
 
@@ -7268,7 +7295,10 @@ class TransResUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $result = $query->getScalarResult();
@@ -7303,7 +7333,10 @@ class TransResUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $result = $query->getScalarResult();
@@ -7354,7 +7387,10 @@ class TransResUtil
         //$query->useResultCache(true);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $res = $query->getScalarResult();
@@ -7372,7 +7408,10 @@ class TransResUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $results = $query->getScalarResult();
@@ -7429,7 +7468,10 @@ class TransResUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         //$count = -1;
@@ -7446,7 +7488,10 @@ class TransResUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $results = $query->getScalarResult();
@@ -7625,7 +7670,10 @@ class TransResUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $priceLists = $query->getResult();
@@ -7827,7 +7875,10 @@ class TransResUtil
         $query = $dql->getQuery(); //$query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $entities = $query->getResult();
@@ -8063,7 +8114,10 @@ class TransResUtil
         $dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -8117,7 +8171,10 @@ class TransResUtil
         $dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -8185,7 +8242,10 @@ class TransResUtil
         $dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -8237,7 +8297,10 @@ class TransResUtil
         //$dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -8289,7 +8352,10 @@ class TransResUtil
         //$dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 
@@ -8763,7 +8829,10 @@ class TransResUtil
             $dqlParameters['workQueueName'] = $name;
 
             $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
 
             $entity = $query->getOneOrNullResult();
         }
@@ -8871,7 +8940,10 @@ class TransResUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $categories = $query->getResult();
@@ -9110,7 +9182,10 @@ class TransResUtil
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $projectPriceLists = $query->getResult();
@@ -9236,7 +9311,10 @@ class TransResUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $prices = $query->getResult();
@@ -9750,7 +9828,10 @@ WHERE
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $antibodies = $query->getResult();
         echo "findOrCreateAntibody: found antibodies=".count($antibodies)."<br>";
@@ -9812,7 +9893,10 @@ WHERE
             }
             $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
 
             $projectGoals = $query->getResult();
 
@@ -9832,7 +9916,10 @@ WHERE
         );
         $dql->orderBy('projectGoal.orderinlist', 'DESC');
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $query->setMaxResults(1);
         $projectGoals = $query->getResult();
 

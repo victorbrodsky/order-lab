@@ -372,7 +372,10 @@ class ExceptionListener {
         $dql->orderBy("logger.id","DESC");
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($dqlParameters);
+        foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $loggers = $query->getResult();
 

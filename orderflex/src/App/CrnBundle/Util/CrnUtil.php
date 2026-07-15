@@ -294,7 +294,10 @@ class CrnUtil
         $dql->orderBy("patient.id","ASC"); //show latest first
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo $mergeId.":sql=".$query->getSql()."<br>";
         $patients = $query->getResult();
         //echo "merged patients = ".count($patients)."<br>";
@@ -1479,7 +1482,10 @@ class CrnUtil
 
                         if( count($parameters) > 0 ) {
                             //print_r($parameters);
-                            $query->setParameters($parameters);
+                            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                                $query->setParameter($__setParamKey, $__setParamValue);
+                            }
+
                         }
 
                         $locations = $query->getResult();
@@ -1850,7 +1856,10 @@ class CrnUtil
         $parameters['typeadd'] = 'user-added';
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $patients = $query->getResult();
         if( count($patients) > 0 ) {
             return $patients;
@@ -2285,7 +2294,10 @@ class CrnUtil
         $queryParameters['eventStr2'] = '%'.$eventStr2.'%';
 
         $query = $dql->getQuery();
-        $query->setParameters( $queryParameters );
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $logs = $query->getResult();
         //echo $oid."[".$statusName."]: logs count=".count($logs)."<br>";
 
@@ -2534,11 +2546,7 @@ class CrnUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'userId' => $user->getId(),
-            'monday' => $mondayDBStr,
-            'sunday' => $sundayDBStr
-        ));
+        $query->setParameter('userId', $user->getId())->setParameter('monday', $mondayDBStr)->setParameter('sunday', $sundayDBStr);
 
         $results = $query->getResult();
         //echo "count=".count($results)."<br>";
@@ -2619,10 +2627,7 @@ class CrnUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'patientId' => $patient->getId(),
-            'deletedMessageStatus' => "Deleted"
-        ));
+        $query->setParameter('patientId', $patient->getId())->setParameter('deletedMessageStatus', "Deleted");
 
         $messages = $query->getResult();
 
@@ -2665,10 +2670,7 @@ class CrnUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'accessionId' => $accession->getId(),
-            'deletedMessageStatus' => "Deleted"
-        ));
+        $query->setParameter('accessionId', $accession->getId())->setParameter('deletedMessageStatus', "Deleted");
 
         $messages = $query->getResult();
 
@@ -2705,9 +2707,7 @@ class CrnUtil
 
         $query = $dql->getQuery();
 
-        $query->setParameters( array(
-            'deletedMessageStatus' => "Deleted"
-        ));
+        $query->setParameter('deletedMessageStatus', "Deleted");
 
         $messages = $query->getResult();
 
@@ -2802,7 +2802,10 @@ class CrnUtil
         $dql->orderBy('message.version','ASC');
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $messages = $query->getResult();
 
         if( count($messages) > 0 ) {
@@ -4526,7 +4529,10 @@ class CrnUtil
         if( $where ) {
 
             $query = $dql->getQuery();
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             $patients = $query->getResult();
 
             //log search action
@@ -4964,7 +4970,10 @@ class CrnUtil
         if( $where ) {
 
             $query = $dql->getQuery();
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             $patients = $query->getResult();
 
             //testing
@@ -5059,7 +5068,10 @@ class CrnUtil
         $parameters['statusAlias'] = 'alias';
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $accessions = $query->getResult();
 
         if( $returnAccessions ) {
@@ -5175,7 +5187,10 @@ class CrnUtil
         $parameters['patientId'] = $patient->getId();
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $accessions = $query->getResult();
 
         if( $asHtml ) {

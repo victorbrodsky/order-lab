@@ -481,7 +481,7 @@ class ScanUserController extends UserController
         $dql->where("userWrapperUser.id = :userid");
 
         //$query = $em->createQuery($dql)->setParameters( array( 'userid'=>$userid ) );
-        $query = $dql->getQuery()->setParameters( array( 'userid'=>$userid ) );
+        $query = $dql->getQuery()->setParameter('userid', $userid);
 
         $projects = $query->getResult();
 
@@ -506,7 +506,7 @@ class ScanUserController extends UserController
         $dql->innerJoin("userWrappers.user", "userWrapperUser");
         $dql->where("userWrapperUser.id = :userid");
 
-        $query = $dql->getQuery()->setParameters( array( 'userid'=>$userid ) );
+        $query = $dql->getQuery()->setParameter('userid', $userid);
 
         $courses = $query->getResult();
 

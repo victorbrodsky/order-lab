@@ -139,14 +139,7 @@ class UserPreferencesType extends AbstractType
                 //'empty_value' => false,
                 'attr' => array('class' => 'combobox combobox-width user-preferences-showToInstitutions'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'level' => 0
-                        ));
+                    return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('level', 0);
                 },
             ));
 
@@ -180,13 +173,7 @@ class UserPreferencesType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added'
-                        ));
+                    return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 },
             ));
 

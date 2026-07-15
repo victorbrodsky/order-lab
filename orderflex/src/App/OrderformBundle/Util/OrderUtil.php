@@ -1444,7 +1444,10 @@ class OrderUtil {
             $parameters['accessionListTypeId'] = $accessionListType->getId();
 
             $query = $dql->getQuery();
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
             $accessionLists = $query->getResult();
 
 
@@ -1656,7 +1659,10 @@ class OrderUtil {
         $parameters['typeadd'] = 'user-added';
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $accessions = $query->getResult();
         if( count($accessions) > 0 ) {
             return $accessions;

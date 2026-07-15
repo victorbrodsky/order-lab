@@ -854,7 +854,10 @@ class CrnPatientController extends PatientController {
         $dql->andWhere("list.type = 'user-added' OR list.type = 'default'");
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
@@ -955,7 +958,10 @@ class CrnPatientController extends PatientController {
         $parameters['hours96Ago'] = $hours96Ago;
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         //echo "sql=".$query->getSql()."<br>";
 
         $limit = 30;
@@ -1017,7 +1023,10 @@ class CrnPatientController extends PatientController {
         $parameters['patientId'] = $patientId;
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $patients = $query->getResult();
 
         $msgArr = array();
@@ -1266,7 +1275,10 @@ class CrnPatientController extends PatientController {
         // Clicking "Re-enter patient" in the Patient Info accordion should re-set the title of the accordion to "Previous Entries" (remove the patient name/info).
 
         $query = $dql->getQuery();
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $limit = 10;
         //$query->setMaxResults($limit);
@@ -1525,7 +1537,10 @@ class CrnPatientController extends PatientController {
         }
 
         $query = $dql->getQuery();
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         //$limit = 10;
 

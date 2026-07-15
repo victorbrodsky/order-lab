@@ -363,7 +363,10 @@ class TreeRepository extends NestedTreeRepository {
 
         $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
 
-        $query->setParameters($params);
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $results = $query->getResult();
 
@@ -407,7 +410,10 @@ class TreeRepository extends NestedTreeRepository {
 
         $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
 
-        $query->setParameters($params);
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $results = $query->getResult();
 
@@ -450,7 +456,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->orderBy("list.level","ASC"); //higher level first, so in case of similar division and service name, the division will be returned.
 
         $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
-        $query->setParameters( array("nameStr"=>$nameStr,"rootNodeId"=>$rootNodeId) );
+        $query->setParameter("nameStr", $nameStr)->setParameter("rootNodeId", $rootNodeId);
 
         $nodes = $query->getResult();
         //echo "nodes count=".count($nodes)."<br>";
@@ -533,7 +539,10 @@ class TreeRepository extends NestedTreeRepository {
 
         $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
 
-        $query->setParameters($params);
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $results = $query->getResult();
 
@@ -878,7 +887,10 @@ class TreeRepository extends NestedTreeRepository {
         //echo "dql=".$dql."<br>";
 
         $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
-        $query->setParameters($params);
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $results = $query->getResult();
 
@@ -1002,7 +1014,10 @@ class TreeRepository extends NestedTreeRepository {
         //echo "dql=".$dql."<br>";
 
         $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
-        $query->setParameters($params);
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $results = $query->getResult();
 

@@ -79,13 +79,7 @@ class AntibodyType extends AbstractType
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("(list.type = :typedef OR list.type = :typeadd)")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd)")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -308,14 +302,7 @@ class AntibodyType extends AbstractType
                 'by_reference' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.id != :selfId")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                            'selfId' => $this->selfId
-                        ));
+                    return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd) AND list.id != :selfId")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('selfId', $this->selfId);
                 }
             ));
         } else {
@@ -328,13 +315,7 @@ class AntibodyType extends AbstractType
                 'by_reference' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd)")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
+                    return $er->createQueryBuilder('list')->where("(list.type = :typedef OR list.type = :typeadd)")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
                 }
             ));
         }

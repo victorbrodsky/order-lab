@@ -247,15 +247,7 @@ class CalllogFilterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Location"),
             'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    ->leftJoin("u.locationTypes", "locationTypes")
-                    ->where("locationTypes.name='Encounter Location'")
-                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
-                    ->orderBy("u.name","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added'
-                    ));
+                return $er->createQueryBuilder('u')->leftJoin("u.locationTypes", "locationTypes")->where("locationTypes.name='Encounter Location'")->andWhere("u.type = :typedef OR u.type = :typeadd")->orderBy("u.name", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -268,11 +260,7 @@ class CalllogFilterType extends AbstractType
             'choice_label' => 'getNameShortName',
             'attr' => array('class' => 'combobox', 'placeholder' => "Institution or Collaboration"),
             'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    //->leftJoin("list.locationTypes", "locationTypes")
-                    ->where("list.level=0")
-                    ->andWhere('list.type = :default')
-                    ->setParameters( array('default'=>'default'))
+                return $er->createQueryBuilder('list')->where("list.level=0")->andWhere('list.type = :default')->setParameter('default', 'default')
                     ->orderBy("list.orderinlist","ASC");
             },
         ));
@@ -296,16 +284,7 @@ class CalllogFilterType extends AbstractType
             'choice_label' => 'name',    //'getNodeNameWithParent',
             'attr' => array('class' => 'combobox', 'placeholder' => "Patient List"),
             'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    ->where("u.level = 3")
-                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
-                    ->andWhere("u.parent = :parentPatientListId")
-                    ->orderBy("u.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                        'parentPatientListId' => $this->params['parentPatientListId'],
-                    ));
+                return $er->createQueryBuilder('u')->where("u.level = 3")->andWhere("u.type = :typedef OR u.type = :typeadd")->andWhere("u.parent = :parentPatientListId")->orderBy("u.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added')->setParameter('parentPatientListId', $this->params['parentPatientListId']);
             },
         ));
 
@@ -391,13 +370,7 @@ class CalllogFilterType extends AbstractType
             //'choice_label' => 'name',
             'attr' => array('class' => 'combobox', 'placeholder' => "Task Type"),
             'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('u')
-                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
-                    ->orderBy("u.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('u')->andWhere("u.type = :typedef OR u.type = :typeadd")->orderBy("u.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
         $builder->add('taskUpdatedBy', EntityType::class, array(
@@ -494,13 +467,7 @@ class CalllogFilterType extends AbstractType
             //'data' => $this->params['defaultAccessionType'],
             'attr' => array('class' => 'combobox combobox-width accessiontype-combobox skip-server-populate accessiontype', 'placeholder' => "Accession Type"),
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 

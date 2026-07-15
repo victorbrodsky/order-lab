@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
@@ -365,7 +366,7 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         //UserUtil::setLoginAttempt($request,$this->security,$em,$options);
         $secUtil->setLoginAttempt($request,$options);
 
-        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+        $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
         //$request->getSession()->set('locale',null);
         //$session->remove('locale');
         //$request->getSession()->set('create-custom-db', null);

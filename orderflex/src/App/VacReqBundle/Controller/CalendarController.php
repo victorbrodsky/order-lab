@@ -249,7 +249,10 @@ class CalendarController extends OrderAbstractController
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $paginationParams = array(
@@ -394,7 +397,10 @@ class CalendarController extends OrderAbstractController
         //echo "query=".$query->getSql()."<br>";
 
         if (count($dqlParameters) > 0) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $holidays = $query->getResult();
@@ -448,7 +454,10 @@ class CalendarController extends OrderAbstractController
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters( $dqlParameters );
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $paginationParams = array(

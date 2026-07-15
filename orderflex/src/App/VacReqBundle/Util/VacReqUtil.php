@@ -2476,10 +2476,7 @@ class VacReqUtil
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";
 
-        $query->setParameters( array(
-            'userId' => $user->getId(),
-            'status' => $status
-        ));
+        $query->setParameter('userId', $user->getId())->setParameter('status', $status);
 
         //bruteForce not used!!! Instead, we prevent to submit and approve overlap requests
 //        if( 0 && $bruteForce == true ) {
@@ -2692,7 +2689,10 @@ class VacReqUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $requests = $query->getResult();
@@ -4026,9 +4026,7 @@ class VacReqUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters( array(
-            'groupId' => $groupId
-        ));
+        $query->setParameter('groupId', $groupId);
 
         $results = $query->getResult();
         //echo "count results=".count($results)."<br>";
@@ -4128,10 +4126,7 @@ class VacReqUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters( array(
-            'userId' => $user->getId(),
-            'statusApproved' => 'approved'
-        ));
+        $query->setParameter('userId', $user->getId())->setParameter('statusApproved', 'approved');
 
         $requests = $query->getResult();
 
@@ -5004,7 +4999,10 @@ class VacReqUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $emplPeriods = $query->getResult();
 
@@ -5187,7 +5185,10 @@ class VacReqUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $emplPeriods = $query->getResult();
 
@@ -5996,7 +5997,10 @@ class VacReqUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($params) > 0 ) {
-            $query->setParameters($params);
+            foreach ($params as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $requests = $query->getResult();
@@ -6398,7 +6402,10 @@ class VacReqUtil
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
-        $query->setParameters($params);
+        foreach ($params as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $approverTypes = $query->getResult();
 
@@ -6906,7 +6913,10 @@ class VacReqUtil
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";
 
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         if( $asObject ) {
             $requests = $query->getResult();
@@ -6960,7 +6970,10 @@ class VacReqUtil
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";
 
-        $query->setParameters($queryParameters);
+        foreach ($queryParameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $requests = $query->getResult();
 
@@ -7615,7 +7628,10 @@ class VacReqUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $result = $query->getScalarResult();
@@ -8168,7 +8184,10 @@ class VacReqUtil
         $query = $dql->getQuery();
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $result = $query->getScalarResult();
@@ -8907,7 +8926,10 @@ class VacReqUtil
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $floatingRequests = $query->getResult();
@@ -9453,12 +9475,7 @@ class VacReqUtil
         //echo "query=".$query->getSql()."<br>";
         //echo "dql=".$dql."<br>";
 
-        $query->setParameters( array(
-            'userId' => $user->getId(),
-            'status' => $status,
-            'floatingDayDateFrom' => $startStr,
-            'floatingDayDateTo' => $endStr
-        ));
+        $query->setParameter('userId', $user->getId())->setParameter('status', $status)->setParameter('floatingDayDateFrom', $startStr)->setParameter('floatingDayDateTo', $endStr);
 
         if( $asObject ) {
             $requests = $query->getResult();

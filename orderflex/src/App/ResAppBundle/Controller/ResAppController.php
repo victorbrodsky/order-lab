@@ -586,7 +586,10 @@ class ResAppController extends OrderAbstractController {
         $query = $dql->getQuery();
 
         if( count($parameters) > 0 ) {
-            $query->setParameters($parameters);
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $paginator  = $this->container->get('knp_paginator');

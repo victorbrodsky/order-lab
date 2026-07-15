@@ -54,13 +54,7 @@ class VacReqApprovalGroupType extends AbstractType
             'attr' => array('class' => 'combobox', 'placeholder' => 'Time Away Approval Group Type'),
             //'choices' => $this->params['filterUsers'],
             'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
+                return $er->createQueryBuilder('list')->where("list.type = :typedef OR list.type = :typeadd")->orderBy("list.orderinlist", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             }
         ));
 

@@ -385,7 +385,10 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $dql->orderBy('message.version','DESC');
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $messages = $query->getResult();
 
         if( count($messages) > 0 ) {
@@ -414,7 +417,10 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $dql->orderBy('message.version','DESC');
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $messages = $query->getResult();
 
         return $messages;
@@ -457,7 +463,10 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $dql->orderBy('message.version','DESC');
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
         $messages = $query->getResult();
 
         return $messages;
@@ -476,7 +485,10 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $parameters['messageOid'] = $message->getOid();
 
         $query = $dql->getQuery();
-        $query->setParameters($parameters);
+        foreach ($parameters as $__setParamKey => $__setParamValue) {
+            $query->setParameter($__setParamKey, $__setParamValue);
+        }
+
 
         $maxVersions = $query->getResult();
         //echo "maxVersions count=".count($maxVersions)."<br>";

@@ -673,7 +673,10 @@ class DefaultReviewerController extends OrderAbstractController
         //echo "query=".$query->getSql()."<br>";
 
         if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $projects = $query->getResult();
@@ -991,7 +994,10 @@ class DefaultReviewerController extends OrderAbstractController
         //echo "query=".$query->getSql()."<br>";
 
         if (count($dqlParameters) > 0) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $requests = $query->getResult();
@@ -1173,7 +1179,10 @@ class DefaultReviewerController extends OrderAbstractController
         //echo "query=".$query->getSql()."<br>";
 
         if (count($dqlParameters) > 0) {
-            $query->setParameters($dqlParameters);
+            foreach ($dqlParameters as $__setParamKey => $__setParamValue) {
+                $query->setParameter($__setParamKey, $__setParamValue);
+            }
+
         }
 
         $invoices = $query->getResult();
