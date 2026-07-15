@@ -33,7 +33,7 @@ class ResearchLabRepository extends EntityRepository {
 
     public function processResearchLab( $user ) {
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         $labs = $user->getResearchLabs();
         //echo "labs count=".count($labs)."<br>";
@@ -166,7 +166,7 @@ class ResearchLabRepository extends EntityRepository {
             return;
         }
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:ResearchLabComment'] by [ResearchLabComment::class]
         $commentDb = $em->getRepository(ResearchLabComment::class)->findOneBy( array( 'author' => $subjectUser->getId(), 'researchLab'=>$lab->getId() ) );

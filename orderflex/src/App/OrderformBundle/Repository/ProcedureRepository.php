@@ -40,7 +40,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
             throw new \Exception( 'This entity must have only one child. Number of children=' . count($entity->getChildren()) );
         }
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
         $foundAccession = $em->getRepository(Accession::class)->findUniqueByKey( $entity->getChildren()->first() );    //,"Accession","accession");
 
@@ -61,14 +61,14 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         if( !$key->getKeytype() || $key->getKeytype() == "" ) {
             //throw new \Exception( 'Procedure does not have a valid keytype. keytype=' . $key->getKeytype() );
-            $em = $this->_em;
+            $em = $this->getEntityManager();
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureType'] by [ProcedureType::class]
             $newkeytypeEntity = $em->getRepository(ProcedureType::class)->findOneByName("Auto-generated Procedure Number");
             $key->setKeytype($newkeytypeEntity);
         }
 
         if( $key == "" || $key->getField() != "Auto-generated Procedure Number" ) {
-            $em = $this->_em;
+            $em = $this->getEntityManager();
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:ProcedureType'] by [ProcedureType::class]
             $newkeytypeEntity = $em->getRepository(ProcedureType::class)->findOneByName("Auto-generated Procedure Number");
             $key->setKeytype($newkeytypeEntity);
@@ -109,7 +109,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
 
         //process conflict if exists for accession number. Replace conflicting accession number by a new generated number.
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
-        $accession = $this->_em->getRepository(Accession::class)->processDuplicationKeyField($accession,$message);
+        $accession = $this->getEntityManager()->getRepository(Accession::class)->processDuplicationKeyField($accession,$message);
 
         $procedure->addChildren($accession);
 

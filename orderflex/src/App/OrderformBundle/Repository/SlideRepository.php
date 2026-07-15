@@ -56,7 +56,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         //Clean empty array fields
         $slide->cleanEmptyArrayFields();
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         //Capture new-entity state BEFORE persist: with SEQUENCE-based ids (ORM 3) the id is
         //assigned at persist() time, so getId() can no longer be used to detect a new slide.
         $isNewSlide = !$em->contains($slide);
@@ -143,7 +143,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $slides = new ArrayCollection();
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Block'] by [Block::class]
-        $block = $this->_em->getRepository(Block::class)->findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
+        $block = $this->getEntityManager()->getRepository(Block::class)->findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr);
 
         if( $block ) {
             foreach( $block->getSlide() as $slide ) {
@@ -156,7 +156,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         //echo "bloc's slide count=".count($slides)."<br>";
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Part'] by [Part::class]
-        $part = $this->_em->getRepository(Part::class)->findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr);
+        $part = $this->getEntityManager()->getRepository(Part::class)->findOneByInstAccessionPart($institution,$accessionTypeStr,$accessionStr,$partStr);
 
         if( $part ) {
             foreach( $part->getSlide() as $slide ) {
@@ -176,7 +176,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $slides = new ArrayCollection();
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
-        $accessiontype = $this->_em->getRepository(AccessionType::class)->findOneByName($accessionTypeStr);
+        $accessiontype = $this->getEntityManager()->getRepository(AccessionType::class)->findOneByName($accessionTypeStr);
 
         $extra = array();
         $extra["keytype"] = $accessiontype->getId();
@@ -187,7 +187,7 @@ class SlideRepository extends ArrayFieldAbstractRepository {
         $single = true;
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
-        $accession = $this->_em->getRepository(Accession::class)->findOneByIdJoinedToField(
+        $accession = $this->getEntityManager()->getRepository(Accession::class)->findOneByIdJoinedToField(
             $institutions,
             $accessionStr,
             "Accession",

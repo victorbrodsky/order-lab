@@ -29,7 +29,7 @@ class UserWrapperRepository extends EntityRepository {
 
         $userWrapper = null;
 
-        $query = $this->_em->createQueryBuilder()
+        $query = $this->getEntityManager()->createQueryBuilder()
             //->from('AppUserdirectoryBundle:UserWrapper', 'list')
             ->from(UserWrapper::class, 'list')
             ->select("list");

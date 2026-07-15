@@ -43,7 +43,7 @@ class GrantRepository extends EntityRepository {
 
     public function processGrant( $user ) {
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         $grants = $user->getGrants();
 
@@ -201,7 +201,7 @@ class GrantRepository extends EntityRepository {
             return;
         }
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:GrantComment'] by [GrantComment::class]
         $commentDb = $em->getRepository(GrantComment::class)->findOneBy( array( 'author' => $subjectUser->getId(), 'grant'=>$grant->getId() ) );

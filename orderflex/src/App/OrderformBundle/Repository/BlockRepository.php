@@ -46,7 +46,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
     public function cleanAndProcessEmptyArrayFields($entity) {
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         //$staintype = $em->getRepository('AppOrderformBundle:StainList')->find("Auto-generated Accession Number");
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:StainList'] by [StainList::class]
         $repository = $em->getRepository(StainList::class);
@@ -175,9 +175,9 @@ class BlockRepository extends ArrayFieldAbstractRepository
             foreach( $institutions as $inst ) {
                 //$instStr .= "b.institution=".$inst."";
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-                $permittedInstitution = $this->_em->getRepository(Institution::class)->find($inst);
+                $permittedInstitution = $this->getEntityManager()->getRepository(Institution::class)->find($inst);
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-                $instStr .= $this->_em->getRepository(Institution::class)->
+                $instStr .= $this->getEntityManager()->getRepository(Institution::class)->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                 if( $count < count($institutions) ) {
                     $instStr .= " OR ";
@@ -218,7 +218,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
     public function findOneByInstAccessionPartBlock($institution,$accessionTypeStr,$accessionStr,$partStr,$blockStr) {
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
-        $accessiontype = $this->_em->getRepository(AccessionType::class)->findOneByName($accessionTypeStr);
+        $accessiontype = $this->getEntityManager()->getRepository(AccessionType::class)->findOneByName($accessionTypeStr);
 
         $institutions = array();
         $institutions[] = $institution;
@@ -226,7 +226,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
         $single = true;
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Block'] by [Block::class]
-        $block = $this->_em->getRepository(Block::class)->findOneBlockByJoinedToField(
+        $block = $this->getEntityManager()->getRepository(Block::class)->findOneBlockByJoinedToField(
             $institutions,
             $accessionStr,
             $accessiontype->getId(),
@@ -261,7 +261,7 @@ class BlockRepository extends ArrayFieldAbstractRepository
 
         $withfields = false;
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         //1a) Check accession
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
@@ -325,10 +325,10 @@ class BlockRepository extends ArrayFieldAbstractRepository
         //TODO: change institution hierarchy and add collaboration
         //$inst = " AND p.institution=".$institution;
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-        $permittedInstitution = $this->_em->getRepository(Institution::class)->find($institution);
+        $permittedInstitution = $this->getEntityManager()->getRepository(Institution::class)->find($institution);
         $inst = " AND (" .
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-                $this->_em->getRepository(Institution::class)->
+                $this->getEntityManager()->getRepository(Institution::class)->
                     getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection")) .
                 ")";
 

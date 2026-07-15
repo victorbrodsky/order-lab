@@ -109,7 +109,7 @@ class ResearchRepository extends ListAbstractRepository {
 //
 //            $userstr = $userWrapper->getName()."";
 //            //echo "userstr=".$userstr."<br>";
-//            $foundPrincipal = $this->_em->getRepository('UserdirectoryBundle:UserWrapper')->findOneByName($userstr);
+//            $foundPrincipal = $this->getEntityManager()->getRepository('UserdirectoryBundle:UserWrapper')->findOneByName($userstr);
 //
 //            if( !$foundPrincipal ) {
 //                throw new \Exception( 'Principal was not found with name '.$userstr );

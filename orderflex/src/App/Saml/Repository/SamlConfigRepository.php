@@ -31,7 +31,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         $config = NULL;
 
-        $query = $this->_em->createQueryBuilder()->from(SamlConfig::class, 'config')->select("config")->where('config.client = :client AND config.type IN (:type)')->orderBy("config.id", "ASC")->setParameter('client', $domain)->setParameter('type', array('default', 'user-added'))
+        $query = $this->getEntityManager()->createQueryBuilder()->from(SamlConfig::class, 'config')->select("config")->where('config.client = :client AND config.type IN (:type)')->orderBy("config.id", "ASC")->setParameter('client', $domain)->setParameter('type', array('default', 'user-added'))
         ;
 
         $configs = $query->getQuery()->getResult();
@@ -67,7 +67,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
         return $config;
 
-//        $query = $this->_em->createQueryBuilder()
+//        $query = $this->getEntityManager()->createQueryBuilder()
 //            ->from(SamlConfig::class, 'config')
 //            ->select("config")
 //            ->where('config.client = :client AND config.type IN (:type)')
@@ -123,7 +123,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
 
     public function findAnyOne() {
-        $configs = $this->_em->getRepository(SamlConfig::class)->findAll();
+        $configs = $this->getEntityManager()->getRepository(SamlConfig::class)->findAll();
         if( count($configs) > 0 ) {
             return $configs[0];
         }
@@ -133,7 +133,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
     public function findAnyEnabledOne() {
         $config = NULL;
 
-        $query = $this->_em->createQueryBuilder()->from(SamlConfig::class, 'config')->select("config")->where('config.type IN (:type)')->orderBy("config.id", "ASC")->setParameter('type', array('default', 'user-added'))
+        $query = $this->getEntityManager()->createQueryBuilder()->from(SamlConfig::class, 'config')->select("config")->where('config.type IN (:type)')->orderBy("config.id", "ASC")->setParameter('type', array('default', 'user-added'))
         ;
 
         $configs = $query->getQuery()->getResult();
@@ -149,7 +149,7 @@ class SamlConfigRepository extends EntityRepository //ServiceEntityRepository
 
 //    public function findOneBy(array $criteria, ?array $orderBy = null)
 //    {
-//        $persister = $this->_em->getUnitOfWork()->getEntityPersister($this->_entityName);
+//        $persister = $this->getEntityManager()->getUnitOfWork()->getEntityPersister($this->_entityName);
 //
 //        return $persister->load($criteria, null, null, [], null, 1, $orderBy);
 //    }

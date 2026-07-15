@@ -47,7 +47,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     {
         parent::__construct($em, $class);
 
-        $securityUtil = new UserSecurityUtil($this->_em);
+        $securityUtil = new UserSecurityUtil($this->getEntityManager());
         $this->source = $securityUtil->getDefaultSourceSystem();
     }
     //https://stackoverflow.com/questions/48024235/cannot-autowire-service-argument-references-class-but-no-such-service-exists
@@ -66,7 +66,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             //return $entity;
         }
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
@@ -176,7 +176,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
     public function setResult( $entity, $message, $original=null ) {
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
 
@@ -577,7 +577,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //default source
-        $securityUtil = new UserSecurityUtil($this->_em);
+        $securityUtil = new UserSecurityUtil($this->getEntityManager());
         $source = $securityUtil->getDefaultSourceSystem();
 
         $class = new \ReflectionClass($entity);
@@ -660,7 +660,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                                     //set ID to null if status is valid (un-cancel procedure)
                                     //if( $status == 'valid' ) {
                                         //$field->setId(null);
-                                        //$em = $this->_em;
+                                        //$em = $this->getEntityManager();
                                         //$em->detach($field);
                                         //$em->persist($field);
                                     //}
@@ -735,7 +735,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     //field id is null if check button is not pressed, in this case all fields are gray
     //if entity is found in DB, then all fields have ID, if not then this function is not executed, because process FieldArrays has original=null
     public function copyField( $entity, $message, $field, $className, $methodName, $exceptionArr ) {
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         //echo "copy Field: class=".$className.$methodName.", id=".$field->getId().", field=".$field."<br>";
         //echo $entity;
 
@@ -959,9 +959,9 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                     //echo "not in array<br>";
                     //$instStr .= "c.institution=".$inst."";
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-                    $permittedInstitution = $this->_em->getRepository(Institution::class)->find($inst);
+                    $permittedInstitution = $this->getEntityManager()->getRepository(Institution::class)->find($inst);
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-                    $instStrNew = $this->_em->getRepository(Institution::class)->
+                    $instStrNew = $this->getEntityManager()->getRepository(Institution::class)->
                         getCriterionStrForCollaborationsByNode($permittedInstitution,"institution",array("Union","Intersection"));
                     //echo "instStrNew=".$instStrNew."<br>";
                     $instStr .= $instStrNew;
@@ -1059,7 +1059,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
                 return -1;
             }
 
-            $em = $this->_em;
+            $em = $this->getEntityManager();
             $em->remove($entity);
             $em->flush();
             $removed++;
@@ -1093,7 +1093,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $status = self::STATUS_RESERVED;
         }
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         $entityClass = "App\\OrderformBundle\\Entity\\".$className;
         $entity = new $entityClass($withfields,'valid',$provider);
@@ -1263,7 +1263,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //$inst = " AND c.institution=".$entity->getInstitution()->getId();
         $inst = " AND (" .
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
-                $this->_em->getRepository(Institution::class)->
+                $this->getEntityManager()->getRepository(Institution::class)->
                     getCriterionStrForCollaborationsByNode($entity->getInstitution(),"institution",array("Union","Intersection")) .
                 ")";
 
@@ -1431,7 +1431,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         if( $entity->obtainValidKeyfield() ) {
-            $em = $this->_em;
+            $em = $this->getEntityManager();
             $validity = array(self::STATUS_VALID,self::STATUS_RESERVED); //false; //accept reserved also
             $institutions = array($entity->getInstitution()->getId());
             $newEntity =
@@ -1510,7 +1510,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
 
                 //clean child
                 //echo 'mem: ' . (memory_get_usage()/1024/1024) . "<br />\n";
-                $em = $this->_em;
+                $em = $this->getEntityManager();
                 $em->detach($child);
                 unset($child);
                 gc_collect_cycles();

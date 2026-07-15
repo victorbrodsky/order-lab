@@ -45,7 +45,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 {
 
     public function setEncounterKey($key, $entity, $provider=null, $message=null ) {
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterType'] by [EncounterType::class]
         $newkeytypeEntity = $em->getRepository(EncounterType::class)->findOneByName("Auto-generated Encounter Number");
         $key->setKeytype($newkeytypeEntity);
@@ -72,7 +72,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         $patient = $encounter->getParent();
 
-        $securityUtil = new UserSecurityUtil($this->_em);
+        $securityUtil = new UserSecurityUtil($this->getEntityManager());
         $source = $securityUtil->getDefaultSourceSystem($sitename);
         //$status = self::STATUS_VALID;
 
@@ -297,13 +297,13 @@ class EncounterRepository extends ArrayFieldAbstractRepository
             $dataqualityObj->setStatus('active');
 
             //Use UnitOfWork state instead of getId(): with SEQUENCE-based ids a new (unflushed) encounter also has an id.
-            if( $encounter && $this->_em->contains($encounter) ) {
+            if( $encounter && $this->getEntityManager()->contains($encounter) ) {
                 $dataqualityObj->setEncounter($encounter);
             } else {
                 $dataqualityObj->setEncounter($original);
             }
 
-            $this->_em->persist($dataqualityObj);
+            $this->getEntityManager()->persist($dataqualityObj);
 
         }
 
@@ -323,7 +323,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
             throw new \Exception( 'This entity must have only one child. Number of children=' . count($entity->getChildren()) );
         }
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Procedure'] by [Procedure::class]
         $foundProcedure = $em->getRepository(Procedure::class)->findUniqueByKey( $entity->getChildren()->first() );    //,"procedure","procedure");
 
@@ -344,14 +344,14 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         if( !$key->getKeytype() || $key->getKeytype() == "" ) {
             //throw new \Exception( 'Encounter does not have a valid keytype. keytype=' . $key->getKeytype() );
-            $em = $this->_em;
+            $em = $this->getEntityManager();
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterType'] by [EncounterType::class]
             $newkeytypeEntity = $em->getRepository(EncounterType::class)->findOneByName("Auto-generated Encounter Number");
             $key->setKeytype($newkeytypeEntity);
         }
 
         if( $key == "" || $key->getField() != "Auto-generated Encounter Number" ) {
-            $em = $this->_em;
+            $em = $this->getEntityManager();
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:EncounterType'] by [EncounterType::class]
             $newkeytypeEntity = $em->getRepository(EncounterType::class)->findOneByName("Auto-generated Encounter Number");
             $key->setKeytype($newkeytypeEntity);
@@ -453,7 +453,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         //process conflict if exists for procedure number. Replace conflicting procedure number by a new generated number.
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Procedure'] by [Procedure::class]
-        $procedure = $this->_em->getRepository(Procedure::class)->processDuplicationKeyField($procedure,$message);
+        $procedure = $this->getEntityManager()->getRepository(Procedure::class)->processDuplicationKeyField($procedure,$message);
 
         $encounter->addChildren($procedure);
 
@@ -486,7 +486,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
     public function findEncountersByNumberAndType( $encounterTypeId, $encounterNumber, $status='valid', $encounterVersion=null ) {
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
-        $repository = $this->_em->getRepository(Encounter::class);
+        $repository = $this->getEntityManager()->getRepository(Encounter::class);
         $dql = $repository->createQueryBuilder("encounter");
         $dql->leftJoin("encounter.number", "number");
 
@@ -563,7 +563,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $encounterTypeId = $key->getKeytype();
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
-        $repository = $this->_em->getRepository(Encounter::class);
+        $repository = $this->getEntityManager()->getRepository(Encounter::class);
         $dql = $repository->createQueryBuilder("encounter");
         $dql->select("MAX(encounter.version) as maxVersion");
 
@@ -607,7 +607,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $encounterTypeId = $key->getKeytype();
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
-        $repository = $this->_em->getRepository(Encounter::class);
+        $repository = $this->getEntityManager()->getRepository(Encounter::class);
         $dql = $repository->createQueryBuilder("encounter");
         $dql->select("encounter");
 

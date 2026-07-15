@@ -144,7 +144,7 @@ class TreeRepository extends NestedTreeRepository {
 //
 //        $res = false;
 //
-//        $repository = $this->_em->getRepository('AppUserdirectoryBundle:Collaboration');
+//        $repository = $this->getEntityManager()->getRepository('AppUserdirectoryBundle:Collaboration');
 //        $dql = $repository->createQueryBuilder("collaboration");
 //        $dql->select("collaboration");
 //        $dql->leftJoin("collaboration.institutions","institutions");
@@ -163,7 +163,7 @@ class TreeRepository extends NestedTreeRepository {
 //        //echo "criteriastr=".$criteriastr."<br>";
 //
 //        $dql->where($criteriastr);
-//        $query = $this->_em->createQuery($dql);
+//        $query = $this->getEntityManager()->createQuery($dql);
 //        $collaborations = $query->getResult();
 //
 //        //echo "single query count(collaborations)=".count($collaborations)."<br>";
@@ -255,7 +255,7 @@ class TreeRepository extends NestedTreeRepository {
         //echo "criteriastr=".$criteriastr."<br>";
 
         $dql->where($criteriastr);
-        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
         $collaborations = $query->getResult();
 
         //TODO: add collaboration institutions if node is collaboration type and has collaboration institutions
@@ -348,7 +348,7 @@ class TreeRepository extends NestedTreeRepository {
             $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
         }
 
-        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
@@ -361,7 +361,7 @@ class TreeRepository extends NestedTreeRepository {
 //            $dql->orWhere("list.type='".$type."'");
 //        }
 
-        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
 
         foreach ($params as $__setParamKey => $__setParamValue) {
             $query->setParameter($__setParamKey, $__setParamValue);
@@ -400,7 +400,7 @@ class TreeRepository extends NestedTreeRepository {
 
         $foundEntity = null;
 
-        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
@@ -408,7 +408,7 @@ class TreeRepository extends NestedTreeRepository {
 
         $params = array('name' => '%"' . $nameStr . '"%');
 
-        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
 
         foreach ($params as $__setParamKey => $__setParamValue) {
             $query->setParameter($__setParamKey, $__setParamValue);
@@ -448,14 +448,14 @@ class TreeRepository extends NestedTreeRepository {
             $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
         }
 
-        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
         $dql->where("list.name = :nameStr AND list.root=:rootNodeId");
         $dql->orderBy("list.level","ASC"); //higher level first, so in case of similar division and service name, the division will be returned.
 
-        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter("nameStr", $nameStr)->setParameter("rootNodeId", $rootNodeId);
 
         $nodes = $query->getResult();
@@ -511,7 +511,7 @@ class TreeRepository extends NestedTreeRepository {
         //echo "childName=(".$childName.")<br>";
         //echo "rep=".$mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']."<br>";
 
-        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
@@ -537,7 +537,7 @@ class TreeRepository extends NestedTreeRepository {
 //            $dql->orWhere("list.type='".$type."'");
 //        }
 
-        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
 
         foreach ($params as $__setParamKey => $__setParamValue) {
             $query->setParameter($__setParamKey, $__setParamValue);
@@ -736,7 +736,7 @@ class TreeRepository extends NestedTreeRepository {
             //exit();
 
             $this->getEntityManager()->persist($newChild);
-            //$this->_em->flush($newChild);
+            //$this->getEntityManager()->flush($newChild);
             $this->getEntityManager()->flush();
 
             return $newChild;
@@ -854,7 +854,7 @@ class TreeRepository extends NestedTreeRepository {
 
         //echo "<br>get labels for ".$mapper['className']."<br>";
 
-        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $dql =  $treeRepository->createQueryBuilder("list");
         $dql->select('list');
@@ -886,7 +886,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where($where);
         //echo "dql=".$dql."<br>";
 
-        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
         foreach ($params as $__setParamKey => $__setParamValue) {
             $query->setParameter($__setParamKey, $__setParamValue);
         }
@@ -984,7 +984,7 @@ class TreeRepository extends NestedTreeRepository {
 
         //echo "<br>get labels for ".$mapper['className']."<br>";
 
-        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
 
         $dql =  $treeRepository->createQueryBuilder("list");
@@ -1013,7 +1013,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where($where);
         //echo "dql=".$dql."<br>";
 
-        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
         foreach ($params as $__setParamKey => $__setParamValue) {
             $query->setParameter($__setParamKey, $__setParamValue);
         }
@@ -1105,7 +1105,7 @@ class TreeRepository extends NestedTreeRepository {
             $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
         }
 
-        //$organizationalGroupTypes = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
+        //$organizationalGroupTypes = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['organizationalGroupType'])->findBy(
         $organizationalGroupTypes = $this->getEntityManager()->getRepository($mapper['entityNamespace'].'\\'.$mapper['organizationalGroupType'])->findBy(
             array(
                 "level" => $level,
@@ -1137,7 +1137,7 @@ class TreeRepository extends NestedTreeRepository {
             $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
         }
 
-        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
         $treeNode = $treeRepository->find($id);
 
@@ -1178,7 +1178,7 @@ class TreeRepository extends NestedTreeRepository {
             $mapper['entityNamespace'] = $mapper['prefix']."\\".$mapper['bundleName']."\\Entity";
         }
 
-        //$treeRepository = $this->_em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $this->getEntityManager()->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
         $treeRepository = $this->getEntityManager()->getRepository($mapper['fullClassName']);
 
         //$nodes = $treeRepository->findByLevel(-1);
@@ -1189,7 +1189,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->where("list.level < 0 AND parent IS NOT NULL AND parent.level > 0");
         //echo "dql=".$dql."<br>";
 
-        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
         $nodes = $query->getResult();
 
         //echo "nodes count=".count($nodes)."<br>";

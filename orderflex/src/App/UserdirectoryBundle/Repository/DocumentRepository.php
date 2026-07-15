@@ -96,7 +96,7 @@ class DocumentRepository extends EntityRepository {
             //check if id is numeric to prevent the case when $doc->getId() = "undefined"
             if( $documentId && is_numeric($documentId) ) {
 
-                $docDb = $this->_em->getRepository(Document::class)->find($documentId);
+                $docDb = $this->getEntityManager()->getRepository(Document::class)->find($documentId);
                 //$docDb = $doc;
 
                 //echo "docDb: [".$docDb."]<br>";
@@ -194,13 +194,13 @@ class DocumentRepository extends EntityRepository {
 //            echo "<br>";
 
             $documentHolder->$removeMethodName($doc);
-            //$this->_em->persist($doc);
+            //$this->getEntityManager()->persist($doc);
 
             //check if id is numeric to prevent the case when $doc->getId() = "undefined"
             if( $documentId && is_numeric($documentId) ) {
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
-                $docDb = $this->_em->getRepository(Document::class)->find($documentId);
+                $docDb = $this->getEntityManager()->getRepository(Document::class)->find($documentId);
                 //$docDb = $doc;
 
                 echo "docDb: [".$docDb."]<br>";
@@ -212,8 +212,8 @@ class DocumentRepository extends EntityRepository {
                         $docDb->setType($docType);
                     }
 
-                    //$this->_em->persist($docDb);
-                    //$this->_em->persist($documentHolder);
+                    //$this->getEntityManager()->persist($docDb);
+                    //$this->getEntityManager()->persist($documentHolder);
 
                     $documentHolder->$addMethodName($docDb);
                 } else {
@@ -282,7 +282,7 @@ class DocumentRepository extends EntityRepository {
             if( $documentId ) {
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
-                $docDb = $this->_em->getRepository(Document::class)->find($documentId);
+                $docDb = $this->getEntityManager()->getRepository(Document::class)->find($documentId);
                 if ($docDb) {
 
                     //echo "docDb id=".$docDb->getId()."<br>";
@@ -360,7 +360,7 @@ class DocumentRepository extends EntityRepository {
 
         if( $doctypeStr ) {
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:DocumentTypeList'] by [DocumentTypeList::class]
-            $documentType = $this->_em->getRepository(DocumentTypeList::class)->findOneByName($doctypeStr);
+            $documentType = $this->getEntityManager()->getRepository(DocumentTypeList::class)->findOneByName($doctypeStr);
         }
 
         //echo "documentType=".$documentType."<br>";
@@ -373,7 +373,7 @@ class DocumentRepository extends EntityRepository {
 
 //    public function findOneRecentDocument( $holder, $holderBundleName, $holderClassName, $documentStr ) {
 //
-//        $repository = $this->_em->getRepository($holderBundleName.':'.$holderClassName);
+//        $repository = $this->getEntityManager()->getRepository($holderBundleName.':'.$holderClassName);
 //        $dql = $repository->createQueryBuilder('holder');
 //        $dql->select("holder.documents");
 //        $dql->leftJoin("holder.".$documentStr,"documents");
@@ -383,7 +383,7 @@ class DocumentRepository extends EntityRepository {
 //        $dql->setMaxResults(1);
 //        $dql->orderBy("documents.createdate","DESC");
 //
-//        $query = $this->_em->createQuery($dql);
+//        $query = $this->getEntityManager()->createQuery($dql);
 //
 //        $documents = $query->getResult();
 //

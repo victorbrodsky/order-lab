@@ -478,8 +478,8 @@ class UserRepository extends EntityRepository {
     public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName=null, $sortBy=null) {
 
         //check if user's roles have permission
-        //$query = $this->_em->createQueryBuilder()->from('AppUserdirectoryBundle:Roles', 'list');
-        //$query = $this->_em->createQueryBuilder()->from(Roles::class, 'list'); //sf 6.4
+        //$query = $this->getEntityManager()->createQueryBuilder()->from('AppUserdirectoryBundle:Roles', 'list');
+        //$query = $this->getEntityManager()->createQueryBuilder()->from(Roles::class, 'list'); //sf 6.4
         $query = $this->getEntityManager()->createQueryBuilder()->from(Roles::class, 'list'); //sf 7.4
         $query->select("list");
 
@@ -507,7 +507,7 @@ class UserRepository extends EntityRepository {
             $institution = $this->getEntityManager()->getRepository(Institution::class)->find($institutionId);
             //echo "institution=".$institution->getNodeNameWithRoot()."<br>";
             //get inst criterion string tree with collaboration
-            //$instStr = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->
+            //$instStr = $this->getEntityManager()->getRepository('AppUserdirectoryBundle:Institution')->
             //        getCriterionStrForCollaborationsByNode($institution,"institution",array("Intersection"),false,false);
             //get simple inst criterion string tree (without collaboration)
             $instStr = $this->getEntityManager()->getRepository(Institution::class)->selectNodesUnderParentNode($institution,"institution",false);
@@ -673,7 +673,7 @@ class UserRepository extends EntityRepository {
             //check if the $userRoles is under $parentRole
             foreach( $userRoles as $userRole ) {
                 //echo "parentRole=".$parentRole."; userRole=".$userRole."<br>";
-                //$nodeUnderParent = $this->_em->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentRole->getInstitution(), $userRole->getInstitution());
+                //$nodeUnderParent = $this->getEntityManager()->getRepository('AppUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentRole->getInstitution(), $userRole->getInstitution());
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Institution'] by [Institution::class]
                 $nodeUnderParent = $this->getEntityManager()->getRepository(Institution::class)->isNodeUnderCollaborationParentnode($parentRole->getInstitution(), $userRole->getInstitution());
                 if( $nodeUnderParent ) {
@@ -928,7 +928,7 @@ class UserRepository extends EntityRepository {
     
 //    public function getPendingAdminReview() {
 //        if(1) {
-//            $query = $this->_em->createQueryBuilder()
+//            $query = $this->getEntityManager()->createQueryBuilder()
 //                ->from(User::class, 'user')
 //                ->select("user")
 //                ->leftJoin("user.infos", "infos")
@@ -944,11 +944,11 @@ class UserRepository extends EntityRepository {
 //        //$totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL) AND (((administrativeTitles.status = 0 OR appointmentTitles.status = 0 OR medicalTitles.status = 0 OR locations.status = 0)) AND (((employmentStatus.id IS NULL) OR employmentStatus.terminationDate IS NULL OR employmentStatus.terminationDate > '2015-11-05')))";
 //
 //        //$em = $this->em; //getDoctrine()->getManager();
-//        $repository = $this->_em->getRepository(User::class);
+//        $repository = $this->getEntityManager()->getRepository(User::class);
 //        $dql = $repository->createQueryBuilder('user');
 //        $dql->select('user');
 //        $dql->where("user.id = 1");
-//        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
 //        $pendings = $query->getResult();
 //        exit("111");
 //        $pendingCount = count($pendings);
@@ -969,7 +969,7 @@ class UserRepository extends EntityRepository {
 //
 //        $dql->where($totalcriteriastr);
 //
-//        $query = $dql->getQuery(); //$query = $this->_em->createQuery($dql);
+//        $query = $dql->getQuery(); //$query = $this->getEntityManager()->createQuery($dql);
 //
 //        //$pending = 0;
 //        //$pending = $query->getSingleScalarResult();

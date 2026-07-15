@@ -58,7 +58,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
     public function processMessageEntity( $entity, $user, $type, $router, $container ) {
 
         gc_enable();
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         //$em->getConnection()->getConfiguration()->setSQLLogger(null);
 
         $this->user = $user;
@@ -102,7 +102,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
     //process objects from bottom (slide level) to top (patient level)
     public function setMessageResultBottomToTop( $entity ) {
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         $this->setSlides($entity);
 
         $slides = $entity->getSlide();
@@ -207,7 +207,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
 
 
         ////////////////////// create new message //////////////////////
-        //$em = $this->_em;
+        //$em = $this->getEntityManager();
         $em->persist($entity);
         $em->flush();
         ////////////////////// EOF create new message //////////////////////
@@ -371,7 +371,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $parameters = array();
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
-        $repository = $this->_em->getRepository(Message::class);
+        $repository = $this->getEntityManager()->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -403,7 +403,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $parameters = array();
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
-        $repository = $this->_em->getRepository(Message::class);
+        $repository = $this->getEntityManager()->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -449,7 +449,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
         $parameters = array();
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
-        $repository = $this->_em->getRepository(Message::class);
+        $repository = $this->getEntityManager()->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
 
         $dql->where("message.oid = :oid");
@@ -476,7 +476,7 @@ class MessageRepository extends ArrayFieldAbstractRepository {
     public function getMaxMessageVersion( $message ) {
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Message'] by [Message::class]
-        $repository = $this->_em->getRepository(Message::class);
+        $repository = $this->getEntityManager()->getRepository(Message::class);
         $dql = $repository->createQueryBuilder("message");
         $dql->select("MAX(message.version) as maxVersion");
 

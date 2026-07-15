@@ -41,7 +41,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
     public function changeKeytype($entity) {
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         $key = $entity->obtainValidKeyField();
 
@@ -78,7 +78,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     //if keytype is "Existing Auto-generated Accession Number", then get "Auto-generated Accession Number" object and return its id
     //return id of the correct AccessionType
     public function getCorrectKeytypeId($keytypeid,$user=null) {
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         if( is_numeric ( $keytypeid ) ) {
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
@@ -97,7 +97,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
     }
 
     public function getExtraEntityById( $extra ) {
-        $em = $this->_em;
+        $em = $this->getEntityManager();
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
         return $em->getRepository(AccessionType::class)->findOneById($extra["keytype"]);
     }
@@ -113,7 +113,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         //echo "Must be accession: ".$accession;
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         //process data quality
         $currentDataquality = null;
@@ -261,7 +261,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
         $acctype = $em->getRepository(AccessionType::class)->findOneByName("Auto-generated Accession Number");
 
-        $securityUtil = new UserSecurityUtil($this->_em);
+        $securityUtil = new UserSecurityUtil($this->getEntityManager());
         $source = $securityUtil->getDefaultSourceSystem();
 
         //we should have only one key field !!!
@@ -313,7 +313,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
         //$validity[] = self::STATUS_RESERVED;
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Accession'] by [Accession::class]
-        $accessions = $this->_em->getRepository(Accession::class)->findOneByIdJoinedToField(
+        $accessions = $this->getEntityManager()->getRepository(Accession::class)->findOneByIdJoinedToField(
             $institutions,
             $accValue,      //$fieldStr
             "Accession",    //$className
@@ -389,7 +389,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
 
     public function findByAccessiontypeString($typeStr) {
-        $query = $this->_em->createQueryBuilder()->from(Accession::class, 'entity')->select("entity")->leftJoin("entity.accession", "accession")->leftJoin("accession.keytype", "keytype")->where("keytype.name = :keytypeStr")->setParameter('keytypeStr', $typeStr)
+        $query = $this->getEntityManager()->createQueryBuilder()->from(Accession::class, 'entity')->select("entity")->leftJoin("entity.accession", "accession")->leftJoin("accession.keytype", "keytype")->where("keytype.name = :keytypeStr")->setParameter('keytypeStr', $typeStr)
             ->getQuery();
 
         $accessions = $query->getResult();

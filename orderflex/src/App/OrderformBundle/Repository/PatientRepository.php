@@ -39,7 +39,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
     public function changeKeytype( $entity ) {
 
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         $key = $entity->obtainValidKeyField();
 
@@ -73,7 +73,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
     public function getCorrectKeytypeId($keytypeid,$user=null) {
-        $em = $this->_em;
+        $em = $this->getEntityManager();
 
         //if( is_numeric ( $keytypeid ) ) {
         if( strval($keytypeid) == strval(intval($keytypeid)) ) {
@@ -95,7 +95,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
     public function getExtraEntityById( $extra ) {
         if( strval($extra["keytype"]) == strval(intval($extra["keytype"])) ) {
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
-            return $this->_em->getRepository(MrnType::class)->findOneById($extra["keytype"]);
+            return $this->getEntityManager()->getRepository(MrnType::class)->findOneById($extra["keytype"]);
         } else {
             return null;
         }
@@ -143,7 +143,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
             //echo "0 accession slide count=".count($accession->getPart()->first()->getBlock()->first()->getSlide())."<br>";
 
             //$sameChild = $this->findSimilarChild($parent,$encounter->getChildren()->first());
-            $em = $this->_em;
+            $em = $this->getEntityManager();
             //$sameChild = $em->getRepository('AppOrderformBundle:Encounter')->findSimilarChild( $parent, $encounter->getChildren()->first() );
             //$foundAccession = $em->getRepository('AppOrderformBundle:Accession')->findSimilarChild( $parent, $accession );
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]
@@ -212,7 +212,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
         //echo "mrnStr=".$mrnStr."; mrntypeId=".$mrntypeId."<br>";
         $queryParameters = array();
 
-        $dql = $this->_em->createQueryBuilder()
+        $dql = $this->getEntityManager()->createQueryBuilder()
             //->from('AppOrderformBundle:Patient', 'patient')
             ->from(Patient::class, 'patient')
             ->select("patient")
@@ -249,7 +249,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
 
     public function findByMrntypeString($mrntypeStr) {
 
-        $query = $this->_em->createQueryBuilder()->from(Patient::class, 'patient')->select("patient")->leftJoin("patient.mrn", "mrn")->leftJoin("mrn.keytype", "keytype")->where("keytype.name = :keytypeStr")->setParameter('keytypeStr', $mrntypeStr)
+        $query = $this->getEntityManager()->createQueryBuilder()->from(Patient::class, 'patient')->select("patient")->leftJoin("patient.mrn", "mrn")->leftJoin("mrn.keytype", "keytype")->where("keytype.name = :keytypeStr")->setParameter('keytypeStr', $mrntypeStr)
             ->getQuery();
 
         $patients = $query->getResult();
@@ -268,11 +268,11 @@ class PatientRepository extends ArrayFieldAbstractRepository
             return null;
         }
 
-        $securityUtil = new UserSecurityUtil($this->_em);
+        $securityUtil = new UserSecurityUtil($this->getEntityManager());
         $source = $securityUtil->getDefaultSourceSystem($sitename);
 
 //        foreach( $patient->getEncounter() as $encounter ) {
-//            $this->_em->getRepository('AppOrderformBundle:Encounter')->copyNewCommonFieldsToPatient($encounter,$user,$source);
+//            $this->getEntityManager()->getRepository('AppOrderformBundle:Encounter')->copyNewCommonFieldsToPatient($encounter,$user,$source);
 //        }
 //        return $patient;
 
@@ -309,7 +309,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
         $fieldlc = strtolower($fieldStr);
 
         //include latest updated or created
-        $query = $this->_em->createQueryBuilder()->from('App\OrderformBundle\Entity\EncounterPat' . $fieldlc, 'commonfield')->select("commonfield")->leftJoin("commonfield.encounter", "encounter")->leftJoin("encounter.patient", "patient")->where("patient.id = :patientId AND commonfield.status = 'valid' AND commonfield.field IS NOT NULL")->orderBy("commonfield.updateDate", "DESC")->setParameter('patientId', $patient->getId())
+        $query = $this->getEntityManager()->createQueryBuilder()->from('App\OrderformBundle\Entity\EncounterPat' . $fieldlc, 'commonfield')->select("commonfield")->leftJoin("commonfield.encounter", "encounter")->leftJoin("encounter.patient", "patient")->where("patient.id = :patientId AND commonfield.status = 'valid' AND commonfield.field IS NOT NULL")->orderBy("commonfield.updateDate", "DESC")->setParameter('patientId', $patient->getId())
             ->getQuery();
 
         $commonfields = $query->getResult();

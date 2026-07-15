@@ -47,7 +47,7 @@ class RequestCategoryTypeListRepository extends EntityRepository {
     }
 
 //    public function findOneByProjectSpecialties($id) {
-//        $em = $this->_em;
+//        $em = $this->getEntityManager();
 //        $categoryDb = $em->getRepository('AppTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProjectSpecialties($id);
 //        return $categoryDb;
 //    }
