@@ -55,10 +55,15 @@ class Document {
     //Logger id strategy: 'AUTO' => constrains: Default: empty
     //ProductTest id strategy: 'SEQUENCE' => constrains: Default: empty
 
+//    #[ORM\Id]
+//    #[ORM\Column(type: 'integer')]
+//    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+//    private  $id;
     #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private  $id;
+    private ?int $id = null;
+
 
     #[ORM\Column(type: 'string', nullable: true)]
     #[Assert\NotBlank]

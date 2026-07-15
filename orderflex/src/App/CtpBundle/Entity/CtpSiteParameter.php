@@ -27,7 +27,7 @@ class CtpSiteParameter {
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     private $id;
 
     /*

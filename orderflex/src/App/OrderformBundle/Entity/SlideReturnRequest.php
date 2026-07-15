@@ -32,7 +32,7 @@ class SlideReturnRequest {
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     private $id;
 
     #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'slideReturnRequest', cascade: ['persist'])]

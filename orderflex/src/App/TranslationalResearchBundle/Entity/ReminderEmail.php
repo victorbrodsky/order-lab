@@ -34,7 +34,7 @@ class ReminderEmail
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]

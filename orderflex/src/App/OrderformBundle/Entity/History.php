@@ -31,7 +31,7 @@ class History
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     private $id;
 
     #[ORM\Column(type: 'string', nullable: true)]

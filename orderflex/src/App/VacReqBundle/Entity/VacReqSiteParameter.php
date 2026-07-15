@@ -34,7 +34,7 @@ class VacReqSiteParameter
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     private $id;
 
     #[ORM\Column(type: 'date', nullable: true)]

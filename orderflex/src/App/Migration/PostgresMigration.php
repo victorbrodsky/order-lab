@@ -223,7 +223,6 @@ class PostgresMigration extends AbstractMigration
             echo $this->counter.":###Ignore7 (all DROP INDEX pk__) ".$sql.$newline;
             return; // FALSE;
         }
-
 //        //DROP INDEX pk__fellapp___1e656710b5f511b5
 //        //An exception occurred while executing a query: SQLSTATE[2BP01]: Dependent objects still exist: 7 ERROR:  cannot dro
 //        //p index pk__fellapp___1e656710b5f511b5 because constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_c

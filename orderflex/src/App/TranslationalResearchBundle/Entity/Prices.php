@@ -40,10 +40,14 @@ class Prices
     /**
      * @var integer
      */
-    #[ORM\Column(name: 'id', type: 'integer')]
+//    #[ORM\Column(name: 'id', type: 'integer')]
+//    #[ORM\Id]
+//    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+//    private $id;
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private $id;
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: 'RequestCategoryTypeList', inversedBy: 'prices')]
     #[ORM\JoinColumn(name: 'requestCategoryType_id', referencedColumnName: 'id', onDelete: 'CASCADE')]

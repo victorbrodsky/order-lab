@@ -43,7 +43,7 @@ class FosComment extends FosBaseComment // implements SignedCommentInterface
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     protected $id;
 
     /**

@@ -38,7 +38,7 @@ class AttachmentContainer {
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     private $id;
 
     #[ORM\OneToMany(targetEntity: 'DocumentContainer', mappedBy: 'attachmentContainer', cascade: ['persist', 'remove'])]

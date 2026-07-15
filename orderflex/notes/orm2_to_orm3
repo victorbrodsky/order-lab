@@ -20,3 +20,4 @@ In Connection.php line 57:
   HINT:  You can drop constraint pk__fellapp___1e656710b5f511b5 on table fellapp_fellapp_coverletter instead.
 
 
+old: nextval('fellapp_fellowshipapplication_id_seq'::regclass)

@@ -37,7 +37,7 @@ abstract class ListAbstract
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     protected $id;
 
     #[ORM\Column(name: 'name', type: 'string')]

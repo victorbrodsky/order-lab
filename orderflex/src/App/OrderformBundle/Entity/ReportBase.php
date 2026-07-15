@@ -30,7 +30,7 @@ abstract class ReportBase {
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     protected $id;
 
     #[ORM\Column(type: 'datetime', nullable: true)]

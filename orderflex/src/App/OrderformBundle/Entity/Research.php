@@ -41,7 +41,7 @@ class Research
 
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     private $id;
 
     #[ORM\OneToOne(targetEntity: 'Message', mappedBy: 'research')]

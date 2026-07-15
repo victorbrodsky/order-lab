@@ -35,7 +35,7 @@ class Logger
 //    #[ORM\GeneratedValue]
 //    private $id;
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 

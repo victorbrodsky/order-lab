@@ -27,10 +27,14 @@ class VisualInfo {
     /**
      * @var integer
      */
-    #[ORM\Column(name: 'id', type: 'integer')]
+//    #[ORM\Column(name: 'id', type: 'integer')]
+//    #[ORM\Id]
+//    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+//    protected $id;
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    protected $id;
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\Column(type: 'integer')]
+    protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     #[ORM\JoinColumn(name: 'author', referencedColumnName: 'id')]

@@ -30,7 +30,7 @@ class DataQuality
      */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     protected $id;
 
     #[ORM\Column(type: 'text', nullable: true)]
