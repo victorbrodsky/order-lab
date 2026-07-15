@@ -1359,7 +1359,7 @@ class InvoiceController extends OrderAbstractController
                     $invoice->setIssuedDate(new \DateTime());
                 }
             }
-            //exit("status=".$invoice->getStatus());
+            //exit("Before flush status=".$invoice->getStatus()); //testing
 
             $em->flush(); //edit
 

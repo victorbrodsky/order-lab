@@ -32,6 +32,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ORM\HasLifecycleCallbacks]
 class InvoiceItem {
 
+    //IDENTITY=>SEQUENCE: Test remove invoice item from Invoice and update => error: invoice item not removed
+    //Items can ve added to the invoice but not deleted.
+    //Added items on the invoice will be displayed on work request under section "Additional Info from the Invoice. See latest invoice APCP2-REQ1-V3"
+
     /**
      * @var integer
      */

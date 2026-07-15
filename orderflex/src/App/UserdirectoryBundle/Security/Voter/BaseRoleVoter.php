@@ -33,6 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use App\UserdirectoryBundle\Entity\User;
 
 
@@ -78,7 +79,7 @@ abstract class BaseRoleVoter extends Voter {
     }
 
     //evaluate if this user has this role (attribute)
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) : bool
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token, ?Vote $vote = null) : bool
     {
 
         //return false; //testing

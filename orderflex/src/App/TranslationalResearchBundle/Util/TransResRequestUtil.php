@@ -2407,7 +2407,7 @@ class TransResRequestUtil
                     }
 
                     if ($category) {
-                        echo "Adding new found by $itemCode: category=" . $category . "<br>";
+                        //echo "Adding new found by $itemCode: category=" . $category . "<br>";
                         //exit(111);
 
                         $newProduct = new Product($user);
@@ -2455,7 +2455,7 @@ class TransResRequestUtil
                     $transresUtil->setEventLog($transresRequest, $eventType, $msg);
 
                 } else {
-                    echo "Product with ID=" . $invoiceProduct->getId() . " already exists in work request. InvoiceID=" . $invoice->getId() . ", workRequestId=" . $transresRequest->getId() . ", invoiceItemId=" . $invoiceItem->getId() . "<br>";
+                    //echo "Product with ID=" . $invoiceProduct->getId() . " already exists in work request. InvoiceID=" . $invoice->getId() . ", workRequestId=" . $transresRequest->getId() . ", invoiceItemId=" . $invoiceItem->getId() . "<br>";
                 }
             }//if(0)
             //////////////////// EOF Case D: adding new invoice item with existing category ////////////////////
@@ -2482,6 +2482,7 @@ class TransResRequestUtil
         foreach( $transresRequest->getProducts() as $product ) {
             if( !isset($invoiceItemProducts[$product->getId()]) ) {
                 //product does not exists anymore in the invoice via $invoiceItemProducts
+                //echo "product does not exists anymore in the invoice via invoiceItemProducts, product id=".$product->getId()."<br>";
                 $product->setNotInInvoice(true);
             }
         }

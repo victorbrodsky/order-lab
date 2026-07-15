@@ -129,7 +129,7 @@ abstract class BasePermissionVoter extends Voter {
 
 
     //if return false it redirect to main page (access_denied_url?): "You don't have permission to visit this page on Scan Order site. If you already applied for access, then try to Re-Login"
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) : bool
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token, ?Vote $vote = null) : bool
     {
 
         $attribute = $this->convertAttribute($attribute);

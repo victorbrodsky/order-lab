@@ -506,4 +506,23 @@ private ?int $id = null;
 
 Still, I have some IDENTITY entities and after migration they have duplicate sequence
 
+Upgrade steps:
+1) composer install
+
+2) Covert array to json:
+php bin/console app:convert-array-to-json --all --apply --alter-schema
+
+3) Run bash prepare.sh
+
+4) Run diff and then migration
+
+5) Clear cache by rm -rf var/log*
+
+6) Run all tests
+
+
+Test after upgrade.
+//IDENTITY=>SEQUENCE: Test remove invoice item from Invoice and update => error: invoice item not removed
+//Items can ve added to the invoice but not deleted.
+//Added items on the invoice will be displayed on work request under section "Additional Info from the Invoice. See latest invoice APCP2-REQ1-V3"
 

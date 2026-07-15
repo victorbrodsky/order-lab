@@ -30,6 +30,7 @@ use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
 use App\VacReqBundle\Entity\VacReqRequestFloating;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 
@@ -54,9 +55,9 @@ class VacReqPermissionVoter extends BasePermissionVoter //BasePermissionVoter   
         return false;
     }
 
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) : bool
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token, ?Vote $vote = null) : bool
     {
-        if( parent::voteOnAttribute($attribute, $subject, $token) ) {
+        if( parent::voteOnAttribute($attribute, $subject, $token, $vote) ) {
             return true;
         } else {
             switch($attribute) {
