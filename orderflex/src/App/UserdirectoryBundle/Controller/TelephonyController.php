@@ -426,7 +426,7 @@ class TelephonyController extends OrderAbstractController {
 //            }
 //        }
 
-        $phoneNumber = $request->get('phoneNumber');
+        $phoneNumber = $request->attributes->get('phoneNumber', $request->query->get('phoneNumber', $request->request->get('phoneNumber')));
         //exit("phoneNumber=".$phoneNumber);
 
 //        $userInfo = $user->getUserInfoByPreferredMobilePhone($phoneNumber);
@@ -631,9 +631,9 @@ class TelephonyController extends OrderAbstractController {
 
         $userRequest = NULL;
         
-        $phoneNumber = $request->get('phoneNumber');
-        $userRequestId = $request->get('userRequestId');
-        $objectName = $request->get('objectName');
+        $phoneNumber = $request->attributes->get('phoneNumber', $request->query->get('phoneNumber', $request->request->get('phoneNumber')));
+        $userRequestId = $request->attributes->get('userRequestId', $request->query->get('userRequestId', $request->request->get('userRequestId')));
+        $objectName = $request->attributes->get('objectName', $request->query->get('objectName', $request->request->get('objectName')));
 
         if( $userRequestId ) {
             //$userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);
@@ -704,7 +704,7 @@ class TelephonyController extends OrderAbstractController {
         //$verificationCode = $request->query->get('verificationCode');
         $userRequestId = $request->request->get('userRequestId');
         $userRequestId = trim((string)$userRequestId);
-        $objectName = $request->get('objectName');
+        $objectName = $request->attributes->get('objectName', $request->query->get('objectName', $request->request->get('objectName')));
 
         if( $userRequestId ) {
             //$userRequest = $em->getRepository('AppUserdirectoryBundle:UserRequest')->find($userRequestId);

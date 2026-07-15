@@ -87,7 +87,7 @@ class WorkQueueController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $singleWorkqueue = NULL;
         $title = "Work Queues"; // . $workQueuesName;
 
@@ -193,7 +193,7 @@ class WorkQueueController extends OrderAbstractController
         $fundingNumber = $filterform['fundingNumber']->getData();
         $fundingType = $filterform['fundingType']->getData();
         //$filterType = trim((string)$request->get('type'));
-        $filterTitle = trim((string)$request->get('title'));
+        $filterTitle = trim((string)$request->attributes->get('title', $request->query->get('title', $request->request->get('title'))));
 
         //replace - with space
         //echo "filterType=$filterType <br>"; //All-COVID-19-Requests

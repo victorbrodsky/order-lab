@@ -55,11 +55,11 @@ class UploadListener {
     {
         $request = $event->getRequest();
         $logger = $this->container->get('logger');
-        $userid = $request->get('userid');
-        $originalfilename = $request->get('filename');
-        $documentType = $request->get('documenttype');
-        $sitename = $request->get('sitename');
-        $authUserId = $request->get('authuserid');
+        $userid = $request->attributes->get('userid', $request->query->get('userid', $request->request->get('userid')));
+        $originalfilename = $request->attributes->get('filename', $request->query->get('filename', $request->request->get('filename')));
+        $documentType = $request->attributes->get('documenttype', $request->query->get('documenttype', $request->request->get('documenttype')));
+        $sitename = $request->attributes->get('sitename', $request->query->get('sitename', $request->request->get('sitename')));
+        $authUserId = $request->attributes->get('authuserid', $request->query->get('authuserid', $request->request->get('authuserid')));
 
         //$holdername = $request->get('holdername');
         //$holderid = $request->get('holderid');

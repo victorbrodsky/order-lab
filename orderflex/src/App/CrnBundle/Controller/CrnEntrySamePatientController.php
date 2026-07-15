@@ -92,12 +92,12 @@ class CrnEntrySamePatientController extends CrnEntryController
         $orderUtil = $this->container->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $mrn = trim((string)$request->get('mrn'));
-        $mrntype = trim((string)$request->get('mrntype'));
-        $encounterNumber = trim((string)$request->get('encounter-number'));
-        $encounterTypeId = trim((string)$request->get('encounter-type'));
+        $mrn = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $encounterNumber = trim((string)$request->attributes->get('encounter-number', $request->query->get('encounter-number', $request->request->get('encounter-number'))));
+        $encounterTypeId = trim((string)$request->attributes->get('encounter-type', $request->query->get('encounter-type', $request->request->get('encounter-type'))));
         //$encounterVersion = trim((string)$request->get('encounter-version'));
-        $messageTypeId = trim((string)$request->get('message-type'));
+        $messageTypeId = trim((string)$request->attributes->get('message-type', $request->query->get('message-type', $request->request->get('message-type'))));
         //echo "mrntype=".$mrntype."<br>";
 
         //check if user has at least one institution

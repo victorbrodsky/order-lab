@@ -75,7 +75,7 @@ class RequestController extends OrderAbstractController
 
         $user = $this->getUser();
         $approvalGroupType = $vacreqUtil->getSingleApprovalGroupType($user);
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $newCarryOverRequestStr = null;
 
         //Testing accrued days
@@ -610,7 +610,7 @@ class RequestController extends OrderAbstractController
 
 
         //check permission
-        $routName = $request->get('_route');
+        $routName = $request->attributes->get('_route');
         if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             if ($routName == 'vacreq_review') {
                 if (false == $this->isGranted("changestatus", $entity)) {
@@ -994,7 +994,7 @@ class RequestController extends OrderAbstractController
 
         $review = false;
         if( $request ) {
-            if( $request->get('_route') == 'vacreq_review' ) {
+            if( $request->attributes->get('_route') == 'vacreq_review' ) {
                 $review = true;
             }
         }
@@ -1036,7 +1036,7 @@ class RequestController extends OrderAbstractController
 
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $user = $this->getUser();
         $vacreqUtil = $this->container->get('vacreq_util');
 
@@ -1477,7 +1477,7 @@ class RequestController extends OrderAbstractController
     #[Route(path: '/cancellation-request/estatus/{id}/{status}', name: 'vacreq_status_cancellation-request_email_change', methods: ['GET'])]
     public function statusCancellationRequestChangeAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $user = $this->getUser();
         //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
         $entity = $em->getRepository(VacReqRequest::class)->find($id);
@@ -1607,7 +1607,7 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->container->get('user_service_utility');
         $vacreqUtil = $this->container->get('vacreq_util');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $user = $this->getUser();
 

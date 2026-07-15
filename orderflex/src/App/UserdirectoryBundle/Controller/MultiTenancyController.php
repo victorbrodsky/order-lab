@@ -120,7 +120,7 @@ class MultiTenancyController extends OrderAbstractController
         $cycle = "show";
         $disabled = true;
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         if( $routeName == 'employees_tenancy_manager_configure_edit' ) {
             $cycle = "edit";
             $disabled = false;
@@ -1001,7 +1001,7 @@ class MultiTenancyController extends OrderAbstractController
         $cycle = "show";
         $disabled = true;
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         if( $routeName == 'employees_homepage_manager_configure_edit' ) {
             $cycle = "edit";
             $disabled = false;

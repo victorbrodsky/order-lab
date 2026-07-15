@@ -662,9 +662,9 @@ class DefaultController extends OrderAbstractController
         //$projectId = $request->query->get('projectId');
         //$productArr = $request->query->get('productArr');
 
-        $projectId = $request->get('projectId');
-        $workrequestId = $request->get('workrequestId');
-        $productsArr = $request->get('productsArr');
+        $projectId = $request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId')));
+        $workrequestId = $request->attributes->get('workrequestId', $request->query->get('workrequestId', $request->request->get('workrequestId')));
+        $productsArr = $request->attributes->get('productsArr', $request->query->get('productsArr', $request->request->get('productsArr')));
 
         //print_r($productsArr);
         //echo "projectId=$projectId, workrequestId=$workrequestId <br>";
@@ -1979,8 +1979,8 @@ class DefaultController extends OrderAbstractController
         $newline =  "<br>\n";
         $invoice = NULL;
 
-        $invoiceId = $request->get('invoiceId');
-        $specialtyId = $request->get('specialtyId');
+        $invoiceId = $request->attributes->get('invoiceId', $request->query->get('invoiceId', $request->request->get('invoiceId')));
+        $specialtyId = $request->attributes->get('specialtyId', $request->query->get('specialtyId', $request->request->get('specialtyId')));
 
         //echo "invoiceId=$invoiceId<br>";
 

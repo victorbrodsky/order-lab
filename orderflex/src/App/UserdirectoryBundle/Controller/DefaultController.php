@@ -304,7 +304,7 @@ class DefaultController extends OrderAbstractController
 
         $result = "no testing";
 
-        $testFile = trim((string)$request->get('testFile'));
+        $testFile = trim((string)$request->attributes->get('testFile', $request->query->get('testFile', $request->request->get('testFile'))));
 
         $logDir = $this->container->get('kernel')->getProjectDir();
 

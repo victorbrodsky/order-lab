@@ -91,7 +91,7 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
 
         $user = $this->getUser();
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
         //echo "route".$route."<br>";
         //exit();
 
@@ -1008,7 +1008,7 @@ class FellAppController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
         $logger = $this->container->get('logger');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
 
         //$user = $this->container->get('security')->getUser();
@@ -1146,7 +1146,7 @@ class FellAppController extends OrderAbstractController {
 
         $applicant->addFellowshipApplication($fellowshipApplication);
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $args = $this->getShowParameters($routeName,$fellowshipApplication,$user); // new
 
         if( count($args) == 0 ) {
@@ -1485,7 +1485,7 @@ class FellAppController extends OrderAbstractController {
         //$fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //$user = $this->getUser();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $applicant = $entity->getUser();
         //echo "Applicant=".$applicant.", applicantID=".$applicant->getId().", user=".$user."<br>";
@@ -2283,7 +2283,7 @@ class FellAppController extends OrderAbstractController {
             'entity' => $fellowshipApplication,
             'pathbase' => 'fellapp',
             'cycle' => 'new',
-            'route_path' => $request->get('_route'), //new
+            'route_path' => $request->attributes->get('_route'), //new
             'sitename' => $this->getParameter('fellapp.sitename'),
             //'parentFormnodeId' => $parentFormnodeId
         );
@@ -2437,7 +2437,7 @@ class FellAppController extends OrderAbstractController {
             $event
         );
 
-        if( $request->get('_route') == 'fellapp_status_email' ) {
+        if( $request->attributes->get('_route') == 'fellapp_status_email' ) {
             return $this->redirect( $this->generateUrl('fellapp_show',array('id' => $id)) );
         }
 
@@ -2459,9 +2459,9 @@ class FellAppController extends OrderAbstractController {
 
         $logger = $this->container->get('logger');
 
-        $status = trim((string)$request->get('status'));
-        $subject = (string)$request->get('subject');
-        $body = (string)$request->get('body');
+        $status = trim((string)$request->attributes->get('status', $request->query->get('status', $request->request->get('status'))));
+        $subject = (string)$request->attributes->get('subject', $request->query->get('subject', $request->request->get('subject')));
+        $body = (string)$request->attributes->get('body', $request->query->get('body', $request->request->get('body')));
 
         $logger->notice("sendInterviewInvitationAction: status=$status, subject=$subject, body=$body");
         $logger->notice("sendInterviewInvitationAction: body=".json_encode($body));
@@ -2505,7 +2505,7 @@ class FellAppController extends OrderAbstractController {
         // Optional free-text reason provided when an application is withdrawn
         $reasonText = null;
         if( $request instanceof Request ) {
-            $reasonText = trim((string)$request->get('withdrawReason'));
+            $reasonText = trim((string)$request->attributes->get('withdrawReason', $request->query->get('withdrawReason', $request->request->get('withdrawReason'))));
         }
 
         //previous status
@@ -2722,7 +2722,7 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil = $this->container->get('fellapp_util');
         //$user = $this->getUser();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $cycle = "show";
 
         if( $routeName == "fellapp_application_edit" ) {
@@ -2801,7 +2801,7 @@ class FellAppController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Interview'] by [Interview::class]
         $interview = $em->getRepository(Interview::class)->find($id);
@@ -3367,7 +3367,7 @@ class FellAppController extends OrderAbstractController {
 
         if( $reportDocument ) {
 
-            $routeName = $request->get('_route');
+            $routeName = $request->attributes->get('_route');
 
             if( $routeName == "fellapp_view_pdf" ) {
                 return $this->redirect( $this->generateUrl('fellapp_file_view',array('id' => $reportDocument->getId())) );
@@ -3645,7 +3645,7 @@ class FellAppController extends OrderAbstractController {
 
         //$idsArr = explode(",",$ids);
 
-        $ids = $request->get('ids');
+        $ids = $request->attributes->get('ids', $request->query->get('ids', $request->request->get('ids')));
 
         foreach($ids as $id) {
             //$logger->notice("Rejection id=".$id);
@@ -3951,7 +3951,7 @@ class FellAppController extends OrderAbstractController {
 
         $applicant->addFellowshipApplication($fellowshipApplication);
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $args = $this->getShowParameters($routeName,$fellowshipApplication,$applicant,$institutionId,$specialtyId); //apply GET
 
         // Check if the specified program exists (for program[]=X URL parameter)
@@ -4333,7 +4333,7 @@ class FellAppController extends OrderAbstractController {
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $user = $this->getUser(); //in case of apply, it might be fellapp_public_submitter user
 
         $applicantEmailError = false;

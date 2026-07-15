@@ -1055,7 +1055,7 @@ class DefaultController extends OrderAbstractController
     //#[Route('/{page}', name: 'ctp_home')]
     public function homeAction( Request $request, RouterInterface $router, string $page=null ): Response
     {
-        if( $request->get('_route') == 'ctp_index' ) {
+        if( $request->attributes->get('_route') == 'ctp_index' ) {
             return $this->redirect( $this->generateUrl('ctp_home') );
         }
 

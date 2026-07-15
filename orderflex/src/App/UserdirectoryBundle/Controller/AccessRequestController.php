@@ -1095,7 +1095,7 @@ class AccessRequestController extends OrderAbstractController
             'sitename' => $this->siteName,
             'sitenameshowuser' => $this->siteNameShowuser,
             'sitenamefull'=>$this->siteNameStr,
-            'routename' => $request->get('_route'),
+            'routename' => $request->attributes->get('_route'),
             'routenameshort' => 'accessrequest_management'
         );
 
@@ -1331,7 +1331,7 @@ class AccessRequestController extends OrderAbstractController
             'sitenamefull'=>$this->siteNameStr,
             'siteRoles'=>$siteRoles,
             'accreq' => $accReq,
-            'routename' => $request->get('_route'),
+            'routename' => $request->attributes->get('_route'),
             'routenameshort' => 'authorization_user_management'
         );
 

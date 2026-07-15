@@ -132,7 +132,7 @@ class RequestController extends OrderAbstractController
 
         // $_GET: get project id parameter for standalone new work request page
         $projectId = NULL;
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         if( $routeName == "translationalresearch_new_standalone_request" ) {
             $projectId = $request->query->get('id');
             if( $projectId ) {
@@ -416,7 +416,7 @@ class RequestController extends OrderAbstractController
             'handsometableData' => null,
             //'formnodetrigger' => $formnodetrigger,
             //'formnodeTopHolderId' => $formnodeTopHolderId,
-            'routeName' => $request->get('_route')
+            'routeName' => $request->attributes->get('_route')
         );
     }
 
@@ -774,7 +774,7 @@ class RequestController extends OrderAbstractController
             'entityName' => $className,
             'entityId' => $transresRequest->getId(),
             'sitename' => $this->getParameter('translationalresearch.sitename'),
-            'routeName' => $request->get('_route'),
+            'routeName' => $request->attributes->get('_route'),
             //'handsometableData' => json_encode($jsonData)
             'handsometableData' => $jsonData,
             'defaultAccessionType' => $defaultAccessionType,
@@ -1108,7 +1108,7 @@ class RequestController extends OrderAbstractController
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         $showPackingSlip = false;
-        if( $request->get('_route') == "translationalresearch_request_show_with_packingslip" ) {
+        if( $request->attributes->get('_route') == "translationalresearch_request_show_with_packingslip" ) {
             $showPackingSlip = true;
         }
 
@@ -1118,7 +1118,7 @@ class RequestController extends OrderAbstractController
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Work Request ".$transresRequest->getOid() . $feeHtml,
-            'routeName' => $request->get('_route'),
+            'routeName' => $request->attributes->get('_route'),
             //'handsometableData' => json_encode($jsonData)
             'handsometableData' => $jsonData,
             'showPackingSlip' => $showPackingSlip,
@@ -1219,7 +1219,7 @@ class RequestController extends OrderAbstractController
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $title = "Work Requests";
         $formnode = false;
         $titleAdd = "";
@@ -1394,8 +1394,8 @@ class RequestController extends OrderAbstractController
             //$billingContact = $filterform['billingContact']->getData();
             $fundingNumber = $filterform['fundingNumber']->getData();
             $fundingType = $filterform['fundingType']->getData();
-            $filterType = trim((string)$request->get('type'));
-            $filterTitle = trim((string)$request->get('title'));
+            $filterType = trim((string)$request->attributes->get('type', $request->query->get('type', $request->request->get('type'))));
+            $filterTitle = trim((string)$request->attributes->get('title', $request->query->get('title', $request->request->get('title'))));
 
             //replace - with space
             //echo "filterType=$filterType <br>"; //All-COVID-19-Requests
@@ -2654,7 +2654,7 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $billingStateChoiceArr = $transresRequestUtil->getBillingStateArr();
         $progressStateChoiceArr = $transresRequestUtil->getProgressStateArr();
@@ -2955,8 +2955,8 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
 
-        $updatePdf = trim((string)$request->get('updatePdf'));
-        $projectId = trim((string)$request->get('projectId'));
+        $updatePdf = trim((string)$request->attributes->get('updatePdf', $request->query->get('updatePdf', $request->request->get('updatePdf'))));
+        $projectId = trim((string)$request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId'))));
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
         $project = $em->getRepository(Project::class)->find($projectId);
 
@@ -2998,7 +2998,7 @@ class RequestController extends OrderAbstractController
             $originalIrbExpDateStr = "Unknown";
             $originalIrbExpDate = $project->getIrbExpirationDate();
 
-            $value = trim((string)$request->get('value'));
+            $value = trim((string)$request->attributes->get('value', $request->query->get('value', $request->request->get('value'))));
             //echo "value=".$value."<br>";
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
 
@@ -3062,8 +3062,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $updatePdf = trim((string)$request->get('updatePdf'));
-        $projectId = trim((string)$request->get('projectId'));
+        $updatePdf = trim((string)$request->attributes->get('updatePdf', $request->query->get('updatePdf', $request->request->get('updatePdf'))));
+        $projectId = trim((string)$request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId'))));
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
         $project = $em->getRepository(Project::class)->find($projectId);
 
@@ -3092,7 +3092,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $project ) {
-            $pricelistid = trim((string)$request->get('pricelistid'));
+            $pricelistid = trim((string)$request->attributes->get('pricelistid', $request->query->get('pricelistid', $request->request->get('pricelistid'))));
             //echo "pricelistid=".$pricelistid."<br>";
 
             if( !$pricelistid ) {
@@ -3171,8 +3171,8 @@ class RequestController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $user = $this->getUser();
 
-        $updatePdf = trim((string)$request->get('updatePdf'));
-        $projectId = trim((string)$request->get('projectId'));
+        $updatePdf = trim((string)$request->attributes->get('updatePdf', $request->query->get('updatePdf', $request->request->get('updatePdf'))));
+        $projectId = trim((string)$request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId'))));
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
         $project = $em->getRepository(Project::class)->find($projectId);
 
@@ -3201,7 +3201,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $project ) {
-            $approvedProjectBudget = trim((string)$request->get('approvedProjectBudget'));
+            $approvedProjectBudget = trim((string)$request->attributes->get('approvedProjectBudget', $request->query->get('approvedProjectBudget', $request->request->get('approvedProjectBudget'))));
             //echo "approvedProjectBudget=".$approvedProjectBudget."<br>";
 
             $originalApprovedProjectBudget = $project->getApprovedProjectBudget();
@@ -3250,8 +3250,8 @@ class RequestController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $updatePdf = trim((string)$request->get('updatePdf'));
-        $projectId = trim((string)$request->get('projectId'));
+        $updatePdf = trim((string)$request->attributes->get('updatePdf', $request->query->get('updatePdf', $request->request->get('updatePdf'))));
+        $projectId = trim((string)$request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId'))));
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
         $project = $em->getRepository(Project::class)->find($projectId);
 
@@ -3280,7 +3280,7 @@ class RequestController extends OrderAbstractController
         }
 
         if( $project ) {
-            $noBudgetLimit = trim((string)$request->get('noBudgetLimit'));
+            $noBudgetLimit = trim((string)$request->attributes->get('noBudgetLimit', $request->query->get('noBudgetLimit', $request->request->get('noBudgetLimit'))));
             //echo "noBudgetLimit=".$noBudgetLimit."<br>";
 
             $originalNoBudgetLimit = $project->getNoBudgetLimit();
@@ -3627,9 +3627,9 @@ class RequestController extends OrderAbstractController
 
         $transresUtil = $this->container->get('transres_util');
 
-        $type = trim((string)$request->get('type') );
-        $search = trim((string)$request->get('search') );
-        $limit = trim((string)$request->get('limit') );
+        $type = trim((string)$request->attributes->get('type') );
+        $search = trim((string)$request->attributes->get('search') );
+        $limit = trim((string)$request->attributes->get('limit') );
 
         //echo "type=".$type."<br>";
         //echo "search=".$search."<br>";

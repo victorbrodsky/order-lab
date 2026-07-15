@@ -278,7 +278,7 @@ class AdminController extends OrderAbstractController
                 '; generateTenantUrlList='.$count_generateTenantUrlList
             );
 
-            if( $request->get('_route') == "first-time-login-generation-init-https" ) {
+            if( $request->attributes->get('_route') == "first-time-login-generation-init-https" ) {
                 //set channel in SiteParameters to https
 //                $entities = $em->getRepository(SiteParameters::class)->findAll();
 //                if (count($entities) != 1) {
@@ -9402,7 +9402,7 @@ class AdminController extends OrderAbstractController
     //Add options: ['expose' => true] to the associated route names
     public function compositeTree(Request $request, $sitename)
     {
-        $mapper = $this->getMapper($request->get('_route'));
+        $mapper = $this->getMapper($request->attributes->get('_route'));
 
 //        //show html tree
 //        if( 0 ) {
@@ -9478,7 +9478,7 @@ class AdminController extends OrderAbstractController
                 'filterform' => $filterform->createView(),
                 //'filters' => $filters,
                 //'filterList' => $filterList,
-                'routename' => $request->get('_route')
+                'routename' => $request->attributes->get('_route')
             )
         );
     }

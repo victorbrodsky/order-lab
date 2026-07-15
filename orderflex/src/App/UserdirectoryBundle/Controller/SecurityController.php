@@ -60,7 +60,7 @@ class SecurityController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
 
         //dump($request);
-        $username = $request->get('_username');
+        $username = $request->attributes->get('_username', $request->query->get('_username', $request->request->get('_username')));
         //$sitename = $request->get('_sitename');
         //$lastroute = $request->get('_lastroute');
 
@@ -174,7 +174,7 @@ class SecurityController extends OrderAbstractController
         //exit('user: loginAction');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
         //echo "routename=".$routename."<br>";
 
         //default
@@ -529,7 +529,7 @@ class SecurityController extends OrderAbstractController
     public function idlelogoutAction( Request $request, $flag = null )
     {
         //exit('idlelogoutAction');
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
 
         //default
         $sitename = $this->getParameter('employees.sitename');
@@ -734,7 +734,7 @@ class SecurityController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
-        $empty = $request->get('empty');
+        $empty = $request->attributes->get('empty', $request->query->get('empty', $request->request->get('empty')));
 
         return array(
             'sitename' => $this->getParameter('employees.sitename'),
@@ -765,7 +765,7 @@ class SecurityController extends OrderAbstractController
 
         $res = "NOTOK";
 
-        $password = $request->get('token');
+        $password = $request->attributes->get('token', $request->query->get('token', $request->request->get('token')));
         //echo "password=".$password."<br>";
 
         //create token
@@ -811,13 +811,13 @@ class SecurityController extends OrderAbstractController
 
         $res = "NOTOK";
 
-        $password = $request->get('token');
+        $password = $request->attributes->get('token', $request->query->get('token', $request->request->get('token')));
         //echo "password=".$password."<br>";
 
         if( $user && $user instanceof User ) {
             $username = $user->getUsername();
         } else {
-            $username = $request->get('username');
+            $username = $request->attributes->get('username', $request->query->get('username', $request->request->get('username')));
 
             $fellappUtil = $this->container->get('fellapp_util');
             $user = $fellappUtil->checkUserExistByEmail($username,$getUser=true);
@@ -907,7 +907,7 @@ class SecurityController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         //$userUtil = new UserUtil();
 
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
         if( $routename == "employees_setloginvisit" ) {
             $options['sitename'] = $this->getParameter('employees.sitename');
             $options['event'] = "Employee Directory login page visit";

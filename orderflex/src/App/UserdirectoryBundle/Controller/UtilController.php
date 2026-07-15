@@ -85,7 +85,7 @@ class UtilController extends OrderAbstractController {
 
     public function getGenericList( $request, $name ) {
 
-        $cycle = $request->get('cycle');
+        $cycle = $request->attributes->get('cycle', $request->query->get('cycle', $request->request->get('cycle')));
         $newCycle = false;
         if( $cycle && (strpos((string)$cycle, 'new') !== false || strpos((string)$cycle, 'create') !== false) ) {
             $newCycle = true;
@@ -233,12 +233,12 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $id = trim((string)$request->get('id') );
-        $pid = trim((string)$request->get('pid') );
+        $id = trim((string)$request->attributes->get('id', $request->query->get('id', $request->request->get('id'))) );
+        $pid = trim((string)$request->attributes->get('pid', $request->query->get('pid', $request->request->get('pid'))) );
         //echo "pid=".$pid."<br>";
         //echo "id=".$id."<br>";
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $name = str_replace("get-", "", $routeName);
         $name = str_replace("-by-parent", "", $name);
@@ -374,7 +374,7 @@ class UtilController extends OrderAbstractController {
         //exit('getTrainingInstitutionAction');
         $em = $this->getDoctrine()->getManager();
 
-        $cycle = $request->get('cycle');
+        $cycle = $request->attributes->get('cycle', $request->query->get('cycle', $request->request->get('cycle')));
         $newCycle = false;
         if( $cycle && (strpos((string)$cycle, 'new') !== false || strpos((string)$cycle, 'create') !== false) ) {
             $newCycle = true;
@@ -446,7 +446,7 @@ class UtilController extends OrderAbstractController {
     #[Route(path: '/common/institution-old/', name: 'employees_get_institution', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function getInstitutionAction(Request $request) {
 
-        $id = trim((string)$request->get('id') );
+        $id = trim((string)$request->attributes->get('id', $request->query->get('id', $request->request->get('id'))) );
 
         $em = $this->getDoctrine()->getManager();
 
@@ -606,7 +606,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $cycle = $request->get('cycle');
+        $cycle = $request->attributes->get('cycle', $request->query->get('cycle', $request->request->get('cycle')));
         //echo "cycle=".$cycle."<br>";
         $newCycle = false;
         if( $cycle && (strpos((string)$cycle, 'new') !== false || strpos((string)$cycle, 'create') !== false) ) {
@@ -662,7 +662,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $cycle = $request->get('cycle');
+        $cycle = $request->attributes->get('cycle', $request->query->get('cycle', $request->request->get('cycle')));
         $newCycle = false;
         if( $cycle && (strpos((string)$cycle, 'new') !== false || strpos((string)$cycle, 'create') !== false) ) {
             $newCycle = true;
@@ -826,7 +826,7 @@ class UtilController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $locationId = trim((string)$request->get('locationId'));
+        $locationId = trim((string)$request->attributes->get('locationId', $request->query->get('locationId', $request->request->get('locationId'))));
 
         if( strval($locationId) == strval(intval($locationId)) ) {
             //echo "locationId is integer<br>";
@@ -1270,7 +1270,7 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $cwid = trim((string)$request->get('number') );
+        $cwid = trim((string)$request->attributes->get('number', $request->query->get('number', $request->request->get('number'))) );
         $em = $this->getDoctrine()->getManager();
 
         $user = $em->getRepository(User::class)->findOneByUsername($cwid);
@@ -1295,7 +1295,7 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $ssn = trim((string)$request->get('number') );
+        $ssn = trim((string)$request->attributes->get('number', $request->query->get('number', $request->request->get('number'))) );
         $em = $this->getDoctrine()->getManager();
 
         $users = null;
@@ -1337,7 +1337,7 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $ein = trim((string)$request->get('number') );
+        $ein = trim((string)$request->attributes->get('number', $request->query->get('number', $request->request->get('number'))) );
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1377,8 +1377,8 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $userType = trim((string)$request->get('userType') );
-        $userId = trim((string)$request->get('userId') );
+        $userType = trim((string)$request->attributes->get('userType', $request->query->get('userType', $request->request->get('userType'))) );
+        $userId = trim((string)$request->attributes->get('userId', $request->query->get('userId', $request->request->get('userId'))) );
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1408,7 +1408,7 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
        
-        $userId = trim((string)$request->get('userId') ); //cwid
+        $userId = trim((string)$request->attributes->get('userId', $request->query->get('userId', $request->request->get('userId'))) ); //cwid
         //$userTypeText = trim((string)$request->get('userTypeText') );
         //echo "userId=$userId<br>";
         //exit('111');
@@ -1442,9 +1442,9 @@ class UtilController extends OrderAbstractController {
     #[Route(path: '/common/user-data-search/{type}/{limit}/{search}', name: 'employees_user-data-search', methods: ['GET'], options: ['expose' => true])]
     public function getUserDataSearchAction(Request $request) {
 
-        $type = trim((string)$request->get('type') );
-        $search = trim((string)$request->get('search') );
-        $limit = trim((string)$request->get('limit') );
+        $type = trim((string)$request->attributes->get('type') );
+        $search = trim((string)$request->attributes->get('search') );
+        $limit = trim((string)$request->attributes->get('limit') );
 
         //clean $search
         $search = str_replace("'","",$search);
@@ -1653,8 +1653,8 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $mrntype = $request->get('mrntype');
-        $identifier = $request->get('identifier');
+        $mrntype = $request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype')));
+        $identifier = $request->attributes->get('identifier', $request->query->get('identifier', $request->request->get('identifier')));
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1695,8 +1695,8 @@ class UtilController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $userid = trim((string)$request->get('userid') );
-        $userpassword = trim((string)$request->get('userpassword') );
+        $userid = trim((string)$request->attributes->get('userid', $request->query->get('userid', $request->request->get('userid'))) );
+        $userpassword = trim((string)$request->attributes->get('userpassword', $request->query->get('userpassword', $request->request->get('userpassword'))) );
 
         $user = $this->getUser();
         if( $userid != $user->getId() ) {

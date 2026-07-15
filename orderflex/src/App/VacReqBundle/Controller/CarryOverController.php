@@ -264,7 +264,7 @@ class CarryOverController extends OrderAbstractController
 
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $user = $this->getUser();
         $vacreqUtil = $this->container->get('vacreq_util');
         //$emailUtil = $this->container->get('user_mailer_utility');

@@ -106,7 +106,7 @@ class ScanOrderController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         //echo "routeName=".$routeName."<br>";
 
         if( $routeName == "incoming-scan-orders" && false === $this->isGranted('ROLE_SCANORDER_PROCESSOR')) {
@@ -146,7 +146,7 @@ class ScanOrderController extends OrderAbstractController {
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
         $service = $form->get('service')->getData();
-        $page = $request->get('page');
+        $page = $request->attributes->get('page', $request->query->get('page', $request->request->get('page')));
 
         //service
         //echo "<br>service=".$service."<br>";
@@ -821,12 +821,12 @@ class ScanOrderController extends OrderAbstractController {
     #[Route(path: '/scanorder-complex-search', name: 'scanorder-complex-search', methods: ['POST'])]
     public function getSearchViewAjaxAction( Request $request ) {
 
-        $routename   = $request->get('routename');
-        $service   = $request->get('service');
-        $filter   = $request->get('filter');
-        $search   = $request->get('search');
-        $searchObject   = $request->get('searchobject');
-        $page   = $request->get('page');
+        $routename   = $request->attributes->get('routename', $request->query->get('routename', $request->request->get('routename')));
+        $service   = $request->attributes->get('service', $request->query->get('service', $request->request->get('service')));
+        $filter   = $request->attributes->get('filter', $request->query->get('filter', $request->request->get('filter')));
+        $search   = $request->attributes->get('search', $request->query->get('search', $request->request->get('search')));
+        $searchObject   = $request->attributes->get('searchobject', $request->query->get('searchobject', $request->request->get('searchobject')));
+        $page   = $request->attributes->get('page', $request->query->get('page', $request->request->get('page')));
 
         //echo "routename=".$routename.", search=".$search.", searchObject=".$searchObject."<br>";
 
@@ -856,8 +856,8 @@ class ScanOrderController extends OrderAbstractController {
             $logger->setUsername($user."");
             $logger->setIp($request->getClientIp());
             $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
-            $logger->setWidth($request->get('display_width'));
-            $logger->setHeight($request->get('display_height'));
+            $logger->setWidth($request->attributes->get('display_width', $request->query->get('display_width', $request->request->get('display_width'))));
+            $logger->setHeight($request->attributes->get('display_height', $request->query->get('display_height', $request->request->get('display_height'))));
             $logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:EventTypeList'] by [EventTypeList::class]
@@ -911,8 +911,8 @@ class ScanOrderController extends OrderAbstractController {
             $logger->setUsername($user."");
             $logger->setIp($request->getClientIp());
             $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
-            $logger->setWidth($request->get('display_width'));
-            $logger->setHeight($request->get('display_height'));
+            $logger->setWidth($request->attributes->get('display_width', $request->query->get('display_width', $request->request->get('display_width'))));
+            $logger->setHeight($request->attributes->get('display_height', $request->query->get('display_height', $request->request->get('display_height'))));
             //$logger->setEvent( 'Search for "' . $search . '" in ' . $viewArr['searchObjectName'] . '. ' . $count . ' results found.' );
             $logger->setEvent( implode("<br>",$resArr) );
 

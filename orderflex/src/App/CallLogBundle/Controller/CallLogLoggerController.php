@@ -62,8 +62,8 @@ class CallLogLoggerController extends LoggerController
     #[Template('AppCallLogBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
-        $postData = $request->get('postData');
-        $userid = $request->get('id');
+        $postData = $request->attributes->get('postData', $request->query->get('postData', $request->request->get('postData')));
+        $userid = $request->attributes->get('id');
 
         $entityName = 'User';
 
@@ -242,7 +242,7 @@ class CallLogLoggerController extends LoggerController
         //$userid = $params['entityId'];
         $userid = ( array_key_exists('entityId', $params) ? $params['entityId'] : null);
         //echo "userid=".$userid."<br>";
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
         //echo "route=".$routename."<br>";
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
         return $this->createForm(CalllogLoggerFilterType::class, null, array(

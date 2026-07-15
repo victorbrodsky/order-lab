@@ -43,7 +43,7 @@ class GoogleFormConfigController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $cycle = "show";
 

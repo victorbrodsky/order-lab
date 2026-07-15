@@ -88,7 +88,7 @@ class ResAppController extends OrderAbstractController {
         //$user = $this->getUser();
         $user = $this->getUser();
 
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
         //echo "route".$route."<br>";
         //exit();
 
@@ -805,7 +805,7 @@ class ResAppController extends OrderAbstractController {
         //$user = $this->getUser();
         $user = $this->getUser();
         $logger = $this->container->get('logger');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
 
         $actionStr = "viewed";
@@ -938,7 +938,7 @@ class ResAppController extends OrderAbstractController {
 
         $applicant->addResidencyApplication($residencyApplication);
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         //$args = $this->getShowParameters($routeName,null,$residencyApplication);
         $args = $this->getShowParameters($routeName,$residencyApplication); //new
 
@@ -1347,7 +1347,7 @@ class ResAppController extends OrderAbstractController {
         //$resappRecLetterUtil = $this->container->get('resapp_rec_letter_util');
         //$user = $this->getUser();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         //user who has the same res type can view or edit
         $resappUtil = $this->container->get('resapp_util');
@@ -2060,7 +2060,7 @@ class ResAppController extends OrderAbstractController {
             $event
         );
 
-        if( $request->get('_route') == 'resapp_status_email' ) {
+        if( $request->attributes->get('_route') == 'resapp_status_email' ) {
             return $this->redirect( $this->generateUrl('resapp_show',array('id' => $id)) );
         }
 
@@ -2312,7 +2312,7 @@ class ResAppController extends OrderAbstractController {
         $resappUtil = $this->container->get('resapp_util');
         //$user = $this->getUser();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $cycle = "show";
 
         if( $routeName == "resapp_application_edit" ) {
@@ -2376,7 +2376,7 @@ class ResAppController extends OrderAbstractController {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         //process.py script: replaced namespace by ::class: ['AppResAppBundle:Interview'] by [Interview::class]
         $interview = $em->getRepository(Interview::class)->find($id);
@@ -2922,7 +2922,7 @@ class ResAppController extends OrderAbstractController {
 
         if( $reportDocument ) {
 
-            $routeName = $request->get('_route');
+            $routeName = $request->attributes->get('_route');
 
             if( $routeName == "resapp_view_pdf" ) {
                 return $this->redirect( $this->generateUrl('resapp_file_view',array('id' => $reportDocument->getId())) );
@@ -3190,7 +3190,7 @@ class ResAppController extends OrderAbstractController {
 
         //$idsArr = explode(",",$ids);
 
-        $ids = $request->get('ids');
+        $ids = $request->attributes->get('ids', $request->query->get('ids', $request->request->get('ids')));
 
         foreach($ids as $id) {
             //$logger->notice("Rejection id=".$id);

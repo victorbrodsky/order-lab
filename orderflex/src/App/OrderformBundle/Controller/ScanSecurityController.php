@@ -82,7 +82,7 @@ class ScanSecurityController extends SecurityController
     #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
-        $empty = $request->get('empty');
+        $empty = $request->attributes->get('empty', $request->query->get('empty', $request->request->get('empty')));
 
         return array(
             'sitename' => $this->getParameter('scan.sitename'),

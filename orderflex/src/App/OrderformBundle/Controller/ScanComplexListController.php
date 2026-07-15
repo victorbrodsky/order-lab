@@ -62,7 +62,7 @@ class ScanComplexListController extends ComplexListController
     public function showListAction(Request $request, $id)
     {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         if(
             $routeName == $this->getParameter('scan.sitename')."_labtests_pathaction_edit_standalone"

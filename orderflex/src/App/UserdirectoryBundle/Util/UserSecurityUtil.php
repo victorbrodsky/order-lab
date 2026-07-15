@@ -791,8 +791,8 @@ class UserSecurityUtil {
                 $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
             }
             $logger->setIp($request->getClientIp());
-            $logger->setWidth($request->get('display_width'));
-            $logger->setHeight($request->get('display_height'));
+            $logger->setWidth($request->attributes->get('display_width', $request->query->get('display_width', $request->request->get('display_width'))));
+            $logger->setHeight($request->attributes->get('display_height', $request->query->get('display_height', $request->request->get('display_height'))));
         }
 
         return $logger;
@@ -2070,7 +2070,7 @@ class UserSecurityUtil {
 
         } else {
 
-            $username = $request->get('_username');
+            $username = $request->attributes->get('_username', $request->query->get('_username', $request->request->get('_username')));
 
             $userDb = $this->em->getRepository(User::class)->findOneByUsername($username);
             $user = $userDb;
@@ -2090,8 +2090,8 @@ class UserSecurityUtil {
         $logger->setRoles($roles);
         $logger->setUsername($username);
         $logger->setIp($request->getClientIp());
-        $logger->setWidth($request->get('display_width'));
-        $logger->setHeight($request->get('display_height'));
+        $logger->setWidth($request->attributes->get('display_width', $request->query->get('display_width', $request->request->get('display_width'))));
+        $logger->setHeight($request->attributes->get('display_height', $request->query->get('display_height', $request->request->get('display_height'))));
         $logger->setEvent($options['event']);
         $logger->setServerresponse($options['serverresponse']);
 

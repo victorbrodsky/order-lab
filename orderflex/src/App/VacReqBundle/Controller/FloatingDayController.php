@@ -135,7 +135,7 @@ class FloatingDayController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->container->get('vacreq_util');
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $sitename = $this->getParameter('vacreq.sitename');
         //$filtered = false;
         //$indexTitle = "Floating Day Incoming Requests";
@@ -325,10 +325,10 @@ class FloatingDayController extends OrderAbstractController
         //get submitter groups: VacReqRequest, create
         $groupParams = array();
         $groupParams['statusArr'] = array('default','user-added');
-        if( $request->get('_route') == "vacreq_myfloatingrequests" ) {
+        if( $request->attributes->get('_route') == "vacreq_myfloatingrequests" ) {
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
         }
-        if( $request->get('_route') == "vacreq_floatingrequests" ) {
+        if( $request->attributes->get('_route') == "vacreq_floatingrequests" ) {
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
             if( $this->isGranted('ROLE_VACREQ_ADMIN') == false ) {
                 $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
@@ -402,7 +402,7 @@ class FloatingDayController extends OrderAbstractController
         $academicYearTooltip = "Academic Year Start (for ".$yearRange.", pick ".$previousYear.")";
         $params['academicYearTooltip'] = $academicYearTooltip;
 
-        $params['routeName'] = $request->get('_route');
+        $params['routeName'] = $request->attributes->get('_route');
 
         $approverRole = false;
         if( $this->isGranted('ROLE_VACREQ_APPROVER') ||
@@ -583,7 +583,7 @@ class FloatingDayController extends OrderAbstractController
             $filtered = true;
         }
 
-        if( $groups == null && $request->get('_route') == "vacreq_floatingrequests" ) {
+        if( $groups == null && $request->attributes->get('_route') == "vacreq_floatingrequests" ) {
             //exit('group is NULL');
             $instWhereArr = array();
 
@@ -936,7 +936,7 @@ class FloatingDayController extends OrderAbstractController
         }
 
         //check permission
-        $routName = $request->get('_route');
+        $routName = $request->attributes->get('_route');
         if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
             if ($routName == 'vacreq_floating_review') {
                 if (false == $this->isGranted("changestatus", $entity)) {
@@ -1100,7 +1100,7 @@ class FloatingDayController extends OrderAbstractController
 
         $review = false;
         if( $request ) {
-            if( $request->get('_route') == 'vacreq_floating_review' ) {
+            if( $request->attributes->get('_route') == 'vacreq_floating_review' ) {
                 $review = true;
             }
         }
@@ -1133,7 +1133,7 @@ class FloatingDayController extends OrderAbstractController
 
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $user = $this->getUser();
         $vacreqUtil = $this->container->get('vacreq_util');
 
@@ -1257,8 +1257,8 @@ class FloatingDayController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $id = $request->get('id');
-        $status = $request->get('status'); //format: floatingDay=02/23/2022
+        $id = $request->attributes->get('id', $request->query->get('id', $request->request->get('id')));
+        $status = $request->attributes->get('status', $request->query->get('status', $request->request->get('status'))); //format: floatingDay=02/23/2022
 
         //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
         $entity = $em->getRepository(VacReqRequestFloating::class)->find($id);
@@ -1493,8 +1493,8 @@ class FloatingDayController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $id = $request->get('id');
-        $status = $request->get('status'); //format: floatingDay=02/23/2022
+        $id = $request->attributes->get('id', $request->query->get('id', $request->request->get('id')));
+        $status = $request->attributes->get('status', $request->query->get('status', $request->request->get('status'))); //format: floatingDay=02/23/2022
 
         if( $status && $status == 'cancellation-request' ) {
             $statusStr = "Cancelation Request";
@@ -1665,7 +1665,7 @@ class FloatingDayController extends OrderAbstractController
     #[Route(path: '/cancellation-request/estatus/floating/{id}/{status}', name: 'vacreq_floating_status_cancellation_request_email_change', methods: ['GET'])]
     public function statusCancellationRequestChangeAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $user = $this->getUser();
 
         //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequestFloating'] by [VacReqRequestFloating::class]
@@ -1804,10 +1804,10 @@ class FloatingDayController extends OrderAbstractController
 
         $vacreqUtil = $this->container->get('vacreq_util');
 
-        $floatingTypeId = $request->get('floatingTypeId');
-        $floatingDay = $request->get('floatingDay'); //format: floatingDay=02/23/2022
-        $subjectUserId = $request->get('subjectUserId');
-        $floatingRequestId = $request->get('floatingRequestId');
+        $floatingTypeId = $request->attributes->get('floatingTypeId', $request->query->get('floatingTypeId', $request->request->get('floatingTypeId')));
+        $floatingDay = $request->attributes->get('floatingDay', $request->query->get('floatingDay', $request->request->get('floatingDay'))); //format: floatingDay=02/23/2022
+        $subjectUserId = $request->attributes->get('subjectUserId', $request->query->get('subjectUserId', $request->request->get('subjectUserId')));
+        $floatingRequestId = $request->attributes->get('floatingRequestId', $request->query->get('floatingRequestId', $request->request->get('floatingRequestId')));
         //echo "floatingTypeId=$floatingTypeId, floatingDay=$floatingDay, subjectUserId=$subjectUserId<br>";
 
         $statusArr = array('pending','approved');
@@ -1876,7 +1876,7 @@ class FloatingDayController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->container->get('user_service_utility');
         $vacreqUtil = $this->container->get('vacreq_util');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $user = $this->getUser();
 

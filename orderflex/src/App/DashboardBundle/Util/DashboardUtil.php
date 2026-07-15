@@ -2534,13 +2534,13 @@ class DashboardUtil
                 }
                 $processed = true;
             } else {
-                $startDate = $request->get('startDate');
-                $endDate = $request->get('endDate');
-                $projectSpecialty = $request->get('projectSpecialty');
-                $showLimited = $request->get('showLimited');
-                $chartType = $request->get('chartType');
-                $productservice = $request->get('productservice');
-                $quantityLimit = $request->get('quantityLimit');
+                $startDate = $request->attributes->get('startDate', $request->query->get('startDate', $request->request->get('startDate')));
+                $endDate = $request->attributes->get('endDate', $request->query->get('endDate', $request->request->get('endDate')));
+                $projectSpecialty = $request->attributes->get('projectSpecialty', $request->query->get('projectSpecialty', $request->request->get('projectSpecialty')));
+                $showLimited = $request->attributes->get('showLimited', $request->query->get('showLimited', $request->request->get('showLimited')));
+                $chartType = $request->attributes->get('chartType', $request->query->get('chartType', $request->request->get('chartType')));
+                $productservice = $request->attributes->get('productservice', $request->query->get('productservice', $request->request->get('productservice')));
+                $quantityLimit = $request->attributes->get('quantityLimit', $request->query->get('quantityLimit', $request->request->get('quantityLimit')));
                 $processed = true;
             }
         } else {

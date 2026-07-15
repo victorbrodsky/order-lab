@@ -136,7 +136,7 @@ class RequestIndexController extends OrderAbstractController
         $forceShowAllRows = true; //show all columns including "Person Away"
         //$forceShowAllRows = false;
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
         $repository = $em->getRepository(VacReqRequest::class);
@@ -530,10 +530,10 @@ class RequestIndexController extends OrderAbstractController
         //get submitter groups: VacReqRequest, create
         $groupParams = array();
         $groupParams['statusArr'] = array('default','user-added');
-        if( $request->get('_route') == "vacreq_myrequests" ) {
+        if( $request->attributes->get('_route') == "vacreq_myrequests" ) {
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
         }
-        if( $request->get('_route') == "vacreq_incomingrequests" ) {
+        if( $request->attributes->get('_route') == "vacreq_incomingrequests" ) {
             if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
                 if( $this->isGranted('ROLE_VACREQ_ADMIN') == false ) {
@@ -615,7 +615,7 @@ class RequestIndexController extends OrderAbstractController
         $academicYearTooltip = "Academic Year Start (for ".$yearRange.", pick ".$previousYear.")";
         $params['academicYearTooltip'] = $academicYearTooltip;
 
-        $params['routeName'] = $request->get('_route');
+        $params['routeName'] = $request->attributes->get('_route');
 
         $approverRole = false;
         if( $this->isGranted('ROLE_VACREQ_APPROVER') ||
@@ -794,7 +794,7 @@ class RequestIndexController extends OrderAbstractController
 
         //echo "groups=".$groups."<br>";
         //if( $groups == null && $request->get('_route') == "vacreq_incomingrequests" ) {
-        if( $request->get('_route') == "vacreq_incomingrequests" ) {
+        if( $request->attributes->get('_route') == "vacreq_incomingrequests" ) {
 
             $instWhereArr = array();
 

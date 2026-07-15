@@ -232,7 +232,7 @@ class ReviewBaseController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $reviewEntityName = $transresUtil->getReviewClassNameByState($stateStr);
         if( !$reviewEntityName ) {

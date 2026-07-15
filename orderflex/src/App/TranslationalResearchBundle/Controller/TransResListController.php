@@ -194,9 +194,9 @@ class TransResListController extends ListController
 
         $transresRequestUtil = $this->container->get('transres_request_util');
 
-        $search = $request->get('search');
-        $linkToListId = $request->get('linkToListId');
-        $pathbase = $request->get('pathbase');
+        $search = $request->attributes->get('search', $request->query->get('search', $request->request->get('search')));
+        $linkToListId = $request->attributes->get('linkToListId', $request->query->get('linkToListId', $request->request->get('linkToListId')));
+        $pathbase = $request->attributes->get('pathbase', $request->query->get('pathbase', $request->request->get('pathbase')));
         //echo "linkToListId=$linkToListId, search=$search, pathbase=$pathbase <br>";
         //dump($search);
 

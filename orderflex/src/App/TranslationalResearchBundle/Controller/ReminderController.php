@@ -32,7 +32,7 @@ class ReminderController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresReminderUtil = $this->container->get('transres_reminder_util');
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $showSummary = false;
 
         if( $routeName == "translationalresearch_unpaid_invoice_reminder_show" ) {
@@ -111,7 +111,7 @@ class ReminderController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $transresReminderUtil = $this->container->get('transres_reminder_util');
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $showSummary = false;
 
         if( $routeName == "translationalresearch_project_reminder_show" ) {
@@ -231,7 +231,7 @@ class ReminderController extends OrderAbstractController
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresReminderUtil = $this->container->get('transres_reminder_util');
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $showSummary = true;
 
         $reminderDelayArr = array();

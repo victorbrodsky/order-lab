@@ -128,7 +128,7 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         //default
         $sitename = $this->container->getParameter('employees.sitename');
 
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
 
         //$logger = $this->container->get('logger');
         //$logger->notice("onLogout: getSitename: routename=$routename"); //translationalresearch_logout

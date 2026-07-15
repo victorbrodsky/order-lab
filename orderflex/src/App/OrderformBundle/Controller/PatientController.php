@@ -228,7 +228,7 @@ class PatientController extends OrderAbstractController
         }
 
 
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
         if( $route == "scan-patient-show" ) {
             $datastructure = 'datastructure';
         } else {

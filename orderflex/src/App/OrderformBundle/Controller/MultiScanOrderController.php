@@ -113,7 +113,7 @@ class MultiScanOrderController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         //echo "routeName=".$routeName;
 
         if( $routeName == "singleorder_create" ) {
@@ -429,7 +429,7 @@ class MultiScanOrderController extends OrderAbstractController {
         $res = new Research();
         $entity->setResearch($res);
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         //echo "newMultyAction: routeName=".$routeName."<br>";
 
         if( $routeName == "multi_new") {
@@ -610,7 +610,7 @@ class MultiScanOrderController extends OrderAbstractController {
 //        unset($entity_tmp);
         //////////////// EOF order memory usage ////////////////
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         if( $routeName == "multy_show") {
             $actions = array('show');

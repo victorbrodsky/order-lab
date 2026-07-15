@@ -160,7 +160,7 @@ class TableController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $em = $this->getDoctrine()->getManager();
 

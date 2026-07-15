@@ -173,7 +173,7 @@ class RequestFormNodeController extends OrderAbstractController
             'title' => $title,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
-            'routeName' => $request->get('_route')
+            'routeName' => $request->attributes->get('_route')
         );
     }
 
@@ -387,7 +387,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $title = "Requests for the project ID ".$project->getOid();
 
         //////// create filter //////////
@@ -523,7 +523,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $title = "My Requests";
 
         //////// create filter //////////
@@ -684,7 +684,7 @@ class RequestFormNodeController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $trpAdmin = false;
         if(
@@ -861,7 +861,7 @@ class RequestFormNodeController extends OrderAbstractController
         $transresUtil = $this->container->get('transres_util');
         $res = "NotOK";
 
-        $projectId = trim((string)$request->get('projectId') );
+        $projectId = trim((string)$request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId'))) );
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
         $project = $em->getRepository(Project::class)->find($projectId);
 
@@ -875,7 +875,7 @@ class RequestFormNodeController extends OrderAbstractController
         }
 
         if( $project ) {
-            $value = trim((string)$request->get('value'));
+            $value = trim((string)$request->attributes->get('value', $request->query->get('value', $request->request->get('value'))));
 
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
 

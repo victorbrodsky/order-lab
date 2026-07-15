@@ -211,7 +211,7 @@ class CrnEditController extends CrnEntryController
         //$title = "Critical Result Notification";
         $formtype = "crn-entry";
 
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
         if( strpos((string)$route, "crn_crnentry_edit") !== false ) {
             $cycle = "edit";
         }
@@ -964,9 +964,9 @@ class CrnEditController extends CrnEntryController
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->container->get('crn_util');
 
-        $messageId = trim((string)$request->get('messageId'));
-        $latestNextMessageVersion = trim((string)$request->get('latestNextMessageVersion')); //next message version, that message will have after submit
-        $latestNextEncounterVersion = trim((string)$request->get('latestNextEncounterVersion'));
+        $messageId = trim((string)$request->attributes->get('messageId', $request->query->get('messageId', $request->request->get('messageId'))));
+        $latestNextMessageVersion = trim((string)$request->attributes->get('latestNextMessageVersion', $request->query->get('latestNextMessageVersion', $request->request->get('latestNextMessageVersion')))); //next message version, that message will have after submit
+        $latestNextEncounterVersion = trim((string)$request->attributes->get('latestNextEncounterVersion', $request->query->get('latestNextEncounterVersion', $request->request->get('latestNextEncounterVersion'))));
         //echo "latestNextMessageVersion=$latestNextMessageVersion<br>";
 
         $encounter = null;

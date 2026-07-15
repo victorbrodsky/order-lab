@@ -101,12 +101,12 @@ class ProjectChangeStatusController extends OrderAbstractController
         $res["flag"] = "NOTOK";
 
         //translationalresearch_project_close translationalresearch_project_close_without_notifications
-        $routename = trim((string)$request->get('routename') );
-        $reason = trim((string)$request->get('reason') );
+        $routename = trim((string)$request->attributes->get('routename', $request->query->get('routename', $request->request->get('routename'))) );
+        $reason = trim((string)$request->attributes->get('reason', $request->query->get('reason', $request->request->get('reason'))) );
 
         $res = NULL;
         $project = NULL;
-        $projectId = trim((string)$request->get('projectId') );
+        $projectId = trim((string)$request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId'))) );
         if( $projectId ) {
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
             $project = $em->getRepository(Project::class)->find($projectId);
@@ -168,7 +168,7 @@ class ProjectChangeStatusController extends OrderAbstractController
         //exit('close project');
 
         //Close project
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $reason = NULL;
         $this->closeProject($project,$reason,$routeName);
 

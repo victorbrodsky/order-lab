@@ -52,8 +52,8 @@ class ScanLoggerController extends LoggerController
     #[Template('AppOrderformBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
-        $postData = $request->get('postData');
-        $userid = $request->get('id');
+        $postData = $request->attributes->get('postData', $request->query->get('postData', $request->request->get('postData')));
+        $userid = $request->attributes->get('id');
         //$onlyheader = $request->get('onlyheader');
 
         //echo "postData=<br>";

@@ -286,8 +286,8 @@ class CrnAccessionController extends OrderAbstractController {
             return $this->redirect($this->generateUrl('crn-nopermission'));
         }
 
-        $accessionNumber = trim((string)$request->get('accessionnumber'));
-        $accessionType = trim((string)$request->get('accessiontype'));
+        $accessionNumber = trim((string)$request->attributes->get('accessionnumber', $request->query->get('accessionnumber', $request->request->get('accessionnumber'))));
+        $accessionType = trim((string)$request->attributes->get('accessiontype', $request->query->get('accessiontype', $request->request->get('accessiontype'))));
 
         $crnUtil = $this->container->get('crn_util');
         $accession = $crnUtil->findExistingAccession($accessionNumber,$accessionType);
@@ -417,7 +417,7 @@ class CrnAccessionController extends OrderAbstractController {
         );
 
         //return OK
-        if( $request->get('_route') == "crn_add_accession_to_list_ajax" ) {
+        if( $request->attributes->get('_route') == "crn_add_accession_to_list_ajax" ) {
             $res = "OK";
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');

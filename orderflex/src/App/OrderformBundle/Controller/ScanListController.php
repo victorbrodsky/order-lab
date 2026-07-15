@@ -84,7 +84,7 @@ class ScanListController extends ListController
             return $this->redirect( $this->generateUrl($this->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
         //echo "pathbase=".$pathbase."<br>";

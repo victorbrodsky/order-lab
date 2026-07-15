@@ -49,7 +49,7 @@ class EducationalResearchController extends OrderAbstractController {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         //echo "routeName=".$routeName; //mrntype
 
         $pieces = explode("_", $routeName);
@@ -86,7 +86,7 @@ class EducationalResearchController extends OrderAbstractController {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $pieces = explode("_", $routeName);
         $type = $pieces[0];
         $type = ucfirst($type);

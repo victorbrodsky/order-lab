@@ -778,8 +778,8 @@ class DataBackupManagementController extends OrderAbstractController
         }
         //exit('Not Allowed');
 
-        $backupFileName = $request->get('fileId');
-        $env = $request->get('env');
+        $backupFileName = $request->attributes->get('fileId', $request->query->get('fileId', $request->request->get('fileId')));
+        $env = $request->attributes->get('env', $request->query->get('env', $request->request->get('env')));
         $logger->notice("restoreDbAjaxAction: backupFilePath=".$backupFileName."; env=".$env);
         //echo "backupFilePath=".$fileId."; env=".$env."<br>";
         //exit('111');
@@ -1275,8 +1275,8 @@ class DataBackupManagementController extends OrderAbstractController
         $userStr = $user."";
         $sitename = $this->getParameter('employees.sitename');
 
-        $type = $request->get('type');
-        $msg = $request->get('msg');
+        $type = $request->attributes->get('type', $request->query->get('type', $request->request->get('type')));
+        $msg = $request->attributes->get('msg', $request->query->get('msg', $request->request->get('msg')));
 
         $resStr = "Restored ".$type." by $userStr. msg=$msg";
 
@@ -1307,8 +1307,8 @@ class DataBackupManagementController extends OrderAbstractController
         $user = $this->getUser();
         $userStr = $user."";
 
-        $type = $request->get('type'); //db or files
-        $msg = $request->get('msg');
+        $type = $request->attributes->get('type'); //db or files
+        $msg = $request->attributes->get('msg');
 
         if( $type ) {
             $type = strtoupper($type);
@@ -1535,8 +1535,8 @@ class DataBackupManagementController extends OrderAbstractController
         }
         //exit('Not Allowed');
 
-        $backupFileName = $request->get('fileId');
-        $env = $request->get('env');
+        $backupFileName = $request->attributes->get('fileId', $request->query->get('fileId', $request->request->get('fileId')));
+        $env = $request->attributes->get('env', $request->query->get('env', $request->request->get('env')));
         $logger->notice("restore BackupFilesAjaxAction backupFilePath=".$backupFileName."; env=".$env);
         //echo "backupFilePath=".$fileId."; env=".$env."<br>";
         //exit('111');

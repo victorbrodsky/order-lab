@@ -285,8 +285,8 @@ class SignUpController extends OrderAbstractController
             if( $request ) {
                 $signUp->setUseragent($_SERVER['HTTP_USER_AGENT']);
                 $signUp->setIp($request->getClientIp());
-                $signUp->setWidth($request->get('display_width'));
-                $signUp->setHeight($request->get('display_height'));
+                $signUp->setWidth($request->attributes->get('display_width', $request->query->get('display_width', $request->request->get('display_width'))));
+                $signUp->setHeight($request->attributes->get('display_height', $request->query->get('display_height', $request->request->get('display_height'))));
             }
 
             $firewallName = "ldap_".$this->siteName."_firewall";
@@ -1146,8 +1146,8 @@ class SignUpController extends OrderAbstractController
             if( $request ) {
                 $resetPassword->setUseragent($_SERVER['HTTP_USER_AGENT']);
                 $resetPassword->setIp($request->getClientIp());
-                $resetPassword->setWidth($request->get('display_width'));
-                $resetPassword->setHeight($request->get('display_height'));
+                $resetPassword->setWidth($request->attributes->get('display_width', $request->query->get('display_width', $request->request->get('display_width'))));
+                $resetPassword->setHeight($request->attributes->get('display_height', $request->query->get('display_height', $request->request->get('display_height'))));
             }
 
             //exit('flush');
@@ -1188,7 +1188,7 @@ class SignUpController extends OrderAbstractController
         }
 
         $title = "ORDER Password Reset";
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         if (strpos($routeName, 'account_activation') !== false) {
             $title = "ORDER Account Activation";
         }

@@ -149,9 +149,9 @@ class CheckController extends OrderAbstractController {
 
         $user = $this->getUser();
 
-        $key = trim((string)$request->get('key') );
-        $keytype = trim((string)$request->get('extra') );
-        $inst = trim((string)$request->get('inst') );
+        $key = trim((string)$request->attributes->get('key', $request->query->get('key', $request->request->get('key'))) );
+        $keytype = trim((string)$request->attributes->get('extra', $request->query->get('extra', $request->request->get('extra'))) );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
 
         $originalKeytype = $keytype;
         
@@ -230,7 +230,7 @@ class CheckController extends OrderAbstractController {
 //            return $this->render('AppOrderformBundle/Security/login.html.twig');
 //        }
 
-        $inst = trim((string)$request->get('inst') );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
 
         $user = $this->getUser();
 
@@ -281,11 +281,11 @@ class CheckController extends OrderAbstractController {
 
         $user = $this->getUser();
 
-        $key = trim((string)$request->get('key') );
-        $keytype = trim((string)$request->get('extra') );
+        $key = trim((string)$request->attributes->get('key') );
+        $keytype = trim((string)$request->attributes->get('extra', $request->query->get('extra', $request->request->get('extra'))) );
         //echo "keytype=$keytype<br>";
 
-        $inst = trim((string)$request->get('inst') );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         $institutions = array();
         $institutions[] = $inst;
 
@@ -316,9 +316,9 @@ class CheckController extends OrderAbstractController {
 
         $user = $this->getUser();
 
-        $key = trim((string)$request->get('key') );
-        $keytype = trim((string)$request->get('extra') );  //id or string of accession type
-        $inst = trim((string)$request->get('inst') );
+        $key = trim((string)$request->attributes->get('key', $request->query->get('key', $request->request->get('key'))) );
+        $keytype = trim((string)$request->attributes->get('extra', $request->query->get('extra', $request->request->get('extra'))) );  //id or string of accession type
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         
         $originalKeytype = $keytype;
 
@@ -491,7 +491,7 @@ class CheckController extends OrderAbstractController {
 //            return $this->render('AppOrderformBundle/Security/login.html.twig');
 //        }
 
-        $inst = trim((string)$request->get('inst') );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
 
         $user = $this->getUser();
 
@@ -536,11 +536,11 @@ class CheckController extends OrderAbstractController {
 
         $user = $this->getUser();
 
-        $key = trim((string)$request->get('key') );
-        $keytype = trim((string)$request->get('extra') );
+        $key = trim((string)$request->attributes->get('key') );
+        $keytype = trim((string)$request->attributes->get('extra', $request->query->get('extra', $request->request->get('extra'))) );
         //echo "key=".$key.",keytype=".$keytype." | ";
 
-        $inst = trim((string)$request->get('inst') );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         $institutions = array();
         $institutions[] = $inst;
 
@@ -569,12 +569,12 @@ class CheckController extends OrderAbstractController {
     #[Route(path: '/part/check', name: 'get-part', methods: ['GET'])]
     public function getPartAction(Request $request) {
 
-        $key = trim((string)$request->get('key') );
-        $accession = trim((string)$request->get('parentkey') ); //need accession number to check if part exists in DB
-        $keytype = trim((string)$request->get('parentextra') );
+        $key = trim((string)$request->attributes->get('key', $request->query->get('key', $request->request->get('key'))) );
+        $accession = trim((string)$request->attributes->get('parentkey', $request->query->get('parentkey', $request->request->get('parentkey'))) ); //need accession number to check if part exists in DB
+        $keytype = trim((string)$request->attributes->get('parentextra', $request->query->get('parentextra', $request->request->get('parentextra'))) );
         //echo "key=".$key."   ";
 
-        $inst = trim((string)$request->get('inst') );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         $institutions = array();
         $institutions[] = $inst;
 
@@ -631,9 +631,9 @@ class CheckController extends OrderAbstractController {
     #[Route(path: '/part/generate', name: 'create-part', methods: ['GET'])]
     public function createPartAction(Request $request) {
 
-        $accession = trim((string)$request->get('parentkey') );
-        $keytype = trim((string)$request->get('parentextra') );
-        $inst = trim((string)$request->get('inst') );
+        $accession = trim((string)$request->attributes->get('parentkey', $request->query->get('parentkey', $request->request->get('parentkey'))) );
+        $keytype = trim((string)$request->attributes->get('parentextra', $request->query->get('parentextra', $request->request->get('parentextra'))) );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         //echo "accession=(".$accession.")   ";
 
         if( $accession && $accession != ""  ) {
@@ -671,15 +671,15 @@ class CheckController extends OrderAbstractController {
     #[Route(path: '/part/delete/{key}', name: 'delete-part', methods: ['POST', 'DELETE'])]
     public function deletePartAction(Request $request) {
 
-        $key = trim((string)$request->get('key') );
-        $accession = trim((string)$request->get('parentkey') );
-        $keytype = trim((string)$request->get('parentextra') );
+        $key = trim((string)$request->attributes->get('key') );
+        $accession = trim((string)$request->attributes->get('parentkey', $request->query->get('parentkey', $request->request->get('parentkey'))) );
+        $keytype = trim((string)$request->attributes->get('parentextra', $request->query->get('parentextra', $request->request->get('parentextra'))) );
 
         $extra = array();
         $extra["accession"] = $accession;
         $extra["keytype"] = $keytype;
 
-        $inst = trim((string)$request->get('inst') );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         $institutions = array();
         $institutions[] = $inst;
 
@@ -703,13 +703,13 @@ class CheckController extends OrderAbstractController {
     #[Route(path: '/block/check', name: 'get-block', methods: ['GET'])]
     public function getBlockAction(Request $request) {
 
-        $key = trim((string)$request->get('key'));
-        $partname = trim((string)$request->get('parentkey')); //need partname to check if part exists in DB
-        $accession = trim((string)$request->get('grandparentkey')); //need accession number to check if part exists in DB 
-        $keytype = trim((string)$request->get('grandparentextra'));    
+        $key = trim((string)$request->attributes->get('key', $request->query->get('key', $request->request->get('key'))));
+        $partname = trim((string)$request->attributes->get('parentkey', $request->query->get('parentkey', $request->request->get('parentkey')))); //need partname to check if part exists in DB
+        $accession = trim((string)$request->attributes->get('grandparentkey', $request->query->get('grandparentkey', $request->request->get('grandparentkey')))); //need accession number to check if part exists in DB 
+        $keytype = trim((string)$request->attributes->get('grandparentextra', $request->query->get('grandparentextra', $request->request->get('grandparentextra'))));    
         //echo "key=".$key."   ";
 
-        $inst = trim((string)$request->get('inst') );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         $institutions = array();
         $institutions[] = $inst;
         $validity = array('valid','reserved');
@@ -764,10 +764,10 @@ class CheckController extends OrderAbstractController {
      */
     #[Route(path: '/block/generate', name: 'create-block', methods: ['GET'])]
     public function createBlockAction(Request $request) {
-        $partname = trim((string)$request->get('parentkey'));
-        $accession = trim((string)$request->get('grandparentkey')); //need accession number to check if part exists in DB 
-        $keytype = trim((string)$request->get('grandparentextra') );
-        $inst = trim((string)$request->get('inst') );
+        $partname = trim((string)$request->attributes->get('parentkey', $request->query->get('parentkey', $request->request->get('parentkey'))));
+        $accession = trim((string)$request->attributes->get('grandparentkey', $request->query->get('grandparentkey', $request->request->get('grandparentkey')))); //need accession number to check if part exists in DB 
+        $keytype = trim((string)$request->attributes->get('grandparentextra', $request->query->get('grandparentextra', $request->request->get('grandparentextra'))) );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         //echo "accession=(".$accession.")   ";
 
         if( $accession != "" && $partname != "" ) {
@@ -808,12 +808,12 @@ class CheckController extends OrderAbstractController {
     #[Route(path: '/block/delete/{key}', name: 'delete-block', methods: ['POST', 'DELETE'])]
     public function deleteBlockAction(Request $request) {
 
-        $key = trim((string)$request->get('key'));            
-        $partname = trim((string)$request->get('parentkey'));
-        $accession = trim((string)$request->get('grandparentkey'));
-        $keytype = trim((string)$request->get('grandparentextra') );
+        $key = trim((string)$request->attributes->get('key'));            
+        $partname = trim((string)$request->attributes->get('parentkey', $request->query->get('parentkey', $request->request->get('parentkey'))));
+        $accession = trim((string)$request->attributes->get('grandparentkey', $request->query->get('grandparentkey', $request->request->get('grandparentkey'))));
+        $keytype = trim((string)$request->attributes->get('grandparentextra', $request->query->get('grandparentextra', $request->request->get('grandparentextra'))) );
 
-        $inst = trim((string)$request->get('inst') );
+        $inst = trim((string)$request->attributes->get('inst', $request->query->get('inst', $request->request->get('inst'))) );
         $institutions = array();
         $institutions[] = $inst;
 
@@ -840,11 +840,11 @@ class CheckController extends OrderAbstractController {
 
         $em = $this->getDoctrine()->getManager();
 
-        if( $request->get('_route') == "get-accession-keytypeid" ) {
+        if( $request->attributes->get('_route') == "get-accession-keytypeid" ) {
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:AccessionType'] by [AccessionType::class]
             $keytypeEntity = $em->getRepository(AccessionType::class)->findOneByName($keytype);
         } else
-        if( $request->get('_route') == "get-patient-keytypeid" ) {
+        if( $request->attributes->get('_route') == "get-patient-keytypeid" ) {
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:MrnType'] by [MrnType::class]
             $keytypeEntity = $em->getRepository(MrnType::class)->findOneByName($keytype);
         } else {

@@ -39,8 +39,8 @@ class FellAppUtilController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $fellappId = trim((string)$request->get('id'));
-        $emailType = trim((string)$request->get('emailType')); //accepted, rejected
+        $fellappId = trim((string)$request->attributes->get('id', $request->query->get('id', $request->request->get('id'))));
+        $emailType = trim((string)$request->attributes->get('emailType', $request->query->get('emailType', $request->request->get('emailType')))); //accepted, rejected
         
         //process.py script: replaced namespace by ::class: ['AppFellAppBundle:FellowshipApplication'] by [FellowshipApplication::class]
         $fellapp = $this->getDoctrine()->getRepository(FellowshipApplication::class)->find($fellappId);

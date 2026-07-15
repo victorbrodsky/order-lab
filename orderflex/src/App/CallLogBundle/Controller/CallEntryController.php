@@ -153,7 +153,7 @@ class CallEntryController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
         $title = "Call Case List";
         $alerts = false;
         $limit = 10;
@@ -265,7 +265,7 @@ class CallEntryController extends OrderAbstractController
         $userSecUtil = $this->container->get('user_security_utility');
         $sitename = $this->getParameter('calllog.sitename');
 
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
         //exit("route=".$route);
         //$title = "Call Case List";
 
@@ -1291,7 +1291,7 @@ class CallEntryController extends OrderAbstractController
         }
 
         $user = $this->getUser();
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
 
         if( $routename == "calllog_tasks_todo" ) {
             return $this->redirectToRoute('calllog_home',
@@ -1346,12 +1346,12 @@ class CallEntryController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $sitename = $this->getParameter('calllog.sitename');
 
-        $mrn = trim((string)$request->get('mrn'));
-        $mrntype = trim((string)$request->get('mrntype'));
-        $encounterNumber = trim((string)$request->get('encounter-number'));
-        $encounterTypeId = trim((string)$request->get('encounter-type'));
+        $mrn = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $encounterNumber = trim((string)$request->attributes->get('encounter-number', $request->query->get('encounter-number', $request->request->get('encounter-number'))));
+        $encounterTypeId = trim((string)$request->attributes->get('encounter-type', $request->query->get('encounter-type', $request->request->get('encounter-type'))));
         //$encounterVersion = trim((string)$request->get('encounter-version'));
-        $messageTypeId = trim((string)$request->get('message-type'));
+        $messageTypeId = trim((string)$request->attributes->get('message-type', $request->query->get('message-type', $request->request->get('message-type'))));
 
         //check if user has at least one institution
 //        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -2508,8 +2508,8 @@ class CallEntryController extends OrderAbstractController
         if( count($patients) == 0 ) {
             //search again, but only by mrn
             $params = array();
-            $mrntype = trim((string)$request->get('mrntype'));
-            $mrn = trim((string)$request->get('mrn'));
+            $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+            $mrn = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
             $params['mrntype'] = $mrntype;
             $params['mrn'] = $mrn;
             $patientsDataStrict = $this->searchPatient( $request, true, $params );
@@ -2529,8 +2529,8 @@ class CallEntryController extends OrderAbstractController
         if( count($patients) == 0 ) {
             //search again, but only by accession
             $params = array();
-            $accessiontype = trim((string)$request->get('accessiontype'));
-            $accessionnumber = trim((string)$request->get('accessionnumber'));
+            $accessiontype = trim((string)$request->attributes->get('accessiontype', $request->query->get('accessiontype', $request->request->get('accessiontype'))));
+            $accessionnumber = trim((string)$request->attributes->get('accessionnumber', $request->query->get('accessionnumber', $request->request->get('accessionnumber'))));
             if( $accessionnumber && $accessiontype ) {
                 $params['accessiontype'] = $accessiontype;
                 $params['accessionnumber'] = $accessionnumber;
@@ -2676,16 +2676,16 @@ class CallEntryController extends OrderAbstractController
 //            $metaphone = trim((string)$request->get('metaphone'));
 
             $params = array(
-                'mrntype' => trim((string)$request->get('mrntype')),
-                'mrn' => trim((string)$request->get('mrn')),
-                'accessionnumber' => trim((string)$request->get('accessionnumber')),
-                'accessiontype' => trim((string)$request->get('accessiontype')),
-                'dob' => trim((string)$request->get('dob')),
-                'lastname' => trim((string)$request->get('lastname')),
-                'firstname' => trim((string)$request->get('firstname')),
-                'phone' => trim((string)$request->get('phone')),
-                'email' => trim((string)$request->get('email')),
-                'metaphone' => trim((string)$request->get('metaphone'))
+                'mrntype' => trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype')))),
+                'mrn' => trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn')))),
+                'accessionnumber' => trim((string)$request->attributes->get('accessionnumber', $request->query->get('accessionnumber', $request->request->get('accessionnumber')))),
+                'accessiontype' => trim((string)$request->attributes->get('accessiontype', $request->query->get('accessiontype', $request->request->get('accessiontype')))),
+                'dob' => trim((string)$request->attributes->get('dob', $request->query->get('dob', $request->request->get('dob')))),
+                'lastname' => trim((string)$request->attributes->get('lastname', $request->query->get('lastname', $request->request->get('lastname')))),
+                'firstname' => trim((string)$request->attributes->get('firstname', $request->query->get('firstname', $request->request->get('firstname')))),
+                'phone' => trim((string)$request->attributes->get('phone', $request->query->get('phone', $request->request->get('phone')))),
+                'email' => trim((string)$request->attributes->get('email', $request->query->get('email', $request->request->get('email')))),
+                'metaphone' => trim((string)$request->attributes->get('metaphone', $request->query->get('metaphone', $request->request->get('metaphone'))))
             );
         }
 
@@ -2748,18 +2748,18 @@ class CallEntryController extends OrderAbstractController
         $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
 
-        $mrn = trim((string)$request->get('mrn'));
-        $mrntype = trim((string)$request->get('mrntype')); //ID
-        $dob = trim((string)$request->get('dob'));
-        $lastname = trim((string)$request->get('lastname'));
-        $firstname = trim((string)$request->get('firstname'));
-        $middlename = trim((string)$request->get('middlename'));
-        $suffix = trim((string)$request->get('suffix'));
-        $sex = trim((string)$request->get('sex'));
-        $phone = trim((string)$request->get('phone'));
-        $email = trim((string)$request->get('email'));
-        $accessionnumber = trim((string)$request->get('accessionnumber'));
-        $accessiontype = trim((string)$request->get('accessiontype'));
+        $mrn = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype')))); //ID
+        $dob = trim((string)$request->attributes->get('dob', $request->query->get('dob', $request->request->get('dob'))));
+        $lastname = trim((string)$request->attributes->get('lastname', $request->query->get('lastname', $request->request->get('lastname'))));
+        $firstname = trim((string)$request->attributes->get('firstname', $request->query->get('firstname', $request->request->get('firstname'))));
+        $middlename = trim((string)$request->attributes->get('middlename', $request->query->get('middlename', $request->request->get('middlename'))));
+        $suffix = trim((string)$request->attributes->get('suffix', $request->query->get('suffix', $request->request->get('suffix'))));
+        $sex = trim((string)$request->attributes->get('sex', $request->query->get('sex', $request->request->get('sex'))));
+        $phone = trim((string)$request->attributes->get('phone', $request->query->get('phone', $request->request->get('phone'))));
+        $email = trim((string)$request->attributes->get('email', $request->query->get('email', $request->request->get('email'))));
+        $accessionnumber = trim((string)$request->attributes->get('accessionnumber', $request->query->get('accessionnumber', $request->request->get('accessionnumber'))));
+        $accessiontype = trim((string)$request->attributes->get('accessiontype', $request->query->get('accessiontype', $request->request->get('accessiontype'))));
         //print_r($allgets);
         //echo "mrn=".$mrn."<br>";
         //echo "mrntype=".$mrntype."<br>";
@@ -3225,8 +3225,8 @@ class CallEntryController extends OrderAbstractController
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        $patientId = trim((string)$request->get('patientId'));
-        $nowStr = trim((string)$request->get('nowStr'));
+        $patientId = trim((string)$request->attributes->get('patientId', $request->query->get('patientId', $request->request->get('patientId'))));
+        $nowStr = trim((string)$request->attributes->get('nowStr', $request->query->get('nowStr', $request->request->get('nowStr'))));
         //echo "patientId=".$patientId."<br>";
         //echo "nowStr=".$nowStr."<br>";
 
@@ -3278,7 +3278,7 @@ class CallEntryController extends OrderAbstractController
         $userServiceUtil = $this->container->get('user_service_utility');
         $calllogUtil = $this->container->get('calllog_util');
         //$calllogUtil = $this->calllogUtil;
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
 
         $pathPostfix = "";
         $cycle = "show";
@@ -3645,7 +3645,7 @@ class CallEntryController extends OrderAbstractController
         //$all = $request->get('all');
         //echo "all=".$all."<br>";
 
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
 
         if( $routename == "calllog_export_csv" ) {
             $limit = 500;

@@ -44,15 +44,15 @@ class TreeController extends OrderAbstractController {
     public function getTreeByParentAction(Request $request) {
        
         
-        $userid = trim((string)$request->get('userid') );
-        $opt = trim((string)$request->get('opt') );
-        $thisid = trim((string)$request->get('thisid') );
-        $pid = trim((string)$request->get('id') );
-        $className = trim((string)$request->get('classname') );
-        $bundleName = trim((string)$request->get('bundlename') );
-        $type = trim((string)$request->get('type') ); //user-added or default or undefined
-        $entityIds = trim((string)$request->get('entityIds') );
-        $orderformtype = trim((string)$request->get('orderformtype') ); //similar to sitename (calllog, crn, single, multi, transres ...)
+        $userid = trim((string)$request->attributes->get('userid', $request->query->get('userid', $request->request->get('userid'))) );
+        $opt = trim((string)$request->attributes->get('opt', $request->query->get('opt', $request->request->get('opt'))) );
+        $thisid = trim((string)$request->attributes->get('thisid', $request->query->get('thisid', $request->request->get('thisid'))) );
+        $pid = trim((string)$request->attributes->get('id', $request->query->get('id', $request->request->get('id'))) );
+        $className = trim((string)$request->attributes->get('classname', $request->query->get('classname', $request->request->get('classname'))) );
+        $bundleName = trim((string)$request->attributes->get('bundlename', $request->query->get('bundlename', $request->request->get('bundlename'))) );
+        $type = trim((string)$request->attributes->get('type', $request->query->get('type', $request->request->get('type'))) ); //user-added or default or undefined
+        $entityIds = trim((string)$request->attributes->get('entityIds', $request->query->get('entityIds', $request->request->get('entityIds'))) );
+        $orderformtype = trim((string)$request->attributes->get('orderformtype', $request->query->get('orderformtype', $request->request->get('orderformtype'))) ); //similar to sitename (calllog, crn, single, multi, transres ...)
         //$level = trim((string)$request->get('pid') );
         //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
@@ -401,21 +401,21 @@ class TreeController extends OrderAbstractController {
     #[Route(path: '/tree/action', name: 'employees_tree_edit_node', methods: ['POST'], options: ['expose' => true])]
     public function setTreeAction(Request $request) {
 
-        $opt = trim((string)$request->get('opt') );
+        $opt = trim((string)$request->attributes->get('opt', $request->query->get('opt', $request->request->get('opt'))) );
 
-        $pid = trim((string)$request->get('pid') );
-        $position = trim((string)$request->get('position') );
+        $pid = trim((string)$request->attributes->get('pid', $request->query->get('pid', $request->request->get('pid'))) );
+        $position = trim((string)$request->attributes->get('position', $request->query->get('position', $request->request->get('position'))) );
 
-        $oldpid = trim((string)$request->get('oldpid') );
-        $oldposition = trim((string)$request->get('oldposition') );
+        $oldpid = trim((string)$request->attributes->get('oldpid', $request->query->get('oldpid', $request->request->get('oldpid'))) );
+        $oldposition = trim((string)$request->attributes->get('oldposition', $request->query->get('oldposition', $request->request->get('oldposition'))) );
 
-        $nodeid = trim((string)$request->get('nodeid') );
-        $nodetext = trim((string)$request->get('nodetext') );
+        $nodeid = trim((string)$request->attributes->get('nodeid', $request->query->get('nodeid', $request->request->get('nodeid'))) );
+        $nodetext = trim((string)$request->attributes->get('nodetext', $request->query->get('nodetext', $request->request->get('nodetext'))) );
 
-        $action = trim((string)$request->get('action') );
+        $action = trim((string)$request->attributes->get('action', $request->query->get('action', $request->request->get('action'))) );
         //$action = 'none'; //testing
-        $className = trim((string)$request->get('classname') );
-        $bundleName = trim((string)$request->get('bundlename') );
+        $className = trim((string)$request->attributes->get('classname', $request->query->get('classname', $request->request->get('classname'))) );
+        $bundleName = trim((string)$request->attributes->get('bundlename', $request->query->get('bundlename', $request->request->get('bundlename'))) );
         //echo "nodeid=".$nodeid."<br>";
         //echo "pid=".$pid."<br>";
         //echo "action=".$action."<br>";

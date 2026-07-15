@@ -56,7 +56,7 @@ class AntibodyController extends OrderAbstractController
     public function getList($request, $onlyPublic=false, $limit=50) {
 
         $transresUtil = $this->container->get('transres_util');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         //get object name: stain-list => stain
         $pieces = explode("-", $routeName);
@@ -934,7 +934,7 @@ class AntibodyController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Antibody/antibodies_public_table.html.twig')]
     public function indexPublicAntibodiesAction(Request $request)
     {
-        $filterType = trim((string)$request->get('public'));
+        $filterType = trim((string)$request->attributes->get('public', $request->query->get('public', $request->request->get('public'))));
 
         $filterPublic = null;
         $all = $request->query->all();
@@ -1067,7 +1067,7 @@ class AntibodyController extends OrderAbstractController
         //$request->query->set('filter', $typeArr);
 
         //get original filter
-        $filter = $request->get('filter');
+        $filter = $request->attributes->get('filter', $request->query->get('filter', $request->request->get('filter')));
 
         //add types ('default','user-added') to the existing filter
         $filter['type'] = array('default','user-added');

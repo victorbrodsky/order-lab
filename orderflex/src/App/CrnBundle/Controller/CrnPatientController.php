@@ -125,9 +125,9 @@ class CrnPatientController extends PatientController {
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $mrntype = trim((string)$request->get('mrntype'));
-        $mrn = trim((string)$request->get('mrn'));
-        $showtreedepth = trim((string)$request->get('show-tree-depth'));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $mrn = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
+        $showtreedepth = trim((string)$request->attributes->get('show-tree-depth', $request->query->get('show-tree-depth', $request->request->get('show-tree-depth'))));
 
         $extra = array();
         $extra["keytype"] = $mrntype;
@@ -241,9 +241,9 @@ class CrnPatientController extends PatientController {
         $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $mrntype = trim((string)$request->get('mrntype'));
-        $mrn = trim((string)$request->get('mrn'));
-        $showtreedepth = trim((string)$request->get('show-tree-depth'));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $mrn = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
+        $showtreedepth = trim((string)$request->attributes->get('show-tree-depth', $request->query->get('show-tree-depth', $request->request->get('show-tree-depth'))));
 
         $extra = array();
         $extra["keytype"] = $mrntype;
@@ -1099,7 +1099,7 @@ class CrnPatientController extends PatientController {
         );
 
         //return OK
-        if( $request->get('_route') == "crn_add_patient_to_list_ajax" ) {
+        if( $request->attributes->get('_route') == "crn_add_patient_to_list_ajax" ) {
             $res = "OK";
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
@@ -1339,7 +1339,7 @@ class CrnPatientController extends PatientController {
 
         $params = array(
             'filterform' =>  ($filterform ? $filterform->createView() : null), //$filterform->createView(),
-            'route_path' => $request->get('_route'),
+            'route_path' => $request->attributes->get('_route'),
             'messages' => $messages,
             'title' => $title,
             'limit' => $limit,
@@ -1590,7 +1590,7 @@ class CrnPatientController extends PatientController {
 
         $params = array(
             'filterform' =>  null,
-            'route_path' => $request->get('_route'),
+            'route_path' => $request->attributes->get('_route'),
             'tasks' => $tasks,
             'title' => $title,
             'cycle' => $cycle,
@@ -1667,7 +1667,7 @@ class CrnPatientController extends PatientController {
         $em = $this->getDoctrine()->getManager();
         $crnUtil = $this->container->get('crn_util');
 
-        $patientId = trim((string)$request->get('patientId'));
+        $patientId = trim((string)$request->attributes->get('patientId', $request->query->get('patientId', $request->request->get('patientId'))));
         //echo "patientId=$patientId<br>";
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Patient'] by [Patient::class]
@@ -1706,7 +1706,7 @@ class CrnPatientController extends PatientController {
         $em = $this->getDoctrine()->getManager();
         //$crnUtil = $this->container->get('crn_util');
 
-        $encounterId = trim((string)$request->get('encounterId'));
+        $encounterId = trim((string)$request->attributes->get('encounterId', $request->query->get('encounterId', $request->request->get('encounterId'))));
         //echo "encounterId=$encounterId<br>";
 
         //process.py script: replaced namespace by ::class: ['AppOrderformBundle:Encounter'] by [Encounter::class]

@@ -129,7 +129,7 @@ class ProjectController extends OrderAbstractController
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $title = "Project Requests";
 
         //testing
@@ -439,7 +439,7 @@ class ProjectController extends OrderAbstractController
             $preroute = $filterform['preroute']->getData();
         }
 
-        $filterTitle = trim((string)$request->get('title'));
+        $filterTitle = trim((string)$request->attributes->get('title', $request->query->get('title', $request->request->get('title'))));
 
         if( $filterTitle ) {
             $title = $filterTitle;
@@ -2380,9 +2380,9 @@ class ProjectController extends OrderAbstractController
         //$projectId = $request->query->get('projectId');
         //$productArr = $request->query->get('productArr');
 
-        $projectId = $request->get('projectId');
-        $workrequestId = $request->get('workrequestId');
-        $projectGoals = $request->get('projectGoals');
+        $projectId = $request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId')));
+        $workrequestId = $request->attributes->get('workrequestId', $request->query->get('workrequestId', $request->request->get('workrequestId')));
+        $projectGoals = $request->attributes->get('projectGoals', $request->query->get('projectGoals', $request->request->get('projectGoals')));
 
         //dump($projectGoals);
         //exit('111');
@@ -2558,7 +2558,7 @@ class ProjectController extends OrderAbstractController
 
         $transresUtil = $this->container->get('transres_util');
 
-        $projectId = $request->get('projectId');
+        $projectId = $request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId')));
 
         if( !$projectId ) {
             $output = array(
@@ -2770,7 +2770,7 @@ class ProjectController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $transresUtil = $this->container->get('transres_util');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         //set project price list if not set
         //if( $cycle == "new" ) {
@@ -3586,7 +3586,7 @@ class ProjectController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
-        $projectId = trim((string)$request->get('projectId') );
+        $projectId = trim((string)$request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId'))) );
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Project'] by [Project::class]
         $project = $em->getRepository(Project::class)->find($projectId);
 

@@ -58,8 +58,8 @@ class CtpLoggerController extends LoggerController
     #[Template('AppCtpBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
-        $postData = $request->get('postData');
-        $userid = $request->get('id');
+        $postData = $request->attributes->get('postData', $request->query->get('postData', $request->request->get('postData')));
+        $userid = $request->attributes->get('id');
 
         $entityName = 'User';
 

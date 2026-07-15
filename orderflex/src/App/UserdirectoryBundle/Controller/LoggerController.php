@@ -77,9 +77,9 @@ class LoggerController extends OrderAbstractController
     public function getAuditLogAction(Request $request)
     {
 
-        $postData = $request->get('postData');
-        $userid = $request->get('id');
-        $onlyheader = $request->get('onlyheader');
+        $postData = $request->attributes->get('postData', $request->query->get('postData', $request->request->get('postData')));
+        $userid = $request->attributes->get('id');
+        $onlyheader = $request->attributes->get('onlyheader', $request->query->get('onlyheader', $request->request->get('onlyheader')));
 
         //echo "postData=<br>";
         //print_r($postData);
@@ -110,8 +110,8 @@ class LoggerController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
-        $postData = $request->get('postData');
-        $userid = $request->get('id');
+        $postData = $request->attributes->get('postData', $request->query->get('postData', $request->request->get('postData')));
+        $userid = $request->attributes->get('id');
         //$onlyheader = $request->get('onlyheader');
 
         //echo "postData=<br>";
@@ -376,7 +376,7 @@ class LoggerController extends OrderAbstractController
         //showing 3 of 5 matching event(s)
         $eventlogTitle = $eventlogTitle . " showing " . count($pagination) . " of " . $pagination->getTotalItemCount() . " matching event(s)";
 
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
         //echo "route=".$route."<br>";
         //echo "sitename=".$sitename."<br>";
 
@@ -625,7 +625,7 @@ class LoggerController extends OrderAbstractController
 //            $disbaled = true;
 //        }
 
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
         //echo "route=".$routename."<br>";
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
         return $this->createForm(LoggerFilterType::class, null, array(
@@ -716,7 +716,7 @@ class LoggerController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/Logger/warning.html.twig')]
     public function warningLoggerAction(Request $request)
     {
-        $message = $request->get('message');
+        $message = $request->attributes->get('message', $request->query->get('message', $request->request->get('message')));
 
         return array(
             'title' => "Logger Warning Message",

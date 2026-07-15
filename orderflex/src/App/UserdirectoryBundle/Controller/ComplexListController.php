@@ -64,7 +64,7 @@ class ComplexListController extends OrderAbstractController
     }
     public function getList($request,$sitename) {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $mapper = $this->classListMapper($routeName,$request);
 
@@ -210,7 +210,7 @@ class ComplexListController extends OrderAbstractController
     public function showListAction(Request $request, $id)
     {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         if(
             $routeName == "employees_locations_pathaction_edit_standalone" ||
@@ -228,7 +228,7 @@ class ComplexListController extends OrderAbstractController
     public function showList(Request $request, $id, $sitename)
     {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $mapper = $this->classListMapper($routeName,$request);
 
@@ -277,7 +277,7 @@ class ComplexListController extends OrderAbstractController
     public function newList(Request $request, $sitename)
     {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $mapper = $this->classListMapper($routeName,$request);
 
@@ -328,7 +328,7 @@ class ComplexListController extends OrderAbstractController
 
         $user = $this->getUser();
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $mapper = $this->classListMapper($routeName,$request);
 
@@ -439,7 +439,7 @@ class ComplexListController extends OrderAbstractController
     public function updateList( Request $request, $id, $sitename )
     {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $mapper = $this->classListMapper($routeName,$request);
 
         $cycle = 'edit_put_standalone';

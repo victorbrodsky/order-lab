@@ -330,7 +330,7 @@ class ListController extends OrderAbstractController
     }
     public function getList($request, $limit=50) {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         //get object name: stain-list => stain
         $pieces = explode("-", $routeName);
@@ -648,7 +648,7 @@ class ListController extends OrderAbstractController
     }
     public function getList_Test($request, $limit=50) {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         //get object name: stain-list => stain
         $pieces = explode("-", $routeName);
@@ -749,9 +749,9 @@ class ListController extends OrderAbstractController
         //echo "ids=".$ids."<br>";
         //exit('111');
 
-        $search = $request->get('search');
-        $linkToListId = $request->get('linkToListId');
-        $pathbase = $request->get('pathbase');
+        $search = $request->attributes->get('search', $request->query->get('search', $request->request->get('search')));
+        $linkToListId = $request->attributes->get('linkToListId', $request->query->get('linkToListId', $request->request->get('linkToListId')));
+        $pathbase = $request->attributes->get('pathbase', $request->query->get('pathbase', $request->request->get('pathbase')));
         //echo "linkToListId=$linkToListId, search=$search, pathbase=$pathbase <br>";
         //dump($search);
 
@@ -1054,7 +1054,7 @@ class ListController extends OrderAbstractController
     }
     public function createList( $request ) {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -1439,7 +1439,7 @@ class ListController extends OrderAbstractController
     }
     public function newList( $request, $pid=null ) {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
         //echo "pathbase=".$pathbase."<br>";
@@ -1775,7 +1775,7 @@ class ListController extends OrderAbstractController
     }
     public function showList( $request, $id, $showEditBtn=false ) {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
         //echo "pathbase=".$pathbase."<br>";
@@ -2088,7 +2088,7 @@ class ListController extends OrderAbstractController
     }
     public function editList( $request, $id ) {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
 
@@ -2465,7 +2465,7 @@ class ListController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
 
@@ -4525,7 +4525,7 @@ class ListController extends OrderAbstractController
 
     public function deleteList($request, $id) {
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
 

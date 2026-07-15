@@ -51,7 +51,7 @@ class UserDatesController extends OrderAbstractController
         $authUtil->checkUsersAD();
 
         $cycle = 'show';
-        if( $request->get('_route') == 'employees_user_dates_edit' ) {
+        if( $request->attributes->get('_route') == 'employees_user_dates_edit' ) {
             $cycle = 'edit';
         }
 
@@ -564,11 +564,11 @@ class UserDatesController extends OrderAbstractController
 //        $userId = json_decode($request->get('userId'));
 //        $startDate = json_decode($request->get('startDate'));
 //        $endDate = json_decode($request->get('endDate'));
-        $userId = $request->get('userId');
-        $emplstatusId = $request->get('emplstatusId');
-        $startDate = $request->get('startDate');
-        $endDate = $request->get('endDate');
-        $effort = $request->get('effort');
+        $userId = $request->attributes->get('userId', $request->query->get('userId', $request->request->get('userId')));
+        $emplstatusId = $request->attributes->get('emplstatusId', $request->query->get('emplstatusId', $request->request->get('emplstatusId')));
+        $startDate = $request->attributes->get('startDate', $request->query->get('startDate', $request->request->get('startDate')));
+        $endDate = $request->attributes->get('endDate', $request->query->get('endDate', $request->request->get('endDate')));
+        $effort = $request->attributes->get('effort', $request->query->get('effort', $request->request->get('effort')));
         echo "userId=$userId, startDate=$startDate, endDate=$endDate, effort=$effort <br>";
         //exit('111');
 

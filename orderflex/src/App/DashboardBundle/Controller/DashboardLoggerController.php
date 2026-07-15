@@ -61,8 +61,8 @@ class DashboardLoggerController extends LoggerController
     #[Template('AppDashboardBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
-        $postData = $request->get('postData');
-        $userid = $request->get('id');
+        $postData = $request->attributes->get('postData', $request->query->get('postData', $request->request->get('postData')));
+        $userid = $request->attributes->get('id');
         //$onlyheader = $request->get('onlyheader');
 
         //echo "postData=<br>";
@@ -110,7 +110,7 @@ class DashboardLoggerController extends LoggerController
         $eventTypes = array();
 
         //$filter = $request->query->get('filter');
-        $filter = $request->get('filter');
+        $filter = $request->attributes->get('filter', $request->query->get('filter', $request->request->get('filter')));
 
         if( is_array($filter) && count($filter) > 0 ) {
             $eventTypes = $filter['eventType'];

@@ -41,8 +41,8 @@ class ResAppUtilController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('resapp-nopermission') );
         }
 
-        $resappId = trim((string)$request->get('id'));
-        $emailType = trim((string)$request->get('emailType')); //accepted, rejected
+        $resappId = trim((string)$request->attributes->get('id', $request->query->get('id', $request->request->get('id'))));
+        $emailType = trim((string)$request->attributes->get('emailType', $request->query->get('emailType', $request->request->get('emailType')))); //accepted, rejected
         
         //process.py script: replaced namespace by ::class: ['AppResAppBundle:ResidencyApplication'] by [ResidencyApplication::class]
         $resapp = $this->getDoctrine()->getRepository(ResidencyApplication::class)->find($resappId);
@@ -153,7 +153,7 @@ class ResAppUtilController extends OrderAbstractController
 
         //$duplicateArr = $this->checkDuplicate($rowArr,$handsomtableJsonData);
 
-        $tabledata = $request->get('tabledata');
+        $tabledata = $request->attributes->get('tabledata', $request->query->get('tabledata', $request->request->get('tabledata')));
 
         $data = json_decode($tabledata, true);
 

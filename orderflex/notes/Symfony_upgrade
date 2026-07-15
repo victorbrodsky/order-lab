@@ -526,3 +526,4 @@ Test after upgrade.
 //Items can ve added to the invoice but not deleted.
 //Added items on the invoice will be displayed on work request under section "Additional Info from the Invoice. See latest invoice APCP2-REQ1-V3"
 
+"tattali/calendar-bundle": "^1.2", => "tattali/calendar-bundle": "^7",

@@ -126,7 +126,7 @@ class SiteParametersController extends OrderAbstractController
 
         $entity = $entities[0];
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
 
@@ -218,9 +218,9 @@ class SiteParametersController extends OrderAbstractController
 
     public function editParameters( Request $request, $id, $role=null )
     {
-        $param = trim((string)$request->get('param') );
+        $param = trim((string)$request->attributes->get('param', $request->query->get('param', $request->request->get('param'))) );
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
         //exit('role='.$role."; sitename=".$sitename.", param=".$param);
@@ -269,11 +269,11 @@ class SiteParametersController extends OrderAbstractController
     public function updateParameters(Request $request, $id, $role=null)
     {
 
-        $param = trim((string)$request->get('param') );
+        $param = trim((string)$request->attributes->get('param', $request->query->get('param', $request->request->get('param'))) );
         //echo "param=".$param."<br>";
         //exit('111');
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
 
@@ -439,7 +439,7 @@ class SiteParametersController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
 

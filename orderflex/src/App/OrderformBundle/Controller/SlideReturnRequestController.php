@@ -463,8 +463,8 @@ class SlideReturnRequestController extends OrderAbstractController
         return array(
             'sliderequests' => $sliderequests,
             'filter' => $filterForm->createView(),
-            'route' => $request->get('_route'),
-            'routename' => $request->get('_route')
+            'route' => $request->attributes->get('_route'),
+            'routename' => $request->attributes->get('_route')
         );
     }
 
@@ -577,7 +577,7 @@ class SlideReturnRequestController extends OrderAbstractController
         return array(
             'sliderequests' => $sliderequests,
             'filter' => $filterForm->createView(),
-            'routename' => $request->get('_route')
+            'routename' => $request->attributes->get('_route')
         );
     }
 
@@ -647,7 +647,7 @@ class SlideReturnRequestController extends OrderAbstractController
 
 
         //$filter = $request->query->get('filter');
-        $filter = $request->get('filter');
+        $filter = $request->attributes->get('filter', $request->query->get('filter', $request->request->get('filter')));
 
         if( $filter && $filter != "" ) {
             $paramUrl = array('filter_search_box[filter]'=>$filter);

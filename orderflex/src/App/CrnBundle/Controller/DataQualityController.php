@@ -73,8 +73,8 @@ class DataQualityController extends CrnEntryController
         $patient1 = new Patient(true,$status,$user,$system);
 
         $triggerSearch = 0;
-        $mrntype = trim((string)$request->get('mrntype'));
-        $mrnid = trim((string)$request->get('mrn'));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $mrnid = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
         if( $mrntype && $mrnid ) {
             $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
             $mrnPatient1->setKeytype($mrntype);
@@ -119,9 +119,9 @@ class DataQualityController extends CrnEntryController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
 
-        $id1 = trim((string)$request->get('id1'));
-        $id2 = trim((string)$request->get('id2'));
-        $masterMergeRecordId = trim((string)$request->get('masterMergeRecordId'));
+        $id1 = trim((string)$request->attributes->get('id1', $request->query->get('id1', $request->request->get('id1'))));
+        $id2 = trim((string)$request->attributes->get('id2', $request->query->get('id2', $request->request->get('id2'))));
+        $masterMergeRecordId = trim((string)$request->attributes->get('masterMergeRecordId', $request->query->get('masterMergeRecordId', $request->request->get('masterMergeRecordId'))));
         //echo "id1=$id1; id2=$id2 <br>";
         //exit('exit');
 
@@ -353,7 +353,7 @@ class DataQualityController extends CrnEntryController
         $status = 'valid';
         $cycle = 'new';
 
-        $route = $request->get('_route');
+        $route = $request->attributes->get('_route');
 
         if( $route == "crn_unmerge_patient_records" ) {
             $title = "Un-merge Patient Records";
@@ -366,8 +366,8 @@ class DataQualityController extends CrnEntryController
         $patient1 = new Patient(true,$status,$user,$system);
 
         $triggerSearch = 0;
-        $mrntype = trim((string)$request->get('mrntype'));
-        $mrnid = trim((string)$request->get('mrn'));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $mrnid = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
         if( $mrntype && $mrnid ) {
             $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
             $mrnPatient1->setKeytype($mrntype);
@@ -416,7 +416,7 @@ class DataQualityController extends CrnEntryController
         $error = false;
         $msg = "";
 
-        $patientId = trim((string)$request->get('masterId'));
+        $patientId = trim((string)$request->attributes->get('masterId', $request->query->get('masterId', $request->request->get('masterId'))));
         //echo "patientId=".$patientId."<br>";
 
         //set master patient
@@ -459,8 +459,8 @@ class DataQualityController extends CrnEntryController
         $error = false;
         $msg = "";
 
-        $masterId = trim((string)$request->get('masterId'));
-        $patientIds = trim((string)$request->get('patientIds'));
+        $masterId = trim((string)$request->attributes->get('masterId', $request->query->get('masterId', $request->request->get('masterId'))));
+        $patientIds = trim((string)$request->attributes->get('patientIds', $request->query->get('patientIds', $request->request->get('patientIds'))));
         //echo "masterId=".$masterId."<br>";
         //echo "patientIds=".$patientIds."<br>";
         //exit('1');
@@ -557,8 +557,8 @@ class DataQualityController extends CrnEntryController
         $patient1 = new Patient(true,$status,$user,$system);
 
         $triggerSearch = 0;
-        $mrntype = trim((string)$request->get('mrntype'));
-        $mrnid = trim((string)$request->get('mrn'));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $mrnid = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
         if( $mrntype && $mrnid ) {
             $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
             $mrnPatient1->setKeytype($mrntype);
@@ -601,17 +601,17 @@ class DataQualityController extends CrnEntryController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $patientId = trim((string)$request->get('patientId'));
-        $mrn = trim((string)$request->get('mrn'));
-        $mrntype = trim((string)$request->get('mrntype'));
-        $dob = trim((string)$request->get('dob'));
-        $lastname = trim((string)$request->get('lastname'));
-        $firstname = trim((string)$request->get('firstname'));
-        $middlename = trim((string)$request->get('middlename'));
-        $suffix = trim((string)$request->get('suffix'));
-        $sex = trim((string)$request->get('sex'));
-        $phone = trim((string)$request->get('phone'));
-        $email = trim((string)$request->get('email'));
+        $patientId = trim((string)$request->attributes->get('patientId', $request->query->get('patientId', $request->request->get('patientId'))));
+        $mrn = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $dob = trim((string)$request->attributes->get('dob', $request->query->get('dob', $request->request->get('dob'))));
+        $lastname = trim((string)$request->attributes->get('lastname', $request->query->get('lastname', $request->request->get('lastname'))));
+        $firstname = trim((string)$request->attributes->get('firstname', $request->query->get('firstname', $request->request->get('firstname'))));
+        $middlename = trim((string)$request->attributes->get('middlename', $request->query->get('middlename', $request->request->get('middlename'))));
+        $suffix = trim((string)$request->attributes->get('suffix', $request->query->get('suffix', $request->request->get('suffix'))));
+        $sex = trim((string)$request->attributes->get('sex', $request->query->get('sex', $request->request->get('sex'))));
+        $phone = trim((string)$request->attributes->get('phone', $request->query->get('phone', $request->request->get('phone'))));
+        $email = trim((string)$request->attributes->get('email', $request->query->get('email', $request->request->get('email'))));
         //print_r($allgets);
         echo "patientId=".$patientId."; mrn=".$mrn."<br>";
 
@@ -643,8 +643,8 @@ class DataQualityController extends CrnEntryController
         $patient1 = new Patient(true,$status,$user,$system);
 
         $triggerSearch = 0;
-        $mrntype = trim((string)$request->get('mrntype'));
-        $mrnid = trim((string)$request->get('mrn'));
+        $mrntype = trim((string)$request->attributes->get('mrntype', $request->query->get('mrntype', $request->request->get('mrntype'))));
+        $mrnid = trim((string)$request->attributes->get('mrn', $request->query->get('mrn', $request->request->get('mrn'))));
         if( $mrntype && $mrnid ) {
             $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
             $mrnPatient1->setKeytype($mrntype);

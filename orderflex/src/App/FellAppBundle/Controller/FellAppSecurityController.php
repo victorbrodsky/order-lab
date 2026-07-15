@@ -54,7 +54,7 @@ class FellAppSecurityController extends SecurityController
     public function actionNoPermission( Request $request )
     {
         //$message = null;
-        $empty = $request->get('empty');
+        $empty = $request->attributes->get('empty', $request->query->get('empty', $request->request->get('empty')));
 
         return array(
             'sitename' => $this->getParameter('fellapp.sitename'),

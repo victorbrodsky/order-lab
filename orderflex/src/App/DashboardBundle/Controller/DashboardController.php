@@ -837,7 +837,7 @@ class DashboardController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $chartId = trim((string)$request->get('chartId') );
+        $chartId = trim((string)$request->attributes->get('chartId', $request->query->get('chartId', $request->request->get('chartId'))) );
 
         //process.py script: replaced namespace by ::class: ['AppDashboardBundle:ChartList'] by [ChartList::class]
         $chart = $em->getRepository(ChartList::class)->find($chartId);

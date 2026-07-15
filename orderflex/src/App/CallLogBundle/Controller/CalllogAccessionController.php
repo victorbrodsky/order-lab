@@ -289,8 +289,8 @@ class CalllogAccessionController extends OrderAbstractController {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        $accessionNumber = trim((string)$request->get('accessionnumber'));
-        $accessionType = trim((string)$request->get('accessiontype'));
+        $accessionNumber = trim((string)$request->attributes->get('accessionnumber', $request->query->get('accessionnumber', $request->request->get('accessionnumber'))));
+        $accessionType = trim((string)$request->attributes->get('accessiontype', $request->query->get('accessiontype', $request->request->get('accessiontype'))));
 
         $calllogUtil = $this->container->get('calllog_util');
         $accession = $calllogUtil->findExistingAccession($accessionNumber,$accessionType);
@@ -421,7 +421,7 @@ class CalllogAccessionController extends OrderAbstractController {
         );
 
         //return OK
-        if( $request->get('_route') == "calllog_add_accession_to_list_ajax" ) {
+        if( $request->attributes->get('_route') == "calllog_add_accession_to_list_ajax" ) {
             $res = "OK";
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');

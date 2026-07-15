@@ -57,10 +57,10 @@ class UploadController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $documentid = $request->get('documentid');
-        $commentid = $request->get('commentid');
-        $commentclass = $request->get('commenttype');    //comment class
-        $sitename = $request->get('sitename');
+        $documentid = $request->attributes->get('documentid', $request->query->get('documentid', $request->request->get('documentid')));
+        $commentid = $request->attributes->get('commentid', $request->query->get('commentid', $request->request->get('commentid')));
+        $commentclass = $request->attributes->get('commenttype', $request->query->get('commenttype', $request->request->get('commenttype')));    //comment class
+        $sitename = $request->attributes->get('sitename', $request->query->get('sitename', $request->request->get('sitename')));
         //echo "documentid=".$documentid."<br>";
         //echo "commentid=".$commentid."<br>";
         //echo "commentclass=".$commentclass."<br>";

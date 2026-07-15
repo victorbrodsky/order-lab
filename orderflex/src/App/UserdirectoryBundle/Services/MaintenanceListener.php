@@ -285,8 +285,17 @@ class MaintenanceListener {
             return;
         }
 
-        if( $event->getRequest()->get('_route') == "first-time-login-generation-init" ||
-            $event->getRequest()->get('_route') == "first-time-login-generation-init-https"
+//        if( $event->getRequest()->get('_route') == "first-time-login-generation-init" ||
+//            $event->getRequest()->get('_route') == "first-time-login-generation-init-https"
+//        ) {
+//            return;
+//        }
+
+        //$routeName = $request->get('_route'); deprecated
+        //$routeName = $event->getRequest()->attributes->get('_route', $request->query->get('_route', $request->request->get('_route')));
+        $routeName = $event->getRequest()->attributes->get('_route');
+        if( $routeName == "first-time-login-generation-init" ||
+            $routeName == "first-time-login-generation-init-https"
         ) {
             return;
         }

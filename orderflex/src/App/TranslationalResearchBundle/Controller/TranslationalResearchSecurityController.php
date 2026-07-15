@@ -54,8 +54,8 @@ class TranslationalResearchSecurityController extends SecurityController
     #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
-        $empty = $request->get('empty');
-        $additionalMessage = $request->get('additionalMessage');
+        $empty = $request->attributes->get('empty', $request->query->get('empty', $request->request->get('empty')));
+        $additionalMessage = $request->attributes->get('additionalMessage', $request->query->get('additionalMessage', $request->request->get('additionalMessage')));
 
         return array(
             'sitename' => $this->getParameter('translationalresearch.sitename'),

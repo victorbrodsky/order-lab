@@ -338,11 +338,11 @@ class UserController extends OrderAbstractController
     #[Route(path: '/my-objects', name: 'employees_my_objects')]
     public function myObjectsAction(Request $request) {        
         
-        $tablename = $request->get('tablename');
-        $objectid = $request->get('id');
-        $objectname = $request->get('name');
-        $postData = $request->get('postData');
-        $subjectUserId = $request->get('subjectUserId');
+        $tablename = $request->attributes->get('tablename', $request->query->get('tablename', $request->request->get('tablename')));
+        $objectid = $request->attributes->get('id', $request->query->get('id', $request->request->get('id')));
+        $objectname = $request->attributes->get('name', $request->query->get('name', $request->request->get('name')));
+        $postData = $request->attributes->get('postData', $request->query->get('postData', $request->request->get('postData')));
+        $subjectUserId = $request->attributes->get('subjectUserId', $request->query->get('subjectUserId', $request->request->get('subjectUserId')));
 
         //echo "tablename=".$tablename."<br>";
 
@@ -391,7 +391,7 @@ class UserController extends OrderAbstractController
     #[Template('AppUserdirectoryBundle/Location/common-locations.html.twig')]
     public function listCommonLocationsAction(Request $request) {
 
-        $filter = trim((string)$request->get('filter') );
+        $filter = trim((string)$request->attributes->get('filter', $request->query->get('filter', $request->request->get('filter'))) );
 
         //location search
         $userUtil = $this->container->get('user_utility');
@@ -412,9 +412,9 @@ class UserController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $tablename = $request->get('tablename');
-        $objectid = $request->get('id');
-        $objectname = $request->get('name');
+        $tablename = $request->attributes->get('tablename', $request->query->get('tablename', $request->request->get('tablename')));
+        $objectid = $request->attributes->get('id', $request->query->get('id', $request->request->get('id')));
+        $objectname = $request->attributes->get('name', $request->query->get('name', $request->request->get('name')));
 
         //user search
         $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid);
@@ -506,9 +506,9 @@ class UserController extends OrderAbstractController
         //$accessreqs = "";
         $accessreqs = $this->getActiveAccessReq();
 
-        $search = trim((string)$request->get('search') );
-        $userid = trim((string)$request->get('userid') );
-        $all = trim((string)$request->get('all'));
+        $search = trim((string)$request->attributes->get('search', $request->query->get('search', $request->request->get('search'))) );
+        $userid = trim((string)$request->attributes->get('userid', $request->query->get('userid', $request->request->get('userid'))) );
+        $all = trim((string)$request->attributes->get('all', $request->query->get('all', $request->request->get('all'))));
 
         //clean $search
         $search = str_replace("'","",$search);
@@ -611,11 +611,11 @@ class UserController extends OrderAbstractController
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $filter = trim((string)$request->get('filter') );
+        $filter = trim((string)$request->attributes->get('filter', $request->query->get('filter', $request->request->get('filter'))) );
 
         $prefix =  "";
         $time = 'current_only';
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         if( $routeName == "employees_listusers_previous" ) {
             $time = 'past_only';
             $prefix =  "Previous ";
@@ -1919,7 +1919,7 @@ class UserController extends OrderAbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $comboboxValue = $request->get('comboboxValue');
+        $comboboxValue = $request->attributes->get('comboboxValue', $request->query->get('comboboxValue', $request->request->get('comboboxValue')));
         //echo "comboboxValue=$comboboxValue<br>";
 
         $comboboxValueArr = explode(" ",$comboboxValue);
@@ -2089,8 +2089,8 @@ class UserController extends OrderAbstractController
         $resArr = null;
         $primaryPublicUserId = null;
 
-        $searchvalue = $request->get('searchvalue');
-        $inputType = $request->get('type');
+        $searchvalue = $request->attributes->get('searchvalue', $request->query->get('searchvalue', $request->request->get('searchvalue')));
+        $inputType = $request->attributes->get('type', $request->query->get('type', $request->request->get('type')));
         //echo "searchvalue=$searchvalue <br>";
         //echo "inputType=$inputType <br>";
 
@@ -2206,18 +2206,18 @@ class UserController extends OrderAbstractController
             "error" => "Unknown Error"
         );
 
-        $keytype = $request->get('keytype');
-        $fieldId = $request->get('fieldId');
-        $sitename = $request->get('sitename');
-        $otherUserParam = $request->get('otherUserParam');
-        $publicUserId = $request->get('cwid');
-        $email = $request->get('email');
-        $displayname = $request->get('displayname');
-        $firstname = $request->get('firstname');
-        $lastname = $request->get('lastname');
-        $phone = $request->get('phone');
-        $administrativetitle = $request->get('administrativetitle');
-        $institution = $request->get('institution');
+        $keytype = $request->attributes->get('keytype', $request->query->get('keytype', $request->request->get('keytype')));
+        $fieldId = $request->attributes->get('fieldId', $request->query->get('fieldId', $request->request->get('fieldId')));
+        $sitename = $request->attributes->get('sitename', $request->query->get('sitename', $request->request->get('sitename')));
+        $otherUserParam = $request->attributes->get('otherUserParam', $request->query->get('otherUserParam', $request->request->get('otherUserParam')));
+        $publicUserId = $request->attributes->get('cwid', $request->query->get('cwid', $request->request->get('cwid')));
+        $email = $request->attributes->get('email', $request->query->get('email', $request->request->get('email')));
+        $displayname = $request->attributes->get('displayname', $request->query->get('displayname', $request->request->get('displayname')));
+        $firstname = $request->attributes->get('firstname', $request->query->get('firstname', $request->request->get('firstname')));
+        $lastname = $request->attributes->get('lastname', $request->query->get('lastname', $request->request->get('lastname')));
+        $phone = $request->attributes->get('phone', $request->query->get('phone', $request->request->get('phone')));
+        $administrativetitle = $request->attributes->get('administrativetitle', $request->query->get('administrativetitle', $request->request->get('administrativetitle')));
+        $institution = $request->attributes->get('institution', $request->query->get('institution', $request->request->get('institution')));
 
         //echo "publicUserId=$publicUserId<br>";
 
@@ -4898,10 +4898,10 @@ class UserController extends OrderAbstractController
 //        $file = $_FILES['avatar_file'];
 //        $userid = $_POST['avatar_userid'];
 
-        $src = $request->get('avatar_src');
-        $data = $request->get('avatar_data');
+        $src = $request->attributes->get('avatar_src', $request->query->get('avatar_src', $request->request->get('avatar_src')));
+        $data = $request->attributes->get('avatar_data', $request->query->get('avatar_data', $request->request->get('avatar_data')));
         $file = $_FILES['avatar_file']; //$request->get('avatar_file');
-        $userid = $request->get('avatar_userid');
+        $userid = $request->attributes->get('avatar_userid', $request->query->get('avatar_userid', $request->request->get('avatar_userid')));
 
         //echo "src=".$src." <br>";
         //echo "data=".$data." <br>";

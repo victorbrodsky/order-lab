@@ -53,7 +53,7 @@ class InvoiceController extends OrderAbstractController
 
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
-        $routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $advancedFilter = 0;
         $title = "List of Invoices";
         $metaTitle = null;
@@ -143,7 +143,7 @@ class InvoiceController extends OrderAbstractController
 
         $filterform->handleRequest($request);
 
-        $filterTitle = trim((string)$request->get('title'));
+        $filterTitle = trim((string)$request->attributes->get('title', $request->query->get('title', $request->request->get('title'))));
         //$filterwell = trim((string)$request->get('filterwell') );
 
         //$filterType = trim((string)$request->get('type') );
@@ -1781,7 +1781,7 @@ class InvoiceController extends OrderAbstractController
         $newline = "\n";
         $res = "NotOK";
 
-        $userId = trim((string)$request->get('userId') );
+        $userId = trim((string)$request->attributes->get('userId', $request->query->get('userId', $request->request->get('userId'))) );
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
         $billToUser = $em->getRepository(User::class)->find($userId);
 
@@ -1949,7 +1949,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $status = trim((string)$request->get('status') );
+        $status = trim((string)$request->attributes->get('status', $request->query->get('status', $request->request->get('status'))) );
 
         $msg = "Invoice's (ID ".$invoice->getOid().") status has not been updated to '" . $status . "'";
 
@@ -2004,15 +2004,15 @@ class InvoiceController extends OrderAbstractController
         $em = $this->getDoctrine()->getManager();
         $res = "NotOK";
 
-        $invoiceId = trim((string)$request->get('invoiceId') );
-        $paid = trim((string)$request->get('paid') );
-        $total = trim((string)$request->get('total') );
-        $discountNumeric = trim((string)$request->get('discountNumeric') );
-        $discountPercent = trim((string)$request->get('discountPercent') );
-        $administrativeFee = trim((string)$request->get('administrativeFee') );
-        $due = trim((string)$request->get('due') );
-        $comment = trim((string)$request->get('comment') );
-        $status = trim((string)$request->get('status') );
+        $invoiceId = trim((string)$request->attributes->get('invoiceId', $request->query->get('invoiceId', $request->request->get('invoiceId'))) );
+        $paid = trim((string)$request->attributes->get('paid', $request->query->get('paid', $request->request->get('paid'))) );
+        $total = trim((string)$request->attributes->get('total', $request->query->get('total', $request->request->get('total'))) );
+        $discountNumeric = trim((string)$request->attributes->get('discountNumeric', $request->query->get('discountNumeric', $request->request->get('discountNumeric'))) );
+        $discountPercent = trim((string)$request->attributes->get('discountPercent', $request->query->get('discountPercent', $request->request->get('discountPercent'))) );
+        $administrativeFee = trim((string)$request->attributes->get('administrativeFee', $request->query->get('administrativeFee', $request->request->get('administrativeFee'))) );
+        $due = trim((string)$request->attributes->get('due', $request->query->get('due', $request->request->get('due'))) );
+        $comment = trim((string)$request->attributes->get('comment', $request->query->get('comment', $request->request->get('comment'))) );
+        $status = trim((string)$request->attributes->get('status', $request->query->get('status', $request->request->get('status'))) );
 
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
         $invoice = $em->getRepository(Invoice::class)->find($invoiceId);

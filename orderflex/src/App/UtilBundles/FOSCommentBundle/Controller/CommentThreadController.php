@@ -98,9 +98,9 @@ class CommentThreadController extends OrderAbstractController
 //        $threadId = $request->query->get('threadId');
 //        $parentId = $request->query->get('parentId');
 //        $comment = $request->query->get('comment');
-        $threadId = $request->get('threadId');
-        $parentId = $request->get('parentId');
-        $commentText = $request->get('comment');
+        $threadId = $request->attributes->get('threadId', $request->query->get('threadId', $request->request->get('threadId')));
+        $parentId = $request->attributes->get('parentId', $request->query->get('parentId', $request->request->get('parentId')));
+        $commentText = $request->attributes->get('comment', $request->query->get('comment', $request->request->get('comment')));
         //echo "threadId=$threadId, parentId=$parentId, comment=$comment, uri=$uri <br>";
         //exit('111');
 

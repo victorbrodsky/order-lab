@@ -1765,7 +1765,7 @@ class ApproverController extends OrderAbstractController
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $routename = $request->get('_route');
+        $routename = $request->attributes->get('_route');
         if( $routename == 'vacreq_my_group' ) {
             $vacreqUtil = $this->container->get('vacreq_util');
             $groupTypes = $vacreqUtil->getApprovalGroupTypes();

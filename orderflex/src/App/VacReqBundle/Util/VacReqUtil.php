@@ -8758,7 +8758,8 @@ class VacReqUtil
     }
 
     public function redirectIndex( $request ) {
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
         $requestType = NULL;
         $requestTypeOriginal = false;
         $redirect = false;
