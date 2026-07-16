@@ -8,20 +8,14 @@
 
 namespace App\VacReqBundle\EventListener;
 
-
-
 use App\VacReqBundle\Entity\VacReqRequest; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequest
-
-
 use App\VacReqBundle\Entity\VacReqRequestFloating; //process.py script: replaced namespace by ::class: added use line for classname=VacReqRequestFloating
-
-
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
 
-
-use CalendarBundle\CalendarEvents;
+//use CalendarBundle\CalendarEvents;
+//use CalendarBundle\Event\CalendarEvent;
+use CalendarBundle\Event\SetDataEvent;
 use CalendarBundle\Entity\Event;
-use CalendarBundle\Event\CalendarEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -50,12 +44,18 @@ class CalendarSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents() : array
     {
+//        return [
+//            CalendarEvents::SET_DATA => 'onCalendarSetData',
+//        ];
         return [
-            CalendarEvents::SET_DATA => 'onCalendarSetData',
+            SetDataEvent::class => 'onCalendarSetData',
         ];
     }
 
-    public function onCalendarSetData(CalendarEvent $calendarEvent) {
+    ////public function onCalendarSetData(SetDataEvent $calendarEvent): void
+    //public function onCalendarSetData(CalendarEvent $calendarEvent)
+    public function onCalendarSetData(SetDataEvent $calendarEvent): void
+    {
         $startDate = $calendarEvent->getStart();
         $endDate = $calendarEvent->getEnd();
         //echo "endDate=".$endDate->format('Y-m-d H:i:s')."<br>";
@@ -68,15 +68,18 @@ class CalendarSubscriber implements EventSubscriberInterface
         $groupId = $filters['groupId'];
         //echo "filter:".$groupId.";";
 
-        $filter = array('groupId'=>$groupId);
+        if(0) {
+            $filter = array('groupId'=>$groupId);
 
-        $this->setCalendar($calendarEvent, "requestBusiness", $startDate, $endDate, $filter);
-        $this->setCalendar($calendarEvent, "requestVacation", $startDate, $endDate, $filter);
 
-        $this->setFloatingCalendar($calendarEvent, $startDate, $endDate, $filter);
+            $this->setCalendar($calendarEvent, "requestBusiness", $startDate, $endDate, $filter);
+            $this->setCalendar($calendarEvent, "requestVacation", $startDate, $endDate, $filter);
 
-        //set Calendar for observed holidays
-        $this->setObservedHolidaysCalendar($calendarEvent, $startDate, $endDate, $filter);
+            $this->setFloatingCalendar($calendarEvent, $startDate, $endDate, $filter);
+
+            //set Calendar for observed holidays
+            $this->setObservedHolidaysCalendar($calendarEvent, $startDate, $endDate, $filter);
+        }
     }
 
     public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate, $filter ) {

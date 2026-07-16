@@ -273,7 +273,8 @@ class CalendarController extends OrderAbstractController
 
         $title = 'Holiday Dates';
 
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         return array(
             'filterform' => $filterform->createView(),
@@ -478,7 +479,8 @@ class CalendarController extends OrderAbstractController
 
         $title = 'Observed Holidays';
 
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         return array(
             'filterform' => $filterform->createView(),
@@ -697,7 +699,8 @@ class CalendarController extends OrderAbstractController
 
         $title = 'Manage observed holidays';
 
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
         if( $holidaysUrl ) {
@@ -830,7 +833,8 @@ class CalendarController extends OrderAbstractController
         }
         /////////// EOF get user's org groups ///////////
 
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
+        $routeName = $request->attributes->get('_route');
 
         $holidaysUrl = $userSecUtil->getSiteSettingParameter('holidaysUrl','vacreq');
         if( $holidaysUrl ) {

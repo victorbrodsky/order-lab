@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe1af3f32d06a524470b63bbaec367a4",
+    "content-hash": "5716d7daecb5bde37f1c3cdade65f470",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -2309,16 +2309,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.14.1",
+            "version": "7.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "6b1d2429a2c312474c523aa9017fba0c07b5f4a0"
+                "reference": "fa88c57803501ad0770f5cddb1e60525d49da9a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/6b1d2429a2c312474c523aa9017fba0c07b5f4a0",
-                "reference": "6b1d2429a2c312474c523aa9017fba0c07b5f4a0",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/fa88c57803501ad0770f5cddb1e60525d49da9a1",
+                "reference": "fa88c57803501ad0770f5cddb1e60525d49da9a1",
                 "shasum": ""
             },
             "require": {
@@ -2417,7 +2417,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.14.1"
+                "source": "https://github.com/guzzle/guzzle/tree/7.14.2"
             },
             "funding": [
                 {
@@ -2433,7 +2433,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-13T01:32:54+00:00"
+            "time": "2026-07-14T18:15:01+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -10696,32 +10696,32 @@
         },
         {
             "name": "tattali/calendar-bundle",
-            "version": "v1.3.0",
+            "version": "v7.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tattali/CalendarBundle.git",
-                "reference": "0885fc7157211b9c0b6e9c49f8b815b8f979d52d"
+                "reference": "fccf63cd886691690e1d8d9ee44809c088f690f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tattali/CalendarBundle/zipball/0885fc7157211b9c0b6e9c49f8b815b8f979d52d",
-                "reference": "0885fc7157211b9c0b6e9c49f8b815b8f979d52d",
+                "url": "https://api.github.com/repos/tattali/CalendarBundle/zipball/fccf63cd886691690e1d8d9ee44809c088f690f0",
+                "reference": "fccf63cd886691690e1d8d9ee44809c088f690f0",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=8.0",
-                "symfony/dependency-injection": "^5.4 || ^6.3 || ^7.0",
-                "symfony/event-dispatcher": "^5.4 || ^6.3 || ^7.0",
-                "symfony/framework-bundle": "^5.4 || ^6.3 || ^7.0"
+                "php": ">=8.2",
+                "symfony/dependency-injection": "^7.0",
+                "symfony/event-dispatcher": "^7.0",
+                "symfony/framework-bundle": "^7.0"
             },
             "require-dev": {
-                "phpspec/prophecy": "^1.8",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpunit/phpunit": "^9.6 || ^10.4",
-                "symfony/dotenv": "^5.4 || ^6.3 || ^7.0",
-                "symfony/phpunit-bridge": "^5.4 || ^6.3 || ^7.0",
-                "symfony/yaml": "^5.4 || ^6.3 || ^7.0"
+                "friendsofphp/php-cs-fixer": "^3.65",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "^11.2",
+                "symfony/dotenv": "^7.0",
+                "symfony/phpunit-bridge": "^7.0",
+                "symfony/yaml": "^7.0"
             },
             "suggest": {
                 "doctrine/mongodb-odm-bundle": "To support MongoDB.",
@@ -10744,7 +10744,7 @@
                     "homepage": "https://theoattali.fr"
                 }
             ],
-            "description": "Provides event calendar for your Symfony 5+ project. Compatible with Doctrine ORM & ODM, and API like Google Calendar.",
+            "description": "Provides event calendar for your Symfony 7+ project. Compatible with API like Google Calendar.",
             "homepage": "https://github.com/tattali/CalendarBundle",
             "keywords": [
                 "calendar",
@@ -10754,7 +10754,7 @@
             ],
             "support": {
                 "issues": "https://github.com/tattali/CalendarBundle/issues",
-                "source": "https://github.com/tattali/CalendarBundle/tree/v1.3.0"
+                "source": "https://github.com/tattali/CalendarBundle/tree/v7.0.2"
             },
             "funding": [
                 {
@@ -10762,7 +10762,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-01-16T19:06:32+00:00"
+            "time": "2025-11-22T14:15:43+00:00"
         },
         {
             "name": "twig/extra-bundle",

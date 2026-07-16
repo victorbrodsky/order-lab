@@ -542,8 +542,8 @@ class UserRepository extends EntityRepository {
             $query->orderBy($entity.'.'.$field,$direction);
         }
 
-        foreach ($parameters as $__setParamKey => $__setParamValue) {
-            $query->setParameter($__setParamKey, $__setParamValue);
+        foreach ($parameters as $__setParamValue) {
+            $query->setParameter($__setParamValue->getName(), $__setParamValue->getValue());
         }
 
 
@@ -724,8 +724,8 @@ class UserRepository extends EntityRepository {
 
         $query->orderBy("list.id","ASC");
 
-        foreach ($parameters as $__setParamKey => $__setParamValue) {
-            $query->setParameter($__setParamKey, $__setParamValue);
+        foreach ($parameters as $__setParamValue) {
+            $query->setParameter($__setParamValue->getName(), $__setParamValue->getValue());
         }
 
 
