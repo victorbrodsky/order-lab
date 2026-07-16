@@ -724,10 +724,12 @@ class UserRepository extends EntityRepository {
 
         $query->orderBy("list.id","ASC");
 
-        foreach ($parameters as $__setParamValue) {
-            $query->setParameter($__setParamValue->getName(), $__setParamValue->getValue());
+//        foreach ($parameters as $__setParamValue) {
+//            $query->setParameter($__setParamValue->getName(), $__setParamValue->getValue());
+//        }
+        foreach ($parameters as $__setParamName=>$__setParamValue) {
+            $query->setParameter($__setParamName, $__setParamValue);
         }
-
 
         //echo "sql=".$query->getQuery()->getSql()."<br>";
 

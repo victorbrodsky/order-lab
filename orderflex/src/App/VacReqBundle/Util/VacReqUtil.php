@@ -4535,29 +4535,32 @@ class VacReqUtil
         return $eventArr;
 
     }
-    public function diffDoctrineObject($entity) {
+
+    //Don't use computeChangeSets: $uow->computeChangeSets() recomputes the entire UnitOfWork change set,
+    // which has side effects on entities scheduled for insertion. When a new VacReqRequestBusiness
+    // is added to an existing VacReqRequest, calling computeChangeSets() before flush() can
+    // reset the change tracking for the new entity, causing Doctrine to skip persisting it.
+    //NEVER call computeChangeSets() on request DTOs or partially hydrated entities
+    //Use computeChangeSets(): inside Doctrine event listeners (preFlush, preUpdate) or on fully managed entities (loaded from DB)
+    public function diffDoctrineObject(object $entity): array
+    {
         $uow = $this->em->getUnitOfWork();
         $originalEntityData = $uow->getOriginalEntityData($entity);
-        //echo "originalEntityData=".$originalEntityData."<br>";
-        //print_r($originalEntityData);
-
-//        if( $originalEntityData['phone'] != $entity->getPhone() ) {
-//            echo "phone changed:".$originalEntityData['phone'] ."=>". $entity->getPhone()."<br>";
-//        }
 
         $changeSet = array();
 
         foreach( $entity->getArrayFields() as $field ) {
             $getMethod = "get".$field;
-            $oldValue = $originalEntityData[$field];
+            $oldValue = null;
+            if( array_key_exists($field, $originalEntityData) ) {
+                $oldValue = $originalEntityData[$field];
+            }
             $newValue = $entity->$getMethod();
             if( $oldValue != $newValue ) {
-                //echo "phone changed:".$originalEntityData['phone'] ."=>". $entity->getPhone()."<br>";
                 $changeSet[$field] = array($oldValue,$newValue);
             }
         }
 
-        //print_r($changeSet);
         return $changeSet;
     }
 

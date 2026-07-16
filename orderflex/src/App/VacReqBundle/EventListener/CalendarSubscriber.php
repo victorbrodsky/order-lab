@@ -58,28 +58,24 @@ class CalendarSubscriber implements EventSubscriberInterface
     {
         $startDate = $calendarEvent->getStart();
         $endDate = $calendarEvent->getEnd();
+        $filters = $calendarEvent->getFilters();
         //echo "endDate=".$endDate->format('Y-m-d H:i:s')."<br>";
 
         // The original request so you can get filters from the calendar
         // Use the filter in your query for example
 
         $groupId = NULL;
-        $filters = $calendarEvent->getFilters();
         $groupId = $filters['groupId'];
         //echo "filter:".$groupId.";";
+        $filter = array('groupId'=>$groupId);
 
-        if(0) {
-            $filter = array('groupId'=>$groupId);
+        $this->setCalendar($calendarEvent, "requestBusiness", $startDate, $endDate, $filter);
+        $this->setCalendar($calendarEvent, "requestVacation", $startDate, $endDate, $filter);
 
+        $this->setFloatingCalendar($calendarEvent, $startDate, $endDate, $filter);
 
-            $this->setCalendar($calendarEvent, "requestBusiness", $startDate, $endDate, $filter);
-            $this->setCalendar($calendarEvent, "requestVacation", $startDate, $endDate, $filter);
-
-            $this->setFloatingCalendar($calendarEvent, $startDate, $endDate, $filter);
-
-            //set Calendar for observed holidays
-            $this->setObservedHolidaysCalendar($calendarEvent, $startDate, $endDate, $filter);
-        }
+        //set Calendar for observed holidays
+        $this->setObservedHolidaysCalendar($calendarEvent, $startDate, $endDate, $filter);
     }
 
     public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate, $filter ) {

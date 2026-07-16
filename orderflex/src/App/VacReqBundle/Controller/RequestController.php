@@ -884,11 +884,12 @@ class RequestController extends OrderAbstractController
                     }
                 } else {
                     //$subRequestB = $entity->getRequestBusiness();
-                    //echo "yes business req<br>";
+                    //echo "yes business req: $subRequestB<br>";
                     //$em->persist($subRequestB);
                     //$em->persist($entity->getRequestBusiness());
                 }
                 if( !$entity->hasVacationRequest() ) {
+                    //echo "no vacation req => remove <br>";
                     $subRequestV = $entity->getRequestVacation();
                     if( $subRequestV ) {
                         $entity->setRequestVacation(null);
@@ -898,8 +899,10 @@ class RequestController extends OrderAbstractController
                     //$subRequestV = $entity->getRequestVacation();
                     //$em->persist($subRequestV);
                     //$em->persist($entity->getRequestVacation());
+                    //echo "yes vacation req: $subRequestV<br>";
                 }
-                //exit('1');
+
+                //exit('exit vacreq_edit');
 
                 ///////////// TODO: add default inform users to informUsers: $entity->addInformUser(); /////////////
 //                $orgInstitution = $entity->getInstitution();
@@ -929,12 +932,14 @@ class RequestController extends OrderAbstractController
                     $em->getRepository(Document::class)->processDocuments($entity->getRequestBusiness(), 'travelIntakeForm');
                 }
 
-                //echo "0 business req=".$entity->getRequestBusiness()."<br>";
+                //echo "0 before business req=".$entity->getRequestBusiness()."<br>";
+                //echo "0 before vacation req=".$entity->getRequestVacation()."<br>";
                 //exit('1');
 
                 $em->persist($entity);
                 $em->flush();
-                //echo "1 business req=".$entity->getRequestBusiness()."<br>";
+                //echo "1 after business req=".$entity->getRequestBusiness()."<br>";
+                //echo "1 after vacation req=".$entity->getRequestVacation()."<br>";
                 //exit('1');
 
                 $action = "updated";
@@ -984,13 +989,16 @@ class RequestController extends OrderAbstractController
                 $userSecUtil->createUserEditEvent($this->getParameter('vacreq.sitename'),$carryOverWarningMessageLog,$user,$entity,$request,$eventType);
             }
 
+            //echo "2 after eventlog business req=".$entity->getRequestBusiness()."<br>";
+            //echo "2 after eventlog vacation req=".$entity->getRequestVacation()."<br>";
+            //exit('after eventlog');
+
             if( $routName == 'vacreq_review' ) {
                 return $this->redirectToRoute('vacreq_incomingrequests',array('filter[requestType]'=>$entity->getRequestType()->getId()));
             } else {
                 return $this->redirectToRoute('vacreq_show', array('id' => $entity->getId()));
             }
-
-        }
+        } //submit
 
         $review = false;
         if( $request ) {
