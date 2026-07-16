@@ -15,6 +15,9 @@ framework:
 
     annotations: false
 
+    property_info:
+        with_constructor_extractor: true
+
 #    router:
 #        resource: "%kernel.project_dir%/config/routes.yml"
 #        strict_requirements: ~
@@ -59,6 +62,7 @@ framework:
     profiler:
         collect: true #show profiler toolbar
         #collect: false
+        collect_serializer_data: true
 
     #Testing http cache: With HTTP Caching, you cache the full output of a page (i.e. the response) and bypass your application entirely on subsequent requests
     #http_cache: true
