@@ -70,6 +70,8 @@ doctrine:
         #Warning: rename cache Proxies Access is denied (code: 5): set auto_generate_proxy_classes: false
         auto_generate_proxy_classes: false
         enable_lazy_ghost_objects: true
+        controller_resolver:
+            auto_mapping: true
 #        auto_mapping: true
         default_entity_manager: default
         entity_managers:
