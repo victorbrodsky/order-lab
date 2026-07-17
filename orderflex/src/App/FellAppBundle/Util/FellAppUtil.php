@@ -4120,11 +4120,11 @@ class FellAppUtil {
         $directorsStr = $this->getProgramDirectorStr($fellapp->getFellowshipSubspecialty(),$str);
 
         $str = str_replace("[[LOCAL INSTITUTION NAME]]",$localInstitutionName,$str);
-        $str = str_replace("[[APPLICANT NAME]]",$applicantFullName,$str);
+        $str = str_replace("[[APPLICANT NAME]]",$applicantFullName ?? '',$str);
         $str = str_replace("[[REFEREE NAME]]",$refereeFullName,$str);
         $str = str_replace("[[SUBMIT REFERENCE URL]]",$submitReferenceUrl,$str);
-        $str = str_replace("[[START YEAR]]",$startDateStr,$str);
-        $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappTypeStr,$str);
+        $str = str_replace("[[START YEAR]]",$startDateStr ?? '',$str);
+        $str = str_replace("[[FELLOWSHIP TYPE]]",$fellappTypeStr ?? '',$str);
         $str = str_replace("[[INSTITUTION]]",$fellappInstName,$str);
         $str = str_replace("[[DEPARTMENT]]",$fellappDepartmentName,$str);
         $str = str_replace("[[DIRECTOR]]",$directorsStr,$str);

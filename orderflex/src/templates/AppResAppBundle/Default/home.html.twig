@@ -922,7 +922,7 @@
                                         {% endif %}
 
                                         {% if entity.appStatus.name != 'complete' %}
-                                            {% set filter = app.request.get('filter') %}
+                                            {#{% set filter = app.request.query.get('filter') %}#}
                                             <li>
                                                 <a
                                                     general-data-confirm="Are you sure you want to mark this Application as 'Complete'?"

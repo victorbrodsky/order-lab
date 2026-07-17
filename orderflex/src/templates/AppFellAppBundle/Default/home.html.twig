@@ -1148,6 +1148,7 @@
                                         </li>
                                     {% endif %}
 
+
                                     {% if is_granted('ROLE_FELLAPP_COORDINATOR') or
                                             is_granted('ROLE_FELLAPP_DIRECTOR') or
                                             is_granted('ROLE_FELLAPP_PUBLIC_SUBMITTER')
@@ -1195,7 +1196,10 @@
                                         {% endif %}
 
                                         {% if entity.appStatus and entity.appStatus.name != 'complete' %}
-                                            {% set filter = app.request.get('filter') %}
+                                            {#Replaced app.request.get('filter') with app.request.query.get('filter')#}
+                                            {#{% set filter = app.request.get('filter') %}#}
+                                            {#{% set filter = app.request.query.get('filter') %}#}
+                                            {#filter={{ dump(filter) }}#}
                                             <li>
                                                 <a
                                                     general-data-confirm="Are you sure you want to mark this Application as 'Complete'?"
