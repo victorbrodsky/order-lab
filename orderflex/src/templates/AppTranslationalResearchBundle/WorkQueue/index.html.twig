@@ -134,8 +134,8 @@
 
                 {% if not workqueue %}
                 <td>
-                    {% for workQueue in product.getWorkQueues() %}
-                        {{ workQueue.getName() }}
+                    {% for workQueueEntity in product.getWorkQueues() %}
+                        {{ workQueueEntity.getName() }}
                     {% endfor %}
                 </td>
                 {% endif %}
@@ -171,6 +171,10 @@
                                 {% set markTitle = "Mark orderable as" %}
                             {% endif  %}
 
+                            {#workqueue is object WorkQueueList#}
+                            {#workqueue.id={{ workqueue.id }}#}
+                            {#workqueue={{ workqueue }}#}
+
                             {#Mark as “Completed”.#}
                             {% set thisStatus = "Completed" %}
                             {% if not product.hasStatus(thisStatus) %}
@@ -181,7 +185,7 @@
                                         general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
                                         href="{{
                                             path(translationalresearch_sitename~'_product_update_orderablestatus',
-                                            { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
+                                            { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue.id })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
@@ -196,7 +200,7 @@
                                         general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
-                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue.id })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
@@ -211,7 +215,7 @@
                                         general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
-                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue.id })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
@@ -226,7 +230,7 @@
                                         general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
-                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue })
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue.id })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}

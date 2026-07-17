@@ -21,6 +21,7 @@ use App\FellAppBundle\Entity\FellowshipApplication;
 use App\FellAppBundle\Entity\Reference;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -247,7 +248,7 @@ class TestController extends OrderAbstractController
      * http://127.0.0.1/order/index_dev.php/fellowship-applications/test/test-latest-reference-letter/17 //2810
      */
     #[Route(path: '/test-latest-reference-letter/{id}', name: 'fellapp_test_test-latest-reference-letter')]
-    public function testLatestReferenceLetterAction( Request $request, Reference $reference ) {
+    public function testLatestReferenceLetterAction( Request $request, #[MapEntity] Reference $reference ) {
 
         //exit("not allowed");
 

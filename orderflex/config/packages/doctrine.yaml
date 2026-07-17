@@ -71,7 +71,8 @@ doctrine:
         auto_generate_proxy_classes: false
         enable_lazy_ghost_objects: true
         controller_resolver:
-            auto_mapping: true
+#            auto_mapping: true //Enabling the controller resolver automapping feature has been deprecated. Symfony Mapped Route Parameters should be used as replacement.
+            auto_mapping: false
 #        auto_mapping: true
         default_entity_manager: default
         entity_managers:

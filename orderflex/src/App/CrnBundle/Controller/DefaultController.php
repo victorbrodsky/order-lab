@@ -30,6 +30,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
 use App\UserdirectoryBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
@@ -347,7 +348,7 @@ class DefaultController extends OrderAbstractController
 
     #[Route(path: '/update-cache-manually/{id}', name: 'crn_update_cache_manually')]
     #[Template('AppCrnBundle/Crn/update-cache-manually.html.twig')]
-    public function updateCacheManuallyAction(Request $request, Message $message)
+    public function updateCacheManuallyAction(Request $request, #[MapEntity] Message $message)
     {
         if( false === $this->isGranted('ROLE_CRN_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));

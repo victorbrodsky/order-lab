@@ -99,6 +99,9 @@ class WebTestBase extends WebTestCase
         //$this->em = $this->getService('user_security_utility');
         $this->em = $this->testContainer->get('doctrine.orm.entity_manager');
 
+        // Force Gedmo tree repository / event manager initialization before headers are sent.
+        // NativeFileSessionHandler calls ini_set() in its constructor, which fails after headers have been sent.
+        //$this->em->getRepository(\App\UserdirectoryBundle\Entity\Institution::class);
 
         //Set tenantid in the url
         //$this->tenantprefix = $this->testContainer->getParameter('defaultlocale');

@@ -38,6 +38,7 @@ use App\TranslationalResearchBundle\Form\TransResRequestType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +58,7 @@ class RequestFormNodeController extends OrderAbstractController
     #[Route(path: '/project/{id}/request/new/', name: 'translationalresearch_request_formnode_new', methods: ['GET', 'POST'])]
     #[Route(path: '/request/new/', name: 'translationalresearch_new_standalone_request_formnode', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/RequestFormnode/new.html.twig')]
-    public function newFormNodeAction(Request $request, Project $project=null)
+    public function newFormNodeAction(Request $request, #[MapEntity] Project $project=null)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_REQUESTER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -184,7 +185,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     #[Route(path: '/work-request/edit/{id}', name: 'translationalresearch_request_formnode_edit', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/RequestFormnode/edit.html.twig')]
-    public function editAction(Request $request, TransResRequest $transresRequest)
+    public function editAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
 
         if( false == $this->isGranted('ROLE_TRANSRES_REQUESTER') ) {
@@ -322,7 +323,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     #[Route(path: '/work-request/show/{id}', name: 'translationalresearch_request_formnode_show', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/RequestFormnode/show.html.twig')]
-    public function showAction(Request $request, TransResRequest $transresRequest)
+    public function showAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -377,7 +378,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     #[Route(path: '/project/{id}/requests', name: 'translationalresearch_request_formnode_index', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/RequestFormnode/index.html.twig')]
-    public function indexAction(Request $request, Project $project)
+    public function indexAction(Request $request, #[MapEntity] Project $project)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -779,7 +780,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     #[Route(path: '/request/progress/review/{id}', name: 'translationalresearch_request_formnode_review_progress_state', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/RequestFormnode/review.html.twig')]
-    public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
+    public function reviewProgressAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
 
@@ -815,7 +816,7 @@ class RequestFormNodeController extends OrderAbstractController
      */
     #[Route(path: '/request/billing/review/{id}', name: 'translationalresearch_request_formnode_review_billing_state', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/RequestFormnode/review.html.twig')]
-    public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
+    public function reviewBillingAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
 

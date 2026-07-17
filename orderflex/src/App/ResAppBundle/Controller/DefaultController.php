@@ -25,6 +25,7 @@ use App\ResAppBundle\Util\ImportFromOldSystem;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 use App\UserdirectoryBundle\Entity\ResidencyTrackList;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -257,7 +258,7 @@ class DefaultController extends OrderAbstractController
 
     #[Route(path: '/confirmation/{id}', name: 'resapp_simple_confirmation')]
     #[Template('AppResAppBundle/Default/simple-confirmation.html.twig')]
-    public function confirmationAction( Request $request, ResidencyApplication $resapp ) {
+    public function confirmationAction( Request $request, #[MapEntity] ResidencyApplication $resapp ) {
 
         return array(
             'entity' => $resapp

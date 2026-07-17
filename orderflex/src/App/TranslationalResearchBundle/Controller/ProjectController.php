@@ -48,6 +48,7 @@ use App\TranslationalResearchBundle\Form\ProjectType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -1699,7 +1700,7 @@ class ProjectController extends OrderAbstractController
      */
     #[Route(path: '/project/edit/{id}', name: 'translationalresearch_project_edit', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/Project/edit.html.twig')]
-    public function editAction(Request $request, Project $project)
+    public function editAction(Request $request, #[MapEntity] Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
@@ -2116,7 +2117,7 @@ class ProjectController extends OrderAbstractController
      */
     #[Route(path: '/project/show/{id}', name: 'translationalresearch_project_show', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Project/show.html.twig')]
-    public function showAction(Request $request, Project $project, $cycle="show")
+    public function showAction(Request $request, #[MapEntity] Project $project, $cycle="show")
     {
 
 //        //Testing
@@ -2228,7 +2229,7 @@ class ProjectController extends OrderAbstractController
      */
     #[Route(path: '/project/show-simple/{id}', name: 'translationalresearch_project_show_simple', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Project/show-simple.html.twig')]
-    public function includeProjectDetailsAction(Request $request, Project $project)
+    public function includeProjectDetailsAction(Request $request, #[MapEntity] Project $project)
     {
 
         ////////////////// rendering using the original project show ////////////////
@@ -2307,7 +2308,7 @@ class ProjectController extends OrderAbstractController
     //Show this field on “Work Request Edit” page to users with TRP roles other than “basic TRP submitter”, even if it is empty on this Edit page
     #[Route(path: '/project/goals/{id}/{workrequestid}/{cycle}', name: 'translationalresearch_project_goals', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Project/goals.html.twig')]
-    public function projectGoalsAction(Request $request, Project $project, $cycle, $workrequestid=NULL )
+    public function projectGoalsAction(Request $request, #[MapEntity] Project $project, $cycle, $workrequestid=NULL )
     {
 //        $transresPermissionUtil = $this->container->get('transres_permission_util');
 //        if( false === $transresPermissionUtil->hasProjectPermission("edit",$project) ) {
@@ -2382,7 +2383,7 @@ class ProjectController extends OrderAbstractController
 
         $projectId = $request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId')));
         $workrequestId = $request->attributes->get('workrequestId', $request->query->get('workrequestId', $request->request->get('workrequestId')));
-        $projectGoals = $request->attributes->get('projectGoals', $request->query->get('projectGoals', $request->request->get('projectGoals')));
+        $projectGoals = $request->request->has('projectGoals') ? $request->request->all('projectGoals') : $request->query->all('projectGoals');
 
         //dump($projectGoals);
         //exit('111');
@@ -2619,7 +2620,7 @@ class ProjectController extends OrderAbstractController
      */
     #[Route(path: '/project/review/{id}', name: 'translationalresearch_project_review', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Project/review.html.twig')]
-    public function reviewAction(Request $request, Project $project)
+    public function reviewAction(Request $request, #[MapEntity] Project $project)
     {
         $transresUtil = $this->container->get('transres_util');
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -2686,7 +2687,7 @@ class ProjectController extends OrderAbstractController
      */
     #[Route(path: '/project/resubmit/{id}', name: 'translationalresearch_project_resubmit', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Project/review.html.twig')]
-    public function resubmitAction(Request $request, Project $project)
+    public function resubmitAction(Request $request, #[MapEntity] Project $project)
     {
         $transresUtil = $this->container->get('transres_util');
 
@@ -3053,7 +3054,7 @@ class ProjectController extends OrderAbstractController
      */
     #[Route(path: '/project/ajax/{id}', name: 'translationalresearch_get_project_ajax', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Project/review.html.twig')]
-    public function getProjectAction(Request $request, Project $project)
+    public function getProjectAction(Request $request, #[MapEntity] Project $project)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -3571,7 +3572,7 @@ class ProjectController extends OrderAbstractController
      */
     #[Route(path: '/project/show-simple-pdf/{id}', name: 'translationalresearch_project_show_simple_pdf', methods: ['GET'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Project/show-simple-pdf.html.twig')]
-    public function showProjectPdfAction(Request $request, Project $project)
+    public function showProjectPdfAction(Request $request, #[MapEntity] Project $project)
     {
         return $this->showAction($request, $project, "pdf");
     }

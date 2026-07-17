@@ -37,6 +37,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 //use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +58,7 @@ class PackingSlipController extends OrderAbstractController
      */
     #[Route(path: '/generate-packing-slip/{id}', name: 'translationalresearch_generate_packing_slip', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Request/new.html.twig')]
-    public function generatePackingSlipAction(Request $request, TransResRequest $transresRequest)
+    public function generatePackingSlipAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
@@ -142,7 +143,7 @@ class PackingSlipController extends OrderAbstractController
      * E-Mail Packing Slip to PIs and Submitter
      */
     #[Route(path: '/email-packing-slip/{id}', name: 'translationalresearch_email_packing_slip', methods: ['GET'])]
-    public function emailPackingSlipAction(Request $request, TransResRequest $transresRequest)
+    public function emailPackingSlipAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -211,7 +212,7 @@ class PackingSlipController extends OrderAbstractController
      * E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'
      */
     #[Route(path: '/email-packing-slip-and-change-status-to-pending-investigator/{id}', name: 'translationalresearch_email_packing_slip_change_status_pending_investigator', methods: ['GET'])]
-    public function emailPackingSlipChangeStatusPendingInvestigatorAction(Request $request, TransResRequest $transresRequest)
+    public function emailPackingSlipChangeStatusPendingInvestigatorAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
@@ -288,7 +289,7 @@ class PackingSlipController extends OrderAbstractController
      */
     #[Route(path: '/download-packing-slip-pdf/{id}', name: 'translationalresearch_packing_slip_download', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Request/packing-slip-pdf-show.html.twig')]
-    public function showPackingSlipAsPdfAction(Request $request, TokenStorageInterface $tokenStorage, TransResRequest $transresRequest)
+    public function showPackingSlipAsPdfAction(Request $request, TokenStorageInterface $tokenStorage, #[MapEntity] TransResRequest $transresRequest)
     {
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();

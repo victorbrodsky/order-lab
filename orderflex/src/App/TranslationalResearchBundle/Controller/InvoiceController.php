@@ -11,6 +11,7 @@ use App\TranslationalResearchBundle\Form\InvoiceType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ class InvoiceController extends OrderAbstractController
     #[Route(path: '/list/', name: 'translationalresearch_invoice_index_filter', methods: ['GET'])]
     #[Route(path: '/list/{invoicetype}', name: 'translationalresearch_invoice_index_type', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Invoice/index.html.twig')]
-    public function indexAction(Request $request, TransResRequest $transresRequest=null, $invoicetype=null)
+    public function indexAction(Request $request, #[MapEntity] TransResRequest $transresRequest=null, $invoicetype=null)
     {
         if (false === $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));
@@ -900,7 +901,7 @@ class InvoiceController extends OrderAbstractController
      */
     #[Route(path: '/new/{id}', name: 'translationalresearch_invoice_new', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/Invoice/new.html.twig')]
-    public function newAction(Request $request, TransResRequest $transresRequest)
+    public function newAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
         //if( false === $this->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
         //    return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -996,7 +997,7 @@ class InvoiceController extends OrderAbstractController
      */
     #[Route(path: '/partial/new/{id}', name: 'translationalresearch_partial_invoice_new', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/Invoice/new-partial-invoice.html.twig')]
-    public function newPartialInvoiceAction(Request $request, TransResRequest $transresRequest)
+    public function newPartialInvoiceAction(Request $request, #[MapEntity] TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -1418,7 +1419,7 @@ class InvoiceController extends OrderAbstractController
      * Deletes a invoice entity.
      */
     #[Route(path: '/delete/{id}', name: 'translationalresearch_invoice_delete', methods: ['DELETE'])]
-    public function deleteAction(Request $request, Invoice $invoice)
+    public function deleteAction(Request $request, #[MapEntity] Invoice $invoice)
     {
         //exit("Delete is not allowed.");
 
@@ -1526,7 +1527,7 @@ class InvoiceController extends OrderAbstractController
      */
     #[Route(path: '/download-invoice-pdf/{id}', name: 'translationalresearch_invoice_download', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Invoice/pdf-show.html.twig')]
-    public function downloadPdfAction(Request $request, TokenStorageInterface $tokenStorage, Invoice $invoice)
+    public function downloadPdfAction(Request $request, TokenStorageInterface $tokenStorage, #[MapEntity] Invoice $invoice)
     {
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->getUser();

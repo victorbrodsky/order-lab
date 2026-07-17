@@ -24,6 +24,7 @@ use App\TranslationalResearchBundle\Form\ProjectChangeStatusConfirmationType;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Form\ProjectStateType;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      * Cancel project
      */
     #[Route(path: '/cancel-project/{id}', name: 'translationalresearch_project_cancel', methods: ['GET'])]
-    public function cancelAction(Request $request, Project $project)
+    public function cancelAction(Request $request, #[MapEntity] Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
@@ -157,7 +158,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      */
     #[Route(path: '/close-project/{id}', name: 'translationalresearch_project_close', methods: ['GET'])]
     #[Route(path: '/close-project-without-notifications/{id}', name: 'translationalresearch_project_close_without_notifications', methods: ['GET'])]
-    public function closeAction(Request $request, Project $project)
+    public function closeAction(Request $request, #[MapEntity] Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
@@ -420,7 +421,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      * Approve project
      */
     #[Route(path: '/approve-project/{id}', name: 'translationalresearch_project_approve', methods: ['GET'])]
-    public function approveAction(Request $request, Project $project)
+    public function approveAction(Request $request, #[MapEntity] Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
@@ -523,7 +524,7 @@ class ProjectChangeStatusController extends OrderAbstractController
 
 
     #[Route(path: '/deny-project-reactivation/{id}', name: 'translationalresearch_project_reactivation_deny', methods: ['GET'])]
-    public function denyReactivationProjectAction(Request $request, Project $project)
+    public function denyReactivationProjectAction(Request $request, #[MapEntity] Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
@@ -621,7 +622,7 @@ class ProjectChangeStatusController extends OrderAbstractController
     }
 
     #[Route(path: '/approve-project-reactivation/{id}', name: 'translationalresearch_project_reactivation_approve', methods: ['GET'])]
-    public function approveReactivationProjectAction(Request $request, Project $project)
+    public function approveReactivationProjectAction(Request $request, #[MapEntity] Project $project)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
@@ -718,7 +719,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      */
     #[Route(path: '/project-state-confirmation/{id}', name: 'translationalresearch_project_change_status_confirmation', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/Project/project-state-confirmation.html.twig')]
-    public function projectStateConfirmationAction(Request $request, Project $project)
+    public function projectStateConfirmationAction(Request $request, #[MapEntity] Project $project)
     {
         if( false === $this->isGranted('ROLE_TRANSRES_REACTIVATION_APPROVER') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -785,7 +786,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      * Deletes a project entity.
      */
     #[Route(path: '/project-delete/{id}', name: 'translationalresearch_project_delete', methods: ['DELETE'])]
-    public function deleteAction(Request $request, Project $project)
+    public function deleteAction(Request $request, #[MapEntity] Project $project)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -805,7 +806,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      * Deletes a project entity.
      */
     #[Route(path: '/project-delete-get/{id}', name: 'translationalresearch_project_delete_get', methods: ['GET'])]
-    public function deleteProjectAction(Request $request, Project $project)
+    public function deleteProjectAction(Request $request, #[MapEntity] Project $project)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -921,7 +922,7 @@ class ProjectChangeStatusController extends OrderAbstractController
      */
     #[Route(path: '/project/set-state/{id}', name: 'translationalresearch_project_set_state', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/Project/set-state.html.twig')]
-    public function setStateAction(Request $request, Project $project)
+    public function setStateAction(Request $request, #[MapEntity] Project $project)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->getParameter('translationalresearch.sitename').'-nopermission') );

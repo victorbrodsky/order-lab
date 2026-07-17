@@ -34,6 +34,7 @@ use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -273,7 +274,7 @@ class ProjectFormNodeController extends ProjectController
      */
     #[Route(path: '/project/formnode/edit/{id}', name: 'translationalresearch_project_formnode_edit', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/Project/edit.html.twig')]
-    public function editAction(Request $request, Project $project)
+    public function editAction(Request $request, #[MapEntity] Project $project)
     {
 
 //        if (false == $this->isGranted('ROLE_TRANSRES_USER')) {

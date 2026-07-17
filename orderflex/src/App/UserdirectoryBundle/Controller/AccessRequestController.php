@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 
 //use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
@@ -1750,7 +1751,7 @@ class AccessRequestController extends OrderAbstractController
 
     #[Route(path: '/generated-user/{id}', name: 'employees_generated_user_management', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/generated_user_management.html.twig')]
-    public function generatedUserManagementAction(Request $request, User $user)
+    public function generatedUserManagementAction(Request $request, #[MapEntity] User $user)
     {
         if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
@@ -1906,7 +1907,7 @@ class AccessRequestController extends OrderAbstractController
     }
 
     #[Route(path: '/generated-user/approve/{id}', name: 'employees_generated_user_approve', methods: ['GET', 'POST'])]
-    public function generatedUserApproveAction(Request $request, User $user)
+    public function generatedUserApproveAction(Request $request, #[MapEntity] User $user)
     {
         if (false === $this->isGranted($this->roleEditor)) {
             return $this->redirect($this->generateUrl($this->siteName . "-nopermission"));

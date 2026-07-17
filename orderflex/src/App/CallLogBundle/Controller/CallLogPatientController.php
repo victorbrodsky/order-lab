@@ -68,6 +68,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 
 use App\OrderformBundle\Controller\PatientController;
@@ -356,7 +357,7 @@ class CallLogPatientController extends PatientController {
      */
     #[Route(path: '/patient-demographics/{id}', name: 'calllog_single_patient_view', methods: ['GET'])]
     #[Template('AppCallLogBundle/DataQuality/single-patient-edit.html.twig')]
-    public function patientSingleViewAction(Request $request, Patient $patient)
+    public function patientSingleViewAction(Request $request, #[MapEntity] Patient $patient)
     {
         if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -384,7 +385,7 @@ class CallLogPatientController extends PatientController {
      */
     #[Route(path: '/patient-demographics/edit/{id}', name: 'calllog_single_patient_edit', methods: ['GET', 'POST'], options: ['expose' => true])]
     #[Template('AppCallLogBundle/DataQuality/single-patient-edit.html.twig')]
-    public function patientSingleEditAction(Request $request, Patient $patient)
+    public function patientSingleEditAction(Request $request, #[MapEntity] Patient $patient)
     {
         if( false == $this->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );

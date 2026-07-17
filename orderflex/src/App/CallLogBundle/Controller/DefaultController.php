@@ -45,6 +45,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 use App\UserdirectoryBundle\Entity\SiteParameters;
 use App\UserdirectoryBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormError;
@@ -368,7 +369,7 @@ class DefaultController extends OrderAbstractController
 
     #[Route(path: '/update-cache-manually/{id}', name: 'calllog_update_cache_manually')]
     #[Template('AppCallLogBundle/CallLog/update-cache-manually.html.twig')]
-    public function updateCacheManuallyAction(Request $request, Message $message)
+    public function updateCacheManuallyAction(Request $request, #[MapEntity] Message $message)
     {
         if( false === $this->isGranted('ROLE_CALLLOG_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));

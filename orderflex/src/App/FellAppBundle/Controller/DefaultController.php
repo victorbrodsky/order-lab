@@ -29,6 +29,7 @@ use App\UserdirectoryBundle\Entity\FellowshipSubspecialty;
 use App\UserdirectoryBundle\Entity\Institution;
 use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -481,7 +482,7 @@ class DefaultController extends OrderAbstractController
     //    }
     #[Route(path: '/confirmation/{id}', name: 'fellapp_simple_confirmation')]
     #[Template('AppFellAppBundle/Default/simple-confirmation.html.twig')]
-    public function confirmationAction( Request $request, FellowshipApplication $fellapp ) {
+    public function confirmationAction( Request $request, #[MapEntity] FellowshipApplication $fellapp ) {
 
         return array(
             'entity' => $fellapp

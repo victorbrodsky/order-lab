@@ -30,6 +30,7 @@ use App\TranslationalResearchBundle\Entity\TransResRequest;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Exception\LogicException;
@@ -171,7 +172,7 @@ class WorkflowController extends OrderAbstractController
      * https://symfony.com/doc/current/workflow/usage.html
      */
     #[Route(path: '/to-irb-review/{id}', name: 'translationalresearch_to_irb_review', methods: ['GET'])]
-    public function toIrbReviewAction( Project $project )
+    public function toIrbReviewAction( #[MapEntity] Project $project )
     {
         $transresUtil = $this->container->get('transres_util');
         //$workflow = $this->container->get('state_machine.transres_project');
@@ -229,7 +230,7 @@ class WorkflowController extends OrderAbstractController
      * https://symfony.com/doc/current/workflow/usage.html
      */
     #[Route(path: '/project-transition-state/{transitionName}/{to}/{id}', name: 'translationalresearch_transition_state_action', methods: ['GET'])]
-    public function transitionStateAction( $transitionName, $to, Project $project )
+    public function transitionStateAction( $transitionName, $to, #[MapEntity] Project $project )
     {
         $transresUtil = $this->container->get('transres_util');
 
@@ -283,7 +284,7 @@ class WorkflowController extends OrderAbstractController
      * https://symfony.com/doc/current/workflow/usage.html
      */
     #[Route(path: '/project-transition/{transitionName}/{id}', name: 'translationalresearch_transition_action', methods: ['GET'])]
-    public function transitionAction( $transitionName, Project $project )
+    public function transitionAction( $transitionName, #[MapEntity] Project $project )
     {
         exit("NOT USED PATH: translationalresearch_transition_action");
 
@@ -299,7 +300,7 @@ class WorkflowController extends OrderAbstractController
      * https://symfony.com/doc/current/workflow/usage.html
      */
     #[Route(path: '/project-review-transition/{transitionName}/{id}/{reviewId}', name: 'translationalresearch_transition_action_by_review', methods: ['GET'])]
-    public function transitionReviewAction( $transitionName, Project $project, $reviewId )
+    public function transitionReviewAction( $transitionName, #[MapEntity] Project $project, $reviewId )
     {
         $transresUtil = $this->container->get('transres_util');
         $review = $transresUtil->getReviewByReviewidAndState($reviewId,$project->getState());
@@ -348,7 +349,7 @@ class WorkflowController extends OrderAbstractController
      * https://symfony.com/doc/current/workflow/usage.html
      */
     #[Route(path: '/request-review-transition/{transitionName}/{id}/{statMachineType}', name: 'translationalresearch_request_transition_action_by_review', methods: ['GET'])]
-    public function transitionRequestReviewAction( $transitionName, TransResRequest $transresRequest, $statMachineType )
+    public function transitionRequestReviewAction( $transitionName, #[MapEntity] TransResRequest $transresRequest, $statMachineType )
     {
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');

@@ -59,6 +59,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -1336,7 +1337,7 @@ class ResAppController extends OrderAbstractController {
     #[Route(path: '/edit/{id}', name: 'resapp_edit', methods: ['GET', 'POST'])]
     #[Route(path: '/edit-with-default-interviewers/{id}', name: 'resapp_edit_default_interviewers', methods: ['GET', 'POST'])]
     #[Template('AppResAppBundle/Form/edit.html.twig')]
-    public function editAction(Request $request, ResidencyApplication $entity)
+    public function editAction(Request $request, #[MapEntity] ResidencyApplication $entity)
     {
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Residency Application');
@@ -2299,7 +2300,7 @@ class ResAppController extends OrderAbstractController {
     #[Route(path: '/application-evaluation/show/{id}', name: 'resapp_application_show', methods: ['GET'])]
     #[Route(path: '/application-evaluation/{id}', name: 'resapp_application_edit', methods: ['GET'])]
     #[Template('AppResAppBundle/Interview/interview_selector.html.twig')]
-    public function applicationAction( Request $request, ResidencyApplication $resapp )
+    public function applicationAction( Request $request, #[MapEntity] ResidencyApplication $resapp )
     {
 
         //echo "status <br>";

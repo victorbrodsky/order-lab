@@ -26,6 +26,7 @@ use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
 
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 
 use App\UserdirectoryBundle\Entity\AccessRequest;
@@ -175,13 +176,13 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     }
     #[Route(path: '/generated-user/{id}', name: 'translationalresearch_generated_user_management', methods: ['GET', 'POST'])]
     #[Template('AppUserdirectoryBundle/AccessRequest/generated_user_management.html.twig')]
-    public function generatedUserManagementAction(Request $request, User $user)
+    public function generatedUserManagementAction(Request $request, #[MapEntity] User $user)
     {
         return parent::generatedUserManagementAction($request,$user);
     }
 
     #[Route(path: '/generated-user/approve/{id}', name: 'translationalresearch_generated_user_approve', methods: ['GET', 'POST'])]
-    public function generatedUserApproveAction(Request $request, User $user)
+    public function generatedUserApproveAction(Request $request, #[MapEntity] User $user)
     {
         return parent::generatedUserApproveAction($request,$user);
     }

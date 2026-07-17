@@ -194,13 +194,15 @@
     {#user.username={{ form.vars.value.user.username }}#}
 
 {% if form.timestamp is defined %}
-    <div class="row">
-        <div class="col-xs-4"></div>
-        <div class="col-xs-4">
-            {{ formmacros.fieldDateLabel_vertical(form.timestamp,'allow-future-date') }}
-        </div>
-        <div class="col-xs-4"></div>
-    </div>
+    {#<div class="row">#}
+        {#<div class="col-xs-4"></div>#}
+        {#<div class="col-xs-4">#}
+            {#{{ formmacros.fieldDateLabel_vertical(form.timestamp,'allow-future-date') }}#}
+            {#{{ formmacros.fieldDateLabel(form.timestamp,'allow-future-date') }}#}
+        {#</div>#}
+        {#<div class="col-xs-4"></div>#}
+    {#</div>#}
+    {{ formmacros.fieldDateLabel(form.timestamp,'allow-future-date') }}
 {% endif %}
 
 {% if collapsein is not defined %}

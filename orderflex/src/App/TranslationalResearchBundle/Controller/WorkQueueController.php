@@ -717,7 +717,7 @@ class WorkQueueController extends OrderAbstractController
         $formArray = array(
             'products' => $products,
             'title' => $title,
-            'workqueue' => $singleWorkqueue,
+            'workqueue' => $singleWorkqueue, //object WorkQueueList
             'filterform' => $filterform->createView(),
             'advancedFilter' => $advancedFilter,
             'eventObjectTypeId' => $eventObjectTypeId,
@@ -826,7 +826,13 @@ class WorkQueueController extends OrderAbstractController
         $lowercaseName = NULL;
         if( $workqueueId ) {
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
-            $workQueue = $em->getRepository(WorkQueueList::class)->find($workqueueId);
+            //dump($workqueueId); //CTP Lab
+            //exit('111');
+            if( is_numeric($workqueueId) ) {
+                $workQueue = $em->getRepository(WorkQueueList::class)->find($workqueueId);
+            } else {
+                $workQueue = $em->getRepository(WorkQueueList::class)->findOneBy(['name' => $workqueueId]);
+            }
             if ($workQueue) {
                 $lowercaseName = strtolower($workQueue->getName()); //ctp lab
                 $lowercaseName = str_replace(' ', '-', $lowercaseName);

@@ -593,7 +593,7 @@ class SecurityController extends OrderAbstractController
     }
     //Used by Routing.generate in idleTimeoutClass.prototype.checkIdleTimeout.
     //idle log out with refereal url, from this url we can get the sitename and then redirect properly to the same system
-    #[Route(path: '/idle-log-out-ref/{url}', name: 'employees_idlelogout_ref', options: ['expose' => true])]
+    #[Route(path: '/idle-log-out-ref/{url}', name: 'employees_idlelogout_ref', requirements: ['url' => '.+'], options: ['expose' => true])]
     public function idlelogoutRefAction( Request $request, $url = null )
     {
         //exit('idlelogoutRefAction'); //testing
@@ -664,7 +664,7 @@ class SecurityController extends OrderAbstractController
     /**
      * sessionKeepAliveUrl for user-idleTimeouts.js
      */
-    #[Route(path: '/common/setserveractive/{url}', name: 'setserveractive', methods: ['GET', 'POST'], options: ['expose' => true])]
+    #[Route(path: '/common/setserveractive/{url}', name: 'setserveractive', methods: ['GET', 'POST'], requirements: ['url' => '.+'], options: ['expose' => true])]
     public function setServerActiveAction( Request $request, $url=null )
     {
         //echo "keep Alive Action! <br>";

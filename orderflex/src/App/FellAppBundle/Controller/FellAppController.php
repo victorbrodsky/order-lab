@@ -63,6 +63,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -1469,7 +1470,7 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/edit/{id}', name: 'fellapp_edit', methods: ['GET', 'POST'])]
     #[Route(path: '/edit-with-default-interviewers/{id}', name: 'fellapp_edit_default_interviewers', methods: ['GET', 'POST'])]
     #[Template('AppFellAppBundle/Form/edit.html.twig')]
-    public function editAction(Request $request, FellowshipApplication $entity)
+    public function editAction(Request $request, #[MapEntity] FellowshipApplication $entity)
     {
         //$logger = $this->container->get('logger');
         if( !$entity ) {
@@ -2710,7 +2711,7 @@ class FellAppController extends OrderAbstractController {
     #[Route(path: '/application-evaluation/show/{id}', name: 'fellapp_application_show', methods: ['GET'])]
     #[Route(path: '/application-evaluation/{id}', name: 'fellapp_application_edit', methods: ['GET'])]
     #[Template('AppFellAppBundle/Interview/interview_selector.html.twig')]
-    public function applicationAction( Request $request, FellowshipApplication $fellapp )
+    public function applicationAction( Request $request, #[MapEntity] FellowshipApplication $fellapp )
     {
 
         //echo "status <br>";

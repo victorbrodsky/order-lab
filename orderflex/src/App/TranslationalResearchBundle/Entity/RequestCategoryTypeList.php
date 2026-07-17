@@ -549,7 +549,12 @@ class RequestCategoryTypeList extends ListAbstract
         if( $request ) {
             $priceList = $request->getPriceList();
         }
-        return $this->getProductId($priceList) . " (" .$this->getSection() . ")";
+        if( $this->getSection() ) {
+            $shortInfo = $this->getProductId($priceList) . " (" . $this->getSection() . ")";
+        } else {
+            $shortInfo = $this->getProductId($priceList);
+        }
+        return $shortInfo;
     }
 
     public function getSpecificPricesInfo( $allowedPriceListIds=NULL ) {

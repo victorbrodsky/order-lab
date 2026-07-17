@@ -24,6 +24,7 @@ use App\FellAppBundle\Form\GoogleFormConfigType;
 use App\UserdirectoryBundle\Entity\GeoLocation;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,7 @@ class ReferenceController extends OrderAbstractController
 {
 
     #[Route(path: '/invite-references-submit-letters/{id}', name: 'fellapp_invite_references_submit_letters', methods: ['GET'])]
-    public function InviteReferencesToSubmitLettersAction(Request $request, FellowshipApplication $fellapp) {
+    public function InviteReferencesToSubmitLettersAction(Request $request, #[MapEntity] FellowshipApplication $fellapp) {
         if(
             $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
             $this->isGranted('ROLE_FELLAPP_DIRECTOR') === false )
@@ -71,7 +72,7 @@ class ReferenceController extends OrderAbstractController
 
 
     #[Route(path: '/invite-reference-submit-letter/{id}/{referenceid}', name: 'fellapp_invite_reference_submit_letter', methods: ['GET'])]
-    public function InviteReferenceToSubmitLetterAction(Request $request, FellowshipApplication $fellapp, $referenceid) {
+    public function InviteReferenceToSubmitLetterAction(Request $request, #[MapEntity] FellowshipApplication $fellapp, $referenceid) {
 
         if(
             $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
@@ -106,7 +107,7 @@ class ReferenceController extends OrderAbstractController
     }
 
     #[Route(path: '/reference-letter-received/{id}', name: 'fellapp_reference_letter_received', methods: ['GET'])]
-    public function ReferenceLetterReceivedAction( Request $request, Reference $reference ) {
+    public function ReferenceLetterReceivedAction( Request $request, #[MapEntity] Reference $reference ) {
 
         if(
             $this->isGranted('ROLE_FELLAPP_COORDINATOR') === false &&
