@@ -523,7 +523,7 @@ class Credentials extends BaseUserAttributes
 
     public function getOneRecentExamination() {
         $items = $this->getExaminations();
-        $criteria = Criteria::create()
+        $criteria = Criteria::create(true)
             //->where(Criteria::expr()->eq("user", $user))
             ->orderBy(array("creationDate" => Criteria::DESC))
         ;

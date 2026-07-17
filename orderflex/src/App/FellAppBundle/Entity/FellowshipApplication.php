@@ -1232,7 +1232,7 @@ class FellowshipApplication extends BaseUserAttributes {
 
         $items = $this->getInterviews();
 
-        $criteria = Criteria::create()
+        $criteria = Criteria::create(true)
             ->where(Criteria::expr()->eq("interviewer", $interviewer))
             //->orderBy(array("creationDate" => Criteria::DESC))
         ;
