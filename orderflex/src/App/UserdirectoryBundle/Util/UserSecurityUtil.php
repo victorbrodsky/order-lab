@@ -2021,7 +2021,7 @@ class UserSecurityUtil {
         //return;
         $user = null;
         $username = null;
-        $roles = null;
+        $roles = [];
 
         if( !array_key_exists('serverresponse', $options) ) {
             //$options['serverresponse'] = null;
@@ -2037,9 +2037,7 @@ class UserSecurityUtil {
         $logger = new Logger($site);
 
         //$token = $this->secToken->getToken();
-
-        $roles = null;
-
+        
         if( $this->security && $this->security->getUser() ) {
 
             //$user = $this->secToken->getToken()->getUser();
