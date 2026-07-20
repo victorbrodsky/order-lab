@@ -14,6 +14,8 @@
     limitations under the License.
 #}
 
+{#TO DELETE#}
+
 {% import "AppTranslationalResearchBundle/Default/navbar.html.twig" as navbarmacros %}
 
 {% macro createFilterRequestType( filterTypes ) %}
@@ -45,6 +47,18 @@
         {% endif %}
     {% endfor %}
 
+{% endmacro %}
+{% macro createFilterType( filterTypes ) %}
+    {% for filterType in filterTypes %}
+        {% if filterType == "[[hr]]" %}
+            <hr style="margin-top: 10px; margin-bottom: 10px;">
+        {% else %}
+            {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
+            <li id="nav-bar-translationalresearch-all-invoices-my">
+                <a href="{{ path(translationalresearch_sitename~'_invoice_index_type',{'invoicetype':filterTypeUrl}) }}">{{ filterType }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
 {% endmacro %}
 
 {% block navbar %}
@@ -284,18 +298,7 @@
                         {#is_granted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') or#}
                         {#is_granted('ROLE_TRANSRES_EXECUTIVE_APCP')#}
                     {#%}#}
-                        {% macro createFilterType( filterTypes ) %}
-                            {% for filterType in filterTypes %}
-                                {% if filterType == "[[hr]]" %}
-                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
-                                {% else %}
-                                    {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
-                                    <li id="nav-bar-translationalresearch-all-invoices-my">
-                                        <a href="{{ path(translationalresearch_sitename~'_invoice_index_type',{'invoicetype':filterTypeUrl}) }}">{{ filterType }}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                        {% endmacro %}
+
                         <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
                             <ul class="dropdown-menu">
