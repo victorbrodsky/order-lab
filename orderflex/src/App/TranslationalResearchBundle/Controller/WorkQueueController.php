@@ -788,7 +788,6 @@ class WorkQueueController extends OrderAbstractController
 
         $orderableStatusName = $request->query->get('orderablestatus');
         $workqueueId = $request->query->get('workqueue');
-        //echo "workqueue=$workqueue<br>";
         $set = false;
 
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:OrderableStatusList'] by [OrderableStatusList::class]
@@ -825,9 +824,6 @@ class WorkQueueController extends OrderAbstractController
         //translationalresearch_work_queue_index_filter
         $lowercaseName = NULL;
         if( $workqueueId ) {
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:WorkQueueList'] by [WorkQueueList::class]
-            //dump($workqueueId); //CTP Lab
-            //exit('111');
             if( is_numeric($workqueueId) ) {
                 $workQueue = $em->getRepository(WorkQueueList::class)->find($workqueueId);
             } else {
