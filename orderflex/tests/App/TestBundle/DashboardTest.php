@@ -36,6 +36,8 @@ class DashboardTest extends WebTestBase
         $this->logIn();
 
         unset($_GET['sort']);
+
+        // 1. Send the request
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'dashboards/event-log/');
 
         //$content = $this->client->getResponse()->getContent();
@@ -45,6 +47,13 @@ class DashboardTest extends WebTestBase
             0,
             $crawler->filter('html:contains("Event Log showing")')->count()
         );
+
+        // 2. Ensure the page actually loaded successfully first
+        //$this->assertResponseIsSuccessful();
+
+        // Using PHPUnit (Standard)
+        // 3. Assert the text content exists
+        //$this->assertStringContainsString('Event Log showing', $this->client->getResponse()->getContent());
     }
 
     public function testAboutAction() {

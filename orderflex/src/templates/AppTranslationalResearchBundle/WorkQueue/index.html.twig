@@ -185,7 +185,7 @@
                                         general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
                                         href="{{
                                             path(translationalresearch_sitename~'_product_update_orderablestatus',
-                                            { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue.id })
+                                            { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue ? workqueue.id : '' })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
@@ -200,7 +200,7 @@
                                         general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
-                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue.id })
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue ? workqueue.id : '' })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
@@ -215,7 +215,7 @@
                                         general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
-                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue.id })
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue ? workqueue.id : '' })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}
@@ -230,7 +230,7 @@
                                         general-data-confirm='Are you sure you would like to mark as "{{ thisStatus }}"?'
                                         href="{{
                                         path(translationalresearch_sitename~'_product_update_orderablestatus',
-                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue.id })
+                                        { 'id': product.id, 'orderablestatus': thisStatus, 'workqueue': workqueue ? workqueue.id : '' })
                                         }}">{{ markTitle }} "{{ thisStatus }}"</a>
                                 </li>
                             {% endif %}

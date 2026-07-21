@@ -15,6 +15,10 @@
  *  limitations under the License.
  */
 
+if( ($_SERVER['APP_ENV'] ?? '') === 'test' ) {
+    ob_start();
+}
+
 require 'base.php';
 //require 'multitenancy.php';
 
@@ -447,4 +451,8 @@ else {
 echo "*** siteparameters.php: APP_ENV=".$_SERVER['APP_ENV'] . ", APP_DEBUG=" . $_SERVER['APP_DEBUG']." ***\n";
 
 #printSettings($container);
+
+if( ($_SERVER['APP_ENV'] ?? '') === 'test' ) {
+    ob_end_clean();
+}
 
