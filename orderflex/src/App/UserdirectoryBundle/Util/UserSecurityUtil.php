@@ -2037,7 +2037,7 @@ class UserSecurityUtil {
         $logger = new Logger($site);
 
         //$token = $this->secToken->getToken();
-        
+
         if( $this->security && $this->security->getUser() ) {
 
             //$user = $this->secToken->getToken()->getUser();
