@@ -44,6 +44,7 @@ class Kernel extends BaseKernel
 // So, kernel.request listener were added in Kernel.php that installs a custom error handler
 // after Symfony’s ErrorHandler and swallows only the three E_USER_DEPRECATED messages
 // containing mailer.html.twig and the macro-tag warning. Everything else is passed through unchanged.
+//Disable when symfony/web-profiler-bundle is available
     public function boot(): void
     {
         parent::boot();
