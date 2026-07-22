@@ -24,6 +24,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class Kernel extends BaseKernel
 {
@@ -34,6 +35,45 @@ class Kernel extends BaseKernel
     public function getProjectDir(): string
     {
         return \dirname(__DIR__);
+    }
+
+
+// The deprecations are still appearing because Symfony’s cache warmer uses the @!WebProfiler/… namespace,
+// which deliberately bypasses templates/bundles/ overrides and compiles the original vendor template.
+// There’s also no newer symfony/web-profiler-bundle release to update to.
+// So, kernel.request listener were added in Kernel.php that installs a custom error handler
+// after Symfony’s ErrorHandler and swallows only the three E_USER_DEPRECATED messages
+// containing mailer.html.twig and the macro-tag warning. Everything else is passed through unchanged.
+    public function boot(): void
+    {
+        parent::boot();
+
+        if ($this->debug && $this->container->has('event_dispatcher')) {
+            $this->container->get('event_dispatcher')->addListener(
+                'kernel.request',
+                function (RequestEvent $event) {
+                    static $registered = false;
+                    if ($registered) {
+                        return;
+                    }
+                    $registered = true;
+
+                    $previousHandler = set_error_handler(function ($errno, $errstr, $errfile, $errline) use (&$previousHandler) {
+                        if (E_USER_DEPRECATED === $errno
+                            && false !== strpos($errstr, 'Using the "macro" tag outside the root of a template')
+                            && false !== strpos($errstr, 'mailer.html.twig')) {
+                            return true;
+                        }
+                        if ($previousHandler) {
+                            return $previousHandler($errno, $errstr, $errfile, $errline);
+                        }
+
+                        return false;
+                    });
+                },
+                2049
+            );
+        }
     }
 
 //    public function registerBundles(): iterable
