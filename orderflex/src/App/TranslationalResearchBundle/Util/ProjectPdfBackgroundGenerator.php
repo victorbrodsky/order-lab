@@ -8,6 +8,12 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+//When project's description is too long, for example 10k chars,
+// knp_snappy is creating too many pages (>100 pages) and it causes "exceeded the timeout of 300 seconds"
+// and 504 Gateway Time-out.
+// Therefore, use queueProjectPdfGeneration (async use of generateAndSaveProjectPdf)
+// instead of generateAndSaveProjectPdf directly
+
 class ProjectPdfBackgroundGenerator
 {
     private $container;

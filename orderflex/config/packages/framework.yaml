@@ -67,6 +67,11 @@ framework:
     #Testing http cache: With HTTP Caching, you cache the full output of a page (i.e. the response) and bypass your application entirely on subsequent requests
     #http_cache: true
 
+# when@dev:
+#     framework:
+#         php_errors:
+#             log: false
+
 when@test:
     framework:
         test: true
