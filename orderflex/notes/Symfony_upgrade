@@ -509,12 +509,14 @@ Still, I have some IDENTITY entities and after migration they have duplicate seq
 Upgrade steps:
 1) composer install
 
-2) Covert array to json:
-php bin/console app:convert-array-to-json --all --apply --alter-schema
+1a) php bin/console cache:clear
 
-3) Run bash prepare.sh
+2) Covert array to json:
+
+3) Run bash prepare_migration.sh
 
 4) Run diff and then migration
+php bin/console doctrine:migrations:migrate --all-or-nothing
 
 5) Clear cache by rm -rf var/log*
 
@@ -527,3 +529,28 @@ Test after upgrade.
 //Added items on the invoice will be displayed on work request under section "Additional Info from the Invoice. See latest invoice APCP2-REQ1-V3"
 
 "tattali/calendar-bundle": "^1.2", => "tattali/calendar-bundle": "^7",
+
+
+Final Upgrade steps:
+0) git pull
+
+1a) composer self-update
+1b) composer install
+1c) php bin/console cache:clear
+
+2) Covert array to json:
+php bin/console app:convert-array-to-json --all --apply --alter-schema
+
+3) bash prepare_migration.sh
+
+4) Run migration
+php bin/console doctrine:migrations:status
+php bin/console doctrine:migrations:migrate --all-or-nothing
+
+5) Clear cache by 'php bin/console cache:clear' or 'rm -rf var/log*'
+php bin/console cache:clear
+
+6) Run all tests
+./vendor/bin/phpunit
+
+

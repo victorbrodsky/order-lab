@@ -750,7 +750,7 @@ def main():
                 movedmsg = "Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed);
                 # logger.info("Moved to {}{}".format(manager_config.get('LOCAL_BACKUP_PATH'), filename_compressed))
                 logger.info(movedmsg)
-                movedmsg = "DB Backup (Step 2/2): Backup file has been created: {}".format(filename_compressed);
+                movedmsg = "DB Backup (Step 2/2): Backup file has been created successfully: {}".format(filename_compressed);
                 if send_email == 'yes':
                     send_confirmation_email(callback_url, token, args.action, movedmsg, logger)
                 print(movedmsg)
