@@ -161,7 +161,7 @@ f_sync() {
             bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
     fi
 
-    if [ -n "$type" ] && [ "$type" == "info" ]
+    if [ -n "$type" ] && [ "$type" == "version" ]
         #Get versions of symfony, php, postgres
         then
             echo -e ${COLOR} Get versions of symfony, php, postgres for "$1" ${NC}
