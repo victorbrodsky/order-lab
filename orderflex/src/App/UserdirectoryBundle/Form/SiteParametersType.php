@@ -1704,7 +1704,7 @@ class SiteParametersType extends AbstractType
             ));
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'wkhtmltopdfpathLinux' )
             $builder->add('wkhtmltopdfpathLinux',null,array(
-                'label'=>'Path to wkhtmltopdf binary - Linux (update system cache is required):',
+                'label'=>'Path to wkhtmltopdf binary - Linux (/usr/local/bin/wkhtmltopdf, update system cache is required):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 

@@ -1024,7 +1024,7 @@ class UserServiceUtil {
         //set default Third-Party Software Dependencies for Linux not used in container
         if( !$this->isWindows() ) {
             //set the same value as in setparameters.php run on deploy $wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
-            $types['wkhtmltopdfpathLinux'] = $wkhtmltopdfpath = "/usr/bin/xvfb-run wkhtmltopdf";
+            $types['wkhtmltopdfpathLinux'] = $wkhtmltopdfpath = "/usr/bin/xvfb-run wkhtmltopdf"; 
             //$types['wkhtmltopdfpathLinux'] = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
             //$types['wkhtmltopdfpathLinux'] = "xvfb-run wkhtmltopdf";
 

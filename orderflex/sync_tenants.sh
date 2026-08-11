@@ -165,26 +165,22 @@ f_sync() {
         #Get versions of symfony, php, postgres
         then
             echo -e ${COLOR} Get versions of symfony, php, postgres for "$1" ${NC}
-#            if [ -z "$INFO_SHOWN" ]
-#                then
-#                    INFO_SHOWN=1
-                    echo -e ${COLORWHITE} PHP version: $(php -v | head -n 1) ${NC}
+            echo -e ${COLORWHITE} PHP version: $(php -v | head -n 1) ${NC}
 
-                    consolePath="$homedir"/order-lab-"$1"/orderflex/bin/console
-                    if [ -f "$consolePath" ]
-                        then
-                            echo -e ${COLORWHITE} Symfony version: $(php "$consolePath" --version) ${NC}
-                        else
-                            echo -e ${COLORWHITE} Symfony version: bin/console not found at "$consolePath" ${NC}
-                    fi
+            consolePath="$homedir"/order-lab-"$1"/orderflex/bin/console
+            if [ -f "$consolePath" ]
+                then
+                    echo -e ${COLORWHITE} Symfony version: $(php "$consolePath" --version) ${NC}
+                else
+                    echo -e ${COLORWHITE} Symfony version: bin/console not found at "$consolePath" ${NC}
+            fi
 
-                    if command -v psql >/dev/null 2>&1
-                        then
-                            echo -e ${COLORWHITE} PostgreSQL version: $(psql --version) ${NC}
-                        else
-                            echo -e ${COLORWHITE} PostgreSQL version: psql not found in PATH ${NC}
-                    fi
-#            fi
+            if command -v psql >/dev/null 2>&1
+                then
+                    echo -e ${COLORWHITE} PostgreSQL version: $(psql --version) ${NC}
+                else
+                    echo -e ${COLORWHITE} PostgreSQL version: psql not found in PATH ${NC}
+            fi
     fi
 
 #    if [ -n "$type" ] && [ "$type" == "createdb" ]
