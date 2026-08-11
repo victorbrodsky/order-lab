@@ -160,6 +160,32 @@ f_sync() {
             bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
     fi
 
+    if [ -n "$type" ] && [ "$type" == "info" ]
+        #Get versions of symfony, php, postgres
+        then
+            echo -e ${COLOR} Get versions of symfony, php, postgres for "$1" ${NC}
+#            if [ -z "$INFO_SHOWN" ]
+#                then
+#                    INFO_SHOWN=1
+                    echo -e ${COLOR} PHP version: $(php -v | head -n 1) ${NC}
+
+                    consolePath="$homedir"/order-lab-"$1"/orderflex/bin/console
+                    if [ -f "$consolePath" ]
+                        then
+                            echo -e ${COLOR} Symfony version: $(php "$consolePath" --version) ${NC}
+                        else
+                            echo -e ${COLOR} Symfony version: bin/console not found at "$consolePath" ${NC}
+                    fi
+
+                    if command -v psql >/dev/null 2>&1
+                        then
+                            echo -e ${COLOR} PostgreSQL version: $(psql --version) ${NC}
+                        else
+                            echo -e ${COLOR} PostgreSQL version: psql not found in PATH ${NC}
+                    fi
+#            fi
+    fi
+
 #    if [ -n "$type" ] && [ "$type" == "createdb" ]
 #        then
 #            echo -e ${COLOR} Create db for "$1" ${NC}
@@ -186,6 +212,8 @@ f_sync() {
 	#bash "$homedir"/order-lab-"$1"/orderflex/deploy.sh
 	#echo -e ${COLOR} check migration status for "$1" ${NC}
     #php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:status
+
+
 }
 
 
