@@ -9509,7 +9509,7 @@ WHERE
                 )
             ";
 
-            $res = $conn->executeQuery($dql)->fetchAll(\PDO::FETCH_COLUMN);
+            $res = $conn->executeQuery($dql)->fetchAll(\PDO::FETCH_COLUMN); //NOT USED
             dump($res);
             exit('111');
         }

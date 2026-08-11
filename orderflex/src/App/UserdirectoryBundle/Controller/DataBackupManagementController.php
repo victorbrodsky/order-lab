@@ -101,7 +101,7 @@ class DataBackupManagementController extends OrderAbstractController
                 'pnotify-error',
                 "DB management is not implemented for Windows"
             );
-            return $this->redirect($this->generateUrl('employees_home'));
+            //return $this->redirect($this->generateUrl('employees_home'));
         }
 
         $param = $userServiceUtil->getSingleSiteSettingParameter();
@@ -183,7 +183,7 @@ class DataBackupManagementController extends OrderAbstractController
         //estimate DB backup time based on the size of /var/lib/pgsql
         $dbFolder = null;
         $dbBackupTime = 1; //min time
-        $dbBackupSize = null;
+        $dbBackupSize = 'N/A';
         if( $userServiceUtil->isWindows() == false ) {
             $dbFolder = '/var/lib/pgsql/'; //Centos, Alma, Rhel
             if( !file_exists($dbFolder) ) {
@@ -245,7 +245,7 @@ class DataBackupManagementController extends OrderAbstractController
         //estimate upload backup time based on the size of Uploaded folder
         $uploadFilesFolder = null;
         $uploadFilesBackupTime = 1; //min time 1 min
-        $uploadFilesBackupSize = null;
+        $uploadFilesBackupSize = 'N/A';
         if( $userServiceUtil->isWindows() == false ) {
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
@@ -273,6 +273,20 @@ class DataBackupManagementController extends OrderAbstractController
                     $uploadFilesBackupTime = $sizeGb; //"; Uploaded files backup should take about " . $size . " min.";
                 }
                 $uploadFilesBackupSize = $this->convertBytesToReadable($size);
+            }
+        } else {
+            //Windows: no `du` command, calculate the size with PHP
+            $projectRoot = $this->container->get('kernel')->getProjectDir();
+            $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
+            if( is_dir($uploadFilesFolder) ) {
+                $size = $this->dirSize($uploadFilesFolder);
+                if( $size ) {
+                    $sizeGb = round($size / (1024 * 1000 * 1000)); //GB
+                    if( $sizeGb ) {
+                        $uploadFilesBackupTime = $sizeGb;
+                    }
+                    $uploadFilesBackupSize = $this->convertBytesToReadable($size);
+                }
             }
         }
 
@@ -358,6 +372,7 @@ class DataBackupManagementController extends OrderAbstractController
             'dbFreeSpaceBytes' => $dbFreeSpace[0],
             'uploadFreeSpaceBytes' => $uploadFreeSpace[0],
             'freeSpace' => $freeSpace,
+            'isWindows' => $userServiceUtil->isWindows(),
             'loggedInUsers' => $loggedInUsers,
             'maintenanceStatus' => $maintenanceStatus,
             'maintenanceAction' => $maintenanceAction
@@ -365,7 +380,16 @@ class DataBackupManagementController extends OrderAbstractController
     }
     public function getFreeSpace( $folder ) {
         //get free disk space for Upload and DB
+        if( !$folder || !is_string($folder) ) {
+            return array(0,'N/A');
+        }
         $bytes = disk_free_space($folder);
+        if( false === $bytes ) {
+            return array(0,'N/A');
+        }
+        if( $bytes <= 0 ) {
+            return array(0,'0 B');
+        }
         $si_prefix = array( 'B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB' );
         $base = 1024;
         $class = min((int)log($bytes , $base) , count($si_prefix) - 1);
@@ -410,9 +434,9 @@ class DataBackupManagementController extends OrderAbstractController
         //echo "sql=" . $sql . "<br>";
         $conn = $this->getConnection();
         $stmt = $conn->prepare($sql);
-        $results = $stmt->executeQuery()->fetchAll(\PDO::FETCH_COLUMN);
+        $results = $stmt->executeQuery()->fetchAllNumeric();
         if( $results && count($results) > 0 ) {
-            return $results[0];
+            return $results[0][0];
         }
         return null;
         //dump($results);

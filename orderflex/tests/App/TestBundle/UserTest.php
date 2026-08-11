@@ -70,6 +70,28 @@ class UserTest extends WebTestBase
         );
     }
 
+    public function testManualBackupRestoreAction() {
+        $this->user->addRole('ROLE_PLATFORM_ADMIN');
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/manual-backup-restore/');
+
+        //$content = $this->client->getResponse()->getContent();
+        //exit("content=$content");
+
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("DB backup files will have the format")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Current database size is")')->count()
+        );
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("Upload folder backup file will have the format")')->count()
+        );
+    }
+
     public function testAboutAction() {
         $this->logIn();
         $crawler = $this->client->request('GET', '/'.$this->tenantprefix.'directory/about');

@@ -44,6 +44,8 @@
     </p>
     <p>{{ estimateTimeMsg|raw }}</p>
     <p>{{ freeSpace|raw }}</p>
+
+    {% if not isWindows %}
     {#<p>Refresh this page to see the uploaded files in the select box below.</p>#}
 
     {% set disabledFalg = 'disabled' %}
@@ -325,6 +327,8 @@
         </div> {#panel-body#}
     </div> {#panel#}
 
+    {% endif %}
+
 
     {#Reset Demo Environment#}
     {% if 0 %}
@@ -416,6 +420,7 @@
 {% endblock %}
 {% block additionaljs %}
 
+    {% if not isWindows %}
     {#FineUploader#}
     {#https://docs.fineuploader.com/quickstart/01-getting-started.html#}
     {#https://docs.fineuploader.com/branch/master/quickstart/02-setting_options.html#}
@@ -1146,4 +1151,5 @@
 
     </script>
 
+    {% endif %}
 {% endblock %}

@@ -40,7 +40,7 @@ class StainHydrator extends AbstractHydrator
         //return $this->_stmt->fetchAll(PDO::FETCH_ASSOC);
         
         $result = [];
-        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) { //NOT USED
             $result[] = $row;
         }
 
@@ -51,7 +51,7 @@ class StainHydrator extends AbstractHydrator
     {         
         $result = array();         
         //$cache  = array();
-        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) { //NOT USED
             print_r($row);
             echo "<br>";
             //$this->hydrateRowData($row, $cache, $result); //Changed StainHydrator

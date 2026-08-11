@@ -3435,8 +3435,8 @@ class RequestController extends OrderAbstractController
             $dqlParameters['feeScheduleVersion'] = $feeScheduleVersion;
         }
 
+        //exit('count($specialties)='.count($specialties));
         if( $specialties && count($specialties) > 0 ) {
-
             //$dql->andWhere("projectSpecialties.id != 5");
             //echo "specialties=".implode(",", $specialties)."<br>";
 
@@ -3456,7 +3456,8 @@ class RequestController extends OrderAbstractController
                       AND b.specialtylist_id IN ($specialtiesStr)
                     )
                 ";
-                $filteredIds = $conn->executeQuery($subDql)->fetchAll(\PDO::FETCH_COLUMN); //fetchAll(\PDO::FETCH_COLUMN,0)
+                $results = $conn->executeQuery($subDql)->fetchAllNumeric(); //fetchAll(\PDO::FETCH_COLUMN,0)
+                $filteredIds = array_column($results, 0);
 
                 //2) use these ids to filter the list
                 $whereFilteredIds = "list.id IN (:filteredIds)";

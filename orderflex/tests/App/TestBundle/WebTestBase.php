@@ -199,7 +199,11 @@ class WebTestBase extends WebTestCase
 //    }
 
     public function logIn() {
-        $systemUser = $this->getUser();
+        $systemUser = $this->user;
+        if( !$systemUser ) {
+            $systemUser = $this->getUser();
+            $this->user = $systemUser;
+        }
 
         $firewall_context_name = 'scan_auth';
         if( $this->testContainer->hasParameter('tenant_role') && $this->testContainer->getParameter('tenant_role') ) {

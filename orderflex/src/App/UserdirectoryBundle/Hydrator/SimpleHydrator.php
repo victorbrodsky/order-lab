@@ -40,7 +40,7 @@ class SimpleHydrator extends AbstractHydrator
         //return $this->_stmt->fetchAll(PDO::FETCH_ASSOC);
         
         $result = [];
-        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) { //NOT USED
             $result[] = $row;
         }
 
@@ -51,7 +51,7 @@ class SimpleHydrator extends AbstractHydrator
     {         
         $result = array();         
         //$cache  = array();
-        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        foreach($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) { //NOT USED
             //$this->hydrateRowData($row, $cache, $result);
             $this->hydrateRowData($row, $result); //Changed SimpleHydrator
         }

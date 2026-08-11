@@ -35,14 +35,14 @@ class UploadSingleFileType extends AbstractType
                 // unmapped fields can't define their validation using annotations
                 // in the associated entity, so you can use the PHP constraint classes
                 'constraints' => [
-                    new File([
-                        'maxSize' => '10G' //'10240M', //10Gig
-//                        'mimeTypes' => [
+                    new File(
+                        maxSize: '10G' //'10240M', //10Gig
+//                        mimeTypes: [
 //                            'application/pdf',
 //                            'application/x-pdf',
 //                        ],
-                        //'mimeTypesMessage' => 'Please upload a valid PDF document',
-                    ])
+                        //mimeTypesMessage: 'Please upload a valid PDF document',
+                    )
                 ],
             ])
         ;
