@@ -42,6 +42,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   php bin/console app:convert-list-roles-to-json
  *   php bin/console app:convert-list-roles-to-json --apply
  */
+//NOT USED. Use 'php bin/console app:convert-array-to-json --all --apply --alter-schema' (ConvertArrayToJsonCommand) instead
 class ConvertListRolesToJsonCommand extends Command
 {
     private $container;

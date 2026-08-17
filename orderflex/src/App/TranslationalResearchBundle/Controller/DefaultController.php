@@ -664,7 +664,15 @@ class DefaultController extends OrderAbstractController
 
         $projectId = $request->attributes->get('projectId', $request->query->get('projectId', $request->request->get('projectId')));
         $workrequestId = $request->attributes->get('workrequestId', $request->query->get('workrequestId', $request->request->get('workrequestId')));
-        $productsArr = $request->attributes->get('productsArr', $request->query->get('productsArr', $request->request->get('productsArr')));
+
+        //$productsArr = $request->attributes->get('productsArr', $request->query->get('productsArr', $request->request->get('productsArr')));
+        $productsArr = $request->request->all('productsArr');
+        if( empty($productsArr) ) {
+            $productsArr = $request->query->all('productsArr');
+            if( empty($productsArr) ) {
+                $productsArr = $request->attributes->get('productsArr', []);
+            }
+        }
 
         //print_r($productsArr);
         //echo "projectId=$projectId, workrequestId=$workrequestId <br>";

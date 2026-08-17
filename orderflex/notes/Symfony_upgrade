@@ -519,7 +519,7 @@ Final Upgrade steps:
 1b) composer install
 1c) php bin/console cache:clear
 
-2) Covert array to json:
+2) Covert array to json (array_to_json_backup_...csv file created):
 php bin/console app:convert-array-to-json --all --apply --alter-schema
 
 3) bash prepare_migration.sh

@@ -735,6 +735,7 @@ class LoggerController extends OrderAbstractController
      *
      * Dry-run by default (backup only). Pass ?apply=1 to also UPDATE the rows.
      */
+    //NOT USED. Use 'php bin/console app:convert-array-to-json --all --apply --alter-schema' (ConvertArrayToJsonCommand) instead
     #[Route(path: '/convert-roles-to-json/', name: 'employees_logger_convert_roles', methods: ['GET'])]
     public function convertRolesToJsonAction(Request $request)
     {
