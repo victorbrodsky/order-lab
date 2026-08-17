@@ -5,44 +5,44 @@
 var _transresitemcodes = [];
 //var _transresitemcodesRun = false;
 
-function transresUpdateInvoiceStatus(invoiceId,status) {
+function transresUpdateInvoiceStatus(invoiceId, status) {
     //console.log("transresUpdateInvoice: invoiceId="+invoiceId);
 
-    $("#modal-invoice-error-"+invoiceId).hide();
-    $("#modal-invoice-error-"+invoiceId).html(null);
+    $("#modal-invoice-error-" + invoiceId).hide();
+    $("#modal-invoice-error-" + invoiceId).html(null);
 
     //remove all buttons
     //$(".updateInvoiceBtn").hide();
     //insert new text to the updateInvoiceBtnHolder
     //$("#updateInvoiceBtnHolder-"+invoiceId).html("Please wait ...");
-    $("#updateInvoiceBtnHolder-"+invoiceId).hide();
+    $("#updateInvoiceBtnHolder-" + invoiceId).hide();
 
     //var form = $("#change_invoice_form_"+invoiceId);
     //var paid = form.find("#invoice-paid").val();
 
-    var paid = $("#invoice-paid-"+invoiceId).val();
+    var paid = $("#invoice-paid-" + invoiceId).val();
     //console.log("paid="+paid);
 
-    var comment = $("#invoice-comment-"+invoiceId).val();
+    var comment = $("#invoice-comment-" + invoiceId).val();
     //console.log("comment="+comment);
 
-    var discountNumeric = $("#invoice-discountNumeric-"+invoiceId).val();
-    var discountPercent = $("#invoice-discountPercent-"+invoiceId).val();
-    var administrativeFee = $("#invoice-administrativeFee-"+invoiceId).val();
-    var total = $("#invoice-total-"+invoiceId).val();
-    var due = $("#invoice-due-"+invoiceId).val();
+    var discountNumeric = $("#invoice-discountNumeric-" + invoiceId).val();
+    var discountPercent = $("#invoice-discountPercent-" + invoiceId).val();
+    var administrativeFee = $("#invoice-administrativeFee-" + invoiceId).val();
+    var total = $("#invoice-total-" + invoiceId).val();
+    var due = $("#invoice-due-" + invoiceId).val();
 
     //console.log("status="+status);
 
-    if( status == "Paid Partially" ) {
+    if (status == "Paid Partially") {
 
         //If “paid partially” is pressed but no amount is typed into the “paid” field,
         // a red error well should be displayed stating “Please enter the partial amount into the “paid” field.”
-        if( !paid ) {
+        if (!paid) {
             var error = "Please enter the partial amount into the 'Paid' field.";
-            $("#modal-invoice-error-"+invoiceId).show();
-            $("#modal-invoice-error-"+invoiceId).html(error);
-            $("#updateInvoiceBtnHolder-"+invoiceId).show();
+            $("#modal-invoice-error-" + invoiceId).show();
+            $("#modal-invoice-error-" + invoiceId).html(error);
+            $("#updateInvoiceBtnHolder-" + invoiceId).show();
             return false;
         }
 
@@ -51,20 +51,20 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
         // is equal to the amount due. If the invoice has been paid in full, please press the “Paid in Full” button.
         // If the invoice has been paid partially, please enter the partial amount paid and press the “Paid Partially” button.”
         var paidFloat = 0;
-        if( paid ) {
+        if (paid) {
             var paidFloat = parseFloat(paid);
         }
         var paidTotal = 0;
-        if( total ) {
+        if (total) {
             var paidTotal = parseFloat(total);
         }
-        if( paidFloat == paidTotal ) {
-            var error = "The amount entered into the 'Paid' field is equal to the amount due in the 'Total' field."+
-                " If the invoice has been paid in full, please press the 'Paid in Full' button."+
+        if (paidFloat == paidTotal) {
+            var error = "The amount entered into the 'Paid' field is equal to the amount due in the 'Total' field." +
+                " If the invoice has been paid in full, please press the 'Paid in Full' button." +
                 " If the invoice has been paid partially, please enter the partial amount paid and press the 'Paid Partially' button.";
-            $("#modal-invoice-error-"+invoiceId).show();
-            $("#modal-invoice-error-"+invoiceId).html(error);
-            $("#updateInvoiceBtnHolder-"+invoiceId).show();
+            $("#modal-invoice-error-" + invoiceId).show();
+            $("#modal-invoice-error-" + invoiceId).html(error);
+            $("#updateInvoiceBtnHolder-" + invoiceId).show();
             return false;
         }
     }
@@ -75,33 +75,33 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
     // does not equal the amount due. If the invoice has been paid in full, please delete
     // the value in the “Paid” field and press the “Paid in Full” button.
     // If the invoice has been paid partially, please enter the amount paid and press the “Paid Partially” button.”
-    if( status == "Paid in Full" && paid ) {
+    if (status == "Paid in Full" && paid) {
         var paidFloat = 0;
-        if( paid ) {
+        if (paid) {
             var paidFloat = parseFloat(paid);
         }
         var paidTotal = 0;
-        if( total ) {
+        if (total) {
             var paidTotal = parseFloat(total);
         }
         //console.log(status+":"+"paid="+paid+"; total="+total);
         //console.log(status+":"+"paidFloat="+paidFloat+"; paidTotal="+paidTotal);
-        if( paidFloat > 0 && paidFloat < paidTotal ) {
+        if (paidFloat > 0 && paidFloat < paidTotal) {
             //console.log(status+": error");
-            var error = "The amount entered into the 'Paid' field does not equal the amount due in the 'Total' field."+
-                " If the invoice has been paid in full, please delete the value in the 'Paid' field"+
-                " and press the 'Paid in Full' button. If the invoice has been paid partially,"+
+            var error = "The amount entered into the 'Paid' field does not equal the amount due in the 'Total' field." +
+                " If the invoice has been paid in full, please delete the value in the 'Paid' field" +
+                " and press the 'Paid in Full' button. If the invoice has been paid partially," +
                 " please enter the amount paid and press the 'Paid Partially' button.";
             //console.log("error="+error);
-            $("#modal-invoice-error-"+invoiceId).show();
-            $("#modal-invoice-error-"+invoiceId).html(error);
-            $("#updateInvoiceBtnHolder-"+invoiceId).show();
+            $("#modal-invoice-error-" + invoiceId).show();
+            $("#modal-invoice-error-" + invoiceId).html(error);
+            $("#updateInvoiceBtnHolder-" + invoiceId).show();
             return false;
         }
     }
 
-    $("#updateInvoiceBtnHolder-"+invoiceId).show();
-    $("#updateInvoiceBtnHolder-"+invoiceId).html("Please wait ...");
+    $("#updateInvoiceBtnHolder-" + invoiceId).show();
+    $("#updateInvoiceBtnHolder-" + invoiceId).html("<p class='text-info lead' style='text-align:center;'>Processing, please wait ...</p>");
     //return false; //testing
 
     var url = Routing.generate('translationalresearch_invoice_update_ajax');
@@ -121,16 +121,16 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
             comment: comment,
             status: status
         },
-        async: false,
-    }).success(function(response) {
+        async: true,
+    }).success(function (response) {
         //console.log(response);
-        if( response == "OK" ) {
+        if (response == "OK") {
             //reload parent page
             window.location.reload(true);
         }
-    }).done(function() {
+    }).done(function () {
         //lbtn.stop();
-    }).error(function(jqXHR, textStatus, errorThrown) {
+    }).error(function (jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
     });
 
@@ -146,8 +146,8 @@ function transresUpdateInvoiceStatus(invoiceId,status) {
 //     }
 // })(jQuery)
 
-function removeInvoiceItemExistingObject( delBtn, classname ) {
-    removeExistingObject(delBtn,classname);
+function removeInvoiceItemExistingObject(delBtn, classname) {
+    removeExistingObject(delBtn, classname);
     //console.log("removeInvoiceItemExistingObject");
 
     var thisEl = $('#oleg_translationalresearchbundle_invoice_subTotal');
@@ -155,7 +155,7 @@ function removeInvoiceItemExistingObject( delBtn, classname ) {
 }
 
 
-function transresInvoiceItemListeneres(){
+function transresInvoiceItemListeneres() {
 
     console.log("transresInvoiceItemListeneres");
 
@@ -163,7 +163,7 @@ function transresInvoiceItemListeneres(){
     transresInitItemCodeAsSelect();
     transresInvoiceItemCodeListeneres();
 
-    $('.invoiceitem-quantity').on('input', function(event) {
+    $('.invoiceitem-quantity').on('input', function (event) {
         var invoiceItemRow = $(this).closest('.user-collection-holder');
         transresAdjustQuantity(invoiceItemRow);
     });
@@ -180,7 +180,7 @@ function transresInvoiceItemListeneres(){
     //     transresUpdateSubTotal(this);
     // });
 
-    $('.invoiceitem-quantity, .invoiceitem-additionalQuantity').on('input', function(event) {
+    $('.invoiceitem-quantity, .invoiceitem-additionalQuantity').on('input', function (event) {
         var invoiceItemRow = $(this).closest('.user-collection-holder');
         transresValidateQuantity(invoiceItemRow);
 
@@ -196,7 +196,7 @@ function transresInvoiceItemListeneres(){
         //transresQuantityValidation(invoiceItemRow);
     });
 
-    $('.invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function(event) {
+    $('.invoiceitem-unitPrice, .invoiceitem-additionalUnitPrice').on('input', function (event) {
 
         var invoiceItemRow = $(this).closest('.user-collection-holder');
 
@@ -216,29 +216,29 @@ function transresInvoiceItemListeneres(){
     //     transres UpdateSubTotal(this);
     // });
 
-    $('.invoice-subTotal').on('input', function(event) {
+    $('.invoice-subTotal').on('input', function (event) {
         transresUpdateTotal(this);
     });
 
     //total update => update subtotal and total
-    $('.invoiceitem-total').on('input', function(event) {
+    $('.invoiceitem-total').on('input', function (event) {
         //console.log("transres UpdateSubTotal: triggered by manually update row total");
         //var holder = $(this).closest('.invoice-financial-fields');
         transresUpdateSubTotal(this);
     });
 
-    $('.invoice-discountNumeric').on('input', function(event) {
+    $('.invoice-discountNumeric').on('input', function (event) {
         transresDiscountNumericUpdate(this);
     });
-    $('.invoice-discountPercent').on('input', function(event) {
+    $('.invoice-discountPercent').on('input', function (event) {
         //console.log("discountPercent updated");
         transresDiscountPercentUpdate(this);
     });
-    $('.invoice-administrativeFee').on('input', function(event) {
+    $('.invoice-administrativeFee').on('input', function (event) {
         transresAdministrativeFeeUpdate(this);
     });
 
-    $('.invoice-paid').on('input', function(event) {
+    $('.invoice-paid').on('input', function (event) {
         //var holder = $(this).closest('.invoice-financial-fields');
         //console.log("paid updated");
         transresUpdateDue(this);
@@ -257,13 +257,13 @@ function transresAdjustQuantity(invoiceItemRow) {
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
     var totalQuantity = invoiceItemRow.find(".original-total-quantity").val();
 
-    if( totalQuantity == 0 ) {
+    if (totalQuantity == 0) {
         return;
     }
 
     var newAdditionalQuantity = parseInt(totalQuantity) - parseInt(quantity);
 
-    if( newAdditionalQuantity != additionalQuantity ) {
+    if (newAdditionalQuantity != additionalQuantity) {
         invoiceItemRow.find(".invoiceitem-additionalQuantity").val(newAdditionalQuantity);
     }
 }
@@ -274,7 +274,7 @@ function transresValidateQuantity(invoiceItemRow) {
 
     var totalQuantity = invoiceItemRow.find(".original-total-quantity").val();
     //console.log("totalQuantity="+totalQuantity);
-    if( !totalQuantity ) {
+    if (!totalQuantity) {
         return;
     }
 
@@ -284,45 +284,45 @@ function transresValidateQuantity(invoiceItemRow) {
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
     //console.log("quantity="+quantity +", additionalQuantity="+additionalQuantity);
 
-    if( (!quantity || quantity == 0) && (!additionalQuantity || additionalQuantity == 0) ) {
+    if ((!quantity || quantity == 0) && (!additionalQuantity || additionalQuantity == 0)) {
         // invoiceitem-quantity-warning-message
         warning = "The total quantity for this item is zero. " +
             "Please remove such items or update the quantity.";
         //warningQuantityMessage.html(warning).show();
     }
 
-    if( !quantity ) {
+    if (!quantity) {
         quantity = 0;
     }
 
-    if( !additionalQuantity ) {
+    if (!additionalQuantity) {
         additionalQuantity = 0;
     }
 
     var newTotalQuantity = parseInt(quantity) + parseInt(additionalQuantity);
     //console.log("totalQuantity="+totalQuantity +", newTotalQuantity="+newTotalQuantity);
 
-    if( newTotalQuantity && totalQuantity != newTotalQuantity ) {
+    if (newTotalQuantity && totalQuantity != newTotalQuantity) {
         var invoiceitemProductId = invoiceItemRow.find('.invoiceitem-product-id').val();
-        warning = warning + " The total quantity for this item "+invoiceitemProductId+
-            " is not equal to the completed or requested quantity of "+totalQuantity+". " +
+        warning = warning + " The total quantity for this item " + invoiceitemProductId +
+            " is not equal to the completed or requested quantity of " + totalQuantity + ". " +
             "Please ensure the quantities on this invoice are correct.";
         // var warning = "The total quantity for this item "+
         //     "is not equal to the completed or requested quantity of "+totalQuantity+". " +
         //     "Please ensure the quantities on this invoice are correct.";
     }
 
-    if( warning ) {
+    if (warning) {
         warningMessage.html(warning).show();
     }
 
     //invoiceitem-warning-message
     //if cycle new or edit
     //console.log("cycle="+cycle);
-    if( typeof cycle === 'undefined' ) {
+    if (typeof cycle === 'undefined') {
         cycle = 'new';
     }
-    if( cycle == "new" || cycle == "edit" ) {
+    if (cycle == "new" || cycle == "edit") {
         var visibleWarningMessages = $('.invoiceitem-warning-message:visible');
         if (visibleWarningMessages.length > 0) {
             //invoice-warning-message "I have verified the listed quantities."
@@ -337,10 +337,10 @@ function transresValidateQuantity(invoiceItemRow) {
 }
 
 function transresInvoiceConfirmationListener() {
-    $('#invoice-confirmation-submit').on('input', function(event) {
+    $('#invoice-confirmation-submit').on('input', function (event) {
         //console.log("invoice-confirmation-submit button clicked");
 
-        if( $(this).is(':checked') ) {
+        if ($(this).is(':checked')) {
             //console.log("ok confirmed");
             $('#submit-buttons-section').show();
         } else {
@@ -351,7 +351,7 @@ function transresInvoiceConfirmationListener() {
     });
 }
 
-function transresCalculateTotals( invoiceItemRow ) {
+function transresCalculateTotals(invoiceItemRow) {
     //var invoiceItemRow = invoiceItemRowEl.closest('.user-collection-holder');
     var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
@@ -366,7 +366,7 @@ function transresCalculateTotals( invoiceItemRow ) {
     var total1 = 0;
     var total2 = 0;
 
-    if( quantity && unitPrice ) {
+    if (quantity && unitPrice) {
         total1 = parseFloat(quantity) * parseFloat(unitPrice);
         total1 = transresRoundDecimal(total1);
         //console.log("row total1="+total1);
@@ -375,7 +375,7 @@ function transresCalculateTotals( invoiceItemRow ) {
         totalEl1.val(null);
     }
 
-    if( additionalQuantity && additionalUnitPrice ) {
+    if (additionalQuantity && additionalUnitPrice) {
         total2 = parseFloat(additionalQuantity) * parseFloat(additionalUnitPrice);
         total2 = transresRoundDecimal(total2);
         //console.log("row total2="+total2);
@@ -385,7 +385,7 @@ function transresCalculateTotals( invoiceItemRow ) {
     }
 
     var total = parseFloat(total1) + parseFloat(total2);
-    if( total ) {
+    if (total) {
         total = transresRoundDecimal(total);
         //console.log("total="+total);
         invoiceItemTotalEl.val(total);
@@ -416,23 +416,23 @@ function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
     //console.log("update subtotal and total");
     //var totals = invoiceItemTotalEl.closest('.invoice-financial-fields').find(".invoiceitem-total");
 
-    if( !thisEl ) {
+    if (!thisEl) {
         var thisEl = $('#oleg_translationalresearchbundle_invoice_subTotal');
     }
 
     var holder = $(thisEl).closest('.invoice-financial-fields');
 
     var invoiceItemRows = holder.find('.user-collection-holder');
-    invoiceItemRows.each(function() {
+    invoiceItemRows.each(function () {
         transresCalculateTotals($(this));
     });
 
     var totals = holder.find(".invoiceitem-total");
     var subTotal = 0;
-    totals.each(function() {
+    totals.each(function () {
         var total = $(this).val();
         //console.log("1 get total="+total);
-        if( !total ) {
+        if (!total) {
             total = 0;
         }
         //console.log("2 get total="+total);
@@ -460,20 +460,20 @@ function transresUpdateTotal(thisEl) {
     //console.log("count="+$(".invoice-discountNumeric").length);
     //console.log("subTotal="+subTotal+", transres UpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent+"; subTotal="+subTotal+", administrativeFee="+administrativeFee);
 
-    if( subTotal ) {
-        if( discountNumeric ) {
+    if (subTotal) {
+        if (discountNumeric) {
             discount = parseFloat(discountNumeric);
         }
-        if( discountPercent ) {
-            discount = subTotal * (parseFloat(discountPercent)/100);
+        if (discountPercent) {
+            discount = subTotal * (parseFloat(discountPercent) / 100);
         }
     }
 
     //if( subTotal && discount && subTotal > 0 && discount > 0 ) {
-        total = parseFloat(subTotal) - parseFloat(discount);
+    total = parseFloat(subTotal) - parseFloat(discount);
     //}
 
-    if( administrativeFee ) {
+    if (administrativeFee) {
         total = parseFloat(total) + parseFloat(administrativeFee);
     }
 
@@ -494,7 +494,7 @@ function transerUpdateSubsidyInfo() {
 
     //var total = holder.find(".invoice-total").val();
     var total = tarnsresCalculateCleanTotal();
-    if( !total ) {
+    if (!total) {
         total = holder.find(".invoice-total").val();
     }
 
@@ -504,12 +504,12 @@ function transerUpdateSubsidyInfo() {
     //var defaultTotal = $('#invoice-default-total').val();
     var defaultTotal = transresRecalculateInvoiceDefaultTotal();
 
-    if( !defaultTotal ) {
+    if (!defaultTotal) {
         var defaultTotal = $('#invoice-default-total').val();
     }
 
-    console.log("total="+total+", defaultTotal="+defaultTotal);
-    if( total && defaultTotal && defaultTotal != 0 ) {
+    console.log("total=" + total + ", defaultTotal=" + defaultTotal);
+    if (total && defaultTotal && defaultTotal != 0) {
         var subsidy = defaultTotal - total;
         //console.log("subsidy="+subsidy);
         // if( subsidy > 0 ) {
@@ -525,12 +525,12 @@ function transerUpdateSubsidyInfo() {
 
         subsidy = transresRoundDecimal(subsidy);
 
-        if( subsidy >= 0 ) {
-            subsidy = "$"+subsidy;
+        if (subsidy >= 0) {
+            subsidy = "$" + subsidy;
         } else {
             subsidy = Math.abs(subsidy);
             subsidy = transresRoundDecimal(subsidy);
-            subsidy = "-$"+subsidy;
+            subsidy = "-$" + subsidy;
         }
 
         $("#invoice-subsidy-info").html(subsidy);
@@ -545,13 +545,13 @@ function tarnsresCalculateCleanTotal() {
 
     var subTotalClean = 0;
 
-    holder.find('.transres-invoiceItems').each(function() {
+    holder.find('.transres-invoiceItems').each(function () {
 
         //console.log($(this).find('.invoiceitem-itemCode'));
         var categoryId = $(this).find('.invoiceitem-itemCode').select2('val');
         //console.log("transres CalculateCleanTotal: categoryId="+categoryId);
 
-        if( categoryId && categoryId in _productArr ) {
+        if (categoryId && categoryId in _productArr) {
 
             var total = $(this).find(".invoiceitem-total").val();
             //console.log("transres CalculateCleanTotal: total="+total);
@@ -568,12 +568,12 @@ function tarnsresCalculateCleanTotal() {
 
     //console.log("subTotalClean="+subTotalClean+", transres UpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent);
 
-    if( subTotalClean ) {
-        if( discountNumeric ) {
+    if (subTotalClean) {
+        if (discountNumeric) {
             discount = parseFloat(discountNumeric);
         }
-        if( discountPercent ) {
-            discount = subTotalClean * (parseFloat(discountPercent)/100);
+        if (discountPercent) {
+            discount = subTotalClean * (parseFloat(discountPercent) / 100);
         }
     }
 
@@ -584,12 +584,12 @@ function tarnsresCalculateCleanTotal() {
 }
 
 function transresRoundDecimal(value) {
-    return Number(Math.round(value+'e2')+'e-2').toFixed(2); //1.005 => 1.01
+    return Number(Math.round(value + 'e2') + 'e-2').toFixed(2); //1.005 => 1.01
 }
 
 //update Bill To
-function transresInvoicePiListeneres(){
-    $('.transres-invoice-principalInvestigator').on("change", function(e) {
+function transresInvoicePiListeneres() {
+    $('.transres-invoice-principalInvestigator').on("change", function (e) {
         var piId = $(this).select2('val');
         //console.log("transres-invoice-principalInvestigator change: piId="+piId);
         //$('.transres-invoice-invoiceTo').val(piId);
@@ -608,12 +608,12 @@ function transresUpdateBillTo(userId) {
         timeout: _ajaxTimeout,
         //type: "GET",
         type: "GET",
-        data: {userId: userId },
+        data: { userId: userId },
         //dataType: 'json',
         async: asyncflag
-    }).success(function(response) {
+    }).success(function (response) {
         //console.log(response);
-        if( response == "NotOK" ) {
+        if (response == "NotOK") {
             $(".transres-alert").find(".alert").html(response);
             $(".transres-alert").show();
         } else {
@@ -623,9 +623,9 @@ function transresUpdateBillTo(userId) {
             //console.log('height='+height);
             $('.transres-invoice-invoiceTo').height(height);
         }
-    }).done(function() {
+    }).done(function () {
         //lbtn.stop();
-    }).error(function(jqXHR, textStatus, errorThrown) {
+    }).error(function (jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
         $(".transres-alert").find(".alert").html(errorThrown);
         $(".transres-alert").show();
@@ -647,7 +647,7 @@ function transresUpdateDue(thisEl) {
     var paid = holder.find(".invoice-paid").val();
     var due = parseFloat(total);
 
-    if( total && paid ) {
+    if (total && paid) {
         due = parseFloat(total) - parseFloat(paid);
     }
 
@@ -670,18 +670,18 @@ function transresDisableWheelQuantity() {
 //     alert("Please filter invoices by project or PI first.");
 // }
 
-function transresInvoiceItemCodeListeneres(){
+function transresInvoiceItemCodeListeneres() {
 
     console.log("transresInvoiceItemCodeListeneres");
 
-    $('.invoiceitem-itemCode').on('change', function(event) {
+    $('.invoiceitem-itemCode').on('change', function (event) {
         var invoiceItemRow = $(this).closest('.user-collection-holder');
         var categoryId = $(this).select2('val');
-        console.log("invoiceitem-itemCode changed: categoryId="+categoryId);
+        console.log("invoiceitem-itemCode changed: categoryId=" + categoryId);
 
         var categoryInfoArr = null;
 
-        if( categoryId && categoryId in _productArr ) {
+        if (categoryId && categoryId in _productArr) {
 
             categoryInfoArr = _productArr[categoryId];
             console.log("categoryInfoArr:");
@@ -691,18 +691,18 @@ function transresInvoiceItemCodeListeneres(){
 
         //transresRecalculateInvoiceDefaultTotal();
 
-        transresPopulateItem(categoryInfoArr,invoiceItemRow,categoryId);
+        transresPopulateItem(categoryInfoArr, invoiceItemRow, categoryId);
         transresUpdateSubTotal(this);
 
         transerUpdateSubsidyInfo();
     });
 }
 
-function transresPopulateItem( categoryInfoArr, invoiceItemRow, categoryId ) {
+function transresPopulateItem(categoryInfoArr, invoiceItemRow, categoryId) {
 
     //var categoryId = null;
 
-    if( categoryInfoArr ) {
+    if (categoryInfoArr) {
         invoiceItemRow.find('.invoiceitem-description').val(categoryInfoArr.name);
         invoiceItemRow.find('.invoiceitem-unitPrice').val(categoryInfoArr.initialFee);
         invoiceItemRow.find('.invoiceitem-additionalUnitPrice').val(categoryInfoArr.additionalFee);
@@ -728,12 +728,12 @@ function transresRecalculateInvoiceDefaultTotal() {
 
     var totalDefault = 0;
 
-    $('.transres-invoiceItems').each(function() {
+    $('.transres-invoiceItems').each(function () {
 
         var categoryId = $(this).find('.invoiceitem-itemCode').select2('val');
         //console.log("transres RecalculateInvoiceDefaultTotal: categoryId="+categoryId);
 
-        if( categoryId && categoryId in _productArr ) {
+        if (categoryId && categoryId in _productArr) {
             var categoryInfoArr = _productArr[categoryId];
             //console.log("categoryInfoArr:");
             //console.log(categoryInfoArr);
@@ -745,13 +745,13 @@ function transresRecalculateInvoiceDefaultTotal() {
             //console.log("categoryId="+categoryId+": initialFeeDefault=" + initialFeeDefault + "; additionalFeeDefault=" + additionalFeeDefault);
 
             var initialQuantity = $(this).find('.invoiceitem-quantity').val();
-            if( initialQuantity ) {
+            if (initialQuantity) {
                 initialQuantity = parseInt(initialQuantity);
             } else {
                 initialQuantity = 0;
             }
             var additionalQuantity = $(this).find('.invoiceitem-additionalQuantity').val();
-            if( additionalQuantity ) {
+            if (additionalQuantity) {
                 additionalQuantity = parseInt(additionalQuantity);
             } else {
                 additionalQuantity = 0;
@@ -768,7 +768,7 @@ function transresRecalculateInvoiceDefaultTotal() {
 
     });
 
-    if( totalDefault > 0 ) {
+    if (totalDefault > 0) {
         totalDefault = transresRoundDecimal(totalDefault);
     }
 
@@ -776,18 +776,18 @@ function transresRecalculateInvoiceDefaultTotal() {
 
     return totalDefault;
 }
-function transresGetTotalFeesByQuantity(fee,feeAdditionalItem,initialQuantity,quantity) {
+function transresGetTotalFeesByQuantity(fee, feeAdditionalItem, initialQuantity, quantity) {
     //console.log("transres GetTotalFeesByQuantity: fee=" + fee + ", feeAdditionalItem=" + feeAdditionalItem + ", initialQuantity=" + initialQuantity + ", quantity=" + quantity);
 
     quantity = parseInt(quantity);
 
-    if( !fee ) {
+    if (!fee) {
         fee = 0;
     }
 
     fee = transresRoundDecimal(fee);
 
-    if( feeAdditionalItem ) {
+    if (feeAdditionalItem) {
         feeAdditionalItem = transresRoundDecimal(feeAdditionalItem);
     } else {
         feeAdditionalItem = fee;
@@ -799,17 +799,17 @@ function transresGetTotalFeesByQuantity(fee,feeAdditionalItem,initialQuantity,qu
 
     var total = (+initialTotal) + (+additionalTotal);
 
-    if( total > 0 ) {
+    if (total > 0) {
         total = transresRoundDecimal(total);
     }
-    console.log("transres GetTotalFeesByQuantity: total="+total);
+    console.log("transres GetTotalFeesByQuantity: total=" + total);
 
     return total;
 }
 
 //'transresitemcodes',_transresitemcodes,pricelistId
 //Used in transresInitItemCodeAsSelect, transresInvoiceItemListeneres
-function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
+function transresGetComboboxGeneric(name, globalDataArray, pricelistId) {
 
     //console.log('get Combobox Generic: name='+name);
 
@@ -821,12 +821,12 @@ function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
     //     return;
     // }
 
-    var targetid = ".ajax-combobox-"+name;
+    var targetid = ".ajax-combobox-" + name;
     //console.log('targetid='+targetid);
 
     var placeholder = "Select an option or type in a new value";
 
-    if( $(targetid).length == 0 ) {
+    if ($(targetid).length == 0) {
         return;
     }
 
@@ -852,33 +852,33 @@ function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
 
     //translationalresearch_get_transresitemcodes_ajax
     var url = Routing.generate('translationalresearch_get_transresitemcodes_ajax');
-        
+
     //var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
     //console.log('get Combobox Generic: url='+url);
 
-    if( arrLen == 0 ) {
-    //if( _transresitemcodesRun == false ) {
+    if (arrLen == 0) {
+        //if( _transresitemcodesRun == false ) {
 
         //var thisAsyncflag = asyncflag;
         var thisAsyncflag = false; //use synchronous ajax to avoid second, simultaneous run when ajax is not completed yet.
         //_transresitemcodesRun = true;
-        console.log('run translationalresearch_get_transresitemcodes_ajax='+globalDataArray.length+", thisAsyncflag="+thisAsyncflag);
+        console.log('run translationalresearch_get_transresitemcodes_ajax=' + globalDataArray.length + ", thisAsyncflag=" + thisAsyncflag);
 
         $.ajax({
             url: url,
             timeout: _ajaxTimeout,
             async: thisAsyncflag,
-            data: {pricelistId: pricelistId, invoiceId: invoiceId, transresRequestId: transresRequestId },
-        }).done(function(data) {
-            $.each(data, function(key, val) {
+            data: { pricelistId: pricelistId, invoiceId: invoiceId, transresRequestId: transresRequestId },
+        }).done(function (data) {
+            $.each(data, function (key, val) {
                 //console.log("val="+val);
                 globalDataArray.push(val);
                 //console.log(data);
             });
-            populateSelectCombobox( targetid, globalDataArray, placeholder, false );
+            populateSelectCombobox(targetid, globalDataArray, placeholder, false);
         });
     } else {
-        populateSelectCombobox( targetid, globalDataArray, placeholder, false );
+        populateSelectCombobox(targetid, globalDataArray, placeholder, false);
     }
 
     //console.log("EOF getComboboxGeneric");
@@ -886,11 +886,11 @@ function transresGetComboboxGeneric( name, globalDataArray, pricelistId ) {
 
 function transresInitItemCodeAsSelect() {
     //            var pricelistAbbreviation = $('#pricelist-abbreviation').val();
-//            if( !pricelistAbbreviation ) {
-//                pricelistAbbreviation = 'trp-default-pricelist';
-//            }
+    //            if( !pricelistAbbreviation ) {
+    //                pricelistAbbreviation = 'trp-default-pricelist';
+    //            }
     var pricelistId = $('#pricelist-id').val();
-    if( !pricelistId ) {
+    if (!pricelistId) {
         pricelistId = 'trp-default-pricelist';
     }
 
@@ -906,29 +906,29 @@ function transresInitItemCodeAsSelect() {
     //console.log("get _transresitemcodes. pricelistId="+pricelistId);
     //getComboboxGeneric(null,'transresitemcodes',_transresitemcodes,false,pricelistId+'/');
 
-    transresGetComboboxGeneric('transresitemcodes',_transresitemcodes,pricelistId);
+    transresGetComboboxGeneric('transresitemcodes', _transresitemcodes, pricelistId);
 }
 
 function transresLockUnlockPriceField(invoiceItemRow) {
     var quantity = invoiceItemRow.find(".invoiceitem-quantity").val();
-    if( quantity && quantity != 0 ) {
+    if (quantity && quantity != 0) {
         //unlock
-        invoiceItemRow.find(".invoiceitem-unitPrice").prop( "disabled", false );
+        invoiceItemRow.find(".invoiceitem-unitPrice").prop("disabled", false);
         //invoiceItemRow.find(".invoiceitem-unitPrice").removeAttr( "disabled" );
     } else {
         //lock
-        invoiceItemRow.find(".invoiceitem-unitPrice").prop( "disabled", true );
+        invoiceItemRow.find(".invoiceitem-unitPrice").prop("disabled", true);
         //invoiceItemRow.find(".invoiceitem-unitPrice").attr( "disabled", true );
     }
 
     var additionalQuantity = invoiceItemRow.find(".invoiceitem-additionalQuantity").val();
-    if( additionalQuantity && additionalQuantity != 0 ) {
+    if (additionalQuantity && additionalQuantity != 0) {
         //unlock
-        invoiceItemRow.find(".invoiceitem-additionalUnitPrice").prop( "disabled", false );
+        invoiceItemRow.find(".invoiceitem-additionalUnitPrice").prop("disabled", false);
         //invoiceItemRow.find(".invoiceitem-additionalUnitPrice").removeAttr( "disabled" );
     } else {
         //lock
-        invoiceItemRow.find(".invoiceitem-additionalUnitPrice").prop( "disabled", true );
+        invoiceItemRow.find(".invoiceitem-additionalUnitPrice").prop("disabled", true);
         //invoiceItemRow.find(".invoiceitem-additionalUnitPrice").attr( "disabled", true );
     }
 }
