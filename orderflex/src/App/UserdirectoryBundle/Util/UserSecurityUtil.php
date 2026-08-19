@@ -111,10 +111,10 @@ class UserSecurityUtil {
 
     public function __construct(
         EntityManagerInterface $em,
-        ContainerInterface $container=null,
-        Security $security=null,
-        TokenStorageInterface $tokenStorage=null,
-        RequestStack $requestStack=null
+        ?ContainerInterface $container=null,
+        ?Security $security=null,
+        ?TokenStorageInterface $tokenStorage=null,
+        ?RequestStack $requestStack=null
     ) {
         $this->em = $em;
         $this->container = $container;

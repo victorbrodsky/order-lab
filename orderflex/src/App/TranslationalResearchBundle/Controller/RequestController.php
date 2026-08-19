@@ -87,7 +87,7 @@ class RequestController extends OrderAbstractController
     #[Route(path: '/project/{id}/work-request/new/', name: 'translationalresearch_request_new', methods: ['GET', 'POST'], options: ['expose' => true])]
     #[Route(path: '/work-request/new/', name: 'translationalresearch_new_standalone_request', methods: ['GET', 'POST'], options: ['expose' => true])]
     #[Template('AppTranslationalResearchBundle/Request/new.html.twig')]
-    public function newFormNodeAction(Request $request, #[MapEntity] Project $project=null)
+    public function newFormNodeAction(Request $request, #[MapEntity] ?Project $project=null)
     {
         //exit("Work request submission temporarily is not available. Please try again later in 5-10 min.");
         $transresPermissionUtil = $this->container->get('transres_permission_util');

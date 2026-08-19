@@ -511,7 +511,7 @@ Test after upgrade.
 
 "tattali/calendar-bundle": "^1.2", => "tattali/calendar-bundle": "^7",
 
-
+########## Upgrade Symfony 6.4 to 7.4 ##############
 Final Upgrade steps:
 0) git pull
 
@@ -534,5 +534,58 @@ bash deploy.sh
 
 6) Run all tests
 ./vendor/bin/phpunit
+##############################################
 
+
+######### PHP Upgrade 8.3 -> 8.5 ##############
+1) Enable EPEL
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+if error related to pgdg13:
+sudo dnf config-manager --disable pgdg12
+sudo dnf config-manager --disable pgdg13
+
+Now retry to reinstall:
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+2) Install Remi repository
+sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+
+3) Enable CodeReady Builder
+sudo subscription-manager repos --enable codeready-builder-for-rhel-9-x86_64-rpms
+
+4) Reset the current PHP module
+sudo dnf module reset php
+
+5) Switch to PHP 8.5 stream
+sudo dnf module switch-to php:remi-8.5/common
+
+6)Update packages
+sudo dnf update
+
+If error (PGDG, newrelic):
+Disable PGDG12 and PGDG13 (both dead):
+sudo dnf config-manager --disable pgdg12
+sudo dnf config-manager --disable pgdg13
+Disable New Relic EL5 repo:
+sudo dnf config-manager --disable newrelic
+sudo dnf config-manager --disable newrelic-infra
+Clean DNF cache:
+sudo dnf clean all
+Retry the update:
+sudo dnf update
+
+If PHP Warning:  PHP Startup: newrelic: Unable to initialize module:
+Remove the New Relic PHP packages:
+sudo dnf remove newrelic-php5 newrelic-php5-common newrelic-daemon
+Remove the New Relic repo (it is EL5 and broken):
+sudo rm -f /etc/yum.repos.d/newrelic*.repo
+Remove the New Relic ini file:
+sudo rm -f /etc/php.d/newrelic.ini
+Clean DNF cache:
+sudo dnf clean all
+
+
+You can switch back:
+sudo dnf module switch-to php:8.3/common
+##############################################
 

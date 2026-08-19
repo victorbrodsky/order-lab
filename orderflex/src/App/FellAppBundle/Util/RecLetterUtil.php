@@ -353,7 +353,7 @@ class RecLetterUtil {
 
         if( !$fellappRecLetterUrl ) {
             $msg = "Can not send invitation email to the references.";
-            $msg = $msg . " The URL of the recommendation letter upload page in the Fellowship Site Settings";
+            $msg = $msg . " The URL of the recommendation letter upload page in the Fellowship Site Settings is not provided for this retrieval method";
             $this->sendLetterEventLog($msg,"No Reference Invitation Email",$fellapp);
             $res = array(
                 "res" => false,
