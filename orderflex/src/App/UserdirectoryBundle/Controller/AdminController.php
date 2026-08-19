@@ -8177,7 +8177,7 @@ class AdminController extends OrderAbstractController
     }
 
     #[Route(path: '/populate-class-url/', name: 'user_populate_class_url', methods: ['GET'])]
-    public function populateClassUrlAction( Request $request=null ) {
+    public function populateClassUrlAction( ?Request $request=null ) {
         $this->populateClassUrl();
     }
     public function populateClassUrl() {
@@ -8244,7 +8244,7 @@ class AdminController extends OrderAbstractController
      * populate Platform List Manager Root List: url="order/directory/admin/list-manager-populate/"
      */
     #[Route(path: '/list/generate-empty-lists/{withcustom}', name: 'user_populate_platform_list_manager', methods: ['GET'])]
-    public function generatePlatformListManagerList( Request $request=null, $withcustom=null ) {
+    public function generatePlatformListManagerList( ?Request $request=null, $withcustom=null ) {
 
         $username = $this->getUser();
 

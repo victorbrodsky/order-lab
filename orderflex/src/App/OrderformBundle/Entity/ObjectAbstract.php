@@ -207,7 +207,7 @@ abstract class ObjectAbstract
      *
      * @param \App\OrderformBundle\Entity\Message $message
      */
-    public function addMessage(\App\OrderformBundle\Entity\Message $message=null)
+    public function addMessage(?\App\OrderformBundle\Entity\Message $message=null)
     {
         //echo "ObjectAbstract add message=".$message."<br>";
         if( !$this->message->contains($message) ) {

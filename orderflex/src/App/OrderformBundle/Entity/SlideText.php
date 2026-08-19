@@ -73,7 +73,7 @@ class SlideText extends ArrayFieldAbstract
      * @param \App\OrderformBundle\Entity\SlideReturnRequest $slideReturnRequest
      * @return SlideReturnRequest Field
      */
-    public function setSlideReturnRequest(\App\OrderformBundle\Entity\SlideReturnRequest $slideReturnRequest = null)
+    public function setSlideReturnRequest(?\App\OrderformBundle\Entity\SlideReturnRequest $slideReturnRequest = null)
     {
         $this->slideReturnRequest = $slideReturnRequest;
 

@@ -47,7 +47,7 @@ class DemoDbUtil {
     public function __construct(
         EntityManagerInterface $em,
         ContainerInterface $container,
-        Security $security=null
+        ?Security $security=null
     )
     {
         $this->em = $em;

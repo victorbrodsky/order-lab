@@ -40,7 +40,7 @@ class UserCommentUtil {
     protected $em;
     protected $container;
 
-    public function __construct( EntityManagerInterface $em, ContainerInterface $container=null ) {
+    public function __construct( EntityManagerInterface $em, ?ContainerInterface $container=null ) {
         $this->em = $em;
         $this->container = $container;
     }
@@ -177,7 +177,7 @@ class UserCommentUtil {
     /**
      * {@inheritdoc}
      */
-    public function createComment(ThreadInterface $thread, CommentInterface $parent = null)
+    public function createComment(ThreadInterface $thread, ?CommentInterface $parent = null)
     {
         $comment = new FosComment();
         $comment->setThread($thread);

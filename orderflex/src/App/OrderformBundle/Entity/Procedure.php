@@ -222,7 +222,7 @@ class Procedure extends ObjectAbstract
      * @param \App\OrderformBundle\Entity\Encounter $encounter
      * @return Procedure
      */
-    public function setEncounter(\App\OrderformBundle\Entity\Encounter $encounter = null)
+    public function setEncounter(?\App\OrderformBundle\Entity\Encounter $encounter = null)
     {
         $this->encounter = $encounter;
     

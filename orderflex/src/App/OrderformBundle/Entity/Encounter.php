@@ -603,7 +603,7 @@ class Encounter extends ObjectAbstract
      * @param \App\OrderformBundle\Entity\Patient $patient
      * @return Encounter
      */
-    public function setPatient(\App\OrderformBundle\Entity\Patient $patient = null)
+    public function setPatient(?\App\OrderformBundle\Entity\Patient $patient = null)
     {
         $this->patient = $patient;
     

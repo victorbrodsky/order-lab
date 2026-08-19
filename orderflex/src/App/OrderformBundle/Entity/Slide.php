@@ -133,7 +133,7 @@ class Slide extends ObjectAbstract
      * @param \App\OrderformBundle\Entity\Block $block
      * @return Slide
      */
-    public function setBlock(\App\OrderformBundle\Entity\Block $block = null)
+    public function setBlock(?\App\OrderformBundle\Entity\Block $block = null)
     {
         $this->block = $block;
     
@@ -148,7 +148,7 @@ class Slide extends ObjectAbstract
         return $this->block;
     }
 
-    public function setPart(\App\OrderformBundle\Entity\Part $part = null)
+    public function setPart(?\App\OrderformBundle\Entity\Part $part = null)
     {
         $this->part = $part;
 

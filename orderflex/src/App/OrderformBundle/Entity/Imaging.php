@@ -102,7 +102,7 @@ class Imaging extends ObjectAbstract
 
 
 
-    public function setSlide(\App\OrderformBundle\Entity\Slide $slide = null)
+    public function setSlide(?\App\OrderformBundle\Entity\Slide $slide = null)
     {
         $this->slide = $slide;
         return $this;

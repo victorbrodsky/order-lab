@@ -185,7 +185,7 @@ class Part extends ObjectAbstract
         $this->diseaseType->removeElement($diseaseType);
     }
 
-    public function setAccession(\App\OrderformBundle\Entity\Accession $accession = null) {
+    public function setAccession(?\App\OrderformBundle\Entity\Accession $accession = null) {
         $this->accession = $accession;
         return $this;
     }

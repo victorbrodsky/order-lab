@@ -43,7 +43,7 @@ abstract class BlockArrayFieldAbstract extends ArrayFieldAbstract {
      * @param \App\OrderformBundle\Entity\Block $block
      * @return BlockArrayFieldAbstract
      */
-    public function setBlock(\App\OrderformBundle\Entity\Block $block = null)
+    public function setBlock(?\App\OrderformBundle\Entity\Block $block = null)
     {
         $this->block = $block;
 

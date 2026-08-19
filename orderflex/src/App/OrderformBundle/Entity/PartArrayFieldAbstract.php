@@ -38,7 +38,7 @@ abstract class PartArrayFieldAbstract extends ArrayFieldAbstract {
      * @param \App\OrderformBundle\Entity\Part $part
      * @return PartArrayFieldAbstract
      */
-    public function setPart(\App\OrderformBundle\Entity\Part $part = null)
+    public function setPart(?\App\OrderformBundle\Entity\Part $part = null)
     {
         $this->part = $part;
 

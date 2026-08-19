@@ -37,7 +37,7 @@ abstract class SlideArrayFieldAbstract extends ArrayFieldAbstract {
      * @param \App\OrderformBundle\Entity\Slide $part
      * @return PartArrayFieldAbstract
      */
-    public function setSlide(\App\OrderformBundle\Entity\Slide $slide = null)
+    public function setSlide(?\App\OrderformBundle\Entity\Slide $slide = null)
     {
         $this->slide = $slide;
 

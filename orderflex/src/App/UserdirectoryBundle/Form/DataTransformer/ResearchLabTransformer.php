@@ -36,7 +36,7 @@ class ResearchLabTransformer implements DataTransformerInterface
     private $user;
     private $className;
     
-    public function __construct(EntityManagerInterface $em=null, $user=null, $className=null)
+    public function __construct(?EntityManagerInterface $em=null, $user=null, $className=null)
     {
         $this->em = $em;
         $this->user = $user;

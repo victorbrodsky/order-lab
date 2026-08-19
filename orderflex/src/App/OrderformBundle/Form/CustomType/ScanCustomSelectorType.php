@@ -51,7 +51,7 @@ class ScanCustomSelectorType extends AbstractType {
     private $om;
     private $serviceContainer;
 
-    public function __construct(EntityManagerInterface $om, ContainerInterface $serviceContainer = null)
+    public function __construct(EntityManagerInterface $om, ?ContainerInterface $serviceContainer = null)
     {
         $this->om = $om;
         $this->serviceContainer = $serviceContainer;

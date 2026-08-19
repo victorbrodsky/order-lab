@@ -4158,7 +4158,7 @@ class FellAppController extends OrderAbstractController {
     }
 
     #[Route(path: '/get-global-fellowship-types/{institution}', name: 'fellapp-global-fellowship-types', options: ['expose' => true])]
-    public function getGlobalFellowshipTypes(Institution $institution=null)
+    public function getGlobalFellowshipTypes(?Institution $institution=null)
     {
 //        $cities = $country->getCities()->map(fn($city) => [
 //            'id' => $city->getId(),
@@ -4179,7 +4179,7 @@ class FellAppController extends OrderAbstractController {
     }
 
     #[Route(path: '/get-institution-by-global/{global}', name: 'fellapp-institution-by-global', options: ['expose' => true])]
-    public function getInstitutionFellowshipTypes(GlobalFellowshipSpecialty $global=null)
+    public function getInstitutionFellowshipTypes(?GlobalFellowshipSpecialty $global=null)
     {
         //$fellappUtil = $this->container->get('fellapp_util');
         //$institutionId = $fellappUtil->getInstitutionByGlobalFelltype($global); //resturn as select2 array

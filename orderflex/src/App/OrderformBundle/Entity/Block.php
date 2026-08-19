@@ -191,7 +191,7 @@ class Block extends ObjectAbstract
      * @param \App\OrderformBundle\Entity\Part $part
      * @return Block
      */
-    public function setPart(\App\OrderformBundle\Entity\Part $part = null)
+    public function setPart(?\App\OrderformBundle\Entity\Part $part = null)
     {
         $this->part = $part;   
         return $this;

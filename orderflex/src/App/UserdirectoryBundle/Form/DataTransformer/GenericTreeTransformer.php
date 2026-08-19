@@ -52,7 +52,7 @@ class GenericTreeTransformer implements DataTransformerInterface
     protected $fullClassName;
     protected $params;
     
-    public function __construct(EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
+    public function __construct(?EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;
         $this->user = $user;

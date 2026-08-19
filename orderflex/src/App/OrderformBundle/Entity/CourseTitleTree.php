@@ -165,7 +165,7 @@ class CourseTitleTree extends BaseCompositeNode {
  * Overwrite base setParent method: adjust this organizationalGroupType according to the first parent child
  * @param mixed $parent
  */
-    public function setParent(CompositeNodeInterface $parent = null)
+    public function setParent(?CompositeNodeInterface $parent = null)
     {
         $this->parent = $parent;
 

@@ -167,7 +167,7 @@ class Accession extends ObjectAbstract {
      * @param \App\OrderformBundle\Entity\Procedure $procedure
      * @return Accession
      */
-    public function setProcedure(\App\OrderformBundle\Entity\Procedure $procedure = null)
+    public function setProcedure(?\App\OrderformBundle\Entity\Procedure $procedure = null)
     {
         $this->procedure = $procedure;
     

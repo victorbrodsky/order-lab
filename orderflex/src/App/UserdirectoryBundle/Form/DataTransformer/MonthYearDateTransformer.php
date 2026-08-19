@@ -36,7 +36,7 @@ class MonthYearDateTransformer implements DataTransformerInterface
     private $em;
     private $user;
     
-    public function __construct(EntityManagerInterface $em=null, $user=null)
+    public function __construct(?EntityManagerInterface $em=null, $user=null)
     {
         $this->em = $em;
         $this->user = $user;

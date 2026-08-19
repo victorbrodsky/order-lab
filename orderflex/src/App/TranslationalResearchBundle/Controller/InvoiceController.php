@@ -40,7 +40,7 @@ class InvoiceController extends OrderAbstractController
     #[Route(path: '/list/', name: 'translationalresearch_invoice_index_filter', methods: ['GET'])]
     #[Route(path: '/list/{invoicetype}', name: 'translationalresearch_invoice_index_type', methods: ['GET'])]
     #[Template('AppTranslationalResearchBundle/Invoice/index.html.twig')]
-    public function indexAction(Request $request, #[MapEntity] TransResRequest $transresRequest=null, $invoicetype=null)
+    public function indexAction(Request $request, #[MapEntity] ?TransResRequest $transresRequest=null, $invoicetype=null)
     {
         if (false === $this->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl($this->getParameter('translationalresearch.sitename') . '-nopermission'));

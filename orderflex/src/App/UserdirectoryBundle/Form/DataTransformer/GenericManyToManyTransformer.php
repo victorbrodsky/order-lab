@@ -35,7 +35,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
     protected $params;
 
 
-    public function __construct(EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
+    public function __construct(?EntityManagerInterface $em=null, $user=null, $className=null, $bundleName=null, $params=null)
     {
         $this->em = $em;
         $this->user = $user;

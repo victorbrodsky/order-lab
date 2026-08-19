@@ -43,7 +43,7 @@ abstract class ProcedureArrayFieldAbstract extends ArrayFieldAbstract {
      * @param \App\OrderformBundle\Entity\Procedure $Procedure
      * @return ProcedureArrayFieldAbstract
      */
-    public function setProcedure(\App\OrderformBundle\Entity\Procedure $procedure = null)
+    public function setProcedure(?\App\OrderformBundle\Entity\Procedure $procedure = null)
     {
         $this->procedure = $procedure;
 
