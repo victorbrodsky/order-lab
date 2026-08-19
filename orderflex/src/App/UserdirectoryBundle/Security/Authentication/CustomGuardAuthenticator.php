@@ -87,8 +87,8 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     public function __construct(
         ContainerInterface $container,
         EntityManagerInterface $em,
-        Security $security=null,
-        CsrfTokenManagerInterface $csrfTokenManager=null,
+        ?Security $security=null,
+        ?CsrfTokenManagerInterface $csrfTokenManager=null,
     )
     {
         //$this->encoder = $encoder;

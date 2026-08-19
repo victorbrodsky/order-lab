@@ -168,7 +168,7 @@ interface UserInterface extends SymfonyUserInterface, \Serializable
      *
      * @return static
      */
-    public function setPasswordRequestedAt(\DateTime $date = null);
+    public function setPasswordRequestedAt(?\DateTime $date = null);
 
     /**
      * Checks whether the password reset request has expired.
@@ -186,7 +186,7 @@ interface UserInterface extends SymfonyUserInterface, \Serializable
      *
      * @return static
      */
-    public function setLastLogin(\DateTime $time = null);
+    public function setLastLogin(?\DateTime $time = null);
 
     /**
      * Never use this to check if this user has access to anything!

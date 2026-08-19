@@ -1088,7 +1088,7 @@ class User extends UserBase
     /**
      * {@inheritdoc}
      */
-    public function setLastActivity(\DateTime $time = null): self
+    public function setLastActivity(?\DateTime $time = null): self
 {
     $this->lastActivity = $time;
 

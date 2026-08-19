@@ -39,7 +39,7 @@ abstract class AccessionArrayFieldAbstract extends ArrayFieldAbstract {
      * @param \App\OrderformBundle\Entity\Accession $accession
      * @return Accession Field
      */
-    public function setAccession(\App\OrderformBundle\Entity\Accession $accession = null)
+    public function setAccession(?\App\OrderformBundle\Entity\Accession $accession = null)
     {
         $this->accession = $accession;
 

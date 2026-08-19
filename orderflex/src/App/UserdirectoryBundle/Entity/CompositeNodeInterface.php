@@ -37,7 +37,7 @@ interface CompositeNodeInterface {
     public function getChildren();
 
     public function getParent();
-    public function setParent(CompositeNodeInterface $parent = null);
+    public function setParent(?CompositeNodeInterface $parent = null);
 
     public function setLevel($level);
     public function getLevel();

@@ -361,7 +361,7 @@ abstract class ListAbstract
      *
      * @param \App\UserdirectoryBundle\Entity\User $creator
      */
-    public function setCreator(\App\UserdirectoryBundle\Entity\User $creator=null)
+    public function setCreator(?\App\UserdirectoryBundle\Entity\User $creator=null)
     {
         $this->creator = $creator;
 

@@ -37,7 +37,7 @@ abstract class PatientArrayFieldAbstract extends ArrayFieldAbstract {
      * @param \App\OrderformBundle\Entity\Patient $patient
      * @return PatientArrayFieldAbstract
      */
-    public function setPatient(\App\OrderformBundle\Entity\Patient $patient = null)
+    public function setPatient(?\App\OrderformBundle\Entity\Patient $patient = null)
     {
         $this->patient = $patient;
 

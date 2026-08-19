@@ -4678,7 +4678,7 @@ class VacReqUtil
     }
 
     //https://stackoverflow.com/questions/1519228/get-interval-seconds-between-two-datetime-in-php
-    public static function diffBetweenTwoDates(\DateTime $date1=NULL, \DateTime $date2=NULL)
+    public static function diffBetweenTwoDates(?\DateTime $date1=NULL, ?\DateTime $date2=NULL)
     {
 //        $timezone = new \DateTimeZone('UTC');
 //        $date1->setTimezone($timezone);

@@ -600,7 +600,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setLastLogin(\DateTime $time = null): self
+    public function setLastLogin(?\DateTime $time = null): self
     {
         $this->lastLogin = $time;
 
@@ -620,7 +620,7 @@ abstract class UserBase implements UserInterface, PasswordAuthenticatedUserInter
     /**
      * {@inheritdoc}
      */
-    public function setPasswordRequestedAt(\DateTime $date = null): self
+    public function setPasswordRequestedAt(?\DateTime $date = null): self
     {
         $this->passwordRequestedAt = $date;
 

@@ -58,7 +58,7 @@ class RequestFormNodeController extends OrderAbstractController
     #[Route(path: '/project/{id}/request/new/', name: 'translationalresearch_request_formnode_new', methods: ['GET', 'POST'])]
     #[Route(path: '/request/new/', name: 'translationalresearch_new_standalone_request_formnode', methods: ['GET', 'POST'])]
     #[Template('AppTranslationalResearchBundle/RequestFormnode/new.html.twig')]
-    public function newFormNodeAction(Request $request, #[MapEntity] Project $project=null)
+    public function newFormNodeAction(Request $request, #[MapEntity] ?Project $project=null)
     {
         if (false == $this->isGranted('ROLE_TRANSRES_REQUESTER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
