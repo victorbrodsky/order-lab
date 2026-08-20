@@ -68,9 +68,9 @@ doctrine:
         #auto_generate_proxy_classes: '%kernel.debug%'
         #https://stackoverflow.com/questions/12894822/access-denied-error-on-rename-call-when-uploading-files-in-symfony
         #Warning: rename cache Proxies Access is denied (code: 5): set auto_generate_proxy_classes: false
-        #auto_generate_proxy_classes: false #deprecated in php >8.4
+        auto_generate_proxy_classes: false
         enable_lazy_ghost_objects: true
-        enable_native_lazy_objects: true
+        #enable_native_lazy_objects: true #reverted: causes identity map corruption, see doctrine/orm#12403
         controller_resolver:
 #            auto_mapping: true //Enabling the controller resolver automapping feature has been deprecated. Symfony Mapped Route Parameters should be used as replacement.
             auto_mapping: false
@@ -273,7 +273,7 @@ doctrine:
 when@prod:
     doctrine:
         orm:
-            #auto_generate_proxy_classes: false #deprecated in php >8.4
+            auto_generate_proxy_classes: false
             query_cache_driver:
                 type: pool
                 pool: doctrine.system_cache_pool

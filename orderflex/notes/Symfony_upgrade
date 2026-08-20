@@ -562,6 +562,14 @@ sudo dnf module switch-to php:remi-8.5/common
 6)Update packages
 sudo dnf update
 
+7) Install libraries:
+sudo dnf install \
+  php-cli php-fpm php-common php-curl php-gd php-ldap php-zip \
+  php-opcache php-mbstring php-xml php-pgsql php-pdo php-intl \
+  php-devel php-pear php-bcmath
+sudo systemctl restart php-fpm
+php -m | grep -Ei 'ldap|pgsql|pdo|mbstring|xml|intl|gd|curl|zip'
+
 If error (PGDG, newrelic):
 Disable PGDG12 and PGDG13 (both dead):
 sudo dnf config-manager --disable pgdg12
@@ -589,7 +597,10 @@ You can switch back:
 sudo dnf module reset php
 sudo dnf module switch-to php:8.3/common
 
-
+To switch the system PHP from 8.3 to Remi PHP 8.5:
+sudo dnf module switch-to php:remi-8.5/common
+php -v
+sudo systemctl restart php-fpm
 
 # Recommendation: switch back to PHP 8.3
 All the deprecations you've hit today are the same root cause: **`doctrine/orm` 3.x is not compatible with PHP 8.4+'s
