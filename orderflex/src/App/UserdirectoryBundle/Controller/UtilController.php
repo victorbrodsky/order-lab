@@ -2030,11 +2030,11 @@ class UtilController extends OrderAbstractController {
                 $className = "PositionTypeList";
                 break;
 
-            case "referringProviderSpecialty";
+            case "referringProviderSpecialty":
                 $className = "HealthcareProviderSpecialtiesList";
                 $filterType = null;
                 break;
-            case "referringProviderCommunication";
+            case "referringProviderCommunication":
                 $className = "HealthcareProviderCommunicationList";
                 $filterType = null;
                 break;

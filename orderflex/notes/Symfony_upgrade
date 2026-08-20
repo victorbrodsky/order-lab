@@ -586,6 +586,29 @@ sudo dnf clean all
 
 
 You can switch back:
+sudo dnf module reset php
 sudo dnf module switch-to php:8.3/common
+
+
+
+# Recommendation: switch back to PHP 8.3
+All the deprecations you've hit today are the same root cause: **`doctrine/orm` 3.x is not compatible with PHP 8.4+'s
+native lazy objects**. They only appear on PHP 8.4/8.5, not on 8.3:
+- `Doctrine\ORM\Proxy\Autoloader` deprecated
+- `DefaultProxyClassNameResolver` deprecated
+- `ProxyHelper::generateLazyGhost()` deprecated (guarded by `PHP_VERSION_ID >= 80400` in `ProxyHelper.php:34`)
+None of these are fixable from `orderflex` source — they require `doctrine/orm` 4.0 (not yet released as stable)
+to properly adopt native lazy objects.
+## Supporting evidence
+- [composer.json](cci:7://file:///c:/Users/cinav/Documents/WCMC/ORDER/order-lab/orderflex/composer.json:0:0-0:0)
+platform config is already pinned to `"php": "8.3.7"`
+(`@/c:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\composer.json:80`),
+suggesting 8.3 is the intended/supported runtime for this project.
+- The `doctrine/dbal` `setSchema()` / `Schema::edit()` incompatibility was also only
+recently patched for DBAL <4.5 fallback — another sign the Doctrine stack isn't fully ready for the newest PHP yet.
+## Verdict
+Staying on PHP 8.3 avoids ~5000+ noisy deprecation log entries with zero functional benefit,
+since the fixes are entirely gated behind an unreleased `doctrine/orm` 4.0.
+Revisit the PHP 8.4/8.5 upgrade once `doctrine/orm` 4.0 and `doctrine/dbal` 4.5 are stable releases.
 ##############################################
 
