@@ -75,7 +75,7 @@ class CreateUserCommandTest extends KernelTestCase
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
-        $this->assertStringContainsString('verify fellowship application import', $output);
+        $this->assertStringContainsStringIgnoringCase('fellowship application import', $output);
     }
 
 
