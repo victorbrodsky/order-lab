@@ -68,9 +68,17 @@ doctrine:
         #auto_generate_proxy_classes: '%kernel.debug%'
         #https://stackoverflow.com/questions/12894822/access-denied-error-on-rename-call-when-uploading-files-in-symfony
         #Warning: rename cache Proxies Access is denied (code: 5): set auto_generate_proxy_classes: false
+
+        #Working:
         auto_generate_proxy_classes: false
         enable_lazy_ghost_objects: true
+
+#        An exception has been thrown during the rendering of a template ("While adding an entity of class App\UserdirectoryBundle\Entity\UsernameType with an ID hash of "3" to the identity map,
+#        another object of class App\UserdirectoryBundle\Entity\UsernameType was already present for the same ID. This exception
+#        is a safeguard against an internal inconsistency - IDs should uniquely map to
+#        entity object instances.
         #enable_native_lazy_objects: true #reverted: causes identity map corruption, see doctrine/orm#12403
+
         controller_resolver:
 #            auto_mapping: true //Enabling the controller resolver automapping feature has been deprecated. Symfony Mapped Route Parameters should be used as replacement.
             auto_mapping: false

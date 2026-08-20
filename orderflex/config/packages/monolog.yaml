@@ -75,6 +75,7 @@ when@dev:
                 type: stream
                 channels: [deprecation]
                 path: php://stderr
+                #level: notice
                 #path: '%kernel.logs_dir%/%kernel.environment%_DEPRECATION.log'
 
 when@test:
@@ -126,4 +127,5 @@ when@prod:
                 type: stream
                 channels: [deprecation]
                 path: php://stderr
+                #level: notice
                 #path: '%kernel.logs_dir%/%kernel.environment%_DEPRECATION.log'
