@@ -1006,7 +1006,7 @@ class VacReqUtil
                 $attachmentFilename = $travelIntakeForm->getDescriptiveFilename();
             }
         }
-        $logger->notice("travelIntakeForm attachmentPath=$attachmentPath");
+        $logger->notice("sendSingleRespondEmailToSubmitter: travelIntakeForm attachmentPath=$attachmentPath, attachmentFilename=$attachmentFilename");
 
         if( !$message ) {
             $message = "Dear " . $submitter->getUsernameOptimal() . "," . $break . $break;
@@ -1032,16 +1032,22 @@ class VacReqUtil
             $message .= "**** PLEASE DO NOT REPLY TO THIS EMAIL ****";
         }
 
-        $emailUtil->sendEmail(
-            $submitter->getSingleEmail(),
-            $subject,
-            $message,
-            null,
-            null,
-            $attachmentPath,
-            $attachmentFilename
+        $emailRes = $emailUtil->sendEmail(
+            $submitter->getSingleEmail(),   //1 $emails
+            $subject,                       //2 $subject
+            $message,                       //3 $body
+            null,                           //4 $ccs
+            null,                           //5 $fromEmail
+            $attachmentPath,                //6 $attachmentData/$attachmentPath
+            $attachmentFilename             //7 $attachmentFilename
+            //$replyToEmail                 //8 $replyToEmail
         );
-        $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to submitter ".$submitter->getSingleEmail());
+        if( $emailRes === 'Email successfully sent.' ) {
+            $logger->notice("sendSingleRespondEmailToSubmitter: sent confirmation email to submitter ".$submitter->getSingleEmail());
+        } else {
+            $logger->error("sendSingleRespondEmailToSubmitter: FAILED to send confirmation email to submitter ".$submitter->getSingleEmail().". Result: ".json_encode($emailRes));
+        }
+        //exit('EOF sendSingleRespondEmailToSubmitter'); //testing
 
         //css to email users
         //$approversNameArr = array();

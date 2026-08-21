@@ -159,7 +159,7 @@ class DefaultController extends OrderAbstractController
 
 
     /**
-     * 127.0.0.1/order/residency-applications/test_google_file
+     * 127.0.0.1/residency-applications/test_google_file
      */
     #[Route(path: '/test_google_file', name: 'resapp_test_google_file')]
     public function testGoogleFileAction( Request $request ) {

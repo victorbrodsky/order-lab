@@ -3177,7 +3177,14 @@ class TransResRequestUtil
         //send by email
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $piEmailArr, $emailSubject, $emailBody, $ccs, $senderEmail, $attachmentPath );
+        $emailUtil->sendEmail(
+            $piEmailArr,
+            $emailSubject,
+            $emailBody,
+            $ccs,
+            $senderEmail,
+            $attachmentPath         //6
+        );
 
         $msg =  "Invoice ".$invoice->getOid()." PDF has been sent by email to " . implode(", ",$piEmailArr) . " with CC to " . $ccs;
         $msg = $msg . ".<br> Subject: " . $emailSubject . ".<br> Body: " . $emailBody . "<br>attachmentPath=" . $attachmentPath;

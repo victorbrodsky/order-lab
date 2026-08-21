@@ -335,6 +335,7 @@ class EmailUtil {
 
         //In Symfony versions previous to 6.2, the methods attachFromPath() and attach() could be used to add attachments.
         // These methods have been deprecated and replaced with addPart().
+        $mimeAttachmentCount = 0;
         if( $attachmentData ) {
             if( is_array($attachmentData) ) {
                 //$attachmentData - array( array('path'=>$path1,'name'=>$name1), array('path'=>$path2,'name'=>$name2), ... )
@@ -350,6 +351,7 @@ class EmailUtil {
 
                     if( $pdfPath ) {
                         $message->addPart(new DataPart(new File($pdfPath), $pdfName));
+                        $mimeAttachmentCount++;
                         if( $attachmentPath ) {
                             $attachmentPath = $attachmentPath . ", " . $pdfPath;
                         } else {
@@ -360,11 +362,33 @@ class EmailUtil {
                 }
             } else {
                 //$attachmentData - string
-                $logger->notice("Attachment exists; attachmentData=".$attachmentData);
-                $message->addPart(new DataPart(new File($attachmentData), $attachmentFilename));
+                $logger->notice("sendEmail: Attachment exists; attachmentData=".$attachmentData);
+                if( file_exists($attachmentData) ) {
+//                    $attachmentIsReadable = is_readable($attachmentData) ? 'yes' : 'no';
+//                    $attachmentIsFile = is_file($attachmentData) ? 'yes' : 'no';
+//                    $attachmentSize = @filesize($attachmentData);
+//                    $attachmentMimeType = @mime_content_type($attachmentData);
+//                    $attachmentRealPath = @realpath($attachmentData);
+//                    $logger->notice(
+//                        "sendEmail: attachment verification; exists=yes; is_file=".$attachmentIsFile.
+//                        "; is_readable=".$attachmentIsReadable.
+//                        "; filesize=".($attachmentSize !== false ? $attachmentSize : 'false').
+//                        "; mime_type=".($attachmentMimeType !== false ? $attachmentMimeType : 'false').
+//                        "; realpath=".($attachmentRealPath !== false ? $attachmentRealPath : 'false')
+//                    );
+                    try {
+                        $message->addPart(new DataPart(new File($attachmentData), $attachmentFilename));
+                        $mimeAttachmentCount++;
+                        $attachmentPath = $attachmentData;
+                    } catch( \Exception $e ) {
+                        $logger->error("sendEmail: Failed to attach file (".$attachmentData."): ".$e->getMessage().". Email will be sent without this attachment.");
+                    }
+                } else {
+                    $logger->error("sendEmail: Attachment file does not exist, skipping attachment: ".$attachmentData);
+                }
             }
         } else {
-            $logger->notice("attachmentData is NULL");
+            $logger->notice("sendEmail: attachmentData is NULL");
         }
 
         if( $attachmentInMemoryArray ) {
@@ -374,7 +398,16 @@ class EmailUtil {
                 $attachmentInMemoryArray['filename'],
                 $attachmentInMemoryArray['mimetype']
             );
+            $mimeAttachmentCount++;
         }
+
+        $messageAttachmentCount = null;
+        if( method_exists($message, 'getAttachments') ) {
+            $messageAttachments = $message->getAttachments();
+            $messageAttachmentCount = is_countable($messageAttachments) ? count($messageAttachments) : null;
+        }
+
+        $logger->notice("sendEmail: MIME attachment count=".$mimeAttachmentCount.", message attachment count=".($messageAttachmentCount !== null ? $messageAttachmentCount : 'n/a').", attachmentPath=".$attachmentPath.", attachmentFilename=".$attachmentFilename);
 
         //In Symfony versions previous to 6.2, the methods attachFromPath() and attach() could be used to add attachments.
         // These methods have been deprecated and replaced with addPart().
@@ -1084,7 +1117,7 @@ class EmailUtil {
     //Testing attachments
     public function testEmailWithAttachments() {
 
-        exit('not allowed');
+        //exit('not allowed');
 
         if(0) {
             ///// Test 1) new reference letter ////////
@@ -1109,8 +1142,18 @@ class EmailUtil {
         $oid = "APCP2173-REQ15079-V2"; //collage
         //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:Invoice'] by [Invoice::class]
         $invoice = $this->em->getRepository(Invoice::class)->findOneByOid($oid); //8-testing, 1414-collage, 1439-live
+
         if( !$invoice ) {
-            exit("Invoice not found by oid=$oid");
+            $qb = $this->em->getRepository(Invoice::class)->createQueryBuilder('i');
+            $invoice = $qb
+                ->innerJoin('i.documents', 'd')   // ensures documents is NOT empty
+                ->orderBy('i.id', 'DESC')         // or createdAt DESC
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+        if( !$invoice ) {
+            exit("Invoice not found");
         }
         $res = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
         echo "Test2: $res<br>";
