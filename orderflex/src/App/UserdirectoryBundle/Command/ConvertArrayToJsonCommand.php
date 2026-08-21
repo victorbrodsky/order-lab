@@ -151,8 +151,8 @@ class ConvertArrayToJsonCommand extends Command
         $label = $all ? 'all' : preg_replace('/[^A-Za-z0-9]+/', '_', (string) $classOpt);
         $backupFile = $logsDir . DIRECTORY_SEPARATOR . 'array_to_json_backup_' . $label . '_' . date('Ymd_His') . '.csv';
         $handle = fopen($backupFile, 'w');
-        //fputcsv($handle, array('table', 'column', 'id', 'value_original'));
-        fputcsv($handle, ['table', 'column', 'id', 'value_original'], ',', '"', '\\');
+        fputcsv($handle, array('table', 'column', 'id', 'value_original'));
+        //fputcsv($handle, ['table', 'column', 'id', 'value_original'], ',', '"', '\\');
 
         $columnsProcessed = 0;
         $columnsAltered = 0;
@@ -204,8 +204,8 @@ class ConvertArrayToJsonCommand extends Command
                     $rowsTotal++;
 
                     //Backup original value first
-                    //fputcsv($handle, array($tableName, $columnName, $id, $raw));
-                    fputcsv($handle, [$tableName, $columnName, $id, $raw], ',', '"', '\\');
+                    fputcsv($handle, array($tableName, $columnName, $id, $raw));
+                    //fputcsv($handle, [$tableName, $columnName, $id, $raw], ',', '"', '\\');
 
                     //Skip values already valid JSON (idempotent / re-runnable)
                     $decoded = json_decode((string) $raw, true);
