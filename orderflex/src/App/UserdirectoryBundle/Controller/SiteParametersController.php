@@ -382,7 +382,7 @@ class SiteParametersController extends OrderAbstractController
                 $updatedParam = implode("; ",$updatedParamArr);
             }
 
-            if( $param == 'academicYearStart' || $param == 'academicYearEnd' ) {
+            if( $param == 'academicYearStart' || $param == 'academicYearEnd' || $param == 'maintenanceenddate' ) {
                 if( $originalParam )
                     $originalParam = $originalParam->format('m/d');
                 if( $updatedParam )

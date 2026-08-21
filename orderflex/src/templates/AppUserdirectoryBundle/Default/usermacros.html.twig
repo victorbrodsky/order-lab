@@ -44,7 +44,16 @@
         <p>
         <div class="alert alert-danger text-center">
         The site is in maintenance mode. You may not be able to log in. Please come back when the updates are complete.
-        </div>
+        {% set siteParam = user_service_utility.getSingleSiteSettingParameter() %}
+        {% if siteParam %}
+            {% set maintenanceenddateString = siteParam.getMaintenanceenddateString() %}
+            {% if maintenanceenddateString %}
+                <br>Maintenance is planned to continue until {{ maintenanceenddateString }}.
+            {% else %}
+                Maintenance is currently ongoing.
+            {% endif %}
+        {% endif %}
+    </div>
         </p>
     {% endif %}
     {% if user_security_utility.getSiteSettingParameter('environment') != 'live' %}
