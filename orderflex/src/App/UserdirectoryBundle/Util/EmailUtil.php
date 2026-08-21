@@ -1117,7 +1117,7 @@ class EmailUtil {
     //Testing attachments
     public function testEmailWithAttachments() {
 
-        //exit('not allowed');
+        exit('not allowed');
 
         if(0) {
             ///// Test 1) new reference letter ////////
