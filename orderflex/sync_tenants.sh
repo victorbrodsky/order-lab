@@ -3,6 +3,7 @@
 
 COLOR='\033[1;36m'
 COLORWHITE='\033[37m'
+COLORGREEN='\033[32m'
 NC='\033[0m' # No Color
 
 #Usage: bash sync_tenants.sh basic /srv
@@ -165,21 +166,21 @@ f_sync() {
         #Get versions of symfony, php, postgres
         then
             echo -e ${COLOR} Get versions of symfony, php, postgres for "$1" ${NC}
-            echo -e ${COLORWHITE} PHP version: $(php -v | head -n 1) ${NC}
+            echo -e ${COLORGREEN} PHP version: $(php -v | head -n 1) ${NC}
 
             consolePath="$homedir"/order-lab-"$1"/orderflex/bin/console
             if [ -f "$consolePath" ]
                 then
-                    echo -e ${COLORWHITE} Symfony version: $(php "$consolePath" --version) ${NC}
+                    echo -e ${COLORGREEN} Symfony version: $(php "$consolePath" --version) ${NC}
                 else
-                    echo -e ${COLORWHITE} Symfony version: bin/console not found at "$consolePath" ${NC}
+                    echo -e ${COLORGREEN} Symfony version: bin/console not found at "$consolePath" ${NC}
             fi
 
             if command -v psql >/dev/null 2>&1
                 then
-                    echo -e ${COLORWHITE} PostgreSQL version: $(psql --version) ${NC}
+                    echo -e ${COLORGREEN} PostgreSQL version: $(psql --version) ${NC}
                 else
-                    echo -e ${COLORWHITE} PostgreSQL version: psql not found in PATH ${NC}
+                    echo -e ${COLORGREEN} PostgreSQL version: psql not found in PATH ${NC}
             fi
     fi
 
