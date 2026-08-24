@@ -314,7 +314,13 @@ class LoggerController extends OrderAbstractController
 		    $postData = $request->query->all();
         }
 
-		if( !isset($postData['sort']) ) { 
+		if( isset($postData['sort']) && $postData['sort'] === 'logger.roles' ) {
+			$request->query->remove('sort');
+			$request->query->remove('direction');
+			$postData = $request->query->all();
+		}
+
+		if( !isset($postData['sort']) ) {
 			$dql->orderBy("logger.creationdate","DESC");
 		}
 
