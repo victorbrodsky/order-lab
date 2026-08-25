@@ -67,7 +67,7 @@ run_shell_step_as_root() {
   if [[ "$EUID" -eq 0 ]]; then
     bash "$SCRIPT_DIR/$script"
   else
-    sudo bash "$SCRIPT_DIR/$script"
+    sudo -n bash "$SCRIPT_DIR/$script"
   fi
 }
 
