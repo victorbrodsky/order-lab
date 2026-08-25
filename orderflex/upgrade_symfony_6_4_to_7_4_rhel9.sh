@@ -25,6 +25,9 @@
 
 set -euo pipefail
 
+export COMPOSER_ALLOW_SUPERUSER=1
+export COMPOSER_NO_INTERACTION=1
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
@@ -89,9 +92,9 @@ echo
 
 run_step "0) git pull" git pull
 
-run_step "1a) composer self-update" composer self-update
+run_step "1a) composer self-update" composer self-update --no-interaction
 
-run_step "1b) composer install" composer install
+run_step "1b) composer install" composer install --no-interaction
 
 run_step "1c) php bin/console cache:clear" php bin/console cache:clear
 
