@@ -107,7 +107,7 @@ run_step "5a) php bin/console cache:clear" php bin/console cache:clear
 
 run_shell_step_as_root "5b) bash deploy.sh" deploy.sh
 
-#run_step "6) Run all tests" ./vendor/bin/phpunit
+run_step "6) Run all tests" ./vendor/bin/phpunit
 
 echo
 
