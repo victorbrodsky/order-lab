@@ -104,7 +104,7 @@ run_shell_step "3) bash prepare_migration.sh" prepare_migration.sh
 
 run_step "4a) php bin/console doctrine:migrations:status" php bin/console doctrine:migrations:status
 
-run_step "4b) php bin/console doctrine:migrations:migrate --all-or-nothing" php bin/console doctrine:migrations:migrate --all-or-nothing
+run_step "4b) php bin/console doctrine:migrations:migrate --all-or-nothing --no-interaction" php bin/console doctrine:migrations:migrate --all-or-nothing
 
 run_step "5a) php bin/console cache:clear" php bin/console cache:clear
 
