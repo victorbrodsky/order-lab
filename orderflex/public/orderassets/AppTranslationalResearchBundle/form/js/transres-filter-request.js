@@ -17,7 +17,17 @@
 
 _genericusers = [];
 
-$(document).ready(function() {
+function formatProjectTitle(title) {
+    title = title || '';
+
+    if (title.length > 20) {
+        title = title.substring(0, 20);
+    }
+
+    return title;
+}
+
+$(document).ready(function () {
 
     console.log('transres-filter-request.js');
 
@@ -50,9 +60,9 @@ $(document).ready(function() {
     );
     //Now use _genericusers to populate other user select boxes
     //populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
-    populateSelectCombobox( $('.ajax-combobox-billingcontact'), _genericusers, true, false );
-    populateSelectCombobox( $('.ajax-combobox-pis'), _genericusers, true, true );
-    populateSelectCombobox( $('.ajax-combobox-completedby'), _genericusers, true, false );
+    populateSelectCombobox($('.ajax-combobox-billingcontact'), _genericusers, true, false);
+    populateSelectCombobox($('.ajax-combobox-pis'), _genericusers, true, true);
+    populateSelectCombobox($('.ajax-combobox-completedby'), _genericusers, true, false);
     //populateSelectCombobox( $('.ajax-combobox-requesters'), _genericusers, true, true );
 });
 
@@ -60,7 +70,7 @@ $(document).ready(function() {
 //serach by project oid and pis
 function initTypeaheadTransresProjectSearch() {
 
-    if( $('.multiple-datasets-typeahead-search-project').length == 0 ) {
+    if ($('.multiple-datasets-typeahead-search-project').length == 0) {
         return;
     }
 
@@ -97,7 +107,7 @@ function initTypeaheadTransresProjectSearch() {
     var complex = true; //false;
     var complex = false;
 
-    if( complex ) {
+    if (complex) {
         var oidDB = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('oid'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -156,20 +166,16 @@ function initTypeaheadTransresProjectSearch() {
     }
 
 
-    if( complex ) {
+    if (complex) {
         //limit project title by limit = 20;
         var myTypeahead = $('.multiple-datasets-typeahead-search-project .typeahead').typeahead({
-                highlight: true
-            },
+            highlight: true
+        },
             {
                 name: 'oid',
                 //displayKey: 'title',
-                display: function(item){
-                    var title = item.title;
-                    if( title.length > 20 ) {
-                        title = title.substring(0,20);
-                    }
-                    return item.oid+', '+title+', PI '+item.pis;
+                display: function (item) {
+                    return item.oid + ', ' + formatProjectTitle(item.title) + ', PI ' + item.pis;
                 },
                 source: oidDB.ttAdapter(),
                 templates: {
@@ -187,12 +193,8 @@ function initTypeaheadTransresProjectSearch() {
             {
                 name: 'title',
                 //displayKey: 'title',
-                display: function(item){
-                    var title = item.title;
-                    if( title.length > 20 ) {
-                        title = title.substring(0,20);
-                    }
-                    return item.oid+', '+title+', PI '+item.pis;
+                display: function (item) {
+                    return item.oid + ', ' + formatProjectTitle(item.title) + ', PI ' + item.pis;
                 },
                 source: titleDB.ttAdapter(),
                 templates: {
@@ -210,12 +212,8 @@ function initTypeaheadTransresProjectSearch() {
             {
                 name: 'pis',
                 //displayKey: 'title',
-                display: function(item){
-                    var title = item.title;
-                    if( title.length > 20 ) {
-                        title = title.substring(0,20);
-                    }
-                    return item.oid+', '+title+', PI '+item.pis;
+                display: function (item) {
+                    return item.oid + ', ' + formatProjectTitle(item.title) + ', PI ' + item.pis;
                 },
                 source: pisDB.ttAdapter(),
                 templates: {
@@ -233,17 +231,13 @@ function initTypeaheadTransresProjectSearch() {
         );
     } else {
         var myTypeahead = $('.multiple-datasets-typeahead-search-project .typeahead').typeahead({
-                highlight: true
-            },
+            highlight: true
+        },
             {
                 name: 'single',
                 //displayKey: 'title',
-                display: function(item){
-                    var title = item.title;
-                    if( title.length > 20 ) {
-                        title = title.substring(0,20);
-                    }
-                    return item.oid+', '+title+', PI '+item.pis;
+                display: function (item) {
+                    return item.oid + ', ' + formatProjectTitle(item.title) + ', PI ' + item.pis;
                 },
                 source: singleDb.ttAdapter(),
                 // templates: {
@@ -257,7 +251,7 @@ function initTypeaheadTransresProjectSearch() {
 
 function duplicationDetector(remoteMatch, localMatch) {
     //console.log('dup check');
-    if( remoteMatch.id === localMatch.id ) {
+    if (remoteMatch.id === localMatch.id) {
         return true;
     }
     return false;

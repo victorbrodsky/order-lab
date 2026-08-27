@@ -26,7 +26,7 @@ namespace App\UserdirectoryBundle\Query;
 
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
-use Doctrine\ORM\Query\Lexer;
+use Doctrine\ORM\Query\TokenType;
 use Doctrine\ORM\Query\SqlWalker;
 use Doctrine\ORM\Query\Parser;
 
@@ -41,22 +41,22 @@ class CastFunction extends FunctionNode {
 //        parent::__construct($name);
 //    }
 
-    public function parse(\Doctrine\ORM\Query\Parser $parser)
+    public function parse(\Doctrine\ORM\Query\Parser $parser): void
     {
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
+        $parser->match(TokenType::T_IDENTIFIER);
+        $parser->match(TokenType::T_OPEN_PARENTHESIS);
         $this->firstDateExpression = $parser->StringPrimary();
 
-        $parser->match(Lexer::T_AS);
+        $parser->match(TokenType::T_AS);
 
-        $parser->match(Lexer::T_IDENTIFIER);
+        $parser->match(TokenType::T_IDENTIFIER);
         $lexer = $parser->getLexer();
-        $this->unit = $lexer->token['value'];
+        $this->unit = $lexer->token->value;
 
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 
-    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
+    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker): string
     {
         return sprintf('CAST(%s AS %s)',  $this->firstDateExpression->dispatch($sqlWalker), $this->unit);
     }
