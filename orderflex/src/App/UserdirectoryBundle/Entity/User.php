@@ -1777,6 +1777,10 @@ class User extends UserBase
         return $this->createCleanUsername($this->getUsername());
     }
 
+    public function getUserNameStrQuick($showStatus = false): ?string
+    {
+        return $this->getPrimaryUseridKeytypeStr();
+    }
     //show user's FirstName LastName - userName (userNameType)
     public function getUserNameStr($showStatus = false): ?string
     {
