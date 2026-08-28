@@ -2949,18 +2949,26 @@ class FellAppUtil {
             $originalFileName = $document->getUniquename();
         }
 
+        $cleanFileName = preg_replace([
+            '/Without-Attachments-/',
+            '/-generated-on-\d{2}-\d{2}-\d+/',                     // removes generated-on-03-18-2
+            '/-at-[A-Za-z0-9-]+-(am|pm)_UTC/'                      // removes at-09-15-18-pm_UTC
+        ], '', $originalFileName);
+
         // Truncate filename if too long (max 100 chars including extension)
-        $originalFileName = $this->truncateFileName($originalFileName, 100);
+        $cleanFileName = $this->truncateFileName($cleanFileName, 100, null);
+        //echo '$cleanFileName='.$cleanFileName.'<br>';
 
         // Handle duplicate filenames by adding a numeric prefix
-        $finalFileName = $originalFileName;
+        $finalFileName = $cleanFileName;
         $counter = 1;
         while (in_array($finalFileName, $usedFileNames)) {
-            $pathInfo = pathinfo($originalFileName);
+            $pathInfo = pathinfo($cleanFileName);
             $extension = isset($pathInfo['extension']) ? '.' . $pathInfo['extension'] : '';
             $finalFileName = $pathInfo['filename'] . '_' . $counter . $extension;
             $counter++;
         }
+        //exit('$finalFileName='.$finalFileName);
         $usedFileNames[] = $finalFileName;
 
         // Use forward slash for ZIP internal paths (more compatible with all systems)
@@ -2971,7 +2979,7 @@ class FellAppUtil {
     /**
      * Truncate filename to max length while preserving extension
      */
-    private function truncateFileName($fileName, $maxLength = 100) {
+    private function truncateFileName($fileName, $maxLength = 100, $endstr='...') {
         if (strlen($fileName) <= $maxLength) {
             return $fileName;
         }
@@ -2985,10 +2993,10 @@ class FellAppUtil {
 
         if ($maxBaseLength < 10) {
             // If extension is very long, just truncate the whole thing
-            return substr($fileName, 0, $maxLength - 3) . '...';
+            return substr($fileName, 0, $maxLength - 3) . $endstr;
         }
 
-        return substr($baseName, 0, $maxBaseLength) . '...' . $extension;
+        return substr($baseName, 0, $maxBaseLength) . $endstr . $extension;
     }
 
     public function createInterviewApplicantList( $fellappids ) {
