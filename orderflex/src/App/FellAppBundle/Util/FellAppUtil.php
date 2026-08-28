@@ -2720,6 +2720,7 @@ class FellAppUtil {
 
             // Build folder path: Institution - Department > Fellowship Program Specialty > Start Year > LastName FirstName (Application ID)
             $folderPath = $this->buildApplicantFolderPath($fellapp);
+            exit('$folderPath='.$folderPath);
 
             // Add files to zip
             $this->addApplicantFilesToZip($zip, $fellapp, $folderPath);
