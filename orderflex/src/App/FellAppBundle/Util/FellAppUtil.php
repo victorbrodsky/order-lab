@@ -2720,7 +2720,7 @@ class FellAppUtil {
 
             // Build folder path: Institution - Department > Fellowship Program Specialty > Start Year > LastName FirstName (Application ID)
             $folderPath = $this->buildApplicantFolderPath($fellapp);
-            exit('$folderPath='.$folderPath);
+            //exit('$folderPath='.$folderPath);
 
             // Add files to zip
             $this->addApplicantFilesToZip($zip, $fellapp, $folderPath);
@@ -2755,7 +2755,7 @@ class FellAppUtil {
         // Institution - Department (shortened)
         $institutionDept = $this->getInstitutionDepartmentShortString($fellapp);
         if ($institutionDept) {
-            echo '$institutionDept='.$institutionDept."<br>";
+            //echo '$institutionDept='.$institutionDept."<br>";
             $parts[] = $this->sanitizeFolderName($institutionDept, 50);
         }
 
@@ -2838,7 +2838,7 @@ class FellAppUtil {
      */
     private function getInstitutionDepartmentShortString($fellapp) {
         $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
-        echo '$fellowshipSubspecialty='.$fellowshipSubspecialty.'<br>';
+        //echo '$fellowshipSubspecialty='.$fellowshipSubspecialty.'<br>';
         if ($fellowshipSubspecialty && $fellowshipSubspecialty->getInstitution()) {
             $institution = $fellowshipSubspecialty->getInstitution();
             // Use abbreviation if available, otherwise use short name
@@ -2852,7 +2852,7 @@ class FellAppUtil {
 
         // Try to get from GlobalFellowshipSpecialty
         $globalSpecialty = $fellapp->getGlobalFellowshipSpecialty();
-        echo '$globalSpecialty='.$globalSpecialty.'<br>';
+        //echo '$globalSpecialty='.$globalSpecialty.'<br>';
         if ($globalSpecialty && $globalSpecialty->getInstitution()) {
             $institution = $globalSpecialty->getInstitution();
             $abbr = $institution->getAbbreviation();
