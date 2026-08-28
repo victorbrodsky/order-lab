@@ -79,6 +79,9 @@ class FilterInvoiceType extends AbstractType
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
+                    //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
+                    ->leftJoin("list.perSiteSettings", "perSiteSettings")
+                    ->addSelect("perSiteSettings")
                     ->orderBy("infos.displayName", "ASC");
             },
         ));
@@ -97,6 +100,9 @@ class FilterInvoiceType extends AbstractType
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
+                    //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
+                    ->leftJoin("list.perSiteSettings", "perSiteSettings")
+                    ->addSelect("perSiteSettings")
                     ->orderBy("infos.displayName","ASC");
             },
         ));
@@ -115,6 +121,9 @@ class FilterInvoiceType extends AbstractType
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
+                    //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
+                    ->leftJoin("list.perSiteSettings", "perSiteSettings")
+                    ->addSelect("perSiteSettings")
                     ->orderBy("infos.displayName","ASC");
             },
         ));
@@ -134,6 +143,9 @@ class FilterInvoiceType extends AbstractType
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
+                    //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
+                    ->leftJoin("list.perSiteSettings", "perSiteSettings")
+                    ->addSelect("perSiteSettings")
                     ->orderBy("infos.displayName", "ASC");
             },
         ));

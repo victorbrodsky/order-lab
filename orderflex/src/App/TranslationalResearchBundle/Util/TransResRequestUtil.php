@@ -4093,7 +4093,6 @@ class TransResRequestUtil
     function toMoney($val,$symbol='$',$r=2)
     {
         $fmt = new \NumberFormatter( 'en_US', \NumberFormatter::CURRENCY ); //intl is required
-        //$fmt = new \NumberFormatter( 'en', \NumberFormatter::CURRENCY );
         return $fmt->formatCurrency($val, "USD")."\n";
 
     }
