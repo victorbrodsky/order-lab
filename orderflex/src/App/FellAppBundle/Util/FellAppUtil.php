@@ -2950,13 +2950,14 @@ class FellAppUtil {
         }
 
         $cleanFileName = preg_replace([
-            '/Without-Attachments-/',
-            '/-generated-on-\d{2}-\d{2}-\d+/',                     // removes generated-on-03-18-2
-            '/-at-[A-Za-z0-9-]+-(am|pm)_UTC/'                      // removes at-09-15-18-pm_UTC
+            '/Without-Attachments-/',                 // remove Without-Attachments-
+            '/-generated-on-\d{2}-\d{2}-\d+/',        // remove generated-on-03-18-2
+            '/-at-[A-Za-z0-9-]+-(am|pm)_UTC/',        // remove at-09-15-18-pm_UTC or am
+            '/-Fellowship-Application/'                // remove Fellowship-Application
         ], '', $originalFileName);
 
         // Truncate filename if too long (max 100 chars including extension)
-        $cleanFileName = $this->truncateFileName($cleanFileName, 100, null);
+        $cleanFileName = $this->truncateFileName($cleanFileName, 70, null);
         //echo '$cleanFileName='.$cleanFileName.'<br>';
 
         // Handle duplicate filenames by adding a numeric prefix
