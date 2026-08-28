@@ -66,7 +66,31 @@ class ReviewBaseType extends AbstractType
             $form = $event->getForm();
 
             if(!$reviewObjectEntity) {
-                //new review object
+                //new review object (also used for the CollectionType's JS prototype template,
+                //which never has real reviewer data on the read-only 'show' page,
+                //so avoid loading all users via the type guesser in that cycle)
+                if (isset($this->params['cycle']) && $this->params['cycle'] == 'show') {
+                    $form->add('reviewer', EntityType::class, array(
+                        'class' => User::class,
+                        'label' => "Reviewer:",
+                        'required' => false,
+                        'multiple' => false,
+                        'disabled' => $this->params['disabledReviewers'],
+                        'attr' => array('class' => 'combobox combobox-width'),
+                        'choices' => array(),
+                    ));
+                    $form->add('reviewerDelegate', EntityType::class, array(
+                        'class' => User::class,
+                        'label' => "Reviewer Delegate:",
+                        'required' => false,
+                        'multiple' => false,
+                        'disabled' => $this->params['disabledReviewers'],
+                        'attr' => array('class' => 'combobox combobox-width'),
+                        'choices' => array(),
+                    ));
+                    return;
+                }
+
                 $form->add('reviewer', null, array(
                     'label' => "Reviewer:",
                     'disabled' => $this->params['disabledReviewers'],  //$this->disabledReviewers,
@@ -107,6 +131,44 @@ class ReviewBaseType extends AbstractType
 //                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
 //                ));
 
+                $isShowCycle = isset($this->params['cycle']) && $this->params['cycle'] == 'show';
+
+                $reviewerQueryBuilder = function(EntityRepository $er) use ($reviewObjectEntity, $isShowCycle) {
+                    $qb = $er->createQueryBuilder('list');
+                    if ($isShowCycle) {
+                        $existingReviewer = $reviewObjectEntity->getReviewer();
+                        $existingReviewerId = $existingReviewer ? $existingReviewer->getId() : null;
+                        return $qb->where('list.id = :reviewerId')
+                            ->setParameter('reviewerId', $existingReviewerId);
+                    }
+                    return $qb
+                        ->leftJoin("list.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        //->andWhere("employmentStatus.terminationDate IS NULL")
+                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                        ->leftJoin("list.infos", "infos")
+                        ->orderBy("infos.displayName","ASC");
+                };
+
+                $reviewerDelegateQueryBuilder = function(EntityRepository $er) use ($reviewObjectEntity, $isShowCycle) {
+                    $qb = $er->createQueryBuilder('list');
+                    if ($isShowCycle) {
+                        $existingReviewerDelegate = $reviewObjectEntity->getReviewerDelegate();
+                        $existingReviewerDelegateId = $existingReviewerDelegate ? $existingReviewerDelegate->getId() : null;
+                        return $qb->where('list.id = :reviewerDelegateId')
+                            ->setParameter('reviewerDelegateId', $existingReviewerDelegateId);
+                    }
+                    return $qb
+                        ->leftJoin("list.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        //->andWhere("employmentStatus.terminationDate IS NULL")
+                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                        ->leftJoin("list.infos", "infos")
+                        ->orderBy("infos.displayName","ASC");
+                };
+
                 $form->add( 'reviewer', EntityType::class, array(
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
                     'class' => User::class,
@@ -114,16 +176,7 @@ class ReviewBaseType extends AbstractType
                     'required'=> false,
                     'multiple' => false,
                     'attr' => array('class'=>'combobox combobox-width'),
-                    'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.employmentStatus", "employmentStatus")
-                            ->leftJoin("employmentStatus.employmentType", "employmentType")
-                            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                            //->andWhere("employmentStatus.terminationDate IS NULL")
-                            //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                            ->leftJoin("list.infos", "infos")
-                            ->orderBy("infos.displayName","ASC");
-                    },
+                    'query_builder' => $reviewerQueryBuilder,
                 ));
 
                 $form->add( 'reviewerDelegate', EntityType::class, array(
@@ -133,16 +186,7 @@ class ReviewBaseType extends AbstractType
                     'required'=> false,
                     'multiple' => false,
                     'attr' => array('class'=>'combobox combobox-width'),
-                    'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->leftJoin("list.employmentStatus", "employmentStatus")
-                            ->leftJoin("employmentStatus.employmentType", "employmentType")
-                            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                            //->andWhere("employmentStatus.terminationDate IS NULL")
-                            //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                            ->leftJoin("list.infos", "infos")
-                            ->orderBy("infos.displayName","ASC");
-                    },
+                    'query_builder' => $reviewerDelegateQueryBuilder,
                 ));
             }
 

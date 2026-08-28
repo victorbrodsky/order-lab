@@ -278,6 +278,13 @@ doctrine:
 #            # "TEST_TOKEN" is typically set by ParaTest
 #            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
+when@dev:
+    doctrine:
+        dbal:
+            connections:
+                default:
+                    profiling_collect_backtrace: true #show "View query backtrace"
+
 when@prod:
     doctrine:
         orm:

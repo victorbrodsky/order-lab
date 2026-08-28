@@ -75,6 +75,59 @@ class ProjectType extends AbstractType
         $this->project = $params['project'];
     }
 
+    private function getSelectedUserChoices(string $fieldName): array
+    {
+        $method = 'get' . ucfirst($fieldName);
+        if (!method_exists($this->project, $method)) {
+            return [];
+        }
+
+        $value = $this->project->$method();
+        if ($value === null) {
+            return [];
+        }
+
+        if (is_iterable($value)) {
+            return iterator_to_array($value);
+        }
+
+        return [$value];
+    }
+
+    private function getUserEntityOptions(string $fieldName, string $label, bool $required, bool $multiple): array
+    {
+        $options = array(
+            'class' => User::class,
+            'label' => $label,
+            'required' => $required,
+            'multiple' => $multiple,
+            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
+        );
+
+        if ($this->params['cycle'] == 'show') {
+            $selectedUsers = $this->getSelectedUserChoices($fieldName);
+            $selectedUserIds = array_filter(array_map(function ($user) {
+                return $user instanceof User ? $user->getId() : null;
+            }, $selectedUsers));
+
+            if (empty($selectedUserIds)) {
+                $options['choices'] = [];
+            } else {
+                $options['query_builder'] = function (EntityRepository $er) use ($selectedUserIds) {
+                    return $er->createQueryBuilder('u')
+                        ->leftJoin('u.perSiteSettings', 'ps')->addSelect('ps')
+                        ->leftJoin('u.keytype', 'k')->addSelect('k')
+                        ->where('u.id IN (:ids)')
+                        ->setParameter('ids', $selectedUserIds);
+                };
+            }
+        } else {
+            $options['query_builder'] = $this->params['transresUtil']->userQueryBuilder($this->params['cycle']);
+        }
+
+        return $options;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -135,21 +188,22 @@ class ProjectType extends AbstractType
 
             if (
                 $this->params['cycle'] == 'edit' &&
-                //$this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN')
                 $this->params['trpAdmin']
             ) {
                 //enable edit submitter for admin
-                $builder->add('submitter', null, array(
-                    'label' => "Submitted By:",
-                    //'disabled' => true,
-                    'attr' => array('class' => 'combobox combobox-width')
+                $builder->add('submitter', EntityType::class, $this->getUserEntityOptions(
+                    'submitter',
+                    "Submitted By:",
+                    false,
+                    false
                 ));
             } else {
-                $builder->add('submitter', null, array(
-                    'label' => "Submitted By:",
-                    'disabled' => true,
-                    'attr' => array('class' => 'combobox combobox-width', 'readonly' => true)
-                ));
+                $builder->add('submitter', EntityType::class, $this->getUserEntityOptions(
+                    'submitter',
+                    "Submitted By:",
+                    false,
+                    false
+                ) + array('disabled' => true));
             }
 
 
@@ -499,75 +553,54 @@ class ProjectType extends AbstractType
             $addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ',' . $otherUserParam . ');">Add New</a>)';
         }
 
-        $builder->add('principalInvestigators', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
-            'class' => User::class,
-            'label' => "Principal Investigator(s) for the project$addUserOnFly:",
-            'required' => true,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+        $builder->add('principalInvestigators', EntityType::class, $this->getUserEntityOptions(
+            'principalInvestigators',
+            "Principal Investigator(s) for the project$addUserOnFly:",
+            true,
+            true
         ));
 
-        $builder->add('principalIrbInvestigator', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
-            'class' => User::class,
-            'label' => "Principal Investigator listed on the " . $this->params['transresUtil']->getHumanName() . " application$addUserOnFly:",
-            'required' => false,
-            'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+        $builder->add('principalIrbInvestigator', EntityType::class, $this->getUserEntityOptions(
+            'principalIrbInvestigator',
+            "Principal Investigator listed on the " . $this->params['transresUtil']->getHumanName() . " application$addUserOnFly:",
+            false,
+            false
         ));
 
         //Add submitInvestigators similar to coInvestigators
-        $builder->add('submitInvestigators', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
-            'class' => User::class,
-            'label' => "Submitting Investigator, if different from Principal Investigator above$addUserOnFly:",
-            'required' => false,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+        $builder->add('submitInvestigators', EntityType::class, $this->getUserEntityOptions(
+            'submitInvestigators',
+            "Submitting Investigator, if different from Principal Investigator above$addUserOnFly:",
+            false,
+            true
         ));
 
-        $builder->add('coInvestigators', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
-            'class' => User::class,
-            'label' => "Co-Investigator(s)$addUserOnFly:",
-            'required' => false,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+        $builder->add('coInvestigators', EntityType::class, $this->getUserEntityOptions(
+            'coInvestigators',
+            "Co-Investigator(s)$addUserOnFly:",
+            false,
+            true
         ));
 
-        $builder->add('pathologists', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
-            'class' => User::class,
-            'label' => $this->params['institutionName'] . " Pathologist(s) Involved$addUserOnFly:",
-            'required' => false,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+        $builder->add('pathologists', EntityType::class, $this->getUserEntityOptions(
+            'pathologists',
+            $this->params['institutionName'] . " Pathologist(s) Involved$addUserOnFly:",
+            false,
+            true
         ));
 
-        $builder->add('contacts', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
-            'class' => User::class,
-            'label' => "Contact(s)$addUserOnFly:",
-            'required' => true,
-            'multiple' => true,
-            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+        $builder->add('contacts', EntityType::class, $this->getUserEntityOptions(
+            'contacts',
+            "Contact(s)$addUserOnFly:",
+            true,
+            true
         ));
 
-        $builder->add('billingContact', EntityType::class, array(
-            //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
-            'class' => User::class,
-            'label' => "Billing Contact$addUserOnFly:",
-            'required' => false,
-            'multiple' => false,
-            'attr' => array('class' => 'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam' => $this->params['otherUserParam']),
-            'query_builder' => $this->params['transresUtil']->userQueryBuilder($this->params['cycle'])
+        $builder->add('billingContact', EntityType::class, $this->getUserEntityOptions(
+            'billingContact',
+            "Billing Contact$addUserOnFly:",
+            false,
+            false
         ));
 
         //Reviews

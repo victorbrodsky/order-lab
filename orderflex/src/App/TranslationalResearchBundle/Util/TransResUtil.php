@@ -7535,6 +7535,13 @@ class TransResUtil
             $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
             $dql->orderBy("infos.lastName", "ASC");
         }
+
+        //perSiteSettings is the inverse side of a OneToOne association, so Doctrine cannot
+        //build a lazy proxy for it (no FK available on the User row) and would otherwise
+        //issue one extra "FROM scan_perSiteSettings WHERE fosuser = ?" query per hydrated
+        //User row. Eager-join it here so it's hydrated from this single query instead.
+        $dql->leftJoin("list.perSiteSettings", "perSiteSettings");
+        $dql->addSelect("perSiteSettings");
     
         //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
         //added additional filters

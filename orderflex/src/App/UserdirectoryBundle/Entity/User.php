@@ -115,6 +115,24 @@ class User extends UserBase
     private $dn;
 
     /**
+     * Transient in-memory cache for the expensive user display name string.
+     * @var string|null
+     */
+    private $displayNameCache = null;
+
+    /**
+     * Flag indicating whether displayNameCache has already been computed.
+     * @var bool
+     */
+    private $displayNameCacheSet = false;
+
+    /**
+     * Transient in-memory cache for getUserNameStr() keyed by showStatus.
+     * @var array<string, string|null>
+     */
+    private $userNameStrCache = [];
+
+    /**
      * Primary Public User ID Type
      */
     #[ORM\ManyToOne(targetEntity: 'UsernameType', inversedBy: 'users')]
@@ -1167,25 +1185,17 @@ class User extends UserBase
 
 
     public function __toString(): string
-{
-    //return $this->getUsername();
-    //return $this->getDisplayOrFirstLastname();
-    //return $this->getDisplayName();
-    //return $this->getFirstName();
+    {
+        //testing
+        //return $this->getPrimaryPublicUserId();                 //it takes ~20 sec, 3933 DB queries total, 3780 DB queries 'scan_perSiteSettings'
+        //return (string) $this->getPrimaryUseridKeytypeStr();    //it takes ~20 sec, 3937 DB queries total, 3780 DB queries 'scan_perSiteSettings'
+        //return (string)$this->getUserNameStr();                //it takes ~30 sec, 7732 DB queries total, 3795 DB queries 'user_userInfo', 3780 DB queries 'scan_perSiteSettings'
 
-//        $displayName = null;
-//        $infos = $this->getInfos();
-//        if( $infos && count($infos) > 0 ) {
-//            $displayName = $infos->first()->getDisplayName();
-//        }
-//        return $displayName;
-
-    //testing
-    //return $this->getPrimaryPublicUserId();                 //it takes ~20 sec, 3933 DB queries total, 3780 DB queries 'scan_perSiteSettings'
-    //return (string) $this->getPrimaryUseridKeytypeStr();    //it takes ~20 sec, 3937 DB queries total, 3780 DB queries 'scan_perSiteSettings'
-
-    return (string)$this->getUserNameStr();                //it takes ~30 sec, 7732 DB queries total, 3795 DB queries 'user_userInfo', 3780 DB queries 'scan_perSiteSettings'
-}
+        // Diagnostic: use the lighter string version (no user_userInfo lookup).
+        // If this dramatically improves the project show page, the bottleneck is confirmed
+        // to be in the heavy name construction.
+        return (string) $this->getUserNameStrQuick();
+    }
 
 
 
@@ -1577,6 +1587,10 @@ class User extends UserBase
      */
     public function getDisplayName(): ?string
     {
+        if ($this->displayNameCacheSet) {
+            return $this->displayNameCache;
+        }
+
         $displayName = null;
         $infos = $this->getInfos();
         if ($infos && count($infos) > 0) {
@@ -1591,7 +1605,10 @@ class User extends UserBase
             $displayName = $this->getPrimaryUseridKeytypeStr();
         }
 
-        return $displayName . "";
+        $this->displayNameCache = $displayName;
+        $this->displayNameCacheSet = true;
+
+        return $displayName;
     }
 
     public function getOriginalDisplayName(): ?string
@@ -1784,32 +1801,36 @@ class User extends UserBase
     //show user's FirstName LastName - userName (userNameType)
     public function getUserNameStr($showStatus = false): ?string
     {
-        //Add (No longer works)
-        //echo "showStatus=$showStatus <br>";
+        $cacheKey = $showStatus ? '1' : '0';
+        if (array_key_exists($cacheKey, $this->userNameStrCache)) {
+            return $this->userNameStrCache[$cacheKey];
+        }
+
         $statusStr = "";
         if ($showStatus) {
             $statusStr = $this->getFullStatusStr();
         }
 
         $primaryUseridKeytypeStr = $this->getPrimaryUseridKeytypeStr();
-        //$primaryUseridKeytypeStr = " 222 ";
         $displayName = $this->getDisplayName();
 
         if (!$displayName) {
             $displayName = $this->getFirstName() . " " . $this->getLastName();
         }
 
+        $result = null;
+
         if ($displayName && $primaryUseridKeytypeStr) {
-            return $displayName . " - " . $primaryUseridKeytypeStr . $statusStr;
+            $result = $displayName . " - " . $primaryUseridKeytypeStr . $statusStr;
+        } elseif ($primaryUseridKeytypeStr) {
+            $result = $primaryUseridKeytypeStr . "" . $statusStr;
+        } elseif ($displayName) {
+            $result = $displayName . "" . $statusStr;
         }
 
-        if ($primaryUseridKeytypeStr && !$displayName) {
-            return $primaryUseridKeytypeStr . "" . $statusStr;
-        }
+        $this->userNameStrCache[$cacheKey] = $result;
 
-        if ($displayName && !$primaryUseridKeytypeStr) {
-            return $displayName . "" . $statusStr;
-        }
+        return $result;
     }
 
     //Get displayname or first + last name
