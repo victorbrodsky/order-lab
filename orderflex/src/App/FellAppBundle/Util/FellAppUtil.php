@@ -2838,6 +2838,7 @@ class FellAppUtil {
      */
     private function getInstitutionDepartmentShortString($fellapp) {
         $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
+        echo '$fellowshipSubspecialty='.$fellowshipSubspecialty.'<br>';
         if ($fellowshipSubspecialty && $fellowshipSubspecialty->getInstitution()) {
             $institution = $fellowshipSubspecialty->getInstitution();
             // Use abbreviation if available, otherwise use short name
@@ -2851,6 +2852,7 @@ class FellAppUtil {
 
         // Try to get from GlobalFellowshipSpecialty
         $globalSpecialty = $fellapp->getGlobalFellowshipSpecialty();
+        echo '$globalSpecialty='.$globalSpecialty.'<br>';
         if ($globalSpecialty && $globalSpecialty->getInstitution()) {
             $institution = $globalSpecialty->getInstitution();
             $abbr = $institution->getAbbreviation();
@@ -2860,7 +2862,8 @@ class FellAppUtil {
             return $institution->getName();
         }
 
-        return 'Unknown';
+        //return 'Unknown';
+        return 'Your Department';
     }
 
     /**
