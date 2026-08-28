@@ -102,6 +102,10 @@ class UserSecurityUtil {
 
     protected $em;
     protected $container;
+    //in-memory cache for getSiteListByAbbreviation(), keyed by abbreviation, since many of the
+    //isXxx()/getXxx() helpers below independently look up the same SiteList row (e.g. once per
+    //navbar check) within the same request
+    private $cachedSiteListByAbbreviation = array();
     protected $security;
     protected $tokenStorage;
     protected $requestStack;
@@ -3094,8 +3098,17 @@ class UserSecurityUtil {
         return null;
     }
 
+    public function getSiteListByAbbreviation($abbreviation) {
+        if( array_key_exists($abbreviation, $this->cachedSiteListByAbbreviation) ) {
+            return $this->cachedSiteListByAbbreviation[$abbreviation];
+        }
+        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($abbreviation);
+        $this->cachedSiteListByAbbreviation[$abbreviation] = $siteObject;
+        return $siteObject;
+    }
+
     public function isSelfSignUp( $sitename ) {
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         if( $siteObject && $siteObject->getSelfSignUp() === true ) {
             return true;
         }
@@ -3103,21 +3116,21 @@ class UserSecurityUtil {
     }
 
     public function isRequireVerifyMobilePhone( $sitename ) {
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         if( $siteObject && $siteObject->getRequireVerifyMobilePhone() === true ) {
             return true;
         }
         return false;
     }
     public function isRequireMobilePhoneToLogin( $sitename ) {
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         if( $siteObject && $siteObject->getRequireMobilePhoneToLogin() === true ) {
             return true;
         }
         return false;
     }
     public function isShowSignUp( $sitename ) {
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         //echo "getShowSignUp=".$siteObject->getShowSignUp()."<br>";
         if( $siteObject && ($siteObject->getShowSignUp() === true || $siteObject->getShowSignUp() === NULL) ) {
             return true;
@@ -3125,14 +3138,14 @@ class UserSecurityUtil {
         return false;
     }
     public function isShowRequestAccount( $sitename ) {
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         if( $siteObject && ($siteObject->getShowRequestAccount() === true || $siteObject->getShowRequestAccount() === NULL) ) {
             return true;
         }
         return false;
     }
     public function isShowForgotPassword( $sitename ) {
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         if( $siteObject && ($siteObject->getShowForgotPassword() === true || $siteObject->getShowForgotPassword() === NULL) ) {
             return true;
         }
@@ -3205,7 +3218,7 @@ class UserSecurityUtil {
 //        if( !$parameter || !$sitename ) {
 //            return NULL;
 //        }
-//        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+//        $siteObject = $this->getSiteListByAbbreviation($sitename);
 //        $getterMethod = "get".$parameter;
 //
 //        return $siteObject->$getterMethod();
@@ -3217,7 +3230,7 @@ class UserSecurityUtil {
             return true;
         }
 
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         if( $siteObject && $siteObject->getAccessibility() === true ) {
             return true;
         }
@@ -3246,7 +3259,7 @@ class UserSecurityUtil {
             //always show for employees site
             return true;
         }
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         if( $siteObject && ($siteObject->getShowLinkHomePage() === true || $siteObject->getShowLinkHomePage() === null) ) {
             return true;
         }
@@ -3258,7 +3271,7 @@ class UserSecurityUtil {
             //always show for employees site
             return true;
         }
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        $siteObject = $this->getSiteListByAbbreviation($sitename);
         if( $siteObject && ($siteObject->getShowLinkNavbar() === true || $siteObject->getShowLinkNavbar() === null) ) {
             return true;
         }
@@ -3268,7 +3281,7 @@ class UserSecurityUtil {
     public function getSiteFromEmail( $sitenameAbbreviation ) {
         $fromEmail = null;
         if( $sitenameAbbreviation ) {
-            $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($sitenameAbbreviation);
+            $siteObject = $this->getSiteListByAbbreviation($sitenameAbbreviation);
             if ($siteObject) {
                 $fromEmail = $siteObject->getFromEmail();
             }
@@ -3897,7 +3910,7 @@ class UserSecurityUtil {
         return $entity;
     }
     public function addSingleSiteToEntity( $entity, $siteAbbreviation ) {
-        $siteObject = $this->em->getRepository(SiteList::class)->findOneByAbbreviation($siteAbbreviation);
+        $siteObject = $this->getSiteListByAbbreviation($siteAbbreviation);
         if( $siteObject ) {
             if( !$entity->getSites()->contains($siteObject) ) {
                 $entity->addSite($siteObject);

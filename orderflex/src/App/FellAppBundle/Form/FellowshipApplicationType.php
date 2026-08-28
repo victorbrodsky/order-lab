@@ -580,6 +580,8 @@ class FellowshipApplicationType extends AbstractType
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->where("(employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL)")
                     ->leftJoin("list.infos", "infos")
+                    //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
+                    ->leftJoin("list.perSiteSettings", "perSiteSettings")->addSelect("perSiteSettings")
                     ->orderBy("infos.displayName", "ASC");
             },
         ));

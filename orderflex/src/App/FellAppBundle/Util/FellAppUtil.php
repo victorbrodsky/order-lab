@@ -2134,18 +2134,27 @@ class FellAppUtil {
 
     public function addEmptyLocations($fellowshipApplication) {
 
-        $this->addLocationByType($fellowshipApplication,"Present Address");
-        $this->addLocationByType($fellowshipApplication,"Permanent Address");
-        $this->addLocationByType($fellowshipApplication,"Work Address");
+        //eager-join locationTypes once so hasLocationTypeName() below doesn't lazy-load the
+        //locationTypes ManyToMany collection per Location, once per addLocationByType() call
+        $user = $fellowshipApplication->getUser();
+        $userLocations = $this->em->getRepository(Location::class)->createQueryBuilder('location')
+            ->leftJoin('location.locationTypes', 'locationTypes')->addSelect('locationTypes')
+            ->where('location.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()->getResult();
+
+        $this->addLocationByType($fellowshipApplication,"Present Address", $userLocations);
+        $this->addLocationByType($fellowshipApplication,"Permanent Address", $userLocations);
+        $this->addLocationByType($fellowshipApplication,"Work Address", $userLocations);
 
     }
-    public function addLocationByType($fellowshipApplication,$typeName) {
+    public function addLocationByType($fellowshipApplication,$typeName,$userLocations=null) {
 
         $user = $fellowshipApplication->getUser();
 
         $specificLocation = null;
 
-        foreach( $user->getLocations() as $location ) {
+        foreach( ($userLocations !== null ? $userLocations : $user->getLocations()) as $location ) {
             if( $location->hasLocationTypeName($typeName) ) {
                 $specificLocation = $location;
                 break;

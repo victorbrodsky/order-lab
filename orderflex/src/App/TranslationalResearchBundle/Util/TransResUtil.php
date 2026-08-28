@@ -104,6 +104,11 @@ class TransResUtil
     protected $em;
     protected $security;
     protected $session;
+    //in-memory cache for findCreateSiteParameterEntity(), keyed by specialty abbreviation
+    //(or '' for the default/no-specialty entity), since this service is shared/singleton
+    //within the container for the whole request and this lookup is called repeatedly
+    //(e.g. once per navbar field lookup) without ever changing mid-request
+    private $cachedSiteParameterEntities = array();
 
     // Symfony will inject the 'blog_publishing' workflow configured before => WorkflowInterface $blogPublishingWorkflow
     //transres_project => WorkflowInterface $transresProjectStateMachine
@@ -7860,6 +7865,11 @@ class TransResUtil
         return $value;
     }
     public function findCreateSiteParameterEntity($specialtyStr=NULL) {
+        $cacheKey = $specialtyStr ?? '';
+        if( array_key_exists($cacheKey, $this->cachedSiteParameterEntities) ) {
+            return $this->cachedSiteParameterEntities[$cacheKey];
+        }
+
         $em = $this->em;
 
         //$entity = $em->getRepository('AppTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
@@ -7892,6 +7902,7 @@ class TransResUtil
         //echo "projectSpecialty count=".count($entities)."<br>";
 
         if( count($entities) > 0 ) {
+            $this->cachedSiteParameterEntities[$cacheKey] = $entities[0];
             return $entities[0];
         }
 
@@ -7914,6 +7925,7 @@ class TransResUtil
         $em->persist($entity);
         $em->flush($entity);
 
+        $this->cachedSiteParameterEntities[$cacheKey] = $entity;
         return $entity;
     }
     public function getTransresSiteParameterFile( $fieldName, $project=null, $projectSpecialty=null) {

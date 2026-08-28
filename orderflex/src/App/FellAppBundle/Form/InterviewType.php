@@ -19,6 +19,7 @@ namespace App\FellAppBundle\Form;
 
 
 use App\UserdirectoryBundle\Entity\User;
+use App\UserdirectoryBundle\Entity\Location;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -63,6 +64,8 @@ class InterviewType extends AbstractType
                             ->leftJoin("user.preferences", "preferences")
                             ->leftJoin("user.employmentStatus", "employmentStatus")
                             ->leftJoin("employmentStatus.employmentType", "employmentType")
+                            //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
+                            ->leftJoin("user.perSiteSettings", "perSiteSettings")->addSelect("perSiteSettings")
                             ->where("infos.lastName NOT LIKE 'test%' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
                             ->andWhere("preferences.hide IS NULL OR preferences.hide=false");
                             //->where('u.roles LIKE :role1 OR u.roles LIKE :role2')
@@ -92,10 +95,27 @@ class InterviewType extends AbstractType
             ));
 
             ///////////////// location //////////////////
-            $builder->add('location',null, array(
+            $builder->add('location', EntityType::class, array(
+                'class' => Location::class,
                 'label' => "Interview Location:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width interview-location'),
+                'query_builder' => function(EntityRepository $er) {
+                    //eager-join user + trainings to avoid one extra query per hydrated Location
+                    //when building the choice list labels (Location::__toString() -> getNameFull()
+                    //-> User::getUsernameOptimal() lazy-loads user.trainings)
+                    return $er->createQueryBuilder('list')
+                        ->leftJoin("list.user", "locuser")->addSelect("locuser")
+                        ->leftJoin("locuser.trainings", "trainings")->addSelect("trainings")
+                        ->leftJoin("locuser.infos", "locuserinfos")->addSelect("locuserinfos")
+                        ->leftJoin("locuser.perSiteSettings", "locuserpss")->addSelect("locuserpss")
+                        ->leftJoin("list.locationTypes", "locationTypes")->addSelect("locationTypes")
+                        ->leftJoin("list.institution", "institution")->addSelect("institution")
+                        ->leftJoin("list.room", "room")->addSelect("room")
+                        ->leftJoin("list.suite", "suite")->addSelect("suite")
+                        ->leftJoin("list.building", "building")->addSelect("building")
+                        ->leftJoin("list.mailbox", "mailbox")->addSelect("mailbox");
+                },
             ));
 //            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 //                $interview = $event->getData();
