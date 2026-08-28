@@ -2755,6 +2755,7 @@ class FellAppUtil {
         // Institution - Department (shortened)
         $institutionDept = $this->getInstitutionDepartmentShortString($fellapp);
         if ($institutionDept) {
+            echo '$institutionDept='.$institutionDept."<br>";
             $parts[] = $this->sanitizeFolderName($institutionDept, 50);
         }
 
