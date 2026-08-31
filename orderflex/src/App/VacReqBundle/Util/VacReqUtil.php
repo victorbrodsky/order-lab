@@ -96,6 +96,12 @@ class VacReqUtil
     //private $_adjustHolidays = false; //testing
     //private $_adjustHolidays = true; //testing
 
+    //in-memory cache for getSingleApprovalGroupType(), keyed by user id: this method is called
+    //repeatedly (often without the already-computed value being passed along) by many helper
+    //methods within the same request (getHeaderInfoMessages, getValueApprovalGroupTypeByUser, etc.),
+    //and it is expensive (queries institutions/settings the user belongs to)
+    private $cachedApprovalGroupTypeByUserId = array();
+
 
     public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
 
@@ -6290,6 +6296,21 @@ class VacReqUtil
     //If user member of two group Faculty and Fellows, consider Faculty as default
     //set Faculty's orderinlist to the lower value (lower value is default)
     public function getSingleApprovalGroupType( $user ) {
+        $userId = $user ? $user->getId() : null;
+        if( $userId !== null && array_key_exists($userId, $this->cachedApprovalGroupTypeByUserId) ) {
+            return $this->cachedApprovalGroupTypeByUserId[$userId];
+        }
+
+        $approvalGroup = $this->computeSingleApprovalGroupType($user);
+
+        if( $userId !== null ) {
+            $this->cachedApprovalGroupTypeByUserId[$userId] = $approvalGroup;
+        }
+
+        return $approvalGroup;
+    }
+
+    private function computeSingleApprovalGroupType( $user ) {
         $approvalGroup = NULL;
 
         //get user's associated group, get only submiiter group

@@ -212,6 +212,7 @@ class VacReqRequestType extends AbstractType
                         ->leftJoin("user.infos","infos")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->leftJoin("user.perSiteSettings","perSiteSettings")->addSelect("perSiteSettings")
                         ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
                         ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         ->orderBy("infos.lastName","ASC");
@@ -376,6 +377,7 @@ class VacReqRequestType extends AbstractType
                         ->leftJoin("user.infos","infos")
                         ->leftJoin("user.employmentStatus", "employmentStatus")
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->leftJoin("user.perSiteSettings","perSiteSettings")->addSelect("perSiteSettings")
                         ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
                         ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         ->orderBy("infos.lastName","ASC");
@@ -516,6 +518,7 @@ class VacReqRequestType extends AbstractType
                     ->leftJoin("user.infos","infos")
                     ->leftJoin("user.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->leftJoin("user.perSiteSettings","perSiteSettings")->addSelect("perSiteSettings")
                     ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
                     ->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     ->orderBy("infos.lastName","ASC");

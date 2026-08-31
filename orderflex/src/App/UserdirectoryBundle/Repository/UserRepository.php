@@ -32,6 +32,11 @@ use Doctrine\ORM\Query;
 
 class UserRepository extends EntityRepository {
 
+    //in-memory cache for findRolesByObjectActionInstitutionSite(), keyed by its serialized
+    //argument list, since it's called repeatedly with identical arguments within one request
+    //(this repository instance is reused for the whole request by Doctrine)
+    private $cachedRolesByObjectActionInstitutionSite = array();
+
     public function findAllByInstitutionNodeAsUserArray( $nodeid, $onlyWorking=false ) {
 
         $users = $this->findAllByInstitutionNode($nodeid,$onlyWorking);
@@ -331,6 +336,11 @@ class UserRepository extends EntityRepository {
             ->from(User::class, 'user')
             ->select("user")
             ->leftJoin("user.infos","infos")
+            //eager-join perSiteSettings: User::$perSiteSettings is a OneToOne mapped on the
+            //inverse side, so Doctrine cannot lazy-load it via proxy and instead issues an
+            //immediate extra query per hydrated row every time this method runs (it's called
+            //in a loop from VacReqUtil::getApproversBySubmitterRole())
+            ->leftJoin("user.perSiteSettings","perSiteSettings")->addSelect("perSiteSettings")
             ->where('user.id IN (:ids)')
             ->setParameter('ids', $ids)
             ->orderBy($orderBy,"ASC");
@@ -477,6 +487,14 @@ class UserRepository extends EntityRepository {
     //get all roles with corresponding permissions: object-action
     public function findRolesByObjectActionInstitutionSite($objectStr, $actionStr, $institutionId, $sitename, $roleName=null, $sortBy=null) {
 
+        //in-memory cache: this method is called repeatedly with the exact same arguments
+        //(e.g. once per role name from findUserRolesBySitePermissionObjectAction(), across
+        //many callers within the same request), so memoize by the full argument set
+        $cacheKey = serialize(array($objectStr, $actionStr, $institutionId, $sitename, $roleName, $sortBy));
+        if( array_key_exists($cacheKey, $this->cachedRolesByObjectActionInstitutionSite) ) {
+            return $this->cachedRolesByObjectActionInstitutionSite[$cacheKey];
+        }
+
         //check if user's roles have permission
         //$query = $this->getEntityManager()->createQueryBuilder()->from('AppUserdirectoryBundle:Roles', 'list');
         //$query = $this->getEntityManager()->createQueryBuilder()->from(Roles::class, 'list'); //sf 6.4
@@ -557,6 +575,7 @@ class UserRepository extends EntityRepository {
         //}
         //exit('exit');
 
+        $this->cachedRolesByObjectActionInstitutionSite[$cacheKey] = $roles;
         return $roles;
     }
 
