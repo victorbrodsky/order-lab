@@ -335,7 +335,10 @@ class UserRepository extends EntityRepository {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->from(User::class, 'user')
             ->select("user")
-            ->leftJoin("user.infos","infos")
+            //eager-select infos: callers invoke getDisplayName()/getUsernameShortest() on every
+            //result (e.g. VacReqUtil::getApproversBySubmitterRole()), which lazily loads the
+            //infos collection per row (N+1) if it isn't hydrated eagerly here
+            ->leftJoin("user.infos","infos")->addSelect("infos")
             //eager-join perSiteSettings: User::$perSiteSettings is a OneToOne mapped on the
             //inverse side, so Doctrine cannot lazy-load it via proxy and instead issues an
             //immediate extra query per hydrated row every time this method runs (it's called

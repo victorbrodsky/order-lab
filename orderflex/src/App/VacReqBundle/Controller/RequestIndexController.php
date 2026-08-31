@@ -467,7 +467,12 @@ class RequestIndexController extends OrderAbstractController
         $repository = $this->getDoctrine()->getRepository(User::class);
         $dqlFilterUser = $repository->createQueryBuilder('user');
         $dqlFilterUser->select('user');
-        $dqlFilterUser->leftJoin("user.infos","infos");
+        //eager-select infos and perSiteSettings: this query loads all filter-list users, and
+        //getDisplayName()/getUserNameStr()/getPerSiteSettings() get called on every one of them
+        //(e.g. when building the user select choice list), which would otherwise lazy-load
+        //these relations per row (N+1)
+        $dqlFilterUser->leftJoin("user.infos","infos")->addSelect("infos");
+        $dqlFilterUser->leftJoin("user.perSiteSettings","perSiteSettings")->addSelect("perSiteSettings");
         $dqlFilterUser->leftJoin("user.employmentStatus", "employmentStatus");
         $dqlFilterUser->leftJoin("employmentStatus.employmentType", "employmentType");
         //filter out system user
