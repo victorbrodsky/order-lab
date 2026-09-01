@@ -23,6 +23,8 @@ use App\OrderformBundle\Entity\MrnType; //process.py script: replaced namespace 
 use App\OrderformBundle\Entity\OrderDelivery; //process.py script: replaced namespace by ::class: added use line for classname=OrderDelivery
 use App\UserdirectoryBundle\Entity\User; //process.py script: replaced namespace by ::class: added use line for classname=User
 use App\UserdirectoryBundle\Entity\Institution; //process.py script: replaced namespace by ::class: added use line for classname=Institution
+use App\UserdirectoryBundle\Util\TimeZoneUtil;
+use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Doctrine\ORM\EntityRepository;
 use App\UserdirectoryBundle\Repository\UserRepository;
 use App\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
@@ -1364,6 +1366,32 @@ class SiteParametersType extends AbstractType
             ));
         }
         //////// EOF fields for Server Instance connection ////////
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'instanceTimeZone' ) {
+            //timezone
+            $tzUtil = new TimeZoneUtil();
+            //use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
+            //TimezoneType::class
+//            $builder->add('instanceTimeZone', ChoiceType::class, array( //flipped
+//                'label' => 'Instance Time Zone:',
+//                //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
+//                'choices' => $tzUtil->tz_list(),
+//                //'choices_as_values' => true,
+//                'invalid_message' => 'invalid value: user prefer timezone',
+//                'required' => true,
+//                'preferred_choices' => array('America/New_York'),
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
+
+            $builder->add('instanceTimeZone', TimezoneType::class, array( //flipped
+                'label' => 'Instance Time Zone:',
+                'invalid_message' => 'invalid value: user prefer timezone',
+                'placeholder' => '',        // empty option
+                'required' => false,        // allow null
+                'preferred_choices' => array('America/New_York'),
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'secretKey' ) {
             $builder->add('secretKey', null, array(

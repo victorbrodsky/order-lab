@@ -1,0 +1,14 @@
+from email:
+12- In "Server Instance" section of "Platform Settings" accordion of
+Site Settings page: https://view.online/c/demo-institution/demo-department/fellowship-applications/settings/
+under the row titled "User Group" add a row titled "Instance Time Zone": that shows the drop down menu with
+all timezones, and set it to "NYC / EST" by default on initial installation (when re-installing from scratch).
+Push the update to ALL view.online tenants. Pushe the update to view.med.cornll.edu and to view-test.med.cornell.edu.
+Push the update to BOTH path-view-test.wustl.edu AND path-view.wustl.edu servers .
+Update the value on BOTH path-view-test.wustl.edu AND path-view.wustl.edu to "Chicago / CST".
+Update all DISPLAYED timestamps (not stored, right? we store in UTC?) to adjust based on the
+value in this field. Also ujpdate all timestamps that are NOT displayed, but used anywhere -
+for example in the names on downloaded files, etc. Test on both WUSTL servers.
+
+
+

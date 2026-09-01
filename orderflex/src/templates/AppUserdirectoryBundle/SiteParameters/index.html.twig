@@ -236,6 +236,11 @@
                 <td>{{ entity.authUserGroup }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'authUserGroup'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Instance Time Zone</td>
+                <td>{{ entity.instanceTimeZone }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'instanceTimeZone'}) }}">Edit</a></td>
+            </tr>
             {#<tr>#}
                 {#<td>Tenant prefix URL Slug</td>#}
                 {#<td>{{ entity.tenantPrefixUrlSlug }}</td>#}

@@ -1068,9 +1068,9 @@ class SiteParameters {
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\AuthUserGroupList')]
     private $authUserGroup;
 
-//    //Instance Time Zone
-//    #[ORM\Column(type: 'text', nullable: true)]
-//    private $instanceTimeZone;
+    //Instance Time Zone
+    #[ORM\Column(type: 'string', length: 64, nullable: true)]
+    private $instanceTimeZone;
 
     //Server Network Accessibility and Role (aka Server Role and Network Access):
     //[Intranet (Solo) / Intranet (Tandem) / Internet (Solo) / Internet (Tandem)] / Internet (Hub)
@@ -4535,21 +4535,21 @@ class SiteParameters {
         $this->authUserGroup = $authUserGroup;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getInstanceTimeZone()
-//    {
-//        return $this->instanceTimeZone;
-//    }
-//
-//    /**
-//     * @param mixed $instanceTimeZone
-//     */
-//    public function setInstanceTimeZone($instanceTimeZone)
-//    {
-//        $this->instanceTimeZone = $instanceTimeZone;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getInstanceTimeZone()
+    {
+        return $this->instanceTimeZone;
+    }
+
+    /**
+     * @param mixed $instanceTimeZone
+     */
+    public function setInstanceTimeZone($instanceTimeZone)
+    {
+        $this->instanceTimeZone = $instanceTimeZone;
+    }
 
     /**
      * @return mixed
