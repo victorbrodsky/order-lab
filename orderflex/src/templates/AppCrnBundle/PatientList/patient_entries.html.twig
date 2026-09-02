@@ -143,11 +143,11 @@
                                 {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
                             {% else %}
                                 {#{{ message.orderdate|date('m/d/Y H:i') }}#}
-                                {{ crn_util.getOrderSimpleDateStr(message,"") }}
+                                {{ crn_util.getOrderSimpleDateStr(message," ") }}
                             {% endif %}
                         {% else %}
                             {#{{ message.orderdate|date('m/d/Y H:i') }}#}
-                            {{ crn_util.getOrderSimpleDateStr(message,"") }}
+                            {{ crn_util.getOrderSimpleDateStr(message," ") }}
                         {% endif %}
                     </td>
 

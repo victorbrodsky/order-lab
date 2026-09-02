@@ -1215,6 +1215,11 @@ class GoogleSheetManagement {
     function downloadGeneralFile($service,$file,$sendEmail=true) {
         $logger = $this->container->get('logger');
         $logger->notice("downloadGeneralFile process by file get");
+
+        if( !$file ) {
+            return null;
+        }
+
         try {
             $fileId = $file->getId();
             $response = $service->files->get(

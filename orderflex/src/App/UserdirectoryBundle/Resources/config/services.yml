@@ -89,14 +89,6 @@ services:
         tags:
               - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-#    twigdate.listener.request:
-#        class: App\UserdirectoryBundle\Services\TwigDateRequestListener
-#        autowire: true
-#        autoconfigure: true
-#        arguments:
-#            $defaultTimeZone: '%default_time_zone%'
-
-
     #user security util (removed "@security.token_storage" and "@security.authorization_checker")
     user_security_utility:
         class: App\UserdirectoryBundle\Util\UserSecurityUtil

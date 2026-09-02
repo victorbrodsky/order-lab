@@ -152,6 +152,7 @@ class UserServiceUtil {
             $user_tz = "America/New_York";
         }
 
+        //echo "user_tz=".$user_tz."<br>";
         //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
         //$datetimeUTC = new \DateTime($datetime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
         $datetimeUserTz = $datetime->setTimeZone(new \DateTimeZone($user_tz));

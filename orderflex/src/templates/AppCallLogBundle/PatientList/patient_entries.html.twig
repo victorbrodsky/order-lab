@@ -130,7 +130,9 @@
                     <td>
                         {% for encounter in message.encounter %}
                             {% set encounterDate = encounter.obtainStatusField('date','valid') %}
-                            {{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s',encounterDate.timezone) }}
+                            {#encounterDate.timezone={{ encounterDate.timezone }}#}
+                            {#{{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s',encounterDate.timezone) }}#}
+                            {{ encounterDate.field|date('m/d/Y') }} {{ encounterDate.time|date('H:i:s') }}
                             <br>
                         {% endfor %}
                     </td>
@@ -139,15 +141,18 @@
                     <td>
                         {% if message.version > 1 %}
                             {% if message.editorInfos|length > 0 %}
+                                {#Last Modified 111#}
                                 {#{{  message.editorInfos|last.modifiedOn|date('m/d/Y H:i') }}#}
                                 {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
                             {% else %}
+                                {#Last Modified 222#}
                                 {#{{ message.orderdate|date('m/d/Y H:i') }}#}
-                                {{ calllog_util.getOrderSimpleDateStr(message,"") }}
+                                {{ calllog_util.getOrderSimpleDateStr(message," ") }}
                             {% endif %}
                         {% else %}
+                            {#Last Modified 333#}
                             {#{{ message.orderdate|date('m/d/Y H:i') }}#}
-                            {{ calllog_util.getOrderSimpleDateStr(message,"") }}
+                            {{ calllog_util.getOrderSimpleDateStr(message," ") }}
                         {% endif %}
                     </td>
 
