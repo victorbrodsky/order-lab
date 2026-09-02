@@ -116,8 +116,8 @@ class UserServiceUtil {
 
     public function convertFromUserTimezonetoUTC($datetime,$user) {
 
-        //$user_tz = 'America/New_York';
-        $user_tz = $user->getPreferences()->getTimezone();
+        //SiteParameters::instanceTimeZone takes precedence over $user's UserPreferences::timezone
+        $user_tz = $this->getEffectiveTimezone($user);
 
         //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
         $datetimeTz = new \DateTime($datetime->format('Y-m-d H:i:s'), new \DateTimeZone($user_tz) );
@@ -129,21 +129,8 @@ class UserServiceUtil {
 
     public function convertFromUtcToUserTimezone($datetime,$user=null) {
 
-        if( !$user ) {
-            $user = $this->security->getUser();
-        }
-
-        if( !$user ) {
-            return $datetime;
-        }
-
-        //$user_tz = 'America/New_York';
-        //$user_tz = $user->getPreferences()->getTimezone();
-        $user_tz = null;
-        $preferences = $user->getPreferences();
-        if( $preferences ) {
-            $user_tz = $preferences->getTimezone();
-        }
+        //SiteParameters::instanceTimeZone takes precedence over $user's UserPreferences::timezone
+        $user_tz = $this->getEffectiveTimezone($user);
         if( !$user_tz ) {
             return $datetime;
         }
@@ -159,12 +146,8 @@ class UserServiceUtil {
 
     public function convertToUserTimezone($datetime,$user=null) {
 
-        if( !$user ) {
-            $user = $this->security->getUser();
-        }
-
-        //$user_tz = 'America/New_York';
-        $user_tz = $user->getPreferences()->getTimezone();
+        //SiteParameters::instanceTimeZone takes precedence over $user's UserPreferences::timezone
+        $user_tz = $this->getEffectiveTimezone($user);
         if( !$user_tz ) {
             $user_tz = "America/New_York";
         }
@@ -848,6 +831,29 @@ class UserServiceUtil {
 
         $this->cachedSiteSettingParameter = $entities[0];
         return $entities[0];
+    }
+
+    //Resolve the effective timezone to use for all date/time handling (PHP and Twig):
+    //1) SiteParameters::instanceTimeZone (global instance-wide override), if set
+    //2) $user's UserPreferences::timezone (defaults to the currently logged in user if $user is
+    //   not passed), if set
+    //3) null if neither is set (caller should apply its own default, e.g. 'America/New_York')
+    public function getEffectiveTimezone( $user=null ) {
+        if( !$user ) {
+            $user = $this->security->getUser();
+        }
+        if( $user && is_object($user) && method_exists($user,'getPreferences') && $user->getPreferences() && $user->getPreferences()->getTimezone() ) {
+            return $user->getPreferences()->getTimezone();
+        }
+
+        $siteParameters = $this->getSingleSiteSettingParameter();
+        $instanceTimeZone = $siteParameters ? $siteParameters->getInstanceTimeZone() : null;
+        //global instanceTimeZone always takes precedence over the user's own preference
+        if( $instanceTimeZone ) {
+            return $instanceTimeZone;
+        }
+
+        return null;
     }
 
     public function generateSiteParameters() {

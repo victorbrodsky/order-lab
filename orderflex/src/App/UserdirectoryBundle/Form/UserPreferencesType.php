@@ -38,7 +38,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
-use App\UserdirectoryBundle\Util\TimeZoneUtil;
+use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
+//use App\UserdirectoryBundle\Util\TimeZoneUtil;
 
 class UserPreferencesType extends AbstractType
 {
@@ -81,15 +82,22 @@ class UserPreferencesType extends AbstractType
         if( !$hasRoleSimpleView ) {
 
             //timezone
-            $tzUtil = new TimeZoneUtil();
-
-            $builder->add('timezone', ChoiceType::class, array( //flipped
+//            $tzUtil = new TimeZoneUtil();
+//            $builder->add('timezone', ChoiceType::class, array( //flipped
+//                'label' => 'Time Zone:',
+//                //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
+//                'choices' => $tzUtil->tz_list(),
+//                //'choices_as_values' => true,
+//                'invalid_message' => 'invalid value: user prefer timezone',
+//                'required' => true,
+//                'preferred_choices' => array('America/New_York'),
+//                'attr' => array('class' => 'combobox combobox-width')
+//            ));
+            $builder->add('timezone', TimezoneType::class, array( //flipped
                 'label' => 'Time Zone:',
-                //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
-                'choices' => $tzUtil->tz_list(),
-                //'choices_as_values' => true,
                 'invalid_message' => 'invalid value: user prefer timezone',
-                'required' => true,
+                'placeholder' => '',        // empty option
+                'required' => false,        // allow null
                 'preferred_choices' => array('America/New_York'),
                 'attr' => array('class' => 'combobox combobox-width')
             ));

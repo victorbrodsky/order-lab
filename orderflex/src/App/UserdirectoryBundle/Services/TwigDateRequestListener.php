@@ -29,6 +29,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 //use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\UserdirectoryBundle\Util\UserServiceUtil;
 use Twig\Environment;
 
 //Twig listener to modify timezone as per http://stackoverflow.com/questions/9886058/how-can-i-set-the-default-date-format-for-twig-templates-in-symfony2
@@ -38,25 +39,40 @@ class TwigDateRequestListener {
     protected $twig;
     protected $defaultTimeZone;
     protected $security;
+    protected $userServiceUtil;
 
-    function __construct(Environment $twig, $defaultTimeZone, Security $security) {
+    function __construct(Environment $twig, $defaultTimeZone, Security $security, UserServiceUtil $userServiceUtil) {
         $this->twig = $twig;
         $this->defaultTimeZone = $defaultTimeZone;
         $this->security = $security;
+        $this->userServiceUtil = $userServiceUtil;
     }
 
     public function onKernelRequest(RequestEvent $event) {
         //$this->twig->getExtension('core')->setDateFormat('Y-m-d', '%d days');
 
-        $user = null;
-        $timezone = $this->defaultTimeZone;
-        //echo "default timezone=$timezone <br>";
-
-        $user = $this->security->getUser();
-
-        if( $user && is_object($user) && $user->getPreferences()->getTimezone() ) {
-            $timezone = $user->getPreferences()->getTimezone();
+        //resolve effective timezone: SiteParameters::instanceTimeZone takes precedence over
+        //the current user's UserPreferences::timezone, falling back to the configured default
+        $timezone = $this->userServiceUtil->getEffectiveTimezone();
+        if( !$timezone ) {
+            $timezone = $this->defaultTimeZone;
         }
+        //echo "timezone=$timezone <br>";
+
+        //IMPORTANT: do NOT call date_default_timezone_set($timezone) here with the resolved
+        //per-user/per-instance timezone. All entities store their timestamps via
+        //new \DateTime() in #[ORM\PrePersist]/#[ORM\PreUpdate] callbacks (e.g. Logger::setCreationdate()),
+        //which use PHP's CURRENT default timezone at the moment of write AND Doctrine also uses
+        //the current default timezone to interpret raw DB datetime strings back into DateTime
+        //objects on hydration (no explicit timezone is stored in the "timestamp without time zone"
+        //columns). If the default timezone varies per-request based on the viewing/acting user, both
+        //writes and reads become inconsistent, corrupting stored timestamps and shifting displayed
+        //times unpredictably (e.g. a login recorded at 9:10am New York time displaying as 13:10 to a
+        //different viewer). PHP's default timezone must stay fixed at UTC always, so all timestamps
+        //are consistently stored/read as UTC. The resolved effective timezone below is only applied
+        //to Twig's date filter, which converts the (always-UTC) DateTime to the display timezone at
+        //render time without touching the underlying value.
+        date_default_timezone_set('UTC');
 
 //        $extensions = $this->twig->getExtensions();
 //        foreach($extensions as $name => $extension) {
