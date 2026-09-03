@@ -115,6 +115,9 @@ f_sync() {
 
     if [ -n "$type" ] && [ "$type" == "dbmigrate" ]
         then
+            echo -e ${COLOR} bash prepare_migration.sh for "$1" ${NC}
+            bash "$homedir"/order-lab-"$1"/orderflex/prepare_migration.sh
+
             echo -e ${COLOR} check migration status for "$1" ${NC}
             yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:migrate
         #else
