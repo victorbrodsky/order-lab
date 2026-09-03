@@ -546,7 +546,7 @@ abstract class ObjectAbstract
     //get only one field with $status belongs to order with id $orderid
     //if status is null, get the first field belongs to the given order id
     public function obtainStatusField( $fieldname, $status, $orderid=null ) {
-
+        //echo "obtainStatusField<br>";
         $res = null;
 
         $resArr = $this->obtainStatusFieldArray($fieldname, $status, $orderid);

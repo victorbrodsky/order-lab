@@ -184,6 +184,12 @@ f_sync() {
             fi
     fi
 
+    if [ -n "$type" ] && [ "$type" == "array-to-json" ]
+        then
+            echo -e ${COLOR} Convert array to json for "$1" ${NC}
+            php "$homedir"/order-lab-"$1"/orderflex/bin/console app:convert-array-to-json --all --apply --alter-schema
+    fi
+
 #    if [ -n "$type" ] && [ "$type" == "createdb" ]
 #        then
 #            echo -e ${COLOR} Create db for "$1" ${NC}

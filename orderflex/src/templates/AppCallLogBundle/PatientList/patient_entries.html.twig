@@ -130,9 +130,13 @@
                     <td>
                         {% for encounter in message.encounter %}
                             {% set encounterDate = encounter.obtainStatusField('date','valid') %}
+                            {#Encounter ID={{ encounter.getId() }}#}
+                            {#encounterDate Timezone={{ encounterDate.timezone }}#}
+                            {#Encounter Date={{ encounterDate|date('m/d/Y') }}#}
                             {#encounterDate.timezone={{ encounterDate.timezone }}#}
-                            {#{{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s',encounterDate.timezone) }}#}
-                            {{ encounterDate.field|date('m/d/Y') }} {{ encounterDate.time|date('H:i:s') }}
+                            {#Timezone for encounterDate is saved as 'America/New_York'#}
+                            {{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s',encounterDate.timezone) }}
+                            {#{{ encounterDate.field|date('m/d/Y') }} {{ encounterDate.time|date('H:i:s') }}#}
                             <br>
                         {% endfor %}
                     </td>

@@ -2065,6 +2065,7 @@ class CallLogUtil
             ->select("list")
             //->groupBy('list.id')
             ->leftJoin("list.infos", "infos")
+            ->leftJoin("list.perSiteSettings", "perSiteSettings")->addSelect("perSiteSettings")
             ->leftJoin("list.employmentStatus", "employmentStatus")
             ->leftJoin("employmentStatus.employmentType", "employmentType")
             ->where("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")

@@ -181,7 +181,9 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Author"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
-                    ->leftJoin("u.infos", "infos")
+                    ->leftJoin("u.infos", "infos")->addSelect("infos")
+                    ->leftJoin("u.trainings", "trainings")->addSelect("trainings")
+                    ->leftJoin("u.perSiteSettings", "perSiteSettings")->addSelect("perSiteSettings")
                     ->leftJoin("u.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
@@ -247,7 +249,12 @@ class CalllogFilterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Location"),
             'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('u')->leftJoin("u.locationTypes", "locationTypes")->where("locationTypes.name='Encounter Location'")->andWhere("u.type = :typedef OR u.type = :typeadd")->orderBy("u.name", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
+                return $er->createQueryBuilder('u')
+                    ->leftJoin("u.locationTypes", "locationTypes")->addSelect("locationTypes")
+                    ->leftJoin("u.building", "building")->addSelect("building")
+                    ->leftJoin("u.institution", "institution")->addSelect("institution")
+                    ->leftJoin("u.user", "locuser")->addSelect("locuser")
+                    ->where("locationTypes.name='Encounter Location'")->andWhere("u.type = :typedef OR u.type = :typeadd")->orderBy("u.name", "ASC")->setParameter('typedef', 'default')->setParameter('typeadd', 'user-added');
             },
         ));
 
@@ -305,7 +312,9 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Attending"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
-                    ->leftJoin("u.infos", "infos")
+                    ->leftJoin("u.infos", "infos")->addSelect("infos")
+                    ->leftJoin("u.trainings", "trainings")->addSelect("trainings")
+                    ->leftJoin("u.perSiteSettings", "perSiteSettings")->addSelect("perSiteSettings")
                     ->leftJoin("u.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
@@ -381,7 +390,9 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Task Status Updated By"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
-                    ->leftJoin("u.infos", "infos")
+                    ->leftJoin("u.infos", "infos")->addSelect("infos")
+                    ->leftJoin("u.trainings", "trainings")->addSelect("trainings")
+                    ->leftJoin("u.perSiteSettings", "perSiteSettings")->addSelect("perSiteSettings")
                     ->leftJoin("u.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
@@ -399,7 +410,9 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Task Added By"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
-                    ->leftJoin("u.infos", "infos")
+                    ->leftJoin("u.infos", "infos")->addSelect("infos")
+                    ->leftJoin("u.trainings", "trainings")->addSelect("trainings")
+                    ->leftJoin("u.perSiteSettings", "perSiteSettings")->addSelect("perSiteSettings")
                     ->leftJoin("u.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->andWhere("(employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")

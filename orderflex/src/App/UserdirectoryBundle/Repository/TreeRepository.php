@@ -861,7 +861,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->leftJoin("list.organizationalGroupType","organizationalGroupType");
 
         if( $isInstitution ) {
-            $dql->leftJoin("list.types", "types");
+            $dql->leftJoin("list.types", "types")->addSelect("types");
         }
 
         $where = "(list.type = :typedef OR list.type = :typeadd)";
