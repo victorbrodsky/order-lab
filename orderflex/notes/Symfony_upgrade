@@ -623,3 +623,18 @@ since the fixes are entirely gated behind an unreleased `doctrine/orm` 4.0.
 Revisit the PHP 8.4/8.5 upgrade once `doctrine/orm` 4.0 and `doctrine/dbal` 4.5 are stable releases.
 ##############################################
 
+
+ALma10:
+sudo dnf update -y
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-10.noarch.rpm -y
+sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-10.rpm -y
+sudo dnf config-manager --set-enabled crb
+sudo dnf module reset php -y
+sudo dnf module enable php:remi-8.5 -y
+sudo dnf install php php-cli php-fpm php-mbstring php-xml php-curl php-mysqlnd php-gd php-opcache php-zip -y
+
+sudo systemctl start php-fpm
+sudo systemctl enable php-fpm
+
+php -v
+
