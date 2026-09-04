@@ -850,6 +850,13 @@ class SiteParameters {
     #[ORM\Column(type: 'text', nullable: true)]
     private $calllogResources;
 
+    //Note: 'persist' intentionally removed from cascade. getOrCreateNewCrnParameters() always
+    //explicitly calls $em->persist() on a new CrnSiteParameter before flush, so cascade persist
+    //is not needed there. Keeping cascade persist here silently created orphaned CrnSiteParameter
+    //rows whenever a transient CrnSiteParameter got assigned to this association and *any*
+    //unrelated flush() happened later in the same request. Without cascade persist, that same
+    //situation now throws a traceable "new entity found through relationship" exception instead.
+    //#[ORM\OneToOne(targetEntity: 'App\CrnBundle\Entity\CrnSiteParameter', cascade: ['remove'])]
     #[ORM\OneToOne(targetEntity: 'App\CrnBundle\Entity\CrnSiteParameter', cascade: ['persist', 'remove'])]
     private $crnSiteParameter;
 

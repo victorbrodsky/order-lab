@@ -171,6 +171,7 @@ class SystemTenancyController_TODEL extends OrderAbstractController
         //exit("initialUsers");
     }
     public function generateSiteParameters() {
+        return -1;
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');

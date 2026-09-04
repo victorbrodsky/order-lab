@@ -2070,7 +2070,14 @@ class CrnEntryController extends OrderAbstractController
                     //$eventStr = $eventStr . " submitted by " . $user;
 
                     if( !$testing ) {
-                        $userSecUtil->createUserEditEvent($this->getParameter('crn.sitename'), $eventStr, $user, $message, $request, $eventType); //Save Critical Result Notification Entry
+                        $userSecUtil->createUserEditEvent( //Save Critical Result Notification Entry
+                            $this->getParameter('crn.sitename'), 
+                            $eventStr, 
+                            $user, 
+                            $message, 
+                            $request, 
+                            $eventType
+                        );
                     }
                 }
 

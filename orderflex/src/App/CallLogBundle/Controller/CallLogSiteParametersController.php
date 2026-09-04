@@ -207,6 +207,7 @@ class CallLogSiteParametersController extends SiteParametersController
             //echo "CalllogSiteParameter null <br>";
             $calllogSiteParameter = new CalllogSiteParameter();
             $siteParameters->setCalllogSiteParameter($calllogSiteParameter);
+            //$em->persist($calllogSiteParameter);
             $em->flush();
         }
 

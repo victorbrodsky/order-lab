@@ -24,3 +24,40 @@ Failed asserting that 0 is greater than 0.
 
 C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle\UserTest.php:85
 
+Multiple #[ORM\OneToOne(targetEntity: 'App\CrnBundle\Entity\CrnSiteParameter', cascade: ['persist', 'remove'])]
+calllog_siteparameter
+#[ORM\OneToOne(targetEntity: 'App\CallLogBundle\Entity\CalllogSiteParameter', cascade: ['persist', 'remove'])]
+private $calllogSiteParameter;
+
+CrnSiteParameter
+CalllogSiteParameter
+
+Single:
+CtpSiteParameter
+DashboardSiteParameter
+FellappSiteParameter
+ResappSiteParameter
+TransResSiteParameters
+TelephonySiteParameter
+VacReqSettings (#[ORM\HasLifecycleCallbacks])
+
+public function generateSubSiteParameters() {
+    $count = 0;
+    $count = $count + $this->generateVacReqSiteParameters();
+    $count = $count + $this->generateResAppSiteParameters();
+    $count = $count + $this->generateFellAppSiteParameters();
+    return $count;
+}
+
+ctp_siteparameter
+dashboard_siteparameter
+fellapp_siteparameter
+resapp_siteparameter
+transres_siteparameters
+user_telephonysiteparameter
+vacreq_siteparameter
+
+
+
+
+

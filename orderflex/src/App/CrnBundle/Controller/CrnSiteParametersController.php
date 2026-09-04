@@ -53,7 +53,7 @@ class CrnSiteParametersController extends SiteParametersController
 
         //exit("crn indexAction");
 
-        $this->getOrCreateNewCrnParameters();
+        $this->getOrCreateNewCrnParameters(); //indexAction
 
         return $this->indexParameters($request);
     }
@@ -146,7 +146,7 @@ class CrnSiteParametersController extends SiteParametersController
 
         $cycle = "edit";
 
-        $crnSiteParameter = $this->getOrCreateNewCrnParameters();
+        $crnSiteParameter = $this->getOrCreateNewCrnParameters(); //crnSiteParameterEditAction
         //echo "crnSiteParameter=".$crnSiteParameter->getId()."<br>";
 
         $form = $this->createCrnSiteParameterForm($crnSiteParameter,$cycle);
@@ -156,7 +156,7 @@ class CrnSiteParametersController extends SiteParametersController
             $em = $this->getDoctrine()->getManager();
 
             //exit('submit');
-            $em->persist($crnSiteParameter);
+            //$em->persist($crnSiteParameter);
             $em->flush();
 
             return $this->redirect($this->generateUrl('crn_siteparameters'));
@@ -183,7 +183,7 @@ class CrnSiteParametersController extends SiteParametersController
 
         $cycle = "show";
 
-        $crnSiteParameter = $this->getOrCreateNewCrnParameters();
+        $crnSiteParameter = $this->getOrCreateNewCrnParameters(); //crnSiteParameterShowAction
         //echo "crnSiteParameter=".$crnSiteParameter->getId()."<br>";
 
         $form = $this->createCrnSiteParameterForm($crnSiteParameter,$cycle);
@@ -236,6 +236,7 @@ class CrnSiteParametersController extends SiteParametersController
             //echo "CrnSiteParameter null <br>";
             $crnSiteParameter = new CrnSiteParameter();
             $siteParameters->setCrnSiteParameter($crnSiteParameter);
+            //$em->persist($crnSiteParameter);
             $em->flush();
         }
 

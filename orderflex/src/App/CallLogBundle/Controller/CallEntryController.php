@@ -3507,7 +3507,12 @@ class CallEntryController extends OrderAbstractController
 
         //previous entries similar to calllog-list-previous-entries: get it in the view by ajax
 
-        //Event Log - User accessing “Show Entry” page should be added to the event log as an event for that object/note (Event Type “Entry Viewed”)
+        //Event Log - User accessing "Show Entry" page should be added to the event log as an event for that object/note (Event Type "Entry Viewed")
+        //Clear the EntityManager before logging so that createUserEditEvent's flush() only
+        //persists the EventLog, not any transient sub-site-parameters (e.g. CalllogSiteParameter)
+        //that may have been attached to the cached SiteParameters earlier in the request.
+        //$em->clear();
+
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->getUser();
         $eventType = "Call Log Book Entry Viewed";
