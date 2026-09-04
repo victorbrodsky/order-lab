@@ -95,7 +95,8 @@ class UserServiceUtil {
     //in-memory cache for getSingleSiteSettingParameter(), since this service is shared/singleton
     //within the container for the whole HTTP request (including internal sub-requests triggered
     //by Twig render()/controller() calls), avoiding one SiteParameters::findAll() query per call
-    //private $cachedSiteSettingParameter = false; //false=not yet fetched, null=fetched but not found
+    //It is possible to use cachedSiteSettingParameter, however it causes multiple CrnSiteParameter and CalllogSiteParameter
+    private $cachedSiteSettingParameter = false; //false=not yet fetched, null=fetched but not found
 
     public function __construct( 
         EntityManagerInterface $em, 
@@ -794,17 +795,19 @@ class UserServiceUtil {
     }
 
     //TODO: optimize by using AppUserdirectoryBundle:SiteParameters as a service to query from DB only once
+    //It is possible to use cachedSiteSettingParameter, however it causes multiple CrnSiteParameter and CalllogSiteParameter
     //Get single or generate SettingParameter (Singleton)
     public function getSingleSiteSettingParameter( $createIfEmpty=false ) {
+        //exit('111');
         //return null; //testing
 
         //Serve from in-memory cache when possible (huge N+1 win: this method is called once per
         //kernel.request event, including internal sub-requests from Twig render()/controller() calls,
         //e.g. once per row on list pages). $createIfEmpty=false is by far the most common call and is
         //always safe to serve from cache once we've successfully found the singleton row.
-//        if( $this->cachedSiteSettingParameter !== false && !$createIfEmpty ) {
-//            return $this->cachedSiteSettingParameter;
-//        }
+        if( $this->cachedSiteSettingParameter !== false && !$createIfEmpty ) {
+            //return $this->cachedSiteSettingParameter;
+        }
 
         //$logger = $this->container->get('logger');
         $entities = $this->em->getRepository(SiteParameters::class)->findAll();
@@ -825,12 +828,12 @@ class UserServiceUtil {
                     count($entities).' object(s)'."; createIfEmpty=".$createIfEmpty
                 );
             } else {
-//                $this->cachedSiteSettingParameter = null;
+                $this->cachedSiteSettingParameter = null;
                 return null;
             }
         }
 
-//        $this->cachedSiteSettingParameter = $entities[0];
+        $this->cachedSiteSettingParameter = $entities[0];
         return $entities[0];
     }
 
