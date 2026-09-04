@@ -14,16 +14,6 @@ for example in the names on downloaded files, etc. Test on both WUSTL servers.
 
 There were 4 failures:
 
-1) Tests\App\TestBundle\CrnTest::testResourcesAction
-Failed asserting that 0 is greater than 0.
-
-C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle\CrnTest.php:605
-
-2) Tests\App\TestBundle\CrnTest::testResourcesEditAction
-Failed asserting that 0 is greater than 0.
-
-C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle\CrnTest.php:619
-
 3) Tests\App\TestBundle\FellappTest::testAddNewFellapp
 Failed asserting that 0 is greater than 0.
 
@@ -34,6 +24,3 @@ Failed asserting that 0 is greater than 0.
 
 C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle\UserTest.php:85
 
-
-http://127.0.0.1/critical-result-notifications/resources/
-Must have only one parameter object. Found 3object(s)

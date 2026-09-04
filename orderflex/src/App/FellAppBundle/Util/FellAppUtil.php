@@ -2137,11 +2137,16 @@ class FellAppUtil {
         //eager-join locationTypes once so hasLocationTypeName() below doesn't lazy-load the
         //locationTypes ManyToMany collection per Location, once per addLocationByType() call
         $user = $fellowshipApplication->getUser();
-        $userLocations = $this->em->getRepository(Location::class)->createQueryBuilder('location')
-            ->leftJoin('location.locationTypes', 'locationTypes')->addSelect('locationTypes')
-            ->where('location.user = :user')
-            ->setParameter('user', $user)
-            ->getQuery()->getResult();
+        if( $user && $user->getId() ) {
+            $userLocations = $this->em->getRepository(Location::class)->createQueryBuilder('location')
+                ->leftJoin('location.locationTypes', 'locationTypes')->addSelect('locationTypes')
+                ->where('location.user = :user')
+                ->setParameter('user', $user)
+                ->getQuery()->getResult();
+        } else {
+            //new, not-yet-persisted user (e.g. brand new fellowship application): nothing to query yet
+            $userLocations = $user ? $user->getLocations() : array();
+        }
 
         $this->addLocationByType($fellowshipApplication,"Present Address", $userLocations);
         $this->addLocationByType($fellowshipApplication,"Permanent Address", $userLocations);
@@ -2478,7 +2483,7 @@ class FellAppUtil {
 //        $ews->setCellValue('P1', 'Language Proficiency');
 //        $ews->setCellValue('Q1', 'Comments');
 //        $writer->addRowWithStyle(
-//            [
+//            [`
 //                'ID',                           //0 - A
 //                'First Name',                   //1 - B
 //                'Last Name',                    //2 - C
