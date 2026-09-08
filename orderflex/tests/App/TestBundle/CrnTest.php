@@ -619,6 +619,7 @@ class CrnTest extends WebTestBase
         $this->assertGreaterThan(
             0,
             $crawler->filter('html:contains("Update Critical Result Notification Resources")')->count()
+            //$crawler->filter('html:contains("Update")')->count()
         );
         $this->assertGreaterThan(
             0,
