@@ -805,15 +805,15 @@ class UserServiceUtil {
         //kernel.request event, including internal sub-requests from Twig render()/controller() calls,
         //e.g. once per row on list pages). $createIfEmpty=false is by far the most common call and is
         //always safe to serve from cache once we've successfully found the singleton row.
-        if( $this->cachedSiteSettingParameter !== false && !$createIfEmpty ) {
+        //if( $this->cachedSiteSettingParameter !== false && !$createIfEmpty ) {
             //return $this->cachedSiteSettingParameter;
-        }
+        //}
 
         //$logger = $this->container->get('logger');
         $entities = $this->em->getRepository(SiteParameters::class)->findAll();
 
         //make sure sitesettings is initialized
-        if( count($entities) != 1 ) {
+        if( count($entities) == 0 ) {
             //$logger->notice("getSingleSiteSettingParameter: SiteParameters count=".count($entities)."; createIfEmpty=".$createIfEmpty);
             if( $createIfEmpty ) {
                 $this->generateSiteParameters();
