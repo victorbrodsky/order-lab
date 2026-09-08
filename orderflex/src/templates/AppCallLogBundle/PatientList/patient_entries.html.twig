@@ -127,16 +127,18 @@
                     </td>
 
                     {#Encounter Date#}
+                    {#underlying DateTime object in EncounterDate is in one timezone, but you tell Twig to display it in another#}
                     <td>
                         {% for encounter in message.encounter %}
                             {% set encounterDate = encounter.obtainStatusField('date','valid') %}
                             {#Encounter ID={{ encounter.getId() }}#}
-                            {#encounterDate Timezone={{ encounterDate.timezone }}#}
+                            {#encounterDate Timezone={{ encounterDate.timezone }}<br>#}
                             {#Encounter Date={{ encounterDate|date('m/d/Y') }}#}
                             {#encounterDate.timezone={{ encounterDate.timezone }}#}
                             {#Timezone for encounterDate is saved as 'America/New_York'#}
-                            {{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s',encounterDate.timezone) }}
-                            {#{{ encounterDate.field|date('m/d/Y') }} {{ encounterDate.time|date('H:i:s') }}#}
+                            {#{{ encounterDate.field|date('m/d/Y T (P)',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s T (P)',encounterDate.timezone) }}#}
+                            {{ encounterDate.field|date('m/d/Y','UTC') }} {{ encounterDate.time|date('H:i:s', 'UTC') }}
+                            {#{{ encounterDate.field|date('m/d/Y T (P)',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s', encounterDate.timezone) }}#}
                             <br>
                         {% endfor %}
                     </td>

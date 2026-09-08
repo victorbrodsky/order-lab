@@ -33,6 +33,7 @@ class EncounterDate extends EncounterArrayFieldAbstract
     #[ORM\Column(type: 'datetime', nullable: true)]
     protected $field;
 
+    //TODO: Store both field and time as full datetime fields.
     #[ORM\Column(type: 'time', nullable: true)]
     private $time;
 
