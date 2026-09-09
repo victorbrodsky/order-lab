@@ -2133,7 +2133,7 @@ class FellAppUtil {
     }
 
     public function addEmptyLocations($fellowshipApplication) {
-        echo "addEmptyLocations <br>";
+        echo "### addEmptyLocations start ###<br>";
         //eager-join locationTypes once so hasLocationTypeName() below doesn't lazy-load the
         //locationTypes ManyToMany collection per Location, once per addLocationByType() call
         $user = $fellowshipApplication->getUser();
@@ -2151,7 +2151,7 @@ class FellAppUtil {
         $this->addLocationByType($fellowshipApplication,"Present Address", $userLocations);
         $this->addLocationByType($fellowshipApplication,"Permanent Address", $userLocations);
         $this->addLocationByType($fellowshipApplication,"Work Address", $userLocations);
-
+        echo "### addEmptyLocations eof ###<br>";
     }
     public function addLocationByType($fellowshipApplication,$typeName,$userLocations=null) {
         echo "addLocationByType: $typeName <br>";
