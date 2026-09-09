@@ -2159,6 +2159,9 @@ class FellAppUtil {
     public function addLocationByType($fellowshipApplication,$typeName,$userLocations=null) {
         echo "addLocationByType: $typeName <br>";
         $user = $fellowshipApplication->getUser();
+        foreach($user->getLocations() as $userLocation) {
+            echo "userLocation ID=".$userLocation->getId().", name=".$userLocation->getName()."<br>";
+        }
 
         $specificLocation = null;
 
