@@ -2182,6 +2182,10 @@ class FellAppUtil {
             $specificLocation->addLocationType($locationType);
             $user->addLocation($specificLocation);
             $fellowshipApplication->addLocation($specificLocation);
+        } else {
+            echo "Existed specificLocation=".$specificLocation->getName()."<br>";
+            $user->addLocation($specificLocation);
+            $fellowshipApplication->addLocation($specificLocation);
         }
 
     }
