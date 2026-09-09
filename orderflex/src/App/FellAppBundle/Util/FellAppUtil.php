@@ -2154,7 +2154,7 @@ class FellAppUtil {
 
     }
     public function addLocationByType($fellowshipApplication,$typeName,$userLocations=null) {
-
+        echo "addLocationByType $typeName <br>";
         $user = $fellowshipApplication->getUser();
 
         $specificLocation = null;
@@ -2166,6 +2166,7 @@ class FellAppUtil {
             }
         }
 
+        echo "specificLocation=$specificLocation <br>";
         if( !$specificLocation ) {
 
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
@@ -2174,6 +2175,7 @@ class FellAppUtil {
                 throw new EntityNotFoundException('Unable to find entity by name='.$typeName);
             }
 
+            echo "new Location $typeName <br>";
             $specificLocation = new Location();
             $specificLocation->setName('Fellowship Applicant '.$typeName);
             $specificLocation->addLocationType($locationType);
