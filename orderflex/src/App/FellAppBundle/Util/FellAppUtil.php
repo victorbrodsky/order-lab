@@ -2134,6 +2134,7 @@ class FellAppUtil {
 
     public function addEmptyLocations($fellowshipApplication) {
         echo "### addEmptyLocations start ###<br>";
+        echo "addEmptyLocations: before count=".count($fellowshipApplication->getLocations())."<br>";
         //eager-join locationTypes once so hasLocationTypeName() below doesn't lazy-load the
         //locationTypes ManyToMany collection per Location, once per addLocationByType() call
         $user = $fellowshipApplication->getUser();
@@ -2151,6 +2152,8 @@ class FellAppUtil {
         $this->addLocationByType($fellowshipApplication,"Present Address", $userLocations);
         $this->addLocationByType($fellowshipApplication,"Permanent Address", $userLocations);
         $this->addLocationByType($fellowshipApplication,"Work Address", $userLocations);
+
+        echo "addEmptyLocations: after count=".count($fellowshipApplication->getLocations())."<br>";
         echo "### addEmptyLocations eof ###<br>";
     }
     public function addLocationByType($fellowshipApplication,$typeName,$userLocations=null) {
@@ -2166,10 +2169,8 @@ class FellAppUtil {
             }
         }
 
-        echo "specificLocation=$specificLocation <br>";
+        echo "specificLocation=".$specificLocation."<br>";
         if( !$specificLocation ) {
-
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:LocationTypeList'] by [LocationTypeList::class]
             $locationType = $this->em->getRepository(LocationTypeList::class)->findOneByName($typeName);
             if( !$locationType ) {
                 throw new EntityNotFoundException('Unable to find entity by name='.$typeName);
