@@ -2133,8 +2133,8 @@ class FellAppUtil {
     }
 
     public function addEmptyLocations($fellowshipApplication) {
-        echo "### addEmptyLocations start ###<br>";
-        echo "addEmptyLocations: before count=".count($fellowshipApplication->getLocations())."<br>";
+        //echo "### addEmptyLocations start ###<br>";
+        //echo "addEmptyLocations: before count=".count($fellowshipApplication->getLocations())."<br>";
         //eager-join locationTypes once so hasLocationTypeName() below doesn't lazy-load the
         //locationTypes ManyToMany collection per Location, once per addLocationByType() call
         $user = $fellowshipApplication->getUser();
@@ -2153,8 +2153,8 @@ class FellAppUtil {
         $this->addLocationByType($fellowshipApplication,"Permanent Address", $userLocations);
         $this->addLocationByType($fellowshipApplication,"Work Address", $userLocations);
 
-        echo "addEmptyLocations: after count=".count($fellowshipApplication->getLocations())."<br>";
-        echo "### addEmptyLocations eof ###<br>";
+        //echo "addEmptyLocations: after count=".count($fellowshipApplication->getLocations())."<br>";
+        //echo "### addEmptyLocations eof ###<br>";
     }
     public function addLocationByType($fellowshipApplication,$typeName,$userLocations=null) {
         //echo "addLocationByType: $typeName <br>";
@@ -2188,6 +2188,7 @@ class FellAppUtil {
             $user->addLocation($specificLocation);
             $fellowshipApplication->addLocation($specificLocation);
         } else {
+            //$specificLocation exists, make sure it has been added to the fellowship application
             //echo "Existed specificLocation=".$specificLocation->getName()."<br>";
             $user->addLocation($specificLocation);
             $fellowshipApplication->addLocation($specificLocation);
