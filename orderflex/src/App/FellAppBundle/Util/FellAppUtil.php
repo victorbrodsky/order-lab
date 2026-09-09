@@ -2157,44 +2157,44 @@ class FellAppUtil {
         echo "### addEmptyLocations eof ###<br>";
     }
     public function addLocationByType($fellowshipApplication,$typeName,$userLocations=null) {
-        echo "addLocationByType: $typeName <br>";
+        //echo "addLocationByType: $typeName <br>";
         $user = $fellowshipApplication->getUser();
 
-        foreach($user->getLocations() as $userLocation) {
-            echo "1 userLocation ID=".$userLocation->getId().", name=".$userLocation->getName()."<br>";
-        }
+//        foreach($user->getLocations() as $userLocation) {
+//            echo "1 userLocation ID=".$userLocation->getId().", name=".$userLocation->getName()."<br>";
+//        }
 
         $specificLocation = null;
 
         foreach( ($userLocations !== null ? $userLocations : $user->getLocations()) as $location ) {
             if( $location->hasLocationTypeName($typeName) ) {
-                echo "Assign location ID=".$location->getId().", name=".$location->getName()."<br>";
+                //echo "Assign location ID=".$location->getId().", name=".$location->getName()."<br>";
                 $specificLocation = $location;
                 break;
             }
         }
 
-        echo "specificLocation=".$specificLocation."<br>";
+        //echo "specificLocation=".$specificLocation."<br>";
         if( !$specificLocation ) {
             $locationType = $this->em->getRepository(LocationTypeList::class)->findOneByName($typeName);
             if( !$locationType ) {
                 throw new EntityNotFoundException('Unable to find entity by name='.$typeName);
             }
 
-            echo "new Location: $typeName <br>";
+            //echo "new Location: $typeName <br>";
             $specificLocation = new Location();
             $specificLocation->setName('Fellowship Applicant '.$typeName);
             $specificLocation->addLocationType($locationType);
             $user->addLocation($specificLocation);
             $fellowshipApplication->addLocation($specificLocation);
         } else {
-            echo "Existed specificLocation=".$specificLocation->getName()."<br>";
+            //echo "Existed specificLocation=".$specificLocation->getName()."<br>";
             $user->addLocation($specificLocation);
             $fellowshipApplication->addLocation($specificLocation);
         }
-        foreach($user->getLocations() as $userLocation) {
-            echo "2 userLocation ID=".$userLocation->getId().", name=".$userLocation->getName()."<br>";
-        }
+//        foreach($user->getLocations() as $userLocation) {
+//            echo "2 userLocation ID=".$userLocation->getId().", name=".$userLocation->getName()."<br>";
+//        }
     }
 
     public function addEmptyTrainings($fellowshipApplication) {

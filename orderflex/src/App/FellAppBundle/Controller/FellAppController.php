@@ -1812,11 +1812,11 @@ class FellAppController extends OrderAbstractController {
 //        if( count($fellTypes) == 0 ) {
 //            return array();
 //        }
-        echo "Before adding location count=".count($entity->getLocations())."<br>";
+        //echo "Before adding location count=".count($entity->getLocations())."<br>";
         $fellappUtil->addEmptyFellAppFields($entity); //createFellAppEditForm
 
         //testing
-        echo "After adding location count=".count($entity->getLocations())."<br>";
+        //echo "After adding location count=".count($entity->getLocations())."<br>";
         //echo "education count=".count($entity->getTrainings())."<br>";
         //exit('createFellAppEditForm');
 
