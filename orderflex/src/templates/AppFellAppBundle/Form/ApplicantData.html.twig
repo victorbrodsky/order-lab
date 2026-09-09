@@ -135,9 +135,9 @@
                 {#form.locations={{ form.locations|length }}#}
             {% for location in form.locations %}
 
-                location.name.vars.value=({{ location.vars.value.name }})<br>
-                location.id.vars.value=({{ location.vars.value.id }})<br>
-                location.vars.value.locationTypes|length=({{ location.vars.value.locationTypes|length }})<br>
+                {#location.name.vars.value=({{ location.vars.value.name }})<br>#}
+                {#location.id.vars.value=({{ location.vars.value.id }})<br>#}
+                {#location.vars.value.locationTypes|length=({{ location.vars.value.locationTypes|length }})<br>#}
 
                 {% set presentLocation = false %}
                 {% set permanentLocation = false %}
@@ -145,7 +145,7 @@
 
                 {% if location.vars.value %}
                     {% for locationType in location.vars.value.locationTypes %}
-                        locationType.name:{{ locationType.name }}<br>
+                        {#locationType.name:{{ locationType.name }}<br>#}
                         {% if locationType.name == 'Present Address' %}
                             {% set presentLocation = true %}
                         {% endif %}
@@ -258,17 +258,17 @@
 
             {#Phone, Mobile, Fax...#}
             <div class="well">
-                <label class="col-xs-12 control-label">Applicant Telephone:</label>
+                <label class="col-xs-12 control-label">Telephone:</label>
                 <div class="row">
                     <div class="col-xs-6">
-                        form.locations|length={{ form.locations|length }}
+                        {#form.locations|length={{ form.locations|length }}#}
                         {#<label for="telephoneHome" class="control-label">Home</label>#}
                         {#<input type="text" class="form-control" id="telephoneHome" name="telephoneHome" placeholder="Home">#}
                         {% for location in form.locations %}
                             {% if location.vars.value %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Present Address' %}
-                                        Present Address location.phone:
+                                        {#Present Address location.phone:#}
                                         {% if cycle != "show" %}
                                             {{ form_row(location.phone) }}
                                         {% else %}
@@ -289,7 +289,7 @@
                             {% if location.vars.value %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Work Address' %}
-                                        Work Address location.phone:
+                                        {#Work Address location.phone:#}
                                         {% if cycle != "show" %}
                                             {{ form_row(location.phone,{'label': 'Work:'}) }}
                                         {% else %}
@@ -312,7 +312,7 @@
                             {% if location.vars.value %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Present Address' %}
-                                        Present Address location.phone/mobile:
+                                        {#Present Address location.phone/mobile:#}
                                         {% if cycle != "show" %}
                                             {{ form_row(location.mobile) }}
                                         {% else %}
@@ -333,7 +333,7 @@
                             {% if location.vars.value %}
                                 {% for locationType in location.vars.value.locationTypes %}
                                     {% if locationType.name == 'Present Address' %}
-                                        Present Address location.fax
+                                        {#Present Address location.fax#}
                                         {{ form_row(location.fax) }}
                                     {% endif %}
                                 {% endfor %}
