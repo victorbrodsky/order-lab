@@ -2161,7 +2161,7 @@ class FellAppUtil {
         $user = $fellowshipApplication->getUser();
 
         foreach($user->getLocations() as $userLocation) {
-            echo "userLocation ID=".$userLocation->getId().", name=".$userLocation->getName()."<br>";
+            echo "1 userLocation ID=".$userLocation->getId().", name=".$userLocation->getName()."<br>";
         }
 
         $specificLocation = null;
@@ -2192,7 +2192,9 @@ class FellAppUtil {
             $user->addLocation($specificLocation);
             $fellowshipApplication->addLocation($specificLocation);
         }
-
+        foreach($user->getLocations() as $userLocation) {
+            echo "2 userLocation ID=".$userLocation->getId().", name=".$userLocation->getName()."<br>";
+        }
     }
 
     public function addEmptyTrainings($fellowshipApplication) {
