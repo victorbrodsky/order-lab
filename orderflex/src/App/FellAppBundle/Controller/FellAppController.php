@@ -1816,6 +1816,7 @@ class FellAppController extends OrderAbstractController {
         $fellappUtil->addEmptyFellAppFields($entity); //createFellAppEditForm
 
         //testing
+        echo "location count=".count($entity->getLocations())."<br>";
         //echo "education count=".count($entity->getTrainings())."<br>";
         //exit('createFellAppEditForm');
 
