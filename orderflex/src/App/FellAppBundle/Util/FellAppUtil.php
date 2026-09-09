@@ -2164,7 +2164,7 @@ class FellAppUtil {
 
         foreach( ($userLocations !== null ? $userLocations : $user->getLocations()) as $location ) {
             if( $location->hasLocationTypeName($typeName) ) {
-                echo "Assign $location <br>";
+                echo "Assign location ID=".$location->getId().", name=".$location->getName()."<br>";
                 $specificLocation = $location;
                 break;
             }
@@ -2185,7 +2185,7 @@ class FellAppUtil {
             $fellowshipApplication->addLocation($specificLocation);
         } else {
             echo "Existed specificLocation=".$specificLocation->getName()."<br>";
-            //$user->addLocation($specificLocation);
+            $user->addLocation($specificLocation);
             $fellowshipApplication->addLocation($specificLocation);
         }
 
