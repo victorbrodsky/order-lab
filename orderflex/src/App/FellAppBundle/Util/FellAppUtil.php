@@ -2133,7 +2133,7 @@ class FellAppUtil {
     }
 
     public function addEmptyLocations($fellowshipApplication) {
-
+        echo "addEmptyLocations <br>";
         //eager-join locationTypes once so hasLocationTypeName() below doesn't lazy-load the
         //locationTypes ManyToMany collection per Location, once per addLocationByType() call
         $user = $fellowshipApplication->getUser();
@@ -2154,7 +2154,7 @@ class FellAppUtil {
 
     }
     public function addLocationByType($fellowshipApplication,$typeName,$userLocations=null) {
-        echo "addLocationByType $typeName <br>";
+        echo "addLocationByType: $typeName <br>";
         $user = $fellowshipApplication->getUser();
 
         $specificLocation = null;
@@ -2175,7 +2175,7 @@ class FellAppUtil {
                 throw new EntityNotFoundException('Unable to find entity by name='.$typeName);
             }
 
-            echo "new Location $typeName <br>";
+            echo "new Location: $typeName <br>";
             $specificLocation = new Location();
             $specificLocation->setName('Fellowship Applicant '.$typeName);
             $specificLocation->addLocationType($locationType);
