@@ -58,8 +58,22 @@ user_telephonysiteparameter
 vacreq_siteparameter
 
 13- Fix the issue with the blank sections - done
+
 14- Add controller for downloading uploaded files
+1)Move all files from /public to /private
+2) Controller:
+ #[Route('/secure-file/{filename}', name: 'secure_file')]
+ public function secureFile(string $filename): Response
+ {
+     $this->denyAccessUnlessGranted('ROLE_USER'); // or your own logic
 
+     $path = $this->getParameter('kernel.project_dir') . '/private/uploads/fellapp/FellowshipApplicantUploads/' . $filename;
 
+     if (!file_exists($path)) {
+         throw $this->createNotFoundException();
+     }
+
+     return $this->file($path);
+ }
 
 

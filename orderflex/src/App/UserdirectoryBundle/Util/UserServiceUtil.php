@@ -3014,7 +3014,7 @@ tracepoint:sched:sched_process_exit
                 //$dest = $document->getServerPath();
                 //$dest = $document->getFullServerPath();
 
-                $src = $document->getServerPath();
+                $src = $document->getFullServerPath();
                 $uniquename = $document->getUniquename();
 
 //                if (file_exists($src)) {
@@ -3027,7 +3027,7 @@ tracepoint:sched:sched_process_exit
                 //Small
                 $desired_width = 65;
                 $uniquenameSmall = "small" . "-" . $uniquename;
-                $dest = str_replace($uniquename,$uniquenameSmall,$src);
+                $dest = $document->getFullServerPath('small', false);
                 //echo $desired_width.": dest=".$dest."<br>";
                 $destSmall = $this->makeThumb($src, $dest, $desired_width);
 
@@ -3035,7 +3035,7 @@ tracepoint:sched:sched_process_exit
                 $desired_width = 260;
                 $uniquename = $document->getUniquename();
                 $uniquenameSmall = "medium" . "-" . $uniquename;
-                $dest = str_replace($uniquename,$uniquenameSmall,$src);
+                $dest = $document->getFullServerPath('medium', false);
                 //echo $desired_width.": dest=".$dest."<br>";
                 $destMedium = $this->makeThumb($src, $dest, $desired_width);
 
@@ -3060,9 +3060,10 @@ tracepoint:sched:sched_process_exit
             //echo "The file $dest does not exists <br>";
         }
 
-        if (file_exists($src)) {
-            //echo "The file $src exists <br>";
-            //$logger->notice("src file does not exists src=$src");
+        if (!file_exists($src)) {
+            //echo "The file $src does not exists <br>";
+            $logger = $this->container->get('logger');
+            $logger->notice("src file does not exists src=$src");
             return null;
         }
         else {
@@ -6596,51 +6597,25 @@ tracepoint:sched:sched_process_exit
     public function getDocumentAbsoluteUrl( $document, $size=null, $onlyResize=false, $useRealScheme=true ) {
         //$logger = $this->container->get('logger');
 
-        $baseUrl = $this->container->get('router')->generate(
-            'main_common_home',
-            array(),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        ); //https://view.online/c/wcm/pathology/
-        //exit('$baseUrl='.$baseUrl);
-        //echo '$baseUrl='.$baseUrl."<br>";
-
-        $uniquename = $document->getUniquename();
-        if( !$uniquename ) {
+        if( !$document || !$document->getUniquename() ) {
             return null;
         }
 
-        if ($size) {
-            $uniquename = $size . "-" . $uniquename;
+        //Use the secure Symfony route so access is enforced by UploadController
+        $params = array('id' => $document->getId());
+        if( $size ) {
+            $params['viewType'] = 'snapshot-' . $size;
         }
-
-        $baseUrl = rtrim($baseUrl,'/'); //trim '/' at the end
-
-        $url = $baseUrl . '/' . $document->getUploadDirectory() . '/' . $uniquename;
-        //echo '$url='.$url."<br>";
-        //$logger->notice('getDocumentAbsoluteUrl: url1='.$url);
-
-        if( $onlyResize == false ) {
-            if ($size) {
-                $src = $document->getServerPath($size);
-                if (file_exists($src)) {
-                    //echo "The file $src exists <br>";
-                } else {
-                    //echo "The file $path does not exists <br>";
-                    //exit("The file $src does not exists");
-                    $url = $this->getDocumentAbsoluteUrl($document);
-                    //$logger->notice('getDocumentAbsoluteUrl: url2='.$url);
-                }
-            } else {
-                //echo "Size is null <br>";
-            }
-        }
+        $url = $this->container->get('router')->generate(
+            'employees_file_view',
+            $params,
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         if( $useRealScheme ) {
             $userUtil = $this->container->get('user_utility');
             $url = $userUtil->getRealSchemeUrl($url);
-            //$logger->notice('getDocumentAbsoluteUrl: url3='.$url);
         }
-        //$logger->notice('getDocumentAbsoluteUrl: url4='.$url);
 
         //echo 'return $url='.$url."<br>";
         //exit('return $url='.$url);

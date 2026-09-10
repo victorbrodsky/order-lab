@@ -15,43 +15,43 @@ oneup_uploader:
         employees_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%employees.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%employees.uploadpath%'
         scan_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%scan.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%scan.uploadpath%'
         fellapp_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%fellapp.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%fellapp.uploadpath%'
         resapp_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%resapp.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%resapp.uploadpath%'
         vacreq_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%vacreq.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%vacreq.uploadpath%'
         transres_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%transres.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%transres.uploadpath%'
         calllog_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%calllog.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%calllog.uploadpath%'
         crn_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%crn.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%crn.uploadpath%'
         ctp_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%ctp.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%ctp.uploadpath%'
         dashboard_gallery:
             frontend: dropzone
             storage:
-                directory: 'Uploaded/%dashboard.uploadpath%'
+                directory: '%kernel.project_dir%/private/Uploaded/%dashboard.uploadpath%'
 #        large_plupload:
 #            frontend: plupload
 #            storage:

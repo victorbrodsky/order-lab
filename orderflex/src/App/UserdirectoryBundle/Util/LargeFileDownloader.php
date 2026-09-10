@@ -337,8 +337,11 @@ class LargeFileDownloader {
         if( $ext == 'gif' ) {
             $mimeType = 'image/gif';
         }
-        if( $ext == 'tif' ) {
-            $mimeType = 'image/tif';
+        if( $ext == 'png' ) {
+            $mimeType = 'image/png';
+        }
+        if( $ext == 'tif' || $ext == 'tiff' ) {
+            $mimeType = 'image/tiff';
         }
 
         return $mimeType;

@@ -1859,10 +1859,7 @@ class UserSecurityUtil {
             $deletedDocumentIdsArr[] = $document->getId();
 
             //document absolute path
-            //$documentPath = $document->getAbsoluteUploadFullPath();
-            //$documentPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $document->getUploadDirectory().'/'.$document->getUniquename();
-            $documentPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' .
-                DIRECTORY_SEPARATOR . $document->getUploadDirectory() . DIRECTORY_SEPARATOR . $document->getUniquename();
+            $documentPath = $document->getFullServerPath();
             //$documentPath = "Uploaded/scan-order/documents/test.jpeg";
             //echo "documentPath=".$documentPath."<br>";
 

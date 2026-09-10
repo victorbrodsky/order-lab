@@ -376,7 +376,7 @@ class DefaultController extends OrderAbstractController
             if( $transresIntakeForm ) {
                 //$abspath = $transresIntakeForm->getAbsoluteUploadFullPath();
                 //$abspath = $transresIntakeForm->getRelativeUploadFullPath();
-                $abspath = $transresIntakeForm->getServerPath();
+                $abspath = $transresIntakeForm->getFullServerPath();
                 $originalname = $transresIntakeForm->getOriginalnameClean();
                 //echo $originalname.": abspath=$abspath <br>";
             } else {

@@ -562,7 +562,7 @@ class ReportGenerator {
         //$logger->notice("before reportPath");
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         //$reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR. $uploadReportPath;
-        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadReportPath;
         
         //$logger->notice("reportPath(before realpath)=".$reportPath);
         //$reportPath = realpath($reportPath);
@@ -1830,7 +1830,7 @@ class ReportGenerator {
 
                 //delete file from server
                 if ($deleteOldFileFromServer) {
-                    $filePath = $report->getServerPath();
+                    $filePath = $report->getFullServerPath(null, false);
                     if (file_exists($filePath)) {
                         //$logger->notice("create FellApp ReportDB: unlink file path=" . $filePath);
                         unlink($filePath);

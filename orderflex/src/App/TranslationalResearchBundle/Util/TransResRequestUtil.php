@@ -1459,7 +1459,7 @@ class TransResRequestUtil
             if( count($logoDocuments) > 0 ) {
                 $logoDocument = $logoDocuments->first(); //DESC order => the most recent first
                 //$docPath = $logoDocument->getAbsoluteUploadFullPath();
-                $docPath = $userServiceUtil->getDocumentAbsoluteUrl($logoDocument);
+                $docPath = $logoDocument->getFullServerPath();
                 //$docPath = $logoDocument->getRelativeUploadFullPath();
                 //echo "docPath=" . $docPath . "<br>";
                 if( $docPath ) {

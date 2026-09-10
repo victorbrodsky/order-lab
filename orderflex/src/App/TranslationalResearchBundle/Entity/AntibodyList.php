@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use App\UserdirectoryBundle\Entity\ListAbstract;
+use App\UserdirectoryBundle\Util\UserServiceUtil;
 
 #[ORM\Table(name: 'transres_antibodylist')]
 #[ORM\Entity]
@@ -1141,7 +1142,7 @@ class AntibodyList extends ListAbstract
         return $json;
     }
 
-    public function getImageData() {
+    public function getImageData($userServiceUtil = null) {
         $imageData = array();
         foreach( $this->getDocuments() as $document ) {
             $imageData[] = array(
@@ -1149,7 +1150,7 @@ class AntibodyList extends ListAbstract
                 'type' => 'document',
                 'key' => 'document-'.$document->getId(),
                 'label' => $this->getName(),
-                'url' => $document->getAbsoluteUploadFullPath(), //should use $userServiceUtil->getDocumentAbsoluteUrl($document)
+                'url' => ($userServiceUtil instanceof UserServiceUtil ? $userServiceUtil->getDocumentAbsoluteUrl($document) : null),
                 'path' => $document->getFullServerPath(),
                 'uniqueid' => $document->getUniqueid(),
                 'uniquename' => $document->getUniquename(),
@@ -1167,8 +1168,7 @@ class AntibodyList extends ListAbstract
             }
 
             foreach( $visualInfo->getDocuments() as $visualInfoDocument ) {
-                $path = $visualInfoDocument->getAbsoluteUploadFullPath(); //should use $userServiceUtil->getDocumentAbsoluteUrl($document) 
-                if( $path ) {
+                if( $visualInfoDocument ) {
                     $imageData[] = array(
                         'id' => $visualInfoDocument->getId(),
                         'type' => 'visualinfo',
@@ -1176,7 +1176,7 @@ class AntibodyList extends ListAbstract
                         'label' => $uploadedType.$visualInfo->getComment(),
                         'comment' => $visualInfo->getComment(),
                         'catalog' => $visualInfo->getCatalog(),
-                        'url' => $path,
+                        'url' => ($userServiceUtil instanceof UserServiceUtil ? $userServiceUtil->getDocumentAbsoluteUrl($visualInfoDocument) : null),
                         'path' => $visualInfoDocument->getFullServerPath(),
                         'uniqueid' => $visualInfoDocument->getUniqueid(),
                         'uniquename' => $visualInfoDocument->getUniquename(),

@@ -36,6 +36,7 @@ use Oneup\UploaderBundle\Event\PreUploadEvent;
 
 use App\UserdirectoryBundle\Entity\Document;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class UploadListener {
@@ -76,6 +77,15 @@ class UploadListener {
         $uniquefilename = $file->getFilename();
         //echo "uniquefilename=".$uniquefilename."<br>";
         $size = $file->getSize();
+
+        //Normalize uploadDirectory to a project-relative path
+        $projectRoot = $this->container->getParameter('kernel.project_dir');
+        $path = str_replace('\\', '/', $path);
+        $projectRoot = str_replace('\\', '/', $projectRoot);
+        if( strpos($path, $projectRoot) === 0 ) {
+            $path = substr($path, strlen($projectRoot));
+            $path = ltrim($path, '/');
+        }
 
         //creator: subjectUser
         //echo "userid=".$userid."<br>";
@@ -126,7 +136,11 @@ class UploadListener {
 
         $response = $event->getResponse();
         $response['documentid'] = $object->getId();
-        $response['documentsrc'] = $object->getRelativeUploadFullPath();
+        $response['documentsrc'] = $this->container->get('router')->generate(
+            'employees_file_view',
+            array('id' => $object->getId()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
     }
 

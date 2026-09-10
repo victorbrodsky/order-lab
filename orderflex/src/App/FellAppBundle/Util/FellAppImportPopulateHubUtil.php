@@ -201,8 +201,8 @@ class FellAppImportPopulateHubUtil {
             $xlsxData = base64_decode($data['xlsx_base64']);
             $filename = $data['filename'];
 
-            // Store in order-lab\orderflex\public\Uploaded\fellapp\Spreadsheets
-            $storagePath = $this->container->getParameter('kernel.project_dir') . '/public/Uploaded/fellapp/Spreadsheets';
+            // Store in order-lab\orderflex\private\Uploaded\fellapp\Spreadsheets
+            $storagePath = $this->container->getParameter('kernel.project_dir') . '/private/Uploaded/fellapp/Spreadsheets';
 
             // Create directory if it doesn't exist
             if( !is_dir($storagePath) ) {
@@ -491,9 +491,9 @@ class FellAppImportPopulateHubUtil {
 
             //$uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
 
-            // /public/Uploaded/fellapp/
+            // /private/Uploaded/fellapp/
             $uploadPath = $projectDir .
-                DIRECTORY_SEPARATOR . 'public' .
+                DIRECTORY_SEPARATOR . 'private' .
                 DIRECTORY_SEPARATOR . $fellappUploadPath;
             $logger->notice("Caller server: uploadPath=$uploadPath");
 
@@ -1135,7 +1135,7 @@ class FellAppImportPopulateHubUtil {
         if( !$applicantsUploadPathFellApp ) {
             $applicantsUploadPathFellApp = "FellowshipApplicantUploads";
         }
-        $storagePath = $this->container->get('kernel')->getProjectDir() . '/public/Uploaded/fellapp/' . $applicantsUploadPathFellApp;
+        $storagePath = $this->container->get('kernel')->getProjectDir() . '/private/Uploaded/fellapp/' . $applicantsUploadPathFellApp;
 
         // Get remote server URL from site settings
         $remoteUrl = $userSecUtil->getSiteSettingParameter(
@@ -2689,7 +2689,8 @@ class FellAppImportPopulateHubUtil {
         }
         $doc = $documents->first();
         if ($doc) {
-            return $doc->getAbsoluteUploadFullPath() ?? '';
+            $userServiceUtil = $this->container->get('user_service_utility');
+            return $userServiceUtil->getDocumentAbsoluteUrl($doc) ?? '';
         }
         return '';
     }
