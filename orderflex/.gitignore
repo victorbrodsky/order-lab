@@ -25,6 +25,8 @@
 /public/Uploaded/*
 !/public/Uploaded/.htaccess
 
+/private/Uploaded/*
+
 /var/
 /vendor/
 
