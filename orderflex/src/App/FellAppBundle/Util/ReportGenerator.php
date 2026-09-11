@@ -570,17 +570,17 @@ class ReportGenerator {
         //$logger->notice("reportPath(after realpath)=".$reportPath);
 
         if( !file_exists($reportPath) ) {
-            mkdir($reportPath, 0700, true);
-            chmod($reportPath, 0700);
+            @mkdir($reportPath, 0777, true);
+            @chmod($reportPath, 0777);
         }
 
         //It works
         $outdir = $reportPath.'/temp_'.$id.'/';
         //$logger->notice("outdir=".$outdir);
-        //if( !file_exists($outdir) ) {
-        //    mkdir($outdir, 0700, true);
-        //    chmod($outdir, 0700);
-        //}
+        if( !file_exists($outdir) ) {
+            @mkdir($outdir, 0777, true);
+            @chmod($outdir, 0777);
+        }
 
         //Don't use it: DIRECTORY_SEPARATOR CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
         //$outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
