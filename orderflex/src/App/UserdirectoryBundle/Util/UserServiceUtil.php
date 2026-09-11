@@ -3119,7 +3119,29 @@ tracepoint:sched:sched_process_exit
         }
 
         /* create the physical thumbnail image to its destination */
-        imagejpeg($virtual_image, $dest);
+        $destDir = dirname($dest);
+
+        if( !is_dir($destDir) ) {
+            @mkdir($destDir, 0777, true);
+        }
+
+        if( !is_writable($destDir) ) {
+            @chmod($destDir, 0777);
+        }
+
+        if( !is_writable($destDir) ) {
+            $logger = $this->container->get('logger');
+            $logger->warning("makeThumb: destination directory is not writable; skipping thumbnail for $dest");
+            return null;
+        }
+
+        if( !@imagejpeg($virtual_image, $dest) ) {
+            $logger = $this->container->get('logger');
+            $logger->error("makeThumb: imagejpeg failed to write $dest");
+            return null;
+        }
+
+        imagedestroy($virtual_image);
 
         return $dest;
     }
