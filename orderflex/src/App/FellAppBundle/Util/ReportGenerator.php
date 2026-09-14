@@ -1161,8 +1161,14 @@ class ReportGenerator {
 
             $filePath = realpath($filePath);
 
+            if( !$filePath ) {
+                $errorMsg = "Convert to PDF: Input file path does not exist for Fellowship Application $fellappInfo: filePath=[".$filePath."]";
+                $logger->error($errorMsg);
+                continue; //ignore this file
+            }
+
             if( !file_exists($filePath) ) {
-                $errorMsg = "Convert to PDF: Input file does not exist for Fellowship Application $fellappInfo: filePath=".$filePath;
+                $errorMsg = "Convert to PDF: Input file does not exist for Fellowship Application $fellappInfo: filePath=[".$filePath."]";
                 $logger->error($errorMsg);
                 $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist",$errorMsg,$toEmailsArr);
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
