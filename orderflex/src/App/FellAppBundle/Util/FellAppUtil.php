@@ -2310,17 +2310,17 @@ class FellAppUtil {
         $ews->setCellValue('G1', 'References');
         $ews->setCellValue('H1', 'Interview Score');
         $ews->setCellValue('I1', 'Interview Date');
+        $ews->setCellValue('J1', 'Visa Status');
+        $ews->setCellValue('K1', 'Country of Citizenship');
         
-        $ews->setCellValue('J1', 'Interviewer');
-        $ews->setCellValue('K1', 'Date');
-        $ews->setCellValue('L1', 'Academic Score');
-        $ews->setCellValue('M1', 'Personality Score');
-        $ews->setCellValue('N1', 'Overall Potential Score');
-        $ews->setCellValue('O1', 'Total Score');
-        $ews->setCellValue('P1', 'Language Proficiency');
-        $ews->setCellValue('Q1', 'Comments');
-        
-
+        $ews->setCellValue('L1', 'Interviewer');                //L
+        $ews->setCellValue('M1', 'Date');                       //M
+        $ews->setCellValue('N1', 'Academic Score');             //N
+        $ews->setCellValue('O1', 'Personality Score');          //O
+        $ews->setCellValue('P1', 'Overall Potential Score');    //P
+        $ews->setCellValue('Q1', 'Total Score');                //Q
+        $ews->setCellValue('R1', 'Language Proficiency');       //R
+        $ews->setCellValue('S1', 'Comments');                   //S
         
         $row = 2;
         foreach( explode("-",$fellappids) as $fellappId ) {
@@ -2362,6 +2362,22 @@ class FellAppUtil {
 	       
             //Interview Date                   
             $ews->setCellValue('I'.$row, $transformer->transform($fellapp->getInterviewDate()));
+
+            //Visa Status
+            $visaStatusesArr = [];
+            $countriesArr = [];
+            $citizenships = $fellapp->getCitizenships();
+            foreach($citizenships as $citizenship) {
+                $visaStatusesArr[] = $citizenship->getVisa();
+                $countriesArr[] = $citizenship->getCountry();
+            }
+            // Convert arrays to comma‑separated strings
+            $visaStatusStr = implode(', ', array_filter($visaStatusesArr));
+            $countryStr = implode(', ', array_filter($countriesArr));
+            //Visa Status
+            $ews->setCellValue('J'.$row, $visaStatusStr);
+            //Country of Citizenship
+            $ews->setCellValue('K'.$row, $countryStr);
             
             $allTotalRanks = 0;
             
@@ -2369,39 +2385,39 @@ class FellAppUtil {
             
                 //Interviewer
                 if( $interview->getInterviewer() ) {
-                    $ews->setCellValue('J'.$row, $interview->getInterviewer()->getUsernameOptimal());
+                    $ews->setCellValue('L'.$row, $interview->getInterviewer()->getUsernameOptimal());
                 }
                 
                 //Date
-                $ews->setCellValue('K'.$row, $transformer->transform($interview->getInterviewDate()));
+                $ews->setCellValue('M'.$row, $transformer->transform($interview->getInterviewDate()));
                 
                 //Academic Rank
                 if( $interview->getAcademicRank() ) {
-                    $ews->setCellValue('L'.$row, $interview->getAcademicRank()->getValue());
+                    $ews->setCellValue('N'.$row, $interview->getAcademicRank()->getValue());
                 }
                 
                 //Personality Rank
                 if( $interview->getPersonalityRank() ) {
-                    $ews->setCellValue('M'.$row, $interview->getPersonalityRank()->getValue());
+                    $ews->setCellValue('O'.$row, $interview->getPersonalityRank()->getValue());
                 }
                 
                 //Potential Rank
                 if( $interview->getPotentialRank() ) {
-                    $ews->setCellValue('N'.$row, $interview->getPotentialRank()->getValue());
+                    $ews->setCellValue('P'.$row, $interview->getPotentialRank()->getValue());
                 }
                 
                 //Total Rank
-                $ews->setCellValue('O'.$row, $interview->getTotalRank());
+                $ews->setCellValue('Q'.$row, $interview->getTotalRank());
                 $allTotalRanks = $allTotalRanks + $interview->getTotalRank();
                 
                 //Language Proficiency
                 if( $interview->getLanguageProficiency() ) {
-                    $ews->setCellValue('P'.$row, $interview->getLanguageProficiency()->getName());
+                    $ews->setCellValue('R'.$row, $interview->getLanguageProficiency()->getName());
                 }
                 
                 //Comments
-                $ews->setCellValue('Q'.$row, $interview->getComment());   
-                
+                $ews->setCellValue('S'.$row, $interview->getComment());
+
                 $row++;
             
             } //for each interview
@@ -2530,16 +2546,21 @@ class FellAppUtil {
                 'Medical School',               //5 - F
                 'Residency Institution',        //6 - G
                 'References',                   //7 - H
-                'Interview Score',              //8 - I
-                'Interview Date',               //9 - J
-                'Interviewer',                  //10 - K
-                'Date',                         //11 - L
-                'Academic Score',                //12 - M
-                'Personality Score',             //13 - N
-                'Overall Potential Score',               //14 - O
-                'Total Score',                   //15 - P
-                'Language Proficiency',         //16 - Q
-                'Comments',                     //17 - R
+
+                'Visa Status',                  //8 - I
+                'Country of Citizenship',       //9 - J
+
+                'Interview Score',              //10 - K
+                'Interview Date',               //11 - L
+
+                'Interviewer',                  //12 - M
+                'Date',                         //13 - N
+                'Academic Score',               //14 - O
+                'Personality Score',            //15 - P
+                'Overall Potential Score',      //16 - Q
+                'Total Score',                  //17 - R
+                'Language Proficiency',         //18 - S
+                'Comments',                     //19 - T
             ],
             $headerStyle
         );
@@ -2592,17 +2613,30 @@ class FellAppUtil {
             //$ews->setCellValue('G'.$row, $fellapp->getAllReferences());
             $data[7] = $fellapp->getAllReferences();
 
-                //Interview Score
+            //Visa Status and Country of Citizenship
+            $visaStatusesArr = [];
+            $countriesArr = [];
+            $citizenships = $fellapp->getCitizenships();
+            foreach($citizenships as $citizenship) {
+                $visaStatusesArr[] = $citizenship->getVisa();
+                $countriesArr[] = $citizenship->getCountry();
+            }
+            $visaStatusStr = implode(', ', array_filter($visaStatusesArr));
+            $countryStr = implode(', ', array_filter($countriesArr));
+            $data[8] = $visaStatusStr;
+            $data[9] = $countryStr;
+
+            //Interview Score
             $totalScore = "";
             if( $fellapp->getInterviewScore() ) {
                 $totalScore = $fellapp->getInterviewScore();
             }
             //$ews->setCellValue('H'.$row, $totalScore );
-            $data[8] = $totalScore;
+            $data[10] = $totalScore;
 
             //Interview Date
             //$ews->setCellValue('I'.$row, $transformer->transform($fellapp->getInterviewDate()));
-            $data[9] = $transformer->transform($fellapp->getInterviewDate());
+            $data[11] = $transformer->transform($fellapp->getInterviewDate());
 
             //$writer->addRowWithStyle($data,$requestStyle);
             $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
@@ -2624,59 +2658,61 @@ class FellAppUtil {
                 $data[7] = null;
                 $data[8] = null;
                 $data[9] = null;
+                $data[10] = null;
+                $data[11] = null;
 
                 //Interviewer
                 if( $interview->getInterviewer() ) {
                     //$ews->setCellValue('J'.$row, $interview->getInterviewer()->getUsernameOptimal());
-                    $data[10] = $interview->getInterviewer()->getUsernameOptimal();
+                    $data[12] = $interview->getInterviewer()->getUsernameOptimal();
                 } else {
-                    $data[10] = null;
+                    $data[12] = null;
                 }
 
                 //Date
                 //$ews->setCellValue('K'.$row, $transformer->transform($interview->getInterviewDate()));
-                $data[11] = $transformer->transform($interview->getInterviewDate());
+                $data[13] = $transformer->transform($interview->getInterviewDate());
 
                 //Academic Rank
                 if( $interview->getAcademicRank() ) {
                     //$ews->setCellValue('L'.$row, $interview->getAcademicRank()->getValue());
-                    $data[12] = $interview->getAcademicRank()->getValue();
+                    $data[14] = $interview->getAcademicRank()->getValue();
                 } else {
-                    $data[12] = null;
+                    $data[14] = null;
                 }
 
                 //Personality Rank
                 if( $interview->getPersonalityRank() ) {
                     //$ews->setCellValue('M'.$row, $interview->getPersonalityRank()->getValue());
-                    $data[13] = $interview->getPersonalityRank()->getValue();
+                    $data[15] = $interview->getPersonalityRank()->getValue();
                 } else {
-                    $data[13] = null;
+                    $data[15] = null;
                 }
 
                 //Potential Rank
                 if( $interview->getPotentialRank() ) {
                     //$ews->setCellValue('N'.$row, $interview->getPotentialRank()->getValue());
-                    $data[14] = $interview->getPotentialRank()->getValue();
+                    $data[16] = $interview->getPotentialRank()->getValue();
                 } else {
-                    $data[14] = null;
+                    $data[16] = null;
                 }
 
                 //Total Rank
                 //$ews->setCellValue('O'.$row, $interview->getTotalRank());
-                $data[15] = $interview->getTotalRank();
+                $data[17] = $interview->getTotalRank();
                 $allTotalRanks = $allTotalRanks + $interview->getTotalRank();
 
                 //Language Proficiency
                 if( $interview->getLanguageProficiency() ) {
                     //$ews->setCellValue('P'.$row, $interview->getLanguageProficiency()->getName());
-                    $data[16] = $interview->getLanguageProficiency()->getName();
+                    $data[18] = $interview->getLanguageProficiency()->getName();
                 } else {
-                    $data[16] = null;
+                    $data[18] = null;
                 }
 
                 //Comments
                 //$ews->setCellValue('Q'.$row, $interview->getComment());
-                $data[17] = $interview->getComment();
+                $data[19] = $interview->getComment();
 
                 //$writer->addRowWithStyle($data,$requestStyle);
                 $spoutRow = WriterEntityFactory::createRowFromArray($data, $requestStyle);
