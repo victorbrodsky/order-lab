@@ -320,26 +320,26 @@ class TestController extends OrderAbstractController
             return $this->redirect( $this->generateUrl($this->getParameter('fellapp.sitename').'-nopermission') );
         }
 
-        //////////// test PhpOffice ////////////
-        if(0) {
-            $filename = "1647382892ID1GzihEJuCbtWQoroRZbrt-k38s9AVcu9yRUS-GTP5gR4.com_Ashour_Salam_2021-05-19_21_34_54"; //good
-            $filename = "1647382888ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18"; //bad
-            //$filename = "good.xls";
-            //$filename = "bad.xls";
-            $inputFileName = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/";
-            $inputFileName = $inputFileName . $filename;
-            echo "Getting source sheet with filename=" . $inputFileName . "<br>";
-            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
-            //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
-            //https://phpspreadsheet.readthedocs.io/en/latest/topics/migration-from-PHPExcel/
-            $inputFileType = "Csv";
-            //$inputFileType = "Xls";
-            echo "inputFileType=$inputFileType <br>";
-            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
-            $objPHPExcel = $objReader->load($inputFileName);
-            exit("testing PhpOffice");
-        }
-        //////////// EOF test PhpOffice ////////////
+//        //////////// test PhpOffice ////////////
+//        if(0) {
+//            $filename = "1647382892ID1GzihEJuCbtWQoroRZbrt-k38s9AVcu9yRUS-GTP5gR4.com_Ashour_Salam_2021-05-19_21_34_54"; //good
+//            $filename = "1647382888ID1-L_TCY1vrhXyl4KBEZ_x7g-iC_CoKQbcjnvdjgdVR-o.edu_Ali_Mahmoud_2021-05-23_20_21_18"; //bad
+//            //$filename = "good.xls";
+//            //$filename = "bad.xls";
+//            $inputFileName = "C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/order-lab/orderflex/public/Uploaded/fellapp/Spreadsheets/";
+//            $inputFileName = $inputFileName . $filename;
+//            echo "Getting source sheet with filename=" . $inputFileName . "<br>";
+//            //migrate PHPExcel=>PhpOffice: All users must migrate to its direct successor PhpSpreadsheet, or another alternative.
+//            //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+//            //https://phpspreadsheet.readthedocs.io/en/latest/topics/migration-from-PHPExcel/
+//            $inputFileType = "Csv";
+//            //$inputFileType = "Xls";
+//            echo "inputFileType=$inputFileType <br>";
+//            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+//            $objPHPExcel = $objReader->load($inputFileName);
+//            exit("testing PhpOffice");
+//        }
+//        //////////// EOF test PhpOffice ////////////
 
 
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');

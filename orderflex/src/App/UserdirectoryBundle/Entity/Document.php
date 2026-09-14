@@ -535,8 +535,16 @@ class Document {
         $uploadDirectory = $this->getUploadDirectory();
         $uploadDirectory = str_replace('\\', '/', $uploadDirectory);
 
-        if( strpos((string)$fullPath, 'public') !== false ) {
-            //web exists: getcwd() is the public/ directory, so project root is one level up
+//        if( strpos((string)$fullPath, 'public') !== false ) {
+//            //web exists: getcwd() is the public/ directory, so project root is one level up
+//            $projectRoot = dirname($fullPath);
+//        } else {
+//            //console: getcwd() is the project root
+//            $projectRoot = $fullPath;
+//        }
+
+        if( strpos((string)$fullPath, 'private') !== false ) {
+            //web exists: getcwd() is the private/ directory, so project root is one level up
             $projectRoot = dirname($fullPath);
         } else {
             //console: getcwd() is the project root
@@ -548,13 +556,15 @@ class Document {
             $basePath = $projectRoot;
         } elseif( strpos($uploadDirectory, 'public/') === 0 ) {
             //Path already contains a public/ prefix relative to the project root (e.g., public/private/Uploaded or public/Uploaded)
-            $basePath = $projectRoot;
+            //$basePath = $projectRoot;
+            return NULL;
         } elseif( strpos($uploadDirectory, 'Uploaded/') === 0 ) {
             //Legacy public storage moved to private/Uploaded
             $basePath = $projectRoot . DIRECTORY_SEPARATOR . 'private';
         } else {
             //Fallback: assume public/Uploaded
-            $basePath = $projectRoot . DIRECTORY_SEPARATOR . 'public';
+            //$basePath = $projectRoot . DIRECTORY_SEPARATOR . 'public';
+            return NULL;
         }
 
         $uniquename = $this->getUniquename();

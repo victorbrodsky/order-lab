@@ -1397,7 +1397,8 @@ class FellAppImportPopulateHubUtil {
         $document = new Document($systemUser);
         $document->setDocumentHash($fileHash);
         $document->setUniquename($fileUniqueName);
-        $document->setUploadDirectory(str_replace($this->container->get('kernel')->getProjectDir() . '/public/', '', $storagePath));
+        //$document->setUploadDirectory(str_replace($this->container->get('kernel')->getProjectDir() . '/public/', '', $storagePath));
+        $document->setUploadDirectory(str_replace($this->container->get('kernel')->getProjectDir() . '/private/', '', $storagePath));
         $document->setSize($filesize);
         $document->setCleanOriginalname($filename);
 

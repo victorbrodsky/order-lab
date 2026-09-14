@@ -1309,7 +1309,8 @@ class InterfaceTransferUtil {
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $uploadDir = 'Uploaded'.'/'.$uploadPath;
-        $uploadPath = $projectRoot.'/public/'.$uploadDir;
+        //$uploadPath = $projectRoot.'/public/'.$uploadDir;
+        $uploadPath = $projectRoot.'/private/'.$uploadDir;
 
         //create upload folder if does not exist
         if( !file_exists($uploadPath) ) {
