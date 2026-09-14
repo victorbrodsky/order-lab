@@ -197,7 +197,7 @@ class AuthUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
         //$usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
-        $this->logger->notice("LocalAuthentication: get user by uesrname=".$token->getUsername());
+        $this->logger->notice("LocalAuthentication: get user by username=".$token->getUsername());
 
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
@@ -230,6 +230,7 @@ class AuthUtil {
 
         }
 
+        $this->logger->notice("User did not found by username=[".$token->getUsername()."]");
         return NULL;
     }
 
