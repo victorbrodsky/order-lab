@@ -1639,7 +1639,7 @@ class UserTenantUtil
     //Used in generateApplicationPdf
     public function routerGenerateWrapper($routName, $paramArr, $replaceContext=true)
     {
-        //$logger = $this->container->get('logger');
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userTenantUtil = $this->container->get('user_tenant_utility');
 
@@ -1687,7 +1687,10 @@ class UserTenantUtil
         //TODO: make this replace smarter (should replace only if $tenantUrlBase is not found in $pageUrl)
         //// replace tenant base in $pageUrl //////
         $tenantUrlBase = $userTenantUtil->getTenantUrlBase();
-        //$logger->notice("routerGenerateWrapper: tenantUrlBase=[" . $tenantUrlBase . "]");
+        if( !$tenantUrlBase ) {
+            $logger->warning("routerGenerateWrapper: tenantUrlBase: parameter tenant_base is not set in parameters.yml");
+        }
+        $logger->notice("routerGenerateWrapper: tenantUrlBase=[" . $tenantUrlBase . "]");
         if (str_contains($pageUrl, $tenantUrlBase) === false) {
             //$pageUrl = str_replace("http://localhost/","http://localhost/".$tenantUrlBase."/",$pageUrl);
             //$logger->notice("1a routerGenerateWrapper: pageUrl=[".$pageUrl."]");
