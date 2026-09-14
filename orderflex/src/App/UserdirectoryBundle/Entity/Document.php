@@ -531,40 +531,35 @@ class Document {
         //From web getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web
         //From console getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
         $fullPath = getcwd();
+        $fullPath = str_replace('\\', '/', $fullPath);
 
         $uploadDirectory = $this->getUploadDirectory();
         $uploadDirectory = str_replace('\\', '/', $uploadDirectory);
 
-//        if( strpos((string)$fullPath, 'public') !== false ) {
-//            //web exists: getcwd() is the public/ directory, so project root is one level up
-//            $projectRoot = dirname($fullPath);
-//        } else {
-//            //console: getcwd() is the project root
-//            $projectRoot = $fullPath;
-//        }
-
-        if( strpos((string)$fullPath, 'private') !== false ) {
-            //web exists: getcwd() is the private/ directory, so project root is one level up
+        //Web: getcwd() usually points to public/ (or sometimes private/); project root is one level up.
+        //Console: getcwd() is the project root.
+        $cwdBaseName = basename($fullPath);
+        if( $cwdBaseName === 'public' || $cwdBaseName === 'private' ) {
             $projectRoot = dirname($fullPath);
         } else {
-            //console: getcwd() is the project root
             $projectRoot = $fullPath;
+        }
+
+        //Strip a stale leading public/ artifact (e.g. "public/private/Uploaded/" or "public/Uploaded/")
+        if( strpos($uploadDirectory, 'public/') === 0 ) {
+            $uploadDirectory = substr($uploadDirectory, strlen('public/'));
+            $uploadDirectory = ltrim($uploadDirectory, '/');
         }
 
         if( strpos($uploadDirectory, 'private/') === 0 ) {
             //New private storage: private/Uploaded/... lives under the project root
             $basePath = $projectRoot;
-        } elseif( strpos($uploadDirectory, 'public/') === 0 ) {
-            //Path already contains a public/ prefix relative to the project root (e.g., public/private/Uploaded or public/Uploaded)
-            //$basePath = $projectRoot;
-            return NULL;
         } elseif( strpos($uploadDirectory, 'Uploaded/') === 0 ) {
             //Legacy public storage moved to private/Uploaded
             $basePath = $projectRoot . DIRECTORY_SEPARATOR . 'private';
         } else {
             //Fallback: assume public/Uploaded
-            //$basePath = $projectRoot . DIRECTORY_SEPARATOR . 'public';
-            return NULL;
+            $basePath = $projectRoot . DIRECTORY_SEPARATOR . 'public';
         }
 
         $uniquename = $this->getUniquename();
