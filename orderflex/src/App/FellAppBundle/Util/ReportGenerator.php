@@ -1162,8 +1162,8 @@ class ReportGenerator {
             $filePath = realpath($filePath);
 
             if( !$filePath ) {
-                $errorMsg = "Convert to PDF: Input file path does not exist for Fellowship Application $fellappInfo: filePath=[".$filePath."]";
-                $logger->error($errorMsg);
+                //$errorMsg = "Convert to PDF: Input file path does not exist for Fellowship Application $fellappInfo: filePath=[".$filePath."]";
+                //$logger->error($errorMsg);
                 continue; //ignore this file
             }
 
