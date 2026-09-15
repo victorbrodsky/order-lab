@@ -689,7 +689,22 @@ class FellAppController extends OrderAbstractController {
 
         }
 
-        $paginator  = $this->container->get('knp_paginator');
+        $idsQueryBuilder = clone $dql;
+        $idsQueryBuilder->select('DISTINCT fellapp.id AS id');
+        $idsQuery = $idsQueryBuilder->getQuery();
+
+        if( count($parameters) > 0 ) {
+            foreach ($parameters as $__setParamKey => $__setParamValue) {
+                $idsQuery->setParameter($__setParamKey, $__setParamValue);
+            }
+        }
+
+        $idsArr = array();
+        foreach( $idsQuery->getScalarResult() as $row ) {
+            $idsArr[] = $row['id'];
+        }
+
+        $paginator = $this->container->get('knp_paginator');
         $fellApps = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
@@ -765,11 +780,6 @@ class FellAppController extends OrderAbstractController {
 
         $rejectedandnotified = $fellappUtil->getFellAppByStatusAndYear('rejectedandnotified',$fellSubspecId,$startYearStr);
         $rejectedandnotifiedTotal = $fellappUtil->getFellAppByStatusAndYear('rejectedandnotified',$fellSubspecId);
-
-        $idsArr = array();
-        foreach( $fellApps as $fellApp ) {
-            $idsArr[] = $fellApp->getId();
-        }
 
         //Showing applications of your interviewees: 25 evaluations received, 10 awaited
         $awaitedInterviews = null;
