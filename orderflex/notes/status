@@ -61,5 +61,12 @@ vacreq_siteparameter
 14- Add controller for downloading uploaded files
 
 
+On the live server, switch to the new branch:
+git fetch
+git checkout private-uploaded
+git pull
+php bin/console cache:clear --env=prod
+
+
 
 
