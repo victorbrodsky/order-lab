@@ -100,23 +100,55 @@
     {% set resStr = "Applications matching search criteria" %}
 
     {% if fellappids is defined and fellappids %}
-        <p><b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
-            <a href="{{ path('fellapp_download_applicants_list_excel', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-                   data-toggle="tooltip" title="Download displayed application summaries as a spreadsheet">
-                   {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
-                    <i class="fa fa-file-excel fa-lg"></i></a>
-            <a href="{{ path('fellapp_download_interview_applicants_list_doc', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-               data-toggle="tooltip" title="Download displayed interviewee summaries as an editable document">
-                {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
-                <i class="fa fa-file-word fa-lg"></i></a>
-            <a href="{{ path('fellapp_download_interview_applicants_list_pdf', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-               data-toggle="tooltip" title="Download displayed interviewee summaries as a PDF document">
-                {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
-                <i class="fa fa-file-pdf fa-lg"></i></a>
-            <a href="{{ path('fellapp_download_applicants_list_zip', { 'fellappIds': fellappids, 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }, true) }}"
-               data-toggle="tooltip" title="Download displayed applications as a zip file">
-                <i class="fa fa-file-zipper fa-lg"></i></a>
-        </p>
+        <div><b>{{ resStr }}: {{ entities.getTotalItemCount }}</b>
+            <form method="post"
+                  action="{{ path('fellapp_download_applicants_list_excel', { 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }) }}"
+                  style="display: inline;">
+                <input type="hidden" name="fellappIds" value="{{ fellappids }}">
+                <button type="submit"
+                        data-toggle="tooltip"
+                        title="Download displayed application summaries as a spreadsheet"
+                        style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                    {#<span class="glyphicon glyphicon-download" aria-hidden="true"></span>#}
+                    <i class="fa fa-file-excel fa-lg"></i>
+                </button>
+            </form>
+            <form method="post"
+                  action="{{ path('fellapp_download_interview_applicants_list_doc', { 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }) }}"
+                  style="display: inline;">
+                <input type="hidden" name="fellappIds" value="{{ fellappids }}">
+                <button type="submit"
+                        data-toggle="tooltip"
+                        title="Download displayed interviewee summaries as an editable document"
+                        style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                    {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
+                    <i class="fa fa-file-word fa-lg"></i>
+                </button>
+            </form>
+            <form method="post"
+                  action="{{ path('fellapp_download_interview_applicants_list_pdf', { 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }) }}"
+                  style="display: inline;">
+                <input type="hidden" name="fellappIds" value="{{ fellappids }}">
+                <button type="submit"
+                        data-toggle="tooltip"
+                        title="Download displayed interviewee summaries as a PDF document"
+                        style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                    {#<span class="glyphicon glyphicon-export" aria-hidden="true"></span>#}
+                    <i class="fa fa-file-pdf fa-lg"></i>
+                </button>
+            </form>
+            <form method="post"
+                  action="{{ path('fellapp_download_applicants_list_zip', { 'currentYear': currentYear, 'fellappTypeId': fellappTypeId }) }}"
+                  style="display: inline;">
+                <input type="hidden" name="fellappIds" value="{{ fellappids }}">
+                <button type="submit"
+                        data-toggle="tooltip"
+                        title="Download displayed applications as a zip file"
+                        style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                    <i class="fa fa-file-zipper fa-lg"></i>
+                </button>
+            </form>
+        </div>
     {% endif %}
 
     {% if awaitedInterviews is not null and receivedInterviews is not null %}

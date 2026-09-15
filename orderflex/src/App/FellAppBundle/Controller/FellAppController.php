@@ -3514,8 +3514,8 @@ class FellAppController extends OrderAbstractController {
 
 
     
-    #[Route(path: '/download-applicants-list-excel/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_applicants_list_excel')]
-    public function downloadApplicantListExcelAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+    #[Route(path: '/download-applicants-list-excel/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_applicants_list_excel', methods: ['GET', 'POST'], defaults: ['fellappIds' => ''])]
+    public function downloadApplicantListExcelAction(Request $request, $currentYear, $fellappTypeId, $fellappIds = '') {
         //exit('$currentYear='.$currentYear);
 //        if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&
 //            false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') &&
@@ -3533,6 +3533,10 @@ class FellAppController extends OrderAbstractController {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
        
+        if( !$fellappIds ) {
+            $fellappIds = $request->request->get('fellappIds') ?? $request->query->get('fellappIds') ?? '';
+        }
+
         $em = $this->getDoctrine()->getManager();
         $fellowshipSubspecialty = null;
         $institutionNameFellappName = "";
@@ -3586,14 +3590,18 @@ class FellAppController extends OrderAbstractController {
         exit();      
     }
 
-    #[Route(path: '/download-applicants-list-zip/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_applicants_list_zip')]
-    public function downloadApplicantListZipAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+    #[Route(path: '/download-applicants-list-zip/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_applicants_list_zip', methods: ['GET', 'POST'], defaults: ['fellappIds' => ''])]
+    public function downloadApplicantListZipAction(Request $request, $currentYear, $fellappTypeId, $fellappIds = '') {
         $fellappUtil = $this->container->get('fellapp_util');
 
         if( false == $this->isGranted("read","FellowshipApplication") &&
             false == $fellappUtil->hasPublicApplicantRole() //plus check ROLE_FELLAPP_PUBLIC_SUBMITTER
         ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        if( !$fellappIds ) {
+            $fellappIds = $request->request->get('fellappIds') ?? $request->query->get('fellappIds') ?? '';
         }
 
         $em = $this->getDoctrine()->getManager();

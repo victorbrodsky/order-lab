@@ -592,8 +592,8 @@ class FellAppApplicantController extends OrderAbstractController {
     }
 
 
-    #[Route(path: '/download-interview-applicants-list-pdf/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_interview_applicants_list_pdf', methods: ['GET'])]
-    public function downloadInterviewApplicantsListAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+    #[Route(path: '/download-interview-applicants-list-pdf/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_interview_applicants_list_pdf', methods: ['GET', 'POST'], defaults: ['fellappIds' => ''])]
+    public function downloadInterviewApplicantsListAction(Request $request, $currentYear, $fellappTypeId, $fellappIds = '') {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&
             false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') &&
@@ -601,6 +601,10 @@ class FellAppApplicantController extends OrderAbstractController {
             false == $this->isGranted('ROLE_FELLAPP_OBSERVER')
         ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        if( !$fellappIds ) {
+            $fellappIds = $request->request->get('fellappIds') ?? $request->query->get('fellappIds') ?? '';
         }
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
@@ -687,8 +691,8 @@ class FellAppApplicantController extends OrderAbstractController {
     }
 
 
-    #[Route(path: '/download-interview-applicants-list-doc/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_interview_applicants_list_doc', methods: ['GET'])]
-    public function downloadInterviewApplicantsListDocAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
+    #[Route(path: '/download-interview-applicants-list-doc/{currentYear}/{fellappTypeId}/{fellappIds}', name: 'fellapp_download_interview_applicants_list_doc', methods: ['GET', 'POST'], defaults: ['fellappIds' => ''])]
+    public function downloadInterviewApplicantsListDocAction(Request $request, $currentYear, $fellappTypeId, $fellappIds = '') {
 
         if( false == $this->isGranted('ROLE_FELLAPP_COORDINATOR') &&
             false == $this->isGranted('ROLE_FELLAPP_DIRECTOR') &&
@@ -696,6 +700,10 @@ class FellAppApplicantController extends OrderAbstractController {
             false == $this->isGranted('ROLE_FELLAPP_OBSERVER')
         ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        if( !$fellappIds ) {
+            $fellappIds = $request->request->get('fellappIds') ?? $request->query->get('fellappIds') ?? '';
         }
 
         $em = $this->getDoctrine()->getManager();
