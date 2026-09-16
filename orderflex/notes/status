@@ -64,6 +64,7 @@ vacreq_siteparameter
 On the live server, switch to the new branch:
 git fetch
 git checkout private-uploaded
+git branch -vv
 git pull
 php bin/console cache:clear --env=prod
 
