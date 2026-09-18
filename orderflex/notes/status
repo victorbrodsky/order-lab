@@ -67,5 +67,17 @@ git branch -vv
 git pull
 php bin/console cache:clear --env=prod
 
+On dev, merge with master:
+git checkout master
+git merge private-uploaded
+git push
+On live:
+git checkout master
+git pull
 
+Remove private-uploaded:
+Delete locally (dev machine):
+#git branch -d private-uploaded
+Delete on GitHub (remote):
+#git push origin --delete private-uploaded
 
