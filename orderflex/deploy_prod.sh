@@ -105,7 +105,7 @@ function prep(){
     #try to set permission
     #chown -R www-data:www-data $PROJECT_LOCAL_PATH/public
     #chown -R apache:apache $PROJECT_LOCAL_PATH/public
-    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/public
+    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/private
 
     if [[ $PARAM2 != "-nodb" ]]
     then
@@ -164,7 +164,7 @@ function prep(){
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var/cache
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/var/log
-    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/public
+    chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/private
     chown -R "$WEB_USER" $PROJECT_LOCAL_PATH/../backup
 
     chmod 744 $PROJECT_LOCAL_PATH/../backup/pg_backup.sh

@@ -517,7 +517,7 @@ class Document {
 
     //use for command console to get a full absolute server path
     //example: C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2/web/Uploaded/fellapp/documents/56fbf9e8867c3.jpg
-    public function getFullServerPath($withRealPath=true)
+    public function getFullServerPath($size=null, $withRealPath=true)
     {
         if( !$this->getUploadDirectory() ) {
             return NULL;
@@ -531,21 +531,60 @@ class Document {
         //From web getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web
         //From console getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
         $fullPath = getcwd();
+        $fullPath = str_replace('\\', '/', $fullPath);
 
-        if( strpos((string)$fullPath, 'public') !== false ) {
-            //web exists
+        $uploadDirectory = $this->getUploadDirectory();
+        $uploadDirectory = str_replace('\\', '/', $uploadDirectory);
+
+        //Web: getcwd() usually points to public/ (or sometimes private/); project root is one level up.
+        //Console: getcwd() is the project root.
+        $cwdBaseName = basename($fullPath);
+        if( $cwdBaseName === 'public' || $cwdBaseName === 'private' ) {
+            $projectRoot = dirname($fullPath);
         } else {
-            //web does not exist
-            $fullPath = $fullPath.DIRECTORY_SEPARATOR."public";
+            $projectRoot = $fullPath;
         }
 
-        $fullPath = $fullPath . DIRECTORY_SEPARATOR . $this->getUploadDirectory() . DIRECTORY_SEPARATOR . $this->getUniquename();
+        //Strip a stale leading public/ artifact (e.g. "public/private/Uploaded/" or "public/Uploaded/")
+        if( strpos($uploadDirectory, 'public/') === 0 ) {
+            $uploadDirectory = substr($uploadDirectory, strlen('public/'));
+            $uploadDirectory = ltrim($uploadDirectory, '/');
+        }
+
+        if( strpos($uploadDirectory, 'private/') === 0 ) {
+            //New private storage: private/Uploaded/... lives under the project root
+            $basePath = $projectRoot;
+        } elseif( strpos($uploadDirectory, 'Uploaded/') === 0 ) {
+            //Legacy public storage moved to private/Uploaded
+            $basePath = $projectRoot . DIRECTORY_SEPARATOR . 'private';
+        } else {
+            //Fallback: assume public/Uploaded
+            $basePath = $projectRoot . DIRECTORY_SEPARATOR . 'public';
+        }
+
+        $uniquename = $this->getUniquename();
+        if( $size ) {
+            $uniquename = $size . "-" . $uniquename;
+        }
+
+        $fullPath = $basePath . DIRECTORY_SEPARATOR . $uploadDirectory . DIRECTORY_SEPARATOR . $uniquename;
 
         //$fullPath = getcwd() . "/web/" . $this->getUploadDirectory().'/'.$this->getUniquename();
         //$fullPath = realpath($fullPath);
 
         if( $fullPath && $withRealPath ) {
-            $fullPath = realpath($fullPath);
+            $realPath = realpath($fullPath);
+            if( $realPath ) {
+                return $realPath;
+            }
+            // Legacy fallback: read original public/Uploaded files if private copy is missing
+            if( strpos($uploadDirectory, 'Uploaded/') === 0 ) {
+                $publicPath = $projectRoot . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadDirectory . DIRECTORY_SEPARATOR . $uniquename;
+                $realPublicPath = realpath($publicPath);
+                if( $realPublicPath ) {
+                    return $realPublicPath;
+                }
+            }
         }
 
         return $fullPath;
@@ -729,7 +768,7 @@ class Document {
 
     public function getFileSystemPath($size=null) {
         //echo "getcwd=".getcwd()."<br>";
-        return getcwd() . "\\" . $this->getServerPath($size);
+        return $this->getFullServerPath($size);
     }
 
     public function getSizeStr()

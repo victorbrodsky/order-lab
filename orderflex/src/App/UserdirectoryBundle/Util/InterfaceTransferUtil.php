@@ -1270,13 +1270,13 @@ class InterfaceTransferUtil {
                 $transferableEntity->addDocument($document);
                 $this->em->flush();
                 $logger->notice('receiveTransfer: after flush: document id='.$document->getId());
-            }
 
-            //TODO: check $transferableEntity how many documents
-            foreach( $transferableEntity->getImageData() as $image) {
-                $logger->notice('receiveTransfer: image id='.$image['id']."; path=".$image['path']."; url=".$image['url']);
-            }
+                $userServiceUtil = $this->container->get('user_service_utility');
+                foreach( $transferableEntity->getImageData($userServiceUtil) as $image) {
+                    $logger->notice('receiveTransfer: image id='.$image['id']."; path=".$image['path']."; url=".$image['url']);
+                }
 
+            }
         }
     }
 
@@ -1309,7 +1309,8 @@ class InterfaceTransferUtil {
 
         $projectRoot = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\order-lab\orderflex
         $uploadDir = 'Uploaded'.'/'.$uploadPath;
-        $uploadPath = $projectRoot.'/public/'.$uploadDir;
+        //$uploadPath = $projectRoot.'/public/'.$uploadDir;
+        $uploadPath = $projectRoot.'/private/'.$uploadDir;
 
         //create upload folder if does not exist
         if( !file_exists($uploadPath) ) {
@@ -2290,12 +2291,12 @@ class InterfaceTransferUtil {
 
             //TODO: transfer file with the same name and add to the project
             //source file
-            $sourceFile = $apppath.'/'.'public'.'/'.$uploadDirectory.'/'.$uniquename;
+            $sourceFile = $apppath.'/'.'private'.'/'.$uploadDirectory.'/'.$uniquename;
 
-            //copy file to public/Uploaded/transres/documents
+            //copy file to private/Uploaded/transres/documents
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             $destinationFileName = $instanceId.'-'.$uniquename;
-            $destinationFile = $projectRoot.'/public/Uploaded/transres/documents/'.$destinationFileName;
+            $destinationFile = $projectRoot.'/private/Uploaded/transres/documents/'.$destinationFileName;
             //$testFile = '/usr/local/bin/order-lab-tenantapp1/orderflex/public/Uploaded/transres/documents/668c329c96a32.pdf';
 
             //echo "sourceFile=".$sourceFile.", destinationFile=".$destinationFile."<br>";

@@ -562,7 +562,7 @@ class ReportGenerator {
         //$logger->notice("before reportPath");
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         //$reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR. $uploadReportPath;
-        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadReportPath;
         
         //$logger->notice("reportPath(before realpath)=".$reportPath);
         //$reportPath = realpath($reportPath);
@@ -570,17 +570,17 @@ class ReportGenerator {
         //$logger->notice("reportPath(after realpath)=".$reportPath);
 
         if( !file_exists($reportPath) ) {
-            mkdir($reportPath, 0700, true);
-            chmod($reportPath, 0700);
+            @mkdir($reportPath, 0777, true);
+            @chmod($reportPath, 0777);
         }
 
         //It works
         $outdir = $reportPath.'/temp_'.$id.'/';
         //$logger->notice("outdir=".$outdir);
-        //if( !file_exists($outdir) ) {
-        //    mkdir($outdir, 0700, true);
-        //    chmod($outdir, 0700);
-        //}
+        if( !file_exists($outdir) ) {
+            @mkdir($outdir, 0777, true);
+            @chmod($outdir, 0777);
+        }
 
         //Don't use it: DIRECTORY_SEPARATOR CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
         //$outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
@@ -1161,8 +1161,14 @@ class ReportGenerator {
 
             $filePath = realpath($filePath);
 
+            if( !$filePath ) {
+                //$errorMsg = "Convert to PDF: Input file path does not exist for Fellowship Application $fellappInfo: filePath=[".$filePath."]";
+                //$logger->error($errorMsg);
+                continue; //ignore this file
+            }
+
             if( !file_exists($filePath) ) {
-                $errorMsg = "Convert to PDF: Input file does not exist for Fellowship Application $fellappInfo: filePath=".$filePath;
+                $errorMsg = "Convert to PDF: Input file does not exist for Fellowship Application $fellappInfo: filePath=[".$filePath."]";
                 $logger->error($errorMsg);
                 $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist",$errorMsg,$toEmailsArr);
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
@@ -1830,7 +1836,7 @@ class ReportGenerator {
 
                 //delete file from server
                 if ($deleteOldFileFromServer) {
-                    $filePath = $report->getServerPath();
+                    $filePath = $report->getFullServerPath(null, false);
                     if (file_exists($filePath)) {
                         //$logger->notice("create FellApp ReportDB: unlink file path=" . $filePath);
                         unlink($filePath);

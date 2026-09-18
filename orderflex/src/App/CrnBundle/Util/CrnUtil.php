@@ -4121,7 +4121,7 @@ class CrnUtil
 
         $originalFile = $document->getFullServerPath();
         //echo "originalFile=$originalFile<br>";
-        $newFile = $newDocument->getFullServerPath(false); //use $withRealPath=false because file does not exists yet
+        $newFile = $newDocument->getFullServerPath(null,false); //use $withRealPath=false because file does not exists yet
         //echo "newFile=$newFile<br>";
         //exit('test');
 

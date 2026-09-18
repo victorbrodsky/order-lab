@@ -2945,17 +2945,17 @@ class UserController extends OrderAbstractController
         
         $getUniquename = $entity['uniquename38'];
         $getAbsoluteUploadFullPath = null;
-        
+
         $uploadDirectory = $entity['uploadDirectory39'];
-        if( $getUniquename && $uploadDirectory ) {
-            //$subdomain = "/order";
-            $subdomain = "";
-            //$scheme = $request->getScheme();
-            //replace $request->getScheme() with getRealScheme($request)
-            $userUtil = $this->container->get('user_utility');
-            $scheme = $userUtil->getRealScheme($request);
-            //$getAbsoluteUploadFullPath = $scheme."://" . $_SERVER['SERVER_NAME'] . "/order/" . $uploadDirectory.'/'.$getUniquename;
-            $getAbsoluteUploadFullPath = $scheme."://" . $_SERVER['SERVER_NAME'] . $subdomain . "/" . $uploadDirectory.'/'.$getUniquename;
+        if( $getUniquename ) {
+            $userServiceUtil = $this->container->get('user_service_utility');
+            $document = $em->getRepository(Document::class)->findOneBy(array(
+                'uniquename' => $getUniquename,
+                'uploadDirectory' => $uploadDirectory
+            ));
+            if( $document ) {
+                $getAbsoluteUploadFullPath = $userServiceUtil->getDocumentAbsoluteUrl($document);
+            }
         }
 
         $getUsernameOptimal = $entity['displayName23'];
@@ -4362,7 +4362,7 @@ class UserController extends OrderAbstractController
 
             //echo "old avatar id=".$oldAvatar->getId()."<br>";
 
-            $oldImageAvatar = $oldAvatar->getAbsoluteUploadFullPath();
+            $oldImageAvatar = $oldAvatar->getFullServerPath();
             //$oldImageUpload = str_replace($crop->getAvatarPostfix(),$crop->getUploadPostfix(),$oldImageAvatar);
             $oldImageUpload = str_replace('avatar','upload',$oldImageAvatar);
 

@@ -38,7 +38,7 @@ class CropAvatar {
     function __construct($src=null, $data=null, $file=null, $uploadPath=null) {
 
         //echo "__DIR__=".__DIR__." ";
-        $webPath = __DIR__.'/../../../../public/';
+        $webPath = __DIR__.'/../../../../private/';
         //$webPath = __DIR__."\..\..\..\..\..\web\"";
         //echo "webPath=".$webPath." ";
 
@@ -86,7 +86,7 @@ class CropAvatar {
 
     private function setSrc($src) {
         if (!empty($src)) {
-            $type = exif_imagetype($src);
+            $type = $this->getImageType($src);
 
             if ($type) {
                 $this -> src = $src;
@@ -107,7 +107,7 @@ class CropAvatar {
         $errorCode = $file['error'];
 
         if ($errorCode === UPLOAD_ERR_OK) {
-            $type = exif_imagetype($file['tmp_name']);
+            $type = $this->getImageType($file['tmp_name']);
 
             if ($type) {
                 $dir = $this -> srcDir;
@@ -144,6 +144,19 @@ class CropAvatar {
         } else {
             $this -> msg = $this -> codeToMessage($errorCode);
         }
+    }
+
+    private function getImageType($file) {
+        if (function_exists('exif_imagetype')) {
+            return exif_imagetype($file);
+        }
+
+        $info = @getimagesize($file);
+        if ($info && isset($info[2])) {
+            return $info[2];
+        }
+
+        return false;
     }
 
     private function setDst() {

@@ -138,11 +138,9 @@
                          {#style="max-width: 250px;"#}
                     {#>#}
 
-                    {% set relativeAvatarPath = lastAvatar.getAssetRelativePath() %}
-                    {#relativeAvatarPath={{ relativeAvatarPath }}#}
-                    {#{% set relativeAvatarPath = 'Uploaded/fellapp/documents/69867df55f467.jpeg' %}#}
+                    {% set avatarUrl = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,'medium') %}
                     <img
-                        src="{{ asset(relativeAvatarPath) }}"
+                        src="{{ avatarUrl }}"
                         alt="{{ altTitle }}"
                         style="max-width: 250px;"
                     >

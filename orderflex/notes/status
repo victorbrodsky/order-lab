@@ -58,16 +58,14 @@ user_telephonysiteparameter
 vacreq_siteparameter
 
 13- Fix the issue with the blank sections - done
+
 14- Add controller for downloading uploaded files
-
-
 On the live server, switch to the new branch:
 git fetch
 git checkout private-uploaded
 git branch -vv
 git pull
 php bin/console cache:clear --env=prod
-
 
 
 

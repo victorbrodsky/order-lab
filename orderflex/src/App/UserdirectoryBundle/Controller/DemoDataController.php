@@ -228,7 +228,7 @@ class DemoDataController extends OrderAbstractController
             }
 
             // Move the file to the upload directory
-            $uploadDirectory = $this->getParameter('kernel.project_dir') . '/public/Uploaded/fellapp/documents';
+            $uploadDirectory = $this->getParameter('kernel.project_dir') . '/private/Uploaded/fellapp/documents';
             if (!file_exists($uploadDirectory)) {
                 mkdir($uploadDirectory, 0777, true);
                 chmod($uploadDirectory, 0700);
@@ -308,12 +308,13 @@ class DemoDataController extends OrderAbstractController
             $logger->notice("apiUploadFile: ".$eventDescription);
             $userSecUtil->createUserEditEvent($sitename, $eventDescription, $user, $document, $request, $documentType . ' Uploaded');
 
+            $userServiceUtil = $this->container->get('user_service_utility');
             return new JsonResponse([
                 'status' => 'success',
                 'filepath' => $filepath,
                 'documentId' => $document->getId(),
                 'documentName' => $document->getUniquename(),
-                'documentPath' => $document->getRelativeUploadFullPath(),
+                'documentPath' => $userServiceUtil->getDocumentAbsoluteUrl($document),
                 'message' => $inputParameters
             ], 200);
 

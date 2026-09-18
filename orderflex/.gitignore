@@ -23,6 +23,7 @@
 /public/.well-known/
 
 /public/Uploaded/*
+/public/Uploaded*/*
 !/public/Uploaded/.htaccess
 
 /private/Uploaded/*

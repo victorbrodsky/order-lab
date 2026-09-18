@@ -320,10 +320,7 @@ class ReminderUtil
 
                 //It's working with cron
                 if( !$attachmentPath ) {
-                    //$attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
-                    $attachmentPath = $userServiceUtil->getDocumentAbsoluteUrl($invoicePDF);
-                    //Result: http://127.0.0.1/Uploaded/transres/InvoicePDF/
-                    //Invoice-PDF-APCP668-REQ14079-V1-Bing-He-generated-on-09-21-2018-at-12-12-15_UTC.pdf;
+                    $attachmentPath = $invoicePDF->getFullServerPath();
                 }
 
                 //TODO: live server => $attachmentPath is empty
