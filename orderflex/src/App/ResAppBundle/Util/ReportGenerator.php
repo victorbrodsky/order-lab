@@ -381,10 +381,15 @@ class ReportGenerator {
     //$kill_pattern = '~(helpctr|jqs|javaw?|iexplore|acrord32)\.exe~i';
     public function isTaskRunning($kill_pattern) {
         $logger = $this->container->get('logger');
+        $userServiceUtil = $this->container->get('user_service_utility');
         // get tasklist
         $task_list = array();
 
-        exec("tasklist 2>NUL", $task_list);
+        if( $userServiceUtil->isWinOs() ) {
+            exec("tasklist 2>NUL", $task_list);
+        } else {
+            exec("ps -e -o args 2>/dev/null", $task_list);
+        }
 
         foreach ($task_list AS $task_line)
         {
@@ -403,8 +408,15 @@ class ReportGenerator {
 
     public function killTaskByName($taskname) {
         $logger = $this->container->get('logger');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $logger->warning('killing task='.$taskname);
-        exec("taskkill /F /IM ".$taskname.".* 2>NUL");
+        if( $userServiceUtil->isWinOs() ) {
+            exec("taskkill /F /IM ".$taskname.".* 2>NUL");
+        } else {
+            //bracket around first char prevents pkill from matching its own shell command line
+            $pkillPattern = '['.substr($taskname,0,1).']'.substr($taskname,1);
+            exec("pkill -9 -f '".$pkillPattern."' 2>/dev/null");
+        }
         $task_pattern = '~(soffice.bin|soffice.exe)~i';
         if( !$this->isTaskRunning($task_pattern) ) {
             $logger->warning('Deleted task='.$taskname);
