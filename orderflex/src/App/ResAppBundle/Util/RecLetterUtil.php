@@ -583,7 +583,7 @@ class RecLetterUtil {
 
         //$root = $this->container->get('kernel')->getRootDir();
         //$fullpath = $root . '/../public/'.$path;
-        $fullpath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $path;
+        $fullpath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $path;
         $target_file = $fullpath . DIRECTORY_SEPARATOR . $file->getTitle() . $fileExtStr;
 
         //check if file already exists by file path

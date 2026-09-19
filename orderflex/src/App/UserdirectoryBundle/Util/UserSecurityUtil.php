@@ -2258,7 +2258,8 @@ class UserSecurityUtil {
     //return absolute file name on the server which will work for web and command
     public function getAbsoluteServerFilePath( $document ) {
         //return realpath($this->container->get('kernel')->getRootDir() . "/../public/" . $document->getServerPath());
-        return $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $document->getServerPath();
+        //getFullServerPath resolves private/Uploaded and falls back to legacy public/Uploaded
+        return $document->getFullServerPath();
     }
 
     //checkAndAddPermissionToRole($role,"Submit a Vacation Request","VacReqRequest","create")
@@ -3995,7 +3996,7 @@ class UserSecurityUtil {
 
     public function getUploadPath() {
         $projectDir = $this->container->get('kernel')->getProjectDir();
-        $uploadPath = $projectDir . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR;
+        $uploadPath = $projectDir . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR;
         return $uploadPath;
     }
 

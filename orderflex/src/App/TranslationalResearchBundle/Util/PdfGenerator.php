@@ -60,17 +60,14 @@ class PdfGenerator
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
         //$logger->notice("1reportPath=".$reportPath);
 
-        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadReportPath;
         //$logger->notice("2reportPath=".$reportPath);
 
         //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);
         //echo "reportPath=".$reportPath."<br>";
 
-        if( !file_exists($reportPath) ) {
-            mkdir($reportPath, 0700, true);
-            chmod($reportPath, 0700);
-        }
+        $this->createReportDir($reportPath);
 
         //$outdir = $reportPath.'/temp_'.$invoice->getOid().'/';
         //$outdir = $reportPath.'/'.$invoice->getOid().'/';
@@ -393,6 +390,31 @@ class PdfGenerator
         return $object;
     }
 
+    protected function createReportDir($reportPath) {
+        $logger = $this->container->get('logger');
+
+        if( file_exists($reportPath) ) {
+            if( is_dir($reportPath) ) {
+                return;
+            }
+            $msg = "createReportDir: path exists but it is not a directory: " . $reportPath;
+            $logger->error($msg);
+            throw new \Exception($msg);
+        }
+
+        if( !mkdir($reportPath, 0700, true) && !is_dir($reportPath) ) {
+            $parentDir = dirname($reportPath);
+            $msg = "createReportDir: failed to create directory " . $reportPath .
+                "; parent " . $parentDir .
+                " exists=" . (is_dir($parentDir) ? 'yes' : 'no') .
+                " writable=" . (is_writable($parentDir) ? 'yes' : 'no');
+            $logger->error($msg);
+            throw new \Exception($msg);
+        }
+
+        chmod($reportPath, 0700);
+    }
+
     protected static function deleteDir($dirPath) {
         if (! is_dir($dirPath)) {
             throw new \InvalidArgumentException("$dirPath must be a directory");
@@ -445,16 +467,13 @@ class PdfGenerator
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPath;
 
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
-        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadReportPath;
 
         //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);
         //echo "reportPath=".$reportPath."<br>";
 
-        if( !file_exists($reportPath) ) {
-            mkdir($reportPath, 0700, true);
-            chmod($reportPath, 0700);
-        }
+        $this->createReportDir($reportPath);
 
         //$outdir = $reportPath.'/temp_'.$invoice->getOid().'/';
         //$outdir = $reportPath.'/'.$invoice->getOid().'/';
@@ -875,17 +894,14 @@ class PdfGenerator
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $uploadReportPath;
         //$logger->notice("1reportPath=".$reportPath);
 
-        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadReportPath;
         //$logger->notice("2reportPath=".$reportPath);
 
         //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);
         //echo "reportPath=".$reportPath."<br>";
 
-        if( !file_exists($reportPath) ) {
-            mkdir($reportPath, 0700, true);
-            chmod($reportPath, 0700);
-        }
+        $this->createReportDir($reportPath);
 
         //$outdir = $reportPath.'/temp_'.$project->getOid().'/';
         //$outdir = $reportPath.'/'.$project->getOid().'/';

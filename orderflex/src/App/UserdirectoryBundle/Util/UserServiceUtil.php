@@ -2520,7 +2520,7 @@ tracepoint:sched:sched_process_exit
             "<br>The next steps would be:".
             " <br>- Make sure that the local administrator user and associated password".
             " is set if the backup is used outside the institutional intranet network".
-            " <br>- Make sure the  public 'Uploaded' folder corresponds to the restored DB.".
+            " <br>- Make sure the  private 'Uploaded' folder corresponds to the restored DB.".
             " <br>- Verify the site settings.".
             //" Specifically, currently, connectionChannel=$connectionChannel, mailerdeliveryaddresses=$siteEmail".
             //" The following site settings parameters were preserved from the original DB:".
@@ -4551,7 +4551,7 @@ tracepoint:sched:sched_process_exit
 
             $projectRoot = $this->container->get('kernel')->getProjectDir();
             //echo "projectRoot=".$projectRoot."<br>";
-            $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";//.DIRECTORY_SEPARATOR."Uploaded";
+            $folder = $projectRoot . DIRECTORY_SEPARATOR . "private";//.DIRECTORY_SEPARATOR."Uploaded";
             //$folder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR."calllog";
             //echo "folder=".$folder."<br>";
             //exit('111');
@@ -4660,7 +4660,7 @@ tracepoint:sched:sched_process_exit
 
         $projectRoot = $this->container->get('kernel')->getProjectDir();
         //echo "projectRoot=".$projectRoot."<br>";
-        $folder = $projectRoot . DIRECTORY_SEPARATOR . "public";
+        $folder = $projectRoot . DIRECTORY_SEPARATOR . "private";
         //echo "folder=".$folder."<br>";
 
         $targetFolder = "Uploaded";

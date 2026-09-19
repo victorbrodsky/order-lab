@@ -549,7 +549,7 @@ class FellAppImportPopulateUtil {
 
             //remove (unlink) file from server
             //$documentPath = $this->container->get('kernel')->getRootDir() . '/../public/' . $document->getUploadDirectory().'/'.$document->getUniquename();
-            $documentPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $document->getUploadDirectory().'/'.$document->getUniquename();
+            $documentPath = $document->getFullServerPath();
 
             if( is_file($documentPath) ) {
 
@@ -947,7 +947,7 @@ class FellAppImportPopulateUtil {
         //if ruuning from cron path must be: $path = getcwd() . "/web";
         //$inputFileName = $path . "/" . $inputFileName;
         //$inputFileName = realpath($this->container->get('kernel')->getRootDir() . "/../public/" . $inputFileName);
-        $inputFileName = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $inputFileName;
+        $inputFileName = $document->getFullServerPath();
         //echo "inputFileName=".$inputFileName."<br>";
         if( !file_exists($inputFileName) ) {
             $logger->error("Source sheet does not exists with filename=".$inputFileName);

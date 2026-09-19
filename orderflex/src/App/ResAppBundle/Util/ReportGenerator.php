@@ -551,7 +551,7 @@ class ReportGenerator {
         //$logger->notice("before reportPath");
         //$reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
         //$reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR. $uploadReportPath;
-        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadReportPath;
         
         //$logger->notice("reportPath(before realpath)=".$reportPath);
         //$reportPath = realpath($reportPath);
@@ -1864,7 +1864,7 @@ class ReportGenerator {
         //echo "serverPath=".$serverPath." ";
 
         //$applicationOutputFilePath = getcwd() . "/web/" . $avatar->getUploadDirectory() . "/test/test.pdf";
-        $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
+        $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
         echo "path=".$applicationOutputFilePath." ";
 
         $this->generateApplicationPdf($resapp->getId(),$applicationOutputFilePath);

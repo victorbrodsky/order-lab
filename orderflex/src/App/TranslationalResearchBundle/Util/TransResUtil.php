@@ -6843,8 +6843,8 @@ class TransResUtil
 
         $uploadAntibodiesPath = "antibodypdfs";
         $reportPath = $this->container->get('kernel')->getProjectDir() .
-            DIRECTORY_SEPARATOR . 'public' .
-            "Uploaded" . DIRECTORY_SEPARATOR . "transres" .
+            DIRECTORY_SEPARATOR . 'private' .
+            DIRECTORY_SEPARATOR . "Uploaded" . DIRECTORY_SEPARATOR . "transres" .
             DIRECTORY_SEPARATOR . $uploadAntibodiesPath;
 
         if( !file_exists($reportPath) ) {

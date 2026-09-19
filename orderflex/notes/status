@@ -81,3 +81,5 @@ Delete locally (dev machine):
 Delete on GitHub (remote):
 #git push origin --delete private-uploaded
 
+Check folder size:
+du -sh /path/to/folder

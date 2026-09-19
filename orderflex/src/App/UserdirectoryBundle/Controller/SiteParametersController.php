@@ -192,7 +192,7 @@ class SiteParametersController extends OrderAbstractController
         //$uploadPath = $rootDir . 'public' . DIRECTORY_SEPARATOR;
         $projectDir = $this->container->get('kernel')->getProjectDir();
         //$projectDir = $this->getProjectDir();
-        $uploadPath = $projectDir . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR;
+        $uploadPath = $projectDir . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR;
 
         return array(
             'entity'      => $entity,

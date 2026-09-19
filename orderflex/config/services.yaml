@@ -346,7 +346,7 @@ services:
 #         calls:
 #             - method: setUploadDir
 #               arguments:
-#                 - '%kernel.project_dir%/public/Uploaded/temp'
+#                 - '%kernel.project_dir%/private/Uploaded/temp'
 #             - method: setApiPath
 #               arguments:
 #                  - '/directory/tus'

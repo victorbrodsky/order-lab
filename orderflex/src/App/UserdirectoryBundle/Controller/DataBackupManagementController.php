@@ -248,7 +248,7 @@ class DataBackupManagementController extends OrderAbstractController
         $uploadFilesBackupSize = 'N/A';
         if( $userServiceUtil->isWindows() == false ) {
             $projectRoot = $this->container->get('kernel')->getProjectDir();
-            $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
+            $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."private".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
 
             $io = popen('/usr/bin/du -sk ' . $uploadFilesFolder, 'r');
             $size = fgets($io, 4096);
@@ -277,7 +277,7 @@ class DataBackupManagementController extends OrderAbstractController
         } else {
             //Windows: no `du` command, calculate the size with PHP
             $projectRoot = $this->container->get('kernel')->getProjectDir();
-            $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."public".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
+            $uploadFilesFolder = $projectRoot.DIRECTORY_SEPARATOR."private".DIRECTORY_SEPARATOR."Uploaded".DIRECTORY_SEPARATOR;
             if( is_dir($uploadFilesFolder) ) {
                 $size = $this->dirSize($uploadFilesFolder);
                 if( $size ) {
@@ -1070,7 +1070,7 @@ class DataBackupManagementController extends OrderAbstractController
                 "<br>The next steps would be:".
                 " <br>- Make sure that the local administrator user and associated password".
                 " is set if the backup is used outside the institutional intranet network".
-                " <br>- Make sure the  public 'Uploaded' folder corresponds to the restored DB.".
+                " <br>- Make sure the  private 'Uploaded' folder corresponds to the restored DB.".
                 " <br>- Verify the site settings.".
                 //" Specifically, currently, connectionChannel=$connectionChannel, mailerdeliveryaddresses=$siteEmail".
                 " The following site settings parameters were preserved from the original DB:".
