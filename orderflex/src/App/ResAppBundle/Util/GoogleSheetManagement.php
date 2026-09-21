@@ -377,7 +377,7 @@ class GoogleSheetManagement {
             //echo "root=".$root."<br>";
             //$fullpath = $this->get('kernel')->getRootDir() . '/../web/'.$path;
             //$fullpath = $root . '/../public/'.$path;
-            $fullpath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $path;
+            $fullpath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $path;
 
             $target_file = $fullpath . DIRECTORY_SEPARATOR . $fileUniqueName;
 

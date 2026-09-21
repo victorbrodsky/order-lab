@@ -1098,7 +1098,8 @@ class PatientController extends OrderAbstractController
             //scan.uploadpath
             $dir = 'Uploaded/'.$this->getParameter('scan.uploadpath');
             $document->setUploadDirectory($dir);
-            $filename = $dir."/".$uniqueName;
+            $fsDir = $this->getParameter('kernel.project_dir').DIRECTORY_SEPARATOR.'private'.DIRECTORY_SEPARATOR.$dir;
+            $filename = $fsDir."/".$uniqueName;
             if( file_exists($filename) ) {
                 $imagesize = filesize($filename);
                 //echo "The imagesize=$imagesize<br>";
@@ -1110,20 +1111,20 @@ class PatientController extends OrderAbstractController
                 if( !file_exists($originalFile) ) {
                     throw new \Exception( 'There is no original file '.$originalFile );
                 }
-                if( !file_exists($dir) ) {
+                if( !file_exists($fsDir) ) {
                     // 0700 - Read and write, execute for owner, nothing for everybody else
-                    mkdir($dir, 0700, true);
-                    chmod($dir, 0700);
-                    //throw new \Exception( 'There is no dir '.$dir );
+                    mkdir($fsDir, 0700, true);
+                    chmod($fsDir, 0700);
+                    //throw new \Exception( 'There is no dir '.$fsDir );
                 }
                 if( !copy($originalFile,$filename) ) {
-                    throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to public/'.$dir );
+                    throw new \Exception( 'Copy Failed: the file '.$filename.' does not exist. Please copy this file to private/'.$dir );
                 }
 
             }
 
             if( !file_exists($filename) ) {
-                throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to public/'.$dir );
+                throw new \Exception( 'The file '.$filename.' does not exist. Please copy this file to private/'.$dir );
             }
         }
 

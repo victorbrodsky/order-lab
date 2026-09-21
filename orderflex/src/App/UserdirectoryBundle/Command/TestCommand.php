@@ -97,7 +97,7 @@ class TestCommand extends Command
 
         ///usr/local/bin/order-lab/Scanorders2/web/Uploaded/fellapp/Reports
         //$reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
-        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
+        $reportPath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadReportPath. DIRECTORY_SEPARATOR;
 
         $outdir = $reportPath . 'temp_' . $fellappApplicationId . DIRECTORY_SEPARATOR;
 

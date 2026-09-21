@@ -1969,7 +1969,7 @@ class ReportGenerator {
         //echo "serverPath=".$serverPath." ";
 
         //$applicationOutputFilePath = getcwd() . "/web/" . $avatar->getUploadDirectory() . "/test/test.pdf";
-        $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "public" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
+        $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
         echo "path=".$applicationOutputFilePath." ";
 
         $res = $this->generateApplicationPdf($fellapp->getId(),$applicationOutputFilePath);

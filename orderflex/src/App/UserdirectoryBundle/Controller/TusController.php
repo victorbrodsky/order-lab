@@ -35,7 +35,7 @@ class TusController extends OrderAbstractController
     {
         $userSecUtil = $this->container->get('user_security_utility');
         $uploadDir = $userSecUtil->getSiteSettingParameter('networkDrivePath');
-        //$uploadDir = '%kernel.project_dir%/public/Uploaded/temp';
+        //$uploadDir = '%kernel.project_dir%/private/Uploaded/temp';
         $server->setUploadDir($uploadDir);
 
         $apiPath = '/directory/tus';

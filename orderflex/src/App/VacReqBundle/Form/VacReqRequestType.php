@@ -307,8 +307,12 @@ class VacReqRequestType extends AbstractType
         $carryOverNote = null;
         if( $useCarryOverNoteAndMaxdaysTogether ) {
             if( $this->params['maxCarryOverVacationDays'] ) {
-                $carryOverNote = " (As per policy, the number of days that can be carried over to the following year is limited to the maximum of ".
-                $this->params['maxCarryOverVacationDays'].")";
+                $carryOverNote = " (As per policy, the number of days that can be carried ".
+                    "over to the following year is limited to the maximum of ".
+                $this->params['maxCarryOverVacationDays'].
+                    ". A part-time exempt staff member accrues vacation time proportionate ".
+                    "to the percentage of full-time that the staff member is scheduled to work. ".
+                    ")";
             }
         } else {
             if( $this->params['noteForCarryOverDays'] ) {

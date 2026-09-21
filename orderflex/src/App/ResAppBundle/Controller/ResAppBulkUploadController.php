@@ -174,7 +174,7 @@ class ResAppBulkUploadController extends OrderAbstractController
                         $res = $zip->open($zipFilePath);
                         if( $res === TRUE ) {
                             $destinationPath = 'Uploaded/resapp/documents';
-                            $sourcePath = $destinationPath.'/temp_extract_path';
+                            $sourcePath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $destinationPath.'/temp_extract_path';
                             $zip->extractTo($sourcePath);
                             $zip->close();
                             //echo 'woot!';
@@ -414,7 +414,7 @@ class ResAppBulkUploadController extends OrderAbstractController
         $sourceFile = $sourcePath . DIRECTORY_SEPARATOR . $fileName;
 
         //$destinationPath = realpath($destinationPath);
-        $destinationFile = $destinationPath . DIRECTORY_SEPARATOR . $fileUniqueName;
+        $destinationFile = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $destinationPath . DIRECTORY_SEPARATOR . $fileUniqueName;
 
         //copy $file to
         if( file_exists($sourceFile) ) {

@@ -2722,7 +2722,7 @@ class PdfUtil {
                 $uploadPath = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
                 //$this->uploadPath = $path;  //'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath.DIRECTORY_SEPARATOR;
 
-                $uploadedFolder = realpath($uploadPath);
+                $uploadedFolder = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadPath;
                 //echo "destinationFolder=".$destinationFolder."<br>";
                 if( !file_exists($uploadedFolder) ) {
                     echo "Create destination folder [$uploadedFolder]<br>";

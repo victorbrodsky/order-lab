@@ -633,7 +633,7 @@ class ImportFromOldSystem {
         $resappuploadpath = $userSecUtil->getSiteSettingParameter('resappuploadpath'); //resapp/documents
         $uploadPath = 'Uploaded'.DIRECTORY_SEPARATOR.$resappuploadpath;
 
-        $destinationFolder = realpath($uploadPath);
+        $destinationFolder = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'private' . DIRECTORY_SEPARATOR . $uploadPath;
         //echo "destinationFolder=".$destinationFolder."<br>";
         if( !file_exists($destinationFolder) ) {
             //echo "Create destination folder <br>";
