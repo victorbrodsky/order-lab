@@ -196,11 +196,21 @@ f_sync() {
     if [ -n "$type" ] && [ "$type" == "test-private" ]
         then
             echo -e ${COLOR} Test public/private folder for "$1" ${NC}
-            git --git-dir="$homedir"/order-lab-"$1"/.git branch
-            #ls -lrt "$homedir"/order-lab-"$1"/orderflex/public
-            du -sh "$homedir"/order-lab-"$1"/orderflex/public/Uploaded
-            #ls -lrt "$homedir"/order-lab-"$1"/orderflex/private
-            du -sh "$homedir"/order-lab-"$1"/orderflex/private/Uploaded
+
+            #Expected result:
+            # * master
+            # du: cannot access '.../orderflex/public/Uploaded': No such file or directory
+            # 4.0K    .../orderflex/private/Uploaded
+            branch=$(git --git-dir="$homedir"/order-lab-"$1"/.git branch 2>/dev/null | grep '^\*' | awk '{print $2}')
+
+            if [ "$branch" == "master" ] &&
+               [ ! -d "$homedir"/order-lab-"$1"/orderflex/public/Uploaded ] &&
+               [ -d "$homedir"/order-lab-"$1"/orderflex/private/Uploaded ]
+            then
+                echo -e ${COLORGREEN} "tenant $1 is ok (private)" ${NC}
+            else
+                echo -e ${COLOR} "tenant $1 IS NOT OK (private): branch=$branch, public/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/public/Uploaded ] && echo yes || echo no), private/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/private/Uploaded ] && echo yes || echo no)" ${NC}
+            fi
     fi
 
 #    if [ -n "$type" ] && [ "$type" == "createdb" ]
