@@ -197,8 +197,8 @@ f_sync() {
         then
             echo -e ${COLOR} Test public/private folder for "$1" ${NC}
             git --git-dir="$homedir"/order-lab-"$1"/.git branch
-            ls -lrt "$homedir"/order-lab-"$1"/public
-            ls -lrt "$homedir"/order-lab-"$1"/private
+            ls -lrt "$homedir"/order-lab-"$1"/orderflex/public
+            ls -lrt "$homedir"/order-lab-"$1"/orderflex/private
     fi
 
 #    if [ -n "$type" ] && [ "$type" == "createdb" ]
