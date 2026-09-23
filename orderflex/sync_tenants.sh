@@ -125,12 +125,12 @@ f_sync() {
     fi
 
     if [ -n "$type" ] && [ "$type" == "addallversions" ]
-            then
-                echo -e ${COLOR} check migration status for "$1" ${NC}
-                yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
-            #else
-            #    echo -e ${COLOR} type is empty ${NC}
-        fi
+        then
+            echo -e ${COLOR} check migration status for "$1" ${NC}
+            yes | php "$homedir"/order-lab-"$1"/orderflex/bin/console doctrine:migrations:version --add --all
+        #else
+        #    echo -e ${COLOR} type is empty ${NC}
+    fi
     ### EOF DB migration ###
 
     if [ -n "$type" ] && [ "$type" == "composer" ]
@@ -191,6 +191,14 @@ f_sync() {
         then
             echo -e ${COLOR} Convert array to json for "$1" ${NC}
             php "$homedir"/order-lab-"$1"/orderflex/bin/console app:convert-array-to-json --all --apply --alter-schema
+    fi
+
+    if [ -n "$type" ] && [ "$type" == "test-private" ]
+        then
+            echo -e ${COLOR} Test public/private folder for "$1" ${NC}
+            git --git-dir="$homedir"/order-lab-"$1"/.git branch
+            lsl "$homedir"/order-lab-"$1"/public
+            lsl "$homedir"/order-lab-"$1"/private
     fi
 
 #    if [ -n "$type" ] && [ "$type" == "createdb" ]
