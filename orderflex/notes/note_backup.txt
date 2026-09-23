@@ -1,4 +1,4 @@
-tar -xf /usr/local/bin/order-lab/orderflex/var/backups/backupfiles-live_2023-10-04-19-59-22_05-10-2023_15-36-35.tar.gz -C /usr/local/bin/order-lab/orderflex/public
+tar -xf /usr/local/bin/order-lab/orderflex/var/backups/backupfiles-live_2023-10-04-19-59-22_05-10-2023_15-36-35.tar.gz -C /usr/local/bin/order-lab/orderflex/private
 tar: Skipping to next header
 tar: A lone zero block at 9387691
 tar: Exiting with failure status due to previous errors
@@ -10,7 +10,7 @@ https://view.online/c/wcm/pathology/directory/settings/1/edit?param=filesBackupC
 [
 {
 "idname" : "uploads-live-MIN",
-"command" : "python3 /usr/local/bin/order-lab-tenantapp1/backup/filesbackup.py -s /usr/local/bin/order-lab-tenantapp1/orderflex/public -d /usr/local/bin/order-lab-tenantapp1/orderflex/var/autobackups/upload-backup/uploads-live-MIN -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 3 >> /srv/order-lab/orderflex/var/log/uploads-live-MIN.log",
+"command" : "python3 /usr/local/bin/order-lab-tenantapp1/backup/filesbackup.py -s /usr/local/bin/order-lab-tenantapp1/orderflex/private -d /usr/local/bin/order-lab-tenantapp1/orderflex/var/autobackups/upload-backup/uploads-live-MIN -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 3 >> /srv/order-lab/orderflex/var/log/uploads-live-MIN.log",
 "croninterval" : "3m"
 },
 {
@@ -29,17 +29,17 @@ Current live server:
 [
 {
 "idname" : "uploads-live-MIN",
-"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/public -d /mnt/pathology/view-backup/upload-backup/uploads-live-MIN -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 3 >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-MIN.log",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/private -d /mnt/pathology/view-backup/upload-backup/uploads-live-MIN -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 3 >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-MIN.log",
 "croninterval" : "40m"
 },
 {
 "idname" : "uploads-live-xits-po-order-prd2-tenantapp1-HOURLY",
-"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/public -d /mnt/pathology/view-backup/upload-backup/uploads-live-xits-po-order-prd2-tenantapp1-HOURLY -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 6 -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-xits-po-order-prd2-tenantapp1-HOURLY.log",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/private -d /mnt/pathology/view-backup/upload-backup/uploads-live-xits-po-order-prd2-tenantapp1-HOURLY -b 'Uploaded' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 6 -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-xits-po-order-prd2-tenantapp1-HOURLY.log",
 "croninterval" : "4h"
 },
 {
 "idname" : "uploads-live-test-MIN",
-"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/public -d /mnt/pathology/view-backup/upload-backup/uploads-live-test-MIN -b 'docs' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 6 -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-test-MIN.log",
+"command" : "python3 /srv/order-lab-tenantapp1/backup/filesbackup.py -s /srv/order-lab-tenantapp1/orderflex/private -d /mnt/pathology/view-backup/upload-backup/uploads-live-test-MIN -b 'docs' -h smtp.med.cornell.edu -f oli2002@med.cornell.edu -r oli2002@med.cornell.edu -k 6 -a 'apache' -n '//brbpathologyfs.med.cornell.edu/pathology/view-backup/upload-backup' -l '/mnt/pathology/view-backup/upload-backup' -c /mnt/pathology/view-backup/credentials.txt >> /srv/order-lab-tenantapp1/orderflex/var/log/uploads-live-test-MIN.log",
 "croninterval" : "1m"
 },
 {
