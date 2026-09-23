@@ -196,7 +196,7 @@ f_sync() {
 
     if [ -n "$type" ] && [ "$type" == "test-private" ]
         then
-            echo -e ${COLOR} *** Test public/private folder for "$1" *** ${NC}
+            echo -e ${COLOR} --- Test public/private folder for "$1" --- ${NC}
 
             #Expected result:
             # * master
