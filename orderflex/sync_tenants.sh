@@ -4,6 +4,7 @@
 COLOR='\033[1;36m'
 COLORWHITE='\033[37m'
 COLORGREEN='\033[32m'
+COLORRED='\033[31m'
 NC='\033[0m' # No Color
 
 #Usage: bash sync_tenants.sh basic /srv
@@ -209,7 +210,7 @@ f_sync() {
             then
                 echo -e ${COLORGREEN} "tenant $1 is ok (private)" ${NC}
             else
-                echo -e ${COLOR} "tenant $1 IS NOT OK (private): branch=$branch, public/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/public/Uploaded ] && echo yes || echo no), private/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/private/Uploaded ] && echo yes || echo no)" ${NC}
+                echo -e ${COLORRED} "tenant $1 IS NOT OK (private): branch=$branch, public/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/public/Uploaded ] && echo yes || echo no), private/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/private/Uploaded ] && echo yes || echo no)" ${NC}
             fi
     fi
 
