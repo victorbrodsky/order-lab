@@ -204,13 +204,19 @@ f_sync() {
             # 4.0K    .../orderflex/private/Uploaded
             branch=$(git --git-dir="$homedir"/order-lab-"$1"/.git branch 2>/dev/null | grep '^\*' | awk '{print $2}')
 
-            if [ "$branch" == "master" ] &&
-               [ ! -d "$homedir"/order-lab-"$1"/orderflex/public/Uploaded ] &&
+            if [ "$branch" == "master" ]
+            then
+                echo -e ${COLORGREEN} "tenant $1 branch is ok (master)" ${NC}
+            else
+                echo -e ${COLORRED} "tenant $1 branch IS NOT OK (branch=$branch)" ${NC}
+            fi
+
+            if [ ! -d "$homedir"/order-lab-"$1"/orderflex/public/Uploaded ] &&
                [ -d "$homedir"/order-lab-"$1"/orderflex/private/Uploaded ]
             then
                 echo -e ${COLORGREEN} "tenant $1 is ok (private)" ${NC}
             else
-                echo -e ${COLORRED} "tenant $1 IS NOT OK (private): branch=$branch, public/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/public/Uploaded ] && echo yes || echo no), private/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/private/Uploaded ] && echo yes || echo no)" ${NC}
+                echo -e ${COLORRED} "tenant $1 IS NOT OK (private): public/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/public/Uploaded ] && echo yes || echo no), private/Uploaded exists=$([ -d "$homedir"/order-lab-"$1"/orderflex/private/Uploaded ] && echo yes || echo no)" ${NC}
             fi
     fi
 
