@@ -138,7 +138,9 @@ class ReviewBaseType extends AbstractType
                     if ($isShowCycle) {
                         $existingReviewer = $reviewObjectEntity->getReviewer();
                         $existingReviewerId = $existingReviewer ? $existingReviewer->getId() : null;
-                        return $qb->where('list.id = :reviewerId')
+                        return $qb->leftJoin('list.infos', 'i')->addSelect('i')
+                            ->leftJoin('list.keytype', 'k')->addSelect('k')
+                            ->where('list.id = :reviewerId')
                             ->setParameter('reviewerId', $existingReviewerId);
                     }
                     return $qb
@@ -147,7 +149,8 @@ class ReviewBaseType extends AbstractType
                         ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         //->andWhere("employmentStatus.terminationDate IS NULL")
                         //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                        ->leftJoin("list.infos", "infos")
+                        ->leftJoin("list.infos", "infos")->addSelect("infos")
+                        ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                         ->orderBy("infos.displayName","ASC");
                 };
 
@@ -156,7 +159,9 @@ class ReviewBaseType extends AbstractType
                     if ($isShowCycle) {
                         $existingReviewerDelegate = $reviewObjectEntity->getReviewerDelegate();
                         $existingReviewerDelegateId = $existingReviewerDelegate ? $existingReviewerDelegate->getId() : null;
-                        return $qb->where('list.id = :reviewerDelegateId')
+                        return $qb->leftJoin('list.infos', 'i')->addSelect('i')
+                            ->leftJoin('list.keytype', 'k')->addSelect('k')
+                            ->where('list.id = :reviewerDelegateId')
                             ->setParameter('reviewerDelegateId', $existingReviewerDelegateId);
                     }
                     return $qb
@@ -165,7 +170,8 @@ class ReviewBaseType extends AbstractType
                         ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         //->andWhere("employmentStatus.terminationDate IS NULL")
                         //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                        ->leftJoin("list.infos", "infos")
+                        ->leftJoin("list.infos", "infos")->addSelect("infos")
+                        ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                         ->orderBy("infos.displayName","ASC");
                 };
 

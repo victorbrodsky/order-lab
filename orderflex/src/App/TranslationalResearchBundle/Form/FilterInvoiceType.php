@@ -78,7 +78,8 @@ class FilterInvoiceType extends AbstractType
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
                     ->leftJoin("list.perSiteSettings", "perSiteSettings")
                     ->addSelect("perSiteSettings")
@@ -99,7 +100,8 @@ class FilterInvoiceType extends AbstractType
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
                     ->leftJoin("list.perSiteSettings", "perSiteSettings")
                     ->addSelect("perSiteSettings")
@@ -120,7 +122,8 @@ class FilterInvoiceType extends AbstractType
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
                     ->leftJoin("list.perSiteSettings", "perSiteSettings")
                     ->addSelect("perSiteSettings")
@@ -142,7 +145,8 @@ class FilterInvoiceType extends AbstractType
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     //eager-join perSiteSettings (inverse OneToOne) to avoid one extra query per hydrated User
                     ->leftJoin("list.perSiteSettings", "perSiteSettings")
                     ->addSelect("perSiteSettings")

@@ -1194,7 +1194,8 @@ class User extends UserBase
         // Diagnostic: use the lighter string version (no user_userInfo lookup).
         // If this dramatically improves the project show page, the bottleneck is confirmed
         // to be in the heavy name construction.
-        return (string) $this->getUserNameStrQuick();
+        //return (string) $this->getUserNameStrQuick();
+        return (string) $this->getUserNameStr();
     }
 
 

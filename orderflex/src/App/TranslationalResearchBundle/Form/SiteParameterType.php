@@ -98,7 +98,8 @@ class SiteParameterType extends AbstractType
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     ->orderBy("infos.displayName", "ASC");
             },
         ));
@@ -334,7 +335,8 @@ class SiteParameterType extends AbstractType
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->leftJoin("list.infos", "infos")
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     ->orderBy("infos.displayName", "ASC");
             }
         ));

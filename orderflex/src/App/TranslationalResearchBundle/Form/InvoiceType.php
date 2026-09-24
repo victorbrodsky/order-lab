@@ -81,7 +81,8 @@ class InvoiceType extends AbstractType
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
                         ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                        ->leftJoin("list.infos", "infos")
+                        ->leftJoin("list.infos", "infos")->addSelect("infos")
+                        ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                         ->orderBy("infos.displayName", "ASC");
                 },
             ));
@@ -102,7 +103,8 @@ class InvoiceType extends AbstractType
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     ->orderBy("infos.displayName", "ASC");
             },
         ));
@@ -122,7 +124,8 @@ class InvoiceType extends AbstractType
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     ->orderBy("infos.displayName", "ASC");
             },
         ));
@@ -144,7 +147,8 @@ class InvoiceType extends AbstractType
                         ->leftJoin("employmentStatus.employmentType", "employmentType")
                         ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                         //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                        ->leftJoin("list.infos", "infos")
+                        ->leftJoin("list.infos", "infos")->addSelect("infos")
+                        ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                         ->orderBy("infos.displayName", "ASC");
                 },
             ));

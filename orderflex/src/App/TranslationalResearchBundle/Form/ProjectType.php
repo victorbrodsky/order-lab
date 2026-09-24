@@ -117,6 +117,7 @@ class ProjectType extends AbstractType
                     return $er->createQueryBuilder('u')
                         ->leftJoin('u.perSiteSettings', 'ps')->addSelect('ps')
                         ->leftJoin('u.keytype', 'k')->addSelect('k')
+                        ->leftJoin('u.infos', 'i')->addSelect('i')
                         ->where('u.id IN (:ids)')
                         ->setParameter('ids', $selectedUserIds);
                 };

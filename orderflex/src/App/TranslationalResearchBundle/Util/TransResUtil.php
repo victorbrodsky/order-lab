@@ -6920,7 +6920,10 @@ class TransResUtil
                     ->andWhere($roles)
                     ->setParameter('testerIds', $testerIds)
                     ->setParameter('adminIds', $adminIds)
-                    ->leftJoin("list.infos", "infos")
+                    //eager-select: getUserNameStr() (via __toString) calls getDisplayName()/getKeytype()
+                    //on every row; without addSelect each row lazy-loads infos/keytype (N+1)
+                    ->leftJoin("list.infos", "infos")->addSelect("infos")
+                    ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                     ->orderBy("infos.displayName","ASC");
             };
         }
@@ -6932,7 +6935,8 @@ class TransResUtil
                 ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                 //->where("employmentType.name NOT LIKE 'Pathology % Applicant' OR employmentType.id IS NULL")
                 //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                ->leftJoin("list.infos", "infos")
+                ->leftJoin("list.infos", "infos")->addSelect("infos")
+                ->leftJoin("list.keytype", "keytype")->addSelect("keytype")
                 ->orderBy("infos.displayName","ASC");
         };
     }
@@ -7536,7 +7540,12 @@ class TransResUtil
     //        }
     
         if(1) { //testing
+            //addSelect infos/keytype: getUserNameStr() (via __toString) calls getDisplayName()/
+            //getKeytype() on every row; without addSelect each row lazy-loads them (N+1)
             $dql->leftJoin("list.infos", "infos");
+            $dql->addSelect("infos");
+            $dql->leftJoin("list.keytype", "keytype");
+            $dql->addSelect("keytype");
             $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
             $dql->orderBy("infos.lastName", "ASC");
         }
@@ -7577,10 +7586,10 @@ class TransResUtil
         //dump($users);
         //exit('111');
     
-    //        foreach($users as $user) {
-    //            echo $user."";
-    //        }
-    //        exit('111');
+//        foreach($users as $user) {
+//            echo $user->getUsernameOptimal()."<br>";
+//        }
+//        exit('111');
     
         return $users;
     }

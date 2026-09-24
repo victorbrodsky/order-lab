@@ -99,7 +99,11 @@ class CalendarSubscriber implements EventSubscriberInterface
         $dql->select('request');
         //$dql->select('DISTINCT requestType.startDate,requestType.endDate,requestType.id as requestTypeId,request.id as requestId');
 
-        //$dql->leftJoin("request.user", "user");
+        //eager-select user display fields: the event title calls getUser()->__toString()
+        //(getUserNameStr) on every row; without addSelect each user lazy-loads infos/keytype (N+1)
+        $dql->leftJoin("request.user", "user")->addSelect("user");
+        $dql->leftJoin("user.infos", "infos")->addSelect("infos");
+        $dql->leftJoin("user.keytype", "keytype")->addSelect("keytype");
 
         if( $requestTypeStr == 'business' || $requestTypeStr == 'requestBusiness' ) {
             $dql->leftJoin("request.requestBusiness", "requestType");
@@ -301,6 +305,11 @@ class CalendarSubscriber implements EventSubscriberInterface
         $dql = $repository->createQueryBuilder('request');
 
         $dql->select('request');
+
+        //eager-select user display fields (see setCalendar)
+        $dql->leftJoin("request.user", "user")->addSelect("user");
+        $dql->leftJoin("user.infos", "infos")->addSelect("infos");
+        $dql->leftJoin("user.keytype", "keytype")->addSelect("keytype");
 
         $dql->andWhere('request.status = :statusApproved OR request.status = :statusPending');
         $dql->andWhere('(request.floatingDay BETWEEN :startDate and :endDate)');
