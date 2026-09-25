@@ -621,11 +621,15 @@ class UtilController extends OrderAbstractController {
 
         $dql->leftJoin("user.keytype", "keytype");
         //$dql->select("user.id as id, CONCAT(infos.displayName,' (',keytype.name,')') as text"); //display user as "displayName (keytype)"
-        $dql->select("user.id as id, 
-            (CASE WHEN user.keytype IS NULL 
-                THEN infos.displayName 
-                ELSE CONCAT(infos.displayName,' (',keytype.name,')') END
-            ) as text"); //display user as "displayName (keytype)"
+        $dql->select("user.id as id,
+            (CASE WHEN user.primaryPublicUserId IS NULL AND user.keytype IS NULL
+                THEN infos.displayName
+                WHEN user.primaryPublicUserId IS NULL
+                THEN CONCAT(infos.displayName,' (',keytype.name,')')
+                WHEN user.keytype IS NULL
+                THEN CONCAT(infos.displayName,' - ',user.primaryPublicUserId)
+                ELSE CONCAT(infos.displayName,' - ',user.primaryPublicUserId,' (',keytype.name,')') END
+            ) as text"); //display user as "displayName - primaryPublicUserId (keytype)"
 
         $dql->where("user.createdby != 'googleapi' AND infos.displayName IS NOT NULL"); //googleapi is used only by fellowship application population
 

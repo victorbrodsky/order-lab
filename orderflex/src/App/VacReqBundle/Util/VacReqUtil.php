@@ -6051,9 +6051,10 @@ class VacReqUtil
         }
 
         if( $approvalGroupType ) {
-            $approvalGroupTypeName = $approvalGroupType->getName();
+            //$approvalGroupTypeName = $approvalGroupType->getName();
+            $approvalGroupTypeName = strtolower($approvalGroupType->getName());
         } else {
-            $approvalGroupTypeName = "Faculty";
+            $approvalGroupTypeName = "Full-time faculty";
         }
 
         $overlapped = null;
@@ -6125,8 +6126,14 @@ class VacReqUtil
         //Faculty accrue 24 vacation days per year, or 2 days per month. If you start employment after July 1, it is prorated.
         //The maximum one can carry over to the next fiscal year 10 days, no exceptions.
         //This request must be made in writing and approved by your Vice Chair. The request is due by May 30th of the same fiscal year.
-        $accruedDaysString = $approvalGroupTypeName." accrue $facultyTotalAccruedDays vacation days per year, or"; //$totalAccruedDays
-        $accruedDaysString .= " " . $vacationAccruedDaysPerMonthStr . " days per month.";
+        //$accruedDaysString = $approvalGroupTypeName." accrue $facultyTotalAccruedDays vacation days per year, or"; //$totalAccruedDays
+        //$accruedDaysString .= " " . $vacationAccruedDaysPerMonthStr . " days per month.";
+
+        //Full-time faculty accrue 24 vacation days per year, or 2 days per month (adjusted proportionally for part-time faculty).
+        //TODO: for fellow don't show (adjusted proportionally for part-time faculty)
+        $accruedDaysString = $approvalGroupTypeName." accrue $facultyTotalAccruedDays vacation days per year, or";
+        $accruedDaysString .= " " . $vacationAccruedDaysPerMonthStr . " days per month (adjusted proportionally for part-time faculty).";
+
         $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
 
         ////////// Based on ... message //////////////
