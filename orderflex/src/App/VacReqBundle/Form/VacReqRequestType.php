@@ -320,7 +320,8 @@ class VacReqRequestType extends AbstractType
         }
 
         $builder->add('carryOverDays', null, array(
-            'label' => "Number of days to carry over". $carryOverNote. ":",
+            //'label' => "Number of days to carry over". $carryOverNote. ":",
+            'label' => "Number of days to carry over:",
             'attr' => array('class' => 'form-control vacreq-carryOverDays', 'max' => $this->params['maxCarryOverVacationDays']),
         ));
 

@@ -6631,19 +6631,19 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         $remainingDaysString .= ".";
     } else {
         //fellow - no carry over request
-        $effortStr = 'full time';
-        $latestEmplPeriod = $this->getEmplPeriodByYearRange(
-            $user,
-            NULL       //$yearRange
-        );
-        if( $latestEmplPeriod ) {
-            $effort = $latestEmplPeriod->getEffort();
-            if ($effort !== NULL) {
-                if( $effort != 100 ) {
-                    $effortStr = "part-time (".$effort."%)";
-                }
-            }
-        }
+//        $effortStr = 'full time';
+//        $latestEmplPeriod = $this->getEmplPeriodByYearRange(
+//            $user,
+//            NULL       //$yearRange
+//        );
+//        if( $latestEmplPeriod ) {
+//            $effort = $latestEmplPeriod->getEffort();
+//            if ($effort !== NULL) {
+//                if( $effort != 100 ) {
+//                    $effortStr = "part-time (".$effort."%)";
+//                }
+//            }
+//        }
 //        Based on your current employment start date (MM/DD/YYYY)
 //        and on approved carry over requests documented in this system,
 //        you have [18?] remaining vacation days during the current academic year.
