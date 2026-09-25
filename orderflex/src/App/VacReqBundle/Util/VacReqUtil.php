@@ -6132,7 +6132,14 @@ class VacReqUtil
         //Full-time faculty accrue 24 vacation days per year, or 2 days per month (adjusted proportionally for part-time faculty).
         //TODO: for fellow don't show (adjusted proportionally for part-time faculty)
         $accruedDaysString = $approvalGroupTypeName." accrue $facultyTotalAccruedDays vacation days per year, or";
-        $accruedDaysString .= " " . $vacationAccruedDaysPerMonthStr . " days per month (adjusted proportionally for part-time faculty).";
+        $accruedDaysString .= " " . $vacationAccruedDaysPerMonthStr . " days per month";
+
+        if (stripos($approvalGroupTypeName, 'fellow') === false) {
+            // does NOT contain "fellow"
+            $accruedDaysString .= " (adjusted proportionally for part-time faculty)";
+        }
+        $accruedDaysString .= ".";
+
 
         $accruedDaysString .= " If you start employment after $academicYearStartString, it is prorated.";
 
