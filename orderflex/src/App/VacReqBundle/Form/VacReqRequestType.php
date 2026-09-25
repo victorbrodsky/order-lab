@@ -310,8 +310,7 @@ class VacReqRequestType extends AbstractType
                 $carryOverNote = " (As per policy, the number of days that can be carried ".
                     "over to the following year is limited to the maximum of ".
                 $this->params['maxCarryOverVacationDays'].
-                    ". A part-time exempt staff member accrues vacation time proportionate ".
-                    "to the percentage of full-time that the staff member is scheduled to work. ".
+                    " for full-time faculty and to the maximum proportional to the percent effort for part-time faculty.".
                     ")";
             }
         } else {

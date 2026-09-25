@@ -446,6 +446,7 @@ class RequestController extends OrderAbstractController
         $noteForCarryOverDays = NULL;
         if( $routeName == "vacreq_carryoverrequest" ) {
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
+            $noteForCarryOverDays = $this->replaceCarryOverNote($user,$noteForCarryOverDays);
         }
         //echo "noteForCarryOverDays=$noteForCarryOverDays <br>";
 
@@ -496,7 +497,7 @@ class RequestController extends OrderAbstractController
             'remainingDays' => $remainingDays,
             //Get header's note from VacReqApprovalTypeList
             'noteForVacationDays' => $noteForVacationDays,
-            'noteForCarryOverDays' => $noteForCarryOverDays,
+            'noteForCarryOverDays' => $noteForCarryOverDays, //newAction
             //First header - vacation infor + carry over
             'totalApprovedDaysString' => $totalApprovedDaysString, //function
             //header
@@ -1780,6 +1781,7 @@ class RequestController extends OrderAbstractController
             //echo "approvalGroupType=$approvalGroupType <br>";
             $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays', $entity->getUser(), $approvalGroupType);
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser('noteForCarryOverDays', $entity->getUser(), $approvalGroupType);
+            $noteForCarryOverDays = $this->replaceCarryOverNote($user,$noteForCarryOverDays);
         }
         //echo "maxCarryOverVacationDays=$maxCarryOverVacationDays, noteForCarryOverDays=$noteForCarryOverDays <br>";
 
@@ -1797,7 +1799,7 @@ class RequestController extends OrderAbstractController
             'tentativeInstitutions' => $userServiceUtil->flipArrayLabelValue($tentativeInstitutions),
             'holidaysUrl' => $holidaysUrl,
             'maxCarryOverVacationDays' => $maxCarryOverVacationDays,
-            'noteForCarryOverDays' => $noteForCarryOverDays,
+            'noteForCarryOverDays' => $noteForCarryOverDays, //createRequestForm
             //'maxVacationDays' => $userSecUtil->getSiteSettingParameter('maxVacationDays','vacreq'),
             //'noteForVacationDays' => $userSecUtil->getSiteSettingParameter('noteForVacationDays','vacreq'),
         );
@@ -1899,7 +1901,46 @@ class RequestController extends OrderAbstractController
         return $accessreqs;
     }
 
+    public function replaceCarryOverNote( $user, $noteForCarryOverDays ) {
+        $vacreqUtil = $this->container->get('vacreq_util');
 
+        $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
+            $user,
+            NULL       //$yearRange
+        );
+        if( $latestEmplPeriod ) {
+            $effort = $latestEmplPeriod->getEffort();
+        }
+        if( !$effort ) {
+            $effort = 100;
+        }
+        //$effort = 20;
+
+        $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user);
+        if( !$maxCarryOverVacationDays ) {
+            $maxCarryOverVacationDays = 10;
+        }
+
+        //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+        if( $effort && $maxCarryOverVacationDays ) {
+            //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+            $effortCoef = $effort/100;
+            $maxCarryOverVacationDays = $maxCarryOverVacationDays * $effortCoef;
+            $maxCarryOverVacationDays = round($maxCarryOverVacationDays);
+            //echo "Adjusted maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+        }
+
+        if( stripos($noteForCarryOverDays, '[[EFFORT]]') !== false ) {
+            //echo "effort=$effort <br>";
+            //replace [[EFFORT]]
+            $noteForCarryOverDays = str_replace("[[EFFORT]]",$effort ?? '',$noteForCarryOverDays);
+        }
+        if( stripos($noteForCarryOverDays, '[[MAXCARRYOVER]]') !== false ) {
+            //replace [[MAXCARRYOVER]]
+            $noteForCarryOverDays = str_replace("[[MAXCARRYOVER]]",$maxCarryOverVacationDays ?? '',$noteForCarryOverDays);
+        }
+        return $noteForCarryOverDays;
+    }
 
 
 

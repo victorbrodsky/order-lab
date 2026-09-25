@@ -1683,7 +1683,7 @@ class GenericListType extends AbstractType
             ));
             //noteForCarryOverDays
             $builder->add('noteForCarryOverDays',null,array(
-                'label' => "Note for carry over vacation days (header on the new carry over request page):",
+                'label' => "Note for carry over vacation days (header on the new carry over request page. [[EFFORT]] - user's effort, [[MAXCARRYOVER]] - user's carry over limit):",
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
