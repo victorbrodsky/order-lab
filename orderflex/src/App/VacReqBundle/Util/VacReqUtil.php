@@ -5136,26 +5136,13 @@ class VacReqUtil
     }
 
     //$yearRange=2024-2025
-    public function getEmplPeriodByYearRange( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
-        // Split the yearRange period by Empl Periods.
-        // For each emplPeriod get number of accrued months and effort in %
-        // Effort % (in fraction, i.e. 0.6) multiple by number of accrued month  and save in accruedDays
-        // Sum all accruedDays in totalAccruedDays
-        // return totalAccruedDays
+    //Return only the latest employment period (by hireDate) within the academic year range
+    public function getEmplPeriodByYearRange( $user=NULL, $yearRange=NULL ) {
 
         $testing = false;
     //        if( $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
     //            $testing = true;
     //        }
-
-        $totalAccruedDays = NULL;
-
-        $vacationAccruedDaysPerMonth = $this->getValueApprovalGroupTypeByUser("vacationAccruedDaysPerMonth",$user,$approvalGroupType);
-
-        if( !$vacationAccruedDaysPerMonth ) {
-            $vacationAccruedDaysPerMonth = 2;
-            //throw new \InvalidArgumentException('vacationAccruedDaysPerMonth is not defined in Site Parameters.');
-        }
 
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
@@ -5252,97 +5239,21 @@ class VacReqUtil
     //            $totalAccruedDays = $this->calculateAdjustedByEmplPeriodParam($user,$totalAccruedMonths,$vacationAccruedDaysPerMonth,$emplPeriod);
     //        }
 
-        //Case 3
-        //Process Multiple Empl Periods
-        if( count($emplPeriods) > 0 ) {
-            $totalAccruedDays = 0;
-            $addedFlag = false;
-            $count = 0;
-            foreach ($emplPeriods as $emplPeriod) {
-                if( $testing ) {
-                    echo "Multiple emplPeriod: " . $emplPeriod->getVacReqData() . "<br>";
-                }
-
-                if( !$emplPeriod->getHireDate()  ) {
-                    $count++;
-                    if( $testing ) {
-                        echo "Skip " . $emplPeriod->getId() . "<br>";
-                    }
-                    continue;
-                }
-
-                //dump($emplPeriods);
-                //exit('111');
-
-                $hireDate = $emplPeriod->getHireDate();
-                $terminationDate = $emplPeriod->getTerminationDate();
-
-                if( !$terminationDate ) {
-                    //if termination date is not set, use hire date of the next empl period (if exist)
-                    if( $count+1 < count($emplPeriods) ) {
-                        $nextEmplPeriod = $emplPeriods[$count + 1];
-                        if ($nextEmplPeriod) {
-                            if ($nextEmplPeriod->getHireDate()) {
-                                $terminationDate = $nextEmplPeriod->getHireDate();
-                            }
-                        }
-                    }
-                }
-
-                $terminationDateStr = "N/A";
-                if( $terminationDate ) {
-                    $terminationDateStr = $terminationDate->format('Y-m-d');
-                }
-                if( $testing ) {
-                    echo "hireDate=" . $hireDate->format('d-m-Y') . ", termDate=" . $terminationDateStr . "<br>";
-                }
-                //getTotalAccruedMonths( $user, $yearRangeStr, $startDate=NULL, $endDate=NULL, $testing=FALSE )
-                $totalAccruedMonths = $this->getTotalAccruedMonths($yearRange,$hireDate,$terminationDate);
-                if( $testing ) {
-                    echo "totalAccruedMonths=$totalAccruedMonths <br>";
-                }
-
-    //                $thisTotalAccruedDays = $totalAccruedMonths * $vacationAccruedDaysPerMonth;
-    //                echo "thisTotalAccruedDays*accruedDays=$thisTotalAccruedDays <br>";
-    //                //reduce by effort
-    //                $effort = $emplPeriod->getEffort();
-    //                if( $effort !== NULL ) {
-    //                    $effort = $effort/100;
-    //                    $thisTotalAccruedDays = $thisTotalAccruedDays * $effort;
-    //                }
-    //                echo $count.": with effort $effort, thisTotalAccruedDays=$thisTotalAccruedDays <br>";
-
-                $thisTotalAccruedDays = $this->calculateAdjustedByEmplPeriodParam(
-                    $user,
-                    $totalAccruedMonths,
-                    $vacationAccruedDaysPerMonth,
-                    $emplPeriod
-                );
-
-                $totalAccruedDays = $totalAccruedDays + $thisTotalAccruedDays;
-
-                $addedFlag = true;
-                $count++;
-            }//foreach
-            if( $addedFlag === false ) {
-                return NULL;
+        //Return only the latest employment period.
+        //Periods are ordered by hireDate ASC; walk backwards to skip trailing periods without a hire date.
+        $latestEmplPeriod = NULL;
+        for( $i = count($emplPeriods)-1; $i >= 0; $i-- ) {
+            if( $emplPeriods[$i]->getHireDate() ) {
+                $latestEmplPeriod = $emplPeriods[$i];
+                break;
             }
-        }//if
-
-        $maxVacationDays = $this->getValueApprovalGroupTypeByUser("maxVacationDays", $user, $approvalGroupType);
-        if ($maxVacationDays && $totalAccruedDays > $maxVacationDays) {
-            $totalAccruedDays = $maxVacationDays;
         }
-        //echo "totalAccruedDays=".$totalAccruedDays."<br>";
-
-        $totalAccruedDays = round($totalAccruedDays);
 
         if( $testing ) {
-            echo "getTotalAccruedDaysUsingEmplPeriods: totalAccruedDays=$totalAccruedDays <br>";
+            echo "latestEmplPeriod=" . ($latestEmplPeriod ? $latestEmplPeriod->getVacReqData() : "none") . "<br>";
             echo "================= <br>";
         }
 
-        //return $totalAccruedDays;
         return $latestEmplPeriod;
     }
 
@@ -6369,6 +6280,16 @@ class VacReqUtil
     //$totalAccruedDaysStr .= " you accrue [24 or X=24*0.8] vacation days per year. Based on your current employment";
 
 
+    //TODO:
+//    With your [“full-time” or “part-time (80% effort)”] status documented in this system,
+//    you accrue [24 or X=24*0.8] vacation days per year.
+//    Based on your current employment
+//    start date (MM/DD/YYYY) and on approved carry over requests documented in this system,
+//    you have [24] remaining vacation days during the current academic year.
+    //$totalAccruedDaysStr = "With your $effortStr status documented in this system,";
+    //$totalAccruedDaysStr .= " you accrue [24 or X=24*0.8] vacation days per year. Based on your current employment";
+
+
         ////////// Based on ... message //////////////
         $startDateStr = NULL;
         $endDateStr = NULL;
@@ -6673,6 +6594,19 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
 //    on approved carry over requests documented in this system,
 //    you have [24] remaining vacation days during the current academic year.
         $effortStr = 'full time';
+        $latestEmplPeriod = $this->getEmplPeriodByYearRange(
+            $user,
+            NULL       //$yearRange
+        );
+        if( $latestEmplPeriod ) {
+            $effort = $latestEmplPeriod->getEffort();
+            if ($effort !== NULL) {
+                if( $effort != 100 ) {
+                    $effortStr = "part-time (".$effort."%)";
+                }
+            }
+        }
+
         $totalAccruedDaysStr = "With your $effortStr status documented in this system, ";
         $totalAccruedDaysStr .= "you accrue $totalAccruedDays vacation days per year. ";
 
@@ -6696,34 +6630,62 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         }
         $remainingDaysString .= ".";
     } else {
+        //fellow - no carry over request
         $effortStr = 'full time';
-        $totalAccruedDaysStr = "With your $effortStr status documented in this system, ";
-        $totalAccruedDaysStr .= "you accrue $totalAccruedDays vacation days per year. ";
-        $remainingDaysRes = array('numberOfDays'=>0);
+        $latestEmplPeriod = $this->getEmplPeriodByYearRange(
+            $user,
+            NULL       //$yearRange
+        );
+        if( $latestEmplPeriod ) {
+            $effort = $latestEmplPeriod->getEffort();
+            if ($effort !== NULL) {
+                if( $effort != 100 ) {
+                    $effortStr = "part-time (".$effort."%)";
+                }
+            }
+        }
+//        Based on your current employment start date (MM/DD/YYYY)
+//        and on approved carry over requests documented in this system,
+//        you have [18?] remaining vacation days during the current academic year.
+        //$totalAccruedDaysStr = "With your $effortStr status documented in this system, ";
+        //$totalAccruedDaysStr .= "you accrue $totalAccruedDays vacation days per year. ";
+        //$remainingDaysRes = array('numberOfDays'=>0);
+        $remainingDaysRes = $this->totalVacationRemainingDays($user);
         //you have [18?] remaining vacation days during the current academic year.
+        $totalAccruedDaysStr = "";
+        $emplDatesStr = "Based on your current employment";
+        if ($startDateStr && $endDateStr) {
+            $emplDatesStr = "Based on your current employment dates ($startDateStr - $endDateStr)";
+        } elseif ($startDateStr) {
+            $emplDatesStr = "Based on your current employment start date ($startDateStr)";
+        } elseif ($endDateStr) {
+            $emplDatesStr = "Based on your current employment end date ($endDateStr)";
+        }
+        $totalAccruedDaysStr .= $emplDatesStr . " documented in this system";
+
         $remainingDaysString = $totalAccruedDaysStr .
-            ", you have " . $totalAccruedDays .
+            ", you have " . $remainingDaysRes['numberOfDays'] .
             " remaining vacation days during the current academic year.";
+        }
+        ////////////// EOF carry over allowed ///////////////////
+
+        $messages = array();
+        $messages['accruedDaysString'] = $accruedDaysString;
+        //$messages['accruedDays'] = $accruedDays;
+        $messages['totalAccruedDays'] = $totalAccruedDays;
+        $messages['carriedOverDaysString'] = $carriedOverDaysString;
+        //$messages['carriedOverDaysNextYearString'] = $carriedOverDaysNextYearString;
+        $messages['remainingDaysString'] = $remainingDaysString;
+
+        if( $remainingDaysRes ) {
+            $messages['remainingDays'] = $remainingDaysRes['numberOfDays'];
+        }
+
+        $messages['overlapped'] = $overlapped;
+
+        return $messages;
     }
-    ////////////// EOF carry over allowed ///////////////////
 
-    $messages = array();
-    $messages['accruedDaysString'] = $accruedDaysString;
-    //$messages['accruedDays'] = $accruedDays;
-    $messages['totalAccruedDays'] = $totalAccruedDays;
-    $messages['carriedOverDaysString'] = $carriedOverDaysString;
-    //$messages['carriedOverDaysNextYearString'] = $carriedOverDaysNextYearString;
-    $messages['remainingDaysString'] = $remainingDaysString;
-
-    if( $remainingDaysRes ) {
-        $messages['remainingDays'] = $remainingDaysRes['numberOfDays'];
-    }
-
-    $messages['overlapped'] = $overlapped;
-
-    return $messages;
-}
-    
     //get noteForVacationDays
 //    public function getNoteForVacationDays($user) {
 //        //If user member of two group Faculty and Fellows, consider Faculty as default
