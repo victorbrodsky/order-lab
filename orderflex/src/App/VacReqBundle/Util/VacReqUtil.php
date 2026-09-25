@@ -6052,7 +6052,7 @@ class VacReqUtil
 
         if( $approvalGroupType ) {
             //$approvalGroupTypeName = $approvalGroupType->getName();
-            $approvalGroupTypeName = strtolower($approvalGroupType->getName());
+            $approvalGroupTypeName = ucfirst(strtolower($approvalGroupType->getName()));
         } else {
             $approvalGroupTypeName = "Full-time faculty";
         }
