@@ -296,9 +296,11 @@
                         {{ formmacros.field(form.destinationYear) }}
                         {#{{ formmacros.simplefield( "Destination Academic Year:", entity.getDestinationYearRange(), "input", "disabled" ) }}#}
 
-                        <div class="alert alert-warning">
-                            {{ noteForCarryOverDays|raw }}
-                        </div>
+                        {% if noteForCarryOverDays is defined and noteForCarryOverDays %}
+                            <div class="alert alert-warning">
+                                {{ noteForCarryOverDays|raw }}
+                            </div>
+                        {% endif %}
                         {{ formmacros.field(form.carryOverDays) }}
 
                         {{ formmacros.field(form.comment) }}

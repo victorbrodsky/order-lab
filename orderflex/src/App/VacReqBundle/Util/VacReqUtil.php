@@ -842,6 +842,38 @@ class VacReqUtil
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
             $message .= $entity->getEmailSubject().".";
 
+            if(1) {
+                //Lihui Qin, MD, PhD has a [“full-time” or “part-time (80% effort)”]
+                // status documented in this system and based on this status
+                // accrues [24 or X=24*0.8] vacation days per year.
+                $effortStr = 'full time';
+                $latestEmplPeriod = $this->getEmplPeriodByYearRange(
+                    $entity->getUser(),
+                    NULL       //$yearRange
+                );
+                if ($latestEmplPeriod) {
+                    $effort = $latestEmplPeriod->getEffort();
+                    if ($effort !== NULL) {
+                        if ($effort != 100) {
+                            $effortStr = "part-time (" . $effort . "%)";
+                        }
+                    }
+                }
+                //TODO: change email
+                $totalAccruedDays = $this->getTotalAccruedDays($submitter); //current year
+                $note1 = $submitter->getUsernameOptimal() . " has a " . $effortStr .
+                    " status documented in this system and based on this status accrues " .
+                    $totalAccruedDays . "vacation days per year.";
+                $message .= $note1;
+
+                //Lihui Qin, MD, PhD has [X] remaining vacation days in [2025-2026]
+                // available for carry over to [2026-2027] which is
+                // [“equal to” or “less than” or “greater than”] the requested [Y] carry over days.
+//                $remainingDaysRes = $this->totalVacationRemainingDays($submitter);
+//                $note2 = $submitter->getUsernameOptimal() . " has " . $remainingDaysRes['numberOfDays'] .
+//                    " remaining vacation days in ";
+            }
+            
             //comment
             if( $entity->getComment() ) {
                 $message .= $break . "Comment: " . $entity->getComment();
@@ -6659,6 +6691,9 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         } elseif ($startDateStr) {
             $emplDatesStr = "Based on your current employment start date ($startDateStr)";
         } elseif ($endDateStr) {
+            //IF START DATE IS NULL IN LATEST EMPLOYMENT PERIOD
+            //Assuming your employment start date was before 07/01/[CARRY-OVER-SOURCE-YEAR]
+            // (no start date has been entered into this system) and based
             $emplDatesStr = "Based on your current employment end date ($endDateStr)";
         }
         $totalAccruedDaysStr .= $emplDatesStr . " documented in this system";
