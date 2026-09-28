@@ -208,17 +208,22 @@ class RequestController extends OrderAbstractController
             }
         }
 
-        //check carry over days limit
+        //TODO: check carry over days limit, confirm if we need it
         if( $routeName == "vacreq_carryoverrequest" ) {
             if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //check carry over days limit
                 //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
                 $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
+                $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($user);
+                $effort = $vacreqUtil->getLatesEmplPeriodEffort($user);
                 $carryOverDays = $entity->getCarryOverDays();
-                if ($carryOverDays && $maxCarryOverVacationDays) {
-                    if ($carryOverDays > $maxCarryOverVacationDays) {
+                if ($carryOverDays && $limitCarryOverDays) {
+                    if ($carryOverDays > $limitCarryOverDays) {
                         $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
-                            . $maxCarryOverVacationDays;
+                            . $maxCarryOverVacationDays . " days.";
+                        $errorMsg = $errorMsg . "<br>" .
+                            "The percent effort documented in this system for your account is $effort" . "%,".
+                            " resulting in a carryover limit of 2 days.";
                         $form['carryOverDays']->addError(new FormError($errorMsg));
                     }
                 }
@@ -718,6 +723,7 @@ class RequestController extends OrderAbstractController
         $totalAccruedDays = NULL;
         $remainingDays = NULL;
         //check carry over days limit (edit). Should we have this only for "new" request?
+        //TODO: use carry over limit by effort
         if( $entity->getRequestTypeAbbreviation() == "carryover"  ) {
             if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //check carry over days limit
@@ -729,6 +735,7 @@ class RequestController extends OrderAbstractController
                     $approvalGroupType = $vacreqSettings->getApprovalType();
                 }
 
+                //TODO: use getLimitCarryOverDays
                 $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$entity->getUser(),$approvalGroupType);
                 $carryOverDays = $entity->getCarryOverDays();
                 if ($carryOverDays && $maxCarryOverVacationDays) {
@@ -1780,6 +1787,8 @@ class RequestController extends OrderAbstractController
 
             //echo "approvalGroupType=$approvalGroupType <br>";
             $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays', $entity->getUser(), $approvalGroupType);
+            $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($entity->getUser());
+
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser('noteForCarryOverDays', $entity->getUser(), $approvalGroupType);
             $noteForCarryOverDays = $this->replaceCarryOverNote($user,$noteForCarryOverDays);
         }
@@ -1799,6 +1808,7 @@ class RequestController extends OrderAbstractController
             'tentativeInstitutions' => $userServiceUtil->flipArrayLabelValue($tentativeInstitutions),
             'holidaysUrl' => $holidaysUrl,
             'maxCarryOverVacationDays' => $maxCarryOverVacationDays,
+            'limitCarryOverDays' => $limitCarryOverDays,
             'noteForCarryOverDays' => $noteForCarryOverDays, //createRequestForm
             //'maxVacationDays' => $userSecUtil->getSiteSettingParameter('maxVacationDays','vacreq'),
             //'noteForVacationDays' => $userSecUtil->getSiteSettingParameter('noteForVacationDays','vacreq'),
@@ -1904,6 +1914,34 @@ class RequestController extends OrderAbstractController
     public function replaceCarryOverNote( $user, $noteForCarryOverDays ) {
         $vacreqUtil = $this->container->get('vacreq_util');
 
+//        /// Get $maxCarryOverDays ///
+//        $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
+//            $user,
+//            NULL       //$yearRange
+//        );
+//        if( $latestEmplPeriod ) {
+//            $effort = $latestEmplPeriod->getEffort();
+//        }
+//        if( !$effort ) {
+//            $effort = 100;
+//        }
+//        //$effort = 20;
+//
+//        $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user);
+//        if( !$maxCarryOverVacationDays ) {
+//            $maxCarryOverVacationDays = 10;
+//        }
+//
+//        //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+//        if( $effort && $maxCarryOverVacationDays ) {
+//            //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+//            $effortCoef = $effort/100;
+//            $maxCarryOverVacationDays = $maxCarryOverVacationDays * $effortCoef;
+//            $maxCarryOverVacationDays = round($maxCarryOverVacationDays);
+//            //echo "Adjusted maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+//        }
+//        /// EOF Get $maxCarryOverDays ///
+
         $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
             $user,
             NULL       //$yearRange
@@ -1914,21 +1952,8 @@ class RequestController extends OrderAbstractController
         if( !$effort ) {
             $effort = 100;
         }
-        //$effort = 20;
 
-        $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user);
-        if( !$maxCarryOverVacationDays ) {
-            $maxCarryOverVacationDays = 10;
-        }
-
-        //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
-        if( $effort && $maxCarryOverVacationDays ) {
-            //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
-            $effortCoef = $effort/100;
-            $maxCarryOverVacationDays = $maxCarryOverVacationDays * $effortCoef;
-            $maxCarryOverVacationDays = round($maxCarryOverVacationDays);
-            //echo "Adjusted maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
-        }
+        $maxCarryOverDays = $vacreqUtil->getLimitCarryOverDays($user);
 
         if( stripos($noteForCarryOverDays, '[[EFFORT]]') !== false ) {
             //echo "effort=$effort <br>";
@@ -1937,7 +1962,7 @@ class RequestController extends OrderAbstractController
         }
         if( stripos($noteForCarryOverDays, '[[MAXCARRYOVER]]') !== false ) {
             //replace [[MAXCARRYOVER]]
-            $noteForCarryOverDays = str_replace("[[MAXCARRYOVER]]",$maxCarryOverVacationDays ?? '',$noteForCarryOverDays);
+            $noteForCarryOverDays = str_replace("[[MAXCARRYOVER]]",$maxCarryOverDays ?? '',$noteForCarryOverDays);
         }
         return $noteForCarryOverDays;
     }

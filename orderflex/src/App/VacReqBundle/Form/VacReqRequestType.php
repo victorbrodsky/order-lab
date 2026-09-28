@@ -303,26 +303,27 @@ class VacReqRequestType extends AbstractType
 
         //add limit from 'maxCarryOverVacationDays'
         //$useCarryOverNoteAndMaxdaysTogether = true;
-        $useCarryOverNoteAndMaxdaysTogether = false;
-        $carryOverNote = null;
-        if( $useCarryOverNoteAndMaxdaysTogether ) {
-            if( $this->params['maxCarryOverVacationDays'] ) {
-                $carryOverNote = " (As per policy, the number of days that can be carried ".
-                    "over to the following year is limited to the maximum of ".
-                $this->params['maxCarryOverVacationDays'].
-                    " for full-time faculty and to the maximum proportional to the percent effort for part-time faculty.".
-                    ")";
-            }
-        } else {
-            if( $this->params['noteForCarryOverDays'] ) {
-                $carryOverNote = " (" . $this->params['noteForCarryOverDays'] . ")";
-            }
-        }
+//        $useCarryOverNoteAndMaxdaysTogether = false;
+//        $carryOverNote = null;
+//        if( $useCarryOverNoteAndMaxdaysTogether ) {
+//            if( $this->params['maxCarryOverVacationDays'] ) {
+//                $carryOverNote = " (As per policy, the number of days that can be carried ".
+//                    "over to the following year is limited to the maximum of ".
+//                $this->params['maxCarryOverVacationDays'].
+//                    " for full-time faculty and to the maximum proportional to the percent effort for part-time faculty.".
+//                    ")";
+//            }
+//        } else {
+//            if( $this->params['noteForCarryOverDays'] ) {
+//                $carryOverNote = " (" . $this->params['noteForCarryOverDays'] . ")";
+//            }
+//        }
 
         $builder->add('carryOverDays', null, array(
             //'label' => "Number of days to carry over". $carryOverNote. ":",
             'label' => "Number of days to carry over:",
-            'attr' => array('class' => 'form-control vacreq-carryOverDays', 'max' => $this->params['maxCarryOverVacationDays']),
+            //'attr' => array('class' => 'form-control vacreq-carryOverDays', 'max' => $this->params['maxCarryOverVacationDays']),
+            'attr' => array('class' => 'form-control vacreq-carryOverDays', 'max' => $this->params['limitCarryOverDays']),
         ));
 
     }

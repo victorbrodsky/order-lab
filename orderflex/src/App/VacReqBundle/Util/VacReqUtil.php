@@ -842,6 +842,13 @@ class VacReqUtil
             //FirstName LastName requested carry over of X vacation days from [Source Academic Year] to [Destination Academic Year].
             $message .= $entity->getEmailSubject().".";
 
+            //comment
+            if( $entity->getComment() ) {
+                $message .= $break . "Comment: " . $entity->getComment();
+            }
+
+            $message .= $break.$break;
+
             if(1) {
                 //Lihui Qin, MD, PhD has a [“full-time” or “part-time (80% effort)”]
                 // status documented in this system and based on this status
@@ -861,10 +868,22 @@ class VacReqUtil
                 }
                 //TODO: change email
                 $totalAccruedDays = $this->getTotalAccruedDays($submitter); //current year
+
+                //Get $maxCarryOverDays
+                $maxCarryOverDays = $this->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$entity->getUser());
+                if( !$maxCarryOverDays ) {
+                    $maxCarryOverDays = 10;
+                }
+                if( $effort && $maxCarryOverDays ) {
+                    $effortCoef = $effort/100;
+                    $maxCarryOverDays = $maxCarryOverDays * $effortCoef;
+                    //$maxCarryOverDays = round($maxCarryOverDays);
+                }
+
                 $note1 = $submitter->getUsernameOptimal() . " has a " . $effortStr .
                     " status documented in this system and based on this status accrues " .
-                    $totalAccruedDays . "vacation days per year.";
-                $message .= $note1;
+                    $totalAccruedDays . " vacation days per year and carryover limit of $maxCarryOverDays days.";
+                $message .= $note1.$break;
 
                 //Lihui Qin, MD, PhD has [X] remaining vacation days in [2025-2026]
                 // available for carry over to [2026-2027] which is
@@ -873,13 +892,6 @@ class VacReqUtil
 //                $note2 = $submitter->getUsernameOptimal() . " has " . $remainingDaysRes['numberOfDays'] .
 //                    " remaining vacation days in ";
             }
-            
-            //comment
-            if( $entity->getComment() ) {
-                $message .= $break . "Comment: " . $entity->getComment();
-            }
-
-            $message .= $break.$break;
 
 //            //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
 //            $message .= "As of ".$entity->getCreateDate()->format("F jS Y").", ".$entity->getUser()->getUsernameOptimal()." has accrued ".
@@ -935,9 +947,8 @@ class VacReqUtil
                     "To review the summary statistics, please visit:".$break.
                     $summaryStatLink
                 ;
-                $message = $message . $warningCarryOverMsg . $break.$break;
+                $message = $message . $warningCarryOverMsg . $break;
             }
-
 
             //subject + SubmitterFirstName SubmitterLastName has M approved vacation days during [CURRENT 20XX-20YY] year.
             $message .= $entity->getUser()->getUsernameOptimal()." has ".$approvedVacationDays." approved vacation days during ".$yearRange." year.";
@@ -4838,6 +4849,46 @@ class VacReqUtil
 //        return $totalAccruedDays;
 //    }
 
+    public function getLimitCarryOverDays( $user=NULL, $yearRange=NULL ) {
+
+        if( !$yearRange ) {
+            $yearRange = $this->getCurrentAcademicYearRange();
+        }
+
+        $maxCarryOverDays = $this->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user);
+        if( !$maxCarryOverDays ) {
+            $maxCarryOverDays = 10;
+        }
+
+//        $latestEmplPeriod = $this->getEmplPeriodByYearRange(
+//            $user,
+//            $yearRange       //$yearRange
+//        );
+//        $effort = NULL;
+//        if ($latestEmplPeriod) {
+//            $effort = $latestEmplPeriod->getEffort();
+//        }
+        $effort = $this->getLatesEmplPeriodEffort($user,$yearRange);
+
+        if( $effort && $maxCarryOverDays ) {
+            $effortCoef = $effort/100;
+            $maxCarryOverDays = $maxCarryOverDays * $effortCoef;
+            $maxCarryOverDays = round($maxCarryOverDays);
+        }
+
+        return $maxCarryOverDays;
+    }
+
+    //Get effort based on the $latestEmplPeriod
+    public function getLatesEmplPeriodEffort( $user=NULL, $yearRange=NULL ) {
+        $latestEmplPeriod = $this->getEmplPeriodByYearRange($user,$yearRange);
+        $effort = NULL;
+        if ($latestEmplPeriod) {
+            $effort = $latestEmplPeriod->getEffort();
+        }
+        return $effort;
+    }
+
     //Old version without user's start/end dates: branch master: 06a6f239c7ef8a5b74a708eddac4634903b0d9fe; July 17 2024 11:23
     //total accrued days calculated by vacationAccruedDaysPerMonth
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
@@ -4897,6 +4948,7 @@ class VacReqUtil
 //        return $totalAccruedDays;
     }
 
+    //NOT USED
     public function getNewTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL )
     {
 
