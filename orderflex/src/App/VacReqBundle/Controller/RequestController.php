@@ -1767,6 +1767,7 @@ class RequestController extends OrderAbstractController
         //echo "groupInstitution=$groupInstitution <br>";
 
         $maxCarryOverVacationDays = NULL;
+        $limitCarryOverDays = NULL;
         $noteForCarryOverDays = NULL;
         if ($requestType->getAbbreviation() == "carryover") {
 //            $approvalGroupType = NULL;
@@ -1788,6 +1789,9 @@ class RequestController extends OrderAbstractController
             //echo "approvalGroupType=$approvalGroupType <br>";
             $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays', $entity->getUser(), $approvalGroupType);
             $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($entity->getUser());
+            if( !$limitCarryOverDays ) {
+                $limitCarryOverDays = $maxCarryOverVacationDays;
+            }
 
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser('noteForCarryOverDays', $entity->getUser(), $approvalGroupType);
             $noteForCarryOverDays = $this->replaceCarryOverNote($user,$noteForCarryOverDays);

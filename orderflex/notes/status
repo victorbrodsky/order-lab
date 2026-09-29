@@ -83,3 +83,8 @@ Delete on GitHub (remote):
 
 Check folder size:
 du -sh /path/to/folder
+
+#Packing slips
+Don't need to keep old packing sleeps
+When add custom packing sleep -> new packing sleep not generating
+Open new generated packing sleep on a new page
