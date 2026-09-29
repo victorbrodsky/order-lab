@@ -1771,6 +1771,7 @@ class ApproverController extends OrderAbstractController
             $groupTypes = $vacreqUtil->getApprovalGroupTypes();
             $arr = array();
             foreach($groupTypes as $groupType) {
+//                '$groupType='.$groupType.'<br>';
                 $arr['filter[types]['.$groupType->getId().']'] = $groupType->getId();
             }
 
@@ -1834,23 +1835,34 @@ class ApproverController extends OrderAbstractController
             //dump($users);
             //exit('111');
             foreach( $groups as $group ) {
+                //echo '$group='.$group.', ID='.$group->getId().'<br>';
                 $thisApprovalGroupType = $this->vacreqUtil->getApprovalGroupTypeByInstitution($group->getId());
+                //echo '$thisApprovalGroupType='.$thisApprovalGroupType.'<br>';
                 if( $thisApprovalGroupType ) {
                     foreach( $filterapprovaltypes as $filterapprovaltype ) {
+                        //echo '$thisApprovalGroupTypeID='.$thisApprovalGroupType->getId().', $filterapprovaltypeID='.$filterapprovaltype->getId()."<br>";
                         if ($thisApprovalGroupType->getId() == $filterapprovaltype->getId()) {
+                            //echo '1 Add group='.$group.', ID='.$group->getId().'<br>';
                             $filteredGroups[] = $group;
                         }
                     }
                 } else {
-                    if( count($filterapprovaltypes) == 0 ) {
-                        $filteredGroups[] = $group;
-                    }
+                    //if( count($filterapprovaltypes) == 0 ) {
+                        //echo '2 Add group='.$group.', ID='.$group->getId().'<br>';
+                        //$filteredGroups[] = $group;
+                    //}
+                    //Add org vacation group (Institution), even if it does not have 'Approval Group Type'
+                    $filteredGroups[] = $group;
                 }
             }
         }
         /////////////// EOF: filter form ///////////////////
         //dump($users);
         //echo "group length=".count($filteredGroups)."<br>";
+        //dump($filteredGroups);
+        //foreach($filteredGroups as $filteredGroup) {
+            //echo '$filteredGroup='.$filteredGroup.', ID='.$filteredGroup->getId().'<br>';
+        //}
         //exit('111');
 
         $showall = true;
@@ -1911,6 +1923,7 @@ class ApproverController extends OrderAbstractController
             $useridsArr = explode("-",$userids);
             $newSubmitters = array();
             foreach( $submitters as $submitter ) {
+                //echo '$submitter='.$submitter.'<br>';
                 if( in_array($submitter->getId(),$useridsArr) ) {
                     $newSubmitters[] = $submitter;
                 }
