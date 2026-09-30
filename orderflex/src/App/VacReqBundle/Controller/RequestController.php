@@ -208,22 +208,43 @@ class RequestController extends OrderAbstractController
             }
         }
 
-        //TODO: check carry over days limit, confirm if we need it
+        //check carry over days validity (all users) and limit (non-admin only)
+        //New form
         if( $routeName == "vacreq_carryoverrequest" ) {
             if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
-                //check carry over days limit
-                //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
-                $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
-                $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($user);
-                $effort = $vacreqUtil->getLatesEmplPeriodEffort($user);
+//                //check carry over days limit
+//                //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
+//                $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
+//                $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($user);
+//                $effort = $vacreqUtil->getLatesEmplPeriodEffort($user);
+//                $carryOverDays = $entity->getCarryOverDays();
+//                if ($carryOverDays && $limitCarryOverDays) {
+//                    if ($carryOverDays > $limitCarryOverDays) {
+//                        $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
+//                            . $maxCarryOverVacationDays . " days.";
+//                        $errorMsg = $errorMsg . "<br>" .
+//                            "The percent effort documented in this system for your account is $effort" . "%,".
+//                            " resulting in a carryover limit of $limitCarryOverDays days.";
+//                        $form['carryOverDays']->addError(new FormError($errorMsg));
+//                    }
+//                }
+
+                //check carry over days limit (limit already adjusted by effort)
+                $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($entity->getUser());
                 $carryOverDays = $entity->getCarryOverDays();
-                if ($carryOverDays && $limitCarryOverDays) {
-                    if ($carryOverDays > $limitCarryOverDays) {
+                if( $carryOverDays !== null && $carryOverDays !== '' ) {
+                    if( !is_numeric($carryOverDays) ) {
+                        $form['carryOverDays']->addError(new FormError("Please enter a valid number of carry‑over days"));
+                    } elseif( $carryOverDays <= 0 ) {
+                        $form['carryOverDays']->addError(new FormError("Please enter a number of carry‑over days greater than zero"));
+                    } elseif( $limitCarryOverDays && $carryOverDays > $limitCarryOverDays ) {
+                        $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
+                        $effort = $vacreqUtil->getLatesEmplPeriodEffort($user);
                         $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
                             . $maxCarryOverVacationDays . " days.";
                         $errorMsg = $errorMsg . "<br>" .
                             "The percent effort documented in this system for your account is $effort" . "%,".
-                            " resulting in a carryover limit of 2 days.";
+                            " resulting in a carryover limit of $limitCarryOverDays days.";
                         $form['carryOverDays']->addError(new FormError($errorMsg));
                     }
                 }
@@ -723,6 +744,7 @@ class RequestController extends OrderAbstractController
             }
         }
 
+        //Edit form
         $totalAccruedDays = NULL;
         $remainingDays = NULL;
         //check carry over days limit (edit). Should we have this only for "new" request?
@@ -1941,14 +1963,15 @@ class RequestController extends OrderAbstractController
 //            //echo "Adjusted maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
 //        }
 //        /// EOF Get $maxCarryOverDays ///
+//        $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
+//            $user,
+//            NULL       //$yearRange
+//        );
+//        if( $latestEmplPeriod ) {
+//            $effort = $latestEmplPeriod->getEffort();
+//        }
 
-        $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
-            $user,
-            NULL       //$yearRange
-        );
-        if( $latestEmplPeriod ) {
-            $effort = $latestEmplPeriod->getEffort();
-        }
+        $effort = $vacreqUtil->getLatesEmplPeriodEffort($user);
         if( !$effort ) {
             $effort = 100;
         }

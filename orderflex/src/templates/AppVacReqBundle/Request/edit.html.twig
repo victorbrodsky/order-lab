@@ -1139,6 +1139,10 @@
                 error = "Please enter the number of days to carry over";
                 $('.vacreq-carryOverDays').addClass('alert-danger');
             }
+            if (!error && carryOverDays && (isNaN(carryOverDays) || Number(carryOverDays) <= 0)) {
+                error = "Please enter a number of carry-over days greater than zero";
+                $('.vacreq-carryOverDays').addClass('alert-danger');
+            }
 
             //Should we have this only for "new" request?
             var admin = $('#vacreq_admin').val();
