@@ -449,7 +449,9 @@ class RequestController extends OrderAbstractController
         //echo "noteForVacationDays=$noteForVacationDays <br>";
 
         $noteForCarryOverDays = NULL;
+        $limitCarryOverDays = NULL;
         if( $routeName == "vacreq_carryoverrequest" ) {
+            $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($entity->getUser());
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
             $noteForCarryOverDays = $this->replaceCarryOverNote($user,$noteForCarryOverDays);
         }
@@ -503,6 +505,7 @@ class RequestController extends OrderAbstractController
             //Get header's note from VacReqApprovalTypeList
             'noteForVacationDays' => $noteForVacationDays,
             'noteForCarryOverDays' => $noteForCarryOverDays, //newAction
+            'limitCarryOverDays' => $limitCarryOverDays,
             //First header - vacation infor + carry over
             'totalApprovedDaysString' => $totalApprovedDaysString, //function
             //header
@@ -723,26 +726,19 @@ class RequestController extends OrderAbstractController
         $totalAccruedDays = NULL;
         $remainingDays = NULL;
         //check carry over days limit (edit). Should we have this only for "new" request?
-        //TODO: use carry over limit by effort
         if( $entity->getRequestTypeAbbreviation() == "carryover"  ) {
             if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
-                //check carry over days limit
-                //$userSecUtil = $this->container->get('user_security_utility');
-                //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
-                $approvalGroupType = NULL;
-                $vacreqSettings = $vacreqUtil->getSettingsByVacreq($entity);
-                if( $vacreqSettings ) {
-                    $approvalGroupType = $vacreqSettings->getApprovalType();
-                }
-
-                //TODO: use getLimitCarryOverDays
-                $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$entity->getUser(),$approvalGroupType);
+                //check carry over days limit (limit already adjusted by effort)
+                $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($entity->getUser());
                 $carryOverDays = $entity->getCarryOverDays();
-                if ($carryOverDays && $maxCarryOverVacationDays) {
-                    if ($carryOverDays > $maxCarryOverVacationDays) {
+                if( $carryOverDays !== null && $carryOverDays !== '' ) {
+                    if( !is_numeric($carryOverDays) ) {
+                        $form['carryOverDays']->addError(new FormError("Please enter a valid number of carry‑over days"));
+                    } elseif( $carryOverDays <= 0 ) {
+                        $form['carryOverDays']->addError(new FormError("Please enter a number of carry‑over days greater than zero"));
+                    } elseif( $limitCarryOverDays && $carryOverDays > $limitCarryOverDays ) {
                         $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
-                            . $maxCarryOverVacationDays;
-                        //exit($errorMsg);
+                            . $limitCarryOverDays;
                         $form['carryOverDays']->addError(new FormError($errorMsg));
                     }
                 }

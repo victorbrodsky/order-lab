@@ -46,6 +46,9 @@
     <input type="hidden" id="requestType" value="{{ entity.getRequestTypeAbbreviation() }}" />
     {#<input type="hidden" id="maxcarryovervacationdays" value="{{ user_security_utility.getSiteSettingParameter('maxCarryOverVacationDays','vacreq') }}" />#}
     <input type="hidden" id="maxcarryovervacationdays" value="{{ vacreq_util.getValueApprovalGroupTypeByUser('maxCarryOverVacationDays') }}" />
+    {% if limitCarryOverDays is defined %}
+        <input type="hidden" id="limitcarryoverdays" value="{{ limitCarryOverDays }}" />
+    {% endif %}
     <input type="hidden" id="authuser_id" value="{{app.user.getId()}}" />
 
     {% if totalAccruedDays is defined %}
@@ -297,7 +300,13 @@
                         {#{{ formmacros.simplefield( "Destination Academic Year:", entity.getDestinationYearRange(), "input", "disabled" ) }}#}
 
                         {% if noteForCarryOverDays is defined and noteForCarryOverDays %}
-                            <div class="alert alert-warning">
+                            {#green if carryOverDays input is empty or not greater than limitCarryOverDays, red otherwise#}
+                            {% set carryOverNoteClass = 'alert-success' %}
+                            {% set carryOverDaysValue = form.carryOverDays.vars.value %}
+                            {% if carryOverDaysValue is not empty and limitCarryOverDays is defined and limitCarryOverDays and carryOverDaysValue > limitCarryOverDays %}
+                                {% set carryOverNoteClass = 'alert-danger' %}
+                            {% endif %}
+                            <div id="note-for-carryover-days" class="alert {{ carryOverNoteClass }}">
                                 {{ noteForCarryOverDays|raw }}
                             </div>
                         {% endif %}
@@ -704,6 +713,21 @@
                 $(this).removeClass('alert-danger');
                 $('#error-box').html('');
                 $('#error-box').hide();
+            });
+
+            //carry over note: green when carryOverDays is empty or within limit, red when above limit
+            $('.vacreq-carryOverDays').on("input", function(e) {
+                var carryOverNote = $('#note-for-carryover-days');
+                if( carryOverNote.length == 0 ) {
+                    return;
+                }
+                var carryOverDays = $(this).val();
+                var limitCarryOverDays = $('#limitcarryoverdays').val();
+                if( carryOverDays !== '' && limitCarryOverDays && Number(carryOverDays) > Number(limitCarryOverDays) ) {
+                    carryOverNote.removeClass('alert-success').addClass('alert-danger');
+                } else {
+                    carryOverNote.removeClass('alert-danger').addClass('alert-success');
+                }
             });
 
             //$('.vacreq-firstDayBackInOffice').datepicker().on("changeDate", function(e) {

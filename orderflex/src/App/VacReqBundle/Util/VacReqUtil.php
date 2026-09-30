@@ -4857,10 +4857,11 @@ class VacReqUtil
 //    }
 
     public function getLimitCarryOverDays( $user=NULL, $yearRange=NULL ) {
-
+        //echo '$yearRange='.$yearRange.'<br>';
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
         }
+        //echo "yearRange=$yearRange <br>";
 
         $maxCarryOverDays = $this->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user);
         if( !$maxCarryOverDays ) {
@@ -4888,6 +4889,9 @@ class VacReqUtil
 
     //Get effort based on the $latestEmplPeriod
     public function getLatesEmplPeriodEffort( $user=NULL, $yearRange=NULL ) {
+        if( !$yearRange ) {
+            $yearRange = $this->getCurrentAcademicYearRange();
+        }
         $latestEmplPeriod = $this->getEmplPeriodByYearRange($user,$yearRange);
         $effort = NULL;
         if ($latestEmplPeriod) {
