@@ -46,7 +46,10 @@
     <div class="panel-heading">
         <h4 class="panel-title">
             <a data-toggle="collapse" href="#vacreq-my-single-group-{{ groupId }}">
-                {{ groupName }} {{ approvalGroupTypeStr }}
+                {{ groupName }}
+                {% if approvalGroupTypeStr %}
+                    ({{ approvalGroupTypeStr }})
+                {% endif %}
             </a>
             {% if is_granted('ROLE_VACREQ_APPROVER') or is_granted('ROLE_VACREQ_SUPERVISOR') %}
                 {% if pendingRequests is defined and pendingRequests > 0 %}
@@ -60,8 +63,8 @@
 
 {% if submittersExist %}
 
-    {% if accruedDays %}
-        <p>Accrued Vacation Days as of today: {{ accruedDays }}</p>
+    {% if accruedDays and approvalGroupTypeStr %}
+        <p>Accrued vacation days as of today for {{ approvalGroupTypeStr|lower }}: {{ accruedDays }}</p>
     {% endif %}
 
 <table class="records_list table table-hover table-condensed text-left table-bordered sortable">

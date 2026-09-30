@@ -1952,7 +1952,8 @@ class ApproverController extends OrderAbstractController
                 //$panelClass = "panel-success";
                 $panelClass = "panel-info";
             }
-            $approvalGroupTypeStr = " (".$approvalGroupType->getName().")";
+            //$approvalGroupTypeStr = " (".$approvalGroupType->getName().")";
+            $approvalGroupTypeStr = "".$approvalGroupType->getName()."";
             //$totalAllocatedDays = $vacreqUtil->getTotalAccruedDaysByGroup($approvalGroupType);
             //echo "mySingleGroupAction totalAllocatedDays=$totalAllocatedDays <br>";
         }

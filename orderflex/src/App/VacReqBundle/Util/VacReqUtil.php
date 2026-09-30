@@ -817,14 +817,14 @@ class VacReqUtil
             $yearRange = $this->getCurrentAcademicYearRange();
 
             //vacation
-            $resVacationDays = $this->getApprovedTotalDays($entity->getUser(),"vacation");
+            $resVacationDays = $this->getApprovedTotalDays($submitter,"vacation");
             $approvedVacationDays = $resVacationDays['numberOfDays'];
             if( !$resVacationDays['accurate'] ) {
                 $approvedVacationDays .= " (".$this->getInaccuracyMessage().")";
             }
 
             //business
-//            $resBusinessDays = $this->getApprovedTotalDays($entity->getUser(),"business");
+//            $resBusinessDays = $this->getApprovedTotalDays($submitter,"business");
 //            $approvedBusinessDays = $resBusinessDays['numberOfDays'];
 //            $accurateBusiness = $resBusinessDays['accurate'];
 //            if( !$accurateBusiness ) {
@@ -853,24 +853,31 @@ class VacReqUtil
                 //Lihui Qin, MD, PhD has a [“full-time” or “part-time (80% effort)”]
                 // status documented in this system and based on this status
                 // accrues [24 or X=24*0.8] vacation days per year.
+//                $effortStr = 'full time';
+//                $latestEmplPeriod = $this->getEmplPeriodByYearRange(
+//                    $submitter,
+//                    NULL       //$yearRange
+//                );
+//                $effort = 100;
+//                if ($latestEmplPeriod) {
+//                    $effort = $latestEmplPeriod->getEffort();
+//                    if ($effort !== NULL) {
+//                        if ($effort != 100) {
+//                            $effortStr = "part-time (" . $effort . "%)";
+//                        }
+//                    }
+//                }
+
                 $effortStr = 'full time';
-                $latestEmplPeriod = $this->getEmplPeriodByYearRange(
-                    $entity->getUser(),
-                    NULL       //$yearRange
-                );
-                if ($latestEmplPeriod) {
-                    $effort = $latestEmplPeriod->getEffort();
-                    if ($effort !== NULL) {
-                        if ($effort != 100) {
-                            $effortStr = "part-time (" . $effort . "%)";
-                        }
-                    }
+                $effort = $this->getLatesEmplPeriodEffort($submitter,$yearRange);
+                if ($effort != 100) {
+                    $effortStr = "part-time (" . $effort . "%)";
                 }
                 //TODO: change email
                 $totalAccruedDays = $this->getTotalAccruedDays($submitter); //current year
 
                 //Get $maxCarryOverDays
-                $maxCarryOverDays = $this->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$entity->getUser());
+                $maxCarryOverDays = $this->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$submitter);
                 if( !$maxCarryOverDays ) {
                     $maxCarryOverDays = 10;
                 }
@@ -894,7 +901,7 @@ class VacReqUtil
             }
 
 //            //As of [date of request submission], FirstName LastName has accrued Y days in the current [current academic year as 2015-2016] academic year,
-//            $message .= "As of ".$entity->getCreateDate()->format("F jS Y").", ".$entity->getUser()->getUsernameOptimal()." has accrued ".
+//            $message .= "As of ".$entity->getCreateDate()->format("F jS Y").", ".$submitter->getUsernameOptimal()." has accrued ".
 //                $accruedDays." days in the current ".$yearRange." academic year,";
 //            //had Z days carried over from [current academic year -1] to [current academic year],
 //            $message .= " had ".$carriedOverDays." days carried over from ".$previousYear." to ".$currentYear.",";
@@ -951,7 +958,7 @@ class VacReqUtil
             }
 
             //subject + SubmitterFirstName SubmitterLastName has M approved vacation days during [CURRENT 20XX-20YY] year.
-            $message .= $entity->getUser()->getUsernameOptimal()." has ".$approvedVacationDays." approved vacation days during ".$yearRange." year.";
+            $message .= $submitter->getUsernameOptimal()." has ".$approvedVacationDays." approved vacation days during ".$yearRange." year.";
 
             if( $withLinks ) {
                 $prefix = " ";
