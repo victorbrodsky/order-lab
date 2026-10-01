@@ -887,6 +887,7 @@ class VacReqUtil
                     //$maxCarryOverDays = round($maxCarryOverDays);
                 }
 
+                //Email body
                 $note1 = $submitter->getUsernameOptimal() . " has a " . $effortStr .
                     " status documented in this system and based on this status accrues " .
                     $totalAccruedDays . " vacation days per year and carryover limit of $maxCarryOverDays days.";
@@ -4897,6 +4898,7 @@ class VacReqUtil
         if ($latestEmplPeriod) {
             $effort = $latestEmplPeriod->getEffort();
         }
+        //echo '$effort='.$effort."<br>";
         return $effort;
     }
 
@@ -5235,6 +5237,7 @@ class VacReqUtil
     public function getEmplPeriodByYearRange( $user=NULL, $yearRange=NULL ) {
 
         $testing = false;
+        //$testing = true;
     //        if( $this->security->isGranted('ROLE_VACREQ_ADMIN') ) {
     //            $testing = true;
     //        }
@@ -6592,7 +6595,10 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
     ////////// Based on ... message //////////////
     $startDateStr = NULL;
     $endDateStr = NULL;
+
+    //TODO: use the same employment period (not correct) as in getTotalAccruedDays (correct)
     $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+    
     $startDate = $userStartEndDates['startDate'];
     if( $startDate ) {
         $startDateStr = $startDate->format('m/d/Y');
@@ -6688,20 +6694,29 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
 //    Based on your current employment start date (MM/DD/YYYY) and
 //    on approved carry over requests documented in this system,
 //    you have [24] remaining vacation days during the current academic year.
+//        $effortStr = 'full time';
+//        $latestEmplPeriod = $this->getEmplPeriodByYearRange(
+//            $user,
+//            NULL       //$yearRange
+//        );
+//        if( $latestEmplPeriod ) {
+//            $effort = $latestEmplPeriod->getEffort();
+//            if ($effort !== NULL) {
+//                if( $effort != 100 ) {
+//                    $effortStr = "part-time (".$effort."%)";
+//                }
+//            }
+//        }
+
+        $effort = $this->getLatesEmplPeriodEffort($user);
         $effortStr = 'full time';
-        $latestEmplPeriod = $this->getEmplPeriodByYearRange(
-            $user,
-            NULL       //$yearRange
-        );
-        if( $latestEmplPeriod ) {
-            $effort = $latestEmplPeriod->getEffort();
-            if ($effort !== NULL) {
-                if( $effort != 100 ) {
-                    $effortStr = "part-time (".$effort."%)";
-                }
+        if( $effort ) {
+            if( $effort != 100 ) {
+                $effortStr = "part-time (".$effort."%)";
             }
         }
 
+        //Header info
         $totalAccruedDaysStr = "With your $effortStr status documented in this system, ";
         $totalAccruedDaysStr .= "you accrue $totalAccruedDays vacation days per year. ";
 

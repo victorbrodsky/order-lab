@@ -88,3 +88,11 @@ du -sh /path/to/folder
 Don't need to keep old packing sleeps
 When add custom packing sleep -> new packing sleep not generating
 Open new generated packing sleep on a new page
+
+#verufy jar9135 with 3 employments periods 07/01/2014-08/01/2024 (100%), 08/01/2024-null (60%), 06/12/2025-null (50%):
+1) Sort by start (hired) date
+2) New vac request page:
+With your part-time (50%) status documented in this system, you accrue 12 vacation days per year.
+Based on your current employment dates (07/01/2014 - 08/01/2024) and on approved carry over
+requests documented in this system, you have 12 remaining vacation days during the current academic year.
+=> (07/01/2014 - 08/01/2024) not correct, => fix //TODO: use the same employment period (not correct) as in getTotalAccruedDays (correct)
