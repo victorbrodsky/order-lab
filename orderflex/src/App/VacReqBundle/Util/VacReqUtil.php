@@ -869,7 +869,7 @@ class VacReqUtil
 //                }
 
                 $effortStr = 'full time';
-                $effort = $this->getLatesEmplPeriodEffort($submitter,$yearRange);
+                $effort = $this->getLatestEmplPeriodEffort($submitter,$yearRange);
                 if ($effort != 100) {
                     $effortStr = "part-time (" . $effort . "%)";
                 }
@@ -4877,7 +4877,7 @@ class VacReqUtil
 //        if ($latestEmplPeriod) {
 //            $effort = $latestEmplPeriod->getEffort();
 //        }
-        $effort = $this->getLatesEmplPeriodEffort($user,$yearRange);
+        $effort = $this->getLatestEmplPeriodEffort($user,$yearRange);
 
         if( $effort && $maxCarryOverDays ) {
             $effortCoef = $effort/100;
@@ -4889,17 +4889,26 @@ class VacReqUtil
     }
 
     //Get effort based on the $latestEmplPeriod
-    public function getLatesEmplPeriodEffort( $user=NULL, $yearRange=NULL ) {
+    public function getLatestEmplPeriodEffort( $user=NULL, $yearRange=NULL ) {
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
         }
         $latestEmplPeriod = $this->getEmplPeriodByYearRange($user,$yearRange);
+        //echo 'getLatestEmplPeriodEffort: $latestEmplPeriod='.$latestEmplPeriod.'<br>';
         $effort = NULL;
         if ($latestEmplPeriod) {
             $effort = $latestEmplPeriod->getEffort();
         }
         //echo '$effort='.$effort."<br>";
         return $effort;
+    }
+
+    //Get current year employment period (EmploymentStatus)
+    public function getCurrentEmplPeriod( $user=NULL ) {
+        $yearRange = $this->getCurrentAcademicYearRange();
+        $currentEmplPeriod = $this->getEmplPeriodByYearRange($user,$yearRange);
+        //echo 'getCurrentEmplPeriod: $currentEmplPeriod='.$currentEmplPeriod.'<br>';
+        return $currentEmplPeriod;
     }
 
     //Old version without user's start/end dates: branch master: 06a6f239c7ef8a5b74a708eddac4634903b0d9fe; July 17 2024 11:23
@@ -6596,9 +6605,32 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
     $startDateStr = NULL;
     $endDateStr = NULL;
 
-    //TODO: use the same employment period (not correct) as in getTotalAccruedDays (correct)
-    $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
-    
+    ////////// Get current year empl period start/end dates /////////////////
+    //TODO: use the same employment period (not correct) as in getTotalAccruedDays (correct) - use similar getLatestEmplPeriodEffort
+    //$userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+//    $userStartEndDates = [];
+//    $userStartEndDates['startDate'] = NULL;
+//    $userStartEndDates['endDate'] = NULL;
+//    $currentEmplPeriod = $this->getCurrentEmplPeriod();
+//    if( $currentEmplPeriod ) {
+//        if( $currentEmplPeriod->getHireDate() ) {
+//            $userStartEndDates['startDate'] = $currentEmplPeriod->getHireDate();
+//        }
+//        if( $currentEmplPeriod->getTerminationDate() ) {
+//            $userStartEndDates['endDate'] = $currentEmplPeriod->getTerminationDate();
+//        }
+//    }
+    $currentEmplPeriod = $this->getCurrentEmplPeriod();
+    $userStartEndDates = $user->getEmploymentStartEndDates($asString=false,$format='m/d/Y',$currentEmplPeriod);
+    //echo "startDate=".$startDate."<br>";
+    //$userStartEndDates['startDate'] = $startDate;
+    //$userStartEndDates['endDate'] = $endDate;
+    ////////// Get current year empl period start/end dates /////////////////
+
+    //$latestEmploymentStatus = $user->getLatestEmploymentStatus();
+    //dump($latestEmploymentStatus);
+    //exit('111');
+
     $startDate = $userStartEndDates['startDate'];
     if( $startDate ) {
         $startDateStr = $startDate->format('m/d/Y');
@@ -6708,7 +6740,7 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
 //            }
 //        }
 
-        $effort = $this->getLatesEmplPeriodEffort($user);
+        $effort = $this->getLatestEmplPeriodEffort($user);
         $effortStr = 'full time';
         if( $effort ) {
             if( $effort != 100 ) {
@@ -7068,7 +7100,6 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
     // with the status of "Approved" or "Cancelation denied (Approved)"
     //If the current month is July or August, AND the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
     public function getNewCarryOverRequestString( $user, $approvalGroupType=null ) {
-
         //check if this group is allow carry over
         if( !$approvalGroupType ) {
             $approvalGroupType = $this->getSingleApprovalGroupType($user);
@@ -7122,6 +7153,7 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
 
             $currentYearUnusedDaysMessage = $this->getCurrentYearUnusedDays($user);
             if( $currentYearUnusedDaysMessage ) {
+                //echo "currentYearUnusedDaysMessage=".$currentYearUnusedDaysMessage."<br>";
                 return $currentYearUnusedDaysMessage;
             }
 
@@ -7192,6 +7224,7 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
                 //$noteForCarryOverDays = $userSecUtil->getSiteSettingParameter('noteForCarryOverDays','vacreq');
                 $noteForCarryOverDays = $this->getValueApprovalGroupTypeByUser('noteForCarryOverDays',$user);
                 if( $noteForCarryOverDays ) {
+                    $noteForCarryOverDays = $this->replaceCarryOverNote($user,$noteForCarryOverDays);
                     $carryOverNote = " (" . $noteForCarryOverDays . ")";
                 }
             }
@@ -7199,9 +7232,8 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
             //show only on vacation request page, hide on carryover page
             //$link = '<a href="' . $actionRequestUrl . '">Request to carry over the remaining ' . $unusedDays . ' vacation days' . $carryOverNote . '</a>';
             $link = '<a href="' . $actionRequestUrl . 
-                '">Request to carry over the remaining vacation days' . 
-                $carryOverNote . '</a>';
-
+                '">Request to carry over the remaining vacation days</a>' . 
+                $carryOverNote;
             return $link;
         }
 
@@ -7340,6 +7372,26 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         }
 
         return $unusedDays;
+    }
+
+    public function replaceCarryOverNote( $user, $noteForCarryOverDays ) {
+        $effort = $this->getLatestEmplPeriodEffort($user);
+        if( !$effort ) {
+            $effort = 100;
+        }
+
+        $maxCarryOverDays = $this->getLimitCarryOverDays($user);
+
+        if( stripos($noteForCarryOverDays, '[[EFFORT]]') !== false ) {
+            //echo "effort=$effort <br>";
+            //replace [[EFFORT]]
+            $noteForCarryOverDays = str_replace("[[EFFORT]]",$effort ?? '',$noteForCarryOverDays);
+        }
+        if( stripos($noteForCarryOverDays, '[[MAXCARRYOVER]]') !== false ) {
+            //replace [[MAXCARRYOVER]]
+            $noteForCarryOverDays = str_replace("[[MAXCARRYOVER]]",$maxCarryOverDays ?? '',$noteForCarryOverDays);
+        }
+        return $noteForCarryOverDays;
     }
 
     //$yearOffset: 0=>current year, -1=>previous year

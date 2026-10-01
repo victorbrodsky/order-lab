@@ -2750,7 +2750,7 @@ class User extends UserBase
         return "";
     }
 
-    public function getEmploymentStartEndDates( $asString=true, $format='m/d/Y' )
+    public function getEmploymentStartEndDates( $asString=true, $format='m/d/Y', $latestEmploymentStatus=NULL )
     {
         $resArr = array();
         $startDate = NULL;
@@ -2762,7 +2762,10 @@ class User extends UserBase
 //        if( count($employmentStatuses) > 0 ) {
 //            $latestEmploymentStatus = $employmentStatuses->first();
 //        }
-        $latestEmploymentStatus = $this->getLatestEmploymentStatus();
+        if( !$latestEmploymentStatus ) {
+            $latestEmploymentStatus = $this->getLatestEmploymentStatus();
+            //echo 'getEmploymentStartEndDates: id='.$latestEmploymentStatus->getId().'<br>';
+        }
 
         if( $latestEmploymentStatus ) {
 
@@ -2827,6 +2830,7 @@ class User extends UserBase
                         $groupName = $group->getName();
                     }
                     //echo "startDate=".$startDate."<br>";
+                    //echo "employmentStatus->getId()=".$employmentStatus->getId()."<br>";
                     //$resArr['userId'] = $employmentStatus->getUser()->getId();
                     $resArr['id'] = $employmentStatus->getId();
                     $resArr['startDate'] = $startDate;

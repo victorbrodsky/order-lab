@@ -168,6 +168,7 @@ class RequestController extends OrderAbstractController
 
             //show only on vacation request page, hide on carryover page
             $newCarryOverRequestStr = $vacreqUtil->getNewCarryOverRequestString($user,$approvalGroupType);
+            //echo "newCarryOverRequestStr=$newCarryOverRequestStr <br>";
         }
 
         //If the current month is July or August, AND the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
@@ -216,7 +217,7 @@ class RequestController extends OrderAbstractController
 //                //$maxCarryOverVacationDays = $userSecUtil->getSiteSettingParameter('maxCarryOverVacationDays', 'vacreq');
 //                $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
 //                $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($user);
-//                $effort = $vacreqUtil->getLatesEmplPeriodEffort($user);
+//                $effort = $vacreqUtil->getLatestEmplPeriodEffort($user);
 //                $carryOverDays = $entity->getCarryOverDays();
 //                if ($carryOverDays && $limitCarryOverDays) {
 //                    if ($carryOverDays > $limitCarryOverDays) {
@@ -239,7 +240,7 @@ class RequestController extends OrderAbstractController
                         $form['carryOverDays']->addError(new FormError("Please enter a number of carry‑over days greater than zero"));
                     } elseif( $limitCarryOverDays && $carryOverDays > $limitCarryOverDays ) {
                         $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
-                        $effort = $vacreqUtil->getLatesEmplPeriodEffort($user);
+                        $effort = $vacreqUtil->getLatestEmplPeriodEffort($user);
                         $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
                             . $maxCarryOverVacationDays . " days.";
                         $errorMsg = $errorMsg . "<br>" .
@@ -474,7 +475,7 @@ class RequestController extends OrderAbstractController
         if( $routeName == "vacreq_carryoverrequest" ) {
             $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($entity->getUser());
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
-            $noteForCarryOverDays = $this->replaceCarryOverNote($user,$noteForCarryOverDays);
+            $noteForCarryOverDays = $vacreqUtil->replaceCarryOverNote($user,$noteForCarryOverDays);
         }
         //echo "noteForCarryOverDays=$noteForCarryOverDays <br>";
 
@@ -1812,7 +1813,7 @@ class RequestController extends OrderAbstractController
             }
 
             $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser('noteForCarryOverDays', $entity->getUser(), $approvalGroupType);
-            $noteForCarryOverDays = $this->replaceCarryOverNote($user,$noteForCarryOverDays);
+            $noteForCarryOverDays = $vacreqUtil->replaceCarryOverNote($user,$noteForCarryOverDays);
         }
         //echo "maxCarryOverVacationDays=$maxCarryOverVacationDays, noteForCarryOverDays=$noteForCarryOverDays <br>";
 
@@ -1933,62 +1934,62 @@ class RequestController extends OrderAbstractController
         return $accessreqs;
     }
 
-    public function replaceCarryOverNote( $user, $noteForCarryOverDays ) {
-        $vacreqUtil = $this->container->get('vacreq_util');
-
-//        /// Get $maxCarryOverDays ///
-//        $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
-//            $user,
-//            NULL       //$yearRange
-//        );
-//        if( $latestEmplPeriod ) {
-//            $effort = $latestEmplPeriod->getEffort();
-//        }
+//    public function replaceCarryOverNote( $user, $noteForCarryOverDays ) {
+//        $vacreqUtil = $this->container->get('vacreq_util');
+//
+////        /// Get $maxCarryOverDays ///
+////        $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
+////            $user,
+////            NULL       //$yearRange
+////        );
+////        if( $latestEmplPeriod ) {
+////            $effort = $latestEmplPeriod->getEffort();
+////        }
+////        if( !$effort ) {
+////            $effort = 100;
+////        }
+////        //$effort = 20;
+////
+////        $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user);
+////        if( !$maxCarryOverVacationDays ) {
+////            $maxCarryOverVacationDays = 10;
+////        }
+////
+////        //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+////        if( $effort && $maxCarryOverVacationDays ) {
+////            //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+////            $effortCoef = $effort/100;
+////            $maxCarryOverVacationDays = $maxCarryOverVacationDays * $effortCoef;
+////            $maxCarryOverVacationDays = round($maxCarryOverVacationDays);
+////            //echo "Adjusted maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+////        }
+////        /// EOF Get $maxCarryOverDays ///
+////        $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
+////            $user,
+////            NULL       //$yearRange
+////        );
+////        if( $latestEmplPeriod ) {
+////            $effort = $latestEmplPeriod->getEffort();
+////        }
+//
+//        $effort = $vacreqUtil->getLatestEmplPeriodEffort($user);
 //        if( !$effort ) {
 //            $effort = 100;
 //        }
-//        //$effort = 20;
 //
-//        $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user);
-//        if( !$maxCarryOverVacationDays ) {
-//            $maxCarryOverVacationDays = 10;
-//        }
+//        $maxCarryOverDays = $vacreqUtil->getLimitCarryOverDays($user);
 //
-//        //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
-//        if( $effort && $maxCarryOverVacationDays ) {
-//            //echo "effort=$effort, maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
-//            $effortCoef = $effort/100;
-//            $maxCarryOverVacationDays = $maxCarryOverVacationDays * $effortCoef;
-//            $maxCarryOverVacationDays = round($maxCarryOverVacationDays);
-//            //echo "Adjusted maxCarryOverVacationDays=$maxCarryOverVacationDays <br>";
+//        if( stripos($noteForCarryOverDays, '[[EFFORT]]') !== false ) {
+//            //echo "effort=$effort <br>";
+//            //replace [[EFFORT]]
+//            $noteForCarryOverDays = str_replace("[[EFFORT]]",$effort ?? '',$noteForCarryOverDays);
 //        }
-//        /// EOF Get $maxCarryOverDays ///
-//        $latestEmplPeriod = $vacreqUtil->getEmplPeriodByYearRange(
-//            $user,
-//            NULL       //$yearRange
-//        );
-//        if( $latestEmplPeriod ) {
-//            $effort = $latestEmplPeriod->getEffort();
+//        if( stripos($noteForCarryOverDays, '[[MAXCARRYOVER]]') !== false ) {
+//            //replace [[MAXCARRYOVER]]
+//            $noteForCarryOverDays = str_replace("[[MAXCARRYOVER]]",$maxCarryOverDays ?? '',$noteForCarryOverDays);
 //        }
-
-        $effort = $vacreqUtil->getLatesEmplPeriodEffort($user);
-        if( !$effort ) {
-            $effort = 100;
-        }
-
-        $maxCarryOverDays = $vacreqUtil->getLimitCarryOverDays($user);
-
-        if( stripos($noteForCarryOverDays, '[[EFFORT]]') !== false ) {
-            //echo "effort=$effort <br>";
-            //replace [[EFFORT]]
-            $noteForCarryOverDays = str_replace("[[EFFORT]]",$effort ?? '',$noteForCarryOverDays);
-        }
-        if( stripos($noteForCarryOverDays, '[[MAXCARRYOVER]]') !== false ) {
-            //replace [[MAXCARRYOVER]]
-            $noteForCarryOverDays = str_replace("[[MAXCARRYOVER]]",$maxCarryOverDays ?? '',$noteForCarryOverDays);
-        }
-        return $noteForCarryOverDays;
-    }
+//        return $noteForCarryOverDays;
+//    }
 
 
 
