@@ -90,6 +90,7 @@ class UserDatesController extends OrderAbstractController
         }
 
         $authUtil = $this->container->get('authenticator_utility');
+        $vacreqUtil = $this->container->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
         $repository = $em->getRepository(User::class);
@@ -347,7 +348,10 @@ class UserDatesController extends OrderAbstractController
 
             $degree = $user->getSingleSalutation();
 
-            $startEndDate = $user->getEmploymentStartEndDates();
+            //$startEndDate = $user->getEmploymentStartEndDates();
+            $currentEmplPeriod = $vacreqUtil->getCurrentEmplPeriod($user);
+            $startEndDate = $user->getEmploymentStartEndDates($asString=true,$format='m/d/Y',$currentEmplPeriod);
+
             $startDate = $startEndDate['startDate'];
             $endDate = $startEndDate['endDate'];
 

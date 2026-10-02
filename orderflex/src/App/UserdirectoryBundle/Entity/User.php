@@ -2599,16 +2599,18 @@ class User extends UserBase
     //return null if user is still employed
     //return str if user not longer working:
     //"No longer works at the [Institution] as of MM/DD/YYYY. (show the most recent "End of Employment Date")
-    public function getEmploymentTerminatedStr() {
+    public function getEmploymentTerminatedStr_orig() {
         $res = "";
         $emplCount = 0;
         $resArr = array();
 
+        //echo $this.': count='.count($this->getEmploymentStatus()).'<br>';
         foreach( $this->getEmploymentStatus() as $employmentStatus ) {
 
             $startDateStr = null;
             $endDateStr = null;
             $intstitution = $employmentStatus->getInstitution();
+            //echo '$employmentStatus='.$employmentStatus.'<br>';
 
             if( $employmentStatus->getTerminationDate() ) {
                 $endDateStr = $employmentStatus->getTerminationDate()->format("m/d/Y");
@@ -2643,7 +2645,7 @@ class User extends UserBase
             }
 
             $emplCount++;
-        }
+        } //foreach
 
         if( count($resArr) > 0 ) {
             $res = implode("; ",$resArr);
@@ -2672,7 +2674,64 @@ class User extends UserBase
 //            //$res = $res . " AD status unknown";
 //            $res = $res . " Inactive in AD";
 //        }
+        //echo "res=$res <br>";
+        return $res;
+    }
+    //Return all employment dates,
+    // because in case of multiple employment periods ($employmentStatus)
+    // one empl period has start and end dates, but newer has only start date
+    public function getEmploymentTerminatedStr() {
+        $res = "";
+        $emplCount = 0;
+        $resArr = array();
 
+        //echo $this.': count='.count($this->getEmploymentStatus()).'<br>';
+        foreach( $this->getEmploymentStatus() as $employmentStatus ) {
+
+            $startDateStr = null;
+            $endDateStr = null;
+            $intstitution = $employmentStatus->getInstitution();
+            //echo '$employmentStatus='.$employmentStatus.'<br>';
+
+            if( $employmentStatus->getTerminationDate() ) {
+                $endDateStr = $employmentStatus->getTerminationDate()->format("m/d/Y");
+            }
+
+            if( $employmentStatus->getHireDate() ) {
+                $startDateStr = $employmentStatus->getHireDate()->format("m/d/Y");
+            }
+
+            $initStr = "Employed ";
+            if( $intstitution ) {
+                $initStr = "Employed by $intstitution ";
+            }
+
+            //1) if start date only
+            if( $startDateStr && !$endDateStr ) {
+                //Employed prior to 11/28/2022.
+                $resArr[] = $initStr."from $startDateStr";
+            }
+
+            //2) if end date only
+            if( !$startDateStr && $endDateStr ) {
+                //Employed prior to 11/28/2022.
+                $resArr[] = $initStr."prior to $endDateStr";
+            }
+
+            //3) if both dates
+            if( $startDateStr && $endDateStr ) {
+                //Employed from 11/22/2022 to 11/28/2022.
+                $resArr[] = $initStr."from $startDateStr to $endDateStr";
+            }
+
+            $emplCount++;
+        } //foreach
+
+        if( count($resArr) > 0 ) {
+            $res = implode("; ",$resArr);
+        }
+
+        //echo "res=$res <br>";
         return $res;
     }
 

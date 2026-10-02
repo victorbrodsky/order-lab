@@ -6620,7 +6620,7 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
 //            $userStartEndDates['endDate'] = $currentEmplPeriod->getTerminationDate();
 //        }
 //    }
-    $currentEmplPeriod = $this->getCurrentEmplPeriod();
+    $currentEmplPeriod = $this->getCurrentEmplPeriod($user);
     $userStartEndDates = $user->getEmploymentStartEndDates($asString=false,$format='m/d/Y',$currentEmplPeriod);
     //echo "startDate=".$startDate."<br>";
     //$userStartEndDates['startDate'] = $startDate;
