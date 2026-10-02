@@ -103,3 +103,13 @@ Use:
 $currentEmplPeriod = $this->getCurrentEmplPeriod();
 $userStartEndDates = $user->getEmploymentStartEndDates($asString=false,$format='m/d/Y',$currentEmplPeriod);
 Fix other: $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+
+//Return only the latest employment period (by hireDate) within the academic year range
+public function getEmplPeriodByYearRange( $user=NULL, $yearRange=NULL ) {
+
+VacReq requirements:
+1)Only one Organizational Group per user (test user ecesarm has 2 groups with 20% effort but without dates)
+On page http://127.0.0.1/time-away-request/groups/ gives warning if any user has multiple org groups
+2) Effort only is used in calculation if start date is not empty -> give warning when effort is set but dates are empty
+Alternatively, if start date is empty, assume start of the current year as a employment period start date
+Without start date getEmplPeriodByYearRange will not return any empl periods

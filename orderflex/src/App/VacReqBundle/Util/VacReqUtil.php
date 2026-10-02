@@ -4916,14 +4916,14 @@ class VacReqUtil
     public function getTotalAccruedDays( $user=NULL, $yearRange=NULL, $approvalGroupType=NULL ) {
 
         if( $user ) {
+            //echo "try to get totalAccruedDays for $user <br>";
             $totalAccruedDays = $this->getTotalAccruedDaysUsingEmplPeriods($user, $yearRange, $approvalGroupType);
             if( $totalAccruedDays !== NULL ) {
                 //echo "return EmplPeriod totalAccruedDays=$totalAccruedDays <br>";
                 return $totalAccruedDays;
             }
         }
-//        //echo "Using default calculations <br>";
-
+        //echo "Using default calculations <br>";
         return $this->getDefaultTotalAccruedDays($user, $yearRange, $approvalGroupType);
 
 
@@ -5000,7 +5000,7 @@ class VacReqUtil
         if( !$yearRange ) {
             $yearRange = $this->getCurrentAcademicYearRange();
         }
-        //echo "user=".$user.", approvalGroupType=".$approvalGroupType.", yearRange=".$yearRange."<br>";
+        //echo "getDefaultTotalAccruedDays: user=".$user.", approvalGroupType=".$approvalGroupType.", yearRange=".$yearRange."<br>";
 
         //Use EmploymentStartEnd to get number of month
         $totalAccruedMonths = $this->getTotalAccruedMonths($yearRange);
@@ -6639,39 +6639,6 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
     if( $endDate ) {
         $endDateStr = $endDate->format('m/d/Y');
     }
-//    $totalAccruedDaysStr = "Based on the assumed [24] accrued days per year";
-//    if ($startDateStr && $endDateStr) {
-//        $totalAccruedDaysStr = "Based on your start/end employment dates ($startDateStr - $endDateStr)";
-//    } elseif ($startDateStr) {
-//        $totalAccruedDaysStr = "Based on your start employment dates ($startDateStr)";
-//    } elseif ($endDateStr) {
-//        $totalAccruedDaysStr = "Based on your end employment dates ($endDateStr)";
-//    }
-
-    //TODO:
-//    With your [“full-time” or “part-time (80% effort)”] status documented in this system,
-//    you accrue [24 or X=24*0.8] vacation days per year. Based on your current employment
-//    start date (MM/DD/YYYY) and on approved carry over requests documented in this system,
-//    you have [24] remaining vacation days during the current academic year.
-//    if(0) {
-//        $employmentStatuses = $user->getAllEmploymentStartEndDates();
-//        $emplPeriods = $query->getResult();
-//
-//        if ($testing) {
-//            echo "emplPeriods=" . count($emplPeriods) . "<br>";
-//        }
-//
-//        //Case 1
-//        if (count($emplPeriods) == 0) {
-//            return NULL;
-//        }
-//        $effort = $emplPeriod->getEffort();
-//        if ($effort !== NULL) {
-//            $effort = $effort / 100;
-//            $accruedDays = $accruedDays * $effort;
-//        }
-//    }
-    ////////// EOF Based on ... message //////////////
 
     ////////////// carry over allowed ///////////////////
     $carriedOverDaysString = null;
@@ -6712,7 +6679,10 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         }
 
         //totalAllocatedDays - vacationDays + carryOverDays
-        $remainingDaysRes = $this->totalVacationRemainingDays($user);
+        //echo "totalVacationRemainingDays: <br>";
+        $remainingDaysRes = $this->totalVacationRemainingDays($user); //check case when start/end dates are not set
+        //dump($remainingDaysRes);
+        //exit('111');
         //$remainingDaysString = "You have ".$remainingDaysRes['numberOfDays']." remaining vacation days during the current academic year";
         ////Based on the assumed [24] accrued days per year and on approved carry over requests documented in this system,
         // You have [17] remaining vacation days during the current academic year.
@@ -6741,6 +6711,7 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
 //        }
 
         $effort = $this->getLatestEmplPeriodEffort($user);
+        //echo '$effort='.$effort.'<br>';
         $effortStr = 'full time';
         if( $effort ) {
             if( $effort != 100 ) {
