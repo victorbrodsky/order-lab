@@ -1299,6 +1299,10 @@ class AuthUtil {
 
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $cnx = $this->connectToLdap($LDAPHost);
+        if( !$cnx ) {
+            $this->logger->notice("checkUsersAD: return NULL: ldap_connect failed for LDAPHost=$LDAPHost");
+            return NULL;
+        }
 
         //Check if admin can bind via ldap
         $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin); //searchLdap
@@ -1452,7 +1456,7 @@ class AuthUtil {
             return null;
         }
 
-        $cnx = ldap_connect($LDAPHost, $LDAPPort);
+        $cnx = @ldap_connect($LDAPHost, $LDAPPort);
         //$cnx = ldap_connect("ldap://{$LDAPHost}:{$LDAPPort}");
         if (!$cnx) {
             $this->logger->error("connectToLdap: Ldap: Failed to connect to {$LDAPHost}:{$LDAPPort}");

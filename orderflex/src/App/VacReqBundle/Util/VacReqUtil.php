@@ -6400,7 +6400,7 @@ class VacReqUtil
         ////////// Based on ... message //////////////
         $startDateStr = NULL;
         $endDateStr = NULL;
-        $userStartEndDates = $user->getEmploymentStartEndDates($asString = false);
+        $userStartEndDates = $user->getEmploymentStartEndDates($asString = false); //v_1
         $startDate = $userStartEndDates['startDate'];
         if( $startDate ) {
             $startDateStr = $startDate->format('m/d/Y');
