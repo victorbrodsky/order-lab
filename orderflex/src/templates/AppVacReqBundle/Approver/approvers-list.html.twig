@@ -35,6 +35,13 @@
     </p>
 
     {#<br>#}
+    {#gives warning if any user has multiple org groups#}
+    {% set usersWithMultipleGroupsStr = vacreq_util.getUsersWithMultipleGroups() %}
+    {% if usersWithMultipleGroupsStr %}
+        <div class="alert alert-warning" role="alert">
+            {{ usersWithMultipleGroupsStr|raw }}
+        </div>
+    {% endif %}
 
     {% for organizationalInstitution in organizationalInstitutions %}
         {#organizationalInstitutionId={{ organizationalInstitution.id }}#}

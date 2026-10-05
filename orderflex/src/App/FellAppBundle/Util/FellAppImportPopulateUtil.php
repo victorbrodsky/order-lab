@@ -467,7 +467,8 @@ class FellAppImportPopulateUtil {
                     $logger->warning("Error populating data file ID ".$datafile->getId());
                 }
             } else {
-                $logger->warning("Warning: failed to process datafile ID=" . $datafile->getId() . " ( created on " . $datafileCreationDateStr .
+                $logger->warning("Warning: failed to process datafile ID=" .
+                    $datafile->getId() . " ( created on " . $datafileCreationDateStr .
                     ") for fellowship application dir=$uploadDir, spreadsheet=$spreadsheetUniqueName.");
             }
 

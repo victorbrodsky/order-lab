@@ -6858,6 +6858,90 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         return NULL;
     }
 
+    //Return a warning string listing users who are assigned to more than one organizational group.
+    //Groups associated with 'changestatus-carryover' action (i.e. "WCM (Carry Over Requests)") are not counted.
+    //Usage in twig: {{ vacreq_util.getUsersWithMultipleGroups()|raw }}
+    public function getUsersWithMultipleGroups() {
+        $userRepository = $this->em->getRepository(User::class);
+
+        //1) get carryover group institution ids to exclude: institutions of roles with 'changestatus-carryover' action
+        $excludedInstitutionIds = array();
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $carryOverRoles = $userRepository->findRolesByObjectActionInstitutionSite('VacReqRequest','changestatus-carryover',null,'vacreq');
+        foreach( $carryOverRoles as $carryOverRole ) {
+            $institution = $carryOverRole->getInstitution();
+            if( $institution ) {
+                $excludedInstitutionIds[$institution->getId()] = true;
+            }
+        }
+
+        //2) map vacreq institutional role names to their institutions
+        $roleNameToInstitution = array();
+        $vacreqRoles = $userRepository->findRolesBySiteAndPartialRoleName('vacreq','ROLE_VACREQ_',null,array('default','user-added'));
+        foreach( $vacreqRoles as $vacreqRole ) {
+            $institution = $vacreqRole->getInstitution();
+            if( $institution ) {
+                $roleNameToInstitution[$vacreqRole->getName()] = $institution;
+            }
+        }
+        if( count($roleNameToInstitution) == 0 ) {
+            return NULL;
+        }
+
+        //3) get all users with their vacreq role names (roles is a jsonb array of role name strings)
+        $connection = $this->em->getConnection();
+        $sql = "SELECT u.id AS user_id, r.role_name AS role_name
+                FROM user_fosuser u
+                CROSS JOIN LATERAL jsonb_array_elements_text(
+                    CASE WHEN jsonb_typeof(u.roles::jsonb) = 'array' THEN u.roles::jsonb ELSE '[]'::jsonb END
+                ) AS r(role_name)
+                WHERE r.role_name LIKE 'ROLE\\_VACREQ\\_%'";
+        $rows = $connection->executeQuery($sql)->fetchAllAssociative();
+
+        //4) collect distinct institutions per user, excluding carryover groups
+        $userInstitutions = array(); //userId => array(institutionId => institutionName)
+        foreach( $rows as $row ) {
+            $roleName = $row['role_name'];
+            if( !array_key_exists($roleName,$roleNameToInstitution) ) {
+                continue;
+            }
+            $institution = $roleNameToInstitution[$roleName];
+            $institutionId = $institution->getId();
+            if( array_key_exists($institutionId,$excludedInstitutionIds) ) {
+                continue;
+            }
+            $userInstitutions[$row['user_id']][$institutionId] = $institution->getName()."";
+        }
+
+        $multiGroupUserIds = array();
+        foreach( $userInstitutions as $userId => $institutionNames ) {
+            if( count($institutionNames) > 1 ) {
+                $multiGroupUserIds[$userId] = $institutionNames;
+            }
+        }
+        if( count($multiGroupUserIds) == 0 ) {
+            return NULL;
+        }
+
+        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:User'] by [User::class]
+        $multiGroupUsers = $this->em->getRepository(User::class)->findBy(array('id'=>array_keys($multiGroupUserIds)));
+        $userMap = array();
+        foreach( $multiGroupUsers as $multiGroupUser ) {
+            $userMap[$multiGroupUser->getId()] = $multiGroupUser;
+        }
+
+        $res = "Warning: ".count($multiGroupUserIds)." user(s) are assigned to more than one organizational group:<br>";
+        foreach( $multiGroupUserIds as $userId => $institutionNames ) {
+            $userStr = "user ID $userId";
+            if( array_key_exists($userId,$userMap) ) {
+                $userStr = $userMap[$userId]->getUserNameStr()." (ID $userId)";
+            }
+            $res .= "- $userStr: ".implode(", ",$institutionNames)."<br>";
+        }
+
+        return $res;
+    }
+
     //If user member of two group Faculty and Fellows, consider Faculty as default
     //set Faculty's orderinlist to the lower value (lower value is default)
     public function getSingleApprovalGroupType( $user ) {
