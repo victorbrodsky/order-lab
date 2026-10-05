@@ -7431,6 +7431,15 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         return $unusedDays;
     }
 
+/*
+ * CarryOverNote
+As per policy, the number of days that can be carried over to the following year is
+limited to the maximum of 10 for full-time faculty and to the maximum proportional
+to the percent effort for part-time faculty. The percent effort documented in this system
+for your account is [[EFFORT]]%, resulting in a carryover limit of [[MAXCARRYOVER]] days.
+A part-time exempt staff member accrues vacation time proportionate to the percentage of
+full-time that the staff member is scheduled to work.
+*/
     public function replaceCarryOverNote( $user, $noteForCarryOverDays ) {
         $effort = $this->getLatestEmplPeriodEffort($user);
         if( !$effort ) {

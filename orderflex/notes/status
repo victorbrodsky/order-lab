@@ -107,6 +107,9 @@ Fix other: $userStartEndDates = $user->getEmploymentStartEndDates($asString = fa
 //Return only the latest employment period (by hireDate) within the academic year range
 public function getEmplPeriodByYearRange( $user=NULL, $yearRange=NULL ) {
 
+Current Version for branch master: 7080a1e200ac838288dd3c352ad0dfc0ab0b1921; September 25 2026 08:48
+git checkout 7080a1e200ac838288dd3c352ad0dfc0ab0b1921
+
 VacReq requirements:
 1)Only one Organizational Group per user (test user ecesarm has 2 groups with 20% effort but without dates)
 On page http://127.0.0.1/time-away-request/groups/ gives warning if any user has multiple org groups

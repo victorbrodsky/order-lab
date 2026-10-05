@@ -594,6 +594,12 @@ class ReportGenerator {
             @chmod($outdir, 0777);
         }
 
+        if( !is_writable($outdir) ) {
+            $logger->error("generateFellAppReport: report output directory is not writable: ".$outdir);
+            throw new \Exception("Report output directory is not writable: ".$outdir.
+                " Check ownership/permissions of the private/Uploaded folder (web server user needs write access; on SELinux also check the directory context).");
+        }
+
         //Don't use it: DIRECTORY_SEPARATOR CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
         //$outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
         //$logger->notice("2 outdir=".$outdir);
