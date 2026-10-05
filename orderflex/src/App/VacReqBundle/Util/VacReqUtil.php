@@ -6858,7 +6858,7 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
         return NULL;
     }
 
-    //Return a warning string listing users who are assigned to more than one organizational group.
+    //Return a warning string listing users who are assigned as Submitter to more than one organizational group.
     //Groups associated with 'changestatus-carryover' action (i.e. "WCM (Carry Over Requests)") are not counted.
     //Usage in twig: {{ vacreq_util.getUsersWithMultipleGroups()|raw }}
     public function getUsersWithMultipleGroups() {
@@ -6877,7 +6877,7 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
 
         //2) map vacreq institutional role names to their institutions
         $roleNameToInstitution = array();
-        $vacreqRoles = $userRepository->findRolesBySiteAndPartialRoleName('vacreq','ROLE_VACREQ_',null,array('default','user-added'));
+        $vacreqRoles = $userRepository->findRolesBySiteAndPartialRoleName('vacreq','ROLE_VACREQ_SUBMITTER',null,array('default','user-added'));
         foreach( $vacreqRoles as $vacreqRole ) {
             $institution = $vacreqRole->getInstitution();
             if( $institution ) {
@@ -6888,14 +6888,14 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
             return NULL;
         }
 
-        //3) get all users with their vacreq role names (roles is a jsonb array of role name strings)
+        //3) get all users with their submitter vacreq role names (roles is a jsonb array of role name strings)
         $connection = $this->em->getConnection();
         $sql = "SELECT u.id AS user_id, r.role_name AS role_name
                 FROM user_fosuser u
                 CROSS JOIN LATERAL jsonb_array_elements_text(
                     CASE WHEN jsonb_typeof(u.roles::jsonb) = 'array' THEN u.roles::jsonb ELSE '[]'::jsonb END
                 ) AS r(role_name)
-                WHERE r.role_name LIKE 'ROLE\\_VACREQ\\_%'";
+                WHERE r.role_name LIKE 'ROLE\\_VACREQ\\_SUBMITTER%'";
         $rows = $connection->executeQuery($sql)->fetchAllAssociative();
 
         //4) collect distinct institutions per user, excluding carryover groups
@@ -6910,7 +6910,7 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
             if( array_key_exists($institutionId,$excludedInstitutionIds) ) {
                 continue;
             }
-            $userInstitutions[$row['user_id']][$institutionId] = $institution->getName()."";
+            $userInstitutions[$row['user_id']][$institutionId] = $institution->getName()." (ID $institutionId)";
         }
 
         $multiGroupUserIds = array();
@@ -6930,13 +6930,15 @@ public function getHeaderInfoMessages($user, $approvalGroupType=null) {
             $userMap[$multiGroupUser->getId()] = $multiGroupUser;
         }
 
-        $res = "Warning: ".count($multiGroupUserIds)." user(s) are assigned to more than one organizational group:<br>";
+        $res = "Warning: ".count($multiGroupUserIds)." user(s) are assigned to more than one organizational group, ".
+            "each user must belong to only one group.".
+            ":<br>";
         foreach( $multiGroupUserIds as $userId => $institutionNames ) {
             $userStr = "user ID $userId";
             if( array_key_exists($userId,$userMap) ) {
                 $userStr = $userMap[$userId]->getUserNameStr()." (ID $userId)";
             }
-            $res .= "- $userStr: ".implode(", ",$institutionNames)."<br>";
+            $res .= "* $userStr: ".implode(", ",$institutionNames)."<br>";
         }
 
         return $res;
