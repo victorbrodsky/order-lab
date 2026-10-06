@@ -76,7 +76,8 @@ class ReportGenerator {
         $this->uploadDir = 'Uploaded';
 
         //$this->generatereportrunCmd = 'php ../bin/console fellapp:generatereportrun --env=prod';
-        $this->generatereportrunCmd = 'php ..'.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'console fellapp:generatereportrun --env=prod';
+        //use absolute console path: '../bin/console' only resolves when CWD is public/ (web request) and fails under cron/CLI
+        $this->generatereportrunCmd = 'php "'.$this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'console'.'" fellapp:generatereportrun --env=prod';
 
         $this->runningGenerationReport = false;
 

@@ -389,7 +389,15 @@ class GoogleSheetManagement {
                 chmod($fullpath, 0700);
             }
 
-            file_put_contents($target_file, $response);
+            if( !is_writable($fullpath) ) {
+                throw new IOException('Unable to download file: upload directory is not writable: '.$fullpath.
+                    ' (check ownership/permissions; directories created by a previous root run may be owned by root)');
+            }
+
+            $writeRes = file_put_contents($target_file, $response);
+            if( $writeRes === false || !file_exists($target_file) ) {
+                throw new IOException('Unable to download file: failed to write file: '.$target_file);
+            }
 
             //generate two thumbnails
             //$logger = $this->container->get('logger');

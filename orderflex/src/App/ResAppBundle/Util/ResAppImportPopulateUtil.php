@@ -566,7 +566,9 @@ class ResAppImportPopulateUtil {
 
         //call tryRun() asynchronous
         if( $populatedResidencyApplications && count($populatedResidencyApplications) > 0 ) {
-            $cmd = 'php ../bin/console resapp:generatereportrun --env=prod';
+            //use absolute console path: '../bin/console' only resolves when CWD is public/ (web request) and fails under cron/CLI
+            $console = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'console';
+            $cmd = 'php "'.$console.'" resapp:generatereportrun --env=prod';
             //$resappRepGen = $this->container->get('resapp_reportgenerator');
             //$resappRepGen->cmdRunAsync($cmd);
             $userServiceUtil = $this->container->get('user_service_utility');

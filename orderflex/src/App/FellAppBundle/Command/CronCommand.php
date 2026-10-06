@@ -57,7 +57,8 @@ class CronCommand extends Command {
             ->setDescription('Import and Populate Fellowship Applications from Google Form');
     }
 
-    //php bin/console cron:importfellapp --env=prod
+    //run as root: php bin/console cron:importfellapp --env=prod
+    //run as apache: sudo -u apache php bin/console cron:importfellapp --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $logger = $this->container->get('logger');
