@@ -130,10 +130,13 @@ class FellAppImportPopulateUtil {
             $populatedBackupApplications = $this->processBackupFellAppFromGoogleDrive();
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $generatedReport = $fellappRepGen->tryRun(); //run hard run report generation
 
         //exit('eof processFellAppFromGoogleDrive');
+
+        $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
 
         $notExistedApplicationsStr = "All fellapp applications in Google Drive have a corresponding fellapp in DB";
         $notExistedApplications = array();
@@ -165,7 +168,7 @@ class FellAppImportPopulateUtil {
         //create eventlog for this cron job event. It will be used later on to display in "Last successful import:
         if(1) {
             //Event Logger with event type "Import of Fellowship Applications Spreadsheet". It will be used to get lastImportTimestamps
-            $userSecUtil = $this->container->get('user_security_utility');
+            //$userSecUtil = $this->container->get('user_security_utility');
             $systemUser = $userSecUtil->findSystemUser();
             $eventTypeStr = "Import of Fellowship Applications Spreadsheet";
 
@@ -196,14 +199,16 @@ class FellAppImportPopulateUtil {
             $userSecUtil->sendEmailToSystemEmail($subject, $body);
 
             //Send email to admins
-            $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
-            $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
-            if (!$emails) {
-                $emails = $ccs;
-                $ccs = null;
+            if( !$hideWarning ) {
+                $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
+                $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
+                if (!$emails) {
+                    $emails = $ccs;
+                    $ccs = null;
+                }
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $emailUtil->sendEmail($emails, $subject, $body, $ccs);
             }
-            $emailUtil = $this->container->get('user_mailer_utility');
-            $emailUtil->sendEmail($emails, $subject, $body, $ccs);
 
             if( $testing == false ) {
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $body, $systemUser, null, null, 'Error');
