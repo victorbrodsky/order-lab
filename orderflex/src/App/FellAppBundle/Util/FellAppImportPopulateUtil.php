@@ -136,8 +136,6 @@ class FellAppImportPopulateUtil {
 
         //exit('eof processFellAppFromGoogleDrive');
 
-        $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->getParameter('fellapp.sitename'));
-
         $notExistedApplicationsStr = "All fellapp applications in Google Drive have a corresponding fellapp in DB";
         $notExistedApplications = array();
         if( $filesGoogleDrive ) {
@@ -199,6 +197,7 @@ class FellAppImportPopulateUtil {
             $userSecUtil->sendEmailToSystemEmail($subject, $body);
 
             //Send email to admins
+            $hideWarning = $userSecUtil->getSiteSettingParameter('hideWarning', $this->container->getParameter('fellapp.sitename'));
             if( !$hideWarning ) {
                 $emails = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Platform Administrator");
                 $ccs = $userSecUtil->getUserEmailsByRole($this->container->getParameter('fellapp.sitename'), "Administrator");
