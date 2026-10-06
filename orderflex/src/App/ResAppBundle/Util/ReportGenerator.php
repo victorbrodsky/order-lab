@@ -1865,7 +1865,8 @@ class ReportGenerator {
         //echo "serverPath=".$serverPath." ";
 
         //$applicationOutputFilePath = getcwd() . "/web/" . $avatar->getUploadDirectory() . "/test/test.pdf";
-        $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
+        //use kernel project dir: getcwd() is unreliable under cron (CWD can be the user's home, e.g. /usr/share/httpd)
+        $applicationOutputFilePath = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . "private" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
         echo "path=".$applicationOutputFilePath." ";
 
         $this->generateApplicationPdf($resapp->getId(),$applicationOutputFilePath);

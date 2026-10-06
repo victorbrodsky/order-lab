@@ -530,20 +530,14 @@ class Document {
 
         //From web getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web
         //From console getcwd()=C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
-        $fullPath = getcwd();
-        $fullPath = str_replace('\\', '/', $fullPath);
+        //getcwd() is not reliable: under cron the process CWD can be the user's home (e.g. /usr/share/httpd),
+        //so derive the project root from this file's location instead:
+        //src/App/UserdirectoryBundle/Entity -> 4 levels up = project root
+        $projectRoot = dirname(__DIR__, 4);
+        $projectRoot = str_replace('\\', '/', $projectRoot);
 
         $uploadDirectory = $this->getUploadDirectory();
         $uploadDirectory = str_replace('\\', '/', $uploadDirectory);
-
-        //Web: getcwd() usually points to public/ (or sometimes private/); project root is one level up.
-        //Console: getcwd() is the project root.
-        $cwdBaseName = basename($fullPath);
-        if( $cwdBaseName === 'public' || $cwdBaseName === 'private' ) {
-            $projectRoot = dirname($fullPath);
-        } else {
-            $projectRoot = $fullPath;
-        }
 
         //Strip a stale leading public/ artifact (e.g. "public/private/Uploaded/" or "public/Uploaded/")
         if( strpos($uploadDirectory, 'public/') === 0 ) {
