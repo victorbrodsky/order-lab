@@ -196,6 +196,7 @@ class VacReqRequest
     //TODO: show decimal (2.75 days) => // Using Decimal (Highly recommended for exact numbers)
     //#[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
     //protected string $carryOverDays; // e.g., "1.50", "0.25". Mapped to PHP string to prevent float distortion.
+    //Or use switch private $useRound = true; in VacReqUtil
     #[ORM\Column(type: 'integer', nullable: true)]
     private $carryOverDays;
 

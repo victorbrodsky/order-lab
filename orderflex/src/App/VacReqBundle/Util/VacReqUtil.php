@@ -102,6 +102,8 @@ class VacReqUtil
     //and it is expensive (queries institutions/settings the user belongs to)
     private $cachedApprovalGroupTypeByUserId = array();
 
+    private $useRound = true;
+    //private $useRound = false;
 
     public function __construct( EntityManagerInterface $em, Security $security, ContainerInterface $container ) {
 
@@ -1202,10 +1204,25 @@ class VacReqUtil
         //echo "carryOverDaysFromPreviousYear=".$carryOverDaysFromPreviousYear."<br>";
         //echo "carryOverDaysToNextYear=".$carryOverDaysToNextYear."<br>";
 
-        $res = array(
-            'numberOfDays' => ( (int)$totalAllocatedDays - (int)$vacationDays + (int)$carryOverDaysFromPreviousYear ) - (int)$carryOverDaysToNextYear,
-            'accurate' => $vacationAccurate
-        );
+        //$useRound = true;
+        //$useRound = false;
+        if( $this->useRound ) {
+            $res = array(
+                'numberOfDays' =>
+                    ( (int)$totalAllocatedDays - (int)$vacationDays + (int)$carryOverDaysFromPreviousYear ) - (int)$carryOverDaysToNextYear,
+                'accurate' => $vacationAccurate
+            );
+        } else {
+            $res = array(
+                //'numberOfDays' => ( (int)$totalAllocatedDays - (int)$vacationDays + (int)$carryOverDaysFromPreviousYear ) - (int)$carryOverDaysToNextYear,
+                'numberOfDays' => (
+                        $totalAllocatedDays
+                        - $vacationDays
+                        + $carryOverDaysFromPreviousYear
+                    ) - $carryOverDaysToNextYear,
+                'accurate' => $vacationAccurate
+            );
+        }
 
         //dump($res);
         //exit('111');
@@ -5231,7 +5248,11 @@ class VacReqUtil
         }
         //echo "totalAccruedDays=".$totalAccruedDays."<br>";
 
-        $totalAccruedDays = round($totalAccruedDays);
+        //$useRound = true;
+        //$useRound = false;
+        if( $this->useRound ) {
+            $totalAccruedDays = round($totalAccruedDays);
+        }
 
         if( $testing ) {
             echo "getTotalAccruedDaysUsingEmplPeriods: totalAccruedDays=$totalAccruedDays <br>";

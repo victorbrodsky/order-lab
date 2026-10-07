@@ -50,6 +50,7 @@ class VacReqRequestBase
     //#[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
     //protected string $days; // e.g., "1.50", "0.25". Mapped to PHP string to prevent float distortion.
     //Others: decimal, float, dateinterval
+    //Or use switch private $useRound = true; in VacReqUtil
     #[ORM\Column(type: 'integer', nullable: true)]
     protected $numberOfDays;
 
