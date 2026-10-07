@@ -46,6 +46,10 @@ class VacReqRequestBase
     #[ORM\Column(type: 'date', nullable: true)]
     protected $endDate;
 
+    //TODO: show decimal (2.75 days) => // Using Decimal (Highly recommended for exact numbers)
+    //#[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
+    //protected string $days; // e.g., "1.50", "0.25". Mapped to PHP string to prevent float distortion.
+    //Others: decimal, float, dateinterval
     #[ORM\Column(type: 'integer', nullable: true)]
     protected $numberOfDays;
 
