@@ -666,10 +666,10 @@ class DefaultController extends OrderAbstractController
         $fellappRecLetterUtil = $this->container->get('fellapp_rec_letter_util');
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
         $letterOne = $em->getRepository(Document::class)->findOneById(877);
-        $letterOnePath = $letterOne->getServerPath();
+        $letterOnePath = $letterOne->getFullServerPath();
         //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:Document'] by [Document::class]
         $letterTwo = $em->getRepository(Document::class)->findOneById(875);
-        $letterTwoPath = $letterTwo->getServerPath();
+        $letterTwoPath = $letterTwo->getFullServerPath();
         $identical = $fellappRecLetterUtil->checkIfFilesIdentical($letterOnePath,$letterTwoPath,$fileTwoHash=null);
         if( $identical ) {
             echo "Files are identical <br>";

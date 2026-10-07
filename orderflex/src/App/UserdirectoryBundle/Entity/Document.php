@@ -692,7 +692,9 @@ class Document {
     }
 
     public function pathExist() {
-        $path = $this->getServerPath();
+        //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+        //only resolves under public/ while files now live in private/Uploaded
+        $path = $this->getFullServerPath();
         if( $path ) {
             if( file_exists($path) ) {
                 return true;
@@ -703,7 +705,9 @@ class Document {
 
     public function getAttachmentElementArr() {
         $attachmentElementArr = null;
-        $path = $this->getServerPath();
+        //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+        //only resolves under public/ while files now live in private/Uploaded
+        $path = $this->getFullServerPath();
         if( $path && file_exists($path) ) {
             $name = $this->getDescriptiveFilename();
             $attachmentElementArr = array('path'=>$path,'name'=>$name);
@@ -797,7 +801,7 @@ class Document {
     }
 
     public function getWidthByHeight($newHeight) {
-        list($originalWidth, $originalHeight) = getimagesize($this->getServerPath());
+        list($originalWidth, $originalHeight) = getimagesize($this->getFullServerPath());
         if( $originalHeight ) {
             $ratio = $originalWidth / $originalHeight;
         } else {

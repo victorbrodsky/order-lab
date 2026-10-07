@@ -361,8 +361,10 @@ class PdfGenerator
             foreach ($holderEntity->$getMethod() as $old) {
 
                 //remove $old from server
-                $oldPath = $old->getServerPath();
-                if( file_exists($oldPath) ) {
+                //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+                //only resolves under public/ while files now live in private/Uploaded
+                $oldPath = $old->getFullServerPath();
+                if( $oldPath && file_exists($oldPath) ) {
                     $logger->notice("create Pdf DB: unlink file path=" . $oldPath);
                     unlink($oldPath);
                 } else {
@@ -987,7 +989,9 @@ class PdfGenerator
             return null;
         }
 
-        $pdfPath = $projectPdf->getServerPath();
+        //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+        //only resolves under public/ while files now live in private/Uploaded
+        $pdfPath = $projectPdf->getFullServerPath();
         if( !$pdfPath || !file_exists($pdfPath) ) {
             return null;
         }

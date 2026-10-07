@@ -64,12 +64,12 @@ class ProjectPdfBackgroundGenerator
             if( $userServiceUtil->isWinOs() ) {
                 //$this->runDetachedHttpCall($executeUrl, $sessionId); //working
                 //$this->runDetachedHttpLinux($executeUrl, $sessionId);
-                $this->runByProcessComponent($executeUrl, $sessionId);
+                $this->runByProcessComponent($executeUrl, $sessionId, (int)$projectId);
                 $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=windows; launcher=runDetachedHttpCall');
                 //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             } else {
                 //$this->runDetachedHttpLinux($executeUrl, $sessionId); //working
-                $this->runByProcessComponent($executeUrl, $sessionId);
+                $this->runByProcessComponent($executeUrl, $sessionId, (int)$projectId);
                 $logger->notice('[ProjectPdfFlow] queueProjectPdfGeneration launcher selected; platform=unix; launcher=runDetachedHttpLinux');
                 //$this->runDetachedHttpCallV2((int)$projectId, $sessionId);
             }
@@ -85,7 +85,7 @@ class ProjectPdfBackgroundGenerator
         }
     }
 
-    private function runByProcessComponent(string $url, ?string $sessionId = null): void
+    private function runByProcessComponent(string $url, ?string $sessionId = null, int $projectId = 0): void
     {
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
@@ -105,7 +105,13 @@ class ProjectPdfBackgroundGenerator
             '@file_get_contents(' . var_export($url, true) . ', false, $context);';
 
         $phpBinary = 'php';
-        if( !$userServiceUtil->isWinOs() ) {
+        if( $userServiceUtil->isWinOs() ) {
+            //'php' relies on PATH which the web service may not have; prefer the php.exe of the current PHP installation
+            $winPhpBinary = PHP_BINDIR . DIRECTORY_SEPARATOR . 'php.exe';
+            if( file_exists($winPhpBinary) ) {
+                $phpBinary = $winPhpBinary;
+            }
+        } else {
             $linuxPhpBinary = $userServiceUtil->getPhpPath();
             if( $linuxPhpBinary ) {
                 $phpBinary = $linuxPhpBinary;
@@ -117,8 +123,24 @@ class ProjectPdfBackgroundGenerator
 
         $process = new Process($commandArr);
         $process->setTimeout(null);
-        $process->disableOutput();
         $process->start();
+
+        //fail fast if the spawned process exits immediately (e.g. php binary not found):
+        //otherwise the generation status would stay 'running' forever and the wait page would poll indefinitely
+        usleep(300000); //300ms - also gives the spawned process time to fire the detached HTTP request
+        if( !$process->isRunning() ) {
+            $error = trim((string)$process->getErrorOutput().' '.(string)$process->getOutput());
+            $logger->error('[ProjectPdfFlow] runByProcessComponent exited immediately; url='.$url.'; phpBinary='.$phpBinary.'; exitCode='.$process->getExitCode().'; output='.$error);
+            if( $projectId > 0 ) {
+                $this->setProjectPdfGenerationStatus($projectId, array(
+                    'status' => 'failed',
+                    'message' => 'Project PDF generation failed to launch the background process',
+                    'updatedAt' => time(),
+                    'projectId' => $projectId,
+                ));
+            }
+            return;
+        }
 
         $logger->notice('[ProjectPdfFlow] runByProcessComponent started; url='.$url.'; pid='.(string)$process->getPid().'; running='.( $process->isRunning() ? 'yes' : 'no' ));
     }

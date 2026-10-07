@@ -3650,7 +3650,9 @@ class ProjectController extends OrderAbstractController
             return false;
         }
 
-        $pdfPath = $pdf->getServerPath();
+        //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+        //only resolves under public/ while files now live in private/Uploaded
+        $pdfPath = $pdf->getFullServerPath();
         if( !$pdfPath || !file_exists($pdfPath) ) {
             return false;
         }

@@ -9388,8 +9388,10 @@ class TransResUtil
         $pdfPath = null;
         $pdf = $project->getSingleProjectPdf();
         if( $pdf ) {
-            $pdfPath = $pdf->getServerPath();
-            if( !file_exists($pdfPath) ) {
+            //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+            //only resolves under public/ while files now live in private/Uploaded
+            $pdfPath = $pdf->getFullServerPath();
+            if( !$pdfPath || !file_exists($pdfPath) ) {
                 $pdfPath = null;
             }
         }
@@ -9406,8 +9408,10 @@ class TransResUtil
                 //exit("OK: filsize=$filsize; filename=$filename");
                 $pdf = $project->getSingleProjectPdf();
                 if( $pdf && $pdf->pathExist() ) {
-                    $pdfPath = $pdf->getServerPath();
-                    if( !file_exists($pdfPath) ) {
+                    //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+                    //only resolves under public/ while files now live in private/Uploaded
+                    $pdfPath = $pdf->getFullServerPath();
+                    if( !$pdfPath || !file_exists($pdfPath) ) {
                         $pdfPath = null;
                     }
                 }

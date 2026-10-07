@@ -837,11 +837,13 @@ class RecLetterUtil {
             if(1) {
                 $letters = $reference->getDocuments();
                 if (count($letters) > 0) {
-                    $uploadedLetterDbPath = $uploadedLetterDb->getServerPath();
+                    //use absolute paths: getServerPath() returns the relative 'Uploaded/...' path which
+                    //only resolves under public/ while files now live in private/Uploaded
+                    $uploadedLetterDbPath = $uploadedLetterDb->getFullServerPath();
                     $fileTwoHash = hash_file('md5', $uploadedLetterDbPath);
                     //loop over all existing letter and compare
                     foreach ($letters as $thisLetter) {
-                        $thisLetterPath = $thisLetter->getServerPath();
+                        $thisLetterPath = $thisLetter->getFullServerPath();
                         $identical = $this->checkIfFilesIdentical($thisLetterPath,$uploadedLetterDbPath,$fileTwoHash);
                         if( $identical ) {
                             $newLetter = false;

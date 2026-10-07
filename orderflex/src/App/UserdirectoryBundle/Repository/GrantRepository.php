@@ -229,7 +229,7 @@ class GrantRepository extends EntityRepository {
                     foreach( $documentContainer->getDocuments() as $document ) {
 
                         if( $document && $document->getId() ) {
-                            $documentPath = $document->getServerPath();
+                            $documentPath = $document->getFullServerPath();
                             $documentContainer->removeDocument($document);
 
                             //remove file from folder

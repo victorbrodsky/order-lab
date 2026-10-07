@@ -1767,8 +1767,10 @@ class ReportGenerator {
 
                 //delete file from server
                 if ($deleteOldFileFromServer) {
-                    $filePath = $report->getServerPath();
-                    if (file_exists($filePath)) {
+                    //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+                    //only resolves under public/ while files now live in private/Uploaded
+                    $filePath = $report->getFullServerPath();
+                    if ($filePath && file_exists($filePath)) {
                         //$logger->notice("create ResApp ReportDB: unlink file path=" . $filePath);
                         unlink($filePath);
                     } else {
