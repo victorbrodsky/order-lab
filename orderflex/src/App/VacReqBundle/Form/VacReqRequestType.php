@@ -323,7 +323,11 @@ class VacReqRequestType extends AbstractType
             //'label' => "Number of days to carry over". $carryOverNote. ":",
             'label' => "Number of days to carry over:",
             //'attr' => array('class' => 'form-control vacreq-carryOverDays', 'max' => $this->params['maxCarryOverVacationDays']),
-            'attr' => array('class' => 'form-control vacreq-carryOverDays', 'max' => $this->params['limitCarryOverDays']),
+            'attr' => array(
+                'class' => 'form-control vacreq-carryOverDays',
+                //'max' => $this->params['limitCarryOverDays'],
+                'min'   => 0,          // only positive numbers
+            ),
         ));
 
     }

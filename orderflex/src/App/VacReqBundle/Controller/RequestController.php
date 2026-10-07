@@ -239,14 +239,17 @@ class RequestController extends OrderAbstractController
                     } elseif( $carryOverDays <= 0 ) {
                         $form['carryOverDays']->addError(new FormError("Please enter a number of carry‑over days greater than zero"));
                     } elseif( $limitCarryOverDays && $carryOverDays > $limitCarryOverDays ) {
-                        $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays',$user,$approvalGroupType);
-                        $effort = $vacreqUtil->getLatestEmplPeriodEffort($user);
-                        $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
-                            . $maxCarryOverVacationDays . " days.";
-                        $errorMsg = $errorMsg . "<br>" .
-                            "The percent effort documented in this system for your account is $effort" . "%,".
-                            " resulting in a carryover limit of $limitCarryOverDays days.";
-                        $form['carryOverDays']->addError(new FormError($errorMsg));
+                        if(0) {
+                            //not allow to submit carryover days > maxCarryOverVacationDays
+                            $maxCarryOverVacationDays = $vacreqUtil->getValueApprovalGroupTypeByUser('maxCarryOverVacationDays', $user, $approvalGroupType);
+                            $effort = $vacreqUtil->getLatestEmplPeriodEffort($user);
+                            $errorMsg = "As per policy, the number of days that can be carried over to the following year is limited to the maximum of "
+                                . $maxCarryOverVacationDays . " days.";
+                            $errorMsg = $errorMsg . "<br>" .
+                                "The percent effort documented in this system for your account is $effort" . "%," .
+                                " resulting in a carryover limit of $limitCarryOverDays days.";
+                            $form['carryOverDays']->addError(new FormError($errorMsg));
+                        }
                     }
                 }
             }
