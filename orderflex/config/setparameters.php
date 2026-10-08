@@ -215,8 +215,10 @@ if( $conn ) {
             $wkhtmltopdfpath = null;
             //set default Third-Party Software Dependencies for Linux used in container
             if (!isWindows()) {
-                //$wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
-                $wkhtmltopdfpath = "/usr/bin/xvfb-run wkhtmltopdf";
+                //knp-snappy >= 1.7 validates the binary with is_executable(), so a compound
+                //command ("xvfb-run wkhtmltopdf", "xwfb-run -- ...") is not allowed.
+                //Use the wrapper script which runs wkhtmltopdf under xwfb-run/xvfb-run when needed:
+                $wkhtmltopdfpath = dirname(__DIR__) . '/bin/wkhtmltopdf-wrapper.sh';
             }
 
             //titles

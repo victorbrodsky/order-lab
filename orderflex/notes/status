@@ -116,3 +116,18 @@ On page http://127.0.0.1/time-away-request/groups/ gives warning if any user has
 2) Effort only is used in calculation if start date is not empty -> give warning when effort is set but dates are empty
 Alternatively, if start date is empty, assume start of the current year as a employment period start date
 Without start date getEmplPeriodByYearRange will not return any empl periods
+
+
+
+Error message: SyntaxError: Parse error\n URL: http://localhost/fellowship-applications/download/7\n
+Line Number: 3420\n[============================================>               ]
+74%\r[============================================================]
+100%\rWarning: Javascript alert: Internal system error. Please reload the page by clicking \"OK\" button. \n
+Please e-mail us at system admin email if the problem persists. \n
+Error message: TypeError: 'undefined' is not a function\n
+URL: undefined\n Line Number: 0\n
+Counting pages (2/6)\n[============================================================]
+Object 1 of 1\rResolving links (4/6)                                                       \n
+[============================================================] Object 1 of 1\rLoading headers and footers (5/6)                                           \nPrinting pages (6/6)\n[>                                                           ] Preparing\r[========>                                                   ] Page 1 of 7\r[================>                                           ] Page 2 of 7\r[=========================>                                  ] Page 3 of 7\r[==================================>                         ] Page 4 of 7\r[==========================================>                 ] Page 5 of 7\r[===================================================>        ] Page 6 of 7\r[============================================================] Page 7 of 7\rDone                                                                      \nExit with code 1 due to network error: ConnectionRefusedError\n\"\nstdout: \"\"\ncommand: '/usr/local/bin/wkhtmltopdf' --lowquality --cookie 'PHPSESSID' '' --javascript-delay '9000' --load-error-handling 'ignore' --load-media-error-handling 'ignore' --enable-local-file-access 'http://localhost/fellowship-applications/download/7' '/srv/order-lab-tenantapp1/orderflex/private/Uploaded/fellapp/Reports/temp_7/application_ID7.pdf'."} []
+(END)
+

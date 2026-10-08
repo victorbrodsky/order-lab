@@ -15,9 +15,14 @@
 # c) sudo dnf clean all
 # d) sudo dnf makecache
 #1) dnf install xwayland-run
-#2) set wkhtmltopdfpathLinux to: xwfb-run -- /usr/local/bin/wkhtmltopdf
-#3) Optional test: xwfb-run -- /usr/local/bin/wkhtmltopdf http://google.com test.pdf
-# Note: The -- separator is required to distinguish between xwfb-run options and the wkhtmltopdf command
+#2) set wkhtmltopdfpathLinux to the absolute path of bin/wkhtmltopdf-wrapper.sh,
+#   e.g. /srv/order-lab-tenantapp1/orderflex/bin/wkhtmltopdf-wrapper.sh
+#   (knp-snappy >= 1.7 requires a single executable file: a compound command such as
+#    "xwfb-run -- /usr/local/bin/wkhtmltopdf" fails the is_executable() check.
+#    The wrapper runs "xwfb-run -- wkhtmltopdf", or "xvfb-run -a wkhtmltopdf" on
+#    older distros, or plain wkhtmltopdf if no virtual display is installed.)
+#3) Optional test: /srv/order-lab-tenantapp1/orderflex/bin/wkhtmltopdf-wrapper.sh http://google.com test.pdf
+#3) Old Optional test: xwfb-run -- /usr/local/bin/wkhtmltopdf http://google.com test.pdf
 
 # Another option to use playwright:
 # pip install playwright

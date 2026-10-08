@@ -1047,10 +1047,10 @@ class UserServiceUtil {
 
         //set default Third-Party Software Dependencies for Linux not used in container
         if( !$this->isWindows() ) {
-            //set the same value as in setparameters.php run on deploy $wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
-            $types['wkhtmltopdfpathLinux'] = $wkhtmltopdfpath = "/usr/bin/xvfb-run wkhtmltopdf"; 
-            //$types['wkhtmltopdfpathLinux'] = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
-            //$types['wkhtmltopdfpathLinux'] = "xvfb-run wkhtmltopdf";
+            //set the same value as in setparameters.php run on deploy
+            //knp-snappy >= 1.7 requires a single executable path: use the wrapper script
+            //which runs wkhtmltopdf under xwfb-run (Alma10) or xvfb-run when needed
+            $types['wkhtmltopdfpathLinux'] = $wkhtmltopdfpath = $this->container->get('kernel')->getProjectDir() . '/bin/wkhtmltopdf-wrapper.sh';
 
             //set other Linux parameters
             $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/bin";
