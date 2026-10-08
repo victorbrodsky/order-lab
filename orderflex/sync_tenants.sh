@@ -220,6 +220,48 @@ f_sync() {
             fi
     fi
 
+    if [ -n "$type" ] && [ "$type" == "make-private" ]
+        then
+            echo -e ${COLOR} --- Create private folder and move entire folder public/Uploaded to private for "$1" --- ${NC}
+
+            tenantdir="$homedir"/order-lab-"$1"/orderflex
+
+            if [ ! -d "$tenantdir" ]
+                then
+                    echo -e ${COLORRED} "tenant $1 orderflex directory not found: $tenantdir" ${NC}
+                else
+
+                    if [ -d "$tenantdir"/public/Uploaded ]
+                        then
+                            mkdir -p "$tenantdir"/private
+
+                            if [ -d "$tenantdir"/private/Uploaded ]
+                                then
+                                    #Both exist: do not merge automatically to avoid overwriting private files
+                                    echo -e ${COLORRED} "tenant $1: both public/Uploaded and private/Uploaded exist; move/merge skipped - resolve manually" ${NC}
+                                else
+                                    echo -e ${COLOR} "tenant $1: moving public/Uploaded to private/Uploaded" ${NC}
+                                    mv "$tenantdir"/public/Uploaded "$tenantdir"/private/Uploaded
+                                    echo -e ${COLORGREEN} "tenant $1: moved public/Uploaded to private/Uploaded" ${NC}
+                            fi
+                        else
+                            mkdir -p "$tenantdir"/private/Uploaded
+                            echo -e ${COLOR} "tenant $1: public/Uploaded not found; ensured private/Uploaded exists" ${NC}
+                    fi
+
+                    #Match ownership of the orderflex dir so the web user can write to private/
+                    chown -R --reference="$tenantdir" "$tenantdir"/private 2>/dev/null
+
+                    #Verify result (same conditions as the 'test-private' option)
+                    if [ ! -d "$tenantdir"/public/Uploaded ] && [ -d "$tenantdir"/private/Uploaded ]
+                        then
+                            echo -e ${COLORGREEN} "tenant $1 is ok (private)" ${NC}
+                        else
+                            echo -e ${COLORRED} "tenant $1 IS NOT OK (private): public/Uploaded exists=$([ -d "$tenantdir"/public/Uploaded ] && echo yes || echo no), private/Uploaded exists=$([ -d "$tenantdir"/private/Uploaded ] && echo yes || echo no)" ${NC}
+                    fi
+            fi
+    fi
+
 #    if [ -n "$type" ] && [ "$type" == "createdb" ]
 #        then
 #            echo -e ${COLOR} Create db for "$1" ${NC}
@@ -251,10 +293,10 @@ f_sync() {
 }
 
 
-f_sync homepagemanager
-f_sync tenantmanager
-f_sync tenantappdemo
+#f_sync homepagemanager
+#f_sync tenantmanager
+#f_sync tenantappdemo
 f_sync tenantapptest
-f_sync tenantapp1
-f_sync tenantapp2
+#f_sync tenantapp1
+#f_sync tenantapp2
 
