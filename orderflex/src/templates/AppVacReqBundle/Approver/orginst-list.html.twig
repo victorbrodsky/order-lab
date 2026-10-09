@@ -378,6 +378,25 @@
                                             </td>
                                         {% endif %}
                                     </tr>
+                                {% else %}
+                                    {#submitter has no employment status records: the for-loop above would#}
+                                    {#render zero rows and the submitter would be invisible on this page#}
+                                    {#(they still show on manage-group). The save endpoint requires an#}
+                                    {#existing EmploymentStatus id, so the date/effort cells are not editable.#}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ path(vacreq_sitename~'_showuser', { 'id': submitter.id }) }}"
+                                            >{{ submitter.getUserNameStr(true) }}</a>
+                                        </td>
+                                        <td colspan="4">No employment status</td>
+                                        <td>
+                                            {#Download Audit Summary#}
+                                            <a class="btn btn-default"
+                                               title="Downlaod audit summary for {{ auditYearRangeArr[1] }} for {{ submitter.getUserNameStr() }}"
+                                               href="{{ path(vacreq_sitename~'_download_summary_report_multiple_years_spreadsheet',
+                                               { 'userId': submitter.id }) }}">Download</a>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                                 </tr>
                             {% endif %}

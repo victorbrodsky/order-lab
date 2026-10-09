@@ -124,12 +124,12 @@ when@prod:
                 type: console
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine"]
-            deprecation: #hide deprecation for prod
-                type: null
+#            deprecation: #hide deprecation for prod
+#                type: null
+#                channels: [deprecation]
+#                #level: notice
+#                #path: '%kernel.logs_dir%/%kernel.environment%_DEPRECATION.log'
+            deprecation: #show deprecation for prod
+                type: stream
                 channels: [deprecation]
-                #level: notice
-                #path: '%kernel.logs_dir%/%kernel.environment%_DEPRECATION.log'
-            #deprecation: #show deprecation for prod
-            #    type: stream
-            #    channels: [deprecation]
-            #    path: php://stderr    
+                path: php://stderr

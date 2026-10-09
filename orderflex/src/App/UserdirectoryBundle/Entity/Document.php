@@ -495,7 +495,8 @@ class Document {
         } else {
             $id = "Unknown";
         }
-        return "ID:$id: ".$this->getRelativeUploadFullPath();
+        //return "Document ID:$id: ".$this->getRelativeUploadFullPath();
+        return $this->getRelativeUploadFullPath();
     }
 
 //    public function getTestPath() {

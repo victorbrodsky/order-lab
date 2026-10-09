@@ -1221,6 +1221,16 @@ class ReportGenerator {
             if( $ext != 'pdf' ) { //TESTING!!!
 
                 //$logger->notice("###PDF converting: cmd=".$cmd);
+                if( is_dir($libreOfficeConvertToPDFPathFellApp) ) {
+                    //echo "Folder exists";
+                } else {
+                    //throw new \InvalidArgumentException('folder libreOfficeConvertToPDFPathFellApp '.$libreOfficeConvertToPDFPathFellApp.' does not exists.');
+                    $errorMsg = 'LibreOffice not found, folder libreOfficeConvertToPDFPathFellApp '.$libreOfficeConvertToPDFPathFellApp.' does not exists.';
+                    $logger->error($errorMsg);
+                    $userSecUtil->sendEmailToSystemEmail("LibreOffice does not exist",$errorMsg,$toEmailsArr);
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
+                    continue; //ignore this file
+                }
 
                 //$shellout = shell_exec( $cmd );
                 $shellout = exec( $cmd );
@@ -1231,6 +1241,7 @@ class ReportGenerator {
                 } else {
                     $errorMsg = "Fellowship Application $fellappInfo - LibreOffice failed to convert input file=" . $filePath;
                     $logger->error($errorMsg);
+                    $logger->error("convertToPdf: cmd=".$cmd);
                     $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
