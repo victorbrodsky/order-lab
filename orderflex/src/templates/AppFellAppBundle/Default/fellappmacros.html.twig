@@ -138,11 +138,27 @@
                          {#style="max-width: 250px;"#}
                     {#>#}
 
-                    {#lastAvatar={{ lastAvatar }}#}
-                    {% set avatarUrl = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,'medium') %}
-                    {#avatarUrl=[{{ lastAvatar }}]#}
+                    {#Primary src: the secure file-view URL generated with the request's own scheme#}
+                    {#(useRealScheme=false) so a 'https' urlConnectionChannel setting does not produce#}
+                    {#https://127.0.0.1 on dev, where there is no SSL. Works in a real browser session.#}
+                    {% set avatarUrl = user_service_utility.getDocumentAbsoluteUrl(lastAvatar,'medium',false,false) %}
+                    {#Fallback for wkhtmltopdf: it runs on the same host and enable-local-file-access#}
+                    {#is set, so embed the local file path directly if the HTTP fetch fails (e.g. the#}
+                    {#file-view request is not authenticated or the scheme/host is unreachable).#}
+                    {% set avatarPath = lastAvatar.getFullServerPath('medium', false) %}
+                    {% if not lastAvatar.getSizeBySize('medium') %}
+                        {#medium thumbnail does not exist: fall back to the original file#}
+                        {% set avatarPath = lastAvatar.getFullServerPath(null, false) %}
+                    {% endif %}
+                    {% if avatarPath %}
+                        {% set avatarFileUrl = 'file:///' ~ avatarPath|replace({'\\':'/'})|trim('/', 'left') %}
+                    {% else %}
+                        {% set avatarFileUrl = null %}
+                    {% endif %}
+                    {#avatarUrl=[{{ avatarUrl }}] avatarFileUrl=[{{ avatarFileUrl }}]<br>#}
                     <img
                         src="{{ avatarUrl }}"
+                        {% if avatarFileUrl %}onerror="this.onerror=null;this.src='{{ avatarFileUrl|e('js') }}'"{% endif %}
                         alt="{{ altTitle }}"
                         style="max-width: 250px;"
                     >

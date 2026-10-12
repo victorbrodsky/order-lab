@@ -541,6 +541,10 @@ class Document {
         $uploadDirectory = $this->getUploadDirectory();
         $uploadDirectory = str_replace('\\', '/', $uploadDirectory);
 
+        //Strip legacy leading ../ or ./ segments: old records may store uploadDirectory
+        //relative to the web dir (e.g. "../../../Uploaded/fellapp/documents")
+        $uploadDirectory = preg_replace('#^(\./|\.\./)+#', '', $uploadDirectory);
+
         //Strip a stale leading public/ artifact (e.g. "public/private/Uploaded/" or "public/Uploaded/")
         if( strpos($uploadDirectory, 'public/') === 0 ) {
             $uploadDirectory = substr($uploadDirectory, strlen('public/'));
@@ -683,8 +687,10 @@ class Document {
 
     public function getSizeBySize($size=null)
     {
-        $path = $this->getServerPath($size);
-        if( file_exists($path) ) {
+        //use absolute path: getServerPath() returns the relative 'Uploaded/...' path which
+        //only resolves under public/ while files now live in private/Uploaded
+        $path = $this->getFullServerPath($size);
+        if( $path && file_exists($path) ) {
            //ok
         } else {
             return null;

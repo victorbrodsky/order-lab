@@ -191,7 +191,6 @@ class ReportGenerator {
         $processesDb = null;
         if( $argument != 'overwrite' ) {
             //$argument == asap
-        //process.py script: replaced namespace by ::class: ['AppFellAppBundle:Process'] by [Process::class]
             $processesDb = $this->em->getRepository(Process::class)->findOneByFellappId($id);
         }
 
