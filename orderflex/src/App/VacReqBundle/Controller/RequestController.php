@@ -368,6 +368,37 @@ class RequestController extends OrderAbstractController
                 //You have successfully submitted request #1781 for X vacation days to be carried over from 20XX-20YY to 20YY-20ZZ.
                 $message .= "You have successfully submitted the request #".$entity->getId()." for ".$entity->getCarryOverDays();
                 $message .= " vacation days to be carried over from ".$entity->getSourceYearRange()." to ".$entity->getDestinationYearRange().".";
+
+                ////// Add carry-over days limit //////
+                $yearRange = $vacreqUtil->getCurrentAcademicYearRange();
+                $effortStr = 'full time';
+                $effort = $vacreqUtil->getLatestEmplPeriodEffort($entity->getUser(),$yearRange);
+                if ($effort != 100) {
+                    $effortStr = "part-time (" . $effort . "%)";
+                }
+                $totalAccruedDays = $vacreqUtil->getTotalAccruedDays($entity->getUser()); //current year
+                //Get $maxCarryOverDays
+                $maxCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser(
+                    'maxCarryOverVacationDays',
+                    $entity->getUser()
+                );
+                if( !$maxCarryOverDays ) {
+                    $maxCarryOverDays = 10;
+                }
+                if( $effort && $maxCarryOverDays ) {
+                    $effortCoef = $effort/100;
+                    $maxCarryOverDays = $maxCarryOverDays * $effortCoef;
+                    //$maxCarryOverDays = round($maxCarryOverDays);
+                }
+                $note1 =
+                    //$entity->getUser()->getUsernameOptimal() . " has a " .
+                    $break."You " . " have a " .
+                    $effortStr .
+                    " status documented in this system and based on this status accrues " .
+                    $totalAccruedDays . " vacation days per year and carryover limit of $maxCarryOverDays days.";
+                $message .= $note1;
+                ////// EOF Add carry-over days limit //////
+
             } else {
                 //vacation/business request
                 $message .= "You have successfully submitted the ".$requestName." #".$entity->getId().".";

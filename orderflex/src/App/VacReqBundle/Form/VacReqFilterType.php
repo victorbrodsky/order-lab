@@ -195,6 +195,12 @@ class VacReqFilterType extends AbstractType
         $resolver->setDefaults(array(
             'form_custom_value' => null,
             'csrf_protection' => false,
+            //fields are added conditionally (e.g. academicYear only when
+            //requestTypeAbbreviation == 'business-vacation'), so a query string may
+            //submit fields the rebuilt form does not have. Allow them instead of
+            //throwing "This form should not contain extra fields" (HTTP 422);
+            //extra values are ignored and available via getExtraData().
+            'allow_extra_fields' => true,
         ));
     }
 

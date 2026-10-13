@@ -117,5 +117,11 @@ On page http://127.0.0.1/time-away-request/groups/ gives warning if any user has
 Alternatively, if start date is empty, assume start of the current year as a employment period start date
 Without start date getEmplPeriodByYearRange will not return any empl periods
 
-FellApp PDF: empty photo - probably, mixed content
+FellApp PDF: empty photo - probably, Mixed content?
+Check htaccess for private/Uploaded folder:
+file:///C:/Users/cinav/Documents/WCMC/ORDER/order-lab/orderflex/private/Uploaded/fellapp/documents/medium-6aa077eca986f.jpg
+http://127.0.0.1/directory/file-view/26081/snapshot-medium
+
+TOD: When submit carry-over request for someone else as admin,
+show the carry-over note above "Number of days to carry over:" for this person
 
