@@ -299,17 +299,16 @@
                         {{ formmacros.field(form.destinationYear) }}
                         {#{{ formmacros.simplefield( "Destination Academic Year:", entity.getDestinationYearRange(), "input", "disabled" ) }}#}
 
-                        {% if noteForCarryOverDays is defined and noteForCarryOverDays %}
-                            {#green if carryOverDays input is empty or not greater than limitCarryOverDays, red otherwise#}
-                            {% set carryOverNoteClass = 'alert-success' %}
-                            {% set carryOverDaysValue = form.carryOverDays.vars.value %}
-                            {% if carryOverDaysValue is not empty and limitCarryOverDays is defined and limitCarryOverDays and carryOverDaysValue > limitCarryOverDays %}
-                                {% set carryOverNoteClass = 'alert-danger' %}
-                            {% endif %}
-                            <div id="note-for-carryover-days" class="alert {{ carryOverNoteClass }}">
-                                {{ noteForCarryOverDays|raw }}
-                            </div>
+                        {#green if carryOverDays input is empty or not greater than limitCarryOverDays, red otherwise#}
+                        {#rendered always (hidden when empty): the note is refreshed via ajax when the person away changes#}
+                        {% set carryOverNoteClass = 'alert-success' %}
+                        {% set carryOverDaysValue = form.carryOverDays.vars.value %}
+                        {% if carryOverDaysValue is not empty and limitCarryOverDays is defined and limitCarryOverDays and carryOverDaysValue > limitCarryOverDays %}
+                            {% set carryOverNoteClass = 'alert-danger' %}
                         {% endif %}
+                        <div id="note-for-carryover-days" class="alert {{ carryOverNoteClass }}" {% if noteForCarryOverDays is not defined or not noteForCarryOverDays %}style="display:none"{% endif %}>
+                            {% if noteForCarryOverDays is defined %}{{ noteForCarryOverDays|raw }}{% endif %}
+                        </div>
                         {{ formmacros.field(form.carryOverDays) }}
 
                         {{ formmacros.field(form.comment) }}
@@ -653,6 +652,8 @@
             vacreqSetPersonAway();
             vacreqSetDefaultInformUsers();
             vacreqSetDefaultInformUsersListener();
+
+            vacreqCarryOverNoteListener();
 
         });
 
@@ -1448,6 +1449,50 @@
                 vacreqUpdatePersonAway(data,personAwayId);
             });
         }
+        //update the carry over note alert when the "Person Away" user changes (carry-over request page)
+        var _carryOverNoteTimer = null;
+        function vacreqCarryOverNoteListener() {
+            var carryOverNote = $('#note-for-carryover-days');
+            if( carryOverNote.length == 0 ) {
+                return;
+            }
+            $('select.vacreq-person-away').on("change", function(e) {
+                //debounce: populating the person away options triggers a change event per option
+                if( _carryOverNoteTimer ) {
+                    clearTimeout(_carryOverNoteTimer);
+                }
+                _carryOverNoteTimer = setTimeout(function() {
+                    _carryOverNoteTimer = null;
+                    var userId = $('select.vacreq-person-away').select2('val');
+                    if( !userId ) {
+                        return;
+                    }
+                    var url = Routing.generate('vacreq_carryover_note_ajax', {userId: userId});
+                    $.ajax({
+                        url: url,
+                        timeout: _ajaxTimeout,
+                    }).done(function(data) {
+                        if( data.noteForCarryOverDays ) {
+                            carryOverNote.html(data.noteForCarryOverDays).show();
+                        } else {
+                            carryOverNote.html('').hide();
+                        }
+                        if( typeof data.limitCarryOverDays !== 'undefined' ) {
+                            $('#limitcarryoverdays').val(data.limitCarryOverDays);
+                        }
+                        //re-apply the alert class for the currently entered days vs the selected user's limit
+                        var carryOverDays = $('.vacreq-carryOverDays').val();
+                        var limitCarryOverDays = $('#limitcarryoverdays').val();
+                        if( carryOverDays !== '' && limitCarryOverDays && Number(carryOverDays) > Number(limitCarryOverDays) ) {
+                            carryOverNote.removeClass('alert-success').addClass('alert-danger');
+                        } else {
+                            carryOverNote.removeClass('alert-danger').addClass('alert-success');
+                        }
+                    });
+                }, 300);
+            });
+        }
+
         function vacreqUpdatePersonAway(users,personAwayId) {
             users.forEach(function(item){
                 var thisUserId = item['id'];

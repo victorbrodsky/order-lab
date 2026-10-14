@@ -98,7 +98,7 @@ list dbs: \l
 list users: \du
 ALTER USER postgres PASSWORD 'postgres';
 passwd postgres
-v: sudo systemctl stop firewalld
+pgAdmin access: sudo systemctl stop firewalld
 Check folder size: du -sh Uploaded
 sudo service php-fpm restart
 

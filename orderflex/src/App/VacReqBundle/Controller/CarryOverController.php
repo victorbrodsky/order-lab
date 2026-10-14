@@ -406,5 +406,49 @@ class CarryOverController extends OrderAbstractController
     }
 
 
+    /**
+     * Get the carry-over note and the carry-over limit for the selected "Person Away" user.
+     * Used by the carry-over request form to refresh the note-for-carryover-days alert
+     * when the person away selection changes.
+     */
+    #[Route(path: '/carry-over-note-ajax/{userId}', name: 'vacreq_carryover_note_ajax', methods: ['GET'], options: ['expose' => true])]
+    public function carryOverNoteAjaxAction(Request $request, $userId)
+    {
+        $user = $this->getUser();
+
+        //the "Person Away" select is editable only for admin, approver, proxysubmitter or supervisor;
+        //a regular submitter may query only their own note
+        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') &&
+            false == $this->isGranted('ROLE_VACREQ_APPROVER') &&
+            false == $this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
+            false == $this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            $user->getId() != $userId
+        ) {
+            return new Response("Access Denied", 403);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $vacreqUtil = $this->container->get('vacreq_util');
+
+        $subjectUser = $em->getRepository(User::class)->find($userId);
+
+        $noteForCarryOverDays = NULL;
+        $limitCarryOverDays = NULL;
+        if( $subjectUser ) {
+            $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($subjectUser);
+            $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$subjectUser);
+            if( $noteForCarryOverDays ) {
+                $noteForCarryOverDays = $vacreqUtil->replaceCarryOverNote($subjectUser,$noteForCarryOverDays);
+            }
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode(array(
+            'noteForCarryOverDays' => $noteForCarryOverDays,
+            'limitCarryOverDays' => $limitCarryOverDays
+        )));
+        return $response;
+    }
 
 }

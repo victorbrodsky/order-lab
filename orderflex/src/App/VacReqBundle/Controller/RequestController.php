@@ -507,9 +507,15 @@ class RequestController extends OrderAbstractController
         $noteForCarryOverDays = NULL;
         $limitCarryOverDays = NULL;
         if( $routeName == "vacreq_carryoverrequest" ) {
-            $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($entity->getUser());
-            $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$user,$approvalGroupType);
-            $noteForCarryOverDays = $vacreqUtil->replaceCarryOverNote($user,$noteForCarryOverDays);
+            $personAwayUser = $entity->getUser();
+            if( !$personAwayUser ) {
+                $personAwayUser = $user;
+            }
+            $limitCarryOverDays = $vacreqUtil->getLimitCarryOverDays($personAwayUser);
+            $noteForCarryOverDays = $vacreqUtil->getValueApprovalGroupTypeByUser("noteForCarryOverDays",$personAwayUser);
+            if( $noteForCarryOverDays ) {
+                $noteForCarryOverDays = $vacreqUtil->replaceCarryOverNote($personAwayUser,$noteForCarryOverDays);
+            }
         }
         //echo "noteForCarryOverDays=$noteForCarryOverDays <br>";
 
