@@ -29,6 +29,55 @@ if [ -z "$homedir" ]
     #homedir="/usr/local/bin"
 fi
 
+#All supported types; used to validate the provided type and to show available options
+all_types="basic full yarn sync stash dbstatus dbmigrate addallversions composer python secret version array-to-json test-private make-private"
+
+f_usage() {
+    echo -e ${COLOR} "Usage: bash sync_tenants.sh <type> [homedir]" ${NC}
+    echo -e ${COLORWHITE} "  type      operation to run for each tenant (default: basic)" ${NC}
+    echo -e ${COLORWHITE} "  homedir   parent directory of order-lab-<tenant> (default: /srv)" ${NC}
+    echo -e ${COLORWHITE} "Available types:" ${NC}
+    echo -e ${COLORWHITE} "  basic          git pull, run deploy.sh, show doctrine migration status" ${NC}
+    echo -e ${COLORWHITE} "  full           git pull, run doctrine migration, yarn install, run deploy.sh" ${NC}
+    echo -e ${COLORWHITE} "  yarn           yarn install --frozen-lockfile" ${NC}
+    echo -e ${COLORWHITE} "  sync           git pull only" ${NC}
+    echo -e ${COLORWHITE} "  stash          git stash" ${NC}
+    echo -e ${COLORWHITE} "  dbstatus       show doctrine migration status" ${NC}
+    echo -e ${COLORWHITE} "  dbmigrate      run prepare_migration.sh and doctrine:migrations:migrate" ${NC}
+    echo -e ${COLORWHITE} "  addallversions doctrine:migrations:version --add --all" ${NC}
+    echo -e ${COLORWHITE} "  composer       composer install" ${NC}
+    echo -e ${COLORWHITE} "  python         install python env (packer/additional.sh)" ${NC}
+    echo -e ${COLORWHITE} "  secret         update secret key in parameters.yml, run deploy.sh" ${NC}
+    echo -e ${COLORWHITE} "  version        show symfony, php, postgres versions" ${NC}
+    echo -e ${COLORWHITE} "  array-to-json  run app:convert-array-to-json --all --apply --alter-schema" ${NC}
+    echo -e ${COLORWHITE} "  test-private   verify branch is master and files are in private/Uploaded" ${NC}
+    echo -e ${COLORWHITE} "  make-private   create private/ and move public/Uploaded to private/Uploaded" ${NC}
+    echo -e ${COLORWHITE} "  help           show this message" ${NC}
+}
+
+if [ "$type" == "help" ] || [ "$type" == "-h" ] || [ "$type" == "--help" ]
+  then
+    f_usage
+    exit 0
+fi
+
+#Show available options when an unknown type is provided
+type_valid=0
+for valid_type in $all_types
+  do
+    if [ "$type" == "$valid_type" ]
+      then
+        type_valid=1
+        break
+    fi
+done
+
+if [ "$type_valid" == "0" ]
+  then
+    echo -e ${COLORRED} "Unknown type: $type" ${NC}
+    f_usage
+    exit 1
+fi
 
 bashpath="/usr/bin"
 
