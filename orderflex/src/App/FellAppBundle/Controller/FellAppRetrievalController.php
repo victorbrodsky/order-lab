@@ -119,11 +119,13 @@ class FellAppRetrievalController extends OrderAbstractController
         // Find FellowshipApplications with ID > maxid
         $em = $this->getDoctrine()->getManager();
         $maxId = $request->query->get('maxid', 0);
+        $logger->notice('downloadApplicationDataAction: $maxId='.$maxId);
 
         $activeStatus = $em->getRepository(FellAppStatus::class)->findOneByName("active");
         if( !$activeStatus ) {
             throw new EntityNotFoundException('Unable to find entity by name='."active");
         }
+        $logger->notice('downloadApplicationDataAction: $activeStatus='.$activeStatus);
 
         //Get only 'active' applications after $maxId
         $fellapps = $em->getRepository(FellowshipApplication::class)->createQueryBuilder('f')
