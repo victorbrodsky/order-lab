@@ -1,0 +1,46 @@
+// Flow B - Recommendation letters: HUB -> Caller
+// Render: dot -Tsvg flow_b_rec_letters.dot -o flow_b_rec_letters.svg
+digraph flow_b {
+    rankdir=TB;
+    fontname="Helvetica";
+    node [fontname="Helvetica", fontsize=10, style="filled,rounded", shape=box];
+    edge [fontname="Helvetica", fontsize=9];
+    label="Flow B: Recommendation Letters  HUB -> Caller  (cron:importfellapp / retrieve-recommendation-letters)";
+    labelloc="t";
+    fontsize=14;
+
+    subgraph cluster_caller {
+        label="CALLER server";
+        color="#6c8ebf"; style="filled"; fillcolor="#eef4fb"; fontcolor="#1a3a5c";
+
+        T [label="Triggers\n- cron:importfellapp (hub method)\n- GET /retrieve-recommendation-letters",
+           fillcolor="#dae8fc", color="#6c8ebf"];
+        B1 [label="retrieveRecommendationLetters()\nfind References:\n  fellapp.remoteId NOT NULL\n  AND recLetterReceived false/null\n  AND recLetterHashId set\n-> hashIds[] + HMAC + timestamp",
+            fillcolor="#dae8fc", color="#6c8ebf"];
+        B2 [label="per returned letter:\nReference by recLetterHashId\n(skip if already received)\nsave file -> private/Uploaded/fellapp/documents/{hashId}.pdf\nnew Document, attach to Reference\nsetRecLetterReceived(true), flush",
+            fillcolor="#dae8fc", color="#6c8ebf"];
+        B3 [label="Flash 'Recommendation letters retrieved: N'\n-> redirect fellapp_home",
+            fillcolor="#fff2cc", color="#d6b656"];
+    }
+
+    subgraph cluster_hub {
+        label="REMOTE HUB server";
+        color="#82b366"; style="filled"; fillcolor="#f0f7ee"; fontcolor="#2d5a1e";
+
+        P [label="(upstream) applicant's references upload\nletters on HUB public page\n/submit-a-letter-of-recommendation",
+           fillcolor="#fff2cc", color="#d6b656"];
+        H1 [label="sendRecommendationLettersAction\nauthenticateHmac()",
+            fillcolor="#d5e8d4", color="#82b366"];
+        H2 [label="per hashId: Reference by recLetterHashId\n-> getRecentReferenceLetter()\n-> getFullServerPath() -> base64\nsetRecLetterReceived(true) on HUB, flush",
+            fillcolor="#d5e8d4", color="#82b366"];
+        ERR [label="401 auth failed", fillcolor="#f8cecc", color="#b85450"];
+    }
+
+    P -> H2 [style=dashed, color="#999999"];
+    T -> B1;
+    B1 -> H1 [label="GET /fellowship-applications/send-recommendation-letters?hashids=a,b,c\nX-HMAC, X-Timestamp", color="#3366cc", penwidth=2];
+    H1 -> ERR [label="auth fail", color="#b85450", style=dashed];
+    H1 -> H2;
+    H2 -> B2 [label="JSON {letters: [{hashId, documentData(base64), filename, hash}]}\n(no hashids param -> ALL letters)", color="#3366cc", penwidth=2];
+    B2 -> B3;
+}

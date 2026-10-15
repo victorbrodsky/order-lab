@@ -1,0 +1,57 @@
+// Overview - HUB <-> Caller channels and shared HMAC auth
+// Render: dot -Tsvg hub_overview.dot -o hub_overview.svg
+digraph overview {
+    rankdir=LR;
+    fontname="Helvetica";
+    node [fontname="Helvetica", fontsize=10, style="filled,rounded", shape=box];
+    edge [fontname="Helvetica", fontsize=9];
+    label="FellApp HUB <-> Caller: channels and shared HMAC authentication";
+    labelloc="t";
+    fontsize=14;
+
+    subgraph cluster_caller {
+        label="CALLER server (local tenant)";
+        color="#6c8ebf"; style="filled"; fillcolor="#eef4fb"; fontcolor="#1a3a5c";
+
+        cron [label="cron:importfellapp\n(if retrievalMethod =\n'Dedicated public tandem\nhub server tenant instance')",
+              fillcolor="#dae8fc", color="#6c8ebf"];
+        manual [label="Manual triggers\n/populate-import (admin)\n/retrieve-application-data\n/retrieve-recommendation-letters",
+                fillcolor="#dae8fc", color="#6c8ebf"];
+        pop [label="DB: User + FellowshipApplication\nFilesystem: private/Uploaded/fellapp/\n  Spreadsheets/, documents/, {applicantsUploadPathFellApp}",
+             fillcolor="#fff2cc", color="#d6b656"];
+        xfer [label="TransferToHubCommand /\nFellAppTransferToHubController\n-> transferParametersToHub()",
+              fillcolor="#dae8fc", color="#6c8ebf"];
+    }
+
+    subgraph cluster_hub {
+        label="REMOTE HUB server (public tandem tenant)";
+        color="#82b366"; style="filled"; fillcolor="#f0f7ee"; fontcolor="#2d5a1e";
+
+        e1 [label="/download-application-data?maxid=N\n-> xlsx of active apps, id>maxid",
+            fillcolor="#d5e8d4", color="#82b366"];
+        e2 [label="/download-application-file?document_hash=\n-> single file base64",
+            fillcolor="#d5e8d4", color="#82b366"];
+        e3 [label="/send-recommendation-letters?hashids=\n-> letter files base64",
+            fillcolor="#d5e8d4", color="#82b366"];
+        e4 [label="/receive-specialty-parameters (POST)\n-> update specialty catalog",
+            fillcolor="#d5e8d4", color="#82b366"];
+        recpage [label="/submit-a-letter-of-recommendation\n(public upload page for references)",
+                 fillcolor="#fff2cc", color="#d6b656"];
+    }
+
+    auth [shape=note, label="Shared secret: Institution.apiConnectionKey (same on both sides)\nkey = sha256(apiConnectionKey)\nX-HMAC = hash_hmac('sha256','fellapp-api:'+X-Timestamp, key)\nHUB: hash_equals over ALL institution hash keys + |dt| <= 300s\nAPI routes are PUBLIC_ACCESS - HMAC is the only auth",
+          fillcolor="#f8cecc", color="#b85450"];
+
+    cron -> e1;
+    manual -> e1;
+    manual -> e3 [style=invis];
+    cron -> e3 [style=invis];
+    e1 -> pop [label="xlsx_base64", color="#3366cc", penwidth=2];
+    e2 -> pop [label="file_base64 (per doc)", color="#3366cc", penwidth=2];
+    e3 -> pop [label="letters[] base64", color="#3366cc", penwidth=2];
+    xfer -> e4 [label="POST specialtyParameters[]", color="#7a3b9d", penwidth=2];
+
+    cron -> manual [style=invis];
+    e1 -> e2 -> e3 -> e4 [style=invis];
+    auth -> e1 [style=dashed, arrowhead=none, color="#b85450"];
+}

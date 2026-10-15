@@ -1,0 +1,66 @@
+// Flow A - Retrieve & populate fellowship applications: HUB -> Caller
+// Render: dot -Tsvg flow_a_applications.dot -o flow_a_applications.svg
+digraph flow_a {
+    rankdir=TB;
+    newrank=true;
+    compound=true;
+    fontname="Helvetica";
+    node [fontname="Helvetica", fontsize=10, style="filled,rounded", shape=box];
+    edge [fontname="Helvetica", fontsize=9];
+    label="Flow A: Fellowship Applications  HUB -> Caller  (cron:importfellapp / populate-import / retrieve-application-data)";
+    labelloc="t";
+    fontsize=14;
+
+    subgraph cluster_caller {
+        label="CALLER server (local tenant)";
+        color="#6c8ebf"; style="filled"; fillcolor="#eef4fb"; fontcolor="#1a3a5c";
+
+        T [label="Triggers\n- cron:importfellapp\n- GET /populate-import (admin) -> redirect\n- GET /retrieve-application-data",
+           fillcolor="#dae8fc", color="#6c8ebf"];
+        A1 [label="retrieveApplicationData()\ngetInstitutionApiConnectionKey()\n-> sha256 -> apiHashConnectionKey\nmaxid = MAX(remoteId)\nhmac = HMAC('fellapp-api:'+ts, hashKey)",
+            fillcolor="#dae8fc", color="#6c8ebf"];
+        C1 [label="Save xlsx ->\nprivate/Uploaded/fellapp/Spreadsheets/",
+            fillcolor="#fff2cc", color="#d6b656"];
+        C2 [label="populateFellappFromFile()\nfor each row:\n  skip if googleFormId exists / no email+names\n  match specialty by apihashconnectionglobalkey\n  find-or-create locked user (createdby='hubimport')\n  new FellowshipApplication: exams, addresses,\n  trainings x9, licenses, board certs, refs x3",
+            fillcolor="#dae8fc", color="#6c8ebf"];
+        C3 [label="downloadRemoteDocuments()\nper doc type (photo, CV, cover letter,\nUSMLE, reprimand, legal):\n  dedup by documentHash\n  GET /download-application-file?document_hash=",
+            fillcolor="#dae8fc", color="#6c8ebf"];
+        C4 [label="persist+flush, log 'Fellowship Application Created'\nqueue PDF report (addFellAppReportToQueue)\nconfirmation emails (applicant, directors, coordinators)\nrec-letter invitation emails -> flash -> fellapp_home",
+            fillcolor="#dae8fc", color="#6c8ebf"];
+        C5 [label="Save file ->\nprivate/Uploaded/fellapp/{applicantsUploadPathFellApp}\nnew Document + thumbnails",
+            fillcolor="#fff2cc", color="#d6b656"];
+    }
+
+    subgraph cluster_hub {
+        label="REMOTE HUB server (public tandem tenant, e.g. view.online)";
+        color="#82b366"; style="filled"; fillcolor="#f0f7ee"; fontcolor="#2d5a1e";
+
+        H1 [label="downloadApplicationDataAction\nX-HMAC / X-Timestamp present?\nauthenticateHmac(): hash_equals over ALL\ninstitution apiHashConnectionKeys\n|now - ts| <= 300s",
+            fillcolor="#d5e8d4", color="#82b366"];
+        H2 [label="SELECT FellowshipApplication\nWHERE id > maxid AND appStatus='active'\nORDER BY id ASC",
+            fillcolor="#d5e8d4", color="#82b366"];
+        H3 [label="generateXlsxData() -> populateRow()\n~200 cols: all fields, doc URLs+hashes,\napihashconnectionkey / apihashconnectionglobalkey,\nID = {id}_{instanceId}_{timestamp}",
+            fillcolor="#d5e8d4", color="#82b366"];
+        H5 [label="downloadApplicationFileAction\nauthenticateHmac() + ts window\nDocument by document_hash\n-> getFullServerPath() -> base64",
+            fillcolor="#d5e8d4", color="#82b366"];
+        ERR1 [label="401 / 404 JSON errors", fillcolor="#f8cecc", color="#b85450"];
+    }
+
+    T -> A1;
+    A1 -> H1 [label="GET {hubServerApiUrl}?maxid=N\nX-HMAC, X-Timestamp", color="#3366cc", penwidth=2];
+    H1 -> ERR1 [label="auth fail", color="#b85450", style=dashed];
+    H1 -> H2;
+    H2 -> ERR1 [label="no rows", color="#b85450", style=dashed];
+    H2 -> H3;
+    H3 -> C1 [label="JSON {success, filename, xlsx_base64}", color="#3366cc", penwidth=2];
+    C1 -> C2 -> C3;
+    C3 -> H5 [label="per document\nGET + HMAC", color="#3366cc", penwidth=2];
+    H5 -> C5 [label="{file_base64, filename}", color="#3366cc", penwidth=2];
+    C5 -> C4;
+    C2 -> C4 [style=dashed, constraint=false];
+
+    //ordering hints: keep the two chains roughly top-to-bottom
+    H1 -> H5 [style=invis];
+    A1 -> C2 [style=invis];
+    C2 -> C5 [style=invis];
+}
