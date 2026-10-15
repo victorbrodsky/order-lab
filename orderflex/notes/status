@@ -10,80 +10,6 @@ Update all DISPLAYED timestamps (not stored, right? we store in UTC?) to adjust 
 value in this field. Also ujpdate all timestamps that are NOT displayed, but used anywhere -
 for example in the names on downloaded files, etc. Test on both WUSTL servers.
 
-
-
-There were 4 failures:
-
-3) Tests\App\TestBundle\FellappTest::testAddNewFellapp
-Failed asserting that 0 is greater than 0.
-
-C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle\FellappTest.php:178
-
-4) Tests\App\TestBundle\UserTest::testManualBackupRestoreAction
-Failed asserting that 0 is greater than 0.
-
-C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\tests\App\TestBundle\UserTest.php:85
-
-Multiple #[ORM\OneToOne(targetEntity: 'App\CrnBundle\Entity\CrnSiteParameter', cascade: ['persist', 'remove'])]
-calllog_siteparameter
-#[ORM\OneToOne(targetEntity: 'App\CallLogBundle\Entity\CalllogSiteParameter', cascade: ['persist', 'remove'])]
-private $calllogSiteParameter;
-
-CrnSiteParameter
-CalllogSiteParameter
-
-Single:
-CtpSiteParameter
-DashboardSiteParameter
-FellappSiteParameter
-ResappSiteParameter
-TransResSiteParameters
-TelephonySiteParameter
-VacReqSettings (#[ORM\HasLifecycleCallbacks])
-
-public function generateSubSiteParameters() {
-    $count = 0;
-    $count = $count + $this->generateVacReqSiteParameters();
-    $count = $count + $this->generateResAppSiteParameters();
-    $count = $count + $this->generateFellAppSiteParameters();
-    return $count;
-}
-
-ctp_siteparameter
-dashboard_siteparameter
-fellapp_siteparameter
-resapp_siteparameter
-transres_siteparameters
-user_telephonysiteparameter
-vacreq_siteparameter
-
-13- Fix the issue with the blank sections - done
-
-14- Add controller for downloading uploaded files
-On the live server, switch to the new branch:
-git fetch
-git checkout private-uploaded
-git branch -vv
-git pull
-php bin/console cache:clear --env=prod
-
-On dev, merge with master:
-git checkout master
-git merge private-uploaded
-git push
-On live:
-git checkout master
-git pull
-
-Remove private-uploaded:
-Delete locally (dev machine):
-#git branch -d private-uploaded
-Delete on GitHub (remote):
-#git push origin --delete private-uploaded
-
-Check folder size:
-du -sh /path/to/folder
-
 #Packing slips
 Don't need to keep old packing sleeps
 When add custom packing sleep -> new packing sleep not generating
@@ -107,21 +33,13 @@ Fix other: $userStartEndDates = $user->getEmploymentStartEndDates($asString = fa
 //Return only the latest employment period (by hireDate) within the academic year range
 public function getEmplPeriodByYearRange( $user=NULL, $yearRange=NULL ) {
 
-Current Version for branch master: 7080a1e200ac838288dd3c352ad0dfc0ab0b1921; September 25 2026 08:48
-git checkout 7080a1e200ac838288dd3c352ad0dfc0ab0b1921
-
-VacReq requirements:
-1)Only one Organizational Group per user (test user ecesarm has 2 groups with 20% effort but without dates)
-On page http://127.0.0.1/time-away-request/groups/ gives warning if any user has multiple org groups
-2) Effort only is used in calculation if start date is not empty -> give warning when effort is set but dates are empty
-Alternatively, if start date is empty, assume start of the current year as a employment period start date
-Without start date getEmplPeriodByYearRange will not return any empl periods
-
 FellApp PDF: empty photo - probably, Mixed content?
 Check htaccess for private/Uploaded folder:
 file:///C:/Users/cinav/Documents/WCMC/ORDER/order-lab/orderflex/private/Uploaded/fellapp/documents/medium-6aa077eca986f.jpg
 http://127.0.0.1/directory/file-view/26081/snapshot-medium
 
-TOD: When submit carry-over request for someone else as admin,
-show the carry-over note above "Number of days to carry over:" for this person
 
+14- Add controller for downloading uploaded files from view.online and set the folder access to not be public.
+Test cron jobs for downloading applications and recommendation letters.
+Thus, implement the conroller for downloads of application file attachments that uses API key
+(only start download from Hub if API is present)
