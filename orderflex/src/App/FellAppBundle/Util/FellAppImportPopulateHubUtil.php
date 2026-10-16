@@ -89,6 +89,10 @@ class FellAppImportPopulateHubUtil {
         $this->uploadDir = 'Uploaded';
     }
 
+    //1) Caller server calculate $maxRemoteId by MAX(remoteId)
+    //1) Caller (Local) Server send request to HUB server to retrieve applications
+    //2) Caller server get Spreadsheet xlsx format
+    //3) Caller server populate application from Spreadsheet via function populateFellappFromFile
     //Called by retrieveApplicationDataAction: (path: '/retrieve-application-data', name: 'fellapp_retrieve_application_data')
     public function retrieveApplicationData( $request=null, $testing=false ) {
         $userSecUtil = $this->container->get('user_security_utility');
@@ -123,19 +127,22 @@ class FellAppImportPopulateHubUtil {
         // (1) Make API call to Remote Server
         // Get maxid from request or use 0 as default (get all new applications)
         //$maxid = $request->query->get('maxid', 0);
-        //$minRemoteId = $this->em->getRepository(FellowshipApplication::class)->findOneByRemoteId();
+        //$maxRemoteId = $this->em->getRepository(FellowshipApplication::class)->findOneByRemoteId();
         $qb = $em->getRepository(FellowshipApplication::class)->createQueryBuilder('f');
-        $minRemoteId = $qb
+        $maxRemoteId = $qb
             //->select('MIN(f.remoteId)')
             ->select('MAX(CAST(f.remoteId AS INTEGER))')
             ->getQuery()
             ->getSingleScalarResult();
-        if( !$minRemoteId ) {
-            $minRemoteId = 0;
+        if( !$maxRemoteId ) {
+            $maxRemoteId = 0;
         }
-        //echo "minRemoteId=$minRemoteId <br>";
+        //Testing: to retrieve only one application again for testing purposes:
+        //$maxRemoteId = 36; //previous existing remoteID from local server DB.
+
+        //echo "maxRemoteId=$maxRemoteId <br>";
         //exit('111');
-        //$remoteUrl = 'https://view.online/fellowship-applications/download-application-data?maxid=' . $minRemoteId;
+        //$remoteUrl = 'https://view.online/fellowship-applications/download-application-data?maxid=' . $maxRemoteId;
         $remoteUrl = $userSecUtil->getSiteSettingParameter(
             'hubServerApiUrl',
             $this->container->getParameter('fellapp.sitename'));
@@ -152,7 +159,7 @@ class FellAppImportPopulateHubUtil {
             ];
         }
 
-        $remoteUrl = $remoteUrl . '?maxid=' . $minRemoteId;
+        $remoteUrl = $remoteUrl . '?maxid=' . $maxRemoteId;
 
         try {
             //$client = HttpClient::create();
