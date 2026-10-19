@@ -44,22 +44,31 @@ Test cron jobs for downloading applications and recommendation letters.
 Thus, implement the conroller for downloads of application file attachments that uses API key
 (only start download from Hub if API is present)
 
-15- Add automatic 12 hour IP ban for more than 3 wrong API Key connection attempts
+15 (1)- Add automatic 12 hour IP ban for more than 3 wrong API Key connection attempts
 (to download applications OR to download individual files - respond with nothing during the 12 hour ban,
 then auto-remove the ban).
-: Baned IPs are stored in config/packages/cache.yaml -> bin/console cache:clear wipes the pool ->
+Note: Baned IPs are stored in config/packages/cache.yaml -> bin/console cache:clear wipes the pool ->
 bans reset on deploys. To keep IPs, the state needs a file under var/ or a DB table instead.
 
-15- Also verify temp account lock/ban (2 hours - you have the checkmark
+15 (2)- Also verify temp account lock/ban (2 hours - you have the checkmark
 for "Lock account" in user's profile) is in place for more than 5 password attempts with the wrong password
 on View.Online. Show "You have attempted to log in 5 times unsuccessfully. Please try again
 in a couple of hours and visit the <Forgot Password page> to reset your password or contact
-the system administrator." In addition to it, in the user table, implement
-additional column (if needed) for timestamps of unsuccessful log in attempts.
-Add logic to check if the current login attempt is unsuccessful; if so, check
+the system administrator." - attempted counter logic already exists
+15 (3)- In addition to it, in the user table, implement
+additional column (if needed) for timestamps of unsuccessful log in attempts. - already exists (getFailedAttemptCounter)
+15 (4)- Add logic to check if the current login attempt is unsuccessful; if so, check
 if there have been more than 5 unsuccessful login attempts were unsuccesful
 in the past 10 minutes - if yes - increase wait time before responding by doubling it,
 starting with 1 second for each subsequent attempt:
 1 second, 2 seconds, 4 seconds, 8 seconds, 16 seconds, 32 seconds (stop at 32 seconds).
 Do not wait additional time before responding
-if the user name + password combo is correct and account for that in the logic.
+if the user name + password combo is correct and account for that in the logic. - unclear what is responding?
+
+
+17- Additional needed fixes:
+A- Enable showing of text to the right of the checkmark for
+the "Screening questions" when the question type is a checkmark. - it will look different comparing to ther questions when text is shown on the left
+
+
+

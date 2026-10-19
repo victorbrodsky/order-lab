@@ -190,7 +190,9 @@
                 <td>{{ entity.orderinlist }}</td>
 
                 <td class="rowlink-skip">
-                    <a href="{{ path(sitename~'_showuser', { 'id': entity.creator.id }) }}">{{ entity.creator.getUsernameOptimal() }}</a>
+                    {% if entity.creator %}
+                        <a href="{{ path(sitename~'_showuser', { 'id': entity.creator.id }) }}">{{ entity.creator.getUsernameOptimal() }}</a>
+                    {% endif %}
                 </td>
                 {#<td>{{ entity.creator.getUsernameOptimal() }}</td>#}
                 <td>{% if entity.createdate %}{{ entity.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>

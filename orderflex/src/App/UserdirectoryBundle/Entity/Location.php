@@ -644,6 +644,7 @@ class Location extends ListAbstract
 
     public function __toString() {
 
+        //return $this->getStringify();
         return $this->getNameFull();
     }
 

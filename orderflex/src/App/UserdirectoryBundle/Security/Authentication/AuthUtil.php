@@ -997,7 +997,8 @@ class AuthUtil {
                 $this->em->flush();
 
                 $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-                $msg = $permittedFailedLoginAttempt." attempts have been made to log into this account with incorrect credentials.<br>".
+                $msg = $permittedFailedLoginAttempt." attempts have been made to log into ".
+                    "this account with incorrect credentials.<br>".
                     " This account has been locked to prevent unauthorized access.<br>".
                     " Please contact the ".$systemEmail." to request account re-activation.";
                 $this->requestStack->getCurrentRequest()->getSession()->getFlashBag()->add(
