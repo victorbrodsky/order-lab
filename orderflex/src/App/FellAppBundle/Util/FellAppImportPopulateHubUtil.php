@@ -144,7 +144,7 @@ class FellAppImportPopulateHubUtil {
             $maxRemoteId = 0;
         }
         //Testing: to retrieve only one application again for testing purposes:
-        $maxRemoteId = 37; //previous existing remoteID from local server DB.
+        //$maxRemoteId = 36; //previous existing remoteID from local server DB.
 
         //echo "maxRemoteId=$maxRemoteId <br>";
         //exit('111');
