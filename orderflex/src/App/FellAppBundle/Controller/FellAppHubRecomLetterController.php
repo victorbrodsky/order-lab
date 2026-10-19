@@ -388,6 +388,11 @@ class FellAppHubRecomLetterController extends ListController
         $logger = $this->container->get('logger');
         $logger->notice("Starting sendRecommendationLettersAction");
 
+        //IP ban: respond with nothing while banned (auto-expires after 12 hours)
+        if( $fellappImportPopulateHubUtil->isApiIpBanned($request) ) {
+            return $fellappImportPopulateHubUtil->getApiBanResponse();
+        }
+
         // Get authentication headers
         $hmacHeader = $request->headers->get('X-HMAC');
         $timestampHeader = $request->headers->get('X-Timestamp');
@@ -400,8 +405,13 @@ class FellAppHubRecomLetterController extends ListController
         $authenticated = $fellappImportPopulateHubUtil->authenticateHmac($hmacHeader,$timestampHeader);
         if (!$authenticated) {
             $logger->error("HMAC authentication failed for hmacHeader=$hmacHeader");
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse(['error' => 'Authentication failed'], 401);
         }
+        $fellappImportPopulateHubUtil->registerApiAuthSuccess($request);
 
         // Get hash IDs to process
         $hashIds = [];

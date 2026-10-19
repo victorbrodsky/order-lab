@@ -33,6 +33,7 @@ use App\UserdirectoryBundle\Entity\EventTypeList; //process.py script: replaced 
 use App\UserdirectoryBundle\Entity\Logger; //process.py script: replaced namespace by ::class: added use line for classname=Logger
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -70,6 +71,11 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 //$fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
 class FellAppImportPopulateHubUtil {
+
+    //IP ban for repeated failed API (HMAC) authentication attempts on the
+    //remote (HUB) API endpoints: more than 3 failures -> empty responses for 12 hours
+    const API_BAN_MAX_ATTEMPTS = 3;
+    const API_BAN_SECONDS = 43200; //12 hours
 
     protected $em;
     protected $container;
@@ -138,7 +144,7 @@ class FellAppImportPopulateHubUtil {
             $maxRemoteId = 0;
         }
         //Testing: to retrieve only one application again for testing purposes:
-        //$maxRemoteId = 36; //previous existing remoteID from local server DB.
+        $maxRemoteId = 37; //previous existing remoteID from local server DB.
 
         //echo "maxRemoteId=$maxRemoteId <br>";
         //exit('111');
@@ -1933,6 +1939,78 @@ class FellAppImportPopulateHubUtil {
     }
 
     //Use on Remote Server: Verify received $hmacHeader with the each institution's ApiHashConnectionKey
+    ////////////////////////// API IP ban (failed HMAC attempts) //////////////////////////
+    //Ban state lives in the cache.app pool; both the attempt counter and the ban flag
+    //expire via TTL, so the ban removes itself after API_BAN_SECONDS.
+
+    private function getApiBanCacheKey( $request, $kind ) {
+        $ip = $request->getClientIp() ?: 'unknown';
+        return 'fellapp_api_'.$kind.'_'.sha1($ip);
+    }
+
+    private function getApiBanCache() {
+        if( $this->container->has('cache.app') ) {
+            return $this->container->get('cache.app');
+        }
+        return null;
+    }
+
+    //TRUE if the client IP is banned: the caller must respond with getApiBanResponse()
+    public function isApiIpBanned( $request ) {
+        $cache = $this->getApiBanCache();
+        if( !$cache ) {
+            return false;
+        }
+        return $cache->getItem($this->getApiBanCacheKey($request,'ban'))->isHit();
+    }
+
+    //Empty response used while the IP is banned: respond with nothing
+    public function getApiBanResponse() {
+        return new Response();
+    }
+
+    //Call on any failed API authentication attempt (bad/missing HMAC, expired timestamp).
+    //Returns the empty ban Response if the IP is banned by this attempt, otherwise NULL.
+    public function handleApiAuthFailure( $request ) {
+        $logger = $this->container->get('logger');
+        $cache = $this->getApiBanCache();
+        $ip = $request->getClientIp() ?: 'unknown';
+
+        if( !$cache ) {
+            $logger->warning('FellApp API: failed authentication attempt from IP '.$ip.' (cache.app unavailable, ban not tracked)');
+            return null;
+        }
+
+        $attemptsKey = $this->getApiBanCacheKey($request,'attempts');
+        $item = $cache->getItem($attemptsKey);
+        $attempts = (int)$item->get() + 1;
+
+        if( $attempts > self::API_BAN_MAX_ATTEMPTS ) {
+            $banItem = $cache->getItem($this->getApiBanCacheKey($request,'ban'));
+            $banItem->set(time());
+            $banItem->expiresAfter(self::API_BAN_SECONDS);
+            $cache->save($banItem);
+            $cache->deleteItem($attemptsKey);
+            $logger->warning('FellApp API: IP '.$ip.' banned for '.self::API_BAN_SECONDS.' seconds after '.$attempts.' failed authentication attempts');
+            return $this->getApiBanResponse();
+        }
+
+        $item->set($attempts);
+        $item->expiresAfter(self::API_BAN_SECONDS);
+        $cache->save($item);
+        $logger->warning('FellApp API: failed authentication attempt '.$attempts.' of '.self::API_BAN_MAX_ATTEMPTS.' from IP '.$ip);
+        return null;
+    }
+
+    //Clear the failed-attempt counter after a successful authentication
+    public function registerApiAuthSuccess( $request ) {
+        $cache = $this->getApiBanCache();
+        if( $cache ) {
+            $cache->deleteItem($this->getApiBanCacheKey($request,'attempts'));
+        }
+    }
+    /////////////////////// EOF API IP ban (failed HMAC attempts) ///////////////////////
+
     public function authenticateHmac( $hmacHeader, $timestampHeader ) {
         $logger = $this->container->get('logger');
         $fellappUtil = $this->container->get('fellapp_util');

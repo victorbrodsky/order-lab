@@ -81,6 +81,11 @@ class FellAppRetrievalController extends OrderAbstractController
         $fellappImportPopulateHubUtil = $this->container->get('fellapp_importpopulate_hub_util');
         // Remote Server: Receive API call and generate xlsx
 
+        //IP ban: respond with nothing while banned (auto-expires after 12 hours)
+        if( $fellappImportPopulateHubUtil->isApiIpBanned($request) ) {
+            return $fellappImportPopulateHubUtil->getApiBanResponse();
+        }
+
         // Verify HMAC authentication from headers
         $hmacHeader = $request->headers->get('X-HMAC');
         $timestampHeader = $request->headers->get('X-Timestamp');
@@ -88,6 +93,10 @@ class FellAppRetrievalController extends OrderAbstractController
         $logger->notice('downloadApplicationDataAction: $timestampHeader='.$timestampHeader);
 
         if( !$hmacHeader || !$timestampHeader ) {
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse([
                 'success' => false,
                 'message' => 'HMAC authentication headers required'
@@ -96,6 +105,10 @@ class FellAppRetrievalController extends OrderAbstractController
 
         /////////// Verify HMAC Get secret key for HMAC verification ///////////
         if( $fellappImportPopulateHubUtil->authenticateHmac($hmacHeader,$timestampHeader) === false ) {
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Invalid HMAC authentication'
@@ -109,12 +122,17 @@ class FellAppRetrievalController extends OrderAbstractController
         $timeWindow = 300; // 5 minutes
 
         if( abs($currentTime - $requestTime) > $timeWindow ) {
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Request timestamp expired'
             ], 401);
         }
         $logger->notice('downloadApplicationDataAction: authenticated successful');
+        $fellappImportPopulateHubUtil->registerApiAuthSuccess($request);
 
         // Find FellowshipApplications with ID > maxid
         $em = $this->getDoctrine()->getManager();
@@ -765,12 +783,21 @@ class FellAppRetrievalController extends OrderAbstractController
         //$fellappUtil = $this->container->get('fellapp_util');
         //$secretKey = $userSecUtil->getSiteSettingParameter('secretKey');
 
+        //IP ban: respond with nothing while banned (auto-expires after 12 hours)
+        if( $fellappImportPopulateHubUtil->isApiIpBanned($request) ) {
+            return $fellappImportPopulateHubUtil->getApiBanResponse();
+        }
+
         // Get authentication headers
         $hmacHeader = $request->headers->get('X-HMAC');
         $timestampHeader = $request->headers->get('X-Timestamp');
 
         /////////// Verify HMAC Get secret key for HMAC verification ///////////
         if( $fellappImportPopulateHubUtil->authenticateHmac($hmacHeader,$timestampHeader) === false ) {
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Invalid HMAC authentication'
@@ -782,8 +809,13 @@ class FellAppRetrievalController extends OrderAbstractController
         // Verify timestamp (prevent replay attacks - allow 5 minute window)
         $currentTime = time();
         if (abs($currentTime - $timestampHeader) > 300) {
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse(['success' => false, 'message' => 'Request timestamp too old'], 403);
         }
+        $fellappImportPopulateHubUtil->registerApiAuthSuccess($request);
 
         // Get document hash from query parameter
         $documentHash = $request->query->get('document_hash');

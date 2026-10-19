@@ -76,6 +76,11 @@ class FellAppTransferToHubController extends OrderAbstractController
         $fellappTransferToHubUtil = $this->container->get('fellapp_transfer_to_hub_util');
         $em = $this->getDoctrine()->getManager();
 
+        //IP ban: respond with nothing while banned (auto-expires after 12 hours)
+        if( $fellappImportPopulateHubUtil->isApiIpBanned($request) ) {
+            return $fellappImportPopulateHubUtil->getApiBanResponse();
+        }
+
         // Verify HMAC authentication from headers
         $hmacHeader = $request->headers->get('X-HMAC');
         $timestampHeader = $request->headers->get('X-Timestamp');
@@ -83,6 +88,10 @@ class FellAppTransferToHubController extends OrderAbstractController
         $logger->notice('receiveSpecialtyParametersAction: $timestampHeader='.$timestampHeader);
 
         if( !$hmacHeader || !$timestampHeader ) {
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse([
                 'success' => false,
                 'message' => 'HMAC authentication headers required'
@@ -91,6 +100,10 @@ class FellAppTransferToHubController extends OrderAbstractController
 
         // Verify HMAC authentication
         if( $fellappImportPopulateHubUtil->authenticateHmac($hmacHeader,$timestampHeader) === false ) {
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Invalid HMAC authentication'
@@ -103,6 +116,10 @@ class FellAppTransferToHubController extends OrderAbstractController
         $timeWindow = 300; // 5 minutes
 
         if( abs($currentTime - $requestTime) > $timeWindow ) {
+            $banResponse = $fellappImportPopulateHubUtil->handleApiAuthFailure($request);
+            if( $banResponse ) {
+                return $banResponse;
+            }
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Request timestamp expired'
@@ -110,6 +127,7 @@ class FellAppTransferToHubController extends OrderAbstractController
         }
 
         $logger->notice('receiveSpecialtyParametersAction: authenticated successful');
+        $fellappImportPopulateHubUtil->registerApiAuthSuccess($request);
 
         // Get JSON data from request
         $data = json_decode($request->getContent(), true);
