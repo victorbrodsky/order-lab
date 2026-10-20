@@ -70,5 +70,10 @@ if the user name + password combo is correct and account for that in the logic. 
 A- Enable showing of text to the right of the checkmark for
 the "Screening questions" when the question type is a checkmark. - it will look different comparing to ther questions when text is shown on the left
 
-
+B- Interview Location field on this page currently shows duplicate values -
+https://view.online/fellowship-applications/edit/34 -
+please make sure the logic that adds these values never adds
+duplicates (always check if the value exists first) and also
+delete inactivate duplicate values so they are not shown in this menu
+(filter out inactive values).
 

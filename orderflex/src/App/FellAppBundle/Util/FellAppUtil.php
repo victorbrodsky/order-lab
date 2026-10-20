@@ -2198,6 +2198,91 @@ class FellAppUtil {
 //        }
     }
 
+    //Find an existing Location of the given user matching the full field combination
+    //(name, location type, GeoLocation fields, phones). Reuse it instead of creating
+    //a duplicate Location during application population. Returns NULL if no match.
+    public function findMatchingLocation( $user, $name, $locationType, $geoLocation=NULL, $phone='', $mobile='', $fax='' ) {
+        if( !$user ) {
+            return NULL;
+        }
+
+        foreach( $user->getLocations() as $location ) {
+            if( !$this->sameLocationString($location->getName(), $name) ) {
+                continue;
+            }
+            if( $locationType && !$location->getLocationTypes()->contains($locationType) ) {
+                continue;
+            }
+            if( !$this->sameGeoLocation($location->getGeoLocation(), $geoLocation) ) {
+                continue;
+            }
+            if( !$this->sameLocationString($location->getPhone(), $phone) ) {
+                continue;
+            }
+            if( !$this->sameLocationString($location->getMobile(), $mobile) ) {
+                continue;
+            }
+            if( !$this->sameLocationString($location->getFax(), $fax) ) {
+                continue;
+            }
+            return $location;
+        }
+
+        return NULL;
+    }
+
+    public function sameGeoLocation( $geoLocation1, $geoLocation2 ) {
+        if( !$geoLocation1 && !$geoLocation2 ) {
+            return true;
+        }
+        if( !$geoLocation1 || !$geoLocation2 ) {
+            return false;
+        }
+        if( !$this->sameLocationString($geoLocation1->getStreet1(), $geoLocation2->getStreet1()) ) {
+            return false;
+        }
+        if( !$this->sameLocationString($geoLocation1->getStreet2(), $geoLocation2->getStreet2()) ) {
+            return false;
+        }
+        if( !$this->sameLocationString($geoLocation1->getZip(), $geoLocation2->getZip()) ) {
+            return false;
+        }
+        if( !$this->sameLocationEntity($geoLocation1->getCity(), $geoLocation2->getCity()) ) {
+            return false;
+        }
+        if( !$this->sameLocationEntity($geoLocation1->getState(), $geoLocation2->getState()) ) {
+            return false;
+        }
+        if( !$this->sameLocationEntity($geoLocation1->getCounty(), $geoLocation2->getCounty()) ) {
+            return false;
+        }
+        if( !$this->sameLocationEntity($geoLocation1->getCountry(), $geoLocation2->getCountry()) ) {
+            return false;
+        }
+        return true;
+    }
+
+    private function sameLocationString( $value1, $value2 ) {
+        return mb_strtolower(trim((string)$value1)) === mb_strtolower(trim((string)$value2));
+    }
+
+    //Compare two list entities (CityList, States, Countries): by id when both are persisted,
+    //by string representation otherwise (candidate GeoLocation may be unpersisted)
+    private function sameLocationEntity( $entity1, $entity2 ) {
+        if( !$entity1 && !$entity2 ) {
+            return true;
+        }
+        if( !$entity1 || !$entity2 ) {
+            return false;
+        }
+        $id1 = $entity1->getId();
+        $id2 = $entity2->getId();
+        if( $id1 !== NULL && $id2 !== NULL ) {
+            return $id1 === $id2;
+        }
+        return $this->sameLocationString((string)$entity1, (string)$entity2);
+    }
+
     public function addEmptyTrainings($fellowshipApplication) {
         //exit('addEmptyTrainings');
         //set TrainingType

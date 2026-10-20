@@ -1562,30 +1562,45 @@ class FellAppImportPopulateUtil {
                 }
 
                 //presentAddress
-                $presentLocation = new Location($systemUser);
-                $presentLocation->setName('Fellowship Applicant Present Address');
-                $presentLocation->addLocationType($presentLocationType);
+                $fellappUtil = $this->container->get('fellapp_util');
+                $telephoneHome = $this->getValueByHeaderName('telephoneHome',$rowData,$headers);
+                $telephoneMobile = $this->getValueByHeaderName('telephoneMobile',$rowData,$headers);
+                $telephoneFax = $this->getValueByHeaderName('telephoneFax',$rowData,$headers);
                 $geoLocation = $this->createGeoLocation($em,$systemUser,'presentAddress',$rowData,$headers);
-                if( $geoLocation ) {
-                    $presentLocation->setGeoLocation($geoLocation);
+
+                //reuse existing location with the same field combination if it exists
+                $presentLocation = $fellappUtil->findMatchingLocation(
+                    $user,'Fellowship Applicant Present Address',$presentLocationType,$geoLocation,
+                    $telephoneHome."",$telephoneMobile."",$telephoneFax."");
+                if( !$presentLocation ) {
+                    $presentLocation = new Location($systemUser);
+                    $presentLocation->setName('Fellowship Applicant Present Address');
+                    $presentLocation->addLocationType($presentLocationType);
+                    if( $geoLocation ) {
+                        $presentLocation->setGeoLocation($geoLocation);
+                    }
+                    //telephoneHome
+                    //telephoneMobile
+                    //telephoneFax
+                    $presentLocation->setPhone($telephoneHome."");
+                    $presentLocation->setMobile($telephoneMobile."");
+                    $presentLocation->setFax($telephoneFax."");
                 }
                 $user->addLocation($presentLocation);
                 $fellowshipApplication->addLocation($presentLocation);
 
-                //telephoneHome
-                //telephoneMobile
-                //telephoneFax
-                $presentLocation->setPhone($this->getValueByHeaderName('telephoneHome',$rowData,$headers)."");
-                $presentLocation->setMobile($this->getValueByHeaderName('telephoneMobile',$rowData,$headers)."");
-                $presentLocation->setFax($this->getValueByHeaderName('telephoneFax',$rowData,$headers)."");
-
                 //permanentAddress
-                $permanentLocation = new Location($systemUser);
-                $permanentLocation->setName('Fellowship Applicant Permanent Address');
-                $permanentLocation->addLocationType($permanentLocationType);
                 $geoLocation = $this->createGeoLocation($em,$systemUser,'permanentAddress',$rowData,$headers);
-                if( $geoLocation ) {
-                    $permanentLocation->setGeoLocation($geoLocation);
+
+                $permanentLocation = $fellappUtil->findMatchingLocation(
+                    $user,'Fellowship Applicant Permanent Address',$permanentLocationType,$geoLocation);
+                if( !$permanentLocation ) {
+                    $permanentLocation = new Location($systemUser);
+                    $permanentLocation->setName('Fellowship Applicant Permanent Address');
+                    $permanentLocation->addLocationType($permanentLocationType);
+                    if( $geoLocation ) {
+                        $permanentLocation->setGeoLocation($geoLocation);
+                    }
                 }
                 $user->addLocation($permanentLocation);
                 $fellowshipApplication->addLocation($permanentLocation);
@@ -1593,10 +1608,14 @@ class FellAppImportPopulateUtil {
                 //telephoneWork
                 $telephoneWork = $this->getValueByHeaderName('telephoneWork',$rowData,$headers);
                 if( $telephoneWork ) {
-                    $workLocation = new Location($systemUser);
-                    $workLocation->setName('Fellowship Applicant Work Address');
-                    $workLocation->addLocationType($workLocationType);
-                    $workLocation->setPhone($telephoneWork."");
+                    $workLocation = $fellappUtil->findMatchingLocation(
+                        $user,'Fellowship Applicant Work Address',$workLocationType,null,$telephoneWork."");
+                    if( !$workLocation ) {
+                        $workLocation = new Location($systemUser);
+                        $workLocation->setName('Fellowship Applicant Work Address');
+                        $workLocation->addLocationType($workLocationType);
+                        $workLocation->setPhone($telephoneWork."");
+                    }
                     $user->addLocation($workLocation);
                     $fellowshipApplication->addLocation($workLocation);
                 }
