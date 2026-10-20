@@ -202,7 +202,10 @@
             </p>
         {% endif %}
 
-        {% if transresRequest and transresRequest.getCreateDate() %}
+        {% if transres_request_util.getTransresSiteParameter('includeServiceDate') and
+            transresRequest and
+            transresRequest.getCreateDate()
+        %}
             {#{{ formmacros.simplefield("Service Date:", transresRequest.getCreateDate()|date("m/d/Y",false), "input", "disabled", "", "", "2-6") }}#}
             {{ formmacros.simplefield("Service Date:", transresRequest.getCreateDate()|date("m/d/Y",false), "input", "disabled") }}
         {% endif %}

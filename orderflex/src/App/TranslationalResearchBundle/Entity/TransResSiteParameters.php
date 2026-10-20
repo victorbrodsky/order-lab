@@ -384,11 +384,23 @@ class TransResSiteParameters {
     #[ORM\Column(type: 'text', nullable: true)]
     private $completedNoInvoiceRequestReminderBody;
     ////////////// EOF Completed Work Requests reminder email //////////////
+
     /**
      * showRemittance section
      */
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $showRemittance;
+
+    /**
+     * Include ‘Service date’ on the invoice:
+     * The Service Date can be removed, particularly at the start or end of a grant,
+     * where it could cause confusion.
+     * We need only the Invoice Number and Invoice Date;
+     * the Due Date could be removed and instead added in the footer.
+     * "payment due within 30 days of invoice date"
+     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $includeServiceDate;
 
     /**
      * Update parent Project Request’s Fund Number when New Work request’s number is submitted
@@ -1680,6 +1692,22 @@ class TransResSiteParameters {
     public function setShowRemittance($showRemittance)
     {
         $this->showRemittance = $showRemittance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncludeServiceDate()
+    {
+        return $this->includeServiceDate;
+    }
+
+    /**
+     * @param mixed $includeServiceDate
+     */
+    public function setIncludeServiceDate($includeServiceDate)
+    {
+        $this->includeServiceDate = $includeServiceDate;
     }
 
     /**
