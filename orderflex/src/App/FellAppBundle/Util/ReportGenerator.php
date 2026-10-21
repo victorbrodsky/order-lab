@@ -1224,7 +1224,7 @@ class ReportGenerator {
                     //echo "Folder exists";
                 } else {
                     //throw new \InvalidArgumentException('folder libreOfficeConvertToPDFPathFellApp '.$libreOfficeConvertToPDFPathFellApp.' does not exists.');
-                    $errorMsg = 'LibreOffice not found, folder libreOfficeConvertToPDFPathFellApp '.$libreOfficeConvertToPDFPathFellApp.' does not exists.';
+                    $errorMsg = 'LibreOffice not found, folder libreOfficeConvertToPDFPathFellApp=['.$libreOfficeConvertToPDFPathFellApp.'] does not exists.';
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("LibreOffice does not exist",$errorMsg,$toEmailsArr);
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
