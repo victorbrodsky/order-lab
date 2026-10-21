@@ -932,7 +932,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
+        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user); //new
 
         $originalInvoiceStatus = $invoice->getStatus();
 
@@ -1023,7 +1023,7 @@ class InvoiceController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
+        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user); //partial new
 
         $originalInvoiceStatus = $invoice->getStatus();
 
@@ -1320,7 +1320,7 @@ class InvoiceController extends OrderAbstractController
 
             //update user
             $invoice->setUpdateUser($user);
-
+            
             //update oid: don't update Invoice version on edit. Only the last version can be edited.
 
 //            //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
