@@ -1163,28 +1163,27 @@ class ReportGenerator {
         //$cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp .
         //       '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
+        //$cmdBinaryPath - binary path without quotes for is_executable()/file_exists() checks
+        $cmdBinaryPath = $libreOfficeConvertToPDFPathFellApp .
+            DIRECTORY_SEPARATOR .
+            $libreOfficeConvertToPDFFilenameFellApp;
+
         if( $userServiceUtil->isWinOs() ) {
-            $cmdBinary = '"' . $libreOfficeConvertToPDFPathFellApp .
-                DIRECTORY_SEPARATOR .
-                $libreOfficeConvertToPDFFilenameFellApp .
-                '"';
-            $cmd = $cmdBinary . ' "' . $outdir . '"';
-//            $cmd = '"' . $libreOfficeConvertToPDFPathFellApp .
-//                DIRECTORY_SEPARATOR .
-//                $libreOfficeConvertToPDFFilenameFellApp .
-//                '" ' .
-//                $libreOfficeConvertToPDFArgumentsdFellApp .
-//                ' "' . $outdir . '"';
+            //LibreOffice's Windows executable is soffice.exe (or soffice.com);
+            //append the extension when the configured name resolves to no file
+            if( !file_exists($cmdBinaryPath) ) {
+                foreach( array('.exe','.com','.bat') as $binExt ) {
+                    if( file_exists($cmdBinaryPath.$binExt) ) {
+                        $cmdBinaryPath = $cmdBinaryPath.$binExt;
+                        break;
+                    }
+                }
+            }
+            $cmdBinary = '"' . $cmdBinaryPath . '"';
+            $cmd = $cmdBinary . ' ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
         } else {
-//            $cmd = $libreOfficeConvertToPDFPathFellApp .
-//                DIRECTORY_SEPARATOR .
-//                $libreOfficeConvertToPDFFilenameFellApp .
-//                  ' ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' ' .
-//                $outdir;
-            $cmdBinary = $libreOfficeConvertToPDFPathFellApp .
-                DIRECTORY_SEPARATOR .
-                $libreOfficeConvertToPDFFilenameFellApp;
-            $cmd = $cmdBinary . ' ' . $outdir;
+            $cmdBinary = $cmdBinaryPath;
+            $cmd = $cmdBinary . ' ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' ' . $outdir;
         }
 
         //echo "cmd=" . $cmd . "<br>";
@@ -1239,12 +1238,12 @@ class ReportGenerator {
                 //if (!is_executable($binary)) {
                 //    throw new RuntimeException("LibreOffice binary is not executable: $binary");
                 //}
-                if( !is_executable($cmdBinary) ) {
+                if( !is_executable($cmdBinaryPath) ) {
                     //throw new \InvalidArgumentException('folder libreOfficeConvertToPDFPathFellApp '.$libreOfficeConvertToPDFPathFellApp.' does not exists.');
                     $errorMsg = 'LibreOffice binary is not executable:'.
                         ' libreOfficeConvertToPDFPathFellApp=['.$libreOfficeConvertToPDFPathFellApp.']'.
                         '; libreOfficeConvertToPDFFilenameFellApp=['.$libreOfficeConvertToPDFFilenameFellApp.']'.
-                        '; cmdBinary=['.$cmdBinary.']'.
+                        '; cmdBinaryPath=['.$cmdBinaryPath.']'.
                         '; Fellowship Application='.$fellappInfo;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("LibreOffice does not exist",$errorMsg,$toEmailsArr);
