@@ -958,7 +958,7 @@ class UserServiceUtil {
             //"applicationPageLinkFellApp" => "http://wcmc.pathologysystems.org/fellowship-application",
             "libreOfficeConvertToPDFPathFellApp" => 'C:\Program Files (x86)\LibreOffice 5\program',
             "libreOfficeConvertToPDFFilenameFellApp" => "soffice",
-            "libreOfficeConvertToPDFArgumentsdFellApp" => "--headless -convert-to pdf -outdir",
+            "libreOfficeConvertToPDFArgumentsdFellApp" => "--headless --convert-to pdf --outdir",
             "pdftkPathFellApp" => 'C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
             "pdftkFilenameFellApp" => "pdftk",
             "pdftkArgumentsFellApp" => "###inputFiles### cat output ###outputFile### dont_ask",
@@ -1055,7 +1055,7 @@ class UserServiceUtil {
             //set other Linux parameters
             $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/bin";
             $types['libreOfficeConvertToPDFFilenameFellAppLinux'] = "soffice";
-            $types['libreOfficeConvertToPDFArgumentsdFellAppLinux'] = "--headless -convert-to pdf -outdir";
+            $types['libreOfficeConvertToPDFArgumentsdFellAppLinux'] = "--headless --convert-to pdf --outdir";
             $types['pdftkPathFellAppLinux'] = "/usr/bin";
             $types['pdftkFilenameFellAppLinux'] = "pdftk";
             $types['pdftkArgumentsFellAppLinux'] = "###inputFiles### cat output ###outputFile### dont_ask";

@@ -1648,12 +1648,12 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFArgumentsdFellApp' )
             $builder->add('libreOfficeConvertToPDFArgumentsdFellApp',null,array(
-                'label'=>'LibreOffice arguments (--headless -convert-to pdf -outdir):',
+                'label'=>'LibreOffice arguments (--headless --convert-to pdf --outdir):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFArgumentsdFellAppLinux' )
             $builder->add('libreOfficeConvertToPDFArgumentsdFellAppLinux',null,array(
-                'label'=>'LibreOffice arguments (--headless -convert-to pdf -outdir) - Linux:',
+                'label'=>'LibreOffice arguments (--headless --convert-to pdf --outdir) - Linux:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
