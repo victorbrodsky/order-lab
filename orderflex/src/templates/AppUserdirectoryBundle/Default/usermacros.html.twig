@@ -250,7 +250,7 @@
 
         {% if maxFilesize is not defined or maxFilesize == "" or maxFilesize == 0 or maxFilesize is null %}
             {#Default max file size 64 MB#}
-            {% set dz_maxFilesize = 64 %}
+            {% set dz_maxFilesize = 200 %}
         {% else %}
             {% set dz_maxFilesize = maxFilesize %}
         {% endif %}
@@ -504,7 +504,7 @@
 
         {% set dz_maxFiles = 1 %}
         {#Default max file size 64 MB#}
-        {% set dz_maxFilesize = 64 %}
+        {% set dz_maxFilesize = 200 %}
 
         {% if documentType is not defined %}
             {% set dz_documentType = "" %}
