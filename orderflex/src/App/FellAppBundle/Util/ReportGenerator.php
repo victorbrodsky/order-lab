@@ -1239,12 +1239,18 @@ class ReportGenerator {
                 //    throw new RuntimeException("LibreOffice binary is not executable: $binary");
                 //}
                 if( !is_executable($cmdBinaryPath) ) {
+                    $request = $this->container->get('request_stack')->getCurrentRequest();
                     //throw new \InvalidArgumentException('folder libreOfficeConvertToPDFPathFellApp '.$libreOfficeConvertToPDFPathFellApp.' does not exists.');
                     $errorMsg = 'LibreOffice binary is not executable:'.
                         ' libreOfficeConvertToPDFPathFellApp=['.$libreOfficeConvertToPDFPathFellApp.']'.
                         '; libreOfficeConvertToPDFFilenameFellApp=['.$libreOfficeConvertToPDFFilenameFellApp.']'.
                         '; cmdBinaryPath=['.$cmdBinaryPath.']'.
-                        '; Fellowship Application='.$fellappInfo;
+                        '; Fellowship Application='.$fellappInfo.
+                        '; Server: '.gethostname()
+                    ;
+                    if( $request ) {
+                        $errorMsg = $errorMsg . '; ' . $request->getSchemeAndHttpHost();
+                    }
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("LibreOffice does not exist",$errorMsg,$toEmailsArr);
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
@@ -1258,7 +1264,13 @@ class ReportGenerator {
                     //echo "shellout=".$shellout."<br>";
                     //$logger->notice("LibreOffice converted input file=" . $filePath);
                 } else {
-                    $errorMsg = "Fellowship Application $fellappInfo - LibreOffice failed to convert input file=" . $filePath;
+                    $request = $this->container->get('request_stack')->getCurrentRequest();
+                    $errorMsg = "Fellowship Application $fellappInfo - LibreOffice failed to convert input file=" .
+                        $filePath .
+                    '; Server: '.gethostname();
+                    if( $request ) {
+                        $errorMsg = $errorMsg . '; ' . $request->getSchemeAndHttpHost();
+                    }
                     $logger->error($errorMsg);
                     $logger->error("convertToPdf: cmd=".$cmd);
                     $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
