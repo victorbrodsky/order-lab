@@ -1246,6 +1246,7 @@ class ReportGenerator {
                         '; libreOfficeConvertToPDFFilenameFellApp=['.$libreOfficeConvertToPDFFilenameFellApp.']'.
                         '; cmdBinaryPath=['.$cmdBinaryPath.']'.
                         '; Fellowship Application='.$fellappInfo.
+                        '; cmd='.$cmd.
                         '; Server: '.gethostname()
                     ;
                     if( $request ) {
