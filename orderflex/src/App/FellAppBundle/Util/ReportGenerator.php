@@ -1267,6 +1267,7 @@ class ReportGenerator {
                     $request = $this->container->get('request_stack')->getCurrentRequest();
                     $errorMsg = "Fellowship Application $fellappInfo - LibreOffice failed to convert input file=" .
                         $filePath .
+                        '; cmd='.$cmd.
                     '; Server: '.gethostname();
                     if( $request ) {
                         $errorMsg = $errorMsg . '; ' . $request->getSchemeAndHttpHost();
