@@ -1163,8 +1163,18 @@ class ReportGenerator {
         //$cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp .
         //       '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
+        //The path parameter may embed a shell environment prefix (e.g. "HOME=/tmp /usr/bin"),
+        //needed to run soffice under root/cron. Strip leading VAR=value tokens to get the
+        //real binary directory for file_exists()/is_executable() checks.
+        $cmdBinaryDir = trim($libreOfficeConvertToPDFPathFellApp);
+        $cmdBinaryDirParts = preg_split('/\s+/', $cmdBinaryDir);
+        while( count($cmdBinaryDirParts) > 1 && preg_match('/^[A-Za-z_][A-Za-z0-9_]*=/', $cmdBinaryDirParts[0]) ) {
+            array_shift($cmdBinaryDirParts);
+        }
+        $cmdBinaryDir = implode(' ', $cmdBinaryDirParts);
+
         //$cmdBinaryPath - binary path without quotes for is_executable()/file_exists() checks
-        $cmdBinaryPath = $libreOfficeConvertToPDFPathFellApp .
+        $cmdBinaryPath = $cmdBinaryDir .
             DIRECTORY_SEPARATOR .
             $libreOfficeConvertToPDFFilenameFellApp;
 
@@ -1182,7 +1192,10 @@ class ReportGenerator {
             $cmdBinary = '"' . $cmdBinaryPath . '"';
             $cmd = $cmdBinary . ' ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
         } else {
-            $cmdBinary = $cmdBinaryPath;
+            //keep the full configured path in the command, including any env prefix
+            $cmdBinary = $libreOfficeConvertToPDFPathFellApp .
+                DIRECTORY_SEPARATOR .
+                $libreOfficeConvertToPDFFilenameFellApp;
             $cmd = $cmdBinary . ' ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' ' . $outdir;
         }
 
@@ -1223,13 +1236,15 @@ class ReportGenerator {
             //continue;
             //}
 
+            //$execCmd - per-file command: base $cmd plus only the current file
+            //(appending to $cmd directly would re-send all previous files on every iteration)
             if( $userServiceUtil->isWinOs() ) {
-                $cmd = $cmd .' "'.$filePath.'"';
+                $execCmd = $cmd .' "'.$filePath.'"';
             } else {
-                $cmd = $cmd .' '.$filePath;
+                $execCmd = $cmd .' '.$filePath;
             }
 
-            $logger->notice("LibreOffice=[".$cmd."]");
+            $logger->notice("LibreOffice=[".$execCmd."]");
 
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             if( $ext != 'pdf' ) { //TESTING!!!
@@ -1258,8 +1273,8 @@ class ReportGenerator {
                     continue; //ignore this file
                 }
 
-                //$shellout = shell_exec( $cmd );
-                $shellout = exec( $cmd );
+                //$shellout = shell_exec( $execCmd );
+                $shellout = exec( $execCmd );
 
                 if( $shellout ) {
                     //echo "shellout=".$shellout."<br>";
@@ -1274,7 +1289,7 @@ class ReportGenerator {
                         $errorMsg = $errorMsg . '; ' . $request->getSchemeAndHttpHost();
                     }
                     $logger->error($errorMsg);
-                    $logger->error("convertToPdf: cmd=".$cmd);
+                    $logger->error("convertToPdf: cmd=".$execCmd);
                     $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
