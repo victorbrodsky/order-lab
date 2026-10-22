@@ -638,3 +638,22 @@ sudo systemctl enable php-fpm
 
 php -v
 
+
+security upgrade php to 8.5.12
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+dnf install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+subscription-manager repos --enable codeready-builder-for-rhel-9-x86_64-rpms
+
+Check if php 8.5.12 is available
+sudo dnf clean metadata
+sudo dnf --refresh list --showduplicates php
+Note: If you rely on the volunteer-maintained rpms.remirepo.net,
+we urge you to switch to distribution packages or build from source,
+so you can immediately apply updates. The repo will not have updates today.
+
+if available:
+sudo dnf update 'php*'
+sudo systemctl restart php-fpm
+php -v
+
+

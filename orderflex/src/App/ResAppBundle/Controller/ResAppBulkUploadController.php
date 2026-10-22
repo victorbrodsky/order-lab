@@ -163,8 +163,10 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 //first run to process zip files
                 $files = $inputDataFile->getErasFiles();
-                foreach ($files as $file) {
-                    $ext = $file->getExtension();
+                //toArray() snapshot: removeErasFile() mutates the collection during iteration,
+                //which can silently skip the next uploaded file
+                foreach ($files->toArray() as $file) {
+                    $ext = strtolower((string)$file->getExtension());
 
                     if ($ext == 'zip') {
                         //extract archive $file
@@ -179,8 +181,12 @@ class ResAppBulkUploadController extends OrderAbstractController
                             $zip->close();
                             //echo 'woot!';
 
-                            //remove zip file from $inputDataFile
+                            //remove zip file from $inputDataFile and delete the archive itself
                             $inputDataFile->removeErasFile($file);
+                            $em->remove($file);
+                            if( $zipFilePath && file_exists($zipFilePath) ) {
+                                unlink($zipFilePath);
+                            }
 
                             //process all files in temp folder and add them to $inputDataFile as addErasFile()
                             //$tempFiles = scandir($tempPath);
@@ -189,8 +195,14 @@ class ResAppBulkUploadController extends OrderAbstractController
                             foreach($tempFiles as $tempFile) {
                                 //echo "tempFile=$tempFile <br>";
 
+                                //skip directories and macOS metadata files (__MACOSX dir, ._file.pdf AppleDouble)
+                                $tempFilePath = $sourcePath . DIRECTORY_SEPARATOR . $tempFile;
+                                if( is_dir($tempFilePath) || strpos($tempFile,'._') === 0 ) {
+                                    continue;
+                                }
+
                                 //$ext = $tempFile->getExtension();
-                                $ext = pathinfo($tempFile, PATHINFO_EXTENSION);
+                                $ext = strtolower(pathinfo($tempFile, PATHINFO_EXTENSION));
 
                                 if( $ext == 'csv' || $ext == 'pdf' ) {
                                     $this->createAndAddDocumentToInputDataFile($inputDataFile,$tempFile,$sourcePath,$destinationPath);
@@ -206,6 +218,10 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                         } else {
                             //echo 'doh!';
+                            $this->addFlash(
+                                'warning',
+                                "Unable to extract archive ".$file->getOriginalname()." (ZipArchive error ".$res.")"
+                            );
                         }
                     }//if zip
                 }//foreach file step 1
@@ -231,7 +247,7 @@ class ResAppBulkUploadController extends OrderAbstractController
 
                 foreach ($files as $file) {
                     //echo "file=" . $file . "<br>";
-                    $ext = $file->getExtension();
+                    $ext = strtolower((string)$file->getExtension());
                     if ($ext == 'csv') {
                         if( !$inputFileName ) {
                             $inputFileName = $file->getFullServerPath();
