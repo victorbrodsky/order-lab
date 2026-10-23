@@ -278,6 +278,11 @@
         <P>
             {{ invoice.footer3 }}
         </P>
+
+        {#Payment due within 30 days of invoice date#}
+        {% if not transres_request_util.getTransresSiteParameter('includeDueDate') %}
+            Payment due within 30 days of invoice date
+        {% endif %}
     </div>
 
     <br><br>
