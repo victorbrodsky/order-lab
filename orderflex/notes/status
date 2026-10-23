@@ -77,3 +77,12 @@ duplicates (always check if the value exists first) and also
 delete inactivate duplicate values so they are not shown in this menu
 (filter out inactive values).
 
+Bug: Logo on the https://view.online/ page is shown via https://view.online/directory/file-view/14,
+but on login page user is not authenticated, so https://view.online/directory/file-view/14 will be empty:
+<img src="https://view.online/directory/file-view/14"
+srcset="https://view.online/directory/file-view/14 1x,
+https://view.online/directory/file-view/15 2x"
+alt="Logo homepage manager" height="180" width="320"
+>
+
+if use not auth show public/WCMLogo.png

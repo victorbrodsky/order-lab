@@ -3321,6 +3321,23 @@ class UserSecurityUtil {
         }
         return $platformLogoPath;
     }
+    public function getPlatformLogoNotAuth() {
+        $platformLogoPath = null;
+        $platformLogos = $this->getSiteSettingParameter('platformLogos');
+        if( $platformLogos && count($platformLogos) > 0 ) {
+            //$platformLogo = $platformLogos->first();
+            //Serve through the public route: the logo lives under private/ and
+            //employees_file_view requires IS_AUTHENTICATED_FULLY
+            $platformLogoPath = $this->container->get('router')->generate(
+                'employees_platform_logo',
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $userUtil = $this->container->get('user_utility');
+            $platformLogoPath = $userUtil->getRealSchemeUrl($platformLogoPath);
+        }
+        return $platformLogoPath;
+    }
 
     //Configuring the Request Context per Command . Set it to liveSiteRootUrl instead of localhost
     // http://symfony.com/doc/current/cookbook/console/request_context.html

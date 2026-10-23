@@ -91,6 +91,14 @@
                     {#alt="Tenant logo" height="{{ height }}" width="{{ width }}"#}
                 {#>#}
 
+                {#{{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Tenant logo") }}#}
+                {% if app.user %}
+                    {#{{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Tenant logo") }}#}
+                {% else %}
+                    {% set platformLogo = user_security_utility.getPlatformLogoNotAuth() %}
+                    {% set highResPlatformLogoPath = user_security_utility.getPlatformLogoNotAuth() %}
+                    {#platformLogo={{ platformLogo }}#}
+                {% endif %}
                 {{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Tenant logo") }}
             </p>
         {% else %}

@@ -461,6 +461,26 @@ class UploadController extends OrderAbstractController {
         return $response;
     }
 
+    //Serve the site platform logo to unauthenticated users (login/home page).
+    //No document id is accepted: only the logo configured in Site Parameters is served,
+    //so this public route cannot be used to access arbitrary private files.
+    #[Route(path: '/platform-logo', name: 'employees_platform_logo', methods: ['GET'])]
+    public function platformLogoAction( Request $request ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
+        if( $platformLogos && count($platformLogos) > 0 ) {
+            $platformLogo = $platformLogos->first();
+            $abspath = $platformLogo->getFullServerPath();
+            if( $abspath && file_exists($abspath) ) {
+                $downloader = new LargeFileDownloader($logger=$this->container->get('logger'));
+                //$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null
+                $downloader->downloadLargeFile($abspath, $platformLogo->getOriginalnameClean(), $platformLogo->getSize(), true, "view", null);
+                exit;
+            }
+        }
+        exit ('Platform logo is not available');
+    }
+
     //make sure to update server DocumentTypeList and EventTypeList
     //"Complete Fellowship Application in PDF"=>"Complete Fellowship Application PDF"
     //"Old Complete Fellowship Application in PDF"=>"Old Complete Fellowship Application PDF"
