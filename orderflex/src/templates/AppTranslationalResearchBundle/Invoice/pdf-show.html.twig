@@ -78,9 +78,13 @@
             <p>
                 Billing Date: {{ invoice.createDate|date("m/d/Y",false) }}
             </p>
-            <p>
-                Due Date: {{ invoice.dueDate|date("m/d/Y",false) }}
-            </p>
+            {% if transres_request_util.getTransresSiteParameter('includeDueDate') and
+                invoice.dueDate()
+            %}
+                <p>
+                    Due Date: {{ invoice.dueDate|date("m/d/Y",false) }}
+                </p>
+            {% endif %}
             <p>
                 {#Salesperson: {{ invoice.salesperson.getUsernameOptimal() }}#}
                 {#Requester: {{ invoice.submitter.getUsernameOptimal() }}#}

@@ -496,6 +496,13 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('includeDueDate', ChoiceType::class, array(
+            'label' => "Include ‘Due date’ on the invoice:",
+            'choices' => $this->booleanChoices,
+            'required' => $this->booleanRequired,
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('updateProjectFundNumber', ChoiceType::class, array(
             'label' => "Update parent Project Request’s Fund Number when New Work request’s number is submitted:",
             'choices' => $this->booleanChoices,

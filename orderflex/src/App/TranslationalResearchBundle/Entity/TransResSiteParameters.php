@@ -402,6 +402,10 @@ class TransResSiteParameters {
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $includeServiceDate;
 
+    //Show or Hide ‘Due date’ at the top of the invoice (only show 'Payment due within 30 days of invoice date' at the bottom
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $includeDueDate;
+
     /**
      * Update parent Project Request’s Fund Number when New Work request’s number is submitted
      */
@@ -1708,6 +1712,22 @@ class TransResSiteParameters {
     public function setIncludeServiceDate($includeServiceDate)
     {
         $this->includeServiceDate = $includeServiceDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIncludeDueDate()
+    {
+        return $this->includeDueDate;
+    }
+
+    /**
+     * @param mixed $includeDueDate
+     */
+    public function setIncludeDueDate($includeDueDate)
+    {
+        $this->includeDueDate = $includeDueDate;
     }
 
     /**
