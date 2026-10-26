@@ -95,28 +95,61 @@ class InterviewType extends AbstractType
             ));
 
             ///////////////// location //////////////////
-            $builder->add('location', EntityType::class, array(
-                'class' => Location::class,
-                'label' => "Interview Location:",
-                'required' => false,
-                'attr' => array('class' => 'combobox combobox-width interview-location'),
-                'query_builder' => function(EntityRepository $er) {
-                    //eager-join user + trainings to avoid one extra query per hydrated Location
-                    //when building the choice list labels (Location::__toString() -> getNameFull()
-                    //-> User::getUsernameOptimal() lazy-loads user.trainings)
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.user", "locuser")->addSelect("locuser")
-                        ->leftJoin("locuser.trainings", "trainings")->addSelect("trainings")
-                        ->leftJoin("locuser.infos", "locuserinfos")->addSelect("locuserinfos")
-                        ->leftJoin("locuser.perSiteSettings", "locuserpss")->addSelect("locuserpss")
-                        ->leftJoin("list.locationTypes", "locationTypes")->addSelect("locationTypes")
-                        ->leftJoin("list.institution", "institution")->addSelect("institution")
-                        ->leftJoin("list.room", "room")->addSelect("room")
-                        ->leftJoin("list.suite", "suite")->addSelect("suite")
-                        ->leftJoin("list.building", "building")->addSelect("building")
-                        ->leftJoin("list.mailbox", "mailbox")->addSelect("mailbox");
-                },
-            ));
+            //Locations with identical names may have been added by mistake: on the new page
+            //list only uniquely named locations (always keeping the interview's own location).
+            //All locations are listed in show/edit cycles because duplicates may still be
+            //referenced by existing fellowship applications.
+            $interviewTypeParams = $this->params;
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($interviewTypeParams) {
+                $interview = $event->getData();
+                $form = $event->getForm();
+
+                $locationOptions = array(
+                    'class' => Location::class,
+                    'label' => "Interview Location:",
+                    'required' => false,
+                    'attr' => array('class' => 'combobox combobox-width interview-location'),
+                    'query_builder' => function(EntityRepository $er) {
+                        //eager-join user + trainings to avoid one extra query per hydrated Location
+                        //when building the choice list labels (Location::__toString() -> getNameFull()
+                        //-> User::getUsernameOptimal() lazy-loads user.trainings)
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.user", "locuser")->addSelect("locuser")
+                            ->leftJoin("locuser.trainings", "trainings")->addSelect("trainings")
+                            ->leftJoin("locuser.infos", "locuserinfos")->addSelect("locuserinfos")
+                            ->leftJoin("locuser.perSiteSettings", "locuserpss")->addSelect("locuserpss")
+                            ->leftJoin("list.locationTypes", "locationTypes")->addSelect("locationTypes")
+                            ->leftJoin("list.institution", "institution")->addSelect("institution")
+                            ->leftJoin("list.room", "room")->addSelect("room")
+                            ->leftJoin("list.suite", "suite")->addSelect("suite")
+                            ->leftJoin("list.building", "building")->addSelect("building")
+                            ->leftJoin("list.mailbox", "mailbox")->addSelect("mailbox");
+                    },
+                );
+
+                if( isset($interviewTypeParams['cycle']) && $interviewTypeParams['cycle'] == 'new' ) {
+                    $em = $interviewTypeParams['em'];
+                    $seenNames = array();
+                    $uniqueLocations = array();
+                    foreach( $em->getRepository(Location::class)->findAll() as $location ) {
+                        $nameKey = mb_strtolower(trim((string)$location->getNameFull()));
+                        if( isset($seenNames[$nameKey]) ) {
+                            continue;
+                        }
+                        $seenNames[$nameKey] = true;
+                        $uniqueLocations[] = $location;
+                    }
+                    //always include the interview's current location even if it is a duplicate
+                    $currentLocation = $interview ? $interview->getLocation() : null;
+                    if( $currentLocation && !in_array($currentLocation, $uniqueLocations, true) ) {
+                        $uniqueLocations[] = $currentLocation;
+                    }
+                    $locationOptions['choices'] = $uniqueLocations;
+                    unset($locationOptions['query_builder']);
+                }
+
+                $form->add('location', EntityType::class, $locationOptions);
+            });
 //            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 //                $interview = $event->getData();
 //                $form = $event->getForm();

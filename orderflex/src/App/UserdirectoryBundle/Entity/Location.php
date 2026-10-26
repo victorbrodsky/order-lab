@@ -644,7 +644,7 @@ class Location extends ListAbstract
 
     public function __toString() {
         //Some location has only User name, so ID is need it to identify them
-        return $this->getNameFull()." (ID ".$this->getId().")";
+        //return $this->getNameFull()." (ID ".$this->getId().")";
         return $this->getNameFull(); //original
     }
 
@@ -671,6 +671,10 @@ class Location extends ListAbstract
 //        }
 
         $locationFullname = $this->getLocationFullBuildingName($html);
+
+        if( !$locationFullname ) {
+            $locationFullname = $this->getGeoLocation().'';
+        }
 
         $name = $name . $locationFullname;
         //echo "name1=[".$name."]<br>";
