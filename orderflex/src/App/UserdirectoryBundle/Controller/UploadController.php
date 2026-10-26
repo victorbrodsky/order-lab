@@ -27,6 +27,7 @@ namespace App\UserdirectoryBundle\Controller;
 
 
 use App\UserdirectoryBundle\Entity\Document; //process.py script: replaced namespace by ::class: added use line for classname=Document
+use App\UserdirectoryBundle\Entity\SiteList;
 
 use App\UserdirectoryBundle\Form\ImportUsersType;
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
@@ -479,6 +480,29 @@ class UploadController extends OrderAbstractController {
             }
         }
         exit ('Platform logo is not available');
+    }
+
+    //Serve the latest logo of the given site to unauthenticated users.
+    //Only documents attached to the SiteList are served - no arbitrary private file access.
+    #[Route(path: '/site-logo/{sitename}', name: 'employees_site_logo', methods: ['GET'], requirements: ['sitename' => '[\w.-]+'])]
+    public function siteLogoAction( Request $request, $sitename ) {
+        $em = $this->getDoctrine()->getManager();
+        $site = $em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
+        if( !$site ) {
+            $site = $em->getRepository(SiteList::class)->findOneByName($sitename);
+        }
+        if( $site && count($site->getDocuments()) > 0 ) {
+            //documents are ordered by createdate DESC: first() is the latest logo
+            $siteLogo = $site->getDocuments()->first();
+            $abspath = $siteLogo->getFullServerPath();
+            if( $abspath && file_exists($abspath) ) {
+                $downloader = new LargeFileDownloader($logger=$this->container->get('logger'));
+                //$filepath, $filename=null, $size=null, $retbytes=true, $action="download", $viewType=null
+                $downloader->downloadLargeFile($abspath, $siteLogo->getOriginalnameClean(), $siteLogo->getSize(), true, "view", null);
+                exit;
+            }
+        }
+        exit ('Site logo is not available');
     }
 
     //make sure to update server DocumentTypeList and EventTypeList

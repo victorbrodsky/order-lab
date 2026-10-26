@@ -3309,7 +3309,7 @@ class UserSecurityUtil {
 
         return $defaultParameter;
     }
-
+    //NOT USED
     public function getPlatformLogo() {
         $platformLogoPath = null;
         $platformLogos = $this->getSiteSettingParameter('platformLogos');
@@ -3338,6 +3338,32 @@ class UserSecurityUtil {
         }
         return $platformLogoPath;
     }
+    //Latest logo document of the given site (SiteList.documents are ordered by createdate DESC),
+    //served through the public employees_site_logo route for unauthenticated users
+    public function getSiteLogoNotAuth( $sitename ) {
+        $siteLogoPath = null;
+        if( $sitename ) {
+            $repository = $this->em->getRepository(SiteList::class);
+            $dql =  $repository->createQueryBuilder("list");
+            $dql->select('list');
+            $dql->where("list.name = :sitename OR list.abbreviation = :sitename");
+            $query = $dql->getQuery();
+            $query->setParameter('sitename', $sitename);
+            $site = $query->getOneOrNullResult();
+
+            if( $site && count($site->getDocuments()) > 0 ) {
+                $siteLogoPath = $this->container->get('router')->generate(
+                    'employees_site_logo',
+                    array('sitename' => $sitename),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $userUtil = $this->container->get('user_utility');
+                $siteLogoPath = $userUtil->getRealSchemeUrl($siteLogoPath);
+            }
+        }
+        return $siteLogoPath;
+    }
+
 
     //Configuring the Request Context per Command . Set it to liveSiteRootUrl instead of localhost
     // http://symfony.com/doc/current/cookbook/console/request_context.html

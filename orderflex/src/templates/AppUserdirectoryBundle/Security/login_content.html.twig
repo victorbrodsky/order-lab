@@ -22,6 +22,12 @@
         <br>
         <br>
         <p>
+            {% if app.user %}
+                {#{{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Tenant logo") }}#}
+            {% else %}
+                {#TODO: get logo for this specific site#}
+                {% set logo = user_security_utility.getSiteLogoNotAuth(sitename) %}
+            {% endif %}
             <img src="{{ asset(logo) }}" alt="{{ title }}" height="{{ logoHeight }}" width="{{ logoWidth }}">
         </p>
     {% else %}
