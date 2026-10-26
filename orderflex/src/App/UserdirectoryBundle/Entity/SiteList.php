@@ -79,6 +79,14 @@ class SiteList extends ListAbstract
     #[ORM\OrderBy(['createdate' => 'DESC'])]
     private $documents;
 
+    //Logo width (300 or 320)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $logoWidth;
+
+    //Logo height (80 or 180)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $logoHeight;
+
     /**
      * Emails sent by this site will appear to come from the following address
      */
@@ -369,6 +377,38 @@ class SiteList extends ListAbstract
     {
         $this->documents->removeElement($item);
         $item->clearUseObject();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogoWidth()
+    {
+        return $this->logoWidth;
+    }
+
+    /**
+     * @param mixed $logoWidth
+     */
+    public function setLogoWidth($logoWidth)
+    {
+        $this->logoWidth = $logoWidth;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogoHeight()
+    {
+        return $this->logoHeight;
+    }
+
+    /**
+     * @param mixed $logoHeight
+     */
+    public function setLogoHeight($logoHeight)
+    {
+        $this->logoHeight = $logoHeight;
     }
 
     public function getSiteName() {

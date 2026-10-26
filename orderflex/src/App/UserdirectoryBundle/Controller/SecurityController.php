@@ -409,6 +409,8 @@ class SecurityController extends OrderAbstractController
         $lastUsername = $lastUsernameArr[0];
 
         $logoPath = null;
+        $logoWidth = 300;
+        $logoHeight = 80;
         $siteObject = $em->getRepository(SiteList::class)->findOneByAbbreviation($sitename);
         if( $siteObject ) {
             $logos = $siteObject->getDocuments();
@@ -417,6 +419,8 @@ class SecurityController extends OrderAbstractController
                 //$packingSlipLogoFileName = $transresRequestUtil->getDefaultFile("transresPackingSlipLogos",null,$transresRequest);
                 //$logoPath = $logo->getAbsoluteUploadFullPath();
                 $logoPath = $userServiceUtil->getDocumentAbsoluteUrl($logo);
+                $logoWidth = $siteObject->getLogoWidth();
+                $logoHeight = $siteObject->getLogoHeight();
             }
         }
 
@@ -460,8 +464,8 @@ class SecurityController extends OrderAbstractController
                             'messageToUsers' => $noteOnLoginPage,
                             'globalNoteOnAllLoginPage' => $globalNoteOnAllLoginPage,
                             'lastRoute' => $lastRoute,
-                            'logoHeight' => 80,
-                            'logoWidth' => 300
+                            'logoHeight' => $logoHeight, //80,
+                            'logoWidth' => $logoWidth //300
                         );
 
         return $formArr;

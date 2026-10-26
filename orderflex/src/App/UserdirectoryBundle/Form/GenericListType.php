@@ -1010,6 +1010,17 @@ class GenericListType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__documentsid__',
             ));
+
+            $builder->add('logoWidth', null, array(
+                'label' => 'Site Logo Width (default 300):',
+                'required' => false,
+                'attr' => array('class' => 'form-control')
+            ));
+            $builder->add('logoHeight', null, array(
+                'label' => 'Site Logo Height (default 80):',
+                'required' => false,
+                'attr' => array('class' => 'form-control')
+            ));
         }
 
 

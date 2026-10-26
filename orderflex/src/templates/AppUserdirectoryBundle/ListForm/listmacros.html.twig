@@ -1198,6 +1198,12 @@
     {% if form.noteOnLoginPage is defined %}
         {{ formmacros.field(form.noteOnLoginPage) }}
     {% endif %}
+    {% if form.logoWidth is defined %}
+        {{ formmacros.field(form.logoWidth) }}
+    {% endif %}
+    {% if form.logoHeight is defined %}
+        {{ formmacros.field(form.logoHeight) }}
+    {% endif %}
 
     {#Tag Types#}
     {% if form.tagTypes is defined %}
