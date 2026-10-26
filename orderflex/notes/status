@@ -84,5 +84,7 @@ srcset="https://view.online/directory/file-view/14 1x,
 https://view.online/directory/file-view/15 2x"
 alt="Logo homepage manager" height="180" width="320"
 >
+fixed by dedicated controller for logos
 
-if use not auth show public/WCMLogo.png
+C- In the top Navbar, add a link to the right of "My Interviewees" titled "My Applications"
+

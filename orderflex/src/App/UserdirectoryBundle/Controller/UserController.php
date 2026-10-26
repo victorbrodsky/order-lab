@@ -83,6 +83,8 @@ use App\UserdirectoryBundle\Entity\AppointmentTitle;
 use App\UserdirectoryBundle\Entity\MedicalTitle;
 use App\UserdirectoryBundle\Entity\StateLicense;
 use App\UserdirectoryBundle\Entity\BoardCertification;
+use App\FellAppBundle\Entity\FellowshipApplication;
+use App\ResAppBundle\Entity\ResidencyApplication;
 use App\UserdirectoryBundle\Entity\EmploymentStatus;
 use App\UserdirectoryBundle\Entity\AdminComment;
 use App\UserdirectoryBundle\Entity\Identifier;
@@ -4430,7 +4432,10 @@ class UserController extends OrderAbstractController
                                 $title->setUser($subjectUser);
                             }
                             //echo "delete object entirely <br>";
-                            // delete object entirely
+                            //delete object entirely
+                            //first detach the entity from fellowship/residency applications sharing it
+                            //(e.g. fellapp_fellowshipapplication_boardcertification) to avoid FK violations
+                            $this->detachFromApplications($em,$title);
                             $em->remove($title);
                             $em->flush();
                         }
@@ -4447,6 +4452,44 @@ class UserController extends OrderAbstractController
         //exit('done remove collection');
 
         return implode("<br>", $removeArr);
+    }
+
+    //BoardCertification, StateLicense, Training, Examination, Location and Citizenship
+    //entities are shared between the user profile and FellowshipApplication/ResidencyApplication
+    //via ManyToMany join tables. Unlink the entity from all referencing applications before
+    //it is deleted, otherwise the DB throws a foreign key violation.
+    public function detachFromApplications($em,$entity) {
+        $detachMap = array(
+            'App\UserdirectoryBundle\Entity\Training' => 'trainings',
+            'App\UserdirectoryBundle\Entity\Examination' => 'examinations',
+            'App\UserdirectoryBundle\Entity\Location' => 'locations',
+            'App\UserdirectoryBundle\Entity\Citizenship' => 'citizenships',
+            'App\UserdirectoryBundle\Entity\StateLicense' => 'stateLicenses',
+            'App\UserdirectoryBundle\Entity\BoardCertification' => 'boardCertifications',
+        );
+        $collectionField = null;
+        foreach( $detachMap as $entityClass => $field ) {
+            if( $entity instanceof $entityClass ) {
+                $collectionField = $field;
+                break;
+            }
+        }
+        if( !$collectionField ) {
+            return;
+        }
+        $removeMethod = 'remove' . rtrim(ucfirst($collectionField),'s');
+        foreach( array(FellowshipApplication::class, ResidencyApplication::class) as $appClass ) {
+            $referencingApps = $em->getRepository($appClass)->createQueryBuilder('application')
+                ->join('application.'.$collectionField, 'col')
+                ->where('col = :entity')
+                ->setParameter('entity', $entity)
+                ->getQuery()->getResult();
+            foreach( $referencingApps as $app ) {
+                if( method_exists($app, $removeMethod) ) {
+                    $app->$removeMethod($entity);
+                }
+            }
+        }
     }
 
     //record if different: old values, new values
