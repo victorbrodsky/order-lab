@@ -672,9 +672,9 @@ class Location extends ListAbstract
 
         $locationFullname = $this->getLocationFullBuildingName($html);
 
-        if( !$locationFullname ) {
-            $locationFullname = $this->getGeoLocation().'';
-        }
+        //if( !$locationFullname ) {
+        //    $locationFullname = $this->getGeoLocation().'';
+        //}
 
         $name = $name . $locationFullname;
         //echo "name1=[".$name."]<br>";
