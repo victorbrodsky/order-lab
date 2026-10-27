@@ -3310,6 +3310,15 @@ class UserSecurityUtil {
         return $defaultParameter;
     }
     //NOT USED
+    /**
+     * Platform logo URL for authenticated users.
+     *
+     * Resolves the first logo configured in Site Parameters (platformLogos)
+     * and returns its URL via the secure employees_file_view route, which
+     * requires IS_AUTHENTICATED_FULLY.
+     *
+     * @return string|null absolute logo URL, or null when no logo is configured
+     */
     public function getPlatformLogo() {
         $platformLogoPath = null;
         $platformLogos = $this->getSiteSettingParameter('platformLogos');
@@ -3321,6 +3330,16 @@ class UserSecurityUtil {
         }
         return $platformLogoPath;
     }
+    /**
+     * Platform logo URL for unauthenticated users (login/home page).
+     *
+     * The logo file lives under private/ and employees_file_view requires
+     * IS_AUTHENTICATED_FULLY, so it is served through the public
+     * employees_platform_logo route, which exposes only the logo
+     * configured in Site Parameters (platformLogos).
+     *
+     * @return string|null absolute logo URL, or null when no logo is configured
+     */
     public function getPlatformLogoNotAuth() {
         $platformLogoPath = null;
         $platformLogos = $this->getSiteSettingParameter('platformLogos');
@@ -3338,8 +3357,19 @@ class UserSecurityUtil {
         }
         return $platformLogoPath;
     }
-    //Latest logo document of the given site (SiteList.documents are ordered by createdate DESC),
-    //served through the public employees_site_logo route for unauthenticated users
+    /**
+     * Latest logo URL of the given site for unauthenticated users.
+     *
+     * The site is resolved by SiteList name or abbreviation and its newest
+     * logo document is used (SiteList.documents is ordered by createdate DESC).
+     * The file lives under private/ and employees_file_view requires
+     * IS_AUTHENTICATED_FULLY, so it is served through the public
+     * employees_site_logo route, which exposes only documents attached
+     * to the SiteList - no arbitrary private file access.
+     *
+     * @param string $sitename site name or abbreviation (e.g. 'fellapp')
+     * @return string|null absolute logo URL, or null when the site has no logo
+     */
     public function getSiteLogoNotAuth( $sitename ) {
         $siteLogoPath = null;
         if( $sitename ) {

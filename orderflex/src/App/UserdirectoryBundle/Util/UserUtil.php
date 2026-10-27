@@ -78,6 +78,16 @@ class UserUtil {
     }
 
     //Should not be used; replaced by getRealScheme
+    /**
+     * Effective URL scheme for generated links ('http' or 'https').
+     *
+     * Delegates to getRealScheme(), which prefers the urlConnectionChannel
+     * site setting over the request scheme - behind HaProxy
+     * $request->getScheme() always reports http, so the configured channel
+     * is the source of truth for absolute URLs.
+     *
+     * @return string 'http' or 'https'
+     */
     public function getScheme() {
         return $this->getRealScheme();
 //        if( $this->requestStack && $this->requestStack->getCurrentRequest() && $this->requestStack->getCurrentRequest()->getScheme() ) {
@@ -85,8 +95,17 @@ class UserUtil {
 //        }
 //        return NULL;
     }
-    //get scheme: $request->getScheme() will give http if using HaProxy.
-    //Therefore, use urlConnectionChannel from SiteSettings
+    /**
+     * Effective URL scheme ('http' or 'https').
+     *
+     * $request->getScheme() always reports http behind HaProxy, so the
+     * urlConnectionChannel site setting is preferred; the request scheme
+     * is used only as a fallback when the setting is empty, defaulting
+     * to 'http'.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request|null $request
+     * @return string 'http' or 'https'
+     */
     public function getRealScheme( $request=NULL ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $scheme = $userSecUtil->getSiteSettingParameter('urlConnectionChannel');
@@ -120,6 +139,17 @@ class UserUtil {
 
         return $scheme;
     }
+    /**
+     * Absolute base URL (scheme + host), e.g. 'https://view-test.med.cornell.edu'.
+     *
+     * Combines getRealScheme() - which prefers the urlConnectionChannel site
+     * setting since $request->getScheme() reports http behind HaProxy - with
+     * $request->getHttpHost(). Falls back to $request->getSchemeAndHttpHost()
+     * when the scheme cannot be resolved.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request|null $request
+     * @return string|null base URL, or null when no request is available (console)
+     */
     public function getRealSchemeAndHttpHost( $request=NULL ) {
         //should give https://view-test.med.cornell.edu
         $baseUrl = NULL;
