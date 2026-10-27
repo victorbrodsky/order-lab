@@ -22,13 +22,8 @@
         <br>
         <br>
         <p>
-            {% if app.user %}
-                {#{{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Tenant logo") }}#}
-            {% else %}
-                {#get logo for this specific site#}
-                {% set logo = user_security_utility.getSiteLogoNotAuth(sitename) %}
-                {#logoHeight={{ logoHeight }}, logoWidth={{ logoWidth }}<br>#}
-            {% endif %}
+            {# logo, logoHeight, logoWidth are provided by the controller:
+               secure file-view URL for authenticated users, public site-logo URL otherwise #}
             <img src="{{ asset(logo) }}" alt="{{ title }}" height="{{ logoHeight }}" width="{{ logoWidth }}">
         </p>
     {% else %}

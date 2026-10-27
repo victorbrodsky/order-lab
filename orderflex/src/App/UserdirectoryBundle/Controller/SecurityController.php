@@ -415,12 +415,14 @@ class SecurityController extends OrderAbstractController
         if( $siteObject ) {
             $logos = $siteObject->getDocuments();
             if( count($logos) > 0 ) {
-                $logo = $logos->first();
+                $logoWidth = $siteObject->getLogoWidth() ?: $logoWidth;
+                $logoHeight = $siteObject->getLogoHeight() ?: $logoHeight;
+                //loginPage returns early for IS_AUTHENTICATED_FULLY users, so the visitor here is never
+                //fully authenticated and employees_file_view would be denied:
+                //serve through the public employees_site_logo route instead
                 //$packingSlipLogoFileName = $transresRequestUtil->getDefaultFile("transresPackingSlipLogos",null,$transresRequest);
                 //$logoPath = $logo->getAbsoluteUploadFullPath();
-                $logoPath = $userServiceUtil->getDocumentAbsoluteUrl($logo);
-                $logoWidth = $siteObject->getLogoWidth();
-                $logoHeight = $siteObject->getLogoHeight();
+                $logoPath = $userSecUtil->getSiteLogoNotAuth($sitename);
             }
         }
 

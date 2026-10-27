@@ -107,13 +107,21 @@ class HomeController extends OrderAbstractController {
         $scheme = $userUtil->getRealScheme($request);
         $highResPlatformLogoPath = NULL;
         $platformLogoPath = NULL;
-        $highResPlatformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
-        if( $highResPlatformLogos && count($highResPlatformLogos) > 0 ) {
-            $highResPlatformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($highResPlatformLogos->first());
-        }
-        $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
-        if( $platformLogos && count($platformLogos) > 0 ) {
-            $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
+        if( $this->isGranted('IS_AUTHENTICATED_FULLY') ) {
+            //authenticated: serve via the secure employees_file_view route
+            $highResPlatformLogos = $userSecUtil->getSiteSettingParameter('highResPlatformLogos');
+            if( $highResPlatformLogos && count($highResPlatformLogos) > 0 ) {
+                $highResPlatformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($highResPlatformLogos->first());
+            }
+            $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
+            if( $platformLogos && count($platformLogos) > 0 ) {
+                $platformLogoPath = $userServiceUtil->getDocumentAbsoluteUrl($platformLogos->first());
+            }
+        } else {
+            //unauthenticated: employees_file_view requires IS_AUTHENTICATED_FULLY,
+            //serve through the public employees_platform_logo route instead.
+            //No public high-res route: leave highRes null so srcset doesn't advertise the regular logo as 2x
+            $platformLogoPath = $userSecUtil->getPlatformLogoNotAuth();
         }
         if ($highResPlatformLogoPath && $scheme) {
             //$highResPlatformLogoPath = preg_replace('/^https?:\/\//', '//', $highResPlatformLogoPath);
@@ -123,6 +131,7 @@ class HomeController extends OrderAbstractController {
             //$platformLogoPath = preg_replace('/^https?:\/\//', '//', $platformLogoPath);
             $platformLogoPath = preg_replace('/^https?:\/\//', $scheme . '://', $platformLogoPath);
         }
+        //exit('$platformLogoPath='.$platformLogoPath.'; $highResPlatformLogoPath='.$highResPlatformLogoPath);
         //$defaultLogoPath = $highResPlatformLogoPath ?? $platformLogoPath;
 
         //echo "mainCommonHomeAction: platformLogoPath=".$platformLogoPath."<br>";

@@ -92,16 +92,12 @@
                 {#>#}
 
                 {#{{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Tenant logo") }}#}
-                {% if app.user %}
+                {#{% if app.user %}#}
                     {#{{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Tenant logo") }}#}
-                {% else %}
-                    {% set platformLogo = user_security_utility.getPlatformLogoNotAuth() %}
-                    {% set highResPlatformLogoPath = user_security_utility.getPlatformLogoNotAuth() %}
-                    {#{% set height = user_security_utility.getSiteSettingParameter('logoHeight')() %}#}
-                    {#{% set width = user_security_utility.getSiteSettingParameter('logoWidth')() %}#}
-                    {#platformLogo={{ platformLogo }}#}
-                    {#height={{ height }}, width={{ width }}<br>#}
-                {% endif %}
+                {#{% else %}#}
+                    {#{% set platformLogo = user_security_utility.getPlatformLogoNotAuth() %}#}
+                    {#{% set highResPlatformLogoPath = user_security_utility.getPlatformLogoNotAuth() %}#}
+                {#{% endif %}#}
                 {{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Tenant logo") }}
             </p>
         {% else %}
