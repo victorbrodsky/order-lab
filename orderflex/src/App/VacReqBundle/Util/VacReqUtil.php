@@ -2892,6 +2892,8 @@ class VacReqUtil
         //get all user approved vacation requests
         $requestTypeStr = "requestVacation";
 
+        //exit('$subjectRequest->getId()='.$subjectRequest->getId()); //NULL
+
         //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]
         $repository = $this->em->getRepository(VacReqRequest::class);
 
@@ -2906,14 +2908,20 @@ class VacReqUtil
         $dql->andWhere("requestVacation.status = 'approved'");
         //$dql->andWhere("user.id = ".$user->getId());
         $dql->andWhere("user.id = :userId");
-        $dql->andWhere("request.id != :requestId");
+        //new request is not in DB yet (id is NULL): "request.id != NULL" is never true in SQL
+        //and would return no requests, so exclude the subject request only when it is persisted
+        if( $subjectRequest->getId() ) {
+            $dql->andWhere("request.id != :requestId");
+        }
 
         $dql->orderBy('request.id');
 
         $query = $dql->getQuery(); //$query = $this->em->createQuery($dql);
 
         $query->setParameter('userId', $user->getId());
-        $query->setParameter('requestId', $subjectRequest->getId());
+        if( $subjectRequest->getId() ) {
+            $query->setParameter('requestId', $subjectRequest->getId());
+        }
 
         $requests = $query->getResult();
         //EOF get all user approved vacation requests

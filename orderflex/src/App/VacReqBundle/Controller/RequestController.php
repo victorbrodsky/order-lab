@@ -196,8 +196,9 @@ class RequestController extends OrderAbstractController
                 $vacreqUser = $user;
             }
             $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($vacreqUser, $entity); //check for newAction
+            //exit('newAction: count overlappedRequests='.count($overlappedRequests)); //testing
             if (count($overlappedRequests) > 0) {
-                //exit('error: count overlappedRequests='.count($overlappedRequests));
+                //exit('newAction error: count overlappedRequests='.count($overlappedRequests)); //testing
                 //$errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
                 $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true ); //new
                 //echo "new errorMsg=$errorMsg <br>";
@@ -208,6 +209,7 @@ class RequestController extends OrderAbstractController
                 //exit('no overlaps found');
             }
         }
+        //exit('newAction: count overlappedRequests='.count($overlappedRequests)); //testing
 
         //check carry over days validity (all users) and limit (non-admin only)
         //New form
@@ -810,7 +812,7 @@ class RequestController extends OrderAbstractController
 
         if( $form->isSubmitted() && $form->isValid() ) { //edit, review
 
-            //exit("Review request");
+            //exit("Edit/Review request");
 
             /////////////// log status ////////////////////////
             $statusMsg = $entity->getId()." (".$routName.")".": set by user=".$user;
