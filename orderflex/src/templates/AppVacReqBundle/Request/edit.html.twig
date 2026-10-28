@@ -817,17 +817,34 @@
                 var endDate = holder.find('.vacreq-endDate').val();
                 console.log('vacreqDateListener: startDate=('+startDate+')' + ', endDate=('+endDate+')');
 
+                //check the raw values: new Date('') is an (invalid) object and always truthy
+                var hasDates = startDate && endDate;
                 startDate = new Date(startDate);
                 endDate = new Date(endDate);
 
                 //get working days difference
-                if( startDate && endDate ) {
+                if( hasDates ) {
 
                     if( startDate > endDate ) {
                         //e.stopPropagation();
                         //e.preventDefault();
+                        //keep the newly entered date and clear the other one:
+                        //Start Date changed => clear End Date; End Date changed => clear Start Date.
+                        //The datepicker is attached to the .input-group.date holder, not to the input:
+                        //calling datepicker() on the input created a second datepicker (=> duplicate alert).
+                        //Clear before alert, so any re-fired change event sees an empty date and doesn't alert again.
+                        var clearSelector = $(this).hasClass('vacreq-endDate') ? '.vacreq-startDate' : '.vacreq-endDate';
+                        var clearDateInput = holder.find(clearSelector);
+                        var clearDatePicker = clearDateInput.closest('.input-group.date');
+                        if( clearDatePicker.data('datepicker') ) {
+                            clearDatePicker.datepicker('clearDates');
+                        } else {
+                            clearDateInput.val('');
+                        }
+                        holder.find('.warning-holidays').html('').hide();
+                        holder.find('.vacreq-numberOfDays').val(null);
+                        vacreqSetDayWeekTooltip(clearDateInput);
                         alert("The requested End Date cannot precede the Start Date.");
-                        $(this).datepicker('setDate', null);
                         e.stopPropagation();
                         return;
                     }
