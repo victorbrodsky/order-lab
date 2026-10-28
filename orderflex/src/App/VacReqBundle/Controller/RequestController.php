@@ -195,15 +195,18 @@ class RequestController extends OrderAbstractController
             if( !$vacreqUser ) {
                 $vacreqUser = $user;
             }
-            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($vacreqUser, $entity); //check for newAction
+            //$overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($vacreqUser, $entity); //check for newAction
+            //don't allow dates overlapping existing pending or approved business/vacation requests
+            $overlappedRequests = $vacreqUtil->getOverlappedPendingApprovedRequests($vacreqUser, $entity); //check for newAction
             //exit('newAction: count overlappedRequests='.count($overlappedRequests)); //testing
             if (count($overlappedRequests) > 0) {
                 //exit('newAction error: count overlappedRequests='.count($overlappedRequests)); //testing
                 //$errorMsg = 'You provided overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
-                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true ); //new
+                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true, false, null ); //new
                 //echo "new errorMsg=$errorMsg <br>";
-                //$form->addError(new FormError($errorMsg));
-                $form['requestVacation']['startDate']->addError(new FormError($errorMsg));
+                //form level error: the request might have only business or only vacation dates
+                $form->addError(new FormError($errorMsg));
+                //$form['requestVacation']['startDate']->addError(new FormError($errorMsg));
                 //$form['requestVacation']['endDate']->addError(new FormError($errorMsg));
             } else {
                 //exit('no overlaps found');
@@ -752,11 +755,13 @@ class RequestController extends OrderAbstractController
         //$routeName = $request->get('_route');
         if( $entity->getRequestTypeAbbreviation() == "business-vacation" ) {
 
-            $overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity);    //check for editAction
+            //$overlappedRequests = $vacreqUtil->checkRequestForOverlapDates($entity->getUser(), $entity);    //check for editAction
+            //don't allow dates overlapping existing pending or approved business/vacation requests (this request is excluded)
+            $overlappedRequests = $vacreqUtil->getOverlappedPendingApprovedRequests($entity->getUser(), $entity);    //check for editAction
             //echo 'overlappedRequests count='.count($overlappedRequests)."<br>";
             if (count($overlappedRequests) > 0) {
                 //$errorMsg = 'This request has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
-                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true ); //edit, review
+                $errorMsg = $vacreqUtil->getOverlappedMessage( $entity, $overlappedRequests, true, false, null ); //edit, review
                 //echo "edit errorMsg=$errorMsg <br>";
                 //$form['requestVacation']['startDate']->addError(new FormError($errorMsg));
                 //$form['requestVacation']['approverComment']->addError(new FormError($errorMsg));
@@ -2217,6 +2222,59 @@ class RequestController extends OrderAbstractController
         //exit('2');
         return $this->redirectToRoute('vacreq_incomingrequests');
     }
+    /**
+     * Used on new/edit page on 'Submit'/'Update' click: check if the entered business/vacation dates
+     * overlap existing pending or approved business/vacation requests of the person away.
+     * Dates format: mm/dd/yyyy. requestId is the edited request (excluded), empty for a new request.
+     */
+    #[Route(path: '/check-overlapped-dates-ajax', name: 'vacreq_check_overlapped_dates_ajax', methods: ['GET', 'POST'], options: ['expose' => true])]
+    public function checkOverlappedDatesAjaxAction(Request $request)
+    {
+        if( false == $this->isGranted('ROLE_VACREQ_USER') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $vacreqUtil = $this->container->get('vacreq_util');
+
+        $subjectUserId = $request->get('subjectUserId');
+        $requestId = $request->get('requestId');
+
+        $resArr = array('overlapped' => false, 'errorMsg' => null);
+
+        //person away: the current user, or another user if the current user can submit/review on their behalf
+        $subjectUser = $subjectUserId ? $em->getRepository(User::class)->find($subjectUserId) : $this->getUser();
+        if( !$subjectUser ) {
+            return $this->json($resArr);
+        }
+        if( $subjectUser->getId() != $this->getUser()->getId() &&
+            !$this->isGranted('ROLE_VACREQ_PROXYSUBMITTER') &&
+            !$this->isGranted('ROLE_VACREQ_APPROVER') &&
+            !$this->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+            !$this->isGranted('ROLE_VACREQ_ADMIN')
+        ) {
+            return $this->json($resArr);
+        }
+
+        $subjectRanges = array();
+        foreach( array('Business','Vacation') as $type ) {
+            $startDate = \DateTime::createFromFormat('!m/d/Y', (string)$request->get('startDate'.$type));
+            $endDate = \DateTime::createFromFormat('!m/d/Y', (string)$request->get('endDate'.$type));
+            if( $startDate && $endDate ) {
+                $subjectRanges[] = array('startDate' => $startDate, 'endDate' => $endDate);
+            }
+        }
+
+        $overlappedRequests = $vacreqUtil->getOverlappedRequestsByDateRanges($subjectUser, $subjectRanges, $requestId ?: null);
+        if( count($overlappedRequests) > 0 ) {
+            $resArr['overlapped'] = true;
+            //relative links rendered as html in the error box
+            $resArr['errorMsg'] = $vacreqUtil->getOverlappedMessage(null, $overlappedRequests, null, false, null);
+        }
+
+        return $this->json($resArr);
+    }
+
     public function findUniqueUserRequests() {
         $em = $this->getDoctrine()->getManager();
         //process.py script: replaced namespace by ::class: ['AppVacReqBundle:VacReqRequest'] by [VacReqRequest::class]

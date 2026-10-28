@@ -50,6 +50,9 @@
         <input type="hidden" id="limitcarryoverdays" value="{{ limitCarryOverDays }}" />
     {% endif %}
     <input type="hidden" id="authuser_id" value="{{app.user.getId()}}" />
+    {#used by the overlapped dates check on Submit/Update: request id (empty for new) and person away (review page has no person away field)#}
+    <input type="hidden" id="vacreq-request-id" value="{{ entity.id }}" />
+    <input type="hidden" id="vacreq-request-user-id" value="{{ entity.user ? entity.user.id : '' }}" />
 
     {% if totalAccruedDays is defined %}
         <input type="hidden" id="totalAccruedDays" value="{{ totalAccruedDays }}" />
@@ -1340,6 +1343,19 @@
                 }
             }
 
+            //check for dates overlapped with existing pending or approved requests of the person away
+            if( !error && (requestB || requestV) ) {
+                var checkRes = checkOverlappedDates(
+                    requestB ? startDateBusiness : null,
+                    requestB ? endDateBusiness : null,
+                    requestV ? startDateVacation : null,
+                    requestV ? endDateVacation : null
+                );
+                if( checkRes && checkRes.overlapped ) {
+                    error = checkRes.errorMsg;
+                }
+            }
+
             //console.log('error='+error);
 
             if( error ) {
@@ -1350,6 +1366,38 @@
             }
 
             $('#vacreq-request-form').submit();
+        }
+
+        //synchronous ajax check (same pattern as checkExistedFloatingDay):
+        //returns {overlapped: bool, errorMsg: string} or null on ajax failure (server-side check still applies on submit)
+        function checkOverlappedDates( startDateBusiness, endDateBusiness, startDateVacation, endDateVacation ) {
+            var subjectUserId = null;
+            var personAwayData = $('.vacreq-person-away').length ? $('.vacreq-person-away').select2('data') : null;
+            if( personAwayData && personAwayData.id ) {
+                subjectUserId = personAwayData.id;
+            } else {
+                subjectUserId = $('#vacreq-request-user-id').val();
+            }
+
+            var resData = null;
+            var url = Routing.generate('vacreq_check_overlapped_dates_ajax');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                dataType: 'json',
+                async: false,
+                data: {
+                    subjectUserId: subjectUserId,
+                    requestId: $('#vacreq-request-id').val(),
+                    startDateBusiness: startDateBusiness,
+                    endDateBusiness: endDateBusiness,
+                    startDateVacation: startDateVacation,
+                    endDateVacation: endDateVacation
+                }
+            }).done(function(data) {
+                resData = data;
+            });
+            return resData;
         }
 
         function vacreqSetDefaultInformUsersListener() {

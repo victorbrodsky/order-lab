@@ -2965,6 +2965,109 @@ class VacReqUtil
         }//foreach requests
         return $overlappedRequests;
     }
+    /**
+     * Pending or approved business/vacation requests of the user overlapping any date range
+     * (business and/or vacation) of the subject request. Used on submit of new/edit requests.
+     *
+     * @param \App\UserdirectoryBundle\Entity\User $user person away
+     * @param VacReqRequest $subjectRequest new (not persisted) or edited request
+     * @param array $statusArr sub-request statuses to check
+     * @return VacReqRequest[]
+     */
+    public function getOverlappedPendingApprovedRequests( $user, $subjectRequest, $statusArr=array('pending','approved') ) {
+        return $this->getOverlappedRequestsByDateRanges(
+            $user,
+            $this->getRequestDateRanges($subjectRequest),
+            $subjectRequest->getId(),
+            $statusArr
+        );
+    }
+
+    /**
+     * @param \App\UserdirectoryBundle\Entity\User $user person away
+     * @param array $subjectRanges array of array('startDate'=>\DateTime,'endDate'=>\DateTime)
+     * @param int|null $excludeRequestId subject request id (NULL for a new request)
+     * @param array $statusArr sub-request statuses to check
+     * @return VacReqRequest[]
+     */
+    public function getOverlappedRequestsByDateRanges( $user, $subjectRanges, $excludeRequestId=null, $statusArr=array('pending','approved') ) {
+        $overlappedRequests = array();
+        if( !$user || !$user->getId() || count($subjectRanges) == 0 ) {
+            return $overlappedRequests;
+        }
+
+        $dql = $this->em->getRepository(VacReqRequest::class)->createQueryBuilder("request");
+        $dql->select('request');
+        $dql->leftJoin("request.user", "user");
+        $dql->leftJoin("request.requestType", "requestType");
+        $dql->leftJoin("request.requestBusiness", "requestBusiness");
+        $dql->leftJoin("request.requestVacation", "requestVacation");
+        $dql->where("requestType.abbreviation = 'business-vacation'");
+        $dql->andWhere("user.id = :userId");
+        $dql->andWhere("requestBusiness.status IN (:statusArr) OR requestVacation.status IN (:statusArr)");
+        //new request is not in DB yet (id is NULL): "request.id != NULL" would return nothing
+        if( $excludeRequestId ) {
+            $dql->andWhere("request.id != :requestId");
+        }
+        $dql->orderBy('request.id');
+
+        $query = $dql->getQuery();
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('statusArr', $statusArr);
+        if( $excludeRequestId ) {
+            $query->setParameter('requestId', $excludeRequestId);
+        }
+
+        foreach( $query->getResult() as $request ) {
+            //compare only the sub-requests (business/vacation) having the checked status
+            foreach( $this->getRequestDateRanges($request, $statusArr) as $range ) {
+                foreach( $subjectRanges as $subjectRange ) {
+                    if( $this->isDateRangesOverlapped($range, $subjectRange) ) {
+                        $overlappedRequests[$request->getId()] = $request;
+                        continue 3;
+                    }
+                }
+            }
+        }
+
+        return array_values($overlappedRequests);
+    }
+
+    /**
+     * Date ranges of the business and vacation sub-requests having both start and end dates.
+     *
+     * @param VacReqRequest $request
+     * @param array|null $statusArr if set, include only sub-requests with one of these statuses
+     * @return array array of array('startDate'=>\DateTime,'endDate'=>\DateTime)
+     */
+    public function getRequestDateRanges( $request, $statusArr=null ) {
+        $subRequests = array();
+        if( $request->hasBusinessRequest() ) {
+            $subRequests[] = $request->getRequestBusiness();
+        }
+        if( $request->hasVacationRequest() ) {
+            $subRequests[] = $request->getRequestVacation();
+        }
+
+        $ranges = array();
+        foreach( $subRequests as $subRequest ) {
+            if( $statusArr && !in_array($subRequest->getStatus(), $statusArr) ) {
+                continue;
+            }
+            $ranges[] = array('startDate'=>$subRequest->getStartDate(), 'endDate'=>$subRequest->getEndDate());
+        }
+        return $ranges;
+    }
+
+    //overlap condition: (StartA <= EndB) and (StartB <= EndA); compare by day only
+    public function isDateRangesOverlapped( $rangeA, $rangeB ) {
+        $startA = $rangeA['startDate']->format('Y-m-d');
+        $endA = $rangeA['endDate']->format('Y-m-d');
+        $startB = $rangeB['startDate']->format('Y-m-d');
+        $endB = $rangeB['endDate']->format('Y-m-d');
+        return $startA <= $endB && $startB <= $endA;
+    }
+
     public function hasOverlappedExactly( $subjectRequest, $overlappedRequests ) {
         $requestTypeStr = "requestVacation";
         $subjectDateRange = $subjectRequest->getFinalStartEndDates($requestTypeStr);
@@ -2993,7 +3096,8 @@ class VacReqUtil
         }
         return false;
     }
-    public function getOverlappedMessage( $subjectRequest, $overlappedRequests, $absolute=null, $short=false ) {
+    //$requestTypeStr: 'requestVacation' (default) - show vacation dates; null - show combined business/vacation dates
+    public function getOverlappedMessage( $subjectRequest, $overlappedRequests, $absolute=null, $short=false, $requestTypeStr='requestVacation' ) {
         //$errorMsg = 'This request ID #'.$entity->getId().' has overlapped vacation date range with a previous approved vacation request(s) with ID #' . implode(',', $overlappedRequestIds);
         $errorMsg = null;
         //Your request includes dates (MM/DD/YYYY, MM/DD/YYYY, MM/DD/YYYY) already covered by your previous request(s) (Request ID LINK #1, Request ID LINK #2, Request ID LINK #3). Please exclude these dates from this request before re-submitting.
@@ -3003,8 +3107,10 @@ class VacReqUtil
             foreach( $overlappedRequests as $overlappedRequest ) {
                 //echo "overlapped re id=".$overlappedRequest->getId()."<br>";
 
-                $finalDates = $overlappedRequest->getFinalStartEndDates('requestVacation');
-                $dates[] = $finalDates['startDate']->format('m/d/Y')."-".$finalDates['endDate']->format('m/d/Y');
+                $finalDates = $overlappedRequest->getFinalStartEndDates($requestTypeStr);
+                if( !empty($finalDates['startDate']) && !empty($finalDates['endDate']) ) {
+                    $dates[] = $finalDates['startDate']->format('m/d/Y')."-".$finalDates['endDate']->format('m/d/Y');
+                }
 
                 if( $absolute ) {
                     $absoluteFlag = UrlGeneratorInterface::ABSOLUTE_URL;
@@ -3019,10 +3125,14 @@ class VacReqUtil
                     $absoluteFlag
                     //UrlGeneratorInterface::ABSOLUTE_URL
                 );
+                $vacreqStatus = $overlappedRequest->getStatus(); //getStatusStr
+                if( $vacreqStatus ) {
+                    $vacreqStatus = ucfirst($vacreqStatus).' ';
+                }
                 if( $absolute ) {
-                    $href = 'Request ID '.$overlappedRequest->getId()." ".$link;
+                    $href = $vacreqStatus . 'Request ID '.$overlappedRequest->getId()." ".$link;
                 } else {
-                    $href = '<a href="'.$link.'">Request ID '.$overlappedRequest->getId().'</a>';
+                    $href = '<a href="'.$link.'">'.$vacreqStatus.'Request ID '.$overlappedRequest->getId().'</a>';
                 }
 
                 $hrefs[] = $href;
