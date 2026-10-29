@@ -108,28 +108,11 @@ class SignUpController extends OrderAbstractController
                 }
             }
 
-            $passwordErrorCount = 0;
-            if( !$password ) {
-                $passwordErrorCount++;
-            } else {
-                //length
-                if( strlen((string)$password) < '8' || strlen((string)$password) > '25' ) {
-                    $passwordErrorCount++;
-                }
-                if( preg_match('/[A-Za-z]/', $password) && preg_match('/[0-9]/', $password) ) {
-                    //echo 'Contains at least one letter and one number';
-                } else {
-                    //echo "No letter or number <br>";
-                    $passwordErrorCount++;
-                }
-            }
-            if( $passwordErrorCount > 0 ) {
-                //echo "email error: $passwordErrorCount<br>";
-                $passwordError = "Please make sure your password is between 8 and 25 characters and ".
-                    "contains at least one letter and at least one number.";
-                $form->get('hashPassword')->addError(new FormError($passwordError));
-            }
+            //Sequential checks: 1) user name (format, then taken), 2) password requirements, 3) email.
+            //Stop at the first failed check and show only its error.
+            $hasError = false;
 
+            //1) user name
             $usernameErrorCount = 0;
             if( !$signUp->getUserName() ) {
                 $usernameErrorCount++;
@@ -144,9 +127,50 @@ class SignUpController extends OrderAbstractController
             if( $usernameErrorCount > 0 ) {
                 $usernameError = "Please make sure your user name contains at least 4 and at most 25 characters and does not contain empty spaces.";
                 $form->get('userName')->addError(new FormError($usernameError));
+                $hasError = true;
             }
 
-            if( !$signUp->getEmail() ) {
+            if( !$hasError ) {
+                //When the user clicks “Sign Up”, search for matching existing user names
+                // in the user table; if the user name is taken, show a red well stating
+                // “This user name appears to be taken. Please choose another one.”
+                $userDb = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($signUp->getUserName());
+                if( $userDb ) {
+                    $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
+                    $hasError = true;
+                }
+            }
+
+            //2) password requirements
+            if( !$hasError ) {
+                $passwordErrorCount = 0;
+                if( !$password ) {
+                    $passwordErrorCount++;
+                } else {
+                    //length
+                    if( strlen((string)$password) < '8' || strlen((string)$password) > '25' ) {
+                        $passwordErrorCount++;
+                    }
+                    if( preg_match('/[A-Za-z]/', $password) && preg_match('/[0-9]/', $password) ) {
+                        //echo 'Contains at least one letter and one number';
+                    } else {
+                        //echo "No letter or number <br>";
+                        $passwordErrorCount++;
+                    }
+                }
+                if( $passwordErrorCount > 0 ) {
+                    //echo "email error: $passwordErrorCount<br>";
+                    $passwordError = "Please make sure your password is between 8 and 25 characters and ".
+                        "contains at least one letter and at least one number.";
+                    $form->get('hashPassword')->addError(new FormError($passwordError));
+                    $hasError = true;
+                }
+            }
+
+            //3) email (institutional, pending sign up, associated with another user)
+            if( $hasError ) {
+                //skip email checks: a previous check failed
+            } elseif( !$signUp->getEmail() ) {
                 //$form->get('email')->addError(new FormError('The email value should not be blank.')); validation is done in DB level
             } else {
                 $emailHasError = false;
@@ -210,7 +234,14 @@ class SignUpController extends OrderAbstractController
                     //echo "usersDb=".count($userDbs)."<br>";
                     if (count($userDbs) > 0) {
                         $userDb = $userDbs[0];
-                        if ($userDb->getLocked()) {
+                        //echo "userDb=".$userDb->getCleanUsername()."<br>";
+                        if(
+                            $signUp &&
+                            mb_strtolower((string)$signUp->getUserName()) ===
+                            mb_strtolower($userDb->getCleanUsername()) &&
+                            $userDb->getLocked() === true
+                        ) {
+                            //sign up
                             $emailError = "Your account is currently locked and you will not be able to log in until" .
                                 " you contact the system administrator at " . $systemEmail . ".";
                         } else {
@@ -228,7 +259,7 @@ class SignUpController extends OrderAbstractController
                             );
                             $resetUrl = '<a href="' . $resetUrl . '">visit this page to receive an email with the password reset link</a>';
 
-                            $emailError = "The email you entered has already been associated with an existing user account." .
+                            $emailError = "The email you entered or email associated with the username has already been associated with an existing user account." .
                                 " Either enter a different email address to continue signing up for a new account," .
                                 " or " . $orderUrl . " using the user name and password of the existing account." .
                                 " If you do not recall the user name and password associated with the existing account," .
@@ -239,16 +270,6 @@ class SignUpController extends OrderAbstractController
                     }
                 }
 
-            }
-
-            if( $signUp->getUserName() && $usernameErrorCount == 0 ) {
-                //When the user clicks “Sign Up”, search for matching existing user names
-                // in the user table; if the user name is taken, show a red well stating
-                // “This user name appears to be taken. Please choose another one.”
-                $userDb = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($signUp->getUserName());
-                if( $userDb ) {
-                    $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
-                }
             }
 
         }//if submitted
