@@ -244,8 +244,11 @@
             ? ctpSiteParameter.getNavbarButtonTitle()
             : 'Path2Path Dashboard'
         %}
-        {% set logoTopText = (ctpSiteParameter and ctpSiteParameter.getLogoTopText()) ? ctpSiteParameter.getLogoTopText() : 'Weill Cornell' %}
-        {% set logoBottomText = (ctpSiteParameter and ctpSiteParameter.getLogoBottomText()) ? ctpSiteParameter.getLogoBottomText() : 'Medicine' %}
+        {#{% set logoTopText = (ctpSiteParameter and ctpSiteParameter.getLogoTopText()) ? ctpSiteParameter.getLogoTopText() : 'Weill Cornell' %}#}
+        {% set logoTopText = (ctpSiteParameter and ctpSiteParameter.getLogoTopText()) ? ctpSiteParameter.getLogoTopText() : null %}
+        {#{% set logoBottomText = (ctpSiteParameter and ctpSiteParameter.getLogoBottomText()) ? ctpSiteParameter.getLogoBottomText() : 'Medicine' %}#}
+        {% set logoBottomText = (ctpSiteParameter and ctpSiteParameter.getLogoBottomText()) ? ctpSiteParameter.getLogoBottomText() : null %}
+        {#don't show overlay if texts are not provided#}
         {% set hasLogoTextOverlay = logoTopText or logoBottomText %}
         {% set logoTopTextColor = (ctpSiteParameter and ctpSiteParameter.getLogoTopTextColor()) ? ctpSiteParameter.getLogoTopTextColor() : '#b31b1b' %}
         {% set logoBottomTextColor = (ctpSiteParameter and ctpSiteParameter.getLogoBottomTextColor()) ? ctpSiteParameter.getLogoBottomTextColor() : '#ff6a00' %}
@@ -267,6 +270,7 @@
                             {#<img src="/orderassets/AppCtpBundle/ctp_site/localhost_3000/wcm-logo.png" alt="Weill Cornell Medicine" class="h-10 w-auto"/>#}
                         {% endif %}
 
+                        {#{% set hasLogoTextOverlay = null %}#}
                         <div class="ctp-logo-map">
                             <img src="{{ ctpLogoPath }}" alt="Weill Cornell Medicine" class="ctp-logo-map-image"/>
                             {% if hasLogoTextOverlay %}

@@ -1,3 +1,14 @@
+ssh -L 3000:localhost:3000 USER_NAME@157.139.226.86
+If you need to boot the site yourself,
+just nav to my site root in the path2path folder (/home/djp2002/path2path) and run the command
+"npm run dev";
+then you can view on localhost:3000
+And then navigate to localhost:3000 on your local browser
+find folder: find / -type d -iname "path2path" 2>/dev/null
+
+
+
+
 Department *
 
 Background * (match to the existing field "Brief Description:")
@@ -113,3 +124,18 @@ Phone
 
 External Collaboration Project Inquiry -> sync to: https://view.med.cornell.edu
 
+
+CTP ticket:
+https://github.com/victorbrodsky/path2path/issues/1
+Oleg fixed the first 97 them, and then I tested them.
+The last 4 issues in that ticket - #98, #99, #100, #101 - have to do with making the tabs on the
+Spore biomarkers and outcomes pages functional, making the “Filters” button on the
+Spore homepage functional (if it is functional in your prototype), and updating links on the Login page.
+
+Status:
+101- On the Login page https://view.online/c/wcm/pathology/center-for-translational-pathology/login :
+A- Make the text "Sign Up | Request an account to access specific data" into two separate functional
+links to enable the user to sign up and to submit an account request.
+Verify above functionality!
+
+106- Add new fields on CTP site settings for:
