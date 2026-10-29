@@ -781,7 +781,7 @@ class SignUpController extends OrderAbstractController
         }
         //exit('new');
 
-        return $this->render('AppUserdirectoryBundle/SignUp/activation.html.twig', array(
+        return $this->render($this->getActivationTwig(), array(
             'signUp' => $signUp,
             'user' => $user,
             'cycle' => $cycle,
@@ -793,6 +793,11 @@ class SignUpController extends OrderAbstractController
 
 
 
+    }
+
+    //Overridden by CTP sign up controllers: CTP base template renders only block content_ctp
+    public function getActivationTwig() {
+        return 'AppUserdirectoryBundle/SignUp/activation.html.twig';
     }
 
     /**

@@ -50,53 +50,8 @@
 
 {% block content %}
 
-    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
-    {% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
-    {% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
-
-    <h3 class="text-info">Registration Activation for {{ sitenamefull }}</h3>
-
-    <hr>
-
-    {{ form_start(form) }}
-
-        {{ formmacros.simplefield( "User Name:", user.primaryPublicUserId, "", "disabled" ) }}
-
-        {% for info in form.infos %}
-            {{ formmacros.field(info.email,'Email:','readonly') }}
-            {{ formmacros.field(info.firstName) }}
-            {{ formmacros.field(info.lastName) }}
-            {#{{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}#}
-            {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
-            {{ usermacros.mobilePhoneField(info,cycle,"") }}
-
-            {% do info.setRendered %}
-        {% endfor %}
-
-        <div class="user-administrativeTitles-holder">
-            {% for administrativeTitle in form.administrativeTitles %}
-
-                {% if administrativeTitle.name is defined %}
-                    {{ formmacros.field(administrativeTitle.name) }}
-                {% endif %}
-
-                {% if administrativeTitle.institution is defined %}
-                    {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
-                {% endif %}
-
-                {% do administrativeTitle.setRendered %}
-            {% endfor %}
-        </div>
-
-        {% if form.activate is defined %}
-            <p>
-                {{ form_widget(form.activate) }}
-            </p>
-        {% endif %}
-
-    {{ form_end(form) }}
-    {#{{ form_end(form,{'render_rest': false}) }}#}
-
+    {#CTP sites use AppCtpBundle/SignUp/activation.html.twig (CTP base renders only block content_ctp)#}
+    {% include 'AppUserdirectoryBundle/SignUp/activation_content.html.twig' %}
 
 {% endblock %}
 

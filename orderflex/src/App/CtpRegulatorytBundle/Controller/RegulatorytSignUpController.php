@@ -55,6 +55,9 @@ class RegulatorytSignUpController extends SignUpController
     {
         return parent::activateAccountAction($request,$tokenStorage,$registrationLinkID);
     }
+    public function getActivationTwig() {
+        return 'AppCtpBundle/SignUp/activation.html.twig';
+    }
 
     /**
      * Finds and displays a signUp entity.

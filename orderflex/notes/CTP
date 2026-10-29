@@ -138,4 +138,6 @@ A- Make the text "Sign Up | Request an account to access specific data" into two
 links to enable the user to sign up and to submit an account request.
 Verify above functionality!
 
-106- Add new fields on CTP site settings for:
+Error:
+Please visit the following link to activate your account or copy/paste it into your browser’s address bar - no content
+http://127.0.0.1/directory/activate-account/3740a0f6a5c53499486bd4beee5a1584

@@ -1,0 +1,70 @@
+{#
+    Copyright 2018 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{#Shared activation form markup: included by AppUserdirectoryBundle/SignUp/activation.html.twig and AppCtpBundle/SignUp/activation.html.twig#}
+
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+{% import "AppUserdirectoryBundle/Default/usermacros.html.twig" as usermacros %}
+{% import "AppUserdirectoryBundle/Tree/treemacros.html.twig" as treemacros %}
+
+<h3 class="text-info">Registration Activation for {{ sitenamefull }}</h3>
+
+<hr>
+
+{{ form_start(form) }}
+
+    {{ formmacros.simplefield( "User Name:", user.primaryPublicUserId, "", "disabled" ) }}
+
+    {% for info in form.infos %}
+        {{ formmacros.field(info.email,'Email:','readonly') }}
+        {{ formmacros.field(info.firstName) }}
+        {{ formmacros.field(info.lastName) }}
+        {#{{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}#}
+        {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+        {{ usermacros.mobilePhoneField(info,cycle,"") }}
+
+        {% do info.setRendered %}
+    {% endfor %}
+
+    <div class="user-administrativeTitles-holder">
+        {% for administrativeTitle in form.administrativeTitles %}
+
+            {#BaseTitleType maps a hidden 'id' field: it must be submitted, otherwise setRendered below
+              skips it and the empty value sets the persisted title id to NULL (not-null violation on update)#}
+            {% if administrativeTitle.id is defined %}
+                {{ form_widget(administrativeTitle.id) }}
+            {% endif %}
+
+            {% if administrativeTitle.name is defined %}
+                {{ formmacros.field(administrativeTitle.name) }}
+            {% endif %}
+
+            {% if administrativeTitle.institution is defined %}
+                {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
+            {% endif %}
+
+            {% do administrativeTitle.setRendered %}
+        {% endfor %}
+    </div>
+
+    {% if form.activate is defined %}
+        <p class="text-center">
+            {{ form_widget(form.activate) }}
+        </p>
+    {% endif %}
+
+{{ form_end(form) }}
+{#{{ form_end(form,{'render_rest': false}) }}#}
