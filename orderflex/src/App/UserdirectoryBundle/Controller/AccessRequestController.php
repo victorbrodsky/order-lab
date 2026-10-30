@@ -559,6 +559,11 @@ class AccessRequestController extends OrderAbstractController
             $error = new FormError("Primary Mobile Phone Number is empty");
             $form->get('mobilePhone')->addError($error);
         }
+
+        if( !$accReq->getReason() ) {
+            $error = new FormError("Reason for access request is empty");
+            $form->get('reason')->addError($error);
+        }
         
         if( $form->isSubmitted() && $form->isValid() ) {
             //exit('new access request valid !!!');
@@ -1041,6 +1046,11 @@ class AccessRequestController extends OrderAbstractController
     {
 
         if (false === $this->isGranted($this->roleEditor)) {
+            //exit('accessRequestManagementAction: nopermission');
+            $this->addFlash(
+                'warning',
+                "You do not have permission to manage access requests."
+            );
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 

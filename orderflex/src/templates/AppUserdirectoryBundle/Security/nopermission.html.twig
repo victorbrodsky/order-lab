@@ -72,3 +72,19 @@
     </div>
 
 {% endblock %}
+
+{#CTP sites (ctp, tma, cohortg, regulatoryt, spore): the CTP base renders only block content_ctp and
+  does not render flash messages, so render them here together with the content.
+  Ignored by the other site bases (they don't define content_ctp and render flashes themselves).#}
+{% block content_ctp %}
+    <div class="mx-auto max-w-4xl px-4 py-8 text-center">
+        {% for flashMessage in app.flashes('notice') %}
+            <div class="flash-notice" align="center">{{ flashMessage|raw }}</div>
+        {% endfor %}
+        {% for flashMessage in app.flashes('warning') %}
+            <p class="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-red-700" align="center">{{ flashMessage|raw }}</p>
+        {% endfor %}
+
+        {{ block('content') }}
+    </div>
+{% endblock %}

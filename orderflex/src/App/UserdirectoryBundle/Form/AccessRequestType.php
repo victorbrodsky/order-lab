@@ -164,7 +164,7 @@ class AccessRequestType extends AbstractType
         
         $builder->add('reason', TextareaType::class, array(
             'label'=>'Reason for access request:',
-            'required'=> false,
+            'required'=> true,
             'attr' => array('class'=>'textarea form-control'),
         ));
 
