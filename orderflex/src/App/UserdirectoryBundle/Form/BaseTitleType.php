@@ -75,7 +75,17 @@ class BaseTitleType extends AbstractType
             $hasRoleSimpleView = $this->params['container']->get('user_utility')->getLoggedinUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
 
-        $builder->add('id',HiddenType::class,array('label'=>false));
+        //Not mapped: a missing/empty submitted id must not call setId(null) on a persisted title
+        //(not-null violation on update). Ids are assigned by the sequence; rows are matched by collection index.
+        $builder->add('id',HiddenType::class,array('label'=>false, 'mapped'=>false));
+        //unmapped fields are not populated from the entity: keep rendering the real id in the hidden input.
+        //POST_SET_DATA: on PRE_SET_DATA the data mapper would afterwards reset the unmapped child to null
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+            $title = $event->getData();
+            if( $title && $title->getId() ) {
+                $event->getForm()->get('id')->setData($title->getId());
+            }
+        });
 
 //        $builder->add( 'name', 'text', array(
 //            'label'=>$this->params['label'].' Title:',   //'Admnistrative Title:',

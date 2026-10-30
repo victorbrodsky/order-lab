@@ -117,7 +117,15 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         );
 
         //invalidate_session manually
+        //invalidate() also wipes the flash bag: keep pending flash messages (i.e. "Your account has been
+        // successfully activated. Please re-login." added before redirecting to logout) for the login page
+        $pendingFlashes = $session->getFlashBag()->all();
         $session->invalidate(); //auto loggout flashbag message not display
+        foreach( $pendingFlashes as $type => $messages ) {
+            foreach( $messages as $message ) {
+                $session->getFlashBag()->add($type, $message);
+            }
+        }
         $userSecUtil->userLogout($sitename);
 
         //samlLogout will redirect by $auth->logout(); to $sitename homepage
