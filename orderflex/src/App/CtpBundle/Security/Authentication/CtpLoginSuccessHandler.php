@@ -50,7 +50,7 @@ class CtpLoginSuccessHandler extends LoginSuccessHandler {
         parent::__construct($container,$em,$security);
 
         $this->siteName = $container->getParameter('ctp.sitename');
-        $this->siteNameStr = 'Critical Result Notification';
+        $this->siteNameStr = 'Center for Translational Pathology';
         $this->roleBanned = 'ROLE_CTP_BANNED';
         $this->roleUser = 'ROLE_CTP_USER';
         $this->roleUnapproved = 'ROLE_CTP_UNAPPROVED';

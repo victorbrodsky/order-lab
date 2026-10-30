@@ -176,6 +176,11 @@ class UserRequestController extends OrderAbstractController
             $form->get('requestedInstitutionScope')->addError($error);
         }
 
+        if( !$entity->getRequest() ) {
+            $error = new FormError("Reason for account request is empty");
+            $form->get('request')->addError($error);
+        }
+
         if( !$entity->getName() ) {
             $error = new FormError("Last Name is empty");
             $form->get('name')->addError($error);
@@ -376,6 +381,8 @@ class UserRequestController extends OrderAbstractController
 
     /**
      * Update (Approve) a new UserRequest entity.
+     * This is a request from a user to create an account on their behalf ->
+     * admin must create a user account manually and set permissions for this account.
      */
     #[Route(path: '/account-requests-approve', name: 'employees_accountrequest_approve', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
@@ -394,16 +401,23 @@ class UserRequestController extends OrderAbstractController
         $form = $this->createForm(UserRequestApproveType::class,$entity,array('form_custom_value'=>$params));
         $form->handleRequest($request);
 
+        //$entity is a new UserRequest populated only with the approve form fields (id, username, roles...).
+        //requestedInstitutionScope is not in the approve form: read it from the stored request
+        $storedEntity = null;
+        if( $entity->getId() ) {
+            $storedEntity = $em->getRepository(UserRequest::class)->findOneById($entity->getId());
+        }
+        $requestedInstitutionScope = $storedEntity ? $storedEntity->getRequestedInstitutionScope() : null;
+
+        //exit('sitename='.$entity->getSiteName());
         if( $entity->getSiteName() == "scan" ) {
             //Case 1: scan order with pacsvendor user
-            if ($entity->getId() &&
-                $entity->getId() != "" &&
-                $entity->getUsername() &&
-                $entity->getUsername() != "" &&
+            if ($entity->getId() && $entity->getId() != "" &&
+                //$entity->getUsername() &&
+                //$entity->getUsername() != "" &&
                 //count($entity->getRequestedInstitutionalPHIScope()) != 0 &&
                 //$entity->getRequestedScanOrderInstitutionScope() &&
-                $entity->getRequestedInstitutionScope() &&
-                $entity->getUsername()
+                $requestedInstitutionScope
             ) {
 
 //            echo "form valid!";
@@ -416,10 +430,11 @@ class UserRequestController extends OrderAbstractController
                 }
 
                 $entityDb->setStatus('approved');
-                $entityDb->setUsername($entity->getUsername());
+                $entityDb->setUsername($entity->getUsernameCollective());
                 //$entityDb->setRequestedInstitutionalPHIScope($entity->getRequestedInstitutionalPHIScope());
                 //$entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
-                $entityDb->setRequestedInstitutionScope($entity->getRequestedInstitutionScope());
+                //keep the stored requestedInstitutionScope: the approve form does not submit it (would set NULL)
+                //$entityDb->setRequestedInstitutionScope($entity->getRequestedInstitutionScope());
 
                 $em->persist($entityDb);
                 $em->flush();
@@ -452,33 +467,40 @@ class UserRequestController extends OrderAbstractController
 
                 $this->addFlash(
                     'notice',
-                    "Approve a user with username " . $entity->getUsername() . " failed." . " " . implode(",", $failedArr)
+                    "Scan: Approve a user with username " . $entity->getUsername() . " failed." . " " . implode(",", $failedArr)
                 );
 
             }
         } else {
+            //dump($entity);
+            //exit(
+            //    'ID='.$entity->getId().
+            //    "; RequestedInstitutionScope=[".$requestedInstitutionScope."]".
+            //    "; roles=[".count($entity->getRoles())."]" );
             //Case 2: all other sites, except scan
             if ($entity->getId() &&
                 $entity->getId() != "" &&
                 //$entity->getRequestedScanOrderInstitutionScope() &&
-                $entity->getRequestedInstitutionScope() &&
+                //$entity->getRequestedInstitutionScope() &&
                 count($entity->getRoles()) > 0
             ) {
                 //exit('Approve ');
 
-        //process.py script: replaced namespace by ::class: ['AppUserdirectoryBundle:UserRequest'] by [UserRequest::class]
                 $entityDb = $em->getRepository(UserRequest::class)->findOneById($entity->getId());
                 if (!$entityDb) {
                     throw $this->createNotFoundException('Unable to find UserRequest entity with ID:' . $entity->getId());
                 }
+                //dump($entityDb);
+                //exit('111');
 
                 $entityDb->setStatus('approved');
-                if( $entity->getUsername() ) {
-                    $entityDb->setUsername($entity->getUsername());
+                if( $entity->getUsernameCollective() ) {
+                    $entityDb->setUsername($entity->getUsernameCollective());
                 }
 
                 //$entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
-                $entityDb->setRequestedInstitutionScope($entity->getRequestedInstitutionScope());
+                //keep the stored requestedInstitutionScope: the approve form does not submit it (would set NULL)
+                //$entityDb->setRequestedInstitutionScope($entity->getRequestedInstitutionScope());
 
                 if( count($entity->getRoles()) > 0 ) {
                     $entityDb->setRoles( $entity->getRoles() );

@@ -511,7 +511,14 @@ class CustomGuardAuthenticator extends AbstractAuthenticator
     
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) : ?Response
     {
-        $authenticationSuccess = $this->container->get('employees_authentication_handler');
+        //use the site specific handler (as onAuthenticationSuccess) so the user is redirected back to
+        //the login page of the site he tried to log in (i.e. ctp_login), not to employees_login
+        $sitename = $this->sitename ?: $request->request->get('_sitename');
+        $handlerName = 'employees_authentication_handler';
+        if( $sitename && $this->container->has($sitename.'_authentication_handler') ) {
+            $handlerName = $sitename.'_authentication_handler';
+        }
+        $authenticationSuccess = $this->container->get($handlerName);
         return $authenticationSuccess->onAuthenticationFailure($request,$exception);
     }
 

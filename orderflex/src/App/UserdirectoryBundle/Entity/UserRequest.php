@@ -525,6 +525,11 @@ class UserRequest
         return $this->username;
     }
 
+    public function getUsernameCollective()
+    {
+        return $this->getFirstName() . " " . $this->getName();
+    }
+
     /**
      * @return mixed
      */
