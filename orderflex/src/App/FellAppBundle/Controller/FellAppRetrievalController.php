@@ -158,7 +158,7 @@ class FellAppRetrievalController extends OrderAbstractController
         if( empty($fellapps) ) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'No new FellowshipApplications found with ID > ' . $maxId
+                'message' => 'No new active FellowshipApplications found with remote ID > ' . $maxId
             ], 404);
         }
 
