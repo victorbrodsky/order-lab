@@ -1828,7 +1828,7 @@
 
         $(document).ready(function() {
 
-            $('[data-toggle="tooltip"]').tooltip({html: true});
+            $('[data-toggle="tooltip"]').tooltip({html: true, container: 'body'});
 
             //Prevent propagation of the checkbox click to open href in this row
             $('.notificationemail').on('click', function(e) {
@@ -1983,7 +1983,7 @@
 
                 if( tooltipStr ) {
                     this.title = tooltipStr;
-                    $(this).tooltip();
+                    $(this).tooltip({container: 'body'});
                 }
             });
         }
