@@ -184,13 +184,34 @@ class FellAppImportPopulateHubUtil {
             $statusCode = $response->getStatusCode();
 
             if( $statusCode !== 200 ) {
+                //Get the remote server's message from the JSON body, if available
+                $remoteMessage = null;
+                try {
+                    $remoteData = $response->toArray(false);
+                    $remoteMessage = $remoteData['message'] ?? null;
+                } catch( \Exception $e ) {
+                    //Response body is not JSON - ignore
+                }
+
+                //404 with a JSON message means there are no new applications on the remote
+                //server - not an error. A generic 404 (e.g. wrong URL, HTML error page)
+                //has no JSON message and falls through to the error return below.
+                if( $statusCode === 404 && $remoteMessage ) {
+                    return [
+                        'success' => true,
+                        'message' => $remoteMessage,
+                        'status'  => 200
+                    ];
+                }
+
 //                return new JsonResponse([
 //                    'success' => false,
 //                    'message' => 'Remote server returned error: ' . $statusCode
 //                ], 500);
                 return [
                     'success' => false,
-                    'message' => 'Remote server returned error: ' . $statusCode . ", url=$remoteUrl",
+                    'message' => 'Remote server returned error: ' . $statusCode . ", url=$remoteUrl" .
+                        ($remoteMessage ? ' (' . $remoteMessage . ')' : ''),
                     'status'  => 500
                 ];
             }

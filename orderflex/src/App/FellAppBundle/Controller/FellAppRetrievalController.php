@@ -63,7 +63,7 @@ class FellAppRetrievalController extends OrderAbstractController
         //$data = json_decode($response->getContent(), true);
         //redirect to Home page
         $this->addFlash(
-            'notice',
+            $response['success'] ? 'notice' : 'warning',
             $response['message']
         );
         return $this->redirect( $this->generateUrl('fellapp_home') );

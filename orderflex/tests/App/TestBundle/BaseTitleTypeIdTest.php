@@ -39,6 +39,8 @@ class BaseTitleTypeIdTest extends KernelTestCase
      */
     public function testEmptySubmittedIdDoesNotNullPersistedTitleId($formTypeClass, $titleClass, $label, $formname)
     {
+        echo "[BaseTitleType]";
+
         $title = $this->createPersistedTitle($titleClass);
         $form = $this->createTitleForm($formTypeClass, $title, $titleClass, $label, $formname);
 
