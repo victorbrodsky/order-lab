@@ -771,12 +771,32 @@
             <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
-            <div class="col-xs-6 text-center" align="left" style="width: 50px;">
+            <div class="col-xs-6" align="left"{% if not formNode.placeholder %}
+                style="width: 20px;"{% endif %}>
+                {% if formNode.placeholder %}
+                    <div style="width: 20px; display: inline-block; vertical-align: middle;">
+                {% endif %}
                 {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+                {% if formNode.placeholder %}
+                    </div>
+                    <label for="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
+                           style="margin-left: 5px; font-weight: normal;">
+                        {{ formNode.placeholder }}
+                    </label>
+                {% endif %}
             </div>
         </div>
     {% else %}
+        {% if formNode.placeholder %}
+            <div style="width: 20px; display: inline-block; vertical-align: middle;">
+        {% endif %}
         {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+        {% if formNode.placeholder %}
+            </div>
+            <label for="oleg_userdirectorybundle_formnode_{{ formNodeId }}" style="margin-left: 5px; font-weight: normal;">
+                {{ formNode.placeholder }}
+            </label>
+        {% endif %}
     {% endif %}
     </p>
 {% endmacro %}

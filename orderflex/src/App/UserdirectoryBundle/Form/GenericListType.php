@@ -761,7 +761,7 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'form-control', 'style'=>'margin:0')
             ));
             $builder->add('placeholder', TextType::class, array(
-                'label' => 'Placeholder:',
+                'label' => 'Placeholder or the text on the right for a checkbox:',
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));

@@ -2141,6 +2141,13 @@ class FormNodeUtil
             $showLabel = true;
         }
 
+        //placeholder
+        if( array_key_exists('placeholder', $params) ) {
+            $placeholder = $params['placeholder'];
+        } else {
+            $placeholder = null;
+        }
+
         //find by name and by parent ($parent) if exists
         if( $parent ) {
             $mapper = array(
@@ -2188,6 +2195,10 @@ class FormNodeUtil
             //set showLabel
             $node->setShowLabel($showLabel);
 
+            if( $placeholder ) {
+                $node->setPlaceholder($placeholder);
+            }
+
             if( $required && method_exists($node, 'setRequired') ) {
                 $node->setRequired($required);
             }
@@ -2231,6 +2242,11 @@ class FormNodeUtil
 
             //set showLabel
             $node->setShowLabel($showLabel);
+
+            if( $placeholder ) {
+                $node->setPlaceholder($placeholder);
+                $updated = true;
+            }
 
             if( $classNamespace && $className ) {
                 $node->setEntityNamespace($classNamespace);
@@ -4090,6 +4106,7 @@ class FormNodeUtil
             'showLabel' => true,
             'visible' => true,
             'required' => false,
+            'placeholder' => "I understand", //text to the right of the checkbox
         );
         $checkmark = $this->createV2FormNode($formParams);
 
