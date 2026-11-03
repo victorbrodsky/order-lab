@@ -46,11 +46,6 @@
     <div class="panel panel-success">
 
         <div class="panel-heading">
-            {#<h4 class="panel-title">#}
-                {#<a data-toggle="collapse" href="#refauthor">#}
-                    {#Recommendation Letter in PDF format#}
-                {#</a>#}
-            {#</h4>#}
             <h3 class="panel-title">
                 <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
                 Recommendation Letter Received
@@ -214,37 +209,43 @@
     {% if fellappSpecialty %}
         <div class="panel panel-info">
             <div class="panel-heading">
-                <h4 class="panel-title">Application Information</h4>
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#refApplicantPanel">
+                        Application Information
+                    </a>
+                </h4>
             </div>
-            <div class="panel-body text-left">
-                <div class="row withpaddingtop">
-                    <div class="col-xs-6">
-                        {{ formmacros.simplefield_vertical("Applicant First Name:", firstName, "", "disabled") }}
+            <div id="refApplicantPanel" class="panel-collapse collapse in">
+                <div class="panel-body text-left">
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-6">
+                            {{ formmacros.simplefield_vertical("Applicant First Name:", firstName, "", "disabled") }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ formmacros.simplefield_vertical("Applicant Last Name:", lastName, "", "disabled") }}
+                        </div>
                     </div>
-                    <div class="col-xs-6">
-                        {{ formmacros.simplefield_vertical("Applicant Last Name:", lastName, "", "disabled") }}
-                    </div>
-                </div>
 
-                <div class="row withpaddingtop">
-                    <div class="col-xs-6">
-                        {{ formmacros.simplefield_vertical("Applicant E-Mail:", email, "", "disabled") }}
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-6">
+                            {{ formmacros.simplefield_vertical("Applicant E-Mail:", email, "", "disabled") }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ formmacros.simplefield_vertical("Fellowship Type:", fellappSpecialty, "", "disabled") }}
+                        </div>
                     </div>
-                    <div class="col-xs-6">
-                        {{ formmacros.simplefield_vertical("Fellowship Type:", fellappSpecialty, "", "disabled") }}
-                    </div>
-                </div>
 
-                <div class="row withpaddingtop">
-                    <div class="col-xs-6">
-                        {% if fellappStart %}
-                            {{ formmacros.simplefield_vertical("Fellowship Start Date", fellappStart, "", "disabled") }}
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-6">
-                        {% if fellappEnd %}
-                            {{ formmacros.simplefield_vertical("Fellowship End Date", fellappEnd, "", "disabled") }}
-                        {% endif %}
+                    <div class="row withpaddingtop">
+                        <div class="col-xs-6">
+                            {% if fellappStart %}
+                                {{ formmacros.simplefield_vertical("Fellowship Start Date", fellappStart, "", "disabled") }}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-6">
+                            {% if fellappEnd %}
+                                {{ formmacros.simplefield_vertical("Fellowship End Date", fellappEnd, "", "disabled") }}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
