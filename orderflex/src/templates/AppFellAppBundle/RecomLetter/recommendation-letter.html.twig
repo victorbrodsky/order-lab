@@ -42,8 +42,14 @@
 
     <br>
 
+    {% if alreadySubmitted %}
+        {% set panelClass = 'panel-success' %}
+    {% else %}
+        {% set panelClass = 'panel-info' %}
+    {% endif %}
+
     {#<div class="panel panel-info">#}
-    <div class="panel panel-success">
+    <div class="panel {{ panelClass }}">
 
         <div class="panel-heading">
             <h3 class="panel-title">
@@ -51,8 +57,8 @@
                     <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
                     Recommendation Letter Received
                 {% else %}
-                    {#Reference Letter#}
-                    Recommendation Letter in PDF format
+                    Reference Letter
+                    {#Recommendation Letter in PDF format#}
                 {% endif %}
             </h3>
         </div>
