@@ -180,6 +180,7 @@ class FellAppHubRecomLetterController extends ListController
         //show 'Reference letter has been already submitted' only if 5 or more letters have been submitted
         $submittedLetterCount = count($reference->getDocuments());
         $alreadySubmitted = $submittedLetterCount > 0;
+        $submittedLetterCount = 5;
         if( $submittedLetterCount >= 5 ) {
 //            return new JsonResponse([
 //                'success' => false,
