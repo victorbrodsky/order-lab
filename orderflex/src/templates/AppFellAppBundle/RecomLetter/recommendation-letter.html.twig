@@ -47,8 +47,13 @@
 
         <div class="panel-heading">
             <h3 class="panel-title">
-                <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-                Recommendation Letter Received
+                {% if alreadySubmitted %}
+                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                    Recommendation Letter Received
+                {% else %}
+                    {#Reference Letter#}
+                    Recommendation Letter in PDF format
+                {% endif %}
             </h3>
         </div>
 
@@ -69,7 +74,7 @@
                 {% endif %}
                 <p>
                 <div class="well form-element-holder user-Reference">
-                    <label class="col-xs-12 control-label">Reference Letter</label>
+                    <label class="col-xs-12 control-label">Recommendation Letter in PDF format</label>
                     <div class="row withpaddingtop">
                         <div class="col-xs-12">
                             {#{% if reference is defined %}#}
