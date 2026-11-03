@@ -177,7 +177,10 @@ class FellAppHubRecomLetterController extends ListController
             ], 500);
         }
 
-        if( 0 && count($reference->getDocuments()) > 0 ) {
+        //show 'Reference letter has been already submitted' only if 5 or more letters have been submitted
+        $submittedLetterCount = count($reference->getDocuments());
+        $alreadySubmitted = $submittedLetterCount > 0;
+        if( $submittedLetterCount >= 5 ) {
 //            return new JsonResponse([
 //                'success' => false,
 //                'message' => "Reference letter has been already submitted"
@@ -346,7 +349,8 @@ class FellAppHubRecomLetterController extends ListController
             'fellappSpecialty' => $fellappSpecialty,
             'fellappStart' => $fellappStart,
             'fellappEnd' => $fellappEnd,
-            'systemUser' => $systemUser
+            'systemUser' => $systemUser,
+            'alreadySubmitted' => $alreadySubmitted
         );
     }
     //Remote Server: confirmation of recommendation letter submition
@@ -435,30 +439,33 @@ class FellAppHubRecomLetterController extends ListController
                     continue;
                 }
 
-                // Get the most recent document
-                $document = $reference->getRecentReferenceLetter();
-                if (!$document) {
+                // Send all documents of this reference so revised/new letters
+                // are delivered sequentially after the previous letter(s)
+                $documents = $reference->getDocuments();
+                if( count($documents) === 0 ) {
                     $logger->warning("No document found for reference: $hashId");
                     continue;
                 }
 
-                // Get file path
-                $filepath = $document->getFullServerPath();
-                if (!file_exists($filepath)) {
-                    $logger->error("File not found: $filepath");
-                    continue;
+                foreach( $documents as $document ) {
+                    // Get file path
+                    $filepath = $document->getFullServerPath();
+                    if (!file_exists($filepath)) {
+                        $logger->error("File not found: $filepath");
+                        continue;
+                    }
+
+                    // Read and encode file
+                    $fileData = file_get_contents($filepath);
+                    $encodedData = base64_encode($fileData);
+
+                    $letters[] = [
+                        'hashId' => $hashId,
+                        'documentData' => $encodedData,
+                        'filename' => $document->getOriginalname() ?? 'recommendation_letter.pdf',
+                        'hash' => $document->getDocumentHash() ?? hash_file('md5', $filepath)
+                    ];
                 }
-
-                // Read and encode file
-                $fileData = file_get_contents($filepath);
-                $encodedData = base64_encode($fileData);
-
-                $letters[] = [
-                    'hashId' => $hashId,
-                    'documentData' => $encodedData,
-                    'filename' => $document->getOriginalname() ?? 'recommendation_letter.pdf',
-                    'hash' => $document->getDocumentHash() ?? hash_file('md5', $filepath)
-                ];
 
                 // Mark as sent
                 $reference->setRecLetterReceived(true); //Remote Server. setRecLetterReceived(true) on a separate confirmation API call

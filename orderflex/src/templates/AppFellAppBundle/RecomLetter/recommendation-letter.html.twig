@@ -54,6 +54,13 @@
 
         <div id="refauthor" class="panel-collapse collapse in">
             <div class="panel-body">
+                {% if alreadySubmitted %}
+                    <p class="alert alert-info">
+                        This page has already been used to successfully upload a recommendation letter
+                        in support of this candidate's application. If you would like to submit a revised
+                        letter of recommendation, please upload it below.
+                    </p>
+                {% endif %}
                 <p>
                 <div class="well form-element-holder user-Reference">
                     <label class="col-xs-12 control-label">Reference Letter</label>
@@ -260,6 +267,13 @@
             }
             dropzone.parent().tooltip('destroy');
 
+            //Hide previews of previously submitted letters (their hidden inputs
+            //stay in the form so the documents remain attached to the reference).
+            //New uploads create .dz-preview elements after this point and stay visible.
+            {% if alreadySubmitted %}
+                dropzone.find('.dz-preview').hide();
+            {% endif %}
+
             // Cache jQuery selectors for button and message span (available to all callbacks)
             var submitBtn = $('#submit-recommendation-btn');
             var msgSpan = $('#upload-required-msg');
@@ -290,7 +304,7 @@
                     ];
 
                     for (var i = 0; i < selectors.length; i++) {
-                        var count = $(selectors[i]).length;
+                        var count = $(selectors[i]).filter(':visible').length;
                         if (count > 0) {
                             fileCount = count;
                             console.log('Found files using selector:', selectors[i], 'count:', count);
