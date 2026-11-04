@@ -765,41 +765,33 @@
     {% else %}
         {% set requiredClass = "" %}
     {% endif %}
+    {#placeholder is the optional text shown to the right of the checkbox; the checkbox is always rendered#}
+    {% set checkboxPlaceholder = formNode.placeholder|default('') %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
             <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
-            <div class="col-xs-6" align="left"
-                {% if not formNode.placeholder %}
-                    style="width: 20px;"
-                {% endif %}
-            >
-                {% if 1 or formNode.placeholder %}
-                    <div style="width: 20px; display: inline-block; vertical-align: middle;">
-                {% endif %}
-                {#[1checkboxField]#}
-                {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
-                {% if formNode.placeholder %}
-                    </div>
+            <div class="col-xs-6" align="left">
+                <div style="width: 20px; display: inline-block; vertical-align: middle;">
+                    {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+                </div>
+                {% if checkboxPlaceholder %}
                     <label for="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
                            style="margin-left: 5px; font-weight: normal;">
-                        {{ formNode.placeholder }}tttt
+                        {{ checkboxPlaceholder }}
                     </label>
                 {% endif %}
             </div>
         </div>
     {% else %}
-        {% if formNode.placeholder %}
-            <div style="width: 20px; display: inline-block; vertical-align: middle;">
-        {% endif %}
-        {#[2checkboxField]#}
-        {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
-        {% if formNode.placeholder %}
-            </div>
+        <div style="width: 20px; display: inline-block; vertical-align: middle;">
+            {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
+        </div>
+        {% if checkboxPlaceholder %}
             <label for="oleg_userdirectorybundle_formnode_{{ formNodeId }}" style="margin-left: 5px; font-weight: normal;">
-                {{ formNode.placeholder }}
+                {{ checkboxPlaceholder }}
             </label>
         {% endif %}
     {% endif %}
