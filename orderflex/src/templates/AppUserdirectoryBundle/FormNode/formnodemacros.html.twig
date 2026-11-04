@@ -757,7 +757,7 @@
     </div>
 {% endmacro %}
 
-
+{#Use placeholder as a text to the right of the checkbox#}
 {% macro checkboxForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "AppUserdirectoryBundle/FormNode/formnodemacros.html.twig" as formnodemacros %}
     {% if formNode.required %}
@@ -771,17 +771,21 @@
             <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
-            <div class="col-xs-6" align="left"{% if not formNode.placeholder %}
-                style="width: 20px;"{% endif %}>
-                {% if formNode.placeholder %}
+            <div class="col-xs-6" align="left"
+                {% if not formNode.placeholder %}
+                    style="width: 20px;"
+                {% endif %}
+            >
+                {% if 1 or formNode.placeholder %}
                     <div style="width: 20px; display: inline-block; vertical-align: middle;">
                 {% endif %}
+                {#[1checkboxField]#}
                 {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
                 {% if formNode.placeholder %}
                     </div>
                     <label for="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
                            style="margin-left: 5px; font-weight: normal;">
-                        {{ formNode.placeholder }}
+                        {{ formNode.placeholder }}tttt
                     </label>
                 {% endif %}
             </div>
@@ -790,6 +794,7 @@
         {% if formNode.placeholder %}
             <div style="width: 20px; display: inline-block; vertical-align: middle;">
         {% endif %}
+        {#[2checkboxField]#}
         {{ formnodemacros.checkboxField(formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype) }}
         {% if formNode.placeholder %}
             </div>
