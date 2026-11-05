@@ -85,8 +85,7 @@ https://view.online/directory/file-view/15 2x"
 alt="Logo homepage manager" height="180" width="320"
 >
 
-17,18 - to do
-
+17,18 - done
 18- If the user visits the same URL for uploading a recommendation letter
 again after uploading their recommendation letter, show the following message in a yellow well:
 This page has already been used to succesfully upload a recommendation letter ...

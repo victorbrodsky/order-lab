@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -51,12 +52,13 @@ class FeeFilterType extends AbstractType
                 'placeholder'=>"Search by name, description, catalog ..."),
         ));
 
-        $builder->add('feeScheduleVersion', TextType::class, array(
+        $builder->add('feeScheduleVersion', IntegerType::class, array(
             'required' => false,
             'label' => false,
             'attr' => array(
                 'class' => 'form-control form-control-modif limit-font-size submit-on-enter-field',
-                'placeholder'=>"Fee Schedule Version"),
+                'placeholder'=>"Fee Schedule Version",
+                'min' => 0),
         ));
 
 //        if( isset($this->params['specialties']) ) {
