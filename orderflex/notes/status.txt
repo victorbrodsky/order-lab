@@ -90,5 +90,5 @@ alt="Logo homepage manager" height="180" width="320"
 again after uploading their recommendation letter, show the following message in a yellow well:
 This page has already been used to succesfully upload a recommendation letter ...
 
-
+send email for pathology home page access
 

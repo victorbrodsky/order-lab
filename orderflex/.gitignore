@@ -14,9 +14,6 @@
 /backup
 
 /public/bundles/
-
-/notes/status.txt
-
 /public/css/
 /public/js/
 /public/log/
@@ -28,6 +25,7 @@
 !/public/Uploaded/.htaccess
 
 /private/Uploaded/*
+/notes/status.txt
 
 /var/
 /vendor/
