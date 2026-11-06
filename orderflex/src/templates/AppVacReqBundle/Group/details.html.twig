@@ -37,7 +37,7 @@
                 <th>Academic Year</th>
                 <th>Carried Over Vacation Days From Previous Year</th>
                 <th title="Total accrued vacation days for this academic year taking into consideration employment period start/end dates">Accrued Days</th>
-                <th title="Carried Over Days From Previous Year + Accrued Days">Total</th>
+                <th title="Carried Over Days From Previous Year + Accrued Days">Total Available Vacation Days/Year</th>
                 <th title="Total approved Vacation days">Vacation Days Taken</th>
                 <th>Remaining Vacation Days</th>
                 <th>Carried Over Vacation Days To Next Year</th>
@@ -62,16 +62,10 @@
                 {% set nextYearRange = (yearParts[0] + 1) ~ '-' ~ (yearParts[1] + 1) %}
                 {% set carryOverDaysNextYear = vacreq_util.getUserCarryOverDays(subjectUser,nextYearRange) %}
 
-                {% set totalRemainingDaysRes =
-                    vacreq_util.totalVacationRemainingDays(
-                        subjectUser,
-                        null,
-                        vacationDays,
-                        carryOverDaysNextYear,
-                        carryOverDaysPrevYear,
-                        yearRange
-                    )
-                %}
+                {#Remaining days at the end of this academic year = Total Available - Taken.
+                  (totalVacationRemainingDays is NOT used: it also subtracts days carried
+                  over to the next year, which is only meaningful for the current year)#}
+                {% set remainingDays = totalDays - vacationDays %}
 
                 <tr>
                     <td style="background-color: {{ backgroundColor }}">
@@ -93,8 +87,8 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{ totalRemainingDaysRes['numberOfDays'] }}
-                        {% if not totalRemainingDaysRes['accurate'] %}
+                        {{ remainingDays }}
+                        {% if not vacationAccurate %}
                             <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
                         {% endif %}
                     </td>
