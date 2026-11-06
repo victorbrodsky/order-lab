@@ -91,4 +91,5 @@ again after uploading their recommendation letter, show the following message in
 This page has already been used to succesfully upload a recommendation letter ...
 
 send email for pathology home page access
+make details page
 

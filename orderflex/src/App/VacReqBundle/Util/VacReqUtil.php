@@ -1832,8 +1832,10 @@ class VacReqUtil
         $startYear = $endYear - 1;   //previous year start
 
         if( $offset ) {
-            $endYear = $endYear - 1;
-            $startYear = $startYear - 1;
+            //$endYear = $endYear - 1;
+            //$startYear = $startYear - 1;
+            $endYear = $endYear - $offset;
+            $startYear = $startYear - $offset;
         }
 
         if( $centuryToStr ) {
@@ -1845,6 +1847,7 @@ class VacReqUtil
         //echo "previous year=".$year."<br>";
 
         $yearRange = $startYear."-".$endYear;
+        //echo "yearRange=".$yearRange."<br>";
 
         return $yearRange;
     }

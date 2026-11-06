@@ -1974,7 +1974,15 @@ class ApproverController extends OrderAbstractController
         //Current Academic Year - 2
         $yearRanges[] = $this->vacreqUtil->getPreviousAcademicYearRange(1);
 
-        $yearRangesColor = array('#c1e2b3','#d0e9c6','#dff0d8');
+        //Testing ranges
+        //Current Academic Year - 3
+        //$yearRanges[] = $this->vacreqUtil->getPreviousAcademicYearRange(2);
+        //Current Academic Year - 4
+        //$yearRanges[] = $this->vacreqUtil->getPreviousAcademicYearRange(3);
+        //Current Academic Year - 5
+        //$yearRanges[] = $this->vacreqUtil->getPreviousAcademicYearRange(4);
+
+        $yearRangesColor = array('#c1e2b3','#d0e9c6','#dff0d8','#a2b4f4','#b8c7f7', '#cfd9f9');
 
         return array(
             'groupId' => $groupId,
@@ -1989,6 +1997,67 @@ class ApproverController extends OrderAbstractController
             //'totalAllocatedDays' => $totalAllocatedDays, //$this->vacreqUtil->getTotalAccruedDays(),
             'trFontSize' => "10px",
             'fontWeight' => "normal"
+        );
+    }
+
+    /**
+     * Details page for a single user: summary for ALL available academic year ranges
+     * (not only the current year and two previous years as on the summary page)
+     */
+    #[Route(path: '/summary/history/{userId}', name: 'vacreq_summary_history', methods: ['GET'])]
+    #[Template('AppVacReqBundle/Group/details.html.twig')]
+    public function summaryHistoryAction( Request $request, $userId )
+    {
+        if( false == $this->isGranted('ROLE_VACREQ_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $vacreqUtil = $this->container->get('vacreq_util');
+
+        $subjectUser = $em->getRepository(User::class)->find($userId);
+        if( !$subjectUser ) {
+            throw $this->createNotFoundException('Unable to find user by id='.$userId);
+        }
+
+        //Find the earliest request created by this user to determine the first year range
+        $minCreateDate = $em->getRepository(VacReqRequest::class)->createQueryBuilder('r')
+            ->select('MIN(r.createDate)')
+            ->where('r.user = :user OR r.submitter = :user')
+            ->setParameter('user', $subjectUser)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        //Academic year start month (i.e. July for 2026-07-01 in the '2026-2027' range)
+        $dates = $vacreqUtil->getCurrentAcademicYearStartEndDates();
+        $currentStartDateArr = explode("-", $dates['startDate']); //Y-m-d
+        $currentStartYear = intval($currentStartDateArr[0]);
+        $academicStartMonth = intval($currentStartDateArr[1]);
+
+        if( $minCreateDate ) {
+            $minDate = new \DateTime($minCreateDate);
+            $minYear = intval($minDate->format('Y'));
+            $minMonth = intval($minDate->format('m'));
+            //If the request was created before the academic year start month,
+            //it belongs to the previous academic year
+            $earliestStartYear = ($minMonth >= $academicStartMonth) ? $minYear : $minYear - 1;
+        } else {
+            //No requests: show the same ranges as on the summary page
+            $earliestStartYear = $currentStartYear - 2;
+        }
+
+        //All year ranges from the current academic year back to the earliest one
+        $yearRanges = array();
+        for( $startYear = $currentStartYear; $startYear >= $earliestStartYear; $startYear-- ) {
+            $yearRanges[] = $startYear . "-" . ($startYear + 1);
+        }
+
+        $yearRangesColor = array('#c1e2b3','#d0e9c6','#dff0d8','#a2b4f4','#b8c7f7', '#cfd9f9');
+
+        return array(
+            'subjectUser' => $subjectUser,
+            'yearRanges' => $yearRanges,
+            'yearRangesColor' => $yearRangesColor,
         );
     }
 

@@ -347,6 +347,10 @@
 
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li>
+                                <a href="{{ path('vacreq_summary_history', { 'userId': submitter.id }) }}">History</a>
+                            </li>
+
+                            <li>
                                 <a href="{{ path(vacreq_sitename~'_carryover', { 'userId': submitter.id }) }}">Manage carry-over days</a>
                             </li>
 

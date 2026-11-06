@@ -836,15 +836,17 @@ class RequestIndexController extends OrderAbstractController
             //echo "<br>Request Start: getEdgeAcademicYearDate<br>";
             $startAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "Start" );
             $startAcademicYearDate = new \DateTime($startAcademicYearStr);
-            $startAcademicYearDate = $this->convertFromUserTimezonetoUTC($startAcademicYearDate,$currentUser);
+            //start of the academic year day in the user's timezone, converted to UTC
             $startAcademicYearDate->setTime(00, 00, 00);
+            $startAcademicYearDate = $this->convertFromUserTimezonetoUTC($startAcademicYearDate,$currentUser);
             //echo "start year date:".$startAcademicYearDate->format('Y-m-d H:i:s')."<br>";
 
             //echo "<br>Request End: getEdgeAcademicYearDate<br>";
             $endAcademicYearStr = $vacreqUtil->getEdgeAcademicYearDate( $academicYear, "End" );
             $endAcademicYearDate = new \DateTime($endAcademicYearStr);
-            $endAcademicYearDate = $this->convertFromUserTimezonetoUTC($endAcademicYearDate,$currentUser);
+            //end of the academic year day in the user's timezone, converted to UTC
             $endAcademicYearDate->setTime(23, 59, 59);
+            $endAcademicYearDate = $this->convertFromUserTimezonetoUTC($endAcademicYearDate,$currentUser);
             //echo "end year date:".$endAcademicYearDate->format('Y-m-d H:i:s')."<br>";
 
             //requests with firstDayAway or firstDayBackInOffice inside the academic year
@@ -860,8 +862,8 @@ class RequestIndexController extends OrderAbstractController
         if( $startdate ) {
             $dql->andWhere("request.createDate >= :startdate");
 
-            $startdate = $this->convertFromUserTimezonetoUTC($startdate,$currentUser);
             $startdate->setTime(00, 00, 00);
+            $startdate = $this->convertFromUserTimezonetoUTC($startdate,$currentUser);
             $dqlParameters['startdate'] = $startdate;
 
             $filtered = true;
@@ -870,8 +872,8 @@ class RequestIndexController extends OrderAbstractController
         if( $enddate ) {
             $dql->andWhere("request.createDate <= :enddate");
 
-            $enddate = $this->convertFromUserTimezonetoUTC($enddate,$currentUser);
             $enddate->setTime(23, 59, 59);
+            $enddate = $this->convertFromUserTimezonetoUTC($enddate,$currentUser);
             $dqlParameters['enddate'] = $enddate;
 
             $filtered = true;
@@ -967,13 +969,26 @@ class RequestIndexController extends OrderAbstractController
     }
 
     //convert given datetime from user's timezone to UTC. Use UTC in DB query. 12:00 => 17:00 +5
+    //Callers must set the boundary time (i.e. 00:00:00 or 23:59:59) on $datetime
+    //BEFORE calling this function so the boundary is the start/end of the day
+    //in the user's timezone, converted to UTC.
     public function convertFromUserTimezonetoUTC($datetime,$user) {
 
-        //$user_tz = 'America/New_York';
-        $user_tz = $user->getPreferences()->getTimezone();
+        $userServiceUtil = $this->container->get('user_service_utility');
+        //user's timezone preference, or global instanceTimeZone (null-safe)
+        $user_tz = $userServiceUtil->getEffectiveTimezone($user);
+        //echo $user.': $user_tz=['.$user_tz.']<br>';
+
+        $timezone = !empty($user_tz)
+            ? $user_tz
+            : date_default_timezone_get();
 
         //echo "input datetime=".$datetime->format('Y-m-d H:i')."<br>";
-        $datetimeTz = new \DateTime($datetime->format('Y-m-d'), new \DateTimeZone($user_tz) );
+        //$datetimeTz = new \DateTime($datetime->format('Y-m-d'), new \DateTimeZone($user_tz) );
+        $datetimeTz = new \DateTime(
+            $datetime->format('Y-m-d H:i:s'),
+            new \DateTimeZone($timezone)
+        );
         $datetimeUTC = $datetimeTz->setTimeZone(new \DateTimeZone('UTC'));
         //echo "output datetime=".$datetimeUTC->format('Y-m-d H:i')."<br>";
 

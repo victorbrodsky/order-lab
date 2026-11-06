@@ -1,0 +1,140 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppVacReqBundle/Default/base.html.twig" %}
+{% import "AppVacReqBundle/Default/vacreqmacros.html.twig" as vacreqmacros %}
+
+{% block title %}
+    Details for {{ subjectUser.getUserNameStr() }}
+{% endblock %}
+
+{% block content %}
+
+    {% set inaccuracyMessage = vacreq_util.getInaccuracyMessage() %}
+
+    <h4 class="text-info" align="center">
+        Away Request History: {{ subjectUser.getUserNameStr() }}
+    </h4>
+
+    <br>
+
+    <table class="records_list table table-hover table-condensed text-left table-bordered sortable">
+        <thead>
+            <tr>
+                <th>Academic Year</th>
+                <th title="Total approved Vacation days">Vacation Days</th>
+                <th>Vacation Days Pending Approval</th>
+                <th>Remaining Vacation Days</th>
+                <th>Carried Over Vacation Days From Previous Year</th>
+                <th>Carried Over Vacation Days To Next Year</th>
+                <th title="Total approved Floating days">Floating Days</th>
+                <th title="Total approved Business Travel days">Business Travel Days</th>
+                <th>Business Travel Days Pending Approval</th>
+                <th title="Total approved days (Vacation + Business)">Total Approved Days</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for yearRange in yearRanges %}
+
+                {% set backgroundColor = yearRangesColor[loop.index0 % yearRangesColor|length] %}
+
+                {% set businessDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(subjectUser,'business',yearRange) %}
+                {% set businessDays = businessDaysRes['numberOfDays'] %}
+                {% set businessAccurate = businessDaysRes['accurate'] %}
+                {% set pendingDaysResB = vacreq_util.getApprovedTotalDaysAcademicYear(subjectUser,'business',yearRange,"pending") %}
+                {% set pendingDaysB = pendingDaysResB['numberOfDays'] %}
+
+                {% set vacationDaysRes = vacreq_util.getApprovedTotalDaysAcademicYear(subjectUser,'vacation',yearRange,"approved") %}
+                {% set vacationDays = vacationDaysRes['numberOfDays'] %}
+                {% set vacationAccurate = vacationDaysRes['accurate'] %}
+                {% set pendingDaysResV = vacreq_util.getApprovedTotalDaysAcademicYear(subjectUser,'vacation',yearRange,"pending") %}
+                {% set pendingDaysV = pendingDaysResV['numberOfDays'] %}
+
+                {% set carryOverDaysPrevYear = vacreq_util.getUserCarryOverDays(subjectUser,yearRange) %}
+
+                {% set yearParts = yearRange|split('-') %}
+                {% set nextYearRange = (yearParts[0] + 1) ~ '-' ~ (yearParts[1] + 1) %}
+                {% set carryOverDaysNextYear = vacreq_util.getUserCarryOverDays(subjectUser,nextYearRange) %}
+
+                {% set floatingDays = vacreq_util.getUserFloatingDay(subjectUser,yearRange,['pending','approved']) %}
+
+                {% set totalRemainingDaysRes =
+                    vacreq_util.totalVacationRemainingDays(
+                        subjectUser,
+                        null,
+                        vacationDays,
+                        carryOverDaysNextYear,
+                        carryOverDaysPrevYear,
+                        yearRange
+                    )
+                %}
+
+                <tr>
+                    <td style="background-color: {{ backgroundColor }}">
+                        {{ yearRange }}
+                    </td>
+                    <td>
+                        {{ vacationDays }}
+                        {% if not vacationAccurate %}
+                            <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ pendingDaysV }}
+                    </td>
+                    <td>
+                        {{ totalRemainingDaysRes['numberOfDays'] }}
+                        {% if not totalRemainingDaysRes['accurate'] %}
+                            <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ carryOverDaysPrevYear }}
+                    </td>
+                    <td>
+                        {{ carryOverDaysNextYear }}
+                    </td>
+                    <td>
+                        {% for floatingDay in floatingDays %}
+                            {{ floatingDay.printRequestShort() }}
+                            {% if not loop.last %}
+                                <hr style="margin-top: 5px; margin-bottom: 5px;">
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ businessDays }}
+                        {% if not businessAccurate %}
+                            <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ pendingDaysB }}
+                    </td>
+                    <td>
+                        {% set totalDays = businessDays + vacationDays %}
+                        {{ totalDays }}
+                        {% if not businessAccurate or not vacationAccurate %}
+                            <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
