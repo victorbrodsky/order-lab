@@ -8738,7 +8738,7 @@ full-time that the staff member is scheduled to work.
 
         $requestStyle = (new StyleBuilder())
             ->setFontSize(10)
-            //->setShouldWrapText()
+            ->setShouldWrapText()
             ->build();
 
         $border = (new BorderBuilder())
@@ -9141,7 +9141,7 @@ full-time that the staff member is scheduled to work.
 
             $requestStyle = (new StyleBuilder())
                 ->setFontSize(10)
-                //->setShouldWrapText()
+                ->setShouldWrapText()
                 ->build();
 
             $border = (new BorderBuilder())
@@ -9369,8 +9369,11 @@ full-time that the staff member is scheduled to work.
             //$writer = WriterFactory::create(Type::XLSX);
             $writer = WriterEntityFactory::createXLSXWriter();
 
-            //$writer->setColumnsWidth(25); //setDefaultColumnWidth(25);
-            //$writer->setDefaultColumnWidth(25);
+            //No true AutoFit in Spout: set fixed widths (where supported) + wrap text
+            if( method_exists($writer,'setDefaultColumnWidth') ) {
+                $writer->setDefaultColumnWidth(15);
+                $writer->setColumnsWidth(35, 1, 1); //label column
+            }
 
             $writer->openToBrowser($fileName);
 
@@ -9385,7 +9388,7 @@ full-time that the staff member is scheduled to work.
 
             $requestStyle = (new StyleBuilder())
                 ->setFontSize(10)
-                //->setShouldWrapText()
+                ->setShouldWrapText()
                 ->build();
 
             $border = (new BorderBuilder())
@@ -9405,6 +9408,57 @@ full-time that the staff member is scheduled to work.
             $data[0] = "Vacation Audit " . $subjectUser->getDisplayName();
             $spoutRow = WriterEntityFactory::createRowFromArray($data, $footerStyle);
             //$spoutRow = WriterEntityFactory::createRowFromArray($data);
+            $writer->addRow($spoutRow);
+
+            //Latest employment period (by hireDate) start/end dates and effort
+            //as shown on the groups page (/time-away-request/groups/)
+            $latestEmploymentStatus = null;
+            foreach( $subjectUser->getEmploymentStatus() as $employmentStatus ) {
+                if( !$employmentStatus ) {
+                    continue;
+                }
+                if( !$latestEmploymentStatus ) {
+                    $latestEmploymentStatus = $employmentStatus;
+                    continue;
+                }
+                $curHireDate = $employmentStatus->getHireDate();
+                $lastHireDate = $latestEmploymentStatus->getHireDate();
+                if( $curHireDate && (!$lastHireDate || $curHireDate > $lastHireDate) ) {
+                    $latestEmploymentStatus = $employmentStatus;
+                }
+            }
+
+            $latestEmplStartDate = "";
+            $latestEmplEndDate = "";
+            $latestEmplEffort = "";
+            if( $latestEmploymentStatus ) {
+                if( $latestEmploymentStatus->getHireDate() ) {
+                    $latestEmplStartDate = $latestEmploymentStatus->getHireDate()->format('m/d/Y');
+                }
+                if( $latestEmploymentStatus->getTerminationDate() ) {
+                    $latestEmplEndDate = $latestEmploymentStatus->getTerminationDate()->format('m/d/Y');
+                }
+                if( $latestEmploymentStatus->getEffort() ) {
+                    $latestEmplEffort = $latestEmploymentStatus->getEffort()."%";
+                }
+            }
+
+            $spoutRow = WriterEntityFactory::createRowFromArray(
+                array("Latest Employment Start Date",$latestEmplStartDate),
+                $requestStyle
+            );
+            $writer->addRow($spoutRow);
+
+            $spoutRow = WriterEntityFactory::createRowFromArray(
+                array("Latest Employment End Date",$latestEmplEndDate),
+                $requestStyle
+            );
+            $writer->addRow($spoutRow);
+
+            $spoutRow = WriterEntityFactory::createRowFromArray(
+                array("Effort",$latestEmplEffort),
+                $requestStyle
+            );
             $writer->addRow($spoutRow);
 
             //Add FY** row: FY20-FY21 | FY21-FY22 | FY22-FY23
