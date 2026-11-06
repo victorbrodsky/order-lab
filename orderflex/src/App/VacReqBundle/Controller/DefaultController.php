@@ -523,9 +523,35 @@ class DefaultController extends OrderAbstractController
 //        $yearRangeStr = $minYear."-".$maxYear;
 //        //echo "yearRangeStr=$yearRangeStr <br>";
 
-        $yearRangeArr = $vacreqUtil->getAuditYearRange();
-        $yearRanges = $yearRangeArr[0];
-        $yearRangeStr = $yearRangeArr[1];
+        //All available year ranges for this user: from the earliest request's
+        //academic year to the current academic year
+        $minCreateDate = $em->getRepository(VacReqRequest::class)->createQueryBuilder('r')
+            ->select('MIN(r.createDate)')
+            ->where('r.user = :user OR r.submitter = :user')
+            ->setParameter('user', $subjectUser)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $dates = $vacreqUtil->getCurrentAcademicYearStartEndDates();
+        $currentStartDateArr = explode("-", $dates['startDate']); //Y-m-d
+        $currentStartYear = intval($currentStartDateArr[0]);
+        $academicStartMonth = intval($currentStartDateArr[1]);
+
+        if( $minCreateDate ) {
+            $minDate = new \DateTime($minCreateDate);
+            $minYear = intval($minDate->format('Y'));
+            $minMonth = intval($minDate->format('m'));
+            $earliestStartYear = ($minMonth >= $academicStartMonth) ? $minYear : $minYear - 1;
+        } else {
+            //No requests: use the same 3 ranges as before
+            $earliestStartYear = $currentStartYear - 2;
+        }
+
+        $yearRanges = array();
+        for( $startYear = $currentStartYear; $startYear >= $earliestStartYear; $startYear-- ) {
+            $yearRanges[] = $startYear . "-" . ($startYear + 1);
+        }
+        $yearRangeStr = $earliestStartYear . "-" . ($currentStartYear + 1);
         ////////// EOF Get Year Range //////////
 
         //$fileName = "SummaryReport-".$subjectUser->getDisplayName()."-".$yearRangeStr.".xlsx";
