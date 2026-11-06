@@ -9452,7 +9452,8 @@ full-time that the staff member is scheduled to work.
             $vacationDays = $vacationDaysRes['numberOfDays'];
             $vacationAccurate = $vacationDaysRes['accurate'];
             //$vacationAccurate = false;
-            $data[$col] = "-".$vacationDays;
+            //$data[$col] = "-".$vacationDays;
+            $data[$col] = $vacationDays;
             $yearData[$yearRange]['vacationDays'] = $vacationDays;
             $yearData[$yearRange]['vacationAccurate'] = $vacationAccurate;
             $col++;
