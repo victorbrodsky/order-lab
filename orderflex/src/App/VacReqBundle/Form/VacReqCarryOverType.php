@@ -49,7 +49,7 @@ class VacReqCarryOverType extends AbstractType
 //        ));
         
         $builder->add('days', null, array(
-            'label' => "Carry Over Days (will be used in all calculations):",
+            'label' => "Carry Over Days (used in all calculations):",
             'attr' => array('class' => 'form-control'),
         ));
 
