@@ -157,7 +157,7 @@
             {% set overwrittenCarryOverDays = vacreq_util.getUserCarryOverDays(request.getUser(),request.destinationYear()) %}
             {% if overwrittenCarryOverDays and overwrittenCarryOverDays != request.carryOverDays %}
                 {#TODO: add manually overwritten carry over days from VacReqUserCarryOver for the user#}
-                (overwritten {{ overwrittenCarryOverDays }})
+                (admin-adjusted to {{ overwrittenCarryOverDays }} {{ overwrittenCarryOverDays == 1 ? 'day' : 'days' }})
             {% endif %}
         {% endif %}
     </td>
