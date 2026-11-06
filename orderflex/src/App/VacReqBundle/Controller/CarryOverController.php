@@ -164,10 +164,32 @@ class CarryOverController extends OrderAbstractController
             return $this->redirectToRoute('vacreq_summary');
         }
 
+        //Requested carry over days per destination year from approved carryover requests
+        $requestedCarryOverDays = array();
+        $carryOverRequests = $em->getRepository(VacReqRequest::class)->createQueryBuilder('r')
+            ->join('r.requestType','requestType')
+            ->where('r.user = :user')
+            ->andWhere("requestType.abbreviation = 'carryover'")
+            ->andWhere("r.status = 'approved'")
+            ->setParameter('user', $subjectUser)
+            ->getQuery()
+            ->getResult();
+        foreach( $carryOverRequests as $carryOverRequest ) {
+            $destYear = $carryOverRequest->getDestinationYear();
+            if( !$destYear ) {
+                continue;
+            }
+            if( !isset($requestedCarryOverDays[$destYear]) ) {
+                $requestedCarryOverDays[$destYear] = 0;
+            }
+            $requestedCarryOverDays[$destYear] += $carryOverRequest->getCarryOverDays();
+        }
+
         return array(
             'subjectUser' => $subjectUser,
             'form' => $form->createView(),
             'cycle' => $cycle,
+            'requestedCarryOverDays' => $requestedCarryOverDays,
         );
 
     }

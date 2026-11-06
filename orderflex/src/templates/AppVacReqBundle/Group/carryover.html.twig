@@ -46,6 +46,11 @@
                 {{ formmacros.simplefield( "Destination Academic Year:", yearRange, "input", "disabled" ) }}
 
                 {{ formmacros.field(carryOver.days) }}
+
+                {% set requestedDays = requestedCarryOverDays[carryOver.vars.value.year]|default('') %}
+                {% if requestedDays is not null and requestedDays != carryOver.days.vars.value %}
+                    {{ formmacros.simplefield( "Requested Carry Over Days by faculty:", requestedDays, "input", "disabled" ) }}
+                {% endif %}
             </div>
 
         {% endfor %}

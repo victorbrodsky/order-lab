@@ -1762,6 +1762,40 @@ class VacReqUtil
         return $removeCarryoverStr;
     }
 
+//    public function getVacReqUserCarryOverByUser( $subjectUser, $sourceYear ) {
+//        echo '$subjectUser='.$subjectUser.', $sourceYear='.$sourceYear.'<br>';
+//        $userCarryOver = $this->em->getRepository(VacReqUserCarryOver::class)->findOneByUser($subjectUser->getId());
+//        if (!$userCarryOver) {
+//            //$logger->notice("VacReqUserCarryOver not found by userid=".$subjectUser->getId());
+//            return null;
+//        }
+//
+//        $overwrittenCarryOverDays = null;
+//
+//        $repository = $this->em->getRepository(VacReqUserCarryOver::class); //VacReqCarryOver
+//        $dql =  $repository->createQueryBuilder("carryover");
+//        $dql->select('carryover');
+//        $dql->leftJoin('carryover.carryOvers','carryOvers');
+//
+//        $dql->where('carryover.user = :userId');
+//        $dql->andWhere('carryOvers.year = :sourceYear');
+//
+//        $query = $dql->getQuery();
+//
+//        $query->setParameters( array(
+//            'userId' => $subjectUser->getId(),
+//            'sourceYear' => $sourceYear
+//        ));
+//
+//        $carryover = $query->getResult();
+//        if( $carryover ) {
+//            $overwrittenCarryOverDays = $carryover
+//        }
+//
+//        return $overwrittenCarryOverDays;
+//    }
+
+
     public function getYearsFromYearRangeStr($yearRangeStr) {
         if( !$yearRangeStr ) {
             throw new \InvalidArgumentException('Year Range of the Academic year is not defined: yearRangeStr='.$yearRangeStr);

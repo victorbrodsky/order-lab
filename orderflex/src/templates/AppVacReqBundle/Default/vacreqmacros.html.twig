@@ -153,6 +153,12 @@
     <td class="{{ tdclassname }}">
         {% if request and request.carryOverDays %}
             {{ request.carryOverDays }}
+            {#{% set overwrittenCarryOverDays = vacreq_util.getVacReqUserCarryOverByUser(request.getUser(),request.sourceYear()) %}#}
+            {% set overwrittenCarryOverDays = vacreq_util.getUserCarryOverDays(request.getUser(),request.destinationYear()) %}
+            {% if overwrittenCarryOverDays and overwrittenCarryOverDays != request.carryOverDays %}
+                {#TODO: add manually overwritten carry over days from VacReqUserCarryOver for the user#}
+                (overwritten {{ overwrittenCarryOverDays }})
+            {% endif %}
         {% endif %}
     </td>
 
