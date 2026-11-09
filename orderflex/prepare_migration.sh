@@ -53,5 +53,7 @@ echo
 prep
 
 echo "Preparing for migration complete."
+echo "Status: php bin/console doctrine:migrations:status"
+echo "Diff: php bin/console doctrine:migrations:diff"
 echo
 exit 0
