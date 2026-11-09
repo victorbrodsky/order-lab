@@ -827,9 +827,10 @@ class Project {
     #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     private $projectGoals;
 
-    ////// CTP 9 fields to be able to merge CTP project Initial Inquiry //////
+    ///////////// CTP 9 fields to be able to merge CTP project Initial Inquiry //////////////
     //7 DB fields (9 fields total) to merge CTP with existing TRP projects, text field is safer
 
+    //Date -> createDate direct match
     //Project Title -> 'Title' direct match
 
     //Principal Investigator

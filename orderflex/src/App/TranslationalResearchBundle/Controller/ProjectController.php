@@ -1449,6 +1449,7 @@ class ProjectController extends OrderAbstractController
 
         $project = $this->createProjectEntity($user,null);
 
+        echo '$specialty='.$specialty.'<br>'; //Investigator's Initial Project Inquiry
         $project->setProjectSpecialty($specialty);
 
         //Set requester group

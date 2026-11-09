@@ -11,7 +11,7 @@ use App\Migration\PostgresMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20261109175110 extends AbstractMigration
+final class Version20261109175110 extends PostgresMigration
 {
     public function getDescription(): string
     {

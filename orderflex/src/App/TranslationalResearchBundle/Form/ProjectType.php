@@ -1334,6 +1334,87 @@ class ProjectType extends AbstractType
             ));
         }
 
+        //SpecialtyList - 'INIT'
+        //RequesterGroupList - 'Internal'/'Internal - WCM Pathology Faculty' or 'External'/'External - Non-WCM Pathology Faculty'
+        if( $this->params['project']->getProjectSpecialtyStr() == 'INIT' ) {
+            echo 'requesterGroup='.$this->params['project']->getRequesterGroupAbbreviation().'<br>';
+            if( !$this->params['project']->getRequesterGroupAbbreviation() ||
+                $this->params['project']->getRequesterGroupAbbreviation() === 'internal'
+            ) {
+                $builder->add('inquiryPiName', null, array(
+                    'label' => "Principal Investigator:",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+                $builder->add('inquiryOrgName', null, array(
+                    'label' => "Department:",
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'textarea form-control',
+                    )
+                ));
+                $builder->add('inquiryPhone', null, array(
+                    'label' => "Phone:",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+                $builder->add('inquiryContactName', null, array(
+                    'label' => "Contact Name:",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+                $builder->add('inquiryContactEmail', null, array(
+                    'label' => "Contact Email Address:",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+                $builder->add('inquiryPlanSummary', null, array(
+                    'label' => "Experimental Plan Summary:",
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'textarea form-control',
+                        'placeholder' => 'Summarize the experimental plan and methods...',
+                    )
+                ));
+                $builder->add('inquiryFundingSource', null, array(
+                    'label' => "Funding Source:",
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'textarea form-control',
+                        'placeholder' => 'List funding sources (if applicable)...'
+                    )
+                ));
+            }
+            if( $this->params['project']->getRequesterGroupAbbreviation() === 'external' ) {
+                $builder->add('inquiryOrgName', null, array(
+                    'label' => "Institution:",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+                $builder->add('inquiryPhone', null, array(
+                    'label' => "Contact Phone Number (optional):",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+                $builder->add('inquiryContactName', null, array(
+                    'label' => "External Collaborator Contact Name:",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+                $builder->add('inquiryContactEmail', null, array(
+                    'label' => "External Contact Email:",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+                $builder->add('inquiryPlanSummary', null, array(
+                    'label' => "Experimental Plan Summary:",
+                    'required' => false,
+                    'attr' => array('class' => 'textarea form-control')
+                ));
+            }
+            //$builder->remove('principalInvestigators');
+        }
+
 //        //////////////////// Project Closure/Reactivation ////////////////////
 //        if( $this->params['cycle'] != 'new' ) {
 //            $builder->add('closureReason', null, array(
