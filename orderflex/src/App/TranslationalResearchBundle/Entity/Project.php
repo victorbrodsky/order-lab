@@ -826,7 +826,41 @@ class Project {
     #[ORM\OneToMany(targetEntity: 'ProjectGoal', mappedBy: 'project', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['orderinlist' => 'ASC'])]
     private $projectGoals;
-    
+
+    ////// CTP 9 fields to be able to merge CTP project Initial Inquiry //////
+    //7 DB fields (9 fields total) to merge CTP with existing TRP projects, text field is safer
+
+    //Project Title -> 'Title' direct match
+
+    //Principal Investigator
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $inquiryPiName;
+
+    //Department or Institution
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $inquiryOrgName;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $inquiryPhone;
+
+    //Contact Name or External Collaborator Contact Name
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $inquiryContactName;
+
+    //Contact Email Address
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $inquiryContactEmail;
+
+    //Background (Provide background information on the project...) -> match to 'Brief Description'
+
+    //Experimental Plan Summary (Summarize the experimental plan and methods...)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $inquiryPlanSummary;
+
+    //Funding Source (List funding sources (if applicable)...)
+    #[ORM\Column(type: 'text', nullable: true)]
+    private $inquiryFundingSource;
+    ////// EOF CTP text fields to be able to merge CTP project Initial Inquiry //////
 
     public function __construct($user=null) {
 
@@ -3295,7 +3329,119 @@ class Project {
         return NULL;
     }
 
+    /////////// CTP fields ///////////
+    /**
+     * @return mixed
+     */
+    public function getInquiryPiName()
+    {
+        return $this->inquiryPiName;
+    }
 
+    /**
+     * @param mixed $inquiryPiName
+     */
+    public function setInquiryPiName($inquiryPiName)
+    {
+        $this->inquiryPiName = $inquiryPiName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInquiryOrgName()
+    {
+        return $this->inquiryOrgName;
+    }
+
+    /**
+     * @param mixed $inquiryOrgName
+     */
+    public function setInquiryOrgName($inquiryOrgName)
+    {
+        $this->inquiryOrgName = $inquiryOrgName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInquiryPhone()
+    {
+        return $this->inquiryPhone;
+    }
+
+    /**
+     * @param mixed $inquiryPhone
+     */
+    public function setInquiryPhone($inquiryPhone)
+    {
+        $this->inquiryPhone = $inquiryPhone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInquiryContactName()
+    {
+        return $this->inquiryContactName;
+    }
+
+    /**
+     * @param mixed $inquiryContactName
+     */
+    public function setInquiryContactName($inquiryContactName)
+    {
+        $this->inquiryContactName = $inquiryContactName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInquiryContactEmail()
+    {
+        return $this->inquiryContactEmail;
+    }
+
+    /**
+     * @param mixed $inquiryContactEmail
+     */
+    public function setInquiryContactEmail($inquiryContactEmail)
+    {
+        $this->inquiryContactEmail = $inquiryContactEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInquiryPlanSummary()
+    {
+        return $this->inquiryPlanSummary;
+    }
+
+    /**
+     * @param mixed $inquiryPlanSummary
+     */
+    public function setInquiryPlanSummary($inquiryPlanSummary)
+    {
+        $this->inquiryPlanSummary = $inquiryPlanSummary;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInquiryFundingSource()
+    {
+        return $this->inquiryFundingSource;
+    }
+
+    /**
+     * @param mixed $inquiryFundingSource
+     */
+    public function setInquiryFundingSource($inquiryFundingSource)
+    {
+        $this->inquiryFundingSource = $inquiryFundingSource;
+    }
+    /////////// EOF CTP fields ///////////
 
 
 
