@@ -1337,7 +1337,7 @@ class ProjectType extends AbstractType
         //SpecialtyList - 'INIT'
         //RequesterGroupList - 'Internal'/'Internal - WCM Pathology Faculty' or 'External'/'External - Non-WCM Pathology Faculty'
         if( $this->params['project']->getProjectSpecialtyStr() == 'INIT' ) {
-            echo 'requesterGroup='.$this->params['project']->getRequesterGroupAbbreviation().'<br>';
+            //echo 'requesterGroup='.$this->params['project']->getRequesterGroupAbbreviation().'<br>';
             if( !$this->params['project']->getRequesterGroupAbbreviation() ||
                 $this->params['project']->getRequesterGroupAbbreviation() === 'internal'
             ) {
@@ -1412,7 +1412,6 @@ class ProjectType extends AbstractType
                     'attr' => array('class' => 'textarea form-control')
                 ));
             }
-            //$builder->remove('principalInvestigators');
         }
 
 //        //////////////////// Project Closure/Reactivation ////////////////////

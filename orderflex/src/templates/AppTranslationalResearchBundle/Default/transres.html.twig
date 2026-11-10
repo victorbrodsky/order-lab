@@ -1383,7 +1383,60 @@ Show this accordion by default in an open + visible state.
     </div>
 {% endmacro %}
 
+{% macro projectInitialInquiryRequesters( form, project, cycle ) %}
+    {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectRequestersHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectRequesters" aria-expanded="true">
+                        Project's Initial Inquiry Requester(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">
+                <div class="panel-body">
 
+                    {#{% if form.requesterGroup is defined %}#}
+                        {#{{ formmacros.field(form.requesterGroup) }}#}
+                    {#{% endif %}#}
+
+                    {% if form.inquiryPiName is defined %}
+                        {{ formmacros.field(form.inquiryPiName) }}
+                    {% endif %}
+                    {% if form.inquiryOrgName is defined %}
+                        {{ formmacros.field(form.inquiryOrgName) }}
+                    {% endif %}
+                    {% if form.inquiryPhone is defined %}
+                        {{ formmacros.field(form.inquiryPhone) }}
+                    {% endif %}
+                    {% if form.inquiryContactName is defined %}
+                        {{ formmacros.field(form.inquiryContactName) }}
+                    {% endif %}
+                    {% if form.inquiryContactEmail is defined %}
+                        {{ formmacros.field(form.inquiryContactEmail) }}
+                    {% endif %}
+                    {% if form.inquiryPlanSummary is defined %}
+                        {{ formmacros.field(form.inquiryPlanSummary) }}
+                    {% endif %}
+                    {% if form.inquiryFundingSource is defined %}
+                        {{ formmacros.field(form.inquiryFundingSource) }}
+                    {% endif %}
+
+                    {% do form.requesterGroup.setRendered %}
+                    {% do form.principalInvestigators.setRendered %}
+                    {% do form.principalIrbInvestigator.setRendered %}
+                    {% do form.submitInvestigators.setRendered %}
+                    {% do form.coInvestigators.setRendered %}
+                    {% do form.pathologists.setRendered %}
+                    {% do form.contacts.setRendered %}
+                    {% do form.billingContact.setRendered %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 
 {% macro updateInfo( form, cycle ) %}
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}

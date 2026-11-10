@@ -1449,7 +1449,7 @@ class ProjectController extends OrderAbstractController
 
         $project = $this->createProjectEntity($user,null);
 
-        echo '$specialty='.$specialty.'<br>'; //Investigator's Initial Project Inquiry
+        //echo '$specialty='.$specialty.'<br>'; //Investigator's Initial Project Inquiry
         $project->setProjectSpecialty($specialty);
 
         //Set requester group
@@ -1476,10 +1476,8 @@ class ProjectController extends OrderAbstractController
         }
 
         //set default exempt
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
         $exemptIrbApproval = $em->getRepository(IrbApprovalTypeList::class)->findOneByName("Not Exempt");
         $project->setExemptIrbApproval($exemptIrbApproval);
-        //process.py script: replaced namespace by ::class: ['AppTranslationalResearchBundle:IrbApprovalTypeList'] by [IrbApprovalTypeList::class]
         $exemptIACUCApproval = $em->getRepository(IrbApprovalTypeList::class)->findOneByName("Exempt");
         $project->setExemptIACUCApproval($exemptIACUCApproval);
 
@@ -1576,7 +1574,7 @@ class ProjectController extends OrderAbstractController
                 );
             }
 
-            //process form nodes
+            //process form nodes (NOT USED)
             if( $formnode ) {
                 $formNodeUtil = $this->container->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing

@@ -451,6 +451,8 @@ function transresValidateProjectForm() {
     var validated = true;
     var label = null;
     var value = null;
+    var projectSpecialty = $("#projectSpecialty").val();
+    console.log("transres.js: projectSpecialty="+projectSpecialty);
 
     $("#projectError").hide();
     $("#projectError").html(null);
