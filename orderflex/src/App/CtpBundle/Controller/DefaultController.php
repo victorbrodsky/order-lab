@@ -27,6 +27,8 @@ use App\UserdirectoryBundle\Entity\Roles; //process.py script: replaced namespac
 use App\OrderformBundle\Entity\Message;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
+use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
+use App\TranslationalResearchBundle\Util\ProjectPdfBackgroundGenerator;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
 
@@ -156,28 +158,64 @@ class DefaultController extends OrderAbstractController
                 );
             }
 
+            $transresUtil = $this->container->get('transres_util');
+            $userSecUtil = $this->container->get('user_security_utility');
+
+            //Create the project the same way as newProjectAction (/project/new/init)
             $project = new Project($this->getUser() instanceof User ? $this->getUser() : null);
             $project->setVersion(1);
 
-            //Set state.
-            $project->setState('draft');
-            //$project->setState('irb_review');
+            //Auto-assign institution (same as createProjectEntity)
+            $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
+            if( !$autoAssignInstitution ) {
+                $autoAssignInstitution = $em->getRepository(Institution::class)->findOneByName('Pathology and Laboratory Medicine');
+            }
+            if( $autoAssignInstitution ) {
+                $project->setInstitution($autoAssignInstitution);
+            }
 
-            $projectSpecialtyName = "Investigator's Initial Project Inquiry";
-            $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['name' => $projectSpecialtyName]);
+            //specialtyStr='init'
+            $projectSpecialty = $transresUtil->getSpecialtyObject('init');
             if( !$projectSpecialty ) {
-                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['friendlyname' => $projectSpecialtyName]);
-            }
-            if( !$projectSpecialty ) {
-                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['abbreviation' => 'init']);
-            }
-            if( !$projectSpecialty ) {
-                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['shortname' => 'INIT']);
+                $projectSpecialtyName = "Investigator's Initial Project Inquiry";
+                $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['name' => $projectSpecialtyName]);
+                if( !$projectSpecialty ) {
+                    $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['friendlyname' => $projectSpecialtyName]);
+                }
+                if( !$projectSpecialty ) {
+                    $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['abbreviation' => 'init']);
+                }
+                if( !$projectSpecialty ) {
+                    $projectSpecialty = $em->getRepository(SpecialtyList::class)->findOneBy(['shortname' => 'INIT']);
+                }
             }
             if( $projectSpecialty ) {
                 $project->setProjectSpecialty($projectSpecialty);
             }
 
+            //Set requester group (same as ?requester-group=Internal on the new project form)
+            $requesterGroupObject = $transresUtil->getRequesterGroupObject('Internal');
+            if( $requesterGroupObject ) {
+                $project->setRequesterGroup($requesterGroupObject);
+            }
+
+            //set default exempt (same as newProjectAction)
+            $exemptIrbApproval = $em->getRepository(IrbApprovalTypeList::class)->findOneByName("Not Exempt");
+            $project->setExemptIrbApproval($exemptIrbApproval);
+            $exemptIACUCApproval = $em->getRepository(IrbApprovalTypeList::class)->findOneByName("Exempt");
+            $project->setExemptIACUCApproval($exemptIACUCApproval);
+
+            //add all default reviewers (same as newProjectAction)
+            $transresUtil->addDefaultStateReviewers($project);
+
+            //Set state the same way as clicking "Submit" on the new project form
+            // (submitIrbReview button => 'irb_review')
+            $project->setState('irb_review');
+            $startProjectReview = true;
+            //$project->setState('draft');
+            //$startProjectReview = false;
+
+            //'Date' => project[createDate]
             $inquiryDate = $this->getTrimmedRequestValue($request, 'inquiryDate');
             if( $inquiryDate ) {
                 try {
@@ -186,6 +224,7 @@ class DefaultController extends OrderAbstractController
                 }
             }
 
+            //'Project Title' => project[title]
             $projectTitle = $this->getTrimmedRequestValue($request, 'projectTitle');
             if( $projectTitle ) {
                 $project->setTitle($projectTitle);
@@ -193,25 +232,28 @@ class DefaultController extends OrderAbstractController
                 $project->setTitle('External Collaboration Project Inquiry');
             }
 
+            //'Background' => project[description]
             $background = $this->getTrimmedRequestValue($request, 'background');
             if( $background ) {
-                $project->setEssentialInfo($background);
                 $project->setDescription($background);
             }
 
+            //'Experimental Plan Summary' => project[inquiryPlanSummary]
             $experimentalPlanSummary = $this->getTrimmedRequestValue($request, 'experimentalPlanSummary');
             if( $experimentalPlanSummary ) {
-                $project->setStrategy($experimentalPlanSummary);
-                $project->setObjective($experimentalPlanSummary);
+                $project->setInquiryPlanSummary($experimentalPlanSummary);
             }
 
+            //'Funding Source' => project[inquiryFundingSource]
             $fundingSource = $this->getTrimmedRequestValue($request, 'fundingSource');
             if( $fundingSource ) {
-                $project->setFundDescription($fundingSource);
+                $project->setInquiryFundingSource($fundingSource);
             }
 
+            //'Department' => project[inquiryOrgName]
             $department = $this->getTrimmedRequestValue($request, 'department');
             if( $department ) {
+                $project->setInquiryOrgName($department);
                 $project->setCollDepartment($department);
 
                 $institution = $em->getRepository(Institution::class)->findOneBy(['name' => $department]);
@@ -234,10 +276,14 @@ class DefaultController extends OrderAbstractController
                 }
                 $externalPhone = $this->getTrimmedRequestValue($request, 'externalPhone');
 
+                //'External Collaborator Contact Name' => project[inquiryContactName]
                 if( $externalContactName ) {
+                    $project->setInquiryContactName($externalContactName);
                     $inquirySummary[] = 'External Collaborator Contact Name: '.$externalContactName;
                 }
+                //'External Contact Email' => project[inquiryContactEmail]
                 if( $externalContactEmail ) {
+                    $project->setInquiryContactEmail($externalContactEmail);
                     $inquirySummary[] = 'External Contact Email: '.$externalContactEmail;
 
                     $contactUser = $em->getRepository(User::class)->findOneUserByEmail($externalContactEmail);
@@ -248,8 +294,10 @@ class DefaultController extends OrderAbstractController
                         }
                     }
                 }
+                //'Institution' => project[inquiryOrgName]
                 if( $externalInstitution ) {
-                    $project->setCollInst($externalInstitution);
+                    $project->setInquiryOrgName($externalInstitution);
+                    //$project->setCollInst($externalInstitution);
 
                     $institution = $em->getRepository(Institution::class)->findOneBy(['name' => $externalInstitution]);
                     if( $institution ) {
@@ -258,7 +306,9 @@ class DefaultController extends OrderAbstractController
 
                     $inquirySummary[] = 'External Institution: '.$externalInstitution;
                 }
+                //'Contact Phone Number' => project[inquiryPhone]
                 if( $externalPhone ) {
+                    $project->setInquiryPhone($externalPhone);
                     $inquirySummary[] = 'External Contact Phone Number: '.$externalPhone;
                 }
             } else {
@@ -267,7 +317,9 @@ class DefaultController extends OrderAbstractController
                 $contactEmail = $this->getTrimmedRequestValue($request, 'contactEmail');
                 $phone = $this->getTrimmedRequestValue($request, 'phone');
 
+                //'Principal Investigator' => project[inquiryPiName]
                 if( $principalInvestigator ) {
+                    $project->setInquiryPiName($principalInvestigator);
                     $inquirySummary[] = 'Principal Investigator (entered): '.$principalInvestigator;
 
                     $principalInvestigatorUser = $em->getRepository(User::class)->findOneByAnyNameStr($principalInvestigator);
@@ -275,10 +327,14 @@ class DefaultController extends OrderAbstractController
                         $project->addPrincipalInvestigator($principalInvestigatorUser);
                     }
                 }
+                //'Contact Name' => project[inquiryContactName]
                 if( $contactName ) {
+                    $project->setInquiryContactName($contactName);
                     $inquirySummary[] = 'Contact Name: '.$contactName;
                 }
+                //'Contact Email Address' => project[inquiryContactEmail]
                 if( $contactEmail ) {
+                    $project->setInquiryContactEmail($contactEmail);
                     $inquirySummary[] = 'Contact Email Address: '.$contactEmail;
 
                     $contactUser = $em->getRepository(User::class)->findOneUserByEmail($contactEmail);
@@ -289,7 +345,9 @@ class DefaultController extends OrderAbstractController
                         }
                     }
                 }
+                //'Phone' => project[inquiryPhone]
                 if( $phone ) {
+                    $project->setInquiryPhone($phone);
                     $inquirySummary[] = 'Phone: '.$phone;
                 }
             }
@@ -298,16 +356,51 @@ class DefaultController extends OrderAbstractController
                 $project->setOtherResource(implode("\n", $inquirySummary));
             }
 
+            //Same post-processing as newProjectAction
+            $transresUtil->assignMinimumProjectRoles($project);
+            $project->autoPopulateApprovedProjectBudget();
+            $project->calculateAndSetImplicitExpirationDate();
+            $project->processShowHideFields();
+
             $em->persist($project);
             $em->flush();
 
             $project->generateOid();
             $em->flush();
 
+            //generate project PDF (same as newProjectAction)
+            $currentUser = $this->getUser();
+            $currentUserId = ($currentUser && method_exists($currentUser,'getId')) ? (int)$currentUser->getId() : null;
+            $projectPdfBackgroundGenerator = $this->container->get(ProjectPdfBackgroundGenerator::class);
+            $projectPdfBackgroundGenerator->queueProjectPdfGeneration(
+                $request,
+                (int)$project->getId(),
+                $currentUserId
+            );
+
             $this->addFlash(
                 'notice',
                 'New project inquiry has been submitted with ID '.$project->getOid()
             );
+
+            //same confirmation email as newProjectAction's startProjectReview block
+            if( $startProjectReview ) {
+                $break = "<br>";
+                $msg = "Thank you for your submission! Your project request '".$project->getTitle().
+                    "' has been received and assigned the following ID of ".$project->getOid().".".
+                    " It will be reviewed and you should receive notifications regarding its approval status by email.";
+                $emailSubject = "Your project request has been received and assigned the following ID: ".$project->getOid();
+                $projectUrl = $transresUtil->getProjectShowUrl($project);
+                $emailBody = $msg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+                $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+                $adminsCcs = $transresUtil->getTransResAdminEmails($project,true,true);
+                if( $requesterEmails ) {
+                    $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
+                }
+            }
 
             //return $this->redirectToRoute('ctp_new-project-inquiry');
             return $this->redirectToRoute('ctp_home');

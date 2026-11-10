@@ -1341,32 +1341,33 @@ class ProjectType extends AbstractType
             if( !$this->params['project']->getRequesterGroupAbbreviation() ||
                 $this->params['project']->getRequesterGroupAbbreviation() === 'internal'
             ) {
-                $builder->add('inquiryPiName', null, array(
+                $builder->add('inquiryPiName', TextType::class, array(
                     'label' => "Principal Investigator:",
                     'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
+                    //'attr' => array('class' => 'textarea form-control')
+                    'attr' => array('class' => 'form-control')
                 ));
-                $builder->add('inquiryOrgName', null, array(
+                $builder->add('inquiryOrgName', TextType::class, array(
                     'label' => "Department:",
                     'required' => false,
                     'attr' => array(
-                        'class' => 'textarea form-control',
+                        'class' => 'form-control',
                     )
                 ));
-                $builder->add('inquiryPhone', null, array(
+                $builder->add('inquiryPhone', TextType::class, array(
                     'label' => "Phone:",
                     'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
+                    'attr' => array('class' => 'form-control')
                 ));
-                $builder->add('inquiryContactName', null, array(
+                $builder->add('inquiryContactName', TextType::class, array(
                     'label' => "Contact Name:",
                     'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
+                    'attr' => array('class' => 'form-control')
                 ));
-                $builder->add('inquiryContactEmail', null, array(
+                $builder->add('inquiryContactEmail', TextType::class, array(
                     'label' => "Contact Email Address:",
                     'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
+                    'attr' => array('class' => 'form-control')
                 ));
                 $builder->add('inquiryPlanSummary', null, array(
                     'label' => "Experimental Plan Summary:",
@@ -1386,25 +1387,25 @@ class ProjectType extends AbstractType
                 ));
             }
             if( $this->params['project']->getRequesterGroupAbbreviation() === 'external' ) {
-                $builder->add('inquiryOrgName', null, array(
+                $builder->add('inquiryOrgName', TextType::class, array(
                     'label' => "Institution:",
                     'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
+                    'attr' => array('class' => 'form-control')
                 ));
-                $builder->add('inquiryPhone', null, array(
+                $builder->add('inquiryPhone', TextType::class, array(
                     'label' => "Contact Phone Number (optional):",
                     'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
+                    'attr' => array('class' => 'form-control')
                 ));
-                $builder->add('inquiryContactName', null, array(
+                $builder->add('inquiryContactName', TextType::class, array(
                     'label' => "External Collaborator Contact Name:",
                     'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
+                    'attr' => array('class' => 'form-control')
                 ));
-                $builder->add('inquiryContactEmail', null, array(
+                $builder->add('inquiryContactEmail', TextType::class, array(
                     'label' => "External Contact Email:",
                     'required' => false,
-                    'attr' => array('class' => 'textarea form-control')
+                    'attr' => array('class' => 'form-control')
                 ));
                 $builder->add('inquiryPlanSummary', null, array(
                     'label' => "Experimental Plan Summary:",

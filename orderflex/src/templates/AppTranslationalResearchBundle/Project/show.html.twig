@@ -93,7 +93,13 @@
 
         {{ transres.projectHeaders(form,project,cycle) }}
 
-        {{ transres.projectRequesters(form,project,cycle) }}
+        {#{{ transres.projectRequesters(form,project,cycle) }}#}
+        {#project.getProjectSpecialtyStr()={{ project.getProjectSpecialtyStr() }}#}
+        {% if (project.getProjectSpecialtyStr()|default('')|lower) == 'init' %}
+            {{ transres.projectInitialInquiryRequesters(form,project,cycle) }}
+        {% else %}
+            {{ transres.projectRequesters(form,project,cycle) }}
+        {% endif %}
 
         {{ transres.projectBodyFormFields(form,project,cycle) }}
 
