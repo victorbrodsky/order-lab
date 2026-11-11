@@ -1423,14 +1423,20 @@ Show this accordion by default in an open + visible state.
                         {{ formmacros.field(form.inquiryFundingSource) }}
                     {% endif %}
 
-                    {% do form.requesterGroup.setRendered %}
-                    {% do form.principalInvestigators.setRendered %}
-                    {% do form.principalIrbInvestigator.setRendered %}
-                    {% do form.submitInvestigators.setRendered %}
-                    {% do form.coInvestigators.setRendered %}
-                    {% do form.pathologists.setRendered %}
-                    {% do form.contacts.setRendered %}
-                    {% do form.billingContact.setRendered %}
+                    {% if 0 and cycle == 'show' %}
+                        {#{% do form.requesterGroup.setRendered %}#}
+                        {#{% if not form.requesterGroup.vars.rendered %}#}
+                            {#{% do form.requesterGroup.setRendered() %}#}
+                        {#{% endif %}#}
+
+                        {% do form.principalInvestigators.setRendered %}
+                        {% do form.principalIrbInvestigator.setRendered %}
+                        {% do form.submitInvestigators.setRendered %}
+                        {% do form.coInvestigators.setRendered %}
+                        {% do form.pathologists.setRendered %}
+                        {% do form.contacts.setRendered %}
+                        {% do form.billingContact.setRendered %}
+                    {% endif %}
 
                 </div>
             </div>

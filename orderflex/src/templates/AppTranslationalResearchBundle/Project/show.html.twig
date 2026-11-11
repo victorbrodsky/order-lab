@@ -97,6 +97,7 @@
         {#project.getProjectSpecialtyStr()={{ project.getProjectSpecialtyStr() }}#}
         {% if (project.getProjectSpecialtyStr()|default('')|lower) == 'init' %}
             {{ transres.projectInitialInquiryRequesters(form,project,cycle) }}
+            {{ transres.projectRequesters(form,project,cycle) }}
         {% else %}
             {{ transres.projectRequesters(form,project,cycle) }}
         {% endif %}

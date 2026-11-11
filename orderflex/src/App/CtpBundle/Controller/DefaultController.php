@@ -28,6 +28,7 @@ use App\OrderformBundle\Entity\Message;
 use App\TranslationalResearchBundle\Entity\Project;
 use App\TranslationalResearchBundle\Entity\SpecialtyList;
 use App\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
+use App\TranslationalResearchBundle\Entity\RequesterGroupList;
 use App\TranslationalResearchBundle\Util\ProjectPdfBackgroundGenerator;
 use App\UserdirectoryBundle\Entity\ObjectTypeText;
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -193,8 +194,26 @@ class DefaultController extends OrderAbstractController
                 $project->setProjectSpecialty($projectSpecialty);
             }
 
-            //Set requester group (same as ?requester-group=Internal on the new project form)
-            $requesterGroupObject = $transresUtil->getRequesterGroupObject('Internal');
+            //Set requester group (same as ?requester-group=Internal|External on the new project form)
+            //WCM tab => 'Internal' ('Internal - WCM Pathology Faculty')
+            //External tab => 'External' ('External - WCM Faculty of Other Departments and Members of Other Institutions')
+            if( $inquiryType === 'external' ) {
+                $requesterGroupStr = 'External';
+                $requesterGroupName = 'External - WCM Faculty of Other Departments and Members of Other Institutions';
+            } else {
+                $requesterGroupStr = 'Internal';
+                $requesterGroupName = 'Internal - WCM Pathology Faculty';
+            }
+            //find by urlSlug
+            $requesterGroupObject = $transresUtil->getRequesterGroupObject($requesterGroupStr);
+            if( !$requesterGroupObject ) {
+                //find by abbreviation
+                $requesterGroupObject = $em->getRepository(RequesterGroupList::class)->findOneBy(['abbreviation' => $requesterGroupStr]);
+            }
+            if( !$requesterGroupObject ) {
+                //find by name
+                $requesterGroupObject = $em->getRepository(RequesterGroupList::class)->findOneBy(['name' => $requesterGroupName]);
+            }
             if( $requesterGroupObject ) {
                 $project->setRequesterGroup($requesterGroupObject);
             }

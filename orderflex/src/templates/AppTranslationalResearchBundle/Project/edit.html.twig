@@ -88,6 +88,7 @@
         {#{{ transres.projectRequesters(edit_form,project,cycle) }}#}
         {% if (project.getProjectSpecialtyStr()|default('')|lower) == 'init' %}
             {{ transres.projectInitialInquiryRequesters(edit_form,project,cycle) }}
+            {{ transres.projectRequesters(edit_form,project,cycle) }}
         {% else %}
             {{ transres.projectRequesters(edit_form,project,cycle) }}
         {% endif %}
