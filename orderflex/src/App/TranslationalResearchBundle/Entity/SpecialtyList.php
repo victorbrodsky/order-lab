@@ -47,6 +47,8 @@ class SpecialtyList extends ListAbstract
     #[ORM\Column(type: 'string', nullable: true)]
     protected $friendlyname;
 
+    //show Project on selector page - this functionality is implemented in SiteSettings:
+    //Enable the display the button (project specialty) on the "New Project Request" selector page
 
     public function __construct($author=null) {
 
@@ -114,7 +116,6 @@ class SpecialtyList extends ListAbstract
     {
         $this->friendlyname = $friendlyname;
     }
-
     
 
 
