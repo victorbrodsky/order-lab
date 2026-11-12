@@ -137,6 +137,12 @@ class DefaultController extends OrderAbstractController
         $activeInquiryType = 'wcm';
         $validationErrors = array();
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $captchaSiteKey = null;
+        if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
+            $captchaSiteKey = $userSecUtil->getSiteSettingParameter('captchaSiteKey');
+        }
+
         if( $request->isMethod('POST') ) {
             $csrfToken = $request->request->get('_token');
             if( !$this->isCsrfTokenValid('ctp_new_project_inquiry_submit', $csrfToken) ) {
@@ -150,12 +156,21 @@ class DefaultController extends OrderAbstractController
             }
             $activeInquiryType = $inquiryType;
 
-            $validationErrors = $this->getRequiredInquiryFieldErrors($request, $inquiryType);
+            if( $captchaSiteKey ) {
+                $captchaRes = $request->request->get('g-recaptcha-response');
+                if( !$userSecUtil->captchaValidate($request,$captchaRes) ) {
+                    $validationErrors[] = 'Captcha is required';
+                }
+            }
+
+            $fieldErrors = $this->getRequiredInquiryFieldErrors($request, $inquiryType);
+            $validationErrors = array_merge($validationErrors, $fieldErrors);
             if( count($validationErrors) > 0 ) {
                 return array(
                     'title' => $title,
                     'activeInquiryType' => $activeInquiryType,
                     'validationErrors' => $validationErrors,
+                    'captchaSiteKey' => $captchaSiteKey,
                 );
             }
 
@@ -429,6 +444,7 @@ class DefaultController extends OrderAbstractController
             'title' => $title,
             'activeInquiryType' => $activeInquiryType,
             'validationErrors' => $validationErrors,
+            'captchaSiteKey' => $captchaSiteKey,
         );
     }
 

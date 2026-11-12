@@ -170,6 +170,10 @@
                     </div>
                 </section>
 
+                {% if captchaSiteKey is defined and captchaSiteKey %}
+                    <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+                {% endif %}
+
                 <div class="flex items-center gap-3">
                     <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">
                         Submit
@@ -254,6 +258,10 @@
                     {#</div>#}
                 {#</section>#}
 
+                {% if captchaSiteKey is defined and captchaSiteKey %}
+                    <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+                {% endif %}
+
                 <div class="flex items-center gap-3">
                     <button type="submit" class="rounded-xl px-4 py-2 text-white transition bg-[#b31b1b] hover:bg-[#a01515]">
                         Submit
@@ -265,6 +273,10 @@
         </main>
 
     </main>
+
+    {% if captchaSiteKey is defined and captchaSiteKey %}
+        <script src='https://www.google.com/recaptcha/api.js' async defer></script>
+    {% endif %}
 
 {% endblock %}
 
