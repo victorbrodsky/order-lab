@@ -250,11 +250,13 @@ class DefaultController extends OrderAbstractController
             //$startProjectReview = false;
 
             //'Date' => project[createDate]
-            $inquiryDate = $this->getTrimmedRequestValue($request, 'inquiryDate');
-            if( $inquiryDate ) {
-                try {
-                    $project->setCreateDate(new \DateTime($inquiryDate));
-                } catch( \Exception $e ) {
+            if(0) {
+                $inquiryDate = $this->getTrimmedRequestValue($request, 'inquiryDate');
+                if ($inquiryDate) {
+                    try {
+                        $project->setCreateDate(new \DateTime($inquiryDate));
+                    } catch (\Exception $e) {
+                    }
                 }
             }
 

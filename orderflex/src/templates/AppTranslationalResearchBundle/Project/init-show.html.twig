@@ -1,0 +1,81 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppTranslationalResearchBundle/Default/base.html.twig" %}
+{% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <br>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                {% if inquiryType is defined and inquiryType == 'external' %}
+                    External Collaboration Project Inquiry
+                {% else %}
+                    WCM Investigator Project Inquiry
+                {% endif %}
+            </h4>
+        </div>
+        <div class="panel-body">
+
+            {#{{ formmacros.simplefield("ID:", project.oid, "input", "disabled") }}#}
+            {#{{ formmacros.simplefield("Status:", project.getState()|trans({},'workflow'), "input", "disabled") }}#}
+            {{ formmacros.simplefield("Submission Date:",
+                project.createDate ? project.createDate|date('m/d/Y',false) : '',
+                "input", "disabled")
+            }}
+
+            {% if inquiryType is defined and inquiryType == 'external' %}
+                {{ formmacros.simplefield("External Collaborator Contact Name:", project.inquiryContactName, "input", "disabled") }}
+                {{ formmacros.simplefield("External Contact Email:", project.inquiryContactEmail, "input", "disabled") }}
+                {{ formmacros.simplefield("Institution:", project.inquiryOrgName, "input", "disabled") }}
+                {{ formmacros.simplefield("Contact Phone Number:", project.inquiryPhone, "input", "disabled") }}
+            {% else %}
+                {{ formmacros.simplefield("Project Title:", project.title, "input", "disabled") }}
+                {{ formmacros.simplefield("Principal Investigator:", project.inquiryPiName, "input", "disabled") }}
+                {{ formmacros.simplefield("Department:", project.inquiryOrgName, "input", "disabled") }}
+                {{ formmacros.simplefield("Phone:", project.inquiryPhone, "input", "disabled") }}
+                {{ formmacros.simplefield("Contact Name:", project.inquiryContactName, "input", "disabled") }}
+                {{ formmacros.simplefield("Contact Email Address:", project.inquiryContactEmail, "input", "disabled") }}
+            {% endif %}
+
+            {{ formmacros.simplefield("Background:", project.description, "input", "disabled") }}
+            {{ formmacros.simplefield("Experimental Plan Summary:", project.inquiryPlanSummary, "input", "disabled") }}
+
+            {% if inquiryType is not defined or inquiryType != 'external' %}
+                {{ formmacros.simplefield("Funding Source:", project.inquiryFundingSource, "input", "disabled") }}
+            {% endif %}
+
+        </div>
+    </div>
+
+    {% if canEdit %}
+        <p>
+            <a class="btn btn-warning" href="{{ path('translationalresearch_initproject_edit', { 'id': project.id }) }}">Edit</a>
+        </p>
+    {% endif %}
+
+{% endblock %}

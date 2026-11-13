@@ -1382,6 +1382,11 @@ class ProjectController extends OrderAbstractController
             return $this->redirect($this->generateUrl('translationalresearch_project_new_selector'));
         }
 
+        //Separate minimalistic flow for "Investigator's Initial Project Inquiry" (specialty 'init')
+        if( strtolower($specialtyStr) == 'init' ) {
+            return $this->redirectToRoute('translationalresearch_initproject_new',$request->query->all());
+        }
+
         //$specialtyStr = $request->query->get('specialty');
         $requesterGroupStr = $request->query->get('requester-group');
         $collDivStr = $request->query->get('collaborating-division');
@@ -1701,6 +1706,12 @@ class ProjectController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Project/edit.html.twig')]
     public function editAction(Request $request, #[MapEntity] Project $project)
     {
+        //Redirect "Investigator's Initial Project Inquiry" (init) projects to the minimalistic edit page
+        $projectSpecialty = $project->getProjectSpecialty();
+        if( $projectSpecialty && strtolower($projectSpecialty->getAbbreviation()) == 'init' ) {
+            return $this->redirectToRoute('translationalresearch_initproject_edit',array('id'=>$project->getId()));
+        }
+
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
         if( false === $transresPermissionUtil->hasProjectPermission("update",$project) ) {
@@ -2118,6 +2129,17 @@ class ProjectController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Project/show.html.twig')]
     public function showAction(Request $request, #[MapEntity] Project $project, $cycle="show")
     {
+        //Redirect "Investigator's Initial Project Inquiry" (init) projects to the minimalistic show page
+        $projectSpecialty = $project->getProjectSpecialty();
+        if( $projectSpecialty && strtolower($projectSpecialty->getAbbreviation()) == 'init' ) {
+            //return $this->redirectToRoute('translationalresearch_initproject_show',array('id'=>$project->getId()));
+            return $this->forward(
+                InitProjectController::class.'::initProjectEditAction',
+                [
+                    'id' => $project->getId(),
+                ]
+            );
+        }
 
 //        //Testing
 //        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {

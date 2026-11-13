@@ -177,15 +177,15 @@ class ProjectType extends AbstractType
             $this->params['trpAdmin'] &&
             $this->project->getCreateDate()
         ) {
-            $builder->add('createDate', DateType::class, array(
-                'widget' => 'single_text',
-                'label' => "Submission Date:",
-                'disabled' => true,
-                'format' => 'MM/dd/yyyy',
-                'html5' => false,
-                'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
-                'required' => false,
-            ));
+//            $builder->add('createDate', DateType::class, array(
+//                'widget' => 'single_text',
+//                'label' => "Submission Date:",
+//                'disabled' => true,
+//                'format' => 'MM/dd/yyyy',
+//                'html5' => false,
+//                'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
+//                'required' => false,
+//            ));
 
             if (
                 $this->params['cycle'] == 'edit' &&

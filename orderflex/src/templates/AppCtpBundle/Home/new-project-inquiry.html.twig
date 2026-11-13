@@ -107,14 +107,14 @@
                 <input type="hidden" name="_token" value="{{ csrf_token('ctp_new_project_inquiry_submit') }}">
                 <input type="hidden" name="inquiryType" value="wcm">
 
-                <section class="grid gap-3 md:w-1/2">
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
-                        <input type="date" name="inquiryDate" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value="{{ app.request.request.get('inquiryDate')|default('') }}"/>
-                    </div>
-                </section>
+                {#<section class="grid gap-3 md:w-1/2">#}
+                    {#<div class="grid gap-1">#}
+                        {#<label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>#}
+                        {#<input type="date" name="inquiryDate" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value="{{ app.request.request.get('inquiryDate')|default('') }}"/>#}
+                    {#</div>#}
+                {#</section>#}
 
-                <hr class="border-gray-200">
+                {#<hr class="border-gray-200">#}
 
                 <section class="grid gap-3 md:grid-cols-2">
                     <div class="grid gap-1">
@@ -192,14 +192,14 @@
                 <input type="hidden" name="_token" value="{{ csrf_token('ctp_new_project_inquiry_submit') }}">
                 <input type="hidden" name="inquiryType" value="external">
 
-                <section class="grid gap-3 md:w-1/2">
-                    <div class="grid gap-1">
-                        <label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>
-                        <input type="date" name="inquiryDate" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value="{{ app.request.request.get('inquiryDate')|default('') }}"/>
-                    </div>
-                </section>
+                {#<section class="grid gap-3 md:w-1/2">#}
+                    {#<div class="grid gap-1">#}
+                        {#<label class="text-sm text-gray-700">Date <span class="text-red-600">*</span></label>#}
+                        {#<input type="date" name="inquiryDate" required class="rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#b31b1b]/20 focus:border-[#b31b1b]" value="{{ app.request.request.get('inquiryDate')|default('') }}"/>#}
+                    {#</div>#}
+                {#</section>#}
 
-                <hr class="border-gray-200">
+                {#<hr class="border-gray-200">#}
 
                 {#<section class="grid gap-3 md:grid-cols-2">#}
                     {#<div class="grid gap-1">#}
