@@ -148,10 +148,16 @@ class UserRepository extends EntityRepository {
         $user = null;
 
         $nameStr = trim((string)$nameStr);
+
+        //empty or null nameStr cannot match any user
+        if( $nameStr === '' ) {
+            return null;
+        }
+
         $nameStrArr = explode(" ",$nameStr);
 
         $firstName = trim((string)$nameStrArr[0]);
-        $lastName = trim((string)$nameStrArr[1]);
+        $lastName = isset($nameStrArr[1]) ? trim((string)$nameStrArr[1]) : '';
 
         $user = $this->findOneByFirstOrLastNameStr($lastName);
 

@@ -94,8 +94,11 @@
             {% if form.updateProject is defined %}
                 {{ form_widget(form.updateProject) }}
             {% endif %}
-            <a class="btn btn-default"
-               href="{{ path(translationalresearch_sitename~'_project_show',{ 'id': project.id }) }}">Cancel</a>
+
+            {% if cycle == 'edit' %}
+                <a class="btn btn-default"
+                href="{{ path(translationalresearch_sitename~'_project_show',{ 'id': project.id }) }}">Cancel</a>
+            {% endif %}
 
         </p>
 

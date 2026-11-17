@@ -6639,7 +6639,7 @@ class TransResUtil
         $partialRoleStr = "_".$specialtyObject->getUppercaseName();
 
         //if admin or deputy admin
-        $adminRole = "ROLE_TRANSRES_ADMIN"."_".$partialRoleStr;
+        $adminRole = "ROLE_TRANSRES_ADMIN".$partialRoleStr;
         if( $this->security->isGranted($adminRole) ) {
             return true;
         }

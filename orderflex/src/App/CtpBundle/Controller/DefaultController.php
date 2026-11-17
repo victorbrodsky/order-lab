@@ -61,7 +61,6 @@ class DefaultController extends OrderAbstractController
 //        if( false == $this->isGranted('ROLE_CTP_USER') ){
 //            return $this->redirect( $this->generateUrl('ctp-nopermission') );
 //        }
-
         $title = 'Center for Translational Pathology';
         $pageName = 'ctp_home';
         $csrfTokenId = 'ctp_home_page_content';
@@ -244,7 +243,8 @@ class DefaultController extends OrderAbstractController
 
             //Set state the same way as clicking "Submit" on the new project form
             // (submitIrbReview button => 'irb_review')
-            $project->setState('irb_review');
+            //$project->setState('irb_review');
+            $project->setState('final_review');
             $startProjectReview = true;
             //$project->setState('draft');
             //$startProjectReview = false;
@@ -438,7 +438,15 @@ class DefaultController extends OrderAbstractController
                 }
             }
 
+//            $this->addFlash(
+//                'notice',
+//                "Project inquiry request ".$project->getOid()." has been successfully submitted."
+//            );
+
             //return $this->redirectToRoute('ctp_new-project-inquiry');
+            //Pass the project OID so the home page can show a confirmation banner
+            //even if the flash message is not rendered after the redirect
+            //return $this->redirectToRoute('ctp_home',array('projectInquirySubmitted'=>$project->getOid()));
             return $this->redirectToRoute('ctp_home');
         }
 
@@ -453,7 +461,7 @@ class DefaultController extends OrderAbstractController
     private function getRequiredInquiryFieldErrors(Request $request, string $inquiryType): array
     {
         $requiredFields = array(
-            'inquiryDate' => 'Date',
+            //'inquiryDate' => 'Date',
             'background' => 'Background',
             'experimentalPlanSummary' => 'Experimental Plan Summary',
         );

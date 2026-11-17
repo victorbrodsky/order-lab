@@ -1384,7 +1384,12 @@ class ProjectController extends OrderAbstractController
 
         //Separate minimalistic flow for "Investigator's Initial Project Inquiry" (specialty 'init')
         if( strtolower($specialtyStr) == 'init' ) {
-            return $this->redirectToRoute('translationalresearch_initproject_new',$request->query->all());
+            //return $this->redirectToRoute('translationalresearch_initproject_new',$request->query->all());
+            return $this->forward(
+                InitProjectController::class.'::initProjectNewAction',
+                $request->query->all()
+                //$request
+            );
         }
 
         //$specialtyStr = $request->query->get('specialty');
@@ -1709,7 +1714,13 @@ class ProjectController extends OrderAbstractController
         //Redirect "Investigator's Initial Project Inquiry" (init) projects to the minimalistic edit page
         $projectSpecialty = $project->getProjectSpecialty();
         if( $projectSpecialty && strtolower($projectSpecialty->getAbbreviation()) == 'init' ) {
-            return $this->redirectToRoute('translationalresearch_initproject_edit',array('id'=>$project->getId()));
+            //return $this->redirectToRoute('translationalresearch_initproject_edit',array('id'=>$project->getId()));
+            return $this->forward(
+                InitProjectController::class.'::initProjectEditAction',
+                [
+                    'id' => $project->getId(),
+                ]
+            );
         }
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
@@ -2129,18 +2140,6 @@ class ProjectController extends OrderAbstractController
     #[Template('AppTranslationalResearchBundle/Project/show.html.twig')]
     public function showAction(Request $request, #[MapEntity] Project $project, $cycle="show")
     {
-        //Redirect "Investigator's Initial Project Inquiry" (init) projects to the minimalistic show page
-        $projectSpecialty = $project->getProjectSpecialty();
-        if( $projectSpecialty && strtolower($projectSpecialty->getAbbreviation()) == 'init' ) {
-            //return $this->redirectToRoute('translationalresearch_initproject_show',array('id'=>$project->getId()));
-            return $this->forward(
-                InitProjectController::class.'::initProjectEditAction',
-                [
-                    'id' => $project->getId(),
-                ]
-            );
-        }
-
 //        //Testing
 //        if( $this->isGranted('ROLE_TRANSRES_ADMIN') ) {
 //            echo "showAction: YES ROLE_TRANSRES_ADMIN <br>";
@@ -2151,6 +2150,18 @@ class ProjectController extends OrderAbstractController
 
         if( false === $transresPermissionUtil->hasProjectPermission("view",$project) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //Redirect "Investigator's Initial Project Inquiry" (init) projects to the minimalistic show page
+        $projectSpecialty = $project->getProjectSpecialty();
+        if( $projectSpecialty && strtolower($projectSpecialty->getAbbreviation()) == 'init' ) {
+            //return $this->redirectToRoute('translationalresearch_initproject_show',array('id'=>$project->getId()));
+            return $this->forward(
+                InitProjectController::class.'::initProjectShowAction',
+                [
+                    'id' => $project->getId(),
+                ]
+            );
         }
 
         $transresUtil = $this->container->get('transres_util');

@@ -133,7 +133,7 @@ abstract class BasePermissionVoter extends Voter {
     {
 
         $attribute = $this->convertAttribute($attribute);
-        //echo "attribute=$attribute <br>";
+        //echo "BasePermission voteOnAttribute: attribute=$attribute <br>";
 
         $user = $token->getUser();
 

@@ -289,6 +289,18 @@ class DefaultController extends OrderAbstractController
 //            echo $count.': '.$submitter."<br>";
 //        }
 //        exit('1');
+
+//        if( $this->isGranted("ROLE_TRANSRES_BIOINFORMATICIAN") ) {
+//            echo "ROLE_TRANSRES_BIOINFORMATICIAN Granted <br>";
+//        } else {
+//            echo "ROLE_TRANSRES_BIOINFORMATICIAN NOT Granted <br>";
+//        }
+//        if( $this->isGranted("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
+//            echo "ROLE_PLATFORM_DEPUTY_ADMIN Granted <br>";
+//        } else {
+//            echo "ROLE_PLATFORM_DEPUTY_ADMIN NOT Granted <br>";
+//        }
+//        exit('111');
         
         return array('sitename'=>$this->getParameter('translationalresearch.sitename'));
     }

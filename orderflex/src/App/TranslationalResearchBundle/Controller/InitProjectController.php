@@ -145,7 +145,8 @@ class InitProjectController extends OrderAbstractController
             }
 
             if( $form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName() ) {
-                $project->setState('irb_review');
+                //$project->setState('irb_review');
+                $project->setState('final_review');
                 $startProjectReview = true;
             }
 

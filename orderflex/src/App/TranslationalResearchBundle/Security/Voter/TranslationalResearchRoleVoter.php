@@ -83,7 +83,7 @@ class TranslationalResearchRoleVoter extends BaseRoleVoter {
     public function voteOnSiteSpecificAttribute($attribute, $subject, TokenInterface $token, $sitename, $siteRoleBase) : bool
     {
         //exit('voteOnSiteSpecificAttribute: attribute='.$attribute);
-        //return false; //testing
+        //return false; //testing //$attribute=ROLE_TRANSRES_ADMIN__USCAP?
         //echo $sitename.': voteOn SiteSpecific Attribute: attribute='.$attribute.", siteRoleBase=".$siteRoleBase."<br>";
         //echo 'attribute='.$attribute."<br>";
         //echo 'subject='.$subject."<br>";
@@ -174,6 +174,27 @@ class TranslationalResearchRoleVoter extends BaseRoleVoter {
         } else {
             //Check for general role (without specialty) ROLE_TRANSRES_TECHNICIAN if user has role ROLE_TRANSRES_ADMIN_USCAP
             //specialty not provided. i.e. 'ROLE_TRANSRES_TECHNICIAN'
+
+            //The admin-implies-general-role fallback is only valid for the general
+            //role families that make up the admin role hierarchy (TECHNICIAN, REQUESTER, ...).
+            //Standalone roles like ROLE_TRANSRES_BIOINFORMATICIAN and
+            //ROLE_TRANSRES_PROJECT_REACTIVATION_APPROVER must NOT be granted to admins.
+            $adminImpliedGeneralRoles = array(
+                'ROLE_TRANSRES_ADMIN',
+                'ROLE_TRANSRES_TECHNICIAN',
+                'ROLE_TRANSRES_REQUESTER',
+                'ROLE_TRANSRES_IRB_REVIEWER',
+                'ROLE_TRANSRES_COMMITTEE_REVIEWER',
+                'ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER',
+                'ROLE_TRANSRES_PRIMARY_REVIEWER',
+                'ROLE_TRANSRES_BILLING_ADMIN',
+                'ROLE_TRANSRES_EXECUTIVE',
+            );
+            if( !in_array($attribute, $adminImpliedGeneralRoles) ) {
+                //exit($attribute.': not an admin-implied general role');
+                return false;
+            }
+
             //2) check if user has a admin role for this specialty
             $adminPartialRole = "ROLE_TRANSRES_ADMIN";
             $roleObjects = $this->em->getRepository(User::class)->findUserRolesBySiteAndPartialRoleName($user,$sitename,$adminPartialRole);

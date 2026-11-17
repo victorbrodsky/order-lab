@@ -152,3 +152,6 @@ To match forms - add missing text fields:
 
 https://github.com/victorbrodsky/path2path/issues/5
 
+C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\src\App\TranslationalResearchBundle\Util\TransResPermissionUtil.php
+ROLE_TRANSRES_BIOINFORMATICIAN return true
+Case: moa3002 (Translational Research USCAP Admin ROLE_TRANSRES_ADMIN_USCAP) -> MISI

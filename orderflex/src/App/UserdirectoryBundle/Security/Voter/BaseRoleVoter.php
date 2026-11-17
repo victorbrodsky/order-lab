@@ -83,6 +83,9 @@ abstract class BaseRoleVoter extends Voter {
     {
 
         //return false; //testing
+        //echo "1 BaseRoleVoter voteOnAttribute: attribute=$attribute <br>"; //ROLE_TRANSRES_ADMIN__USCAP?
+        //$attribute = str_replace('__', '_', $attribute);
+        //echo "2 BaseRoleVoter voteOnAttribute: attribute=$attribute <br>"; //ROLE_TRANSRES_ADMIN__USCAP?
 
         $siteRoleBase = $this->getSiteRoleBase();
         $sitename = $this->getSitename();

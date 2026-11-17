@@ -392,7 +392,7 @@ class TransResPermissionUtil
             $specialtyStr = $projectSpecialtyObject->getUppercaseName();
             $specialtyStr = "_" . $specialtyStr;
         }
-//        echo "specialtyStr=$specialtyStr; action=$action<br>";
+        //echo "specialtyStr=$specialtyStr; action=$action<br>"; //specialtyStr=_MISI;
 //
 //        if( $this->security->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
 //            echo "[ROLE_TRANSRES_REQUESTER".$specialtyStr . "] role is OK <br>";
@@ -463,7 +463,7 @@ class TransResPermissionUtil
 //                exit('hasProjectPermission: ROLE_TRANSRES_REQUESTER'.$specialtyStr);
 //                return true;
 //            }
-
+            //echo "specialtyStr=$specialtyStr; action=$action<br>"; //specialtyStr=_MISI;
             if(
                 $this->security->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr)
                 //|| $this->security->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
@@ -483,6 +483,7 @@ class TransResPermissionUtil
                 if( $project->sendComputationalEmail() ) {
                     //exit('hasProjectPermission: sendComputationalEmail='.$project->sendComputationalEmail());
                     if( $this->security->isGranted("ROLE_TRANSRES_BIOINFORMATICIAN") ) {
+                        //exit('ROLE_TRANSRES_BIOINFORMATICIAN');
                         return true;
                     }
                 }
