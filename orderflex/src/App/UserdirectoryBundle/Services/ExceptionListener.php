@@ -306,6 +306,9 @@ class ExceptionListener {
         if( strpos((string)$controller,'App\DeidentifierBundle') !== false ) {
             return "deidentifier";
         }
+        if( strpos((string)$controller,'App\PortalBundle') !== false ) {
+            return "portal";
+        }
         if( strpos((string)$controller,'App\VacReqBundle') !== false ) {
             return "vacreq";
         }

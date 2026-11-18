@@ -786,6 +786,9 @@ class UserRequestController extends OrderAbstractController
             case "deidentifier":
                 $name = "ORDER Deidentifier";
                 break;
+            case "portal":
+                $name = "ORDER Portal";
+                break;
             case "fellapp":
                 $name = "ORDER Fellowship Applications";
                 break;

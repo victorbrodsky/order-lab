@@ -346,6 +346,17 @@ security:
        - { path: ^.*/prostate-cancer-research-data-explorer/applications, role: ROLE_SPORE_USER }
        - { path: ^.*/prostate-cancer-research-data-explorer/, role: ROLE_SPORE_USER }
 
+      ############################## Portal SITE SETTINGS ##############################
+       - { path: ^.*/portal/access-requests/new/, role: PUBLIC_ACCESS }
+       - { path: ^.*/portal/login, role: PUBLIC_ACCESS }
+       - { path: ^.*/portal/setloginvisit, role: PUBLIC_ACCESS }
+       - { path: ^.*/portal/account-requests/, role: PUBLIC_ACCESS }
+       - { path: ^.*/portal/sign-up, role: PUBLIC_ACCESS }
+       - { path: ^.*/portal/activate-account, role: PUBLIC_ACCESS }
+       - { path: ^.*/portal/forgot-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/portal/reset-password, role: PUBLIC_ACCESS }
+       - { path: ^.*/portal/, role: ROLE_PORTAL_USER }
+
        ### SAML testing ###
        - { path: ^.*/saml/(metadata|login|acs|logout|sls), roles: PUBLIC_ACCESS }
        - { path: ^.*/saml/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }

@@ -1,0 +1,30 @@
+parameters:
+  portal.sitename: portal
+
+
+twig:
+    globals:
+        portal_sitename: '%portal.sitename%'
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                                    # fetching services directly from the container via $container->get() won't work.
+                                    # The best practice is to be explicit about your dependencies anyway.
+
+    portal_authentication_handler:
+        class: App\PortalBundle\Security\Authentication\PortalLoginSuccessHandler
+
+    portal_role_voter:
+        class: App\PortalBundle\Security\Voter\PortalRoleVoter
+        public: false
+        tags:
+            - { name: security.voter }
+
+    portal_permission_voter:
+        class: App\PortalBundle\Security\Voter\PortalPermissionVoter
+        public: false
+        tags:
+            - { name: security.voter }

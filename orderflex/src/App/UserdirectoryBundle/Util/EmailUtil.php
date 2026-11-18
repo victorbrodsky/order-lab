@@ -180,6 +180,10 @@ class EmailUtil {
                 $sitenameAbbreviation = "deidentifier";
                 $subject = "[Deidentifier] " . $subject;
             }
+            if (strpos((string)$url, "/portal/") !== false) {
+                $sitenameAbbreviation = "portal";
+                $subject = "[Portal] " . $subject;
+            }
             if (strpos((string)$url, "/dashboard/") !== false) {
                 $sitenameAbbreviation = "dashboard";
                 $subject = "[Dashboard] " . $subject;

@@ -2209,6 +2209,39 @@ class AdminController extends OrderAbstractController
             ),
             ////////////////////////////////
 
+            //////////// Portal roles ////////////
+            "ROLE_PORTAL_ADMIN" => array(
+                "Portal Administrator",
+                "Full access for the Portal site",
+                90,
+                "portal"
+            ),
+            "ROLE_PORTAL_EDITOR" => array(
+                "Portal Editor",
+                "Can edit portal pages",
+                60,
+                "portal"
+            ),
+            "ROLE_PORTAL_USER" => array(
+                "Portal User",
+                "View access for the Portal site",
+                50,
+                "portal"
+            ),
+            "ROLE_PORTAL_BANNED" => array(
+                "Portal Banned User",
+                "Does not allow to visit Portal site",
+                -1,
+                "portal"
+            ),
+            "ROLE_PORTAL_UNAPPROVED" => array(
+                "Portal Unapproved User",
+                "Does not allow to visit Portal site",
+                0,
+                "portal"
+            ),
+            ////////////////////////////////
+
             //TRANSRES - similar to ROLE_FELLAPP_INTERVIEWER_WCM_HEMATOPATHOLOGY - _WCM_HEMEPATH and _WCM_APCP
             "ROLE_TRANSRES_ADMIN_APCP" => array(
                 "Translational Research AP/CP Admin",
@@ -3180,6 +3213,7 @@ class AdminController extends OrderAbstractController
             'cohort-generator' => 'cohortg',
             'regulatory-templates' => 'regulatoryt',
             'prostate-cancer-research-data-explorer' => 'spore',
+            'portal' => 'portal',
         );
         return $elements;
     }
@@ -3234,7 +3268,9 @@ class AdminController extends OrderAbstractController
 
             'dashboards' => '"Dashboards" is a site for displaying categorized chart groups to authorized users,'
             .' including charts to monitor productivity, financial statistics,'
-            .' turnaround times, applicant scores, and site activity.'
+            .' turnaround times, applicant scores, and site activity.',
+
+            'portal' => '"Portal" is a site for custom content wiki pages, access management, and user profiles.'
         );
         return $elements;
     }
@@ -4218,6 +4254,7 @@ class AdminController extends OrderAbstractController
         $elements = array(
             'Employee Directory',
             'Deidentifier',
+            'Portal',
             'Call Log Book',
             'Critical Result Notifications',
             'Fellowship Applications',
@@ -9101,6 +9138,8 @@ class AdminController extends OrderAbstractController
 
             $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboards' ); //Dashboard
 
+            $resCount = $resCount + $this->addSites( $role, '_PORTAL_', 'portal' );
+
             $resCount = $resCount + $this->addFellAppPermission( $role );
             $resCount = $resCount + $this->addResAppPermission( $role );
 
@@ -9173,6 +9212,7 @@ class AdminController extends OrderAbstractController
                 $resCount = $resCount + $this->addSites($role, '_CRN_', 'critical-result-notifications');
                 $resCount = $resCount + $this->addSites($role, '_CTP_', 'center-for-translational-pathology');
                 $resCount = $resCount + $this->addSites($role, '_DASHBOARD_', 'dashboards'); //Dashboard
+                $resCount = $resCount + $this->addSites($role, '_PORTAL_', 'portal');
             }
 
             if( $resCount > 0 ) {

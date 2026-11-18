@@ -10,6 +10,7 @@ imports:
     - { resource: "../src/App/OrderformBundle/Resources/config/services.yml" }
     - { resource: "../src/App/VacReqBundle/Resources/config/services.yml" }
     - { resource: "../src/App/DeidentifierBundle/Resources/config/services.yml" }
+    - { resource: "../src/App/PortalBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CallLogBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CrnBundle/Resources/config/services.yml" }
     - { resource: "../src/App/CtpBundle/Resources/config/services.yml" }
@@ -140,6 +141,8 @@ services:
         resource: '../src/App/OrderformBundle/Controller/'
     App\DeidentifierBundle\Controller\:
         resource: '../src/App/DeidentifierBundle/Controller/'
+    App\PortalBundle\Controller\:
+        resource: '../src/App/PortalBundle/Controller/'
     App\DashboardBundle\Controller\:
         resource: '../src/App/DashboardBundle/Controller/'
 

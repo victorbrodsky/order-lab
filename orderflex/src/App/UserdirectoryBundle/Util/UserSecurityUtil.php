@@ -979,6 +979,10 @@ class UserSecurityUtil {
                 $roles = array("ROLE_DASHBOARD_ADMIN");
             }
 
+            if( $sitename == $this->container->getParameter('portal.sitename') ) {
+                $roles = array("ROLE_PORTAL_ADMIN");
+            }
+
         } else {
             return null;
         }
@@ -1234,6 +1238,9 @@ class UserSecurityUtil {
         if ($sitename == 'dashboard' ) {
             $defaultSourceSystemName = 'ORDER Dashboards';
         }
+        if ($sitename == 'portal' ) {
+            $defaultSourceSystemName = 'ORDER Portal';
+        }
         if ($sitename == 'scan' || $sitename == null ) {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
         }
@@ -1296,6 +1303,9 @@ class UserSecurityUtil {
         }
         if( strpos((string)$url, $subdomain.'/dashboards/') !== false ) {
             $defaultSourceSystemName = 'ORDER Dashboards';
+        }
+        if( strpos((string)$url, $subdomain.'/portal/') !== false ) {
+            $defaultSourceSystemName = 'ORDER Portal';
         }
 
         if( !$defaultSourceSystemName ) {

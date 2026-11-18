@@ -560,7 +560,8 @@ class HomeController extends OrderAbstractController {
             'critical-result-notifications' => 'crn',
             'center-for-translational-pathology' => 'ctp',
             'translational-research' => 'translationalresearch',
-            'dashboards' => 'dashboard'
+            'dashboards' => 'dashboard',
+            'portal' => 'portal'
         );
 
 
