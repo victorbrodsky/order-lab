@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\PortalBundle\Controller;
+namespace App\WikiportalBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
@@ -37,7 +37,7 @@ class DefaultController extends OrderAbstractController
     }
 
     #[Route(path: '/', name: 'wikiportal_home', methods: ['GET'])]
-    #[Template('AppPortalBundle/Default/index.html.twig')]
+    #[Template('AppWikiportalBundle/Default/index.html.twig')]
     public function indexAction( Request $request ) {
         return array(
             'sitename' => $this->getParameter('wikiportal.sitename')

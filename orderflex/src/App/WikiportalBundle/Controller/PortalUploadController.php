@@ -22,7 +22,7 @@
  * Time: 11:57 AM
  */
 
-namespace App\PortalBundle\Controller;
+namespace App\WikiportalBundle\Controller;
 
 use App\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Component\HttpFoundation\Request;

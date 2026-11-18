@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\PortalBundle\Security\Authentication;
+namespace App\WikiportalBundle\Security\Authentication;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

@@ -14,27 +14,17 @@
     limitations under the License.
 #}
 
-{% extends "AppPortalBundle/Default/base.html.twig" %}
-
+{% extends "AppWikiportalBundle/Default/base.html.twig" %}
 
 {% block title %}
-    {{ eventLogTitle }}
+    Portal
 {% endblock %}
-
 
 {% block content %}
-    {% include 'AppUserdirectoryBundle/Logger/logger_common.html.twig' %}
-{% endblock %}
 
-
-{% block additionalcss %}
-
-    <link rel="stylesheet" type="text/css" href="{{ asset('orderassets/AppUserdirectoryBundle/datetimepicker/css/bootstrap-datetimepicker.min.css') }}" />
-
-{% endblock %}
-
-{% block additionaljs %}
-
-    <script type="text/javascript" src="{{ asset('orderassets/AppUserdirectoryBundle/datetimepicker/js/bootstrap-datetimepicker.min.js') }}" ></script>
+    <div class="portal-home">
+        <h1>Portal</h1>
+        <p>Welcome to the Portal.</p>
+    </div>
 
 {% endblock %}

@@ -22,7 +22,7 @@
  * Time: 10:10 AM
  */
 
-namespace App\PortalBundle\Controller;
+namespace App\WikiportalBundle\Controller;
 
 
 

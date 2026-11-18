@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\PortalBundle\Controller;
+namespace App\WikiportalBundle\Controller;
 
 use App\UserdirectoryBundle\Controller\UserController;
 

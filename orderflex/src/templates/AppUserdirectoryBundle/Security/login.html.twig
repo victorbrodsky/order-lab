@@ -100,6 +100,12 @@
             {% set favicon = 'bar-chart-fill.svg' %}
         {% endif %}
 
+        {% if sitename == wikiportal_sitename %}
+            {% set title = "Wiki Portal" %}
+            {#{% set favicon = 'favicon-stats.png' %}#}
+            {% set favicon = 'glyphicons-43-book.png' %}
+        {% endif %}
+
         <title>{{ title }}</title>
 
         {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}

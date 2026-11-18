@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\PortalBundle\Controller;
+namespace App\WikiportalBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;

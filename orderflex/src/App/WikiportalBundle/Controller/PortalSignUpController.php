@@ -1,6 +1,6 @@
 <?php
 
-namespace App\PortalBundle\Controller;
+namespace App\WikiportalBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\SignUpController;

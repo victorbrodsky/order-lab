@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\PortalBundle\Controller;
+namespace App\WikiportalBundle\Controller;
 
 
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,7 +37,7 @@ class PortalLoggerController extends LoggerController
      * Lists all Logger entities.
      */
     #[Route(path: '/', name: 'wikiportal_logger', methods: ['GET'])]
-    #[Template('AppPortalBundle/Logger/index.html.twig')]
+    #[Template('AppWikiportalBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false == $this->isGranted("ROLE_WIKIPORTAL_ADMIN") ){
@@ -52,7 +52,7 @@ class PortalLoggerController extends LoggerController
 
 
     #[Route(path: '/user/{id}/all', name: 'wikiportal_logger_user_all', methods: ['GET'])]
-    #[Template('AppPortalBundle/Logger/index.html.twig')]
+    #[Template('AppWikiportalBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
         $postData = $request->attributes->get('postData', $request->query->get('postData', $request->request->get('postData')));

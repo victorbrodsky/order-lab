@@ -15,16 +15,16 @@ services:
                                     # The best practice is to be explicit about your dependencies anyway.
 
     wikiportal_authentication_handler:
-        class: App\PortalBundle\Security\Authentication\PortalLoginSuccessHandler
+        class: App\WikiportalBundle\Security\Authentication\PortalLoginSuccessHandler
 
     wikiportal_role_voter:
-        class: App\PortalBundle\Security\Voter\PortalRoleVoter
+        class: App\WikiportalBundle\Security\Voter\PortalRoleVoter
         public: false
         tags:
             - { name: security.voter }
 
     wikiportal_permission_voter:
-        class: App\PortalBundle\Security\Voter\PortalPermissionVoter
+        class: App\WikiportalBundle\Security\Voter\PortalPermissionVoter
         public: false
         tags:
             - { name: security.voter }

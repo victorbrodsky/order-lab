@@ -35,7 +35,7 @@ app_deidentifier:
     prefix:   /deidentifier
 
 app_wikiportal:
-    resource: "../src/App/PortalBundle/Controller/"
+    resource: "../src/App/WikiportalBundle/Controller/"
     type:     attribute
     prefix:   /wiki-portal
 

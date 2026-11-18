@@ -443,7 +443,7 @@ class MaintenanceListener {
         if( strpos((string)$controller,'App\DashboardBundle') !== false ) {
             return "dashboard";
         }
-        if( strpos((string)$controller,'App\PortalBundle') !== false ) {
+        if( strpos((string)$controller,'App\WikiportalBundle') !== false ) {
             return "wikiportal";
         }
 

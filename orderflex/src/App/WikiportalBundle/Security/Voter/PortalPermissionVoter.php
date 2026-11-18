@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace App\PortalBundle\Security\Voter;
+namespace App\WikiportalBundle\Security\Voter;
 
 
 use App\UserdirectoryBundle\Security\Voter\BasePermissionVoter;
