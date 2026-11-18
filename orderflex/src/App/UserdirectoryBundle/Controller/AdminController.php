@@ -2210,9 +2210,6 @@ class AdminController extends OrderAbstractController
             ////////////////////////////////
 
             //////////// Portal roles ////////////
-            //url: wiki-portal
-            //Short Name:
-            //Abbreviation: wikiportal
             "ROLE_WIKIPORTAL_ADMIN" => array(
                 "Wiki Portal Administrator",
                 "Full access for the Wiki Portal site",
@@ -2220,25 +2217,25 @@ class AdminController extends OrderAbstractController
                 "wiki-portal"
             ),
             "ROLE_WIKIPORTAL_EDITOR" => array(
-                "Portal Editor",
+                "Wiki Portal Editor",
                 "Can edit wiki portal pages",
                 60,
                 "wiki-portal"
             ),
             "ROLE_WIKIPORTAL_USER" => array(
-                "Portal User",
+                "Wiki Portal User",
                 "View access for the Wiki Portal site",
                 50,
                 "wiki-portal"
             ),
             "ROLE_WIKIPORTAL_BANNED" => array(
-                "Portal Banned User",
+                "Wiki Portal Banned User",
                 "Does not allow to visit Wiki Portal site",
                 -1,
                 "wiki-portal"
             ),
             "ROLE_WIKIPORTAL_UNAPPROVED" => array(
-                "Portal Unapproved User",
+                "Wiki Portal Unapproved User",
                 "Does not allow to visit Wiki Portal site",
                 0,
                 "wiki-portal"
@@ -2535,7 +2532,19 @@ class AdminController extends OrderAbstractController
                     );
                 }
 
+                //update wikiportal short name if set
+                if( str_contains($roleName, "_WIKIPORTAL_") && $entity->getShortname() ) {
+                    //echo 'update shortname to '.$alias.'<br>';
+                    $entity->setShortname( trim((string)$alias) );
+                }
+
                 continue; //temporary disable to override alias, description, level
+            }
+
+            //replace role 'PORTAL_' to '_WIKIPORTAL_'
+            if( str_contains($roleName, "_WIKIPORTAL_") ) {
+                $oldRoleName = str_replace('_WIKIPORTAL_','_PORTAL_',$roleName);
+                $entity = $em->getRepository(Roles::class)->findOneByName(trim((string)$oldRoleName));
             }
 
             if( !$entity ) {
@@ -9141,7 +9150,7 @@ class AdminController extends OrderAbstractController
 
             $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboards' ); //Dashboard
 
-            $resCount = $resCount + $this->addSites( $role, '_PORTAL_', 'wiki-portal' );
+            $resCount = $resCount + $this->addSites( $role, '_WIKIPORTAL_', 'wiki-portal' );
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
             $resCount = $resCount + $this->addResAppPermission( $role );
@@ -9215,7 +9224,7 @@ class AdminController extends OrderAbstractController
                 $resCount = $resCount + $this->addSites($role, '_CRN_', 'critical-result-notifications');
                 $resCount = $resCount + $this->addSites($role, '_CTP_', 'center-for-translational-pathology');
                 $resCount = $resCount + $this->addSites($role, '_DASHBOARD_', 'dashboards'); //Dashboard
-                $resCount = $resCount + $this->addSites($role, '_PORTAL_', 'wiki-portal');
+                $resCount = $resCount + $this->addSites($role, '_WIKIPORTAL_', 'wiki-portal');
             }
 
             if( $resCount > 0 ) {

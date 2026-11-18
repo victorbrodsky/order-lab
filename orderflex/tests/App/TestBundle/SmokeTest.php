@@ -29,6 +29,9 @@ class SmokeTest extends WebTestBase
         yield ['/'];
         yield ['/directory/users'];
 
+        yield ['/wiki-portal/'];
+        yield ['/wiki-portal/about'];
+
         yield ['/translational-research/projects/'];
         yield ['/translational-research/work-requests/list/'];
         yield ['/translational-research/invoice/list/All-Invoices'];
