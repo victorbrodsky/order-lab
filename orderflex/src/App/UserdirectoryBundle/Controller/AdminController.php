@@ -2532,20 +2532,20 @@ class AdminController extends OrderAbstractController
                     );
                 }
 
-                //update wikiportal short name if set
-                if( str_contains($roleName, "_WIKIPORTAL_") && $entity->getShortname() ) {
-                    //echo 'update shortname to '.$alias.'<br>';
-                    $entity->setShortname( trim((string)$alias) );
-                }
+//                //update wikiportal short name if set
+//                if( str_contains($roleName, "_WIKIPORTAL_") && $entity->getShortname() ) {
+//                    //echo 'update shortname to '.$alias.'<br>';
+//                    $entity->setShortname( trim((string)$alias) );
+//                }
 
                 continue; //temporary disable to override alias, description, level
             }
 
-            //replace role 'PORTAL_' to '_WIKIPORTAL_'
-            if( str_contains($roleName, "_WIKIPORTAL_") ) {
-                $oldRoleName = str_replace('_WIKIPORTAL_','_PORTAL_',$roleName);
-                $entity = $em->getRepository(Roles::class)->findOneByName(trim((string)$oldRoleName));
-            }
+//            //replace role 'PORTAL_' to '_WIKIPORTAL_'
+//            if( str_contains($roleName, "_WIKIPORTAL_") ) {
+//                $oldRoleName = str_replace('_WIKIPORTAL_','_PORTAL_',$roleName);
+//                $entity = $em->getRepository(Roles::class)->findOneByName(trim((string)$oldRoleName));
+//            }
 
             if( !$entity ) {
                 $entity = new Roles();
