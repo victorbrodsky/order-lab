@@ -34,10 +34,10 @@ app_deidentifier:
     type:     attribute
     prefix:   /deidentifier
 
-app_portal:
+app_wikiportal:
     resource: "../src/App/PortalBundle/Controller/"
     type:     attribute
-    prefix:   /portal
+    prefix:   /wiki-portal
 
 app_fellapp:
     resource: "../src/App/FellAppBundle/Controller/"
@@ -225,10 +225,10 @@ deidentifier_login_check:
 deidentifier_logout:
     path:   /deidentifier/logout
 
-portal_login_check:
-    path:   /portal/login_check
-portal_logout:
-    path:   /portal/logout
+wikiportal_login_check:
+    path:   /wiki-portal/login_check
+wikiportal_logout:
+    path:   /wiki-portal/logout
 
 vacreq_login_check:
     path:   /time-away-request/login_check

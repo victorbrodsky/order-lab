@@ -174,8 +174,8 @@ class SessionIdleHandler
         if (strpos((string)$url, "/deidentifier/") !== false) {
             $idleLogoutRouteName = 'deidentifier_idlelogout';
         }
-        if (strpos((string)$url, "/portal/") !== false) {
-            $idleLogoutRouteName = 'portal_idlelogout';
+        if (strpos((string)$url, "/wiki-portal/") !== false) {
+            $idleLogoutRouteName = 'wikiportal_idlelogout';
         }
         if (strpos((string)$url, "/dashboard/") !== false) {
             $idleLogoutRouteName = 'dashboard_idlelogout';

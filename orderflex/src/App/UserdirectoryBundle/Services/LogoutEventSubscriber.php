@@ -153,8 +153,8 @@ class LogoutEventSubscriber implements EventSubscriberInterface
         if( $routename == "deidentifier_logout" ) {
             $sitename = $this->container->getParameter('deidentifier.sitename');
         }
-        if( $routename == "portal_logout" ) {
-            $sitename = $this->container->getParameter('portal.sitename');
+        if( $routename == "wikiportal_logout" ) {
+            $sitename = $this->container->getParameter('wikiportal.sitename');
         }
         if( $routename == "scan_logout" ) {
             $sitename = $this->container->getParameter('scan.sitename');

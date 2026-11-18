@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PortalUploadController extends UploadController {
 
-    #[Route(path: '/file-delete', name: 'portal_file_delete', methods: ['GET', 'POST', 'DELETE'])]
+    #[Route(path: '/file-delete', name: 'wikiportal_file_delete', methods: ['GET', 'POST', 'DELETE'])]
     public function deleteFileAction(Request $request) {
         return $this->deleteFileMethod($request);
     }
@@ -43,18 +43,18 @@ class PortalUploadController extends UploadController {
     /**
      * $id - document id
      */
-    #[Route(path: '/file-download/{id}/{eventtype}', name: 'portal_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/file-download/{id}/{eventtype}', name: 'wikiportal_file_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
-        return $this->downloadFileMethod($request,$id,$this->getParameter('portal.sitename'),$eventtype);
+        return $this->downloadFileMethod($request,$id,$this->getParameter('wikiportal.sitename'),$eventtype);
     }
 
 
     /**
      * $id - document id
      */
-    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'portal_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/file-view/{id}/{viewType}/{eventtype}', name: 'wikiportal_file_view', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
-        return $this->viewFileMethod($request,$id,$this->getParameter('portal.sitename'),$eventtype,$viewType);
+        return $this->viewFileMethod($request,$id,$this->getParameter('wikiportal.sitename'),$eventtype,$viewType);
     }
 
 

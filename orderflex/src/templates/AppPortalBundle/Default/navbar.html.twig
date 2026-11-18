@@ -29,8 +29,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            {% if is_granted('ROLE_PORTAL_USER') %}
-                <a class="navbar-brand visible-xs visible-sm" href="{{ path(portal_sitename~'_home') }}">Home</a> <!-- this is for mobile devices - top menu -->
+            {% if is_granted('ROLE_WIKIPORTAL_USER') %}
+                <a class="navbar-brand visible-xs visible-sm" href="{{ path(wikiportal_sitename~'_home') }}">Home</a> <!-- this is for mobile devices - top menu -->
             {% endif %}
         </div>
 
@@ -38,7 +38,7 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
 
 
-            {% if is_granted('ROLE_PORTAL_USER') %}
+            {% if is_granted('ROLE_WIKIPORTAL_USER') %}
 
                 <ul class="nav navbar-nav navbar-left">
 
@@ -46,7 +46,7 @@
                     {{ usermacros.siteSwitch() }}
 
                     <li id="nav-bar-portalhome" class="hidden-xs divider-vertical">
-                        <a href="{{ path(portal_sitename~'_home') }}">
+                        <a href="{{ path(wikiportal_sitename~'_home') }}">
                             <span class="glyphicon glyphicon-book"></span> Home
                         </a>
                     </li>
@@ -60,23 +60,23 @@
             <ul class="nav navbar-nav navbar-right">
 
 
-                {% if is_granted('ROLE_PORTAL_ADMIN') %}
+                {% if is_granted('ROLE_WIKIPORTAL_ADMIN') %}
 
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
                         <ul class="dropdown-menu">
 
-                            <li><a href="{{ path(portal_sitename~'_accessrequest_list') }}">Access Requests</a></li>
-                            <li><a href="{{ path(portal_sitename~'_accountrequest') }}">Account Requests</a></li>
-                            <li><a href="{{ path(portal_sitename~'_authorized_users') }}">Authorized Users</a></li>
+                            <li><a href="{{ path(wikiportal_sitename~'_accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path(wikiportal_sitename~'_accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path(wikiportal_sitename~'_authorized_users') }}">Authorized Users</a></li>
 
                             <li class="divider"></li>
-                            <li><a href="{{ path(portal_sitename~'_logger') }}">Event Log</a></li>
+                            <li><a href="{{ path(wikiportal_sitename~'_logger') }}">Event Log</a></li>
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
                                 <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
-                                <li><a href="{{ path(portal_sitename~'_siteparameters') }}">Site Settings</a></li>
+                                <li><a href="{{ path(wikiportal_sitename~'_siteparameters') }}">Site Settings</a></li>
                             {% endif %}
 
                         </ul>
@@ -84,21 +84,21 @@
 
                 {% endif %}
 
-                {% if is_granted('ROLE_PORTAL_USER') %}
+                {% if is_granted('ROLE_WIKIPORTAL_USER') %}
 
                     <li id="nav-bar-user" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
                         <ul class="dropdown-menu">
 
                             {% if pendinguser is not defined %}
-                                <li><a href="{{ path(portal_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
+                                <li><a href="{{ path(wikiportal_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
                             {% endif %}
 
                             {% if pendinguser is not defined %}
-                                <li><a href="{{ path(portal_sitename~'_about_page') }}">About</a></li>
+                                <li><a href="{{ path(wikiportal_sitename~'_about_page') }}">About</a></li>
                             {% endif %}
 
-                            <li><a href="{{ path(portal_sitename~'_logout') }}">Log Out</a></li>
+                            <li><a href="{{ path(wikiportal_sitename~'_logout') }}">Log Out</a></li>
 
                         </ul>
                     </li>
@@ -106,8 +106,8 @@
                 {% endif %}
 
                 {% if app.user is empty %}
-                    <li><a href="{{ path(portal_sitename~'_login') }}">Log In</a></li>
-                    <li><a href="{{ path(portal_sitename~'_signup_new') }}">Sign Up</a></li>
+                    <li><a href="{{ path(wikiportal_sitename~'_login') }}">Log In</a></li>
+                    <li><a href="{{ path(wikiportal_sitename~'_signup_new') }}">Sign Up</a></li>
                 {% endif %}
 
             </ul>

@@ -2210,35 +2210,38 @@ class AdminController extends OrderAbstractController
             ////////////////////////////////
 
             //////////// Portal roles ////////////
-            "ROLE_PORTAL_ADMIN" => array(
-                "Portal Administrator",
-                "Full access for the Portal site",
+            //url: wiki-portal
+            //Short Name:
+            //Abbreviation: wikiportal
+            "ROLE_WIKIPORTAL_ADMIN" => array(
+                "Wiki Portal Administrator",
+                "Full access for the Wiki Portal site",
                 90,
-                "portal"
+                "wiki-portal"
             ),
-            "ROLE_PORTAL_EDITOR" => array(
+            "ROLE_WIKIPORTAL_EDITOR" => array(
                 "Portal Editor",
-                "Can edit portal pages",
+                "Can edit wiki portal pages",
                 60,
-                "portal"
+                "wiki-portal"
             ),
-            "ROLE_PORTAL_USER" => array(
+            "ROLE_WIKIPORTAL_USER" => array(
                 "Portal User",
-                "View access for the Portal site",
+                "View access for the Wiki Portal site",
                 50,
-                "portal"
+                "wiki-portal"
             ),
-            "ROLE_PORTAL_BANNED" => array(
+            "ROLE_WIKIPORTAL_BANNED" => array(
                 "Portal Banned User",
-                "Does not allow to visit Portal site",
+                "Does not allow to visit Wiki Portal site",
                 -1,
-                "portal"
+                "wiki-portal"
             ),
-            "ROLE_PORTAL_UNAPPROVED" => array(
+            "ROLE_WIKIPORTAL_UNAPPROVED" => array(
                 "Portal Unapproved User",
-                "Does not allow to visit Portal site",
+                "Does not allow to visit Wiki Portal site",
                 0,
-                "portal"
+                "wiki-portal"
             ),
             ////////////////////////////////
 
@@ -3213,7 +3216,7 @@ class AdminController extends OrderAbstractController
             'cohort-generator' => 'cohortg',
             'regulatory-templates' => 'regulatoryt',
             'prostate-cancer-research-data-explorer' => 'spore',
-            'portal' => 'portal',
+            'wiki-portal' => 'wikiportal',
         );
         return $elements;
     }
@@ -3270,7 +3273,7 @@ class AdminController extends OrderAbstractController
             .' including charts to monitor productivity, financial statistics,'
             .' turnaround times, applicant scores, and site activity.',
 
-            'portal' => '"Portal" is a site for custom content wiki pages, access management, and user profiles.'
+            'wiki-portal' => '"Wiki Portal" is a site for custom content wiki pages, access management, and user profiles.'
         );
         return $elements;
     }
@@ -4254,7 +4257,7 @@ class AdminController extends OrderAbstractController
         $elements = array(
             'Employee Directory',
             'Deidentifier',
-            'Portal',
+            'Wiki Portal',
             'Call Log Book',
             'Critical Result Notifications',
             'Fellowship Applications',
@@ -9138,7 +9141,7 @@ class AdminController extends OrderAbstractController
 
             $resCount = $resCount + $this->addSites( $role, '_DASHBOARD_', 'dashboards' ); //Dashboard
 
-            $resCount = $resCount + $this->addSites( $role, '_PORTAL_', 'portal' );
+            $resCount = $resCount + $this->addSites( $role, '_PORTAL_', 'wiki-portal' );
 
             $resCount = $resCount + $this->addFellAppPermission( $role );
             $resCount = $resCount + $this->addResAppPermission( $role );
@@ -9212,7 +9215,7 @@ class AdminController extends OrderAbstractController
                 $resCount = $resCount + $this->addSites($role, '_CRN_', 'critical-result-notifications');
                 $resCount = $resCount + $this->addSites($role, '_CTP_', 'center-for-translational-pathology');
                 $resCount = $resCount + $this->addSites($role, '_DASHBOARD_', 'dashboards'); //Dashboard
-                $resCount = $resCount + $this->addSites($role, '_PORTAL_', 'portal');
+                $resCount = $resCount + $this->addSites($role, '_PORTAL_', 'wiki-portal');
             }
 
             if( $resCount > 0 ) {

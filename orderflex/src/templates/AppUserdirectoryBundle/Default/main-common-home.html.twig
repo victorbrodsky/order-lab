@@ -145,14 +145,10 @@
 
         <br><br>
 
-        {% if user_security_utility.isSiteShowLinkNavbar(scan_sitename) %}
-            <p><a href="{{ path('scan_home') }}">Glass Slide Scan Orders</a></p>
-        {% endif %}
-
         <p><a href="{{ path('employees_home') }}">Employee Directory</a></p>
 
-        {% if user_security_utility.isSiteShowLinkNavbar(portal_sitename) %}
-            <p><a href="{{ path('portal_home') }}">Portal</a></p>
+        {% if user_security_utility.isSiteShowLinkNavbar(wikiportal_sitename) %}
+            <p><a href="{{ path('wikiportal_home') }}">Wiki Portal</a></p>
         {% endif %}
 
         {% if user_security_utility.isSiteShowLinkNavbar(fellapp_sitename) %}
@@ -217,6 +213,9 @@
             <p><a href="{{ path('dashboard_home') }}">Dashboards</a></p>
         {% endif %}
 
+        {% if user_security_utility.isSiteShowLinkNavbar(scan_sitename) %}
+            <p><a href="{{ path('scan_home') }}">Glass Slide Scan Orders</a></p>
+        {% endif %}
 
         {% if tenantBaseUrlArr is defined and tenantBaseUrlArr|length > 0 %}
             <div class="well">

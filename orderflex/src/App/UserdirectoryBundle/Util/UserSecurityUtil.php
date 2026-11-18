@@ -979,8 +979,8 @@ class UserSecurityUtil {
                 $roles = array("ROLE_DASHBOARD_ADMIN");
             }
 
-            if( $sitename == $this->container->getParameter('portal.sitename') ) {
-                $roles = array("ROLE_PORTAL_ADMIN");
+            if( $sitename == $this->container->getParameter('wikiportal.sitename') ) {
+                $roles = array("ROLE_WIKIPORTAL_ADMIN");
             }
 
         } else {
@@ -1238,8 +1238,8 @@ class UserSecurityUtil {
         if ($sitename == 'dashboard' ) {
             $defaultSourceSystemName = 'ORDER Dashboards';
         }
-        if ($sitename == 'portal' ) {
-            $defaultSourceSystemName = 'ORDER Portal';
+        if ($sitename == 'wikiportal' ) {
+            $defaultSourceSystemName = 'ORDER Wiki Portal';
         }
         if ($sitename == 'scan' || $sitename == null ) {
             $defaultSourceSystemName = 'ORDER Scan Order';  //'Scan Order';
@@ -1304,8 +1304,8 @@ class UserSecurityUtil {
         if( strpos((string)$url, $subdomain.'/dashboards/') !== false ) {
             $defaultSourceSystemName = 'ORDER Dashboards';
         }
-        if( strpos((string)$url, $subdomain.'/portal/') !== false ) {
-            $defaultSourceSystemName = 'ORDER Portal';
+        if( strpos((string)$url, $subdomain.'/wiki-portal/') !== false ) {
+            $defaultSourceSystemName = 'ORDER Wiki Portal';
         }
 
         if( !$defaultSourceSystemName ) {

@@ -444,7 +444,7 @@ class MaintenanceListener {
             return "dashboard";
         }
         if( strpos((string)$controller,'App\PortalBundle') !== false ) {
-            return "portal";
+            return "wikiportal";
         }
 
         return null;

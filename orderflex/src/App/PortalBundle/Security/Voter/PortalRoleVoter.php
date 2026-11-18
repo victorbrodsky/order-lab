@@ -24,11 +24,11 @@ use App\UserdirectoryBundle\Security\Voter\BaseRoleVoter;
 class PortalRoleVoter extends BaseRoleVoter {
 
     protected function getSiteRoleBase() : string {
-        return 'PORTAL';
+        return 'WIKIPORTAL';
     }
 
     protected function getSitename() : string {
-        return 'portal';  //Site abbreviation
+        return 'wikiportal';  //Site abbreviation
     }
 
 

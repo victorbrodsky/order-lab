@@ -1,10 +1,10 @@
 parameters:
-  portal.sitename: portal
+  wikiportal.sitename: wikiportal
 
 
 twig:
     globals:
-        portal_sitename: '%portal.sitename%'
+        wikiportal_sitename: '%wikiportal.sitename%'
 
 services:
     _defaults:
@@ -14,16 +14,16 @@ services:
                                     # fetching services directly from the container via $container->get() won't work.
                                     # The best practice is to be explicit about your dependencies anyway.
 
-    portal_authentication_handler:
+    wikiportal_authentication_handler:
         class: App\PortalBundle\Security\Authentication\PortalLoginSuccessHandler
 
-    portal_role_voter:
+    wikiportal_role_voter:
         class: App\PortalBundle\Security\Voter\PortalRoleVoter
         public: false
         tags:
             - { name: security.voter }
 
-    portal_permission_voter:
+    wikiportal_permission_voter:
         class: App\PortalBundle\Security\Voter\PortalPermissionVoter
         public: false
         tags:

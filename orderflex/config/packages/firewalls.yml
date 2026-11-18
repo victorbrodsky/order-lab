@@ -168,26 +168,26 @@ security:
                 path: ^.*/deidentifier
 #                always_remember_me: true
 
-        ldap_portal_firewall:
-            pattern: ^.*/portal
+        ldap_wikiportal_firewall:
+            pattern: ^.*/wiki-portal
             context: "%firewall_context_name%"
             switch_user: true
             custom_authenticators:
                 authenticator: custom_guard_authenticator
             form_login:
-                login_path: portal_login
-                check_path: portal_login_check
+                login_path: wikiportal_login
+                check_path: wikiportal_login_check
             logout:
-                path:   portal_logout
-                target: portal_login
+                path:   wikiportal_logout
+                target: wikiportal_login
                 invalidate_session: false
             lazy: true
             provider: users
-            access_denied_url: portal_access_request_new_plain
+            access_denied_url: wikiportal_access_request_new_plain
             remember_me:
                 secret:      "%secret%"
                 lifetime: 28800 # 8 hours in seconds
-                path: ^.*/portal
+                path: ^.*/wiki-portal
 
         ldap_vacreq_firewall:
             #pattern: ^/(%multilocales%)(%locdel%)time-away-request

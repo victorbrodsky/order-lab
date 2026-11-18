@@ -561,7 +561,7 @@ class HomeController extends OrderAbstractController {
             'center-for-translational-pathology' => 'ctp',
             'translational-research' => 'translationalresearch',
             'dashboards' => 'dashboard',
-            'portal' => 'portal'
+            'wiki-portal' => 'wikiportal'
         );
 
 

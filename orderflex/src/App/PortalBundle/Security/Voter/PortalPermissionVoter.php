@@ -26,12 +26,12 @@ class PortalPermissionVoter extends BasePermissionVoter
 
     protected function getSiteRoleBase() : string
     {
-        return 'PORTAL';
+        return 'WIKIPORTAL';
     }
 
     protected function getSitename() : string
     {
-        return 'portal';  //Site abbreviation
+        return 'wikiportal';  //Site abbreviation
     }
 
 }

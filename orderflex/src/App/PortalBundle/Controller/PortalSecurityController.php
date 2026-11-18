@@ -35,35 +35,35 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class PortalSecurityController extends SecurityController
 {
 
-    #[Route(path: '/login', name: 'portal_login')]
+    #[Route(path: '/login', name: 'wikiportal_login')]
     public function loginAction( Request $request, AuthenticationUtils $authenticationUtils ) {
         return parent::loginAction($request,$authenticationUtils);
     }
 
 
-    #[Route(path: '/setloginvisit/', name: 'portal_setloginvisit', methods: ['GET'])]
+    #[Route(path: '/setloginvisit/', name: 'wikiportal_setloginvisit', methods: ['GET'])]
     public function setAjaxLoginVisit( Request $request )
     {
         return parent::setAjaxLoginVisit($request);
     }
 
 
-    #[Route(path: '/no-permission', name: 'portal-nopermission', methods: ['GET'])]
+    #[Route(path: '/no-permission', name: 'wikiportal-nopermission', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/Security/nopermission.html.twig')]
     public function actionNoPermission( Request $request )
     {
         $empty = $request->attributes->get('empty', $request->query->get('empty', $request->request->get('empty')));
 
         return array(
-            'sitename' => $this->getParameter('portal.sitename'),
+            'sitename' => $this->getParameter('wikiportal.sitename'),
             'empty' => $empty
         );
     }
 
 
 
-    #[Route(path: '/idle-log-out', name: 'portal_idlelogout')]
-    #[Route(path: '/idle-log-out/{flag}', name: 'portal_idlelogout-saveorder')]
+    #[Route(path: '/idle-log-out', name: 'wikiportal_idlelogout')]
+    #[Route(path: '/idle-log-out/{flag}', name: 'wikiportal_idlelogout-saveorder')]
     public function idlelogoutAction( Request $request, $flag = null )
     {
         return parent::idlelogoutAction($request,$flag);

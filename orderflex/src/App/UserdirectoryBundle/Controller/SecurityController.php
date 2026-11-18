@@ -192,8 +192,8 @@ class SecurityController extends OrderAbstractController
         if( $routename == "deidentifier_login" ) {
             $sitename = $this->getParameter('deidentifier.sitename');
         }
-        if( $routename == "portal_login" ) {
-            $sitename = $this->getParameter('portal.sitename');
+        if( $routename == "wikiportal_login" ) {
+            $sitename = $this->getParameter('wikiportal.sitename');
         }
         if( $routename == "scan_login" ) {
             $sitename = $this->getParameter('scan.sitename');
@@ -555,8 +555,8 @@ class SecurityController extends OrderAbstractController
         if( $routename == "deidentifier_idlelogout" ) {
             $sitename = $this->getParameter('deidentifier.sitename');
         }
-        if( $routename == "portal_idlelogout" ) {
-            $sitename = $this->getParameter('portal.sitename');
+        if( $routename == "wikiportal_idlelogout" ) {
+            $sitename = $this->getParameter('wikiportal.sitename');
         }
         if( $routename == "scan_idlelogout" ) {
             $sitename = $this->getParameter('scan.sitename');
@@ -661,8 +661,8 @@ class SecurityController extends OrderAbstractController
             if (strpos((string)$url, "/deidentifier/") !== false) {
                 $sitename = $this->getParameter('deidentifier.sitename');
             }
-            if (strpos((string)$url, "/portal/") !== false) {
-                $sitename = $this->getParameter('portal.sitename');
+            if (strpos((string)$url, "/wiki-portal/") !== false) {
+                $sitename = $this->getParameter('wikiportal.sitename');
             }
             if (strpos((string)$url, "/dashboard/") !== false) {
                 $sitename = $this->getParameter('dashboard.sitename');
@@ -939,8 +939,8 @@ class SecurityController extends OrderAbstractController
             $options['sitename'] = $this->getParameter('deidentifier.sitename');
             $options['event'] = "Deidentifier System login page visit";
         }
-        if( $routename == "portal_setloginvisit" ) {
-            $options['sitename'] = $this->getParameter('portal.sitename');
+        if( $routename == "wikiportal_setloginvisit" ) {
+            $options['sitename'] = $this->getParameter('wikiportal.sitename');
             $options['event'] = "Portal login page visit";
         }
         if( $routename == "scan_setloginvisit" ) {

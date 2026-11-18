@@ -1,3 +1,16 @@
 new Nexus website - 'portal'
 
+1) Change site name wiki-portal Wiki Portal
+
+2) Add users (?) Jessica, Jeff, Steve (80 people can view this page. Restrictions can affect who can view.)
+
+3) Edit functionality
+Ability to add file and the title, then the file will appear with link
+Event Log
+
+4) Add content
+
+5) Check homepage links and Jeff's updates
+
+6) Personal sub-pages (Spaces)
 

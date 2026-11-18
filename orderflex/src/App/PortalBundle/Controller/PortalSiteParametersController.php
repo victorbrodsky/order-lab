@@ -38,12 +38,12 @@ class PortalSiteParametersController extends SiteParametersController
     /**
      * Lists all SiteParameters entities.
      */
-    #[Route(path: '/', name: 'portal_siteparameters', methods: ['GET'])]
+    #[Route(path: '/', name: 'wikiportal_siteparameters', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/SiteParameters/index.html.twig')]
     public function indexAction(Request $request)
     {
         if( false === $this->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('portal-nopermission') );
+            return $this->redirect( $this->generateUrl('wikiportal-nopermission') );
         }
         return $this->indexParameters($request);
     }
@@ -51,7 +51,7 @@ class PortalSiteParametersController extends SiteParametersController
     /**
      * Displays a form to edit an existing SiteParameters entity.
      */
-    #[Route(path: '/{id}/edit', name: 'portal_siteparameters_edit', methods: ['GET'])]
+    #[Route(path: '/{id}/edit', name: 'wikiportal_siteparameters_edit', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function editAction(Request $request,$id)
     {
@@ -61,7 +61,7 @@ class PortalSiteParametersController extends SiteParametersController
     /**
      * Edits an existing SiteParameters entity.
      */
-    #[Route(path: '/{id}', name: 'portal_siteparameters_update', methods: ['PUT'])]
+    #[Route(path: '/{id}', name: 'wikiportal_siteparameters_update', methods: ['PUT'])]
     #[Template('AppUserdirectoryBundle/SiteParameters/edit.html.twig')]
     public function updateAction(Request $request, $id)
     {

@@ -36,22 +36,22 @@ class PortalLoggerController extends LoggerController
     /**
      * Lists all Logger entities.
      */
-    #[Route(path: '/', name: 'portal_logger', methods: ['GET'])]
+    #[Route(path: '/', name: 'wikiportal_logger', methods: ['GET'])]
     #[Template('AppPortalBundle/Logger/index.html.twig')]
     public function indexAction(Request $request)
     {
-        if( false == $this->isGranted("ROLE_PORTAL_ADMIN") ){
-            return $this->redirect( $this->generateUrl('portal-nopermission') );
+        if( false == $this->isGranted("ROLE_WIKIPORTAL_ADMIN") ){
+            return $this->redirect( $this->generateUrl('wikiportal-nopermission') );
         }
 
-		$params = array('sitename'=>$this->getParameter('portal.sitename'));
+		$params = array('sitename'=>$this->getParameter('wikiportal.sitename'));
         $loggerFormParams = $this->listLogger($params,$request);
 
         return $loggerFormParams;
     }
 
 
-    #[Route(path: '/user/{id}/all', name: 'portal_logger_user_all', methods: ['GET'])]
+    #[Route(path: '/user/{id}/all', name: 'wikiportal_logger_user_all', methods: ['GET'])]
     #[Template('AppPortalBundle/Logger/index.html.twig')]
     public function getAuditLogAllAction(Request $request)
     {
@@ -61,7 +61,7 @@ class PortalLoggerController extends LoggerController
         $entityName = 'User';
 
         $params = array(
-            'sitename'=>$this->getParameter('portal.sitename'),
+            'sitename'=>$this->getParameter('wikiportal.sitename'),
             'entityNamespace'=>'App\UserdirectoryBundle\Entity',
             'entityName'=>$entityName,
             'entityId'=>$userid,

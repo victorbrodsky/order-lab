@@ -28,19 +28,19 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends OrderAbstractController
 {
 
-    #[Route(path: '/about', name: 'portal_about_page')]
+    #[Route(path: '/about', name: 'wikiportal_about_page')]
     #[Template('AppUserdirectoryBundle/Default/about.html.twig')]
     public function aboutAction( Request $request ) {
         return array(
-            'sitename' => $this->getParameter('portal.sitename')
+            'sitename' => $this->getParameter('wikiportal.sitename')
         );
     }
 
-    #[Route(path: '/', name: 'portal_home', methods: ['GET'])]
+    #[Route(path: '/', name: 'wikiportal_home', methods: ['GET'])]
     #[Template('AppPortalBundle/Default/index.html.twig')]
     public function indexAction( Request $request ) {
         return array(
-            'sitename' => $this->getParameter('portal.sitename')
+            'sitename' => $this->getParameter('wikiportal.sitename')
         );
     }
 

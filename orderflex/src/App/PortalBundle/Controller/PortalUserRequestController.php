@@ -36,17 +36,17 @@ class PortalUserRequestController extends UserRequestController
 {
 
     public function __construct() {
-        $this->siteName = 'portal';
-        $this->siteNameShowuser = 'portal';
+        $this->siteName = 'wikiportal';
+        $this->siteNameShowuser = 'wikiportal';
         $this->siteNameStr = 'Portal';
-        $this->roleEditor = 'ROLE_PORTAL_ADMIN';
+        $this->roleEditor = 'ROLE_WIKIPORTAL_ADMIN';
     }
 
 
     /**
      * Displays a form to create a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'portal_accountrequest_new', methods: ['GET'])]
+    #[Route(path: '/account-requests/new', name: 'wikiportal_accountrequest_new', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function newAction( Request $request )
     {
@@ -56,7 +56,7 @@ class PortalUserRequestController extends UserRequestController
     /**
      * Creates a new UserRequest entity.
      */
-    #[Route(path: '/account-requests/new', name: 'portal_accountrequest_create', methods: ['POST'])]
+    #[Route(path: '/account-requests/new', name: 'wikiportal_accountrequest_create', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/account_request.html.twig')]
     public function createAction(Request $request)
     {
@@ -67,7 +67,7 @@ class PortalUserRequestController extends UserRequestController
     /**
      * Lists all UserRequest entities.
      */
-    #[Route(path: '/account-requests', name: 'portal_accountrequest', methods: ['GET'])]
+    #[Route(path: '/account-requests', name: 'wikiportal_accountrequest', methods: ['GET'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function indexAction( Request $request )
     {
@@ -75,7 +75,7 @@ class PortalUserRequestController extends UserRequestController
     }
 
 
-    #[Route(path: '/account-requests/{id}/{status}/status', name: 'portal_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route(path: '/account-requests/{id}/{status}/status', name: 'wikiportal_accountrequest_status', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function statusAction($id, $status)
     {
@@ -85,7 +85,7 @@ class PortalUserRequestController extends UserRequestController
     /**
      * Update (Approve) a new UserRequest entity.
      */
-    #[Route(path: '/account-requests-approve', name: 'portal_accountrequest_approve', methods: ['POST'])]
+    #[Route(path: '/account-requests-approve', name: 'wikiportal_accountrequest_approve', methods: ['POST'])]
     #[Template('AppUserdirectoryBundle/UserRequest/index.html.twig')]
     public function approveUserAccountRequestAction(Request $request)
     {

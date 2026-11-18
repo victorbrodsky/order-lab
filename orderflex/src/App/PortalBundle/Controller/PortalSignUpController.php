@@ -19,34 +19,34 @@ class PortalSignUpController extends SignUpController
 
 
     public function __construct() {
-        $this->siteName = 'portal'; //controller is not setup yet, so we can't use $this->getParameter('portal.sitename');
-        $this->siteNameShowuser = 'portal';
-        $this->siteNameStr = 'Portal';
-        $this->pathHome = 'portal_home';
-        $this->minimumRoles = array('ROLE_PORTAL_USER');
-        $this->roleAdmins = array('ROLE_PORTAL_ADMIN');
+        $this->siteName = 'wikiportal'; //controller is not setup yet, so we can't use $this->getParameter('wikiportal.sitename');
+        $this->siteNameShowuser = 'employees';
+        $this->siteNameStr = 'Wiki Portal';
+        $this->pathHome = 'wikiportal_home';
+        $this->minimumRoles = array('ROLE_WIKIPORTAL_USER');
+        $this->roleAdmins = array('ROLE_WIKIPORTAL_ADMIN');
     }
 
     /**
      * Lists all signUp entities.
      */
-    #[Route(path: '/signup-list', name: 'portal_signup_index', methods: ['GET'])]
+    #[Route(path: '/signup-list', name: 'wikiportal_signup_index', methods: ['GET'])]
     public function indexAction()
     {
         return parent::indexAction();
     }
 
     /**
-     * http://localhost/order/portal/sign-up/new
+     * http://localhost/order/wiki-portal/sign-up/new
      * Creates a new signUp entity.
      */
-    #[Route(path: '/sign-up', name: 'portal_signup_new', methods: ['GET', 'POST'])]
+    #[Route(path: '/sign-up', name: 'wikiportal_signup_new', methods: ['GET', 'POST'])]
     public function newSignUpAction(Request $request)
     {
         return parent::newSignUpAction($request);
     }
 
-    #[Route(path: '/activate-account/{registrationLinkID}', name: 'portal_activate_account', methods: ['GET', 'POST'])]
+    #[Route(path: '/activate-account/{registrationLinkID}', name: 'wikiportal_activate_account', methods: ['GET', 'POST'])]
     public function activateAccountAction(Request $request, TokenStorageInterface $tokenStorage, $registrationLinkID)
     {
         return parent::activateAccountAction($request,$tokenStorage,$registrationLinkID);
@@ -55,7 +55,7 @@ class PortalSignUpController extends SignUpController
     /**
      * Finds and displays a signUp entity.
      */
-    #[Route(path: '/signup-show/{id}', name: 'portal_signup_show', methods: ['GET'])]
+    #[Route(path: '/signup-show/{id}', name: 'wikiportal_signup_show', methods: ['GET'])]
     public function showAction(SignUp $signUp)
     {
         return parent::indexAction($signUp);
@@ -64,7 +64,7 @@ class PortalSignUpController extends SignUpController
     /**
      * Displays a form to edit an existing signUp entity.
      */
-    #[Route(path: '/signup-edit/{id}', name: 'portal_signup_edit', methods: ['GET', 'POST'])]
+    #[Route(path: '/signup-edit/{id}', name: 'wikiportal_signup_edit', methods: ['GET', 'POST'])]
     public function editAction(Request $request, SignUp $signUp)
     {
         return parent::editAction($request,$signUp);
@@ -73,22 +73,22 @@ class PortalSignUpController extends SignUpController
     /**
      * Deletes a signUp entity.
      */
-    #[Route(path: '/signup-delete/{id}', name: 'portal_signup_delete', methods: ['DELETE'])]
+    #[Route(path: '/signup-delete/{id}', name: 'wikiportal_signup_delete', methods: ['DELETE'])]
     public function deleteAction(Request $request, SignUp $signUp)
     {
         return parent::deleteAction($request,$signUp);
     }
 
-    #[Route(path: '/forgot-password', name: 'portal_forgot_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/forgot-password', name: 'wikiportal_forgot_password', methods: ['GET', 'POST'])]
     public function forgotPasswordAction(Request $request)
     {
         return parent::forgotPasswordAction($request);
     }
 
     /**
-     * http://localhost/order/portal/reset-password
+     * http://localhost/order/wiki-portal/reset-password
      */
-    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'portal_reset_password', methods: ['GET', 'POST'])]
+    #[Route(path: '/reset-password/{resetPasswordLinkID}', name: 'wikiportal_reset_password', methods: ['GET', 'POST'])]
     public function resetPasswordAction(Request $request, $resetPasswordLinkID)
     {
         return parent::resetPasswordAction($request,$resetPasswordLinkID);

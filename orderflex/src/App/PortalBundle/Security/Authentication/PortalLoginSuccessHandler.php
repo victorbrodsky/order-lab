@@ -38,12 +38,12 @@ class PortalLoginSuccessHandler extends LoginSuccessHandler {
     {
         parent::__construct($container,$em,$security);
 
-        $this->siteName = $container->getParameter('portal.sitename');
+        $this->siteName = $container->getParameter('wikiportal.sitename');
         $this->siteNameStr = 'Portal';
-        $this->roleBanned = 'ROLE_PORTAL_BANNED';
-        $this->roleUser = 'ROLE_PORTAL_USER';
-        $this->roleUnapproved = 'ROLE_PORTAL_UNAPPROVED';
-        $this->firewallName = 'ldap_portal_firewall';
+        $this->roleBanned = 'ROLE_WIKIPORTAL_BANNED';
+        $this->roleUser = 'ROLE_WIKIPORTAL_USER';
+        $this->roleUnapproved = 'ROLE_WIKIPORTAL_UNAPPROVED';
+        $this->firewallName = 'ldap_wikiportal_firewall';
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) : Response

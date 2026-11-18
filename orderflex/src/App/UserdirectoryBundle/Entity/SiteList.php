@@ -431,8 +431,8 @@ class SiteList extends ListAbstract
         if( $abbreviation == "deidentifier" ) {
             return "Deidentifier";
         }
-        if( $abbreviation == "portal" ) {
-            return "Portal";
+        if( $abbreviation == "wikiportal" ) {
+            return "Wiki Portal";
         }
         if( $abbreviation == "vacreq" ) {
             return "Vacation Request";
