@@ -7,10 +7,21 @@ new Nexus website - 'portal'
 3) Edit functionality
 Ability to add file and the title, then the file will appear with link
 Event Log
+Frontend. Mount TipTap (MIT) or EasyMDE (MIT) via a Symfony Stimulus controller listening for drop and paste events.
 
 4) Add content
 
 5) Check homepage links and Jeff's updates
 
 6) Personal sub-pages (Spaces)
+
+
+
+
+Use TipTap:
+Install:
+npm install @tiptap/core
+npm install @tiptap/starter-kit
+npm install @tiptap/extension-link
+npm install @tiptap/extension-file-handler
 
