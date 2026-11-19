@@ -998,6 +998,7 @@ class UserServiceUtil {
             "fellappuploadpath" => "fellapp/documents",
             "resappuploadpath" => "resapp/documents",
             "vacrequploadpath" => "directory/vacreq",
+            "wikiportaluploadpath" => "wikiportal/documents",
             "transresuploadpath" => "transres/documents",
             "callloguploadpath" => "calllog/documents",
             "crnuploadpath" => "crn/documents",

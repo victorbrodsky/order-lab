@@ -1,6 +1,6 @@
 parameters:
   wikiportal.sitename: wikiportal
-
+  wikiportal.uploadpath:
 
 twig:
     globals:

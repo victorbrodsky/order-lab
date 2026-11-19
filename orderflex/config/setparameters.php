@@ -106,6 +106,9 @@ $container->setParameter('resapp.uploadpath',$resappuploadpath);
 //vacreq
 $vacrequploadpath = "vacreq";
 $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
+//wikiportaluploadpath
+$wikiportaluploadpath = "wikiportaluploadpath";
+$container->setParameter('wikiportal.uploadpath',$wikiportaluploadpath);
 //transres
 $transresuploadpath = "transres";
 $container->setParameter('transres.uploadpath',$transresuploadpath);
@@ -305,6 +308,9 @@ if( $conn ) {
                 //vacreq
                 $vacrequploadpath = getDBParameter($row, $vacrequploadpath, 'vacrequploadpath');
 
+                //wikiportaluploadpath
+                $wikiportaluploadpath = getDBParameter($row, $wikiportaluploadpath, 'wikiportaluploadpath');
+
                 //transres
                 $transresuploadpath = getDBParameter($row, $transresuploadpath, 'transresuploadpath');
 
@@ -383,6 +389,8 @@ if( $conn ) {
                 $container->setParameter('resapp.uploadpath', $resappuploadpath);
             if ($vacrequploadpath)
                 $container->setParameter('vacreq.uploadpath', $vacrequploadpath);
+            if ($wikiportaluploadpath)
+                $container->setParameter('wikiportal.uploadpath', $wikiportaluploadpath);
             if ($transresuploadpath)
                 $container->setParameter('transres.uploadpath', $transresuploadpath);
             if ($callloguploadpath)

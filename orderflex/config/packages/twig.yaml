@@ -57,6 +57,7 @@ twig:
         crn_uploadpath: 'Uploaded/%crn.uploadpath%'
         ctp_uploadpath: 'Uploaded/%ctp.uploadpath%'
         dashboard_uploadpath: 'Uploaded/%dashboard.uploadpath%'
+        wikiportal_uploadpath: 'Uploaded/%wikiportal.uploadpath%'
 
         #service
         user_security_utility: "@user_security_utility"

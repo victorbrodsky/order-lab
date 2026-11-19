@@ -1064,6 +1064,11 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'transresuploadpath'}) }}">Edit</a></td>
             </tr>
             <tr>
+                <td>Wiki Portal Upload Folder (example: wikiportal/documents)</td>
+                <td>{{ entity.wikiportaluploadpath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'wikiportaluploadpath'}) }}">Edit</a></td>
+            </tr>
+            <tr>
                 <td>Call Log Upload Folder (example: calllog/documents)</td>
                 <td>{{ entity.callloguploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'callloguploadpath'}) }}">Edit</a></td>

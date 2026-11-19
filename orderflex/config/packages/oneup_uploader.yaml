@@ -32,6 +32,10 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: '%kernel.project_dir%/private/Uploaded/%vacreq.uploadpath%'
+        wikiportal_gallery:
+            frontend: dropzone
+            storage:
+                directory: '%kernel.project_dir%/private/Uploaded/%wikiportal.uploadpath%'
         transres_gallery:
             frontend: dropzone
             storage:

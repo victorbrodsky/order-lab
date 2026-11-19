@@ -326,6 +326,9 @@ class SiteParameters {
     #[ORM\Column(type: 'string', nullable: true)]
     private $ctpuploadpath;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private $wikiportaluploadpath;
+
     /////////// 4 SEPARATE APPLICATIONs ///////////
     #[ORM\Column(type: 'string', nullable: true)]
     private $tmauploadpath;
@@ -3210,6 +3213,22 @@ class SiteParameters {
     public function setCtpuploadpath($ctpuploadpath)
     {
         $this->ctpuploadpath = $ctpuploadpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWikiportaluploadpath()
+    {
+        return $this->wikiportaluploadpath;
+    }
+
+    /**
+     * @param mixed $wikiportaluploadpath
+     */
+    public function setWikiportaluploadpath($wikiportaluploadpath)
+    {
+        $this->wikiportaluploadpath = $wikiportaluploadpath;
     }
 
     /**

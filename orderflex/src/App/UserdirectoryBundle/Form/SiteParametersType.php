@@ -570,6 +570,13 @@ class SiteParametersType extends AbstractType
             ));
 
 
+        //wikiportaluploadpath
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'wikiportaluploadpath' )
+            $builder->add('wikiportaluploadpath',null,array(
+                'label'=>'Wiki Portal Request Upload Folder:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         //titles and messages
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mainHomeTitle' )
             $builder->add('mainHomeTitle',null,array(
