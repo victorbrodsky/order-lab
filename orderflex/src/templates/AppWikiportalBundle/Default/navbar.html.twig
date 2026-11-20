@@ -51,6 +51,20 @@
                         </a>
                     </li>
 
+                    <li id="nav-bar-wikipages" class="hidden-xs">
+                        <a href="{{ path('wikiportal_pages') }}">
+                            <span class="glyphicon glyphicon-list-alt"></span> Wiki Pages
+                        </a>
+                    </li>
+
+                    {% if is_granted('ROLE_WIKIPORTAL_EDITOR') %}
+                        <li id="nav-bar-wikipage-new" class="hidden-xs">
+                            <a href="{{ path('wikiportal_page_new') }}">
+                                <span class="glyphicon glyphicon-plus"></span> New Page
+                            </a>
+                        </li>
+                    {% endif %}
+
                 </ul>
 
             {% endif %}

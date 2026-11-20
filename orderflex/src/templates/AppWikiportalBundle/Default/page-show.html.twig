@@ -1,0 +1,62 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "AppWikiportalBundle/Default/base.html.twig" %}
+
+{% block title %}
+    {{ page.title }}
+{% endblock %}
+
+{% block additionalcss %}
+    <style>
+        .wiki-page-body img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="pull-right">
+        {% if is_granted('ROLE_WIKIPORTAL_EDITOR') %}
+            <a class="btn btn-default" href="{{ path('wikiportal_page_edit', {'id': page.id}) }}">
+                <span class="glyphicon glyphicon-pencil"></span> Edit
+            </a>
+        {% endif %}
+        <a class="btn btn-default" href="{{ path('wikiportal_pages') }}">All Pages</a>
+    </div>
+
+    <h4 class="text-info">
+        {{ page.title }}
+    </h4>
+
+    <div class="well well-sm text-muted">
+        {% if page.updateuser %}
+            Last updated by {{ page.updateuser.getUserNameShortStr() }}
+        {% elseif page.creator %}
+            Created by {{ page.creator.getUserNameShortStr() }}
+        {% endif %}
+        {% if page.updatedate %}
+            on {{ page.updatedate|date('m/d/Y H:i') }}
+        {% endif %}
+    </div>
+
+    <div class="wiki-page-body">
+        {{ page.body|raw }}
+    </div>
+
+{% endblock %}

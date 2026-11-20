@@ -1,0 +1,67 @@
+/*
+ * Tiptap editor wrapper styles (Bootstrap 3 compatible)
+ */
+
+.tiptap-editor {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.tiptap-toolbar {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+    background: #f5f5f5;
+    border-radius: 4px 4px 0 0;
+}
+
+.tiptap-toolbar-group {
+    margin-right: 6px;
+}
+
+.tiptap-toolbar-btn.active {
+    background-color: #e6e6e6;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+}
+
+.tiptap-content .ProseMirror {
+    min-height: 200px;
+    padding: 10px;
+    outline: none;
+}
+
+.tiptap-content .ProseMirror p {
+    margin: 0 0 8px 0;
+}
+
+.tiptap-content .ProseMirror blockquote {
+    border-left: 3px solid #ddd;
+    padding-left: 10px;
+    color: #777;
+}
+
+.tiptap-content .ProseMirror pre {
+    background: #f5f5f5;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.tiptap-content .ProseMirror img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.tiptap-content .ProseMirror img.ProseMirror-selectednode {
+    outline: 2px solid #337ab7;
+}
+
+.tiptap-file-link:before {
+    content: "\1f4ce\00a0";
+}
+
+.tiptap-uploading {
+    color: #999;
+    font-style: italic;
+}

@@ -2701,3 +2701,35 @@
 
     {#{% extends extendStr%}#}
 {#{% endmacro %}#}
+
+{% macro tiptapField( id, value, options ) %}
+    {# options: uploadUrl, downloadUrl, viewUrl, userid, sitename, documenttype, authuserid, name, placeholder, toolbar, readonly #}
+    {% set options = options|default({}) %}
+    {% set fieldname = options.name|default(id) %}
+
+    <link rel="stylesheet" href="{{ asset('orderassets/AppUserdirectoryBundle/form/css/tiptap-editor.css') }}" />
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/tiptap/tiptap.min.js') }}"></script>
+    <script src="{{ asset('orderassets/AppUserdirectoryBundle/form/js/tiptap-editor.js') }}"></script>
+
+    <textarea id="{{ id }}-input" name="{{ fieldname }}" style="display:none;">{{ value|default('') }}</textarea>
+    <div id="{{ id }}-editor"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var tiptapOptions = {{ {
+                'uploadUrl': options.uploadUrl|default(null),
+                'downloadUrl': options.downloadUrl|default(null),
+                'viewUrl': options.viewUrl|default(null),
+                'userid': options.userid|default(null),
+                'authuserid': options.authuserid|default(null),
+                'documenttype': options.documenttype|default(null),
+                'sitename': options.sitename|default(null),
+                'placeholder': options.placeholder|default(null),
+                'toolbar': options.toolbar is defined ? options.toolbar : true,
+                'readonly': options.readonly|default(false)
+            }|json_encode|raw }};
+            tiptapOptions.textarea = '#{{ id }}-input';
+            TiptapEditor.init(document.getElementById('{{ id }}-editor'), tiptapOptions);
+        });
+    </script>
+{% endmacro %}

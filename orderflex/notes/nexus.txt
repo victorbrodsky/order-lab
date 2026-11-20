@@ -24,4 +24,42 @@ npm install @tiptap/core
 npm install @tiptap/starter-kit
 npm install @tiptap/extension-link
 npm install @tiptap/extension-file-handler
+npm install @tiptap/extension-image
+
+Run npm install --force to update package-lock.js
+npm install @tiptap/extension-image => add to entry.js =? rebuild tiptap.min.js
+
+Rebuild the vendored bundle — takes ~1 minute. The tiptap-build folder may still be in %TEMP% on this machine; either way:
+# one-time (or if %TEMP%\tiptap-build is gone)
+mkdir $env:TEMP\tiptap-build; cd $env:TEMP\tiptap-build; npm init -y
+npm install "@tiptap/core@^3" "@tiptap/starter-kit@^3" "@tiptap/extension-link@^3" "@tiptap/extension-file-handler@^3" "@tiptap/extension-image@^3" esbuild
+
+# rebuild + deploy into orderassets
+cd $env:TEMP\tiptap-build
+# (edit entry.js only if you add/remove extensions - it's already correct for the current set)
+npx esbuild entry.js --bundle --minify --format=iife --outfile=tiptap.min.js
+copy tiptap.min.js "C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\orderassets\AppUserdirectoryBundle\tiptap\tiptap.min.js"
+
+entry.js currently is:
+import { Editor, Extension, Node, Mark } from '@tiptap/core';
+import StarterKit from '@tiptap/starter-kit';
+import { FileHandler } from '@tiptap/extension-file-handler';
+import { Link } from '@tiptap/extension-link';
+import { Image } from '@tiptap/extension-image';
+window.Tiptap = { Editor, Extension, Node, Mark, StarterKit, FileHandler, Link, Image };
+
+public/orderassets/AppUserdirectoryBundle/tiptap/entry.js -
+it's a source file, not loaded by the browser (the macro only includes tiptap.min.js/tiptap-editor.js),
+so serving it publicly is harmless and keeps it under version control with the built output.
+Rebuild is now just:
+cd $env:TEMP\tiptap-build
+npx esbuild "C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\orderassets\AppUserdirectoryBundle\tiptap\entry.js" --bundle --minify --format=iife --outfile="C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\orderassets\AppUserdirectoryBundle\tiptap\tiptap.min.js"
+
+entry.js isn't used by the app at runtime — it's only the build input for esbuild. The chain is:
+entry.js - esbuild -> tiptap.min.js ──<script>── -> browser (window.Tiptap)
+It does two things:
+1) Declares which Tiptap packages go into the bundle — every import (core, starter-kit, link, file-handler, image)
+tells esbuild what to pull in from node_modules. Add an extension => add an import line.
+2) Exposes them on window.Tiptap - the last line assigns the imports to a global,
+which is what tiptap-editor.js consumes (e.g. window.Tiptap.StarterKit, window.Tiptap.Image).
 

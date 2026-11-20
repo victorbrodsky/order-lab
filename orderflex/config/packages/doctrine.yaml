@@ -167,6 +167,12 @@ doctrine:
                         dir: '%kernel.project_dir%/src/App/Saml/Entity'
                         prefix: 'App\Saml\Entity'
                         alias: 'AppSaml'
+                    App\WikiportalBundle:
+                        is_bundle: false
+                        type: attribute
+                        dir: '%kernel.project_dir%/src/App/WikiportalBundle/Entity'
+                        prefix: 'App\WikiportalBundle\Entity'
+                        alias: 'AppWikiportalBundle'
 
 #                    AppOrderformBundle: ~
 #                    AppUserdirectoryBundle: ~
