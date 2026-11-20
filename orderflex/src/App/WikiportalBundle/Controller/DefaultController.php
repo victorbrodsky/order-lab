@@ -19,6 +19,7 @@ namespace App\WikiportalBundle\Controller;
 
 
 use App\UserdirectoryBundle\Controller\OrderAbstractController;
+use App\WikiportalBundle\Entity\WikiPage;
 
 
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -39,6 +40,20 @@ class DefaultController extends OrderAbstractController
     #[Route(path: '/', name: 'wikiportal_home', methods: ['GET'])]
     #[Template('AppWikiportalBundle/Default/index.html.twig')]
     public function indexAction( Request $request ) {
+        $em = $this->getDoctrine()->getManager();
+        $homePage = $em->getRepository(WikiPage::class)->findOneByIsHomepage(true);
+        if( !$homePage ) {
+            $homePage = $em->getRepository(WikiPage::class)->findOneBy(array('parent' => null));
+        }
+
+        if( $homePage ) {
+            return $this->render('AppWikiportalBundle/Default/home.html.twig', array(
+                'sitename' => $this->getParameter('wikiportal.sitename'),
+                'page' => $homePage,
+                'rootPage' => $homePage
+            ));
+        }
+
         return array(
             'sitename' => $this->getParameter('wikiportal.sitename')
         );

@@ -44,6 +44,36 @@
         </div>
 
         <div class="form-group">
+            <label for="wiki-page-parent">Parent Page</label>
+            <select class="form-control" id="wiki-page-parent" name="parent">
+                <option value="">(none - top level)</option>
+                {% for candidate in parentCandidates %}
+                    <option value="{{ candidate.id }}"
+                        {% if (page and page.parent and page.parent.id == candidate.id)
+                              or (presetParent is defined and presetParent and presetParent.id == candidate.id) %}selected{% endif %}>
+                        {{ candidate.fullPath }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="wiki-page-sortorder">Sort Order</label>
+            <input type="number" class="form-control" id="wiki-page-sortorder" name="sortOrder"
+                   value="{% if page %}{{ page.sortOrder }}{% endif %}"
+                   placeholder="optional ordering among sibling pages" />
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="isHomepage" value="1"
+                       {% if page and page.isHomepage %}checked{% endif %} />
+                Home page (rendered at {{ path('wikiportal_home') }})
+            </label>
+            <p class="help-block">Only allowed for top-level pages; setting this un-flags the previous home page.</p>
+        </div>
+
+        <div class="form-group">
             <label>Content</label>
             {{ usermacros.tiptapField('wiki-page-body', page ? page.body : '', {
                 'uploadUrl': oneup_uploader_endpoint('wikiportal_gallery'),

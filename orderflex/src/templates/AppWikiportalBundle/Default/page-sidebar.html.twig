@@ -1,0 +1,87 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{# Sidebar with the page tree. Expects: rootPage (home page), current (current page or null) #}
+
+<style>
+    .wiki-sidebar {
+        border-right: 1px solid #e5e5e5;
+        padding-right: 10px;
+        min-height: 300px;
+    }
+    .wiki-sidebar-heading {
+        font-size: 11px;
+        font-weight: bold;
+        color: #707070;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-bottom: 8px;
+    }
+    .wiki-page-tree,
+    .wiki-page-tree-level {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+    }
+    .wiki-page-tree-level {
+        padding-left: 16px;
+    }
+    .wiki-page-tree .wiki-page-link {
+        display: block;
+        padding: 3px 6px;
+        border-radius: 3px;
+        color: #333;
+        text-decoration: none;
+    }
+    .wiki-page-tree .wiki-page-link:hover {
+        background: #f0f0f0;
+    }
+    .wiki-page-tree .wiki-page-link.active {
+        background: #e6e6e6;
+        font-weight: bold;
+    }
+    .wiki-sidebar-actions {
+        margin-top: 10px;
+        font-size: 12px;
+    }
+</style>
+
+<div class="wiki-sidebar">
+
+    <div class="wiki-sidebar-heading">Pages</div>
+
+    {% if rootPage %}
+        <ul class="wiki-page-tree wiki-page-tree-root">
+            <li>
+                <a href="{{ path('wikiportal_home') }}"
+                   class="wiki-page-link{% if current and current.id == rootPage.id %} active{% endif %}">
+                    {{ rootPage.title }}
+                </a>
+                {% if rootPage.children|length > 0 %}
+                    {% include "AppWikiportalBundle/Default/page-tree-level.html.twig"
+                        with {'pages': rootPage.children, 'current': current} only %}
+                {% endif %}
+            </li>
+        </ul>
+    {% endif %}
+
+    {% if is_granted('ROLE_WIKIPORTAL_EDITOR') %}
+        <div class="wiki-sidebar-actions">
+            <a href="{{ path('wikiportal_pages') }}">All pages</a>
+        </div>
+    {% endif %}
+
+</div>

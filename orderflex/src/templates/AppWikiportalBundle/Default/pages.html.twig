@@ -38,7 +38,7 @@
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Slug</th>
+                <th>Path</th>
                 <th>Updated</th>
                 <th>Author</th>
                 {% if is_granted('ROLE_WIKIPORTAL_EDITOR') %}
@@ -50,9 +50,14 @@
             {% for page in pages %}
                 <tr>
                     <td>
-                        <a href="{{ path('wikiportal_page_show', {'slug': page.slug}) }}">{{ page.title }}</a>
+                        {% if page.isHomepage %}
+                            <a href="{{ path('wikiportal_home') }}">{{ page.title }}</a>
+                            <span class="label label-default">home</span>
+                        {% else %}
+                            <a href="{{ path('wikiportal_page_show', {'path': page.fullPath}) }}">{{ page.title }}</a>
+                        {% endif %}
                     </td>
-                    <td>{{ page.slug }}</td>
+                    <td>/{{ page.fullPath }}</td>
                     <td>{% if page.updatedate %}{{ page.updatedate|date('m/d/Y H:i') }}{% endif %}</td>
                     <td>{% if page.updateuser %}{{ page.updateuser.getUserNameShortStr() }}{% elseif page.creator %}{{ page.creator.getUserNameShortStr() }}{% endif %}</td>
                     {% if is_granted('ROLE_WIKIPORTAL_EDITOR') %}

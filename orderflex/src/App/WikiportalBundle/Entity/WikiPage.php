@@ -17,10 +17,13 @@
 
 namespace App\WikiportalBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: 'wikiportal_page')]
+#[ORM\UniqueConstraint(name: 'wikiportal_page_slug_parent_unique', columns: ['slug', 'parent_id'])]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class WikiPage
@@ -57,6 +60,48 @@ class WikiPage
     #[ORM\Column(type: 'text', nullable: true)]
     private $body;
 
+    /**
+     * Self-referencing parent. NULL = top-level page (the single parentless
+     * page flagged isHomepage renders at '/')
+     *
+     * @var WikiPage
+     */
+    #[ORM\ManyToOne(targetEntity: WikiPage::class, inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    private $parent;
+
+    /**
+     * @var Collection|WikiPage[]
+     */
+    #[ORM\OneToMany(targetEntity: WikiPage::class, mappedBy: 'parent')]
+    #[ORM\OrderBy(['sortOrder' => 'ASC', 'title' => 'ASC'])]
+    private $children;
+
+    /**
+     * Denormalized path built from the ancestor slugs (e.g. 'home/docs/setup').
+     * Unique, used for lookup by /page/{path} route
+     *
+     * @var string
+     */
+    #[ORM\Column(type: 'string', unique: true, nullable: true)]
+    private $fullPath;
+
+    /**
+     * The single home page rendered at '/wiki-portal/'
+     *
+     * @var boolean
+     */
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private $isHomepage = false;
+
+    /**
+     * Ordering among siblings
+     *
+     * @var integer
+     */
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $sortOrder;
+
     #[ORM\ManyToOne(targetEntity: 'App\UserdirectoryBundle\Entity\User')]
     #[ORM\JoinColumn(referencedColumnName: 'id', nullable: true)]
     private $creator;
@@ -80,6 +125,7 @@ class WikiPage
     public function __construct($creator = null)
     {
         $this->creator = $creator;
+        $this->children = new ArrayCollection();
     }
 
     public function getId()
@@ -118,6 +164,88 @@ class WikiPage
     {
         $this->body = $body;
         return $this;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    public function addChild(WikiPage $child)
+    {
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+            $child->setParent($this);
+        }
+        return $this;
+    }
+
+    public function removeChild(WikiPage $child)
+    {
+        if ($this->children->removeElement($child)) {
+            if ($child->getParent() === $this) {
+                $child->setParent(null);
+            }
+        }
+        return $this;
+    }
+
+    public function getFullPath()
+    {
+        return $this->fullPath;
+    }
+
+    public function setFullPath($fullPath)
+    {
+        $this->fullPath = $fullPath;
+        return $this;
+    }
+
+    public function getIsHomepage()
+    {
+        return $this->isHomepage;
+    }
+
+    public function setIsHomepage($isHomepage)
+    {
+        $this->isHomepage = $isHomepage;
+        return $this;
+    }
+
+    public function getSortOrder()
+    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder($sortOrder)
+    {
+        $this->sortOrder = $sortOrder;
+        return $this;
+    }
+
+    /**
+     * Ordered ancestor chain (root first, self last) for breadcrumbs
+     */
+    public function getAncestors()
+    {
+        $ancestors = array();
+        $node = $this;
+        while ($node) {
+            array_unshift($ancestors, $node);
+            $node = $node->getParent();
+        }
+        return $ancestors;
     }
 
     public function getCreator()

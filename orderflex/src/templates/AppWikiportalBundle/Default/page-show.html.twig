@@ -26,37 +26,85 @@
             max-width: 100%;
             height: auto;
         }
+        .wiki-breadcrumb {
+            font-size: 12px;
+            color: #707070;
+            margin-bottom: 6px;
+        }
+        .wiki-breadcrumb a {
+            color: #707070;
+        }
     </style>
 {% endblock %}
 
 {% block content %}
 
-    <div class="pull-right">
-        {% if is_granted('ROLE_WIKIPORTAL_EDITOR') %}
-            <a class="btn btn-default" href="{{ path('wikiportal_page_edit', {'id': page.id}) }}">
-                <span class="glyphicon glyphicon-pencil"></span> Edit
-            </a>
-        {% endif %}
-        <a class="btn btn-default" href="{{ path('wikiportal_pages') }}">All Pages</a>
-    </div>
+    <div class="row">
 
-    <h4 class="text-info">
-        {{ page.title }}
-    </h4>
+        <div class="col-md-3 col-sm-4 hidden-xs">
+            {% include "AppWikiportalBundle/Default/page-sidebar.html.twig" with {'rootPage': rootPage, 'current': page} %}
+        </div>
 
-    <div class="well well-sm text-muted">
-        {% if page.updateuser %}
-            Last updated by {{ page.updateuser.getUserNameShortStr() }}
-        {% elseif page.creator %}
-            Created by {{ page.creator.getUserNameShortStr() }}
-        {% endif %}
-        {% if page.updatedate %}
-            on {{ page.updatedate|date('m/d/Y H:i') }}
-        {% endif %}
-    </div>
+        <div class="col-md-9 col-sm-8">
 
-    <div class="wiki-page-body">
-        {{ page.body|raw }}
+            <div class="pull-right">
+                {% if is_granted('ROLE_WIKIPORTAL_EDITOR') %}
+                    <a class="btn btn-default" href="{{ path('wikiportal_page_edit', {'id': page.id}) }}">
+                        <span class="glyphicon glyphicon-pencil"></span> Edit
+                    </a>
+                    <a class="btn btn-default" href="{{ path('wikiportal_page_new', {'parent': page.id}) }}">
+                        <span class="glyphicon glyphicon-plus"></span> Add Child Page
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="wiki-breadcrumb">
+                {% for ancestor in page.getAncestors() %}
+                    {% if ancestor.id == rootPage.id %}
+                        <a href="{{ path('wikiportal_home') }}">{{ ancestor.title }}</a>
+                    {% elseif ancestor.id != page.id %}
+                        <a href="{{ path('wikiportal_page_show', {'path': ancestor.fullPath}) }}">{{ ancestor.title }}</a>
+                    {% else %}
+                        {{ ancestor.title }}
+                    {% endif %}
+                    {% if not loop.last %} / {% endif %}
+                {% endfor %}
+            </div>
+
+            <h4 class="text-info">
+                {{ page.title }}
+            </h4>
+
+            <div class="well well-sm text-muted">
+                {% if page.updateuser %}
+                    Last updated by {{ page.updateuser.getUserNameShortStr() }}
+                {% elseif page.creator %}
+                    Created by {{ page.creator.getUserNameShortStr() }}
+                {% endif %}
+                {% if page.updatedate %}
+                    on {{ page.updatedate|date('m/d/Y H:i') }}
+                {% endif %}
+            </div>
+
+            <div class="wiki-page-body">
+                {{ page.body|raw }}
+            </div>
+
+            {% if page.children|length > 0 %}
+                <div class="wiki-children">
+                    <h5 class="text-muted">Child Pages</h5>
+                    <ul>
+                        {% for child in page.children %}
+                            <li>
+                                <a href="{{ path('wikiportal_page_show', {'path': child.fullPath}) }}">{{ child.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+        </div>
+
     </div>
 
 {% endblock %}

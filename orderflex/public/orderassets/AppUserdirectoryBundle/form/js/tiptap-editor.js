@@ -188,10 +188,10 @@ var TiptapEditor = (function () {
                 editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
             }),
              makeButton('<span class="glyphicon glyphicon-paperclip"></span>', 'Insert file at cursor', function () {
-                pickAndInsert('file');
+                pickAndInsert(editor, 'file', options);
             }),
              makeButton('<span class="glyphicon glyphicon-picture"></span>', 'Insert image at cursor', function () {
-                pickAndInsert('image');
+                pickAndInsert(editor, 'image', options);
             })],
             [makeButton('<span class="glyphicon glyphicon-arrow-left"></span>', 'Undo', function () { editor.chain().focus().undo().run(); }),
              makeButton('<span class="glyphicon glyphicon-arrow-right"></span>', 'Redo', function () { editor.chain().focus().redo().run(); })]
