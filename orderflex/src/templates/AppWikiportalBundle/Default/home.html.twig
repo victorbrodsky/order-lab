@@ -31,7 +31,7 @@
 
 {% block content %}
 
-    <div class="row">
+    <div class="row text-left">
 
         <div class="col-md-3 col-sm-4 hidden-xs">
             {% include "AppWikiportalBundle/Default/page-sidebar.html.twig" with {'rootPage': rootPage, 'current': page} %}
@@ -64,6 +64,8 @@
                     on {{ page.updatedate|date('m/d/Y H:i') }}
                 {% endif %}
             </div>
+
+            {#{{ include('AppWikiportalBundle/Default/index.html.twig') }}#}
 
             <div class="wiki-page-body">
                 {{ page.body|raw }}

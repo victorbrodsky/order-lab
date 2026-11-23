@@ -38,7 +38,7 @@ npm install "@tiptap/core@^3" "@tiptap/starter-kit@^3" "@tiptap/extension-link@^
 cd $env:TEMP\tiptap-build
 # (edit entry.js only if you add/remove extensions - it's already correct for the current set)
 npx esbuild entry.js --bundle --minify --format=iife --outfile=tiptap.min.js
-copy tiptap.min.js "C:\Users\cinav\Documents\WCMC\ORDER\order-lab\orderflex\public\orderassets\AppUserdirectoryBundle\tiptap\tiptap.min.js"
+copy tiptap.min.js "order-lab\orderflex\public\orderassets\AppUserdirectoryBundle\tiptap\tiptap.min.js"
 
 entry.js currently is:
 import { Editor, Extension, Node, Mark } from '@tiptap/core';
@@ -75,11 +75,14 @@ creates Document records (like UploadListener does), rewrites each nexus href to
 
 Workflow per server
 1) Deploy code: git pull → doctrine:migrations:migrate → cache:clear (as usual)
-2) Copy the mirror subset to any temp dir on the server — e.g. C:\temp\nexus-mirror or /tmp/nexus-mirror. You only need two paths, not the whole HTTrack tree:
+2) Copy the mirror subset on the server (i.e. orderflex\var\wikiportal-home-seed)
+You only need two paths, not the whole HTTrack tree:
 <dir>/display/pathlabmed/Home.html
 <dir>/download/attachments/8164/   (just the ~42 referenced files is enough)
-Get it there however you normally move files onto that server (RDP, shared drive, SCP, IIS folder…). A UNC network share (\\your-pc\share) also works if the web service account can read it — but a local copy is simpler and avoids share-permission issues.
-3) Run the seed: log in as a wikiportal admin and hit
-/wiki-portal/seed-homepage?dir=C:\temp\nexus-mirror
-The action imports attachments into private/Uploaded/wikiportal, creates Document records, rewrites links to file-download/{id}, and creates the home page.
-4) Delete the temp copy — everything needed is now in private/Uploaded/wikiportal + the Document/WikiPage DB rows. The mirror files are no longer required.
+3) Run the seed:
+/wiki-portal/seed-homepage?dir=/me/temp
+The action imports attachments into private/Uploaded/wikiportal, creates Document records,
+rewrites links to file-download/{id}, and creates the home page.
+4) Delete the temp copy — everything needed is now in private/Uploaded/wikiportal + the Document/WikiPage DB rows.
+The mirror files are no longer required.
+

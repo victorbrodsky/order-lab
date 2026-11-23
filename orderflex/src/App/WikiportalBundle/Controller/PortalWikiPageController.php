@@ -110,6 +110,20 @@ class PortalWikiPageController extends OrderAbstractController
             $body
         );
 
+        //make remaining relative links (../../display/..., ../images/...)
+        //absolute to the source site so they keep working
+        $body = preg_replace_callback(
+            '#(href|src)="((?:\.\./)+)([^"\#][^"]*)"#',
+            function ($matches) {
+                return $matches[1] . '="https://nexus.weill.cornell.edu/' . $matches[3] . '"';
+            },
+            $body
+        );
+
+        //separate tags by newlines so the stored HTML is human readable
+        //(e.g. "</p><h2>" -> "</p>\n<h2>")
+        $body = preg_replace('#>\s*<#', ">\n<", trim((string)$body));
+
         //create or update the home page
         $home = $em->getRepository(WikiPage::class)->findOneByIsHomepage(true);
         if (!$home) {

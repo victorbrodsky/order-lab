@@ -25,10 +25,15 @@
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
 }
 
+.tiptap-editor {
+    text-align: left;
+}
+
 .tiptap-content .ProseMirror {
     min-height: 200px;
     padding: 10px;
     outline: none;
+    text-align: left;
 }
 
 .tiptap-content .ProseMirror p {
