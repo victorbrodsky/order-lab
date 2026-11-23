@@ -4,5 +4,6 @@ import { FileHandler } from '@tiptap/extension-file-handler';
 import { Link } from '@tiptap/extension-link';
 import { Image } from '@tiptap/extension-image';
 import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
+import { TextStyle, Color, BackgroundColor } from '@tiptap/extension-text-style';
 
-window.Tiptap = { Editor, Extension, Node, Mark, StarterKit, FileHandler, Link, Image, Table, TableRow, TableCell, TableHeader };
+window.Tiptap = { Editor, Extension, Node, Mark, StarterKit, FileHandler, Link, Image, Table, TableRow, TableCell, TableHeader, TextStyle, Color, BackgroundColor };

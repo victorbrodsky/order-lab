@@ -163,6 +163,56 @@ var TiptapEditor = (function () {
         input.click();
     }
 
+    function colorPickerButton(editor, command, title, glyph) {
+        if (typeof editor.commands[command] !== 'function') {
+            return null;
+        }
+        var label = document.createElement('label');
+        label.className = 'btn btn-default btn-xs tiptap-toolbar-btn tiptap-color-btn';
+        label.title = title;
+
+        var text = document.createElement('span');
+        text.innerHTML = glyph;
+        text.className = 'tiptap-color-glyph';
+        label.appendChild(text);
+
+        var input = document.createElement('input');
+        input.type = 'color';
+        input.className = 'tiptap-color-input';
+        input.addEventListener('input', function () {
+            editor.chain().focus()[command](input.value).run();
+        });
+        label.appendChild(input);
+
+        //sync the glyph underline with the current color at the cursor
+        editor.on('selectionUpdate', function () {
+            var attrs = editor.getAttributes('textStyle');
+            var value = command === 'setColor' ? attrs.color : attrs.backgroundColor;
+            text.style.borderBottomColor = value || '#333';
+        });
+
+        return label;
+    }
+
+    function colorButtons(editor) {
+        var buttons = [];
+        var fontColor = colorPickerButton(editor, 'setColor', 'Font color', '<b>A</b>');
+        if (fontColor) buttons.push(fontColor);
+        var bgColor = colorPickerButton(editor, 'setBackgroundColor', 'Highlight color',
+            '<span class="glyphicon glyphicon-text-background"></span>');
+        if (bgColor) buttons.push(bgColor);
+        if (typeof editor.commands.unsetColor === 'function') {
+            buttons.push(makeButton('<span class="glyphicon glyphicon-erase"></span>', 'Clear color/highlight', function () {
+                var chain = editor.chain().focus().unsetColor();
+                if (typeof editor.commands.unsetBackgroundColor === 'function') {
+                    chain = chain.unsetBackgroundColor();
+                }
+                chain.run();
+            }));
+        }
+        return buttons;
+    }
+
     function tableButtons(editor) {
         if (typeof editor.commands.insertTable !== 'function') {
             return [];
@@ -219,6 +269,7 @@ var TiptapEditor = (function () {
              makeButton('<span class="glyphicon glyphicon-picture"></span>', 'Insert image at cursor', function () {
                 pickAndInsert(editor, 'image', options);
             })],
+            colorButtons(editor),
             tableButtons(editor),
             [makeButton('<span class="glyphicon glyphicon-arrow-left"></span>', 'Undo', function () { editor.chain().focus().undo().run(); }),
              makeButton('<span class="glyphicon glyphicon-arrow-right"></span>', 'Redo', function () { editor.chain().focus().redo().run(); })]
@@ -306,6 +357,18 @@ var TiptapEditor = (function () {
             );
         } else {
             console.warn('TiptapEditor: table extension not in bundle (stale tiptap.min.js?)');
+        }
+
+        if (window.Tiptap.TextStyle && window.Tiptap.Color) {
+            extensions.push(
+                window.Tiptap.TextStyle,
+                window.Tiptap.Color
+            );
+            if (window.Tiptap.BackgroundColor) {
+                extensions.push(window.Tiptap.BackgroundColor);
+            }
+        } else {
+            console.warn('TiptapEditor: text-style/color extension not in bundle (stale tiptap.min.js?)');
         }
 
         extensions.push(fileHandler);

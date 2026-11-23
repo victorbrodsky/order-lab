@@ -71,6 +71,29 @@
     font-style: italic;
 }
 
+/* color pickers */
+.tiptap-color-btn {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.tiptap-color-btn .tiptap-color-glyph {
+    border-bottom: 3px solid #333;
+}
+
+.tiptap-color-btn .tiptap-color-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    padding: 0;
+    border: none;
+}
+
 /* tables */
 .tiptap-content .ProseMirror .tableWrapper {
     margin: 8px 0;
