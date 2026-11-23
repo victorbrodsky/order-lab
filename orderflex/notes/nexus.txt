@@ -86,3 +86,5 @@ rewrites links to file-download/{id}, and creates the home page.
 4) Delete the temp copy — everything needed is now in private/Uploaded/wikiportal + the Document/WikiPage DB rows.
 The mirror files are no longer required.
 
+
+

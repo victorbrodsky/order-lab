@@ -163,6 +163,32 @@ var TiptapEditor = (function () {
         input.click();
     }
 
+    function tableButtons(editor) {
+        if (typeof editor.commands.insertTable !== 'function') {
+            return [];
+        }
+        return [
+            makeButton('<span class="glyphicon glyphicon-th"></span>', 'Insert table (3x3)', function () {
+                editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+            }, 'table'),
+            makeButton('<span class="glyphicon glyphicon-plus"></span>C', 'Add column after', function () {
+                editor.chain().focus().addColumnAfter().run();
+            }),
+            makeButton('<span class="glyphicon glyphicon-plus"></span>R', 'Add row after', function () {
+                editor.chain().focus().addRowAfter().run();
+            }),
+            makeButton('<span class="glyphicon glyphicon-minus"></span>C', 'Delete column', function () {
+                editor.chain().focus().deleteColumn().run();
+            }),
+            makeButton('<span class="glyphicon glyphicon-minus"></span>R', 'Delete row', function () {
+                editor.chain().focus().deleteRow().run();
+            }),
+            makeButton('<span class="glyphicon glyphicon-trash"></span>', 'Delete table', function () {
+                editor.chain().focus().deleteTable().run();
+            })
+        ];
+    }
+
     function buildToolbar(editor, container, options) {
         var toolbar = document.createElement('div');
         toolbar.className = 'tiptap-toolbar';
@@ -193,11 +219,13 @@ var TiptapEditor = (function () {
              makeButton('<span class="glyphicon glyphicon-picture"></span>', 'Insert image at cursor', function () {
                 pickAndInsert(editor, 'image', options);
             })],
+            tableButtons(editor),
             [makeButton('<span class="glyphicon glyphicon-arrow-left"></span>', 'Undo', function () { editor.chain().focus().undo().run(); }),
              makeButton('<span class="glyphicon glyphicon-arrow-right"></span>', 'Redo', function () { editor.chain().focus().redo().run(); })]
         ];
 
         groups.forEach(function (group) {
+            if (!group.length) return;
             var groupDiv = document.createElement('span');
             groupDiv.className = 'btn-group tiptap-toolbar-group';
             group.forEach(function (btn) { groupDiv.appendChild(btn); });
@@ -259,19 +287,33 @@ var TiptapEditor = (function () {
             }
         });
 
+        var extensions = [
+            window.Tiptap.StarterKit.configure({
+                link: { openOnClick: false, autolink: true }
+            }),
+            window.Tiptap.Image.configure({
+                inline: false,
+                allowBase64: false
+            })
+        ];
+
+        if (window.Tiptap.Table) {
+            extensions.push(
+                window.Tiptap.Table.configure({ resizable: true }),
+                window.Tiptap.TableRow,
+                window.Tiptap.TableHeader,
+                window.Tiptap.TableCell
+            );
+        } else {
+            console.warn('TiptapEditor: table extension not in bundle (stale tiptap.min.js?)');
+        }
+
+        extensions.push(fileHandler);
+
         var editor = new window.Tiptap.Editor({
             element: contentDiv,
             editable: !options.readonly,
-            extensions: [
-                window.Tiptap.StarterKit.configure({
-                    link: { openOnClick: false, autolink: true }
-                }),
-                window.Tiptap.Image.configure({
-                    inline: false,
-                    allowBase64: false
-                }),
-                fileHandler
-            ],
+            extensions: extensions,
             content: textarea ? textarea.value : (options.content || ''),
             onUpdate: function () {
                 if (textarea) {

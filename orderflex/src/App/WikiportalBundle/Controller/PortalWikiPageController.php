@@ -43,6 +43,7 @@ class PortalWikiPageController extends OrderAbstractController
     #[Route(path: '/seed-homepage', name: 'wikiportal_seed_homepage', methods: ['GET', 'POST'])]
     public function seedHomepageAction(Request $request)
     {
+        exit("seedHomepageAction not allowed");
         if (false === $this->isGranted('ROLE_WIKIPORTAL_ADMIN')) {
             return $this->redirect($this->generateUrl('wikiportal-nopermission'));
         }
