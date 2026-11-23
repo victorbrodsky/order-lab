@@ -107,7 +107,7 @@ $container->setParameter('resapp.uploadpath',$resappuploadpath);
 $vacrequploadpath = "vacreq";
 $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
 //wikiportaluploadpath
-$wikiportaluploadpath = "wikiportaluploadpath";
+$wikiportaluploadpath = "wikiportal";
 $container->setParameter('wikiportal.uploadpath',$wikiportaluploadpath);
 //transres
 $transresuploadpath = "transres";

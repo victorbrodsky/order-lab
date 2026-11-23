@@ -3,7 +3,19 @@ HaProxy status journalctl -xeu haproxy.service:
 Starting frontend http_front: cannot bind socket (Address already in use) [0.0.0.0:443]
 sudo ss -lnp sport = :443
 
-Key fix!!!: In /etc/httpd/conf.d rename (disable) ssl.conf to ssl.conf_20Sept2025 if there is ssl.conf with Listen 443 https
+################### Key fix!!! ######################
+1) In /etc/httpd/conf.d rename (disable) ssl.conf to ssl.conf_20Sept2025 if there is ssl.conf with Listen 443 https
+2) Restart services:
+Restart all apache/php services:
+sudo systemctl restart httpdhomepagemanager
+sudo systemctl restart httpdtenantmanager
+sudo systemctl restart httpdtenantapp1
+sudo systemctl restart httpdtenantapp2
+sudo systemctl restart httpdtenantappdemo
+sudo systemctl restart httpdtenantapptest
+sudo systemctl restart haproxy
+sudo systemctl restart php-fpm
+################### EOF Key fix!!! ###################
 
 Who uses the port 443:
 sudo ss -lnp sport = :443

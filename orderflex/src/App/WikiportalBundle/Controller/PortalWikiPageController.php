@@ -28,6 +28,181 @@ use Symfony\Component\HttpFoundation\Response;
 class PortalWikiPageController extends OrderAbstractController
 {
 
+    /**
+     * One-time seed: creates/updates the Home wiki page from a server-local
+     * HTTrack mirror of the old Confluence site.
+     *
+     * Usage: /wiki-portal/seed-homepage?dir=<path-to-mirror-root>
+     *   expects <dir>/display/pathlabmed/Home.html
+     *   and     <dir>/download/attachments/8164/<files>
+     *
+     * The page body is extracted from #main-content, attachment links are
+     * imported as Documents and rewritten to local file-download URLs.
+     * Idempotent: re-running reuses already imported documents.
+     */
+    #[Route(path: '/seed-homepage', name: 'wikiportal_seed_homepage', methods: ['GET', 'POST'])]
+    public function seedHomepageAction(Request $request)
+    {
+        if (false === $this->isGranted('ROLE_WIKIPORTAL_ADMIN')) {
+            return $this->redirect($this->generateUrl('wikiportal-nopermission'));
+        }
+
+        $mirrorRoot = $request->get('dir');
+        if (!$mirrorRoot) {
+            return new Response(
+                'Usage: ' . $this->generateUrl('wikiportal_seed_homepage') . '?dir=<path-to-httrack-mirror-root>' .
+                ' expecting <dir>/display/pathlabmed/Home.html and <dir>/download/attachments/8164/'
+            );
+        }
+        $mirrorRoot = rtrim(str_replace('\\', '/', $mirrorRoot), '/');
+        $htmlFile = $mirrorRoot . '/display/pathlabmed/Home.html';
+        $attachDir = $mirrorRoot . '/download/attachments/8164';
+
+        if (!is_file($htmlFile)) {
+            return new Response('Confluence page not found: ' . $htmlFile, 500);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $projectRoot = $this->getParameter('kernel.project_dir');
+
+        $uploadPath = $this->getParameter('wikiportal.uploadpath');
+        //exit('$uploadPath='.$uploadPath); //wikiportal
+        //documents store uploadDirectory with the leading 'private/' (see UploadListener)
+        $destDirRel = 'private/Uploaded/' . $uploadPath;
+        $destDirAbs = $projectRoot . '/' . $destDirRel;
+        if (!is_dir($destDirAbs)) {
+            mkdir($destDirAbs, 0777, true);
+        }
+
+        //extract the page body from #main-content
+        $body = $this->extractMainContent(file_get_contents($htmlFile));
+        if ($body === null) {
+            return new Response('Could not locate #main-content in ' . $htmlFile, 500);
+        }
+
+        $imported = 0;
+        $reused = 0;
+        $missing = array();
+        $self = $this;
+
+        //rewrite attachment links (absolute nexus URLs or ../../ relative
+        //paths) to local file-download URLs
+        $body = preg_replace_callback(
+            '#(href|src)="[^"]*attachments/8164/([^"?]+)(?:\?[^"]*)?"#',
+            function ($matches) use ($em, $user, $attachDir, $destDirRel, $destDirAbs, &$imported, &$reused, &$missing, $self) {
+                $filename = urldecode($matches[2]);
+                $srcFile = $attachDir . '/' . $filename;
+                //exit('$srcFile='.$srcFile); //C:/MyWebSites/Nexus 2/nexus.weill.cornell.edu/download/attachments/8164/LOGO_PATH LAB MED_2LINE_RGB7fb1.png
+                if (!is_file($srcFile)) {
+                    $missing[] = $filename;
+                    return $matches[0]; //keep the original link
+                }
+
+                $document = $self->importAttachment($em, $user, $srcFile, $filename, $destDirRel, $destDirAbs);
+                if ($document['reused']) {
+                    $reused++;
+                } else {
+                    $imported++;
+                }
+                return $matches[1] . '="' . $self->generateUrl('wikiportal_file_download', array('id' => $document['document']->getId())) . '"';
+            },
+            $body
+        );
+
+        //create or update the home page
+        $home = $em->getRepository(WikiPage::class)->findOneByIsHomepage(true);
+        if (!$home) {
+            $home = $em->getRepository(WikiPage::class)->findOneBySlug('home');
+        }
+        $isNew = false;
+        if (!$home) {
+            $home = new WikiPage($user);
+            $home->setTitle('Home');
+            $home->setSlug('home');
+            $isNew = true;
+        }
+        $home->setIsHomepage(true);
+        $home->setParent(null);
+        $home->setBody($body);
+        $home->setUpdateuser($user);
+
+        $em->persist($home);
+        $this->updateFullPathRecursive($home);
+        $em->flush();
+        $this->ensureSingleHomepage($home);
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $event = "Wiki home page seeded (imported=$imported, reused=$reused)";
+        $userSecUtil->createUserEditEvent($this->getParameter('wikiportal.sitename'), $event, $user, $home, $request, 'Wiki Page Seeded');
+
+        $msg = ($isNew ? 'Created' : 'Updated') . " home page (id=" . $home->getId() . "): "
+            . "$imported attachments imported, $reused reused"
+            . ($missing ? ", MISSING: " . implode(', ', $missing) : '');
+        $this->addFlash('notice', $msg);
+
+        return $this->redirect($this->generateUrl('wikiportal_home'));
+    }
+
+    /**
+     * Extract the inner HTML of the #main-content element from a Confluence
+     * (HTTrack) page. Returns null when not found.
+     */
+    private function extractMainContent($html)
+    {
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
+
+        $xpath = new \DOMXPath($dom);
+        $node = $xpath->query('//*[@id="main-content"]')->item(0);
+        if (!$node) {
+            return null;
+        }
+
+        $inner = '';
+        foreach ($node->childNodes as $child) {
+            $inner .= $dom->saveHTML($child);
+        }
+        return $inner;
+    }
+
+    /**
+     * Copy an attachment file into the site upload directory and create a
+     * Document record (same fields as UploadListener). Reuses an existing
+     * Document with the same originalname+uploadDirectory.
+     */
+    public function importAttachment($em, $user, $srcFile, $filename, $destDirRel, $destDirAbs)
+    {
+        $existing = $em->getRepository(Document::class)->findOneBy(array(
+            'uploadDirectory' => $destDirRel,
+            'originalname' => $filename
+        ));
+        if ($existing) {
+            return array('document' => $existing, 'reused' => true);
+        }
+
+        //oneup uniqid namer convention: 11-hex hash + original extension
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $uniquename = substr(md5(uniqid()), 0, 11) . ($ext ? '.' . $ext : '');
+        copy($srcFile, $destDirAbs . '/' . $uniquename);
+
+        $document = new Document($user);
+        $document->setCleanOriginalname($filename);
+        $document->setUniquename($uniquename);
+        $document->setUploadDirectory($destDirRel);
+        $document->setSize(filesize($srcFile));
+
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userServiceUtil->generateTwoThumbnails($document);
+
+        $em->persist($document);
+        $em->flush(); //flush to get document id for the link
+
+        return array('document' => $document, 'reused' => false);
+    }
+
     #[Route(path: '/pages', name: 'wikiportal_pages', methods: ['GET'])]
     #[Template('AppWikiportalBundle/Default/pages.html.twig')]
     public function pagesAction(Request $request)
