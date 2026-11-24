@@ -550,6 +550,22 @@ class UploadController extends OrderAbstractController {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        //step 2: confirmation page submitted with checked users
+        $userlist = $request->request->get('userlist');
+        if( $request->isMethod('POST') && $userlist ) {
+            $userGenerator = $this->container->get('user_generator');
+            $userRows = json_decode($userlist,true);
+            $postData = $request->request->all();
+            $selected = isset($postData['selected']) && is_array($postData['selected']) ? $postData['selected'] : array();
+            $roles = isset($postData['roles']) && is_array($postData['roles']) ? $postData['roles'] : array();
+            $res = $userGenerator->createUsersFromListSimple($userRows,$selected,$roles);
+            $this->addFlash(
+                'notice',
+                $res
+            );
+            return $this->redirect($this->generateUrl('employees_import_users_excel'));
+        }
+
         $form = $this->createForm(ImportUsersType::class,null);
 
         $form->handleRequest($request);
@@ -573,7 +589,20 @@ class UploadController extends OrderAbstractController {
             //$count_users = $userGenerator->generateUsersExcelV1();
 
             //list v2 provided by Jessica
-            $res = $userGenerator->generateUsersExcelV2($inputFileName);
+            //$res = $userGenerator->generateUsersExcelV2($inputFileName);
+
+            //step 1: read users from the spreadsheet and show them for confirmation
+            $res = $userGenerator->generateUsersExcelSimple($inputFileName);
+
+            if( is_array($res) ) {
+                return array(
+                    'form' => $form->createView(),
+                    'sitename' => $this->getParameter('employees.sitename'),
+                    'title' => 'Import Users',
+                    'previewUsers' => $res,
+                    'userlistJson' => json_encode($res)
+                );
+            }
 
             $this->addFlash(
                 'notice',
@@ -597,22 +626,14 @@ class UploadController extends OrderAbstractController {
     #[Route(path: '/import-users/template/', name: 'employees_import_users_template_excel', methods: ['GET'])]
     public function importExcelUsersTemplateFileAction() {
 
-        $rootDir = $this->container->get('kernel')->getRootDir();
+        $rootDir = $this->container->get('kernel')->getProjectDir();
         //echo "rootDir=".$rootDir."<br>";
 
-        //C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/scanorder/importLists/ImportUsersTemplate.xlsx
-//        $templateLink = "file:///C:".DIRECTORY_SEPARATOR."Users".DIRECTORY_SEPARATOR."ch3".DIRECTORY_SEPARATOR."Documents".
-//            DIRECTORY_SEPARATOR."MyDocs".DIRECTORY_SEPARATOR."WCM".DIRECTORY_SEPARATOR."ORDER".
-//            DIRECTORY_SEPARATOR."scanorder".DIRECTORY_SEPARATOR."importLists".DIRECTORY_SEPARATOR."ImportUsersTemplate.xlsx";
+        $templateFile = $rootDir.DIRECTORY_SEPARATOR."src".DIRECTORY_SEPARATOR."App".DIRECTORY_SEPARATOR.
+            "UserdirectoryBundle".DIRECTORY_SEPARATOR."Util".DIRECTORY_SEPARATOR."ImportUsersTemplate.xlsx";
+        //echo "templateFile=".$templateFile."<br>";
 
-        $templateLink = "file:///".$rootDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.
-            "importLists".DIRECTORY_SEPARATOR."ImportUsersTemplate.xlsx";
-        //echo "templateLink=".$templateLink."<br>";
-
-        //$templateLink = "file:///C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/scanorder/importLists/ImportUsersTemplate.xlsx";
-        //echo "templateLink=".$templateLink."<br>";
-
-        $response = new BinaryFileResponse($templateLink);
+        $response = new BinaryFileResponse($templateFile);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,'ImportUsersTemplate.xlsx');
 
         //$mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';

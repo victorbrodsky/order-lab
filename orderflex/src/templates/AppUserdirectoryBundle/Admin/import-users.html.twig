@@ -36,22 +36,90 @@
 
     <br><br>
 
-    {{ form_start(form) }}
+    {% if previewUsers is defined %}
 
-        <div class="row">
-            <div class="col-xs-3"></div>
-            <div class="col-xs-6" align="center">
-                {{ form_row(form.file) }}
+        <h4 class="text-info">Users found in the spreadsheet ({{ previewUsers|length }})</h4>
+
+        <form method="post" action="{{ path('employees_import_users_excel') }}">
+
+            <input type="hidden" name="userlist" value="{{ userlistJson|e('html_attr') }}" />
+
+            <div class="form-group">
+                {{ form_row(form.roles) }}
+                <p class="help-block">Selected roles are added to new users on creation and to existing users.</p>
             </div>
-            <div class="col-xs-3"></div>
-        </div>
 
-        <br><br><br>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center">
+                            <input type="checkbox" id="select-all-users" checked
+                                   onchange="document.querySelectorAll('.user-import-checkbox').forEach(function(cb){ if(!cb.disabled){ cb.checked = document.getElementById('select-all-users').checked; } });" />
+                        </th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Email</th>
+                        {#<th>Username</th>#}
+                        <th class="text-center">Role(s)</th>
+                        {#<th>Keytype</th>#}
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for userRow in previewUsers %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="user-import-checkbox" name="selected[]"
+                                       value="{{ loop.index0 }}"
+                                       {% if userRow.error %}disabled{% else %}checked{% endif %} />
+                            </td>
+                            <td>{{ userRow.name }}</td>
+                            <td>{{ userRow.email }}</td>
+                            <td>{{ userRow.roles }}</td>
+                            {#<td>{{ userRow.username }}</td>#}
+                            {#<td>{{ userRow.keytype }}</td>#}
+                            <td>
+                                {% if userRow.exists %}
+                                    <span class="text-warning">already exists (roles will be added)</span>
+                                {% elseif userRow.error %}
+                                    <span class="text-danger">{{ userRow.error }}</span>
+                                {% else %}
+                                    <span class="text-success">new</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-        {#{{ formmacros.field(form.submit) }}#}
-        {{ form_widget(form.submit) }}
+            <br>
 
-    {{ form_end(form) }}
+            <button type="submit" class="btn btn-info">Add Users</button>
+            <a class="btn btn-default" href="{{ path('employees_import_users_excel') }}">Cancel</a>
+
+        </form>
+
+    {% else %}
+
+        {{ form_start(form) }}
+
+            <div class="row">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-6" align="center">
+                    {{ form_row(form.file) }}
+                </div>
+                <div class="col-xs-3"></div>
+            </div>
+
+            <br><br><br>
+
+            {#{{ formmacros.field(form.submit) }}#}
+            {{ form_widget(form.submit) }}
+
+            {% do form.roles.setRendered() %}
+
+        {{ form_end(form) }}
+
+    {% endif %}
 
 
 {% endblock %}

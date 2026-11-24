@@ -49,6 +49,7 @@ use App\UserdirectoryBundle\Entity\Identifier;
 use App\UserdirectoryBundle\Entity\Location;
 use App\UserdirectoryBundle\Entity\MedicalTitle;
 use App\UserdirectoryBundle\Entity\ResearchLab;
+use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Entity\StateLicense;
 use App\UserdirectoryBundle\Entity\Training;
 use App\UserdirectoryBundle\Entity\User;
@@ -70,6 +71,250 @@ class UserGenerator {
         $this->container = $container;
     }
 
+    //Sheet1 format: column 1 = 'LastName, FirstName', column 2 = email 'cwid@domain'
+    //Reads the spreadsheet only (the uploaded file is not stored anywhere) and
+    //returns an array of parsed user rows for the confirmation page, or an error string.
+    public function generateUsersExcelSimple($inputFileName) {
+
+        if( is_object($inputFileName) && method_exists($inputFileName,'getPathname') ) {
+            $inputFileName = $inputFileName->getPathname();
+        }
+
+        if( !file_exists($inputFileName) ) {
+            return "The file $inputFileName does not exist";
+        }
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( \Exception $e ) {
+            return 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+
+        $userRows = array();
+        $ldapDomains = array('med.cornell.edu','nyp.org');
+
+        $rowData = $sheet->rangeToArray('A1:B'.$highestRow, null, true, false);
+
+        foreach( $rowData as $index => $data ) {
+            $row = $index + 1;
+
+            $name = isset($data[0]) ? trim((string)$data[0]) : '';
+            $email = isset($data[1]) ? trim((string)$data[1]) : '';
+
+            if( !$name && !$email ) {
+                continue; //empty row
+            }
+
+            //skip a header row (no email in column 2)
+            if( $row === 1 && strpos($email,'@') === false ) {
+                continue;
+            }
+
+            $userRow = array(
+                'name' => $name,
+                'firstName' => '',
+                'lastName' => '',
+                'email' => $email,
+                'cwid' => '',
+                'keytype' => '',
+                'username' => '',
+                'roles' => '',
+                'exists' => false,
+                'error' => ''
+            );
+
+            if( !$name || !$email || strpos($email,'@') === false ) {
+                $userRow['error'] = 'Missing or invalid name/email';
+                $userRows[] = $userRow;
+                continue;
+            }
+
+            //'LastName, FirstName'
+            $nameParts = explode(',', $name, 2);
+            $userRow['lastName'] = trim($nameParts[0]);
+            $userRow['firstName'] = isset($nameParts[1]) ? trim($nameParts[1]) : '';
+
+            //cwid is the local part of the email
+            $emailParts = explode('@', $email);
+            $cwid = trim($emailParts[0]);
+            $domain = strtolower(trim(isset($emailParts[1]) ? $emailParts[1] : ''));
+
+            if( !$cwid ) {
+                $userRow['error'] = 'No user id (cwid) in the email address';
+                $userRows[] = $userRow;
+                continue;
+            }
+
+            $keytypeAbbreviation = in_array($domain,$ldapDomains) ? 'ldap-user' : 'local-user';
+
+            //username: oli2002_@_ldap-user
+            $username = $cwid."_@_".$keytypeAbbreviation;
+
+            $userRow['cwid'] = $cwid;
+            $userRow['keytype'] = $keytypeAbbreviation;
+            $userRow['username'] = $username;
+            $userRow['roles'] = '';
+
+            $existingUser = $this->em->getRepository(User::class)->findOneByUsername($username);
+            if( !$existingUser ) {
+                $existingUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
+            }
+            $userRow['exists'] = (bool)$existingUser;
+
+            //list existing user's roles by alias
+            if( $existingUser ) {
+                $roleObjects = $this->em->getRepository(Roles::class)->findBy(
+                    array('name' => $existingUser->getRoles())
+                );
+                $roleAliases = array();
+                foreach( $roleObjects as $roleObject ) {
+                    $roleAliases[] = $roleObject->getAlias() ? $roleObject->getAlias() : $roleObject->getName();
+                }
+                $userRow['roles'] = implode(', ',$roleAliases);
+            }
+
+            $userRows[] = $userRow;
+        }
+
+        if( count($userRows) === 0 ) {
+            return "No user rows have been found in the spreadsheet";
+        }
+
+        return $userRows;
+    }
+
+    //Creates User entities for the rows checked on the confirmation page.
+    //$selected is an array of indexes into $userRows.
+    //$roleIds is an array of Roles entity ids (from the import form) to assign
+    //to each processed user. Existing users are not re-created, but the roles are added to them.
+    public function createUsersFromListSimple($userRows, $selected, $roleIds=array()) {
+
+        if( !is_array($userRows) ) {
+            return "Invalid user list";
+        }
+        if( !is_array($selected) ) {
+            $selected = array();
+        }
+        if( !is_array($roleIds) ) {
+            $roleIds = array();
+        }
+
+        ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes;
+
+        $em = $this->em;
+        $default_time_zone = $this->container->getParameter('default_time_zone');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $ldapKeytype = $userSecUtil->getUsernameType('ldap-user');
+        $localKeytype = $userSecUtil->getUsernameType('local-user');
+
+        //resolve role ids to role names that exist in the user_roles list
+        $validRoleNames = array();
+        if( count($roleIds) > 0 ) {
+            $roleObjects = $em->getRepository(Roles::class)->findBy(array('id' => $roleIds));
+            foreach( $roleObjects as $roleObject ) {
+                $validRoleNames[] = $roleObject->getName();
+            }
+        }
+
+        $count = 0;
+        $updated = 0;
+        $skipped = 0;
+        $unchecked = 0;
+
+        foreach( $userRows as $index => $userRow ) {
+
+            if( !in_array($index,$selected) ) {
+                $unchecked++;
+                continue;
+            }
+
+            $cwid = isset($userRow['cwid']) ? $userRow['cwid'] : '';
+            $keytypeAbbreviation = isset($userRow['keytype']) ? $userRow['keytype'] : '';
+            $username = isset($userRow['username']) ? $userRow['username'] : '';
+
+            if( !$cwid || !$keytypeAbbreviation || !$username ) {
+                $skipped++;
+                continue;
+            }
+
+            //check if user already exists in DB (by username or cwid)
+            $existingUser = $em->getRepository(User::class)->findOneByUsername($username);
+            if( !$existingUser ) {
+                $existingUser = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
+            }
+
+            if( $existingUser ) {
+                //user already exists: only add the selected roles
+                $rolesAdded = false;
+                foreach( $validRoleNames as $roleName ) {
+                    if( !in_array($roleName,$existingUser->getRoles(),true) ) {
+                        $existingUser->addRole($roleName);
+                        $rolesAdded = true;
+                    }
+                }
+                if( $rolesAdded ) {
+                    $updated++;
+                }
+                continue;
+            }
+
+            $userkeytype = $keytypeAbbreviation === 'ldap-user' ? $ldapKeytype : $localKeytype;
+            if( !$userkeytype ) {
+                $skipped++;
+                continue;
+            }
+
+            $user = new User();
+            $user->setKeytype($userkeytype);
+            $user->setPrimaryPublicUserId($cwid);
+
+            //set unique username: cwid_@_keytype
+            $usernameUnique = $user->createUniqueUsername();
+            $user->setUsername($usernameUnique);
+            $user->setUsernameCanonical($usernameUnique);
+
+            $user->setEnabled(true);
+
+            $email = isset($userRow['email']) ? $userRow['email'] : '';
+            $user->setEmail($email);
+            $user->setEmailCanonical($email);
+
+            $user->setFirstName(isset($userRow['firstName']) ? $userRow['firstName'] : '');
+            $user->setLastName(isset($userRow['lastName']) ? $userRow['lastName'] : '');
+
+            foreach( $validRoleNames as $roleName ) {
+                $user->addRole($roleName);
+            }
+
+            $user->setPassword("");
+            $user->setCreatedby('excel');
+            $user->getPreferences()->setTimezone($default_time_zone);
+
+            $em->persist($user);
+            $count++;
+        }
+
+        $em->flush();
+
+        $res = $count." new user(s) have been imported.";
+        if( $updated > 0 ) {
+            $res .= " ".$updated." existing user(s) updated with the selected roles.";
+        }
+        if( $skipped > 0 ) {
+            $res .= " ".$skipped." user(s) skipped (invalid data).";
+        }
+        if( $unchecked > 0 ) {
+            $res .= " ".$unchecked." unchecked user(s) were not imported.";
+        }
+
+        return $res;
+    }
 
     //create template processing of the main user's fields
     public function generateUsersExcelV2($inputFileName) {
@@ -161,6 +406,7 @@ class UserGenerator {
 
             $username = $this->getValueBySectionHeaderName("Primary Public User ID",$rowData,$headers,$sectionNameContactInfoRange);
             //echo "username(cwid)=".$username."<br>";
+            //exit('111');
 
             if( !$username ) {
                 echo "No Primary Public User ID (cwid) has been found in the source file";

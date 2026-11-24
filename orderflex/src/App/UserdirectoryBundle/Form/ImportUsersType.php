@@ -19,6 +19,9 @@
 namespace App\UserdirectoryBundle\Form;
 
 
+use App\UserdirectoryBundle\Entity\Roles;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -40,8 +43,25 @@ class ImportUsersType extends AbstractType {
             //'attr' => array('class'=>'form-control')
         ));
 
+        $builder->add('roles', EntityType::class, array(
+            'label' => 'Roles to add to the processed users:',
+            'class' => Roles::class,
+            'choice_label' => function($role) {
+                //return $role->getAlias() ? $role->getAlias()." (".$role->getName().")" : $role->getName();
+                return $role->getAlias() ? $role->getAlias() : $role->getName();
+            },
+            'multiple' => true,
+            'required' => false,
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('roles')
+                    ->where("roles.type IN ('default','user-added')")
+                    ->orderBy('roles.orderinlist','ASC');
+            },
+            'attr' => array('class'=>'combobox')
+        ));
+
         $builder->add('submit', SubmitType::class, array(
-            'label' => 'Import Users',
+            'label' => 'Process Users',
             'attr' => array('class'=>'btn btn-info')
         ));
 
