@@ -2,7 +2,7 @@ new Nexus website - 'portal'
 
 1) Change site name wiki-portal Wiki Portal
 
-2) Add users (?) Jessica, Jeff, Steve (80 people can view this page. Restrictions can affect who can view.)
+TODO: 2) Add users (?) Jessica, Jeff, Steve (80 people can view this page. Restrictions can affect who can view.)
 
 3) Edit functionality
 Ability to add file and the title, then the file will appear with link
@@ -86,5 +86,5 @@ rewrites links to file-download/{id}, and creates the home page.
 4) Delete the temp copy — everything needed is now in private/Uploaded/wikiportal + the Document/WikiPage DB rows.
 The mirror files are no longer required.
 
-
+Add users
 

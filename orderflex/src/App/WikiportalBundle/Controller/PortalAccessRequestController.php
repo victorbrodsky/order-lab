@@ -40,7 +40,7 @@ class PortalAccessRequestController extends AccessRequestController
         $this->roleBanned = 'ROLE_WIKIPORTAL_BANNED';
         $this->roleUser = 'ROLE_WIKIPORTAL_USER';
         $this->roleUnapproved = 'ROLE_WIKIPORTAL_UNAPPROVED';
-        $this->roleEditor = 'ROLE_WIKIPORTAL_ADMIN';
+        $this->roleEditor = 'ROLE_WIKIPORTAL_EDITOR';
     }
 
     #[Route(path: '/access-requests/new/create', name: 'wikiportal_access_request_new_plain', methods: ['GET'])]
