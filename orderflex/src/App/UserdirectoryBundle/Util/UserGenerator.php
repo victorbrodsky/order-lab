@@ -104,7 +104,7 @@ class UserGenerator {
             $row = $index + 1;
 
             $name = isset($data[0]) ? trim((string)$data[0]) : '';
-            $email = isset($data[1]) ? trim((string)$data[1]) : '';
+            $email = isset($data[1]) ? strtolower(trim((string)$data[1])) : '';
 
             if( !$name && !$email ) {
                 continue; //empty row
@@ -160,10 +160,7 @@ class UserGenerator {
             $userRow['username'] = $username;
             $userRow['roles'] = '';
 
-            $existingUser = $this->em->getRepository(User::class)->findOneByUsername($username);
-            if( !$existingUser ) {
-                $existingUser = $this->em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
-            }
+            $existingUser = $this->findExistingUser($username,$cwid);
             $userRow['exists'] = (bool)$existingUser;
 
             //list existing user's roles by alias
@@ -243,11 +240,8 @@ class UserGenerator {
                 continue;
             }
 
-            //check if user already exists in DB (by username or cwid)
-            $existingUser = $em->getRepository(User::class)->findOneByUsername($username);
-            if( !$existingUser ) {
-                $existingUser = $em->getRepository(User::class)->findOneByPrimaryPublicUserId($cwid);
-            }
+            //check if user already exists in DB (by username or cwid, case insensitive)
+            $existingUser = $this->findExistingUser($username,$cwid);
 
             if( $existingUser ) {
                 //user already exists: only add the selected roles
@@ -314,6 +308,18 @@ class UserGenerator {
         }
 
         return $res;
+    }
+
+    //Find an existing user by username (cwid_@_keytype) or by
+    //primaryPublicUserId (cwid), case insensitive in both cases.
+    private function findExistingUser($username,$cwid) {
+        return $this->em->getRepository(User::class)->createQueryBuilder('u')
+            //->where('LOWER(u.username) = :username OR LOWER(u.primaryPublicUserId) = :cwid')
+            //->setParameter('username',strtolower((string)$username))
+            ->where('LOWER(u.primaryPublicUserId) = :cwid')
+            ->setParameter('cwid',strtolower((string)$cwid))
+            ->setMaxResults(1)
+            ->getQuery()->getOneOrNullResult();
     }
 
     //create template processing of the main user's fields
