@@ -2522,8 +2522,9 @@ class UserSecurityUtil {
             $baseUrl = $scheme . '://' . $request->getHttpHost() . $request->getBasePath();
 
             //Wiki Portal by slug
-            echo '$siteName='.$siteName.'<br>';
-            if( $siteName == 'wiki-portal' ) {
+            //if( $siteName == 'wiki-portal' ) {
+            if( $logger->getObjectType() == "WikiPage" ) {
+                echo '$siteName='.$siteName.'<br>';
                 //1) get WikiPage by id
                 $wikiPage = null;
                 echo '$logger->getEntityId()='.$logger->getEntityId().'<br>';
