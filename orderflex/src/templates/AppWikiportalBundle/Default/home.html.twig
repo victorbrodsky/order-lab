@@ -72,9 +72,15 @@
 
             <div class="well well-sm text-muted">
                 {% if page.updateuser %}
-                    Last updated by {{ page.updateuser.getUserNameShortStr() }}
+                    Last updated by
+                    {#{{ page.updateuser.getUserNameShortStr() }}#}
+                    <a href="{{ path(employees_sitename~'_showuser', { 'id': page.updateuser.id }) }}"
+                       target="_blank">{{ page.updateuser.getUserNameShortStr() }}</a>
                 {% elseif page.creator %}
-                    Created by {{ page.creator.getUserNameShortStr() }}
+                    Created by
+                    {#{{ page.creator.getUserNameShortStr() }}#}
+                    <a href="{{ path(employees_sitename~'_showuser', { 'id': page.creator.id }) }}"
+                       target="_blank">{{ page.creator.getUserNameShortStr() }}</a>
                 {% endif %}
                 {% if page.updatedate %}
                     on {{ page.updatedate|date('m/d/Y H:i') }}
