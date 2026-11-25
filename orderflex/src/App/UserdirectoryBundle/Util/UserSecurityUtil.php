@@ -2526,12 +2526,13 @@ class UserSecurityUtil {
             if( $siteName == 'wiki-portal' ) {
                 //1) get WikiPage by id
                 $wikiPage = null;
+                echo '$logger->getEntityId()='.$logger->getEntityId().'<br>';
                 if( $logger->getEntityId() ) {
                     $wikiPage = $this->em->getRepository(WikiPage::class)->find($logger->getEntityId());
                 }
-                echo '1$wikiPage='.$wikiPage->getId().'<br>';
+                echo '1$wikiPage='.$wikiPage.'<br>';
                 if( $wikiPage ) {
-                    echo '2$wikiPage='.$wikiPage->getId().'<br>';
+                    echo '2$wikiPage='.$wikiPage.'<br>';
                     //2) get fullPath
                     $fullPath = $wikiPage->getFullPath();
                     if( $fullPath ) {
