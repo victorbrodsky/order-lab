@@ -184,7 +184,7 @@
                 {% endif %}
 
                 <th>{{ knp_pagination_sortable(pagination, 'Event Type', 'eventType.name') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'Event Title', 'logger.event') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Description', 'logger.event') }}</th>
 
                 {% if hideADServerResponse is not defined or hideADServerResponse == false %}
                     <th>{{ knp_pagination_sortable(pagination, 'AD Server Response', 'logger.serverresponse') }}</th>

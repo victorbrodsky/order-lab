@@ -68,6 +68,7 @@ use App\OrderformBundle\Entity\AccessionAccession; //process.py script: replaced
 use App\UserdirectoryBundle\Entity\Roles;
 use App\UserdirectoryBundle\Entity\SiteList;
 use App\UserdirectoryBundle\Entity\SiteParameters;
+use App\WikiportalBundle\Entity\WikiPage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use OneLogin\Saml2\Auth;
@@ -2519,6 +2520,24 @@ class UserSecurityUtil {
             $userUtil = $this->container->get('user_utility');
             $scheme = $userUtil->getRealScheme($request);
             $baseUrl = $scheme . '://' . $request->getHttpHost() . $request->getBasePath();
+
+            //Wiki Portal by slug
+            //echo '$siteName='.$siteName.'<br>';
+            if( $siteName == 'wiki-portal' ) {
+                //1) get WikiPage by id
+                $wikiPage = null;
+                if( $logger->getEntityId() ) {
+                    $wikiPage = $this->em->getRepository(WikiPage::class)->find($logger->getEntityId());
+                }
+                if( $wikiPage ) {
+                    //2) get fullPath
+                    $fullPath = $wikiPage->getFullPath();
+                    if( $fullPath ) {
+                        $url = $baseUrl . '/' . $siteName . '/page/' . $fullPath;
+                        return $url;
+                    }
+                }
+            }
 
             $objectUrl = $logger->getObjectType()->getUrl();
             if( !$objectUrl ) {
