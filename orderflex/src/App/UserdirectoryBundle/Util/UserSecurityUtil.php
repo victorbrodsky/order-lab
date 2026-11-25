@@ -2521,7 +2521,7 @@ class UserSecurityUtil {
             $scheme = $userUtil->getRealScheme($request);
             $baseUrl = $scheme . '://' . $request->getHttpHost() . $request->getBasePath();
 
-            //Wiki Portal by slug
+            //WikiPage
             if( $logger->getObjectType() == "WikiPage" ) {
                 //1) get WikiPage by id
                 $wikiPage = null;

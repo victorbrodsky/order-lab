@@ -21,6 +21,24 @@
 
     {% import "AppOrderformBundle/Default/formmacros.html.twig" as formmacros %}
 
+    <style>
+        /*keep wide HTML content (e.g. images in wiki page events) inside the Description column*/
+        .logger-event-description {
+            max-width: 600px;
+            max-height: 400px;
+            overflow: auto;
+            word-break: break-word;
+        }
+        .logger-event-description img {
+            max-width: 100%;
+            height: auto;
+        }
+        .logger-event-description table {
+            width: auto !important;
+            max-width: 100%;
+        }
+    </style>
+
     <h3 class="text-info">{{ eventLogTitle }}</h3>
 
 
@@ -145,7 +163,7 @@
     {{ form_end(loggerfilter) }}
     </p>
 
-
+    {% set hideADServerResponse = true %}
     <table class="records_list table table-hover table-condensed text-left">
         <thead>
             <tr>
@@ -278,7 +296,7 @@
                 {% endif %}
 
                 <td class="rowlink-skip">{{ entity.eventType }}</td>
-                <td class="rowlink-skip">{{ entity.event|raw }}</td>
+                <td class="rowlink-skip"><div class="logger-event-description">{{ entity.event|raw }}</div></td>
 
                 {% if hideADServerResponse is not defined or hideADServerResponse == false %}
                     <td class="rowlink-skip">
