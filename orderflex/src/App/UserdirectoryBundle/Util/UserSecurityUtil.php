@@ -2522,33 +2522,26 @@ class UserSecurityUtil {
             $baseUrl = $scheme . '://' . $request->getHttpHost() . $request->getBasePath();
 
             //Wiki Portal by slug
-            //if( $siteName == 'wiki-portal' ) {
             if( $logger->getObjectType() == "WikiPage" ) {
-                //echo '$siteName='.$siteName.'<br>';
                 //1) get WikiPage by id
                 $wikiPage = null;
-                //echo '$logger->getEntityId()='.$logger->getEntityId().'<br>';
                 if( $logger->getEntityId() ) {
                     $wikiPage = $this->em->getRepository(WikiPage::class)->find($logger->getEntityId());
                 }
-                //echo '1$wikiPage='.$wikiPage.'<br>';
                 if( $wikiPage ) {
-                    //echo '2$wikiPage='.$wikiPage.'<br>';
                     //2) get fullPath
                     $fullPath = $wikiPage->getFullPath();
                     if( $fullPath ) {
-                        //echo '$fullPath='.$fullPath.'<br>';
                         $url = $baseUrl . '/' . $siteName . '/page/' . $fullPath;
                         return $url;
                     }
                 } else {
-                    $message = "This wiki page could not be found and was likely deleted.";
+                    $message = "This wiki page could not be found and appears to have been deleted.";
                     $url = $this->container->get('router')->generate(
                         "logger_warning_message",
                         array(
                             'message' => $message,
                         )
-                    //UrlGeneratorInterface::ABSOLUTE_URL
                     );
                     return $url;
                 }
