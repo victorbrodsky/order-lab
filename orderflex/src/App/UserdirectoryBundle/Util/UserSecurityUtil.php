@@ -2522,17 +2522,20 @@ class UserSecurityUtil {
             $baseUrl = $scheme . '://' . $request->getHttpHost() . $request->getBasePath();
 
             //Wiki Portal by slug
-            //echo '$siteName='.$siteName.'<br>';
+            echo '$siteName='.$siteName.'<br>';
             if( $siteName == 'wiki-portal' ) {
                 //1) get WikiPage by id
                 $wikiPage = null;
                 if( $logger->getEntityId() ) {
                     $wikiPage = $this->em->getRepository(WikiPage::class)->find($logger->getEntityId());
                 }
+                echo '1$wikiPage='.$wikiPage->getId().'<br>';
                 if( $wikiPage ) {
+                    echo '2$wikiPage='.$wikiPage->getId().'<br>';
                     //2) get fullPath
                     $fullPath = $wikiPage->getFullPath();
                     if( $fullPath ) {
+                        echo '$fullPath='.$fullPath.'<br>';
                         $url = $baseUrl . '/' . $siteName . '/page/' . $fullPath;
                         return $url;
                     }
