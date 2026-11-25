@@ -286,6 +286,7 @@ class PortalWikiPageController extends OrderAbstractController
 
             $userSecUtil = $this->container->get('user_security_utility');
             $event = "New wiki page created: " . $page->getTitle() . " (id=" . $page->getId() . ")";
+            $event = $event . "<br>Body: ".$page->getBody();
             $userSecUtil->createUserEditEvent($this->getParameter('wikiportal.sitename'), $event, $this->getUser(), $page, $request, 'Wiki Page Created');
 
             return $this->redirect($this->generateUrl('wikiportal_page_show', array('path' => $page->getFullPath())));
@@ -334,13 +335,14 @@ class PortalWikiPageController extends OrderAbstractController
                 );
             }
 
+            //TODO: delete orphans or not?
             //delete documents that were removed from the page body and are
             //not referenced by any other wiki page
             $removedDocIds = array_diff(
                 $this->extractDocumentIds($oldBody),
                 $this->extractDocumentIds($page->getBody())
             );
-            $this->deleteUnreferencedDocuments($removedDocIds, $page->getId(), $request);
+            //$this->deleteUnreferencedDocuments($removedDocIds, $page->getId(), $request);
 
             $page->setUpdateuser($this->getUser());
             $this->updateFullPathRecursive($page);
@@ -349,6 +351,7 @@ class PortalWikiPageController extends OrderAbstractController
 
             $userSecUtil = $this->container->get('user_security_utility');
             $event = "Wiki page updated: " . $page->getTitle() . " (id=" . $page->getId() . ")";
+            $event = $event . "<br>Body: ".$page->getBody();
             $userSecUtil->createUserEditEvent($this->getParameter('wikiportal.sitename'), $event, $this->getUser(), $page, $request, 'Wiki Page Updated');
 
             return $this->redirect($this->generateUrl('wikiportal_page_show', array('path' => $page->getFullPath())));
@@ -380,12 +383,13 @@ class PortalWikiPageController extends OrderAbstractController
             return $this->redirect($this->generateUrl('wikiportal_pages'));
         }
 
+        //TODO: delete orphans or not?
         //delete documents referenced only by this page (and its descendants,
         //which are removed by the same cascade)
         $docIds = $this->extractDocumentIds($page->getBody());
         $childIds = $this->getDescendantIds($page);
         $childIds[] = $page->getId();
-        $this->deleteUnreferencedDocuments($docIds, $childIds, $request);
+        //$this->deleteUnreferencedDocuments($docIds, $childIds, $request);
 
         $title = $page->getTitle();
         $em->remove($page); //children are removed by DB-level ON DELETE CASCADE on parent_id
@@ -393,6 +397,7 @@ class PortalWikiPageController extends OrderAbstractController
 
         $userSecUtil = $this->container->get('user_security_utility');
         $event = "Wiki page deleted: " . $title . " (id=" . $id . ")";
+        $event = $event . "<br>Body: ".$page->getBody();
         $userSecUtil->createUserEditEvent($this->getParameter('wikiportal.sitename'), $event, $this->getUser(), null, $request, 'Wiki Page Deleted');
 
         $this->addFlash('notice', "Wiki page '" . $title . "' and its sub-pages have been deleted.");
