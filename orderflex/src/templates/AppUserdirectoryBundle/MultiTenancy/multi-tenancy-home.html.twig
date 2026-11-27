@@ -43,7 +43,7 @@
 
 <div class="container">
 
-    <div class="text-center">
+    <div id="multi-tenancy-home-text-center" class="text-center">
 
         {#<input type="hidden" id="heartbeatInput" name="heartbeatInput-status" value="alive" />#}
 
@@ -85,6 +85,7 @@
                     {#platformLogo={{ platformLogo }}#}
                     {#height={{ height }}, width={{ width }}<br>#}
                 {#{% endif %}#}
+                {#use getPlatformLogoNotAuth#}
                 {{ usermacros.showImagesBySrcset(platformLogo,highResPlatformLogoPath,height,width,"Logo homepage manager") }}
             </p>
         {% else %}
