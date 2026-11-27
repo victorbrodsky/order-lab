@@ -211,6 +211,9 @@ class HomeController extends OrderAbstractController {
         //$width = "320";
         //$height = "180";
 
+        //There are logos:
+        // 1) Platform Logo Image (Site Settings)
+        // 2) Tenancy Configuration (directory/settings/homepage-manager/configure/)
         $tenantManager = $userTenantUtil->getSingleTenantManager($createIfEmpty = true);
 
         $width = $tenantManager->getWidth(); //"320";
