@@ -2662,6 +2662,7 @@
 {% endmacro %}
 
 {% macro showImagesBySrcset(platformLogo, highResPlatformLogoPath, height, width, altText) %}
+    showImagesBySrcset platformLogo={{ platformLogo }}
     <img
             src="{% if platformLogo %}{{ asset(platformLogo) }}{% else %}{{ asset(highResPlatformLogoPath) }}{% endif %}"
             {% set srcsetParts = [] %}
